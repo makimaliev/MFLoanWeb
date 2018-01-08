@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+
+
+
+<body>
+
+
+
+
+
+	<div class="row">
+		<div class="col-md-12">
+
+
+
+
+
+
+
+
+
+
+
+			<div class="tabbable-custom ">
+				<ul class="nav nav-tabs " id="staff_tabs">
+					<li class="active"><a href="#tab_15_1" data-toggle="tab">
+							Данные о сотруднике </a></li>
+					<li><a href="#tab_15_2" data-toggle="tab"> Персональные
+							данные </a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab_15_1">
+
+
+
+						<div class="row">
+							<div class="col-md-3">
+
+
+
+								<table
+									class="table table-hover table-condensed table-striped table-bordered compact condensed">
+
+									<tbody>
+										<tr>
+											<td>Organization</td>
+											<td th:text="${staff.organization.name}">Organization</td>
+											<td><a
+												th:href="@{/organization/__${staff.organization.id}__/details}"
+												role="button" class="btn btn-xs green-stripe"> View </a></td>
+											<td>
+										</tr>
+										<tr>
+											<td>Department</td>
+											<td th:text="${staff.department.name}">Department</td>
+											<td><a
+												th:href="@{/department/__${staff.department.id}__/details}"
+												role="button" class="btn btn-xs green-stripe"> View </a></td>
+											<td>											
+										</tr>
+										<tr>
+											<td>Position</td>
+											<td th:text="${staff.position.name}">Position</td>
+											<td><a
+												th:href="@{/position/__${staff.position.id}__/details}"
+												role="button" class="btn btn-xs green-stripe"> View </a></td>
+											<td>											
+										</tr>
+
+										<tr>
+											<td>Person</td>
+											<td th:text="${staff.person.name}">Person name</td>
+											<td><a
+												th:href="@{/person/__${staff.person.id}__/details}"
+												role="button" class="btn btn-xs green-stripe"> View </a></td>
+											<td>											
+										</tr>
+										<tr>
+											<td>EmploymentHistory</td>
+											<td th:text="${staff.employmentHistory.number}">employmentHistory.number</td>
+											<td><a
+												th:href="@{/employmentHistory/__${staff.employmentHistory.id}__/details}"
+												role="button" class="btn btn-xs green-stripe"> View </a></td>
+											<td>											
+										</tr>
+
+
+
+
+
+
+									</tbody>
+								</table>
+
+
+
+							</div>
+						</div>
+
+
+
+
+					</div>
+					<div class="tab-pane" id="tab_15_2">
+
+
+						<div class="row">
+							<div class="col-md-3">
+
+
+
+								<table
+									class="table table-hover table-condensed table-striped table-bordered compact condensed">
+
+									<tbody>
+										<tr>
+											<td>Person</td>
+											<td th:text="${staff.person.name}">Person name</td>
+										</tr>
+										<tr>
+											<td>EmploymentHistory</td>
+											<td th:text="${staff.employmentHistory.number}">employmentHistory.number</td>
+										</tr>
+
+
+
+
+
+
+
+									</tbody>
+								</table>
+
+
+
+							</div>
+						</div>
+
+
+
+						<div class="row">
+							<div class="col-md-12"></div>
+
+
+						</div>
+
+
+
+					</div>
+
+				</div>
+			</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		</div>
+
+
+	</div>
+
+
+	<script type="text/javascript">
+
+$(document).ready(function() {
+    if (location.hash) {
+        $("a[href='" + location.hash + "']").tab("show");
+    }
+    $(document.body).on("click", "a[data-toggle]", function(event) {
+        location.hash = this.getAttribute("href");
+    });
+});
+$(window).on("popstate", function() {
+    var anchor = location.hash || $("a[data-toggle='tab']").first().attr("href");
+    $("a[href='" + anchor + "']").tab("show");
+});
+</script>
+
+
+
+
+
+
+
+</body>
+</html>

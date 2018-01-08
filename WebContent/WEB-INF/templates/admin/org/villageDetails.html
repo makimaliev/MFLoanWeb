@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<div th:replace="fragments/header :: header-css"></div>
+
+<link
+	th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}"
+	rel="stylesheet" type="text/css" />
+<link
+	th:href="@{/assets/global/plugins/datatables/datatables.min.css}"
+	rel="stylesheet" type="text/css" />
+<link
+	th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}"
+	rel="stylesheet" type="text/css" />
+
+</head>
+
+<body
+	class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
+
+	<!-- BEGIN HEADER -->
+	<div th:replace="layout :: header-top"></div>
+	<!-- END HEADER -->
+
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+
+		<!-- BEGIN SIDEBAR -->
+		<div th:replace="layout :: page-container-sidebar"></div>
+		<!-- END SIDEBAR -->
+
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+
+			<!-- BEGIN CONTENT BODY -->
+			<div class="page-content">
+
+			
+			
+			
+
+				<div class="row">
+					<div class="col-md-12">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet portlet-fit ">
+							<div class="portlet-body">
+
+								<div>
+									<table class="table table-hover table-condensed table-striped table-bordered compact condensed" id="villageTable">
+										<thead>
+											<tr>
+												<th>Id</th>
+												<th>Name</th>
+												<th>Code</th>
+												<th>Aokmotu</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+
+										<tbody>
+											
+											<tr>
+												<td th:text="${village.id}">Id</td>
+												<td th:text="${village.name}">Name</td>     
+												<td th:text="${village.code}">Code</td>
+												<td th:text="${village.aokmotu.name}">District</td>												
+												<td>
+													<a data-remote="false" data-toggle="modal"
+													data-target="#villageFormModal" th:href="@{/village/__${village.id}__/edit}"
+													role="button" class="btn btn-xs blue-stripe"> Edit
+													</a>
+												</td>
+												<td>
+													<form th:action="@{/village/__${village.id}__/remove}" method="post">
+														<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+													</form>
+												</td>
+											</tr>
+										</tbody>
+
+									</table>
+								</div>
+
+
+								<div class="col-md-12">
+
+									<!-- Default bootstrap modal example -->
+									<div class="modal fade" id="villageFormModal" tabindex="-1"
+										role="dialog" aria-labelledby="myModalLabel"
+										aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+													<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+												</div>
+												<div class="modal-body">...</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-default"
+														data-dismiss="modal">Close</button>
+												</div>
+											</div>
+										</div>
+									</div>
+
+
+								</div>
+
+
+
+							</div>
+						</div>
+						<!-- END BORDERED TABLE PORTLET-->
+					</div>
+				</div>
+				
+				
+
+
+	<div class="tabbable-custom ">
+		<ul class="nav nav-tabs " id="village_tabs">
+			<li class="active">
+				<a href="#debtorListOfVillage" data-toggle="tab">Заемщик</a>
+			</li>
+			<li>
+				<a href="#loanListOfVillage" data-toggle="tab">Кредитный договор</a>
+			</li>
+		</ul>
+		
+		<div class="tab-content">
+
+			<div class="tab-pane active" id="debtorListOfDistrict">
+			</div>
+			<div class="tab-pane" id="loanListOfDistrict">
+			</div>
+		</div>
+	</div>
+
+
+
+
+			
+
+
+
+			</div>
+			<!-- END CONTENT BODY -->
+		</div>
+		<!-- END CONTENT -->
+		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
+	</div>
+	<!-- END CONTAINER -->
+	<div th:replace="layout :: footer"></div>
+	<div th:replace="fragments/footer :: footer-js"></div>
+
+	<script th:src="@{/assets/global/plugins/datatables/datatables.js}"
+		type="text/javascript"></script>
+	<script
+		th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}"
+		type="text/javascript"></script>
+
+	<!-- BEGIN PAGE LEVEL PLUGINS -->
+
+	<!-- END PAGE LEVEL PLUGINS -->
+	<!-- BEGIN PAGE LEVEL SCRIPTS -->
+
+
+		<script type="text/javascript">
+		$(document).ready(function() {
+
+			var table = $('#villageTable').DataTable({
+		    	stateSave: true,
+		    	"language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
+	    		"info":     false,
+	    		keys: {
+	    	        focus: ':eq(0)'
+	    	    }
+		    } );
+			
+			
+
+			table.on('key-focus', function(e, datatable, cell) {
+				
+				var rowData = datatable.row(cell.index().row).data();
+				
+				
+				$("#village_id").val(rowData[0]);
+				
+				var sUrl ="/MFCredit/village/" + rowData[0]+"/view";
+
+				
+				$.get(sUrl, function(data) {
+
+					$('#content').html(data);
+				});
+				
+				
+				var row = datatable.row( cell.index().row );
+
+
+			      table.$('tr.info').removeClass('info');
+						$( row.node() ).addClass( "info" );
+
+						var rowData = row.data();
+						
+
+						var colData = datatable.cell( { focused: true } ).data();				
+
+				
+
+				});			
+
+			});
+		</script>
+           
+	<script type="text/javascript">
+	$("#aokmotuFormModal").on("show.bs.modal", function(e) {
+	
+		
+	    var link = $(e.relatedTarget);
+	    
+
+	    var villageID = $("#village_id").val();
+	    
+	    if(link.attr("href").indexOf('village/add')>0)
+	    {
+	    	$(this).find(".modal-title").html(link.attr("href").replace("/village/add","/aokmotu/"+aokmotuID+"/village/add"));
+		    $(this).find(".modal-body").load(link.attr("href").replace("/village/add","/aokmotu/"+aokmotuID+"/village/add"));
+	    }
+	    else
+    	{
+	    	$(this).find(".modal-title").html(link.attr("href"));
+		    $(this).find(".modal-body").load(link.attr("href"));
+    	}	    
+	});
+	
+	
+
+	
+</script> 
+
+
+
+
+
+
+
+
+
+
+
+	<!-- END PAGE LEVEL SCRIPTS -->
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+
+
+
+<body>
+
+	<form th:action="@{/information/save}" id="form_sample_2"
+		class="form-horizontal" method="post" th:object="${information}">
+		<div class="form-body">
+			<div class="alert alert-danger display-hide">
+				<button class="close" data-close="alert"></button>
+				You have some form errors. Please check below.
+			</div>
+			<!-- 
+                     <div class="alert alert-success display-hide">
+                     	<button class="close" data-close="alert"></button> Your form validation is successful! 
+                     </div>
+                     -->
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Name <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+					<input hidden="true" type="text" id="id" name="id"
+						th:field="${information.id}" />
+						
+					<input hidden="true" type="text" id="parentInformation.id" name="parentInformation.id"
+						th:field="${information.parentInformation.id}" />						
+				
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="name" th:field="${information.name}" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Description <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="description" th:field="${information.description}" />
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Is title <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="isTitle" th:field="${information.isTitle}" />
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">date</label>
+				<div class="col-md-4">
+					<div class="input-group date date-picker"
+						data-date-format="yyyy-mm-dd" id="informationDate">
+						<input type="text" class="form-control" name="date"
+							th:value="${information.date}" /> <span class="input-group-btn">
+							<button class="btn default" type="button">
+								<i class="fa fa-calendar"></i>
+							</button>
+						</span>
+					</div>
+					<!-- /input-group -->
+					<span class="help-block"> select a date </span>
+				</div>
+				<script>
+	$('#informationDate').datepicker();
+	</script>
+			</div>
+
+
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Number <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="number" th:field="${information.number}" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">ObjectId <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="systemObjectId" th:field="${information.systemObjectId}" />
+					</div>
+				</div>
+			</div>		
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">ObjectTypeId <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="systemObjectTypeId" th:field="${information.systemObjectTypeId}" />
+					</div>
+				</div>
+			</div>				
+
+
+
+			<div class="tabbable-custom ">
+				<ul class="nav nav-tabs ">
+					<li class="active"><a href="#tab_15_11" data-toggle="tab">
+							1 </a></li>
+					<li><a href="#tab_15_21" data-toggle="tab"> 2 </a></li>
+					<li><a href="#tab_15_31" data-toggle="tab"> 3 </a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab_15_11">1</div>
+					<div class="tab-pane" id="tab_15_21">2</div>
+
+
+
+
+
+					<div class="tab-pane" id="tab_15_31">3</div>
+
+				</div>
+			</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		</div>
+		<div class="form-actions">
+			<div class="row">
+				<div class="col-md-offset-3 col-md-9">
+					<button type="submit" class="btn green">Submit</button>
+					<button type="button" class="btn default"
+						onclick="window.location.href='/information/list'">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</form>
+
+</body>
+</html>

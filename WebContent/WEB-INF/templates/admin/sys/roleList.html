@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<head>
+<title></title>
+
+<div th:replace="fragments/header :: header-css"></div>
+
+<link
+	th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}"
+	rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/datatables/datatables.min.css}"
+	rel="stylesheet" type="text/css" />
+<link
+	th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}"
+	rel="stylesheet" type="text/css" />
+	
+	  <style type="text/css">
+table.KeyTable tr.focus {
+outline: 3px solid #3366FF;
+outline-offset: -3px;
+}
+
+  </style>
+
+</head>
+
+<body
+	class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
+
+	<!-- BEGIN HEADER -->
+	<div th:replace="layout :: header-top"></div>
+	<!-- END HEADER -->
+
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+
+		<!-- BEGIN SIDEBAR -->
+		<div th:replace="layout :: page-container-sidebar"></div>
+		<!-- END SIDEBAR -->
+
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+
+			<!-- BEGIN CONTENT BODY -->
+			<div class="page-content">
+
+				<div class="row">
+					<div class="col-md-12">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet portlet-fit ">
+							<div class="portlet-body">
+								<table
+									class="table compact"
+									id="roleTable">
+									<thead>
+										<tr>
+											<th>Id</th>
+											<th>Name</th>
+											<th>View</th>
+											<th>Edit</th>
+											<th>Delete</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="s : ${roleList}">
+											<td th:text="${s.id}">Id</td>
+											<td th:text="${s.name}">Name</td>
+											<td><a th:href="@{/role/__${s.id}__/details}"
+												role="button" class="btn btn-xs green-stripe"> View </a></td>
+											<td><a data-remote="false" data-toggle="modal"
+												data-target="#roleFormModal"
+												th:href="@{/role/__${s.id}__/edit}" role="button"
+												class="btn btn-xs blue-stripe"> Edit </a></td>
+											<td>
+												<form th:action="@{/role/__${s.id}__/remove}"
+													method="post">
+													<button type="submit" class="btn btn-xs red-stripe">
+														Delete</button>
+												</form>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<div class="col-md-12">
+
+									<!-- Default bootstrap modal example -->
+									<div class="modal fade" id="roleFormModal" tabindex="-1"
+										role="dialog" aria-labelledby="myModalLabel"
+										aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+													<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+												</div>
+												<div class="modal-body">...</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-default"
+														data-dismiss="modal">Close</button>
+													<button type="button" class="btn btn-primary">Save
+														changes</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-12">
+										<a data-remote="false" data-toggle="modal"
+											data-target="#roleFormModal" th:href="@{/role/add}"
+											role="button" class="btn btn-large btn-primary"> Add
+											Role</a> 
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- END BORDERED TABLE PORTLET-->
+					</div>
+				
+
+				
+				</div>
+
+				<div class="row">
+
+					<div class="col-md-12">
+
+						<input hidden="true" type="text" id="role_id" name="role_id" />
+
+						<div id="content"></div>
+
+					</div>
+				</div>
+
+
+			</div>
+			<!-- END CONTENT BODY -->
+		</div>
+		<!-- END CONTENT -->
+		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
+	</div>
+	<!-- END CONTAINER -->
+	<div th:replace="layout :: footer"></div>
+	<div th:replace="fragments/footer :: footer-js"></div>
+
+	<script th:src="@{/assets/global/plugins/datatables/datatables.js}"
+		type="text/javascript"></script>
+	<script
+		th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}"
+		type="text/javascript"></script>
+
+	<!-- BEGIN PAGE LEVEL PLUGINS -->
+
+	<!-- END PAGE LEVEL PLUGINS -->
+	<!-- BEGIN PAGE LEVEL SCRIPTS -->
+
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+
+			var table = $('#roleTable').DataTable({
+		    	stateSave: true,
+		    	"language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
+	    		"info":     false,
+	    		keys: {
+	    	        focus: ':eq(0)'
+	    	    }
+		    } );
+
+			table.on('key-focus', function(e, datatable, cell) {
+
+
+				var rowData = datatable.row(cell.index().row).data();
+
+				$("#role_id").val(rowData[0]);
+				
+				var sUrl ="/MFCredit/role/" + rowData[0]+"/view";
+				
+				$.get(sUrl, function(data) {
+
+					$('#content').html(data);
+				});
+				
+				
+				
+				
+				
+				var row = datatable.row( cell.index().row );
+
+
+	      table.$('tr.info').removeClass('info');
+				$( row.node() ).addClass( "info" );
+
+				var rowData = row.data();
+				
+
+				var colData = datatable.cell( { focused: true } ).data();
+				
+
+				});
+
+			});
+		</script>
+
+	<script type="text/javascript">
+	$("#roleFormModal").on("show.bs.modal", function(e) {
+		
+	    var link = $(e.relatedTarget);
+	    
+	    
+	    var roleID = $("#role_id").val();
+
+	    if(link.attr("href").indexOf('district/add')>0)
+	    {
+	    	$(this).find(".modal-title").html(link.attr("href").replace("/district/add","/role/"+roleID+"/district/add"));
+		    $(this).find(".modal-body").load(link.attr("href").replace("/district/add","/role/"+roleID+"/district/add"));
+	    }
+	    else
+    	{
+	    	$(this).find(".modal-title").html(link.attr("href"));
+		    $(this).find(".modal-body").load(link.attr("href"));
+    	}
+	});
+	
+	
+
+	
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- END PAGE LEVEL SCRIPTS -->
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+
+	<form 	th:action="@{/person/save}" 
+			id="form_sample_2"
+			class="form-horizontal" 
+			method="post" 
+			th:object="${person}">
+			
+		<div class="form-body">
+			<div class="alert alert-danger display-hide">
+				<button class="close" 
+						data-close="alert">
+				</button>
+				You have some form errors. Please check below.
+			</div>
+			<!-- 
+                     <div class="alert alert-success display-hide">
+                     	<button class="close" data-close="alert"></button> Your form validation is successful! 
+                     </div>
+                     -->
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Name <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+					<input hidden="true" type="text" id="id" name="id"
+						th:field="*{id}" />
+<input hidden="true" type="text" id="addressId" name="address.id"
+						th:field="*{address.id}" />	
+<input hidden="true" type="text" id="regionId" name="address.region.id"
+						th:field="*{address.region.id}" />	
+<input hidden="true" type="text" id="districtId" name="address.district.id"
+						th:field="*{address.district.id}" />	
+<input hidden="true" type="text" id="aokmotuId" name="address.aokmotu.id"
+						th:field="*{address.aokmotu.id}" />	
+<input hidden="true" type="text" id="villageId" name="address.village.id"
+						th:field="*{address.village.id}" />
+<input hidden="true" type="text" id="identityDocTypeId" name="identityDoc.identityDocType.id"
+						th:field="*{identityDoc.identityDocType.id}" />												
+<input hidden="true" type="text" id="identityDocGivenById" name="identityDoc.identityDocGivenBy.id"
+						th:field="*{identityDoc.identityDocGivenBy.id}" />	
+											
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="name" th:field="*{name}" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Description <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="description" th:field="*{description}" />
+					</div>
+				</div>
+			</div>
+
+			<div class="tabbable-custom ">
+				<ul class="nav nav-tabs ">
+					<li class="active"><a href="#tab_15_11" data-toggle="tab">
+							Address Data </a></li>
+					<li><a href="#tab_15_21" data-toggle="tab"> Identity Doc
+							Data </a></li>
+					<li><a href="#tab_15_31" data-toggle="tab"> Contacts </a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab_15_11">
+
+						<div class="form-group  margin-top-20">
+							<label class="control-label col-md-3">Address Line <span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-4">
+
+								<div class="input-icon right">
+													
+									<i class="fa"></i> <input type="text" class="form-control"
+										name="address.line" th:field="*{address.line}" />
+								</div>
+							</div>
+						</div>
+						<div class="form-group  margin-top-20">
+							<label class="control-label col-md-3">Region<span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-4">
+
+								<select th:value="${person.address.region}" onchange="updateRegionId(this);">
+									<option th:each="regionInList : ${regionList}"
+										th:value="${regionInList.id}" 
+										th:selected="(${regionInList.id} == *{address.region.id})"
+										th:text="${regionInList.name}"
+
+										>Region</option>
+								</select>
+
+							</div>
+						</div>
+
+
+						<div class="form-group  margin-top-20">
+							<label class="control-label col-md-3">District<span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-4">
+
+								<select th:value="${person.address.district}" onchange="updateDistrictId(this);">
+									<option th:each="districtInList : ${districtList}"
+									
+										th:value="${districtInList.id}"
+										th:selected="(${districtInList.id} == *{address.district.id})"
+										th:text="${districtInList.name}">District</option>
+								</select>
+
+							</div>
+						</div>
+
+
+						<div class="form-group  margin-top-20">
+							<label class="control-label col-md-3">Aokmotu<span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-4">
+
+								<select th:value="${person.address.aokmotu}" onchange="updateAokmotuId(this);">
+									<option th:each="aokmotuInList : ${aokmotuList}"
+										th:value="${aokmotuInList.id}"
+									    th:selected="(${aokmotuInList.id} == *{address.aokmotu.id})" 
+										th:text="${aokmotuInList.name}">Aokmotu</option>
+								</select>
+
+							</div>
+						</div>
+
+
+						<div class="form-group  margin-top-20">
+							<label class="control-label col-md-3">Village<span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-4">
+
+								<select th:value="${person.address.village}" onchange="updateVillageId(this);">
+									<option th:each="villageInList : ${villageList}"
+										th:value="${villageInList.id}"
+										th:selected="(${villageInList.id} == *{address.village.id})"
+										th:text="${villageInList.name}">Village</option>
+								</select>
+
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" id="tab_15_21">
+						<div class="form-group  margin-top-20">
+							<label class="control-label col-md-3">Name <span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-4">
+																<div class="input-icon right">
+									<i class="fa"></i> <input type="text" class="form-control"
+										name="identityDoc.name"
+										th:field="${person.identityDoc.name}" />
+								</div>
+							</div>
+						</div>
+						<div class="form-group  margin-top-20">
+							<label class="control-label col-md-3">enabled <span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-4">
+
+								<div class="input-icon right">
+									<i class="fa"></i> <input type="text" class="form-control"
+										name="enabled" th:field="${person.identityDoc.enabled}" />
+								</div>
+							</div>
+						</div>
+						<div class="form-group  margin-top-20">
+							<label class="control-label col-md-3">number <span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-4">
+
+								<div class="input-icon right">
+									<i class="fa"></i> <input type="text" class="form-control"
+										name="number" th:field="${person.identityDoc.number}" />
+								</div>
+							</div>
+						</div>
+						<div class="form-group  margin-top-20">
+							<label class="control-label col-md-3">pin <span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-4">
+
+								<div class="input-icon right">
+									<i class="fa"></i> <input type="text" class="form-control"
+										name="pin" th:field="${person.identityDoc.pin}" />
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group  margin-top-20">
+							<label class="control-label col-md-3">Type<span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-4">
+
+								<select th:value="${person.identityDoc.identityDocType}"  onchange="updateIdentityDocTypeId(this);">
+									<option
+										th:each="identityDocTypeInList : ${identityDocTypeList}"
+										th:value="${identityDocTypeInList.id}"
+										th:selected="(${identityDocTypeInList.id} == *{identityDoc.identityDocType.id})"
+										th:text="${identityDocTypeInList.name}">identityDocType</option>
+								</select>
+
+							</div>
+						</div>
+
+
+						<div class="form-group  margin-top-20">
+							<label class="control-label col-md-3">Given by<span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-4">
+
+								<select th:value="${person.identityDoc.identityDocGivenBy}" onchange="updateIdentityDocGivenById(this);">
+									<option
+										th:each="identityDocGivenByInList : ${identityDocGivenByList}"
+										th:value="${identityDocGivenByInList.id}"
+										th:selected="(${identityDocGivenByInList.id} == *{identityDoc.identityDocGivenBy.id})"
+										th:text="${identityDocGivenByInList.name}">identityDocGivenBy</option>
+								</select>
+
+							</div>
+						</div>
+						<div class="form-group  margin-top-20">
+							<label class="control-label col-md-3">date</label>
+							<div class="col-md-4">
+								<div class="input-group date date-picker"
+									data-date-format="dd.mm.yyyy" id="identityDocDate">
+									<input type="text" class="form-control" name="date"
+										th:value="${person.identityDoc.date}" /> <span
+										class="input-group-btn">
+										<button class="btn default" type="button">
+											<i class="fa fa-calendar"></i>
+										</button>
+									</span>
+								</div>
+								<!-- /input-group -->
+								<span class="help-block"> select a date </span>
+							</div>
+							<script>
+							$('#identityDocDate').datepicker();
+							</script>
+						</div>
+
+						<div class="form-group  margin-top-20">
+							<label class="control-label col-md-3">Firstname <span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-4">
+
+								<div class="input-icon right">
+									<i class="fa"></i> <input type="text" class="form-control"
+										name="identityDocDetails.firstname"
+										th:field="${person.identityDoc.identityDocDetails.firstname}" />
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group  margin-top-20">
+							<label class="control-label col-md-3">Lastname <span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i> <input type="text" class="form-control"
+										name="identityDocDetails.lastname"
+										th:field="${person.identityDoc.identityDocDetails.lastname}" />
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group  margin-top-20">
+							<label class="control-label col-md-3">Midname <span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-4">
+
+								<div class="input-icon right">
+									<i class="fa"></i> <input type="text" class="form-control"
+										name="identityDocDetails.midname"
+										th:field="${person.identityDoc.identityDocDetails.midname}" />
+								</div>
+							</div>
+						</div>
+
+
+						<div class="form-group  margin-top-20">
+							<label class="control-label col-md-3">Fullname <span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-4">
+
+								<div class="input-icon right">
+									<i class="fa"></i> <input type="text" class="form-control"
+										name="identityDocDetails.fullname"
+										th:field="${person.identityDoc.identityDocDetails.fullname}" />
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="tab-pane" id="tab_15_31">
+						<div class="form-group  margin-top-20">
+							<label class="control-label col-md-3">Name <span
+								class="required"> * </span>
+							</label>
+							<div class="col-md-4">
+								<input hidden="true" type="text" id="contactID"
+									name="contact.id" th:field="${person.contact.id}" />
+								<div class="input-icon right">
+									<i class="fa"></i> <input type="text" class="form-control"
+										name="contact.name" th:field="${person.contact.name}" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		</div>
+		<div class="form-actions">
+			<div class="row">
+				<div class="col-md-offset-3 col-md-9">
+					<button type="submit" class="btn green">Submit</button>
+					<button type="button" class="btn default"
+						onclick="window.location.href='/person/list'">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</form>
+
+
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+
+<body>
+
+	<div class="row">
+		<div class="col-md-12">
+
+			<div class="tabbable-custom ">
+				<ul class="nav nav-tabs " id="information_tabs">
+					<li class="active"><a href="#tab_15_1" data-toggle="tab">
+							Information </a></li>
+					<li><a href="#tab_15_2" data-toggle="tab"> === </a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab_15_1">
+						<table
+							class="table table-hover table-condensed table-striped table-bordered compact condensed"
+							id="informationTable">
+							<thead>
+								<tr>
+									<th>Id</th>
+									<th>Name</th>
+									<th>Description</th>
+									<th>isTitle</th>
+									<th>Number</th>
+									<th>Date</th>
+									<th>ObjectTypeId</th>
+									<th>ObjectId</th>
+									<th>Edit</th>
+									<th>Delete</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="s : ${informationList}">
+									<td th:text="${s.id}">Id</td>
+									<td th:text="${s.name}">Name</td>
+									<td th:text="${s.description}">Description</td>
+									<td th:text="${s.isTitle}">isTitle</td>
+									<td th:text="${s.number}">number</td>
+									<td th:text="${s.date}">Date</td>
+									<td th:text="${s.systemObjectTypeId}">ObjectTypeId</td>
+									<td th:text="${s.systemObjectId}">ObjectId</td>
+									<td><a th:href="@{/information/__${s.id}__/details}"
+										role="button" class="btn btn-xs blue-stripe"> View </a></td>
+									<td><a data-remote="false" data-toggle="modal"
+										data-target="#cSystemFormModal"
+										th:href="@{/information/__${s.id}__/edit}" role="button"
+										class="btn btn-xs blue-stripe"> Edit </a></td>
+									<td>
+										<form th:action="@{/information/__${s.id}__/remove}"
+											method="post">
+											<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+										</form>
+									</td>
+								</tr>
+							</tbody>
+
+						</table>
+
+					</div>
+					<div class="tab-pane" id="tab_15_2">2</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+
+			var table3 = $('#informationTable').DataTable({
+		    	stateSave: true,
+		    	"language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
+	    		"info":     false,
+	    		keys: {
+	    	        focus: ':eq(0)'
+	    	    }
+		    } );
+			
+			
+			table3.on('key-focus', function(e, datatable, cell) {
+			
+				var rowData = datatable.row(cell.index().row).data();
+				
+
+				
+				$("#aokmotu_id").val(rowData[0]);
+				
+				var sUrl ="/aokmotu/view/" + rowData[0];
+				
+				$.get(sUrl, function(data) {
+
+					$('#content').html(data);
+				});
+
+				});
+
+			});
+		</script>
+	<script type="text/javascript">
+
+$(document).ready(function() {
+    if (location.hash) {
+        $("a[href='" + location.hash + "']").tab("show");
+    }
+    $(document.body).on("click", "a[data-toggle]", function(event) {
+        location.hash = this.getAttribute("href");
+    });
+});
+$(window).on("popstate", function() {
+    var anchor = location.hash || $("a[data-toggle='tab']").first().attr("href");
+    $("a[href='" + anchor + "']").tab("show");
+});
+</script>
+
+
+
+
+
+
+
+</body>
+</html>

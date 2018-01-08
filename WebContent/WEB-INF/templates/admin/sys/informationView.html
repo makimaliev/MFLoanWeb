@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+
+
+
+<body>
+
+
+
+
+				<div class="row">
+
+					<div class="col-md-12">
+
+
+
+						<div class="row">
+							<div class="col-md-12">
+								<div class="panel panel-primary">
+									<div class="panel-heading">
+										<h3 class="panel-title">Information</h3>
+									</div>
+									<div class="panel-body">
+										<dl class="dl-horizontal">
+
+										</dl>
+
+
+										<dl class="dl-horizontal">
+											<dt>Name</dt>
+											<dd th:text="${information.name}">${Village.name}</dd>
+										</dl>
+
+
+
+
+
+
+
+
+						<div class="tabbable-custom ">
+							<ul class="nav nav-tabs " id="information_tabs">
+								<li class="active"><a href="#tab_15_1" data-toggle="tab">
+										Child information </a></li>
+								<li><a href="#tab_15_2" data-toggle="tab"> Attachments </a></li>
+
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane active" id="tab_15_1">
+
+								
+								
+									<div class="row">
+										<div class="col-md-12">
+
+
+
+											<table
+												class="table table-hover table-condensed table-striped table-bordered compact condensed"
+												id="informationTable">
+												<thead>
+													<tr>
+														<th>Id</th>
+														<th>Name2</th>
+														<th>Edit</th>
+														<th>Delete</th>
+													</tr>
+												</thead>
+
+												<tbody>
+
+													<tr th:each="s : ${information.childInformation}">
+														<td th:text="${s.id}">Id</td>
+														<td th:text="${s.name}">Name</td>
+														<td><a th:href="@{/information/__${s.id}__/details}"
+															role="button" class="btn btn-xs blue-stripe"> View </a></td>
+														<td><a data-remote="false" data-toggle="modal"
+															data-target="#informationFormModal"
+															th:href="@{/information/__${s.id}__/edit}" role="button"
+															class="btn btn-xs blue-stripe"> Edit </a></td>
+														<td>
+															<form th:action="@{/information/attachment/__${s.id}__}"
+																method="post">
+																<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+															</form>
+														</td>
+													</tr>
+												</tbody>
+
+											</table>
+
+
+										</div>
+
+
+									</div>
+
+
+								</div>
+								<div class="tab-pane" id="tab_15_2">
+								
+
+								
+									<div class="row">
+										<div class="col-md-12">
+
+
+
+											<table
+												class="table table-hover table-condensed table-striped table-bordered compact condensed"
+												id="attachmentTable">
+												<thead>
+													<tr>
+														<th>Id</th>
+														<th>Name</th>
+														<th>Edit</th>
+														<th>Delete</th>
+													</tr>
+												</thead>
+
+												<tbody>
+
+													<tr th:each="s : ${information.attachment}">
+														<td th:text="${s.id}">Id</td>
+														<td th:text="${s.name}">Name</td>
+														<td><a th:href="@{/attachment/__${s.id}__/details}"
+															role="button" class="btn btn-xs blue-stripe"> View </a></td>
+														<td><a data-remote="false" data-toggle="modal"
+															data-target="#informationFormModal"
+															th:href="@{/attachment/__${s.id}__/edit}" role="button"
+															class="btn btn-xs blue-stripe"> Edit </a></td>
+														<td>
+															<form th:action="@{/attachment/__${s.id}__/remove}"
+																method="post">
+																<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+															</form>
+														</td>
+													</tr>
+												</tbody>
+
+											</table>
+
+
+										</div>
+
+
+									</div>
+
+								
+								
+								
+								</div>
+							</div>
+						</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+									</div>
+								</div>
+							</div>
+
+
+						</div>
+
+
+
+
+
+
+					</div>
+				</div>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

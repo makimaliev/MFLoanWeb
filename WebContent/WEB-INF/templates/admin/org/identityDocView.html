@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+
+
+
+<body>
+
+
+
+
+
+	<div class="row">
+		<div class="col-md-6">
+
+
+
+
+
+
+
+
+
+
+
+			<div class="tabbable-custom ">
+				<ul class="nav nav-tabs ">
+					<li class="active"><a href="#tab_15_1" data-toggle="tab">
+							Section 1 </a></li>
+					<li><a href="#tab_15_2" data-toggle="tab"> Section 2 </a></li>
+					<li><a href="#tab_15_3" data-toggle="tab"> Section 3 </a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab_15_1">
+
+
+
+							<table
+								class="table table-hover table-condensed table-striped table-bordered compact condensed">
+
+								<tbody>
+									<tr>
+										<td>Name</td>
+										<td th:text="${identityDoc.name}">Name</td>
+									</tr>
+									<tr>
+										<td>Enabled</td>
+										<td th:text="${identityDoc.enabled}">Enabled</td>
+									</tr>									
+									<tr>
+										<td>number</td>
+										<td th:text="${identityDoc.number}">number</td>
+									</tr>									
+
+									<tr>
+										<td>pin</td>
+										<td th:text="${identityDoc.pin}">pin</td>
+									</tr>									
+
+									<tr>
+										<td>identityDocType</td>
+										<td th:text="${identityDoc.identityDocType.name}">identityDocType</td>
+									</tr>									
+
+									<tr>
+										<td>IdentityDocGivenBy</td>
+										<td th:text="${identityDoc.identityDocGivenBy.name}">identityDocGivenBy</td>
+									</tr>									
+
+									<tr>
+										<td>Date</td>
+										<td th:text="${identityDoc.date}">date</td>
+									</tr>									
+
+
+									<tr>
+										<td>Firstname</td>
+										<td th:text="${identityDoc.identityDocDetails.firstname}">Firstnamename</td>
+									</tr>									
+
+									<tr>
+										<td>Lastname</td>
+										<td th:text="${identityDoc.identityDocDetails.Lastname}">Lastname</td>
+									</tr>									
+
+									<tr>
+										<td>Midname</td>
+										<td th:text="${identityDoc.identityDocDetails.midname}">Midname</td>
+									</tr>									
+
+									<tr>
+										<td>Fullname</td>
+										<td th:text="${identityDoc.identityDocDetails.fullname}">Fullname</td>
+									</tr>									
+
+
+								</tbody>
+							</table>
+
+
+					</div>
+					<div class="tab-pane" id="tab_15_2">
+
+
+
+
+
+							<table
+								class="table table-hover table-condensed table-striped table-bordered compact condensed">
+
+								<tbody>
+									<tr>
+										<td>Address line</td>
+										<td th:text="${identityDoc.name}">Address
+											line</td>
+									</tr>
+
+
+								</tbody>
+							</table>
+
+
+
+
+					</div>
+					<div class="tab-pane" id="tab_15_3">3</div>
+				</div>
+			</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		</div>
+
+
+	</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

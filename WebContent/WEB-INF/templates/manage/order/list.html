@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>MFLoan | Credit Orders</title>
+<div th:replace="fragments/header :: header-css" />
+<link th:href="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}" rel="stylesheet" type="text/css" />
+</head>
+<body
+	class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
+	<!-- BEGIN HEADER -->
+	<div th:replace="layout :: header-top" />
+	<!-- END HEADER -->
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div th:replace="layout :: page-container-sidebar" />
+		<!-- END SIDEBAR -->
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<!-- BEGIN CONTENT BODY -->
+			<div class="page-content">
+				<!-- BEGIN PAGE HEADER-->
+				<h1 class="page-title">
+					Credit Orders 
+					<small>create, view, edit, delete credit orders and their types, states </small>
+				</h1>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li><i class="icon-home"></i> <a th:href="@{/}">Home</a> <i class="fa fa-angle-right"></i></li>
+						<li><span>Credit Orders</span></li>
+					</ul>
+					<div class="page-toolbar">
+						<div class="btn-group pull-right">
+							<button type="button" class="btn btn-fit-height grey-salt dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
+								Actions <i class="fa fa-angle-down"></i>
+							</button>
+							<ul class="dropdown-menu pull-right" role="menu">
+								<li><a href="#"> <i class="icon-bell"></i> Action </a></li>
+								<li><a href="#"> <i class="icon-shield"></i> Another action </a></li>
+								<li><a href="#"> <i class="icon-user"></i> Something else here </a></li>
+								<li class="divider"></li>
+								<li><a href="#"> <i class="icon-bag"></i> Separated link </a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- END PAGE HEADER-->
+
+				<div class="row">
+					<div class="col-md-12">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-green"></i> 
+									<span class="caption-subject font-green sbold uppercase">Credit Orders</span>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<div class="table-toolbar">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="btn-group">
+												<a class="btn green" data-toggle="modal" href="#largeOrderNew">
+												Add New Credit Order <i class="fa fa-plus"></i>
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="table-scrollable table-scrollable-borderless">
+									<table class="table table-hover table-light" id="orders">
+										<thead>
+											<tr>
+												<th>Id</th>
+												<th>Registration number</th>
+												<th>Registration date</th>
+												<th>Description</th>
+												<th>Credit Order State</th>
+												<th>Credit Order Type</th>
+												<th>View Details</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+										<tbody>
+											<ordercheck th:if="${#lists.isEmpty(orders)}">
+												<tr class="no-records-found" style="text-align: center;">
+													<td colspan="8">No matching records found</td>
+												</tr>
+											</ordercheck>
+											<order th:each="o : ${orders}">
+												<tr class="clickable-row">
+													<td th:text="${o.id}">Id</td>
+													<td th:text="${o.regNumber}">AB0C1234</td>
+													<td th:text="${o.regDate}">01.01.2017</td>
+													<td th:text="${o.description}">Description here</td>
+													<td th:text="${o.creditOrderState.name}">Active</td>
+													<td th:text="${o.creditOrderType.name}">RPKR</td>
+													<td>
+														<a th:href="@{/manage/order/__${o.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
+													</td>
+													<td>
+														<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#largeOrder' + {o.id}}">Edit</a>
+													</td>
+													<td>
+														<form th:action="@{/manage/order/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+															<input hidden="true" type="text" id="id" name="id" th:value="${o.id}" />
+															<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+														</form>
+													</td>
+												</tr>
+											</order>
+										</tbody>
+									</table>
+								</div>
+								
+								<!-- BEGIN Create modal for a new order -->
+								<div class="modal fade bs-modal-lg" id="largeOrderNew" tabindex="-1" role="dialog" aria-hidden="true">
+	                                <div class="modal-dialog modal-lg">
+	                                    <div class="modal-content">
+	                                        <div class="modal-header">
+	                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+	                                            <h4 class="modal-title">Save Order</h4>
+	                                        </div>
+											<form th:action="@{/manage/order/save}" id="form_sample_2" class="form-horizontal" method="post">
+												<div class="portlet-body">
+			                                        <div class="form-body">
+			                                            <div class="alert alert-danger display-hide">
+			                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
+			                                            </div>
+			                                            <div class="form-group  margin-top-20">
+			                                                <label class="control-label col-md-3">Registration Number
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                	<input hidden="true" type="text" id="id" name="id" th:value="${emptyOrder.id}"/>
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="regNumber" th:value="${emptyOrder.regNumber}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Registration Date</label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+			                                                        <input type="text" class="form-control" name="regDate" th:value="${emptyOrder.regDate}"/>
+			                                                        <span class="input-group-btn">
+			                                                            <button class="btn default" type="button">
+			                                                                <i class="fa fa-calendar"></i>
+			                                                            </button>
+			                                                        </span>
+			                                                    </div>
+			                                                    <span class="help-block"> select a date </span>
+			                                                </div>
+			                                            </div>
+			                                            <!-- 
+			                                            <div class="form-group">
+                                                            <label class="control-label col-md-3">Registration Date</label>
+                                                            <div class="col-md-4">
+                                                                <div class="input-group date form_datetime input-large" data-date-format="yyyy-mm-dd">
+                                                                    <input type="text" size="16" readonly class="form-control" name="regDate" th:value="${emptyOrder.regDate}">
+                                                                    <span class="input-group-btn">
+                                                                        <button class="btn default date-set" type="button">
+                                                                            <i class="fa fa-calendar"></i>
+                                                                        </button>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        -->
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Description
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="description" th:value="${emptyOrder.description}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Credit Order State
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="stateId">
+			                                                        <option value="">Select...</option>
+			                                                        <option th:each="state : ${states}"
+															               th:value="${state.id}"
+															               th:text="${state.name}">Category 1</option>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Credit Order Type
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="typeId">
+			                                                        <option value="">Select...</option>
+			                                                        <option th:each="type : ${types}"
+															               th:value="${type.id}"
+															               th:text="${type.name}">Category 1</option>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                        </div>
+			                                	</div>
+												<div class="modal-footer">
+													<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+													<button type="submit" class="btn green">Save</button>
+												</div>
+											</form>	                                        
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- END Create modal for a new order -->
+								
+								<!-- BEGIN Create modal for each order -->
+								<state th:each="o : ${orders}">
+									<div class="modal fade bs-modal-lg" th:id="${'largeOrder' + {o.id}}" tabindex="-1" role="basic" aria-hidden="true">
+										<div class="modal-dialog modal-lg">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+													<h4 class="modal-title">Save Order</h4>
+												</div>
+												<form th:action="@{/manage/order/save}" id="form_sample_2" class="form-horizontal" method="post">
+													<div class="portlet-body">
+			                                        <div class="form-body">
+			                                            <div class="alert alert-danger display-hide">
+			                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
+			                                            </div>
+			                                            <div class="form-group  margin-top-20">
+			                                                <label class="control-label col-md-3">Registration Number
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                	<input hidden="true" type="text" id="id" name="id" th:value="${o.id}"/>
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="regNumber" th:value="${o.regNumber}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Registration Date</label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+			                                                        <input type="text" class="form-control" name="regDate" th:value="${o.regDate}"/>
+			                                                        <span class="input-group-btn">
+			                                                            <button class="btn default" type="button">
+			                                                                <i class="fa fa-calendar"></i>
+			                                                            </button>
+			                                                        </span>
+			                                                    </div>
+			                                                    <span class="help-block"> select a date </span>
+			                                                </div>
+			                                            </div>
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Description
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="description" th:value="${o.description}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Credit Order State
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="stateId">
+			                                                        <option value="">Select...</option>
+			                                                        <states th:each="state : ${states}">
+			                                                        <option th:if="${o.id > 0 and state.name == o.creditOrderState.name}"
+															               th:value="${state.id}"
+															               th:text="${state.name}"
+															               selected="selected">Category 1</option>
+															        <option th:unless="${o.id > 0 and state.name == o.creditOrderState.name}"
+															               th:value="${state.id}"
+															               th:text="${state.name}">Category 1</option>
+															        </states>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Credit Order Type
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="typeId">
+			                                                        <option value="">Select...</option>
+			                                                        <types th:each="type : ${types}">
+			                                                        <option th:if="${o.id > 0 and type.name == o.creditOrderType.name}"
+															               th:value="${type.id}"
+															               th:text="${type.name}"
+															               selected="selected">Category 1</option>
+															        <option th:unless="${o.id > 0 and type.name == o.creditOrderType.name}"
+															               th:value="${type.id}"
+															               th:text="${type.name}">Category 1</option>
+			                                                        </types>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                        </div>
+			                                	</div>
+												<div class="modal-footer">
+													<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+													<button type="submit" class="btn green">Save</button>
+												</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</state>
+								<!-- END Create modal for each order -->
+								
+							</div>
+						</div>
+						<!-- END BORDERED TABLE PORTLET-->
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-red"></i> 
+									<span class="caption-subject font-red sbold uppercase">Credit Order States</span>
+								</div>
+								<div class="tools">
+	                                <a href="javascript:;" class="expand"> </a>
+	                            </div>
+							</div>
+							<div class="portlet-body" style="display:none">
+								<div class="table-toolbar">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="btn-group">
+												<a class="btn red " data-toggle="modal" href="#basicStateNew">
+												Add New State
+												<i class="fa fa-plus"></i></a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="table-scrollable table-scrollable-borderless">
+									<table class="table table-hover table-light">
+										<thead>
+											<tr>
+												<th>Name</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+										<tbody>
+											<statecheck th:if="${#lists.isEmpty(states)}">
+												<tr class="no-records-found" style="text-align: center;">
+													<td colspan="8">No matching records found</td>
+												</tr>
+											</statecheck>
+											<state th:each="s : ${states}">
+												<tr>
+													<td th:text="${s.name}">Name</td>
+													<td>
+														<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#basicState' + {s.id}}">Edit</a>
+													</td>
+													<td>
+														<form th:action="@{/manage/order/state/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+															<input hidden="true" type="text" id="id" name="id" th:value="${s.id}" />
+															<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+														</form>
+													</td>
+												</tr>
+											</state>
+										</tbody>
+
+									</table>
+								</div>
+								
+								<!-- BEGIN Create modal for a new state -->
+								<div class="modal fade" id="basicStateNew" tabindex="-1" role="basic" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+												<h4 class="modal-title">Save Order State</h4>
+											</div>
+											<form th:action="@{/manage/order/state/save}" id="form_sample_2" class="form-horizontal" method="post">
+												<div class="portlet-body">
+													<div class="form-body">
+														<div class="alert alert-danger display-hide">
+															<button class="close" data-close="alert"></button>
+															You have some form errors. Please check below.
+														</div>
+														<div class="form-group  margin-top-20">
+															<label class="control-label col-md-3">Name <span class="required"> * </span>
+															</label>
+															<div class="col-md-4">
+																<input hidden="true" type="text" id="id" name="id" th:value="${emptyState.id}"/>
+																<div class="input-icon right">
+																	<i class="fa"></i> 
+																	<input type="text" class="form-control" name="name" th:value="${emptyState.name}"/>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+													<button type="submit" class="btn green">Save</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+								<!-- END Create modal for a new state -->								
+								
+								<!-- BEGIN Create modal for each state -->
+								<state th:each="s : ${states}">
+									<div class="modal fade" th:id="${'basicState' + {s.id}}" tabindex="-1" role="basic" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+													<h4 class="modal-title">Save Order State</h4>
+												</div>
+												<form th:action="@{/manage/order/state/save}" id="form_sample_2" class="form-horizontal" method="post">
+													<div class="portlet-body">
+														<div class="form-body">
+															<div class="alert alert-danger display-hide">
+																<button class="close" data-close="alert"></button>
+																You have some form errors. Please check below.
+															</div>
+															<div class="form-group  margin-top-20">
+																<label class="control-label col-md-3">Name <span class="required"> * </span>
+																</label>
+																<div class="col-md-4">
+																	<input hidden="true" type="text" id="id" name="id" th:value="${s.id}"/>
+																	<div class="input-icon right">
+																		<i class="fa"></i> 
+																		<input type="text" class="form-control" name="name" th:value="${s.name}"/>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+														<button type="submit" class="btn green">Save</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</state>
+								<!-- END Create modal for each state -->
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-red"></i>
+									<span class="caption-subject font-red sbold uppercase">Credit Order Types</span>
+								</div>
+								<div class="tools">
+	                                <a href="javascript:;" class="expand"> </a>
+	                            </div>
+							</div>
+							<div class="portlet-body" style="display:none">
+								<div class="table-toolbar">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="btn-group">
+												<a class="btn red " data-toggle="modal" href="#basicTypeNew">
+												Add New Type
+												<i class="fa fa-plus"></i></a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="table-scrollable table-scrollable-borderless">
+									<table class="table table-hover table-light">
+										<thead>
+											<tr>
+												<th>Name</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+										<tbody>
+											<typecheck th:if="${#lists.isEmpty(types)}">
+											<tr class="no-records-found" style="text-align: center;">
+												<td colspan="8">No matching records found</td>
+											</tr>
+											</typecheck>
+											<type th:each="t : ${types}">
+											<tr>
+												<td th:text="${t.name}">Name</td>
+												<td>
+													<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#basicType' + {t.id}}">Edit</a>
+												</td>
+												<td>
+													<form th:action="@{/manage/order/type/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+														<input hidden="true" type="text" id="id" name="id" th:value="${t.id}" />
+														<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+													</form>
+												</td>
+											</tr>
+											</type>
+										</tbody>
+									</table>
+								</div>
+								
+								<!-- BEGIN Create modal for a new type -->
+								<div class="modal fade" id="basicTypeNew" tabindex="-1" role="basic" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+												<h4 class="modal-title">Save Order Type</h4>
+											</div>
+											<form th:action="@{/manage/order/type/save}" id="form_sample_2" class="form-horizontal" method="post">
+												<div class="portlet-body">
+													<div class="form-body">
+														<div class="alert alert-danger display-hide">
+															<button class="close" data-close="alert"></button>
+															You have some form errors. Please check below.
+														</div>
+														<div class="form-group  margin-top-20">
+															<label class="control-label col-md-3">Name <span class="required"> * </span>
+															</label>
+															<div class="col-md-4">
+																<input hidden="true" type="text" id="id" name="id" th:value="${emptyType.id}"/>
+																<div class="input-icon right">
+																	<i class="fa"></i> 
+																	<input type="text" class="form-control" name="name" th:value="${emptyType.name}"/>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+													<button type="submit" class="btn green">Save</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+								<!-- END Create modal for a new type -->								
+								
+								<!-- BEGIN Create modal for each type -->
+								<state th:each="t : ${types}">
+									<div class="modal fade" th:id="${'basicType' + {t.id}}" tabindex="-1" role="basic" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+													<h4 class="modal-title">Save Order Type</h4>
+												</div>
+												<form th:action="@{/manage/order/type/save}" id="form_sample_2" class="form-horizontal" method="post">
+													<div class="portlet-body">
+														<div class="form-body">
+															<div class="alert alert-danger display-hide">
+																<button class="close" data-close="alert"></button>
+																You have some form errors. Please check below.
+															</div>
+															<div class="form-group  margin-top-20">
+																<label class="control-label col-md-3">Name <span class="required"> * </span>
+																</label>
+																<div class="col-md-4">
+																	<input hidden="true" type="text" id="id" name="id" th:value="${t.id}"/>
+																	<div class="input-icon right">
+																		<i class="fa"></i> 
+																		<input type="text" class="form-control" name="name" th:value="${t.name}"/>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+														<button type="submit" class="btn green">Save</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</state>
+								<!-- END Create modal for each type -->
+							</div>
+						</div>
+						<!-- END BORDERED TABLE PORTLET-->
+					</div>
+				</div>
+			</div>
+			<!-- END CONTENT BODY -->
+		</div>
+		<!-- END CONTENT -->
+		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
+	</div>
+	<!-- END CONTAINER -->
+	<div th:replace="layout :: footer" />
+	<div th:replace="fragments/footer :: footer-js" />
+	<script th:src="@{/assets/pages/scripts/ui-modals.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/pages/scripts/form-validation.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/pages/scripts/components-date-time-pickers.min.js}" type="text/javascript"></script>
+</body>
+</html>

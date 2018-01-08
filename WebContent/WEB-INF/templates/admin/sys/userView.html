@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+
+
+
+<body>
+
+
+
+	<div class="tabbable-custom ">
+		<ul class="nav nav-tabs " id="role_tabs">
+			<li class="active">
+				<a href="#userListOfRole" data-toggle="tab">Роли</a>
+			</li>
+			<li>
+				<a href="#supervisorTermListOfUser" data-toggle="tab">Кураторство</a>
+			</li>			
+		</ul>
+		
+		<div class="tab-content">
+			<div class="tab-pane active" id="roleListOfRole">
+
+
+				<table
+					class="table table-hover table-condensed table-striped table-bordered compact condensed"
+					id="roleTable">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+							<th>Code</th>
+							<th>Role</th>
+							<th>View</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+
+					<tbody>
+
+						<tr th:each="roleInList : ${user.roles}">
+							<td th:text="${roleInList.id}">Id</td>
+							<td th:text="${roleInList.name}">Name</td>
+							<td><a th:href="@{/role/__${roleInList.id}__/details}"
+								role="button" class="btn btn-xs green-stripe"> View </a></td>
+							<td><a data-remote="false" data-toggle="modal"
+								data-target="#userFormModal"
+								th:href="@{/role/__${roleInList.id}__/edit}"
+								role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
+
+							<td>
+								<form th:action="@{/role/__${roleInList.id}__/remove}"
+									method="post">
+									<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+								</form>
+							</td>
+						</tr>
+					</tbody>
+
+				</table>
+
+
+
+			</div>
+			
+			
+<div class="tab-pane" id="supervisorTermListOfUser">
+
+
+				<table
+					class="table table-hover table-condensed table-striped table-bordered compact condensed"
+					id="supervisorTermTable">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+							<th>Region</th>
+							<th>District</th>
+							<th>Department</th>
+							<th>workSector</th>
+							<th>DebtorType</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+
+					<tbody>
+
+						<tr th:each="supervisorTermInList : ${user.supervisorTerms}">
+							<td th:text="${supervisorTermInList.id}">Id</td>
+							<td th:text="${supervisorTermInList.name}">Name</td>
+							<td th:text="${supervisorTermInList?.region.name}">Name</td>
+							<td th:text="${supervisorTermInList?.district.name}">Name</td>
+							<td th:text="${supervisorTermInList?.department.name}">Name</td>
+							<td th:text="${supervisorTermInList?.work_sector_id}">Name</td>
+							<td th:text="${supervisorTermInList?.debtor_type_id}">Name</td>
+							<td><a th:href="@{/supervisorTerm/__${supervisorTermInList.id}__/details}"
+								role="button" class="btn btn-xs green-stripe"> View </a></td>
+							<td><a data-remote="false" data-toggle="modal"
+								data-target="#userFormModal"
+								th:href="@{/supervisorTerm/__${supervisorTermInList.id}__/edit}"
+								role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
+
+							<td>
+								<form th:action="@{/supervisorTerm/__${supervisorTermInList.id}__/remove}"
+									method="post">
+									<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+								</form>
+							</td>
+						</tr>
+					</tbody>
+
+				</table>
+
+
+
+			</div>			
+		</div>
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+
+
+
+<body>
+
+
+
+				<div class="row">
+					<div class="col-md-12">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet portlet-fit ">
+							<div class="portlet-body">
+
+								<div>
+									<table class="table table-hover table-condensed table-striped table-bordered compact condensed" id="villageTable">
+										<thead>
+											<tr>
+												<th>Id</th>
+												<th>Name</th>
+												<th>Code</th>
+												<th>Aokmotu</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+
+										<tbody>
+											
+											<tr>
+												<td th:text="${village.id}">Id</td>
+												<td th:text="${village.name}">Name</td>     
+												<td th:text="${village.code}">Code</td>
+												<td th:text="${village.aokmotu.name}">District</td>												
+												<td>
+													<a data-remote="false" data-toggle="modal"
+													data-target="#villageFormModal" th:href="@{/village/edit/__${village.id}__}"
+													role="button" class="btn btn-xs blue-stripe"> Edit
+													</a>
+												</td>
+												<td>
+													<form th:action="@{/village/remove/__${village.id}__}" method="post">
+														<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+													</form>
+												</td>
+											</tr>
+										</tbody>
+
+									</table>
+								</div>
+
+
+								<div class="col-md-12">
+
+									<!-- Default bootstrap modal example -->
+									<div class="modal fade" id="villageFormModal" tabindex="-1"
+										role="dialog" aria-labelledby="myModalLabel"
+										aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+													<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+												</div>
+												<div class="modal-body">...</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-default"
+														data-dismiss="modal">Close</button>
+												</div>
+											</div>
+										</div>
+									</div>
+
+
+								</div>
+
+
+
+							</div>
+						</div>
+						<!-- END BORDERED TABLE PORTLET-->
+					</div>
+				</div>
+				
+				
+
+
+	<div class="tabbable-custom ">
+		<ul class="nav nav-tabs " id="village_tabs">
+			<li class="active">
+				<a href="#debtorListOfVillage" data-toggle="tab">Заемщик</a>
+			</li>
+			<li>
+				<a href="#loanListOfVillage" data-toggle="tab">Кредитный договор</a>
+			</li>
+		</ul>
+		
+		<div class="tab-content">
+
+			<div class="tab-pane active" id="debtorListOfDistrict">
+			</div>
+			<div class="tab-pane" id="loanListOfDistrict">
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+
+</body>
+</html>

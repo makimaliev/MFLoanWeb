@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>MFLoan | Collateral Details</title>
+<div th:replace="fragments/header :: header-css" />
+<link th:href="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}" rel="stylesheet" type="text/css" />
+</head>
+<body
+	class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
+	<!-- BEGIN HEADER -->
+	<div th:replace="layout :: header-top" />
+	<!-- END HEADER -->
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div th:replace="layout :: page-container-sidebar" />
+		<!-- END SIDEBAR -->
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<!-- BEGIN CONTENT BODY -->
+			<div class="page-content">
+				<!-- BEGIN PAGE HEADER-->
+				<h1 class="page-title">
+					Collateral Details
+					<small>create, view, edit, delete collateral agreements </small>
+				</h1>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li><i class="icon-home"></i> <a th:href="@{/}">Home</a> <i class="fa fa-angle-right"></i></li>
+						<li><a th:href="@{/manage/collateral/list}">Collaterals</a> <i class="fa fa-angle-right"></i></li>
+						<li><span>Collateral</span></li>
+					</ul>
+					<div class="page-toolbar">
+						<div class="btn-group pull-right">
+							<button type="button"
+								class="btn btn-fit-height grey-salt dropdown-toggle"
+								data-toggle="dropdown" data-hover="dropdown" data-delay="1000"
+								data-close-others="true">
+								Actions <i class="fa fa-angle-down"></i>
+							</button>
+							<ul class="dropdown-menu pull-right" role="menu">
+								<li><a href="#"> <i class="icon-bell"></i> Action </a></li>
+								<li><a href="#"> <i class="icon-shield"></i> Another action </a></li>
+								<li><a href="#"> <i class="icon-user"></i> Something else here </a></li>
+								<li class="divider"></li>
+								<li><a href="#"> <i class="icon-bag"></i> Separated link </a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- END PAGE HEADER-->
+				<div class="row">
+					<div class="col-md-12">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-green"></i> 
+									<span class="caption-subject font-green sbold uppercase" th:text="'Collateral : '+${collateral.name}">Collateral name</span>
+								</div>
+							</div>
+							<div class="portlet-body form">
+								<form class="form-horizontal" role="form">
+									<div class="form-body" style="padding: 20px">
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Id:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${collateral.id}">1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Collateral name:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${collateral.name}">Coll 1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+									</div>
+								</form>
+							</div>
+						</div>
+						<!-- END BORDERED TABLE PORTLET-->
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-md-12">
+						<div class="tabbable-line boxless tabbable-reversed">
+							<ul class="nav nav-tabs">
+								<li class="active"><a href="#tab_0" data-toggle="tab"> Collateral Agreements </a></li>
+								<li><a href="#tab_1" data-toggle="tab"> Collateral Summaries </a></li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane active" id="tab_0">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="portlet light portlet-fit">
+												<div class="portlet-body">
+													<div class="table-toolbar">
+														<div class="row">
+															<div class="col-md-6">
+																<div class="btn-group">
+																	<a class="btn green" data-toggle="modal" href="#largeAgreementNew">
+																	Add New Collateral Agreement <i class="fa fa-plus"></i>
+																	</a>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="table-scrollable table-scrollable-borderless">
+														<table class="table table-hover table-light"
+															id="entityLists">
+															<thead>
+																<tr>
+																	<th>Id</th>
+																	<th>Agreement number</th>
+																	<th>Agreement date</th>
+																	<th>Collateral office registration number</th>
+																	<th>Collateral office registration date</th>
+																	<th>Notary office registration number</th>
+																	<th>Notary office registration date</th>
+																	<th>Arrest registration number</th>
+																	<th>Arrest registration date</th>
+																	<th>View Details</th>
+																	<th>Edit</th>
+																	<th>Delete</th>
+																</tr>
+															</thead>
+						
+															<tbody>
+																<statecheck th:if="${#lists.isEmpty(agreements)}">
+																<tr class="no-records-found" style="text-align: center;">
+																	<td colspan="5">No matching records found</td>
+																</tr>
+																</statecheck>
+																<state th:each="agreement : ${agreements}">
+																<tr class="clickable-row">
+																	<td th:text="${agreement.id}">Id</td>
+																	<td th:text="${agreement.agreementNumber}">AB0C1234</td>
+																	<td th:text="${agreement.agreementDate}"></td>
+																	<td th:text="${agreement.collateralOfficeRegNumber}">Id</td>
+																	<td th:text="${agreement.collateralOfficeRegDate}">Id</td>
+																	<td th:text="${agreement.notaryOfficeRegNumber}">Id</td>
+																	<td th:text="${agreement.notaryOfficeRegDate}">Id</td>
+																	<td th:text="${agreement.arrestRegNumber}">Id</td>
+																	<td th:text="${agreement.arrestRegDate}">Id</td>
+																	<td>
+																		<a th:href="@{/manage/collateral/__${collateral.id}__/collateralagreement/__${agreement.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
+																	</td>
+																	<td>
+																		<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#largeAgreement' + {agreement.id}}">Edit</a>
+																	</td>
+																	<td>
+																		<form th:action="@{/manage/collateral/__${collateral.id}__/agreement/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+																			<input hidden="true" type="text" id="id" name="id" th:value="${agreement.id}" />
+																			<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+																		</form>
+																	</td>
+																</tr>
+																</state>
+															</tbody>
+														</table>
+													</div>
+													<!-- BEGIN Create modal for a new agreement -->
+													<div class="modal fade bs-modal-lg" id="largeAgreementNew" tabindex="-1" role="dialog" aria-hidden="true">
+						                                <div class="modal-dialog modal-lg">
+						                                    <div class="modal-content">
+						                                        <div class="modal-header">
+						                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+						                                            <h4 class="modal-title">Save Collateral Agreement</h4>
+						                                        </div>
+																<form th:action="@{/manage/collateral/__${collateral.id}__/agreement/save}" id="form_sample_2" class="form-horizontal" method="post">
+																	<div class="portlet-body">
+								                                        <div class="form-body">
+								                                            <div class="alert alert-danger display-hide">
+								                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
+								                                            </div>
+								                                            
+								                                            <div class="form-group  margin-top-20">
+								                                                <label class="control-label col-md-3">Agreement number
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                	<input hidden="true" type="text" id="id" name="id" th:value="${emptyAgreement.id}"/>
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="agreementNumber" th:value="${emptyAgreement.agreementNumber}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group">
+								                                                <label class="control-label col-md-3">Agreement Date</label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+								                                                        <input type="text" class="form-control" name="agreementDate" th:value="${emptyAgreement.agreementDate}"/>
+								                                                        <span class="input-group-btn">
+								                                                            <button class="btn default" type="button">
+								                                                                <i class="fa fa-calendar"></i>
+								                                                            </button>
+								                                                        </span>
+								                                                    </div>
+								                                                    <span class="help-block"> select a date </span>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group">
+								                                                <label class="control-label col-md-3">Collateral office registration number
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="collateralOfficeRegNumber" th:value="${emptyAgreement.collateralOfficeRegNumber}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group">
+								                                                <label class="control-label col-md-3">Collateral office registration date</label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+								                                                        <input type="text" class="form-control" name="collateralOfficeRegDate" th:value="${emptyAgreement.collateralOfficeRegDate}"/>
+								                                                        <span class="input-group-btn">
+								                                                            <button class="btn default" type="button">
+								                                                                <i class="fa fa-calendar"></i>
+								                                                            </button>
+								                                                        </span>
+								                                                    </div>
+								                                                    <span class="help-block"> select a date </span>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group">
+								                                                <label class="control-label col-md-3">Notary office registration number
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="notaryOfficeRegNumber" th:value="${emptyAgreement.notaryOfficeRegNumber}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group">
+								                                                <label class="control-label col-md-3">Notary office registration date</label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+								                                                        <input type="text" class="form-control" name="notaryOfficeRegDate" th:value="${emptyAgreement.notaryOfficeRegDate}"/>
+								                                                        <span class="input-group-btn">
+								                                                            <button class="btn default" type="button">
+								                                                                <i class="fa fa-calendar"></i>
+								                                                            </button>
+								                                                        </span>
+								                                                    </div>
+								                                                    <span class="help-block"> select a date </span>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group">
+								                                                <label class="control-label col-md-3">Arrest registration number
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="arrestRegNumber" th:value="${emptyAgreement.arrestRegNumber}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group">
+								                                                <label class="control-label col-md-3">Arrest registration date</label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+								                                                        <input type="text" class="form-control" name="arrestRegDate" th:value="${emptyAgreement.arrestRegDate}"/>
+								                                                        <span class="input-group-btn">
+								                                                            <button class="btn default" type="button">
+								                                                                <i class="fa fa-calendar"></i>
+								                                                            </button>
+								                                                        </span>
+								                                                    </div>
+								                                                    <span class="help-block"> select a date </span>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                        </div>
+								                                	</div>
+																	<div class="modal-footer">
+																		<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+																		<button type="submit" class="btn green">Save</button>
+																	</div>
+																</form>    
+						                                    </div>
+						                                </div>
+						                            </div>
+						                            <!-- END Create modal for a new agreement -->
+													
+													<!-- BEGIN Create modal for each agreement -->
+													<state th:each="agreement: ${agreements}">
+														<div class="modal fade bs-modal-lg" th:id="${'largeAgreement' + {agreement.id}}" tabindex="-1" role="basic" aria-hidden="true">
+															<div class="modal-dialog modal-lg">
+																<div class="modal-content">
+																	<div class="modal-header">
+																		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+																		<h4 class="modal-title">Save Collateral Agreement</h4>
+																	</div>
+																	<form th:action="@{/manage/collateral/__${collateral.id}__/agreement/save}" id="form_sample_2" class="form-horizontal" method="post">
+																		<div class="portlet-body">
+								                                        <div class="form-body">
+								                                            <div class="alert alert-danger display-hide">
+								                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
+								                                            </div>
+								                                            
+								                                            <div class="form-group  margin-top-20">
+								                                                <label class="control-label col-md-3">Agreement number
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                	<input hidden="true" type="text" id="id" name="id" th:value="${agreement.id}"/>
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="agreementNumber" th:value="${agreement.agreementNumber}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group">
+								                                                <label class="control-label col-md-3">Agreement Date</label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+								                                                        <input type="text" class="form-control" name="agreementDate" th:value="${agreement.agreementDate}"/>
+								                                                        <span class="input-group-btn">
+								                                                            <button class="btn default" type="button">
+								                                                                <i class="fa fa-calendar"></i>
+								                                                            </button>
+								                                                        </span>
+								                                                    </div>
+								                                                    <span class="help-block"> select a date </span>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group">
+								                                                <label class="control-label col-md-3">Collateral office registration number
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="collateralOfficeRegNumber" th:value="${agreement.collateralOfficeRegNumber}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group">
+								                                                <label class="control-label col-md-3">Collateral office registration date</label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+								                                                        <input type="text" class="form-control" name="collateralOfficeRegDate" th:value="${agreement.collateralOfficeRegDate}"/>
+								                                                        <span class="input-group-btn">
+								                                                            <button class="btn default" type="button">
+								                                                                <i class="fa fa-calendar"></i>
+								                                                            </button>
+								                                                        </span>
+								                                                    </div>
+								                                                    <span class="help-block"> select a date </span>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group">
+								                                                <label class="control-label col-md-3">Notary office registration number
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="notaryOfficeRegNumber" th:value="${agreement.notaryOfficeRegNumber}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group">
+								                                                <label class="control-label col-md-3">Notary office registration date</label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+								                                                        <input type="text" class="form-control" name="notaryOfficeRegDate" th:value="${agreement.notaryOfficeRegDate}"/>
+								                                                        <span class="input-group-btn">
+								                                                            <button class="btn default" type="button">
+								                                                                <i class="fa fa-calendar"></i>
+								                                                            </button>
+								                                                        </span>
+								                                                    </div>
+								                                                    <span class="help-block"> select a date </span>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group">
+								                                                <label class="control-label col-md-3">Arrest registration number
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="arrestRegNumber" th:value="${agreement.arrestRegNumber}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group">
+								                                                <label class="control-label col-md-3">Arrest registration date</label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+								                                                        <input type="text" class="form-control" name="arrestRegDate" th:value="${agreement.arrestRegDate}"/>
+								                                                        <span class="input-group-btn">
+								                                                            <button class="btn default" type="button">
+								                                                                <i class="fa fa-calendar"></i>
+								                                                            </button>
+								                                                        </span>
+								                                                    </div>
+								                                                    <span class="help-block"> select a date </span>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                        </div>
+								                                	</div>
+																	<div class="modal-footer">
+																		<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+																		<button type="submit" class="btn green">Save</button>
+																	</div>
+																	</form>
+																</div>
+															</div>
+														</div>
+													</state>
+													<!-- END Create modal for each agreement -->
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="tab-pane" id="tab_1">
+										<div class="row">
+										<div class="col-md-12">
+											<div class="portlet light portlet-fit">
+												<div class="portlet-body">
+													<div class="table-toolbar">
+														<div class="row">
+															<div class="col-md-6">
+																<div class="btn-group">
+																	<a class="btn green" data-toggle="modal" href="#largeSummaryNew">
+																	Add New Collateral Summary <i class="fa fa-plus"></i>
+																	</a>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="table-scrollable table-scrollable-borderless">
+														<table class="table table-hover table-light"
+															id="entityLists">
+															<thead>
+																<tr>
+																	<th>Id</th>
+																	<th>On date</th>
+																	<th>Agreement quantity</th>
+																	<th>Guarantor quantity</th>
+																	<th>Collateral Loan Cover Ratio</th>
+																	<th>Collateral Amount</th>
+																	<th>Loan Amount</th>
+																	<th>Item Average Condition</th>
+																	<th>Item Worst Condition</th>
+																	<th>Item Average Condition By Collateral</th>
+																	<th>Item Average Condition By Loan</th>
+																	<!-- <th>View Details</th> -->
+																	<th>Edit</th>
+																	<th>Delete</th>
+																</tr>
+															</thead>
+						
+															<tbody>
+																<statecheck th:if="${#lists.isEmpty(summaries)}">
+																<tr class="no-records-found" style="text-align: center;">
+																	<td colspan="14">No matching records found</td>
+																</tr>
+																</statecheck>
+																<state th:each="summary : ${summaries}">
+																<tr class="clickable-row">
+																	<td th:text="${summary.id}">Id</td>
+																	<td th:text="${summary.onDate}"></td>
+																	<td th:text="${summary.agreementQuantity}"></td>
+																	<td th:text="${summary.guarantorQuantity}"></td>
+																	<td th:text="${summary.collateralLoanCoverRatio}"></td>
+																	<td th:text="${summary.collateralAmount}"></td>
+																	<td th:text="${summary.loanAmount}"></td>
+																	<td th:text="${summary.itemAverageCondition}"></td>
+																	<td th:text="${summary.itemWorstCondition}"></td>
+																	<td th:text="${summary.itemAvgConditionByCollateral}"></td>
+																	<td th:text="${summary.itemAvgConditionByLoan}"></td>
+																	<!-- 
+																	<td>
+																		<a th:href="@{/manage/collateral/__${collateral.id}__/collateralagreement/__${agreement.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
+																	</td>
+																	 -->
+																	<td>
+																		<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#largeSummary' + {summary.id}}">Edit</a>
+																	</td>
+																	<td>
+																		<form th:action="@{/manage/collateral/__${collateral.id}__/summary/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+																			<input hidden="true" type="text" id="id" name="id" th:value="${summary.id}" />
+																			<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+																		</form>
+																	</td>
+																</tr>
+																</state>
+															</tbody>
+														</table>
+													</div>
+													<!-- BEGIN Create modal for a new summary -->
+													<div class="modal fade bs-modal-lg" id="largeSummaryNew" tabindex="-1" role="dialog" aria-hidden="true">
+						                                <div class="modal-dialog modal-lg">
+						                                    <div class="modal-content">
+						                                        <div class="modal-header">
+						                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+						                                            <h4 class="modal-title">Save Collateral Summary</h4>
+						                                        </div>
+																<form th:action="@{/manage/collateral/__${collateral.id}__/summary/save}" id="form_sample_2" class="form-horizontal" method="post">
+																	<div class="portlet-body">
+								                                        <div class="form-body">
+								                                            <div class="alert alert-danger display-hide">
+								                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
+								                                            </div>
+								                                            
+								                                            <div class="form-group  margin-top-20">
+								                                                <label class="control-label col-md-3">On Date</label>
+								                                                <div class="col-md-4">
+								                                                	<input hidden="true" type="text" id="id" name="id" th:value="${emptySummary.id}"/>
+								                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+								                                                        <input type="text" class="form-control" name="onDate" th:value="${emptySummary.onDate}"/>
+								                                                        <span class="input-group-btn">
+								                                                            <button class="btn default" type="button">
+								                                                                <i class="fa fa-calendar"></i>
+								                                                            </button>
+								                                                        </span>
+								                                                    </div>
+								                                                    <span class="help-block"> select a date </span>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group ">
+								                                                <label class="control-label col-md-3">Agreement quantity
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="agreementQuantity" th:value="${emptySummary.agreementQuantity}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group ">
+								                                                <label class="control-label col-md-3">Guarantor quantity
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="guarantorQuantity" th:value="${emptySummary.guarantorQuantity}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group ">
+								                                                <label class="control-label col-md-3">Collateral Loan Cover Ratio
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="collateralLoanCoverRatio" th:value="${emptySummary.collateralLoanCoverRatio}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group ">
+								                                                <label class="control-label col-md-3">Collateral Amount
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="collateralAmount" th:value="${emptySummary.collateralAmount}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group ">
+								                                                <label class="control-label col-md-3">Loan Amount
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="loanAmount" th:value="${emptySummary.loanAmount}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group ">
+								                                                <label class="control-label col-md-3">Item Average Condition
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="itemAverageCondition" th:value="${emptySummary.itemAverageCondition}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group ">
+								                                                <label class="control-label col-md-3">Item Worst Condition
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="itemWorstCondition" th:value="${emptySummary.itemWorstCondition}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group ">
+								                                                <label class="control-label col-md-3">Item Avg Condition By Collateral
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="itemAvgConditionByCollateral" th:value="${emptySummary.itemAvgConditionByCollateral}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group ">
+								                                                <label class="control-label col-md-3">Item Avg Condition By Loan
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="itemAvgConditionByLoan" th:value="${emptySummary.itemAvgConditionByLoan}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                        </div>
+								                                	</div>
+																	<div class="modal-footer">
+																		<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+																		<button type="submit" class="btn green">Save</button>
+																	</div>
+																</form>    
+						                                    </div>
+						                                </div>
+						                            </div>
+						                            <!-- END Create modal for a new summary -->
+													
+													<!-- BEGIN Create modal for each summary -->
+													<state th:each="summary: ${summaries}">
+														<div class="modal fade bs-modal-lg" th:id="${'largeSummary' + {summary.id}}" tabindex="-1" role="basic" aria-hidden="true">
+															<div class="modal-dialog modal-lg">
+																<div class="modal-content">
+																	<div class="modal-header">
+																		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+																		<h4 class="modal-title">Save Collateral Summary</h4>
+																	</div>
+																	<form th:action="@{/manage/collateral/__${collateral.id}__/summary/save}" id="form_sample_2" class="form-horizontal" method="post">
+																		<div class="portlet-body">
+								                                        <div class="form-body">
+								                                            <div class="alert alert-danger display-hide">
+								                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
+								                                            </div>
+								                                            
+								                                            <div class="form-group  margin-top-20">
+								                                                <label class="control-label col-md-3">On Date</label>
+								                                                <div class="col-md-4">
+								                                                	<input hidden="true" type="text" id="id" name="id" th:value="${summary.id}"/>
+								                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+								                                                        <input type="text" class="form-control" name="onDate" th:value="${summary.onDate}"/>
+								                                                        <span class="input-group-btn">
+								                                                            <button class="btn default" type="button">
+								                                                                <i class="fa fa-calendar"></i>
+								                                                            </button>
+								                                                        </span>
+								                                                    </div>
+								                                                    <span class="help-block"> select a date </span>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group ">
+								                                                <label class="control-label col-md-3">Agreement quantity
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="agreementQuantity" th:value="${summary.agreementQuantity}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group ">
+								                                                <label class="control-label col-md-3">Guarantor quantity
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="guarantorQuantity" th:value="${summary.guarantorQuantity}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group ">
+								                                                <label class="control-label col-md-3">Collateral Loan Cover Ratio
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="collateralLoanCoverRatio" th:value="${summary.collateralLoanCoverRatio}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group ">
+								                                                <label class="control-label col-md-3">Collateral Amount
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="collateralAmount" th:value="${summary.collateralAmount}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group ">
+								                                                <label class="control-label col-md-3">Loan Amount
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="loanAmount" th:value="${summary.loanAmount}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group ">
+								                                                <label class="control-label col-md-3">Item Average Condition
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="itemAverageCondition" th:value="${summary.itemAverageCondition}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group ">
+								                                                <label class="control-label col-md-3">Item Worst Condition
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="itemWorstCondition" th:value="${summary.itemWorstCondition}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group ">
+								                                                <label class="control-label col-md-3">Item Avg Condition By Collateral
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="itemAvgConditionByCollateral" th:value="${summary.itemAvgConditionByCollateral}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                            <div class="form-group ">
+								                                                <label class="control-label col-md-3">Item Avg Condition By Loan
+								                                                    <span class="required"> * </span>
+								                                                </label>
+								                                                <div class="col-md-4">
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="itemAvgConditionByLoan" th:value="${summary.itemAvgConditionByLoan}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                        </div>
+								                                	</div>
+																	<div class="modal-footer">
+																		<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+																		<button type="submit" class="btn green">Save</button>
+																	</div>
+																	</form>
+																</div>
+															</div>
+														</div>
+													</state>
+													<!-- END Create modal for each summary -->
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			<!-- END CONTENT BODY -->
+		</div>
+		<!-- END CONTENT -->
+		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
+	</div>
+	<!-- END CONTAINER -->
+	<div th:replace="layout :: footer" />
+	<div th:replace="fragments/footer :: footer-js" />
+	<script th:src="@{/assets/pages/scripts/ui-modals.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/pages/scripts/form-validation.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/pages/scripts/components-date-time-pickers.min.js}" type="text/javascript"></script>
+</body>
+</html>

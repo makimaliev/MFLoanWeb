@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+
+
+
+<body>
+
+
+
+
+
+	<div class="row">
+		<div class="col-md-12">
+
+
+
+
+
+
+
+
+
+
+
+			<div class="tabbable-custom ">
+				<ul class="nav nav-tabs " id="person_tabs">
+					<li class="active"><a href="#tab_15_1" data-toggle="tab">
+							Адрес </a></li>
+					<li><a href="#tab_15_2" data-toggle="tab"> Идентификационные данные </a></li>
+					<li><a href="#tab_15_3" data-toggle="tab"> Контактные данные </a></li>
+					<li><a href="#tab_15_6" data-toggle="tab"> Информация </a></li>					
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab_15_1">
+
+
+								<div class="row">
+									<div class="col-md-12">
+										
+										
+																			
+							<table
+								class="table table-hover table-condensed table-striped table-bordered compact condensed">
+
+								<tbody>
+									<tr>
+										<td>Address line</td>
+										<td th:text="${person.address.line}">Address
+											line</td>
+									</tr>
+
+									<tr>
+										<td>Region</td>
+										<td th:text="${person.address.region.name}">Address
+											line</td>
+									</tr>
+
+									<tr>
+										<td>District</td>
+										<td th:text="${person.address.district.name}">Address
+											line</td>
+									</tr>
+									<tr>
+										<td>Aokmotu</td>
+										<td th:text="${person.address.aokmotu.name}">Address
+											line</td>
+									</tr>
+									<tr>
+										<td>Village</td>
+										<td th:text="${person.address.village.name}">Address
+											line</td>
+									</tr>
+									
+
+												
+												
+												
+												
+								</tbody>
+							</table>
+
+																			
+																																
+									</div>
+								</div>
+
+
+					</div>
+					<div class="tab-pane" id="tab_15_2">
+
+
+
+							<table
+								class="table table-hover table-condensed table-striped table-bordered compact condensed">
+
+								<tbody>
+									<tr>
+										<td>Name</td>
+										<td th:text="${person.identityDoc.name}">Name</td>
+									</tr>
+									<tr>
+										<td>Enabled</td>
+										<td th:text="${person.identityDoc.enabled}">Enabled</td>
+									</tr>									
+									<tr>
+										<td>number</td>
+										<td th:text="${person.identityDoc.number}">number</td>
+									</tr>									
+
+									<tr>
+										<td>pin</td>
+										<td th:text="${person.identityDoc.pin}">pin</td>
+									</tr>									
+
+									<tr>
+										<td>identityDocType</td>
+										<td th:text="${person.identityDoc.identityDocType.name}">identityDocType</td>
+									</tr>									
+
+									<tr>
+										<td>IdentityDocGivenBy</td>
+										<td th:text="${person.identityDoc.identityDocGivenBy.name}">identityDocGivenBy</td>
+									</tr>									
+
+									<tr>
+										<td>Date</td>
+										<td th:text="${person.identityDoc.date}">date</td>
+									</tr>									
+
+
+									<tr>
+										<td>Firstname</td>
+										<td th:text="${person.identityDoc.identityDocDetails.firstname}">Firstnamename</td>
+									</tr>									
+
+									<tr>
+										<td>Lastname</td>
+										<td th:text="${person.identityDoc.identityDocDetails.Lastname}">Lastname</td>
+									</tr>									
+
+									<tr>
+										<td>Midname</td>
+										<td th:text="${person.identityDoc.identityDocDetails.midname}">Midname</td>
+									</tr>									
+
+									<tr>
+										<td>Fullname</td>
+										<td th:text="${person.identityDoc.identityDocDetails.fullname}">Fullname</td>
+									</tr>									
+
+
+								</tbody>
+							</table>
+
+
+					</div>
+					<div class="tab-pane" id="tab_15_3">
+					
+						<div class="row">
+							<div class="col-md-3">
+								<table
+									class="table table-hover table-condensed table-striped table-bordered compact condensed">
+
+									<tbody>
+										<tr th:each="contactInList : ${person.contact}">
+											<td th:text="${contactInList.name}">Thymus Thymi</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
+
+						</div>
+					
+					</div>
+					
+
+					<div class="tab-pane " id="tab_15_6">
+						<table
+							class="table table-hover table-condensed table-striped table-bordered compact condensed"
+							id="informationTable">
+							<thead>
+								<tr>
+									<th>Id</th>
+									<th>Name</th>
+									<th>Description</th>
+									<th>isTitle</th>
+									<th>Number</th>
+									<th>Date</th>
+									<th>ObjectTypeId</th>
+									<th>ObjectId</th>
+									<th>View</th>
+									<th>Edit</th>
+									<th>Delete</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="s : ${informationList}">
+									<td th:text="${s.id}">Id</td>
+									<td th:text="${s.name}">Name</td>
+									<td th:text="${s.description}">Description</td>
+									<td th:text="${s.isTitle}">isTitle</td>
+									<td th:text="${s.number}">number</td>
+									<td th:text="${s.date}">Date</td>
+									<td th:text="${s.systemObjectTypeId}">ObjectTypeId</td>
+									<td th:text="${s.systemObjectId}">ObjectId</td>
+									<td><a th:href="@{/information/__${s.id}__/details}"
+										role="button" class="btn btn-xs blue-stripe"> View </a></td>
+									<td><a data-remote="false" data-toggle="modal"
+										data-target="#cSystemFormModal"
+										th:href="@{/information/__${s.id}__/edit}" role="button"
+										class="btn btn-xs blue-stripe"> Edit </a></td>
+									<td>
+										<form th:action="@{/information/__${s.id}__/remove}"
+											method="post">
+											<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+										</form>
+									</td>
+								</tr>
+							</tbody>
+
+						</table>
+
+					</div>
+										
+									
+				</div>
+			</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		</div>
+
+
+	</div>
+
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+    if (location.hash) {
+        $("a[href='" + location.hash + "']").tab("show");
+    }
+    $(document.body).on("click", "a[data-toggle]", function(event) {
+        location.hash = this.getAttribute("href");
+    });
+});
+$(window).on("popstate", function() {
+    var anchor = location.hash || $("a[data-toggle='tab']").first().attr("href");
+    $("a[href='" + anchor + "']").tab("show");
+});
+</script>
+
+
+
+
+
+
+
+</body>
+</html>

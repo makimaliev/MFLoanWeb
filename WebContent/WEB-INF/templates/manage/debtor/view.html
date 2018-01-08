@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>MFLoan | Debtor Details</title>
+<div th:replace="fragments/header :: header-css" />
+<link th:href="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}" rel="stylesheet" type="text/css" />
+</head>
+<body
+	class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
+	<!-- BEGIN HEADER -->
+	<div th:replace="layout :: header-top" />
+	<!-- END HEADER -->
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div th:replace="layout :: page-container-sidebar" />
+		<!-- END SIDEBAR -->
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<!-- BEGIN CONTENT BODY -->
+			<div class="page-content">
+				<!-- BEGIN PAGE HEADER-->
+				<h1 class="page-title">
+					Debtor Details
+					<small>create, view, edit, delete loans </small>
+				</h1>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li><i class="icon-home"></i> <a th:href="@{/}">Home</a> <i class="fa fa-angle-right"></i></li>
+						<li><a th:href="@{/manage/debtor/list}">Debtors</a> <i class="fa fa-angle-right"></i></li>
+						<li><span>Debtor</span></li>
+					</ul>
+					<div class="page-toolbar">
+						<div class="btn-group pull-right">
+							<button type="button"
+								class="btn btn-fit-height grey-salt dropdown-toggle"
+								data-toggle="dropdown" data-hover="dropdown" data-delay="1000"
+								data-close-others="true">
+								Actions <i class="fa fa-angle-down"></i>
+							</button>
+							<ul class="dropdown-menu pull-right" role="menu">
+								<li><a href="#"> <i class="icon-bell"></i> Action </a></li>
+								<li><a href="#"> <i class="icon-shield"></i> Another action </a></li>
+								<li><a href="#"> <i class="icon-user"></i> Something else here </a></li>
+								<li class="divider"></li>
+								<li><a href="#"> <i class="icon-bag"></i> Separated link </a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- END PAGE HEADER-->
+				<div class="row">
+					<div class="col-md-12">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-green"></i> 
+									<span class="caption-subject font-green sbold uppercase" th:text="'Debtor : '+${debtor.name}">Debtor name</span>
+								</div>
+							</div>
+							<div class="portlet-body form">
+								<form class="form-horizontal" role="form">
+									<div class="form-body" style="padding: 20px">
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Id:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${debtor.id}">1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Debtor name::</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${debtor.name}">Debtor 1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Type::</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${debtor.debtorType.name}">Type 1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Organization form:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${debtor.orgForm.name}">Org form</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Work sector::</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${debtor.workSector.name}">Work sector</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+									</div>
+								</form>
+							</div>
+						</div>
+						<!-- END BORDERED TABLE PORTLET-->
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-md-12">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-green"></i> 
+									<span class="caption-subject font-green sbold uppercase">Loans</span>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<div class="table-toolbar">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="btn-group">
+												<a class="btn green" data-toggle="modal" href="#largeLoanNew">
+												Add New Loan <i class="fa fa-plus"></i>
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="table-scrollable table-scrollable-borderless">
+									<table class="table table-hover table-light" id="orders">
+										<thead>
+											<tr>
+												<th>Id</th>
+												<th>Registration number</th>
+												<th>Registration date</th>
+												<th>Amount</th>
+												<th>Currency</th>
+												<th>Loan type</th>
+												<th>Loan state</th>
+												<th>Supervisor id</th>
+												<th>Has sub loan</th>
+												<th>Parent loan id</th>
+												<th>Credit order id</th>
+												<th>View Details</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+										<tbody>
+											<ordercheck th:if="${#lists.isEmpty(loans)}">
+												<tr class="no-records-found" style="text-align: center;">
+													<td colspan="15">No matching records found</td>
+												</tr>
+											</ordercheck>
+											<order th:each="loan : ${loans}">
+												<tr class="clickable-row">
+													<td th:text="${loan.id}">Id</td>
+													<td th:text="${loan.regNumber}">REG123</td>
+													<td th:text="${loan.regDate}">01.01.1970</td>
+													<td th:text="${loan.amount}">1000.00</td>
+													<td th:text="${loan.currency.name}">RUB</td>
+													<td th:text="${loan.loanType.name}">Type 1</td>
+													<td th:text="${loan.loanState.name}">State 1</td>
+													<td th:text="${loan.supervisorId}">1</td>
+													<td th:text="${loan.hasSubLoan}">true</td>
+													<td th:text="${loan.parentLoan!=null} ? ${loan.parentLoan.id} : 'null'">0</td>
+													<td th:text="${loan.creditOrder.id}">1</td>
+													<td>
+														<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
+													</td>
+													<td>
+														<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#largeLoan' + {loan.id}}">Edit</a>
+													</td>
+													<td>
+														<form th:action="@{/manage/debtor/__${debtorId}__/loan/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+															<input hidden="true" type="text" id="id" name="id" th:value="${loan.id}" />
+															<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+														</form>
+													</td>
+												</tr>
+											</order>
+										</tbody>
+									</table>
+								</div>
+								
+								<!-- BEGIN Create modal for a new loan -->
+								<div class="modal fade bs-modal-lg" id="largeLoanNew" tabindex="-1" role="dialog" aria-hidden="true">
+	                                <div class="modal-dialog modal-lg">
+	                                    <div class="modal-content">
+	                                        <div class="modal-header">
+	                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+	                                            <h4 class="modal-title">Save Loan</h4>
+	                                        </div>
+											<form th:action="@{/manage/debtor/__${debtorId}__/loan/save}" id="form_sample_2" class="form-horizontal" method="post">
+												<div class="portlet-body">
+			                                        <div class="form-body">
+			                                            <div class="alert alert-danger display-hide">
+			                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
+			                                            </div>
+			                                            <div class="form-group  margin-top-20">
+			                                                <label class="control-label col-md-3">Registration number
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                	<input hidden="true" type="text" id="id" name="id" th:value="${emptyLoan.id}"/>
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="regNumber" th:value="${emptyLoan.regNumber}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Registration Date</label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+			                                                        <input type="text" class="form-control" name="regDate" th:value="${emptyLoan.regDate}"/>
+			                                                        <span class="input-group-btn">
+			                                                            <button class="btn default" type="button">
+			                                                                <i class="fa fa-calendar"></i>
+			                                                            </button>
+			                                                        </span>
+			                                                    </div>
+			                                                    <span class="help-block"> select a date </span>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Amount
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="amount" th:value="${emptyLoan.amount}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Currency
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="currencyId">
+			                                                        <option value="">Select...</option>
+			                                                        <option th:each="currency : ${currencies}"
+															               th:value="${currency.id}"
+															               th:text="${currency.name}">Category 1</option>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Loan type
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="typeId">
+			                                                        <option value="">Select...</option>
+			                                                        <option th:each="type : ${types}"
+															               th:value="${type.id}"
+															               th:text="${type.name}">Category 1</option>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Loan state
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="stateId">
+			                                                        <option value="">Select...</option>
+			                                                        <option th:each="state : ${states}"
+															               th:value="${state.id}"
+															               th:text="${state.name}">Category 1</option>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Supervisor id
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="supervisorId" th:value="${emptyLoan.supervisorId}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Parent loan
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="parentLoanId">
+			                                                        <option value="0">Select...</option>
+			                                                        <option th:each="tLoan : ${tLoans}"
+															               th:value="${tLoan.id}"
+															               th:text="${tLoan.regNumber}">Category 1</option>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Credit order
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="creditOrderId">
+			                                                        <option value="0">Select...</option>
+			                                                        <option th:each="order : ${orders}"
+															               th:value="${order.id}"
+															               th:text="${order.regNumber} + ' '  + ${order.regDate}">Category 1</option>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Collateral Agreements
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="agreementIdList" multiple="multiple">
+			                                                        <option th:each="agreement : ${agreements}"
+															               th:value="${agreement.id}"
+															               th:text="${agreement.agreementNumber}">Category 1</option>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                        </div>
+			                                	</div>
+												<div class="modal-footer">
+													<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+													<button type="submit" class="btn green">Save</button>
+												</div>
+											</form>	                                        
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- END Create modal for a new loan -->
+								
+								<!-- BEGIN Create modal for each loan -->
+								<state th:each="loan : ${loans}">
+									<div class="modal fade bs-modal-lg" th:id="${'largeLoan' + {loan.id}}" tabindex="-1" role="basic" aria-hidden="true">
+										<div class="modal-dialog modal-lg">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+													<h4 class="modal-title">Save Loan</h4>
+												</div>
+												<form th:action="@{/manage/debtor/__${debtorId}__/loan/save}" id="form_sample_2" class="form-horizontal" method="post">
+													<div class="portlet-body">
+			                                        <div class="form-body">
+			                                            <div class="alert alert-danger display-hide">
+			                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
+			                                            </div>
+			                                            
+			                                            <div class="form-group  margin-top-20">
+			                                                <label class="control-label col-md-3">Registration number
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                	<input hidden="true" type="text" id="id" name="id" th:value="${loan.id}"/>
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="regNumber" th:value="${loan.regNumber}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Registration Date</label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+			                                                        <input type="text" class="form-control" name="regDate" th:value="${loan.regDate}"/>
+			                                                        <span class="input-group-btn">
+			                                                            <button class="btn default" type="button">
+			                                                                <i class="fa fa-calendar"></i>
+			                                                            </button>
+			                                                        </span>
+			                                                    </div>
+			                                                    <span class="help-block"> select a date </span>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Amount
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="amount" th:value="${loan.amount}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Currency
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="currencyId">
+			                                                        <option value="">Select...</option>
+			                                                        <states th:each="currency : ${currencies}">
+			                                                        <option th:if="${loan.id > 0 and currency.name == loan.currency.name}"
+															               th:value="${currency.id}"
+															               th:text="${currency.name}"
+															               selected="selected">Category 1</option>
+															        <option th:unless="${loan.id > 0 and currency.name == loan.currency.name}"
+															               th:value="${currency.id}"
+															               th:text="${currency.name}">Category 1</option>
+															        </states>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Loan type
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="typeId">
+			                                                        <option value="">Select...</option>
+			                                                        <states th:each="type : ${types}">
+			                                                        <option th:if="${loan.id > 0 and type.name == loan.loanType.name}"
+															               th:value="${type.id}"
+															               th:text="${type.name}"
+															               selected="selected">Category 1</option>
+															        <option th:unless="${loan.id > 0 and type.name == loan.loanType.name}"
+															               th:value="${type.id}"
+															               th:text="${type.name}">Category 1</option>
+															        </states>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Loan state
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="stateId">
+			                                                        <option value="">Select...</option>
+			                                                        <states th:each="state : ${states}">
+			                                                        <option th:if="${loan.id > 0 and state.name == loan.loanState.name}"
+															               th:value="${state.id}"
+															               th:text="${state.name}"
+															               selected="selected">Category 1</option>
+															        <option th:unless="${loan.id > 0 and state.name == loan.loanState.name}"
+															               th:value="${state.id}"
+															               th:text="${state.name}">Category 1</option>
+															        </states>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Supervisor id
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="supervisorId" th:value="${loan.supervisorId}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Parent loan
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" disabled="disabled">
+			                                                        <option
+															               th:value="${loan.parentLoan!=null} ? ${loan.parentLoan.id} : null"
+															               th:text="${loan.parentLoan!=null} ? ${loan.parentLoan.regNumber} : 'Select...'"
+															               selected="selected">Category 1</option>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                             
+			                                             <div class="form-group">
+			                                                <label class="control-label col-md-3">Credit order id
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="creditOrderId">
+			                                                        <option value="">Select...</option>
+			                                                        <states th:each="order : ${orders}">
+			                                                        <option th:if="${loan.id > 0 and order.id == loan.creditOrder.id}"
+															               th:value="${order.id}"
+															               th:text="${order.regNumber} + ' ' + ${order.regDate}"
+															               selected="selected">Category 1</option>
+															        <option th:unless="${loan.id > 0 and  order.id == loan.creditOrder.id}"
+															               th:value="${order.id}"
+															              th:text="${order.regNumber} + ' ' + ${order.regDate}">Category 1</option>
+															        </states>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                             
+			                                        </div>
+			                                	</div>
+												<div class="modal-footer">
+													<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+													<button type="submit" class="btn green">Save</button>
+												</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</state>
+								<!-- END Create modal for each loan -->
+								
+							</div>
+						</div>
+						<!-- END BORDERED TABLE PORTLET-->
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-md-6">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-red"></i> 
+									<span class="caption-subject font-red sbold uppercase">Loan Types</span>
+								</div>
+								<div class="tools">
+	                                <a href="javascript:;" class="expand"> </a>
+	                            </div>
+							</div>
+							<div class="portlet-body" style="display:none">
+								<div class="table-toolbar">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="btn-group">
+												<a class="btn red " data-toggle="modal" href="#basicTypeNew">
+												Add New Type
+												<i class="fa fa-plus"></i></a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="table-scrollable table-scrollable-borderless">
+									<table class="table table-hover table-light">
+										<thead>
+											<tr>
+												<th>Name</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+										<tbody>
+											<statecheck th:if="${#lists.isEmpty(types)}">
+												<tr class="no-records-found" style="text-align: center;">
+													<td colspan="3">No matching records found</td>
+												</tr>
+											</statecheck>
+											<state th:each="type : ${types}">
+												<tr>
+													<td th:text="${type.name}">Name</td>
+													<td>
+														<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#basicType' + {type.id}}">Edit</a>
+													</td>
+													<td>
+														<form th:action="@{/manage/debtor/__${debtorId}__/loan/type/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+															<input hidden="true" type="text" id="id" name="id" th:value="${type.id}" />
+															<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+														</form>
+													</td>
+												</tr>
+											</state>
+										</tbody>
+
+									</table>
+								</div>
+								
+								<!-- BEGIN Create modal for a new type -->
+								<div class="modal fade" id="basicTypeNew" tabindex="-1" role="basic" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+												<h4 class="modal-title">Save Loan Type</h4>
+											</div>
+											<form th:action="@{/manage/debtor/__${debtorId}__/loan/type/save}" id="form_sample_2" class="form-horizontal" method="post">
+												<div class="portlet-body">
+													<div class="form-body">
+														<div class="alert alert-danger display-hide">
+															<button class="close" data-close="alert"></button>
+															You have some form errors. Please check below.
+														</div>
+														<div class="form-group  margin-top-20">
+															<label class="control-label col-md-3">Name <span class="required"> * </span>
+															</label>
+															<div class="col-md-4">
+																<input hidden="true" type="text" id="id" name="id" th:value="${emptyType.id}"/>
+																<div class="input-icon right">
+																	<i class="fa"></i> 
+																	<input type="text" class="form-control" name="name" th:value="${emptyType.name}"/>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+													<button type="submit" class="btn green">Save</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+								<!-- END Create modal for a new type -->								
+								
+								<!-- BEGIN Create modal for each type -->
+								<state th:each="type : ${types}">
+									<div class="modal fade" th:id="${'basicType' + {type.id}}" tabindex="-1" role="basic" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+													<h4 class="modal-title">Save Loan Type</h4>
+												</div>
+												<form th:action="@{/manage/debtor/__${debtorId}__/loan/type/save}" id="form_sample_2" class="form-horizontal" method="post">
+													<div class="portlet-body">
+														<div class="form-body">
+															<div class="alert alert-danger display-hide">
+																<button class="close" data-close="alert"></button>
+																You have some form errors. Please check below.
+															</div>
+															<div class="form-group  margin-top-20">
+																<label class="control-label col-md-3">Name <span class="required"> * </span>
+																</label>
+																<div class="col-md-4">
+																	<input hidden="true" type="text" id="id" name="id" th:value="${type.id}"/>
+																	<div class="input-icon right">
+																		<i class="fa"></i> 
+																		<input type="text" class="form-control" name="name" th:value="${type.name}"/>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+														<button type="submit" class="btn green">Save</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</state>
+								<!-- END Create modal for each type -->
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-red"></i>
+									<span class="caption-subject font-red sbold uppercase">Loan States</span>
+								</div>
+								<div class="tools">
+	                                <a href="javascript:;" class="expand"> </a>
+	                            </div>
+							</div>
+							<div class="portlet-body" style="display:none">
+								<div class="table-toolbar">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="btn-group">
+												<a class="btn red " data-toggle="modal" href="#basicStateNew">
+												Add New State
+												<i class="fa fa-plus"></i></a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="table-scrollable table-scrollable-borderless">
+									<table class="table table-hover table-light">
+										<thead>
+											<tr>
+												<th>Name</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+										<tbody>
+											<typecheck th:if="${#lists.isEmpty(states)}">
+											<tr class="no-records-found" style="text-align: center;">
+												<td colspan="3">No matching records found</td>
+											</tr>
+											</typecheck>
+											<type th:each="state : ${states}">
+											<tr>
+												<td th:text="${state.name}">Name</td>
+												<td>
+													<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#basicState' + {state.id}}">Edit</a>
+												</td>
+												<td>
+													<form th:action="@{/manage/debtor/__${debtorId}__/loan/state/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+														<input hidden="true" type="text" id="id" name="id" th:value="${state.id}" />
+														<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+													</form>
+												</td>
+											</tr>
+											</type>
+										</tbody>
+									</table>
+								</div>
+								
+								<!-- BEGIN Create modal for a new state -->
+								<div class="modal fade" id="basicStateNew" tabindex="-1" role="basic" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+												<h4 class="modal-title">Save Loan State</h4>
+											</div>
+											<form th:action="@{/manage/debtor/__${debtorId}__/loan/state/save}" id="form_sample_2" class="form-horizontal" method="post">
+												<div class="portlet-body">
+													<div class="form-body">
+														<div class="alert alert-danger display-hide">
+															<button class="close" data-close="alert"></button>
+															You have some form errors. Please check below.
+														</div>
+														<div class="form-group  margin-top-20">
+															<label class="control-label col-md-3">Name <span class="required"> * </span>
+															</label>
+															<div class="col-md-4">
+																<input hidden="true" type="text" id="id" name="id" th:value="${emptyState.id}"/>
+																<div class="input-icon right">
+																	<i class="fa"></i> 
+																	<input type="text" class="form-control" name="name" th:value="${emptyState.name}"/>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+													<button type="submit" class="btn green">Save</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+								<!-- END Create modal for a new state -->								
+								
+								<!-- BEGIN Create modal for each state -->
+								<state th:each="state : ${states}">
+									<div class="modal fade" th:id="${'basicState' + {state.id}}" tabindex="-1" role="basic" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+													<h4 class="modal-title">Save Loan State</h4>
+												</div>
+												<form th:action="@{/manage/debtor/__${debtorId}__/loan/state/save}" id="form_sample_2" class="form-horizontal" method="post">
+													<div class="portlet-body">
+														<div class="form-body">
+															<div class="alert alert-danger display-hide">
+																<button class="close" data-close="alert"></button>
+																You have some form errors. Please check below.
+															</div>
+															<div class="form-group  margin-top-20">
+																<label class="control-label col-md-3">Name <span class="required"> * </span>
+																</label>
+																<div class="col-md-4">
+																	<input hidden="true" type="text" id="id" name="id" th:value="${state.id}"/>
+																	<div class="input-icon right">
+																		<i class="fa"></i> 
+																		<input type="text" class="form-control" name="name" th:value="${state.name}"/>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+														<button type="submit" class="btn green">Save</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</state>
+								<!-- END Create modal for each state -->
+							</div>
+						</div>
+						<!-- END BORDERED TABLE PORTLET-->
+					</div>
+				</div>
+				
+			</div>
+			<!-- END CONTENT BODY -->
+		</div>
+		<!-- END CONTENT -->
+		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
+	</div>
+	<!-- END CONTAINER -->
+	<div th:replace="layout :: footer" />
+	<div th:replace="fragments/footer :: footer-js" />
+	<script th:src="@{/assets/pages/scripts/ui-modals.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/pages/scripts/form-validation.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/pages/scripts/components-date-time-pickers.min.js}" type="text/javascript"></script>
+</body>
+</html>

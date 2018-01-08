@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+
+
+
+<body>
+
+
+
+
+	<div class="tabbable-custom ">
+		<ul class="nav nav-tabs " id="employmentHistoryEvent_tabs">
+			<li class="active">
+				<a href="#aokmotuListOfEmploymentHistoryEvent" data-toggle="tab">Information</a>
+			</li>
+		</ul>
+		
+		<div class="tab-content">
+
+			<div class="tab-pane active" id="aokmotuListOfEmploymentHistoryEvent">
+			
+			
+<table
+					class="table table-hover table-condensed table-striped table-bordered compact condensed"
+					id="employmentHistoryEventTable">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+							<th>Code</th>
+							<th>EmploymentHistoryEvent</th>
+							<th>View</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+
+					<tbody>
+
+						<tr th:each="employmentHistoryEventInList : ${employmentHistoryEventList}">
+							<td th:text="${employmentHistoryEventInList.id}">Id</td>
+							<td th:text="${employmentHistoryEventInList.name}">Name</td>
+							<td
+								th:text="${employmentHistoryEventInList.employmentHistory.number}">employmentHistory</td>
+							<td><a
+								th:href="@{/employmentHistoryEvent/__${employmentHistoryEventInList.id}__/details}"
+								role="button" class="btn btn-xs green-stripe"> View </a></td>
+							<td><a data-remote="false" data-toggle="modal"
+								data-target="#employmentHistoryEventFormModal"
+								th:href="@{/employmentHistoryEvent/__${employmentHistoryEventInList.id}__/edit}"
+								role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
+							<td>
+								<form
+									th:action="@{/employmentHistoryEvent/__${employmentHistoryEventInList.id}__/remove}"
+									method="post">
+									<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+								</form>
+							</td>
+						</tr>
+					</tbody>
+
+				</table>			
+			
+			
+			
+			
+			
+			
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>MFLoan | Debtors</title>
+<div th:replace="fragments/header :: header-css" />
+<link th:href="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}" rel="stylesheet" type="text/css" />
+</head>
+<body
+	class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
+	<!-- BEGIN HEADER -->
+	<div th:replace="layout :: header-top" />
+	<!-- END HEADER -->
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div th:replace="layout :: page-container-sidebar" />
+		<!-- END SIDEBAR -->
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<!-- BEGIN CONTENT BODY -->
+			<div class="page-content">
+				<!-- BEGIN PAGE HEADER-->
+				<h1 class="page-title">
+					Debtors 
+					<small>create, view, edit, delete debtors and their types, organization forms and work sectors </small>
+				</h1>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li><i class="icon-home"></i> <a th:href="@{/}">Home</a> <i class="fa fa-angle-right"></i></li>
+						<li><span>Debtors</span></li>
+					</ul>
+					<div class="page-toolbar">
+						<div class="btn-group pull-right">
+							<button type="button" class="btn btn-fit-height grey-salt dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
+								Actions <i class="fa fa-angle-down"></i>
+							</button>
+							<ul class="dropdown-menu pull-right" role="menu">
+								<li><a href="#"> <i class="icon-bell"></i> Action </a></li>
+								<li><a href="#"> <i class="icon-shield"></i> Another action </a></li>
+								<li><a href="#"> <i class="icon-user"></i> Something else here </a></li>
+								<li class="divider"></li>
+								<li><a href="#"> <i class="icon-bag"></i> Separated link </a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- END PAGE HEADER-->
+
+				<div class="row">
+					<div class="col-md-12">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-green"></i> 
+									<span class="caption-subject font-green sbold uppercase">Debtors</span>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<div class="table-toolbar">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="btn-group">
+												<a class="btn green" data-toggle="modal" href="#largeDebtorNew">
+												Add New Debtor <i class="fa fa-plus"></i>
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="table-scrollable table-scrollable-borderless">
+									<table class="table table-hover table-light" id="orders">
+										<thead>
+											<tr>
+												<th>Id</th>
+												<th>Name</th>
+												<th>Type</th>
+												<th>Organization form</th>
+												<th>Work sector</th>
+												<th>View Details</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+										<tbody>
+											<ordercheck th:if="${#lists.isEmpty(debtors)}">
+												<tr class="no-records-found" style="text-align: center;">
+													<td colspan="8">No matching records found</td>
+												</tr>
+											</ordercheck>
+											<order th:each="debtor : ${debtors}">
+												<tr class="clickable-row">
+													<td th:text="${debtor.id}">Id</td>
+													<td th:text="${debtor.name}">AB0C1234</td>
+													<td th:text="${debtor.debtorType.name}">Type</td>
+													<td th:text="${debtor.orgForm.name}">Org form</td>
+													<td th:text="${debtor.workSector.name}">Work sector</td>
+													<td>
+														<a th:href="@{/manage/debtor/__${debtor.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
+													</td>
+													<td>
+														<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#largeDebtor' + {debtor.id}}">Edit</a>
+													</td>
+													<td>
+														<form th:action="@{/manage/debtor/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+															<input hidden="true" type="text" id="id" name="id" th:value="${debtor.id}" />
+															<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+														</form>
+													</td>
+												</tr>
+											</order>
+										</tbody>
+									</table>
+								</div>
+								
+								<!-- BEGIN Create modal for a new debtor -->
+								<div class="modal fade bs-modal-lg" id="largeDebtorNew" tabindex="-1" role="dialog" aria-hidden="true">
+	                                <div class="modal-dialog modal-lg">
+	                                    <div class="modal-content">
+	                                        <div class="modal-header">
+	                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+	                                            <h4 class="modal-title">Save Debtor</h4>
+	                                        </div>
+											<form th:action="@{/manage/debtor/save}" id="form_sample_2" class="form-horizontal" method="post">
+												<div class="portlet-body">
+			                                        <div class="form-body">
+			                                            <div class="alert alert-danger display-hide">
+			                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
+			                                            </div>
+			                                            <div class="form-group  margin-top-20">
+			                                                <label class="control-label col-md-3">Name
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                	<input hidden="true" type="text" id="id" name="id" th:value="${emptyDebtor.id}"/>
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="name" th:value="${emptyDebtor.name}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Type
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="typeId">
+			                                                        <option value="">Select...</option>
+			                                                        <option th:each="type : ${types}"
+															               th:value="${type.id}"
+															               th:text="${type.name}">Category 1</option>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Organization form
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="orgFormId">
+			                                                        <option value="">Select...</option>
+			                                                        <option th:each="form : ${forms}"
+															               th:value="${form.id}"
+															               th:text="${form.name}">Category 1</option>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Work sector
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="workSectorId">
+			                                                        <option value="">Select...</option>
+			                                                        <option th:each="sector : ${sectors}"
+															               th:value="${sector.id}"
+															               th:text="${sector.name}">Category 1</option>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                        </div>
+			                                	</div>
+												<div class="modal-footer">
+													<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+													<button type="submit" class="btn green">Save</button>
+												</div>
+											</form>	                                        
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- END Create modal for a new debtor -->
+								
+								<!-- BEGIN Create modal for each debtor -->
+								<state th:each="debtor : ${debtors}">
+									<div class="modal fade bs-modal-lg" th:id="${'largeDebtor' + {debtor.id}}" tabindex="-1" role="basic" aria-hidden="true">
+										<div class="modal-dialog modal-lg">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+													<h4 class="modal-title">Save Debtor</h4>
+												</div>
+												<form th:action="@{/manage/debtor/save}" id="form_sample_2" class="form-horizontal" method="post">
+													<div class="portlet-body">
+			                                        <div class="form-body">
+			                                            <div class="alert alert-danger display-hide">
+			                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
+			                                            </div>
+			                                            
+			                                            <div class="form-group  margin-top-20">
+			                                                <label class="control-label col-md-3">Name
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                	<input hidden="true" type="text" id="id" name="id" th:value="${debtor.id}"/>
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="name" th:value="${debtor.name}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Type
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="typeId">
+			                                                        <option value="">Select...</option>
+			                                                        <states th:each="type : ${types}">
+			                                                        <option th:if="${debtor.id > 0 and type.name == debtor.debtorType.name}"
+															               th:value="${type.id}"
+															               th:text="${type.name}"
+															               selected="selected">Category 1</option>
+															        <option th:unless="${debtor.id > 0 and type.name == debtor.debtorType.name}"
+															               th:value="${type.id}"
+															               th:text="${type.name}">Category 1</option>
+															        </states>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Organization form
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="orgFormId">
+			                                                        <option value="">Select...</option>
+			                                                        <states th:each="form : ${forms}">
+			                                                        <option th:if="${debtor.id > 0 and form.name == debtor.orgForm.name}"
+															               th:value="${form.id}"
+															               th:text="${form.name}"
+															               selected="selected">Category 1</option>
+															        <option th:unless="${debtor.id > 0 and form.name == debtor.orgForm.name}"
+															               th:value="${form.id}"
+															               th:text="${form.name}">Category 1</option>
+															        </states>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Work sector
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="workSectorId">
+			                                                        <option value="">Select...</option>
+			                                                        <states th:each="sector : ${sectors}">
+			                                                        <option th:if="${debtor.id > 0 and sector.name == debtor.workSector.name}"
+															               th:value="${sector.id}"
+															               th:text="${sector.name}"
+															               selected="selected">Category 1</option>
+															        <option th:unless="${debtor.id > 0 and sector.name == debtor.workSector.name}"
+															               th:value="${sector.id}"
+															               th:text="${sector.name}">Category 1</option>
+															        </states>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                        </div>
+			                                	</div>
+												<div class="modal-footer">
+													<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+													<button type="submit" class="btn green">Save</button>
+												</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</state>
+								<!-- END Create modal for each debtor -->
+								
+							</div>
+						</div>
+						<!-- END BORDERED TABLE PORTLET-->
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-red"></i> 
+									<span class="caption-subject font-red sbold uppercase">Debtor Types</span>
+								</div>
+								<div class="tools">
+	                                <a href="javascript:;" class="expand"> </a>
+	                            </div>
+							</div>
+							<div class="portlet-body" style="display:none">
+								<div class="table-toolbar">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="btn-group">
+												<a class="btn red " data-toggle="modal" href="#basicTypeNew">
+												Add New Type
+												<i class="fa fa-plus"></i></a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="table-scrollable table-scrollable-borderless">
+									<table class="table table-hover table-light">
+										<thead>
+											<tr>
+												<th>Name</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+										<tbody>
+											<statecheck th:if="${#lists.isEmpty(types)}">
+												<tr class="no-records-found" style="text-align: center;">
+													<td colspan="3">No matching records found</td>
+												</tr>
+											</statecheck>
+											<state th:each="type : ${types}">
+												<tr>
+													<td th:text="${type.name}">Name</td>
+													<td>
+														<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#basicType' + {type.id}}">Edit</a>
+													</td>
+													<td>
+														<form th:action="@{/manage/debtor/type/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+															<input hidden="true" type="text" id="id" name="id" th:value="${type.id}" />
+															<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+														</form>
+													</td>
+												</tr>
+											</state>
+										</tbody>
+
+									</table>
+								</div>
+								
+								<!-- BEGIN Create modal for a new type -->
+								<div class="modal fade" id="basicTypeNew" tabindex="-1" role="basic" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+												<h4 class="modal-title">Save Debtor Type</h4>
+											</div>
+											<form th:action="@{/manage/debtor/type/save}" id="form_sample_2" class="form-horizontal" method="post">
+												<div class="portlet-body">
+													<div class="form-body">
+														<div class="alert alert-danger display-hide">
+															<button class="close" data-close="alert"></button>
+															You have some form errors. Please check below.
+														</div>
+														<div class="form-group  margin-top-20">
+															<label class="control-label col-md-3">Name <span class="required"> * </span>
+															</label>
+															<div class="col-md-4">
+																<input hidden="true" type="text" id="id" name="id" th:value="${emptyType.id}"/>
+																<div class="input-icon right">
+																	<i class="fa"></i> 
+																	<input type="text" class="form-control" name="name" th:value="${emptyType.name}"/>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+													<button type="submit" class="btn green">Save</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+								<!-- END Create modal for a new type -->								
+								
+								<!-- BEGIN Create modal for each type -->
+								<state th:each="type : ${types}">
+									<div class="modal fade" th:id="${'basicType' + {type.id}}" tabindex="-1" role="basic" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+													<h4 class="modal-title">Save Debtor Type</h4>
+												</div>
+												<form th:action="@{/manage/debtor/type/save}" id="form_sample_2" class="form-horizontal" method="post">
+													<div class="portlet-body">
+														<div class="form-body">
+															<div class="alert alert-danger display-hide">
+																<button class="close" data-close="alert"></button>
+																You have some form errors. Please check below.
+															</div>
+															<div class="form-group  margin-top-20">
+																<label class="control-label col-md-3">Name <span class="required"> * </span>
+																</label>
+																<div class="col-md-4">
+																	<input hidden="true" type="text" id="id" name="id" th:value="${type.id}"/>
+																	<div class="input-icon right">
+																		<i class="fa"></i> 
+																		<input type="text" class="form-control" name="name" th:value="${type.name}"/>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+														<button type="submit" class="btn green">Save</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</state>
+								<!-- END Create modal for each type -->
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-red"></i>
+									<span class="caption-subject font-red sbold uppercase">Organization Forms</span>
+								</div>
+								<div class="tools">
+	                                <a href="javascript:;" class="expand"> </a>
+	                            </div>
+							</div>
+							<div class="portlet-body" style="display:none">
+								<div class="table-toolbar">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="btn-group">
+												<a class="btn red " data-toggle="modal" href="#basicOrgFormNew">
+												Add New Organization Form
+												<i class="fa fa-plus"></i></a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="table-scrollable table-scrollable-borderless">
+									<table class="table table-hover table-light">
+										<thead>
+											<tr>
+												<th>Name</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+										<tbody>
+											<typecheck th:if="${#lists.isEmpty(forms)}">
+											<tr class="no-records-found" style="text-align: center;">
+												<td colspan="3">No matching records found</td>
+											</tr>
+											</typecheck>
+											<type th:each="form : ${forms}">
+											<tr>
+												<td th:text="${form.name}">Name</td>
+												<td>
+													<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#basicOrgForm' + {form.id}}">Edit</a>
+												</td>
+												<td>
+													<form th:action="@{/manage/debtor/orgform/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+														<input hidden="true" type="text" id="id" name="id" th:value="${form.id}" />
+														<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+													</form>
+												</td>
+											</tr>
+											</type>
+										</tbody>
+									</table>
+								</div>
+								
+								<!-- BEGIN Create modal for a new orgform -->
+								<div class="modal fade" id="basicOrgFormNew" tabindex="-1" role="basic" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+												<h4 class="modal-title">Save Organization Form</h4>
+											</div>
+											<form th:action="@{/manage/debtor/orgform/save}" id="form_sample_2" class="form-horizontal" method="post">
+												<div class="portlet-body">
+													<div class="form-body">
+														<div class="alert alert-danger display-hide">
+															<button class="close" data-close="alert"></button>
+															You have some form errors. Please check below.
+														</div>
+														<div class="form-group  margin-top-20">
+															<label class="control-label col-md-3">Name <span class="required"> * </span>
+															</label>
+															<div class="col-md-4">
+																<input hidden="true" type="text" id="id" name="id" th:value="${emptyForm.id}"/>
+																<div class="input-icon right">
+																	<i class="fa"></i> 
+																	<input type="text" class="form-control" name="name" th:value="${emptyForm.name}"/>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+													<button type="submit" class="btn green">Save</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+								<!-- END Create modal for a new orgform -->								
+								
+								<!-- BEGIN Create modal for each orgform -->
+								<state th:each="form : ${forms}">
+									<div class="modal fade" th:id="${'basicOrgForm' + {form.id}}" tabindex="-1" role="basic" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+													<h4 class="modal-title">Save Organization Form</h4>
+												</div>
+												<form th:action="@{/manage/debtor/orgform/save}" id="form_sample_2" class="form-horizontal" method="post">
+													<div class="portlet-body">
+														<div class="form-body">
+															<div class="alert alert-danger display-hide">
+																<button class="close" data-close="alert"></button>
+																You have some form errors. Please check below.
+															</div>
+															<div class="form-group  margin-top-20">
+																<label class="control-label col-md-3">Name <span class="required"> * </span>
+																</label>
+																<div class="col-md-4">
+																	<input hidden="true" type="text" id="id" name="id" th:value="${form.id}"/>
+																	<div class="input-icon right">
+																		<i class="fa"></i> 
+																		<input type="text" class="form-control" name="name" th:value="${form.name}"/>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+														<button type="submit" class="btn green">Save</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</state>
+								<!-- END Create modal for each orgform -->
+							</div>
+						</div>
+						<!-- END BORDERED TABLE PORTLET-->
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-md-6">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-red"></i> 
+									<span class="caption-subject font-red sbold uppercase">Work Sectors</span>
+								</div>
+								<div class="tools">
+	                                <a href="javascript:;" class="expand"> </a>
+	                            </div>
+							</div>
+							<div class="portlet-body" style="display:none">
+								<div class="table-toolbar">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="btn-group">
+												<a class="btn red " data-toggle="modal" href="#basicWorkSectorNew">
+												Add New Work Sector
+												<i class="fa fa-plus"></i></a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="table-scrollable table-scrollable-borderless">
+									<table class="table table-hover table-light">
+										<thead>
+											<tr>
+												<th>Name</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+										<tbody>
+											<statecheck th:if="${#lists.isEmpty(sectors)}">
+												<tr class="no-records-found" style="text-align: center;">
+													<td colspan="3">No matching records found</td>
+												</tr>
+											</statecheck>
+											<state th:each="sector : ${sectors}">
+												<tr>
+													<td th:text="${sector.name}">Name</td>
+													<td>
+														<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#basicWorkSector' + {sector.id}}">Edit</a>
+													</td>
+													<td>
+														<form th:action="@{/manage/debtor/worksector/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+															<input hidden="true" type="text" id="id" name="id" th:value="${sector.id}" />
+															<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+														</form>
+													</td>
+												</tr>
+											</state>
+										</tbody>
+
+									</table>
+								</div>
+								
+								<!-- BEGIN Create modal for a new work sector -->
+								<div class="modal fade" id="basicWorkSectorNew" tabindex="-1" role="basic" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+												<h4 class="modal-title">Save Work Sector</h4>
+											</div>
+											<form th:action="@{/manage/debtor/worksector/save}" id="form_sample_2" class="form-horizontal" method="post">
+												<div class="portlet-body">
+													<div class="form-body">
+														<div class="alert alert-danger display-hide">
+															<button class="close" data-close="alert"></button>
+															You have some form errors. Please check below.
+														</div>
+														<div class="form-group  margin-top-20">
+															<label class="control-label col-md-3">Name <span class="required"> * </span>
+															</label>
+															<div class="col-md-4">
+																<input hidden="true" type="text" id="id" name="id" th:value="${emptySector.id}"/>
+																<div class="input-icon right">
+																	<i class="fa"></i> 
+																	<input type="text" class="form-control" name="name" th:value="${emptySector.name}"/>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+													<button type="submit" class="btn green">Save</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+								<!-- END Create modal for a new work sector -->								
+								
+								<!-- BEGIN Create modal for each work sector -->
+								<state th:each="sector : ${sectors}">
+									<div class="modal fade" th:id="${'basicWorkSector' + {sector.id}}" tabindex="-1" role="basic" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+													<h4 class="modal-title">Save Work Sector</h4>
+												</div>
+												<form th:action="@{/manage/debtor/worksector/save}" id="form_sample_2" class="form-horizontal" method="post">
+													<div class="portlet-body">
+														<div class="form-body">
+															<div class="alert alert-danger display-hide">
+																<button class="close" data-close="alert"></button>
+																You have some form errors. Please check below.
+															</div>
+															<div class="form-group  margin-top-20">
+																<label class="control-label col-md-3">Name <span class="required"> * </span>
+																</label>
+																<div class="col-md-4">
+																	<input hidden="true" type="text" id="id" name="id" th:value="${sector.id}"/>
+																	<div class="input-icon right">
+																		<i class="fa"></i> 
+																		<input type="text" class="form-control" name="name" th:value="${sector.name}"/>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+														<button type="submit" class="btn green">Save</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</state>
+								<!-- END Create modal for each work sector -->
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				
+			</div>
+			<!-- END CONTENT BODY -->
+		</div>
+		<!-- END CONTENT -->
+		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
+	</div>
+	<!-- END CONTAINER -->
+	<div th:replace="layout :: footer" />
+	<div th:replace="fragments/footer :: footer-js" />
+	<script th:src="@{/assets/pages/scripts/ui-modals.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/pages/scripts/form-validation.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/pages/scripts/components-date-time-pickers.min.js}" type="text/javascript"></script>
+</body>
+</html>

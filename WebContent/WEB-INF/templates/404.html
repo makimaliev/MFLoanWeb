@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>MFLoan | Главгная страница</title>
+    <div th:replace="fragments/header :: header-css"/>
+    <link th:href="@{/assets/pages/css/error.min.css}" rel="stylesheet" type="text/css" />
+</head>
+    <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
+        <!-- BEGIN HEADER -->
+        <div th:replace="layout :: header-top"/>
+        <!-- END HEADER -->
+        <!-- BEGIN CONTAINER -->
+        <div class="page-container">
+            <!-- BEGIN SIDEBAR -->
+            <div th:replace="layout :: page-container-sidebar"/>
+            <!-- END SIDEBAR -->
+            <!-- BEGIN CONTENT -->
+            <div class="page-content-wrapper">
+                <!-- BEGIN CONTENT BODY -->
+                <div class="page-content">
+                    <!-- BEGIN PAGE HEADER-->
+                    <h1 class="page-title">Welcome page
+                        <small>statistics, charts, recent events and reports</small>
+                    </h1>
+                    <div class="page-bar">
+	                        <ul class="page-breadcrumb">
+	                            <li><i class="icon-home"></i> <a th:href="@{/}">Home</a> <i class="fa fa-angle-right"></i></li>
+								<li><span>System</span></li>
+	                        </ul>
+	                        <div class="page-toolbar">
+	                            <div class="btn-group pull-right">
+	                                <button type="button" class="btn btn-fit-height grey-salt dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true"> Actions
+	                                    <i class="fa fa-angle-down"></i>
+	                                </button>
+	                                <ul class="dropdown-menu pull-right" role="menu">
+	                                    <li>
+	                                        <a href="#">
+	                                            <i class="icon-bell"></i> Action</a>
+	                                    </li>
+	                                    <li>
+	                                        <a href="#">
+	                                            <i class="icon-shield"></i> Another action</a>
+	                                    </li>
+	                                    <li>
+	                                        <a href="#">
+	                                            <i class="icon-user"></i> Something else here</a>
+	                                    </li>
+	                                    <li class="divider"> </li>
+	                                    <li>
+	                                        <a href="#">
+	                                            <i class="icon-bag"></i> Separated link</a>
+	                                    </li>
+	                                </ul>
+	                            </div>
+	                        </div>
+	                    </div>
+                    <!-- END PAGE HEADER-->
+                     <div class="row">
+                        <div class="col-md-12 page-404">
+                            <div class="number font-green"> 404 </div>
+                            <div class="details">
+                                <h3>Oops! You're lost.</h3>
+                                <p> We can not find the page you're looking for.
+                                    <br/>
+                                    <a href="index.html"> Return home </a> or try the search bar below. </p>
+                                <form action="#">
+                                    <div class="input-group input-medium">
+                                        <input type="text" class="form-control" placeholder="keyword...">
+                                        <span class="input-group-btn">
+                                            <button type="submit" class="btn green">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <!-- /input-group -->
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END CONTENT BODY -->
+            </div>
+            <!-- END CONTENT -->
+            <!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
+        </div>
+        <!-- END CONTAINER -->
+        <div th:replace="layout :: footer"/>
+        <div th:replace="fragments/footer :: footer-js"/>
+    </body>
+</html>

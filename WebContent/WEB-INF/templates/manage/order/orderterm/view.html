@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>MFLoan | Order Document Package Details</title>
+<div th:replace="fragments/header :: header-css" />
+<link th:href="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}" rel="stylesheet" type="text/css" />
+</head>
+<body
+	class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
+	<!-- BEGIN HEADER -->
+	<div th:replace="layout :: header-top" />
+	<!-- END HEADER -->
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div th:replace="layout :: page-container-sidebar" />
+		<!-- END SIDEBAR -->
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<!-- BEGIN CONTENT BODY -->
+			<div class="page-content">
+				<!-- BEGIN PAGE HEADER-->
+				<h1 class="page-title">
+					Order Term Details
+					<small>create, view, edit, delete agreement templates </small>
+				</h1>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li><i class="icon-home"></i> <a th:href="@{/}">Home</a> <i class="fa fa-angle-right"></i></li>
+						<li><a th:href="@{/manage/order/list}">Credit Orders</a> <i class="fa fa-angle-right"></i></li>
+						<li><a th:href="@{/manage/order/__${orderId}__/view#tab_2}">Credit Order</a> <i class="fa fa-angle-right"></i></li>
+						<li><span>Order Term</span></li>
+					</ul>
+					<div class="page-toolbar">
+						<div class="btn-group pull-right">
+							<button type="button"
+								class="btn btn-fit-height grey-salt dropdown-toggle"
+								data-toggle="dropdown" data-hover="dropdown" data-delay="1000"
+								data-close-others="true">
+								Actions <i class="fa fa-angle-down"></i>
+							</button>
+							<ul class="dropdown-menu pull-right" role="menu">
+								<li><a href="#"> <i class="icon-bell"></i> Action </a></li>
+								<li><a href="#"> <i class="icon-shield"></i> Another action </a></li>
+								<li><a href="#"> <i class="icon-user"></i> Something else here </a></li>
+								<li class="divider"></li>
+								<li><a href="#"> <i class="icon-bag"></i> Separated link </a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- END PAGE HEADER-->
+				<div class="row">
+					<div class="col-md-12">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-green"></i> 
+									<span class="caption-subject font-green sbold uppercase" th:text="'Order Term : '+${term.description}">Order term description</span>
+								</div>
+							</div>
+							<div class="portlet-body form">
+								<form class="form-horizontal" role="form">
+									<div class="form-body" style="padding: 20px">
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Id:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.id}">1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Description:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.description}">Description</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Fund:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.fund.name}">Fund 1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Amount:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.amount}">1000</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Currency:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.currency.name}">RUB</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Frequency Quantity:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.frequencyQuantity}">1000</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Frequency Type:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.frequencyType.name}">RUB</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Installment Quantity:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.installmentQuantity}">1000</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Installment First Day:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.installmentFirstDay}">12321</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">First Installment Date:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.firstInstallmentDate}">01.01.1970</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Last Installment Date:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.lastInstallmentDate}">01.01.1970</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Min Days Disb First Inst:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.minDaysDisbFirstInst}">123123</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Max Days Disb First Inst:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.maxDaysDisbFirstInst}">01.01.1970</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Grace On Principle Payment Inst:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.graceOnPrinciplePaymentInst}">123123</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Grace On Principle Payment Days:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.graceOnPrinciplePaymentDays}">1232</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Grace On Interest Payment Inst:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.graceOnInterestPaymentInst}">123123</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Grace On Interest Payment Days:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.graceOnInterestPaymentDays}">1232</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Grace On Interest Accr Inst:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.graceOnInterestAccrInst}">123123</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Grace On Interest Accr Days:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.graceOnInterestAccrDays}">1232</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Interest Rate Value:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.interestRateValue}">123123</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Interest Rate Value Per Period:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.interestRateValuePerPeriod.name}">1232</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Interest Type:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.interestType.name}">123123</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Penalty On Principle Overdue Rate Value:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.penaltyOnPrincipleOverdueRateValue}">1232</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Penalty On Principle Overdue Type:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.penaltyOnPrincipleOverdueType.name}">123123</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Penalty On Interest Overdue Rate Value:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.penaltyOnInterestOverdueRateValue}">1232</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Penalty On Interest Overdue Type:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.penaltyOnInterestOverdueType.name}">123123</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Days In Year Method:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.daysInYearMethod.name}">1232</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Days In Month Method:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.daysInMonthMethod.name}">123123</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Transaction Order:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.transactionOrder.name}">1232</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Interest Accr Method:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.interestAccrMethod.name}">123123</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Early Repayment Allowed:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.earlyRepaymentAllowed}">1232</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Penalty Limit Percent:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.penaltyLimitPercent}">123123</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Collateral Free:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${term.collateralFree}">1232</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+									</div>
+								</form>
+							</div>
+						</div>
+						<!-- END BORDERED TABLE PORTLET-->
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-md-12">
+						<div class="portlet light portlet-fit">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-green"></i> 
+									<span class="caption-subject font-green sbold uppercase">Agreement Templates</span>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<div class="table-toolbar">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="btn-group">
+												<a class="btn green" data-toggle="modal" href="#largeTemplateNew">
+												Add New Agreement Template <i class="fa fa-plus"></i>
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="table-scrollable table-scrollable-borderless">
+									<table class="table table-hover table-light"
+										id="entityLists">
+										<thead>
+											<tr>
+												<th>Id</th>
+												<th>Name</th>
+												<th>Created by</th>
+												<th>Created date</th>
+												<th>Created description</th>
+												<th>Approved by</th>
+												<th>Approved date</th>
+												<th>Approved description</th>
+												<!-- <th>View Details</th> -->
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+	
+										<tbody>
+											<statecheck th:if="${#lists.isEmpty(templates)}">
+											<tr class="no-records-found" style="text-align: center;">
+												<td colspan="10">No matching records found</td>
+											</tr>
+											</statecheck>
+											<state th:each="template : ${templates}">
+											<tr class="clickable-row">
+												<td th:text="${template.id}">Id</td>
+												<td th:text="${template.name}">AB0C1234</td>
+												<td th:text="${template.createdBy}">Person 1</td>
+												<td th:text="${template.createdDate}">01.01.1970</td>
+												<td th:text="${template.createdDescription}">Desc 1</td>
+												<td th:text="${template.approvedBy}">Person 1</td>
+												<td th:text="${template.approvedDate}">01.01.1970</td>
+												<td th:text="${template.approvedDescription}">Desc 1</td>
+												<!-- 
+												<td>
+													<a th:href="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${e.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
+												</td>
+												 -->
+												<td>
+													<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#largeTemplate' + {template.id}}">Edit</a>
+												</td>
+												<td>
+													<form th:action="@{/manage/order/__${orderId}__/orderterm/__${term.id}__/agreementtemplate/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+														<input hidden="true" type="text" id="id" name="id" th:value="${template.id}" />
+														<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+													</form>
+												</td>
+											</tr>
+											</state>
+										</tbody>
+									</table>
+								</div>
+								<!-- BEGIN Create modal for a new template -->
+								<div class="modal fade bs-modal-lg" id="largeTemplateNew" tabindex="-1" role="dialog" aria-hidden="true">
+	                                <div class="modal-dialog modal-lg">
+	                                    <div class="modal-content">
+	                                        <div class="modal-header">
+	                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+	                                            <h4 class="modal-title">Save Agreement Template</h4>
+	                                        </div>
+											<form th:action="@{/manage/order/__${orderId}__/orderterm/__${term.id}__/agreementtemplate/save}" id="form_sample_2" class="form-horizontal" method="post">
+												<div class="portlet-body">
+			                                        <div class="form-body">
+			                                            <div class="alert alert-danger display-hide">
+			                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
+			                                            </div>
+			                                            <div class="form-group  margin-top-20">
+			                                                <label class="control-label col-md-3">Name
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                	<input hidden="true" type="text" id="id" name="id" th:value="${emptyTemplate.id}"/>
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="name" th:value="${emptyTemplate.name}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Created by
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="createdBy" th:value="${emptyTemplate.createdBy}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Created date</label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+			                                                        <input type="text" class="form-control" name="createdDate" th:value="${emptyTemplate.createdDate}"/>
+			                                                        <span class="input-group-btn">
+			                                                            <button class="btn default" type="button">
+			                                                                <i class="fa fa-calendar"></i>
+			                                                            </button>
+			                                                        </span>
+			                                                    </div>
+			                                                    <span class="help-block"> select a date </span>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Created description
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="createdDescription" th:value="${emptyTemplate.createdDescription}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Approved by
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="approvedBy" th:value="${emptyTemplate.approvedBy}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Approved date</label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+			                                                        <input type="text" class="form-control" name="approvedDate" th:value="${emptyTemplate.approvedDate}"/>
+			                                                        <span class="input-group-btn">
+			                                                            <button class="btn default" type="button">
+			                                                                <i class="fa fa-calendar"></i>
+			                                                            </button>
+			                                                        </span>
+			                                                    </div>
+			                                                    <span class="help-block"> select a date </span>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Approved description
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="approvedDescription" th:value="${emptyTemplate.approvedDescription}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                        </div>
+			                                	</div>
+												<div class="modal-footer">
+													<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+													<button type="submit" class="btn green">Save</button>
+												</div>
+											</form>    
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- END Create modal for a new template -->
+								
+								<!-- BEGIN Create modal for each template -->
+								<state th:each="template : ${templates}">
+									<div class="modal fade bs-modal-lg" th:id="${'largeTemplate' + {template.id}}" tabindex="-1" role="basic" aria-hidden="true">
+										<div class="modal-dialog modal-lg">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+													<h4 class="modal-title">Save Agreement Template</h4>
+												</div>
+												<form th:action="@{/manage/order/__${orderId}__/orderterm/__${term.id}__/agreementtemplate/save}" id="form_sample_2" class="form-horizontal" method="post">
+													<div class="portlet-body">
+			                                        <div class="form-body">
+			                                            <div class="alert alert-danger display-hide">
+			                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
+			                                            </div>
+			                                            
+			                                            <div class="form-group  margin-top-20">
+			                                                <label class="control-label col-md-3">Name
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                	<input hidden="true" type="text" id="id" name="id" th:value="${template.id}"/>
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="name" th:value="${template.name}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Created by
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="createdBy" th:value="${template.createdBy}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Created date</label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+			                                                        <input type="text" class="form-control" name="createdDate" th:value="${template.createdDate}"/>
+			                                                        <span class="input-group-btn">
+			                                                            <button class="btn default" type="button">
+			                                                                <i class="fa fa-calendar"></i>
+			                                                            </button>
+			                                                        </span>
+			                                                    </div>
+			                                                    <span class="help-block"> select a date </span>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Created description
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="createdDescription" th:value="${template.createdDescription}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Approved by
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="approvedBy" th:value="${template.approvedBy}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Approved date</label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+			                                                        <input type="text" class="form-control" name="approvedDate" th:value="${template.approvedDate}"/>
+			                                                        <span class="input-group-btn">
+			                                                            <button class="btn default" type="button">
+			                                                                <i class="fa fa-calendar"></i>
+			                                                            </button>
+			                                                        </span>
+			                                                    </div>
+			                                                    <span class="help-block"> select a date </span>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Approved description
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="approvedDescription" th:value="${template.approvedDescription}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                        </div>
+			                                	</div>
+												<div class="modal-footer">
+													<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+													<button type="submit" class="btn green">Save</button>
+												</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</state>
+								<!-- END Create modal for each template -->
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			<!-- END CONTENT BODY -->
+		</div>
+		<!-- END CONTENT -->
+		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
+	</div>
+	<!-- END CONTAINER -->
+	<div th:replace="layout :: footer" />
+	<div th:replace="fragments/footer :: footer-js" />
+	<script th:src="@{/assets/pages/scripts/ui-modals.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/pages/scripts/form-validation.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/pages/scripts/components-date-time-pickers.min.js}" type="text/javascript"></script>
+</body>
+</html>

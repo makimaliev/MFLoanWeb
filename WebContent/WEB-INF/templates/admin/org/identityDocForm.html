@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+
+
+
+<body>
+
+	<form th:action="@{/identityDoc/save}" id="form_sample_2"
+		class="form-horizontal" method="post" th:object="${identityDoc}">
+		<div class="form-body">
+			<div class="alert alert-danger display-hide">
+				<button class="close" data-close="alert"></button>
+				You have some form errors. Please check below.
+			</div>
+			<!-- 
+                     <div class="alert alert-success display-hide">
+                     	<button class="close" data-close="alert"></button> Your form validation is successful! 
+                     </div>
+                     -->
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Name <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+					<input hidden="true" type="text" id="id" name="id"
+						th:field="${identityDoc.id}" />
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="name" th:field="${identityDoc.name}" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">enabled <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="enabled" th:field="${identityDoc.enabled}" />
+					</div>
+				</div>
+			</div>
+			
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">number <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="number" th:field="${identityDoc.number}" />
+					</div>
+				</div>
+			</div>	
+			
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">pin <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="pin" th:field="${identityDoc.pin}" />
+					</div>
+				</div>
+			</div>						
+			
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Type<span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<select th:field="*{identityDocType}">
+					  <option th:each="identityDocTypeInList : ${identityDocTypeList}" 
+					          th:value="${identityDocTypeInList.id}" 
+					          th:text="${identityDocTypeInList.name}">identityDocType</option>
+					</select>
+
+				</div>
+			</div>			
+			
+			
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Type<span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<select th:field="*{identityDocGivenBy}">
+					  <option th:each="identityDocGivenByInList : ${identityDocGivenByList}" 
+					          th:value="${identityDocGivenByInList.id}" 
+					          th:text="${identityDocGivenByInList.name}">identityDocGivenBy</option>
+					</select>
+
+				</div>
+			</div>
+
+
+
+
+
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">date</label>
+				<div class="col-md-4">
+					<div class="input-group date date-picker"
+						data-date-format="dd.mm.yyyy" id="identityDocDate">
+						<input type="text" class="form-control" name="date"
+							th:value="${identityDoc.date}" /> <span class="input-group-btn">
+							<button class="btn default" type="button">
+								<i class="fa fa-calendar"></i>
+							</button>
+						</span>
+					</div>
+					<!-- /input-group -->
+					<span class="help-block"> select a date </span>
+				</div>
+					<script>
+	$('#identityDocDate').datepicker();
+	</script>
+			</div>
+
+
+
+
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Firstname <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="identityDocDetails.firstname" th:field="${identityDoc.identityDocDetails.firstname}" />
+					</div>
+				</div>
+			</div>			
+									
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Lastname <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="identityDocDetails.lastname" th:field="${identityDoc.identityDocDetails.lastname}" />
+					</div>
+				</div>
+			</div>			
+			
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Midname <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="identityDocDetails.midname" th:field="${identityDoc.identityDocDetails.midname}" />
+					</div>
+				</div>
+			</div>	
+			
+			
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Fullname <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="identityDocDetails.fullname" th:field="${identityDoc.identityDocDetails.fullname}" />
+					</div>
+				</div>
+			</div>						
+			
+						
+		</div>
+		<div class="form-actions">
+			<div class="row">
+				<div class="col-md-offset-3 col-md-9">
+					<button type="submit" class="btn green">Submit</button>
+					<button type="button" class="btn default"
+						onclick="window.location.href='/identityDoc/list'">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</form>
+
+
+</body>
+</html>

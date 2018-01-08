@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>MFLoan | Document Package Details</title>
+<div th:replace="fragments/header :: header-css" />
+<link th:href="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}" rel="stylesheet" type="text/css" />
+</head>
+<body
+	class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
+	<!-- BEGIN HEADER -->
+	<div th:replace="layout :: header-top" />
+	<!-- END HEADER -->
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div th:replace="layout :: page-container-sidebar" />
+		<!-- END SIDEBAR -->
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<!-- BEGIN CONTENT BODY -->
+			<div class="page-content">
+				<!-- BEGIN PAGE HEADER-->
+				<h1 class="page-title">
+					Document Package Details
+					<small>create, view, edit, delete entity documents </small>
+				</h1>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li><i class="icon-home"></i> <a th:href="@{/}">Home</a> <i class="fa fa-angle-right"></i></li>
+						<li><a th:href="@{/manage/order/list}">Credit Orders</a> <i class="fa fa-angle-right"></i></li>
+						<li><a th:href="@{/manage/order/__${orderId}__/view}">Credit Order</a> <i class="fa fa-angle-right"></i></li>
+						<li><a th:href="@{/manage/order/__${orderId}__/entitylist/__${listId}__/view}">Applied Entity List</a> <i class="fa fa-angle-right"></i></li>
+						<li><a th:href="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${entityId}__/view}">Applied Entity</a> <i class="fa fa-angle-right"></i></li>
+						<li><span>Document Package</span></li>
+					</ul>
+					<div class="page-toolbar">
+						<div class="btn-group pull-right">
+							<button type="button"
+								class="btn btn-fit-height grey-salt dropdown-toggle"
+								data-toggle="dropdown" data-hover="dropdown" data-delay="1000"
+								data-close-others="true">
+								Actions <i class="fa fa-angle-down"></i>
+							</button>
+							<ul class="dropdown-menu pull-right" role="menu">
+								<li><a href="#"> <i class="icon-bell"></i> Action </a></li>
+								<li><a href="#"> <i class="icon-shield"></i> Another action </a></li>
+								<li><a href="#"> <i class="icon-user"></i> Something else here </a></li>
+								<li class="divider"></li>
+								<li><a href="#"> <i class="icon-bag"></i> Separated link </a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- END PAGE HEADER-->
+				<div class="row">
+					<div class="col-md-12">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-green"></i> 
+									<span class="caption-subject font-green sbold uppercase" th:text="'Document Package : '+${dp.name}">DP 1</span>
+								</div>
+							</div>
+							<div class="portlet-body form">
+								<form class="form-horizontal" role="form">
+									<div class="form-body" style="padding: 20px">
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Id:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${dp.id}">1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Name:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${dp.name}">DP 1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Completed date:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${dp.completedDate}">01.01.1970</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Approved date:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${dp.approvedDate}">01.01.1970</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Completed ratio:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${dp.completedRatio}">0.1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Approved ratio:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${dp.approvedRatio}">0.1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Registered ratio:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${dp.registeredRatio}">0.1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Package State:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${dp.documentPackageState.name}">State 1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Package Type:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${dp.documentPackageType.name}">Type 1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+									</div>
+								</form>
+							</div>
+						</div>
+						<!-- END BORDERED TABLE PORTLET-->
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-md-12">
+						<div class="portlet light portlet-fit">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-green"></i> 
+									<span class="caption-subject font-green sbold uppercase">Entity Documents</span>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<div class="table-toolbar">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="btn-group">
+												<a class="btn green" data-toggle="modal" href="#largeDocNew">
+												Add New Entity Document <i class="fa fa-plus"></i>
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="table-scrollable table-scrollable-borderless">
+									<table class="table table-hover table-light" id="docPackages">
+										<thead>
+											<tr>
+												<th>View Details</th>
+												<th>Id</th>
+												<th>Name</th>
+												<th>Completed By</th>
+												<th>Completed Date</th>
+												<th>Completed Description</th>
+												<th>Approved By</th>
+												<th>Approved Date</th>
+												<th>Approved Description</th>
+												<th>Registered Number</th>
+												<th>Registered Date</th>
+												<th>Registered By</th>
+												<th>Registered Description</th>
+												<th>Document State</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+
+										<tbody>
+											<statecheck th:if="${#lists.isEmpty(entityDocuments)}">
+												<tr class="no-records-found" style="text-align: center;">
+													<td colspan="15">No matching records found</td>
+												</tr>
+											</statecheck>
+											<state th:each="ed : ${entityDocuments}">
+												<tr class="clickable-row">
+													<td>
+														<a th:href="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${entityId}__/documentpackage/__${dpId}__/entitydocument/__${ed.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
+													</td>
+													<td th:text="${ed.id}">Id</td>
+													<td th:text="${ed.name}">Name</td>
+													<td th:text="${ed.completedBy}">John Wick</td>
+													<td th:text="${ed.completedDate}">01.01.1970</td>
+													<td th:text="${ed.completedDescription}">Description here</td>
+													<td th:text="${ed.approvedBy}">Batman</td>
+													<td th:text="${ed.approvedDate}">01.01.1970</td>
+													<td th:text="${ed.approvedDescription}">Description here</td>
+													<td th:text="${ed.registeredNumber}">RN123</td>
+													<td th:text="${ed.registeredDate}">01.01.1970</td>
+													<td th:text="${ed.registeredBy.name}">Ironman</td>
+													<td th:text="${ed.registeredDescription}">Description here</td>
+													<td th:text="${ed.entityDocumentState.name}">State 1</td>
+													<td>
+														<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#largeDoc' + {ed.id}}">Edit</a>
+													</td>
+													<td>
+														<form th:action="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${entityId}__/documentpackage/__${dpId}__/entitydocument/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+															<input hidden="true" type="text" id="id" name="id" th:value="${ed.id}" />
+															<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+														</form>
+													</td>
+												</tr>
+											</state>
+										</tbody>
+									</table>
+								</div>
+								
+								<!-- BEGIN Create modal for a new entity document -->
+								<div class="modal fade bs-modal-lg" id="largeDocNew" tabindex="-1" role="dialog" aria-hidden="true">
+	                                <div class="modal-dialog modal-lg">
+	                                    <div class="modal-content">
+	                                        <div class="modal-header">
+	                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+	                                            <h4 class="modal-title">Save Entity Document</h4>
+	                                        </div>
+											<form th:action="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${entityId}__/documentpackage/__${dpId}__/entitydocument/save}" id="form_sample_2" class="form-horizontal" method="post">
+												<div class="portlet-body">
+			                                        <div class="form-body">
+			                                            <div class="alert alert-danger display-hide">
+			                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
+			                                            </div>
+			                                            
+			                                            <div class="form-group margin-top-20">
+			                                                <label class="control-label col-md-3">Document name
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                	<input hidden="true" type="text" id="id" name="id" th:value="${emptyED.id}"/>
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="name" th:value="${emptyED.name}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Completed By
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="completedBy" th:value="${emptyED.completedBy}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Completed Date</label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+			                                                        <input type="text" class="form-control" name="completedDate" th:value="${emptyED.completedDate}"/>
+			                                                        <span class="input-group-btn">
+			                                                            <button class="btn default" type="button">
+			                                                                <i class="fa fa-calendar"></i>
+			                                                            </button>
+			                                                        </span>
+			                                                    </div>
+			                                                    <!-- /input-group -->
+			                                                    <span class="help-block"> select a date </span>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Completed description
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="completedDescription" th:value="${emptyED.completedDescription}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group margin-top-20">
+			                                                <label class="control-label col-md-3">Approved by
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="approvedBy" th:value="${emptyED.approvedBy}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Approved Date</label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+			                                                        <input type="text" class="form-control" name="approvedDate" th:value="${emptyED.approvedDate}"/>
+			                                                        <span class="input-group-btn">
+			                                                            <button class="btn default" type="button">
+			                                                                <i class="fa fa-calendar"></i>
+			                                                            </button>
+			                                                        </span>
+			                                                    </div>
+			                                                    <!-- /input-group -->
+			                                                    <span class="help-block"> select a date </span>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Approved description
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="approvedDescription" th:value="${emptyED.approvedDescription}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Registered number
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="registeredNumber" th:value="${emptyED.registeredNumber}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Registered Date</label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+			                                                        <input type="text" class="form-control" name="registeredDate" th:value="${emptyED.registeredDate}"/>
+			                                                        <span class="input-group-btn">
+			                                                            <button class="btn default" type="button">
+			                                                                <i class="fa fa-calendar"></i>
+			                                                            </button>
+			                                                        </span>
+			                                                    </div>
+			                                                    <!-- /input-group -->
+			                                                    <span class="help-block"> select a date </span>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Registered By
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="rbId">
+			                                                        <option value="">Select...</option>
+			                                                        <option th:each="rb : ${rBs}"
+															               th:value="${rb.id}"
+															               th:text="${rb.name}">RB 1</option>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Registered description
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="registeredDescription" th:value="${emptyED.registeredDescription}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Document State
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="stateId">
+			                                                        <option value="">Select...</option>
+			                                                        <option th:each="state : ${states}"
+															               th:value="${state.id}"
+															               th:text="${state.name}">Category 1</option>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                        </div>
+			                                	</div>
+												<div class="modal-footer">
+													<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+													<button type="submit" class="btn green">Save</button>
+												</div>
+											</form>    
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- END Create modal for a new entity document -->
+								
+								<!-- BEGIN Create modal for each entity document -->
+								<state th:each="ed : ${entityDocuments}">
+									<div class="modal fade bs-modal-lg" th:id="${'largeDoc' + {ed.id}}" tabindex="-1" role="basic" aria-hidden="true">
+										<div class="modal-dialog modal-lg">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+													<h4 class="modal-title">Save Entity Document</h4>
+												</div>
+												<form th:action="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${entityId}__/documentpackage/__${dpId}__/entitydocument/save}" id="form_sample_2" class="form-horizontal" method="post">
+													<div class="portlet-body">
+			                                        <div class="form-body">
+			                                            <div class="alert alert-danger display-hide">
+			                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
+			                                            </div>
+			                                            
+			                                            <div class="form-group margin-top-20">
+			                                                <label class="control-label col-md-3">Document name
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                	<input hidden="true" type="text" id="id" name="id" th:value="${ed.id}"/>
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="name" th:value="${ed.name}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Completed By
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="completedBy" th:value="${ed.completedBy}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Completed Date</label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+			                                                        <input type="text" class="form-control" name="completedDate" th:value="${ed.completedDate}"/>
+			                                                        <span class="input-group-btn">
+			                                                            <button class="btn default" type="button">
+			                                                                <i class="fa fa-calendar"></i>
+			                                                            </button>
+			                                                        </span>
+			                                                    </div>
+			                                                    <!-- /input-group -->
+			                                                    <span class="help-block"> select a date </span>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Completed description
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="completedDescription" th:value="${ed.completedDescription}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group margin-top-20">
+			                                                <label class="control-label col-md-3">Approved by
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="approvedBy" th:value="${ed.approvedBy}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Approved Date</label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+			                                                        <input type="text" class="form-control" name="approvedDate" th:value="${ed.approvedDate}"/>
+			                                                        <span class="input-group-btn">
+			                                                            <button class="btn default" type="button">
+			                                                                <i class="fa fa-calendar"></i>
+			                                                            </button>
+			                                                        </span>
+			                                                    </div>
+			                                                    <!-- /input-group -->
+			                                                    <span class="help-block"> select a date </span>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Approved description
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="approvedDescription" th:value="${ed.approvedDescription}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Registered number
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="registeredNumber" th:value="${ed.registeredNumber}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Registered Date</label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+			                                                        <input type="text" class="form-control" name="registeredDate" th:value="${ed.registeredDate}"/>
+			                                                        <span class="input-group-btn">
+			                                                            <button class="btn default" type="button">
+			                                                                <i class="fa fa-calendar"></i>
+			                                                            </button>
+			                                                        </span>
+			                                                    </div>
+			                                                    <!-- /input-group -->
+			                                                    <span class="help-block"> select a date </span>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Registered by
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="rbId">
+			                                                        <option value="">Select...</option>
+			                                                        <states th:each="rb : ${rBs}">
+			                                                        <option th:if="${ed.id > 0 and rb.name == ed.registeredBy.name}"
+															               th:value="${rb.id}"
+															               th:text="${rb.name}"
+															               selected="selected">Category 1</option>
+															        <option th:unless="${ed.id > 0 and rb.name == ed.registeredBy.name}"
+															               th:value="${rb.id}"
+															               th:text="${rb.name}">Category 1</option>
+															        </states>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Registered description
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <div class="input-icon right">
+			                                                        <i class="fa"></i>
+			                                                        <input type="text" class="form-control" name="registeredDescription" th:value="${ed.registeredDescription}"/> 
+			                                                    </div>
+			                                                </div>
+			                                            </div>
+			                                            
+			                                            <div class="form-group">
+			                                                <label class="control-label col-md-3">Document State
+			                                                    <span class="required"> * </span>
+			                                                </label>
+			                                                <div class="col-md-4">
+			                                                    <select class="form-control" name="stateId">
+			                                                        <option value="">Select...</option>
+			                                                        <states th:each="state : ${states}">
+			                                                        <option th:if="${ed.id > 0 and state.name == ed.entityDocumentState.name}"
+															               th:value="${state.id}"
+															               th:text="${state.name}"
+															               selected="selected">Category 1</option>
+															        <option th:unless="${ed.id > 0 and state.name == ed.entityDocumentState.name}"
+															               th:value="${state.id}"
+															               th:text="${state.name}">Category 1</option>
+															        </states>
+			                                                    </select>
+			                                                </div>
+			                                            </div>
+			                                        </div>
+			                                	</div>
+												<div class="modal-footer">
+													<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+													<button type="submit" class="btn green">Save</button>
+												</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</state>
+								<!-- END Create modal for each entity document -->
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-red"></i> 
+									<span class="caption-subject font-red sbold uppercase">Entity Document States</span>
+								</div>
+								<div class="tools">
+	                                <a href="javascript:;" class="expand"> </a>
+	                            </div>
+							</div>
+							<div class="portlet-body" style="display:none">
+								<div class="table-toolbar">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="btn-group">
+												<a class="btn red " data-toggle="modal" href="#basicStateNew">
+												Add New State
+												<i class="fa fa-plus"></i></a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="table-scrollable table-scrollable-borderless">
+									<table class="table table-hover table-light">
+										<thead>
+											<tr>
+												<th>Name</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+										<tbody>
+											<statecheck th:if="${#lists.isEmpty(states)}">
+												<tr class="no-records-found" style="text-align: center;">
+													<td colspan="8">No matching records found</td>
+												</tr>
+											</statecheck>
+											<state th:each="s : ${states}">
+												<tr>
+													<td th:text="${s.name}">Name</td>
+													<td>
+														<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#basicState' + {s.id}}">Edit</a>
+													</td>
+													<td>
+														<form th:action="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${entityId}__/documentpackage/__${dpId}__/entitydocument/state/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+															<input hidden="true" type="text" id="id" name="id" th:value="${s.id}" />
+															<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+														</form>
+													</td>
+												</tr>
+											</state>
+										</tbody>
+	
+									</table>
+								</div>
+								<!-- BEGIN Create modal for a new state -->
+								<div class="modal fade" id="basicStateNew" tabindex="-1" role="basic" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+												<h4 class="modal-title">Save Entity Document State</h4>
+											</div>
+											<form th:action="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${entityId}__/documentpackage/__${dpId}__/entitydocument/state/save}" id="form_sample_2" class="form-horizontal" method="post">
+												<div class="portlet-body">
+													<div class="form-body">
+														<div class="alert alert-danger display-hide">
+															<button class="close" data-close="alert"></button>
+															You have some form errors. Please check below.
+														</div>
+														<div class="form-group  margin-top-20">
+															<label class="control-label col-md-3">Name <span class="required"> * </span>
+															</label>
+															<div class="col-md-4">
+																<input hidden="true" type="text" id="id" name="id" th:value="${emptyState.id}"/>
+																<div class="input-icon right">
+																	<i class="fa"></i> 
+																	<input type="text" class="form-control" name="name" th:value="${emptyState.name}"/>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+													<button type="submit" class="btn green">Save</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+								<!-- END Create modal for a new state -->								
+								
+								<!-- BEGIN Create modal for each state -->
+								<state th:each="s : ${states}">
+									<div class="modal fade" th:id="${'basicState' + {s.id}}" tabindex="-1" role="basic" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+													<h4 class="modal-title">Save Entity Document State</h4>
+												</div>
+												<form th:action="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${entityId}__/documentpackage/__${dpId}__/entitydocument/state/save}" id="form_sample_2" class="form-horizontal" method="post">
+													<div class="portlet-body">
+														<div class="form-body">
+															<div class="alert alert-danger display-hide">
+																<button class="close" data-close="alert"></button>
+																You have some form errors. Please check below.
+															</div>
+															<div class="form-group  margin-top-20">
+																<label class="control-label col-md-3">Name <span class="required"> * </span>
+																</label>
+																<div class="col-md-4">
+																	<input hidden="true" type="text" id="id" name="id" th:value="${s.id}"/>
+																	<div class="input-icon right">
+																		<i class="fa"></i> 
+																		<input type="text" class="form-control" name="name" th:value="${s.name}"/>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+														<button type="submit" class="btn green">Save</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</state>
+								<!-- END Create modal for each state -->
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-md-6">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-red"></i>
+									<span class="caption-subject font-red sbold uppercase">Entity Document Registered By</span>
+								</div>
+								<div class="tools">
+	                                <a href="javascript:;" class="expand"> </a>
+	                            </div>
+							</div>
+							<div class="portlet-body" style="display:none">
+								<div class="table-toolbar">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="btn-group">
+												<a class="btn red " data-toggle="modal" href="#basicRBNew">
+												Add New Registered by
+												<i class="fa fa-plus"></i></a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="table-scrollable table-scrollable-borderless">
+									<table class="table table-hover table-light">
+										<thead>
+											<tr>
+												<th>Name</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+										<tbody>
+											<typecheck th:if="${#lists.isEmpty(rBs)}">
+											<tr class="no-records-found" style="text-align: center;">
+												<td colspan="8">No matching records found</td>
+											</tr>
+											</typecheck>
+											<type th:each="rb : ${rBs}">
+											<tr>
+												<td th:text="${rb.name}">Name</td>
+												<td>
+													<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#basicRB' + {rb.id}}">Edit</a>
+												</td>
+												<td>
+													<form th:action="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${entityId}__/documentpackage/__${dpId}__/entitydocument/registeredby/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+														<input hidden="true" type="text" id="id" name="id" th:value="${rb.id}" />
+														<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+													</form>
+												</td>
+											</tr>
+											</type>
+										</tbody>
+									</table>
+								</div>
+								
+								<!-- BEGIN Create modal for a new type -->
+								<div class="modal fade" id="basicRBNew" tabindex="-1" role="basic" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+												<h4 class="modal-title">Save Entity Document Registered by</h4>
+											</div>
+											<form th:action="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${entityId}__/documentpackage/__${dpId}__/entitydocument/registeredby/save}" id="form_sample_2" class="form-horizontal" method="post">
+												<div class="portlet-body">
+													<div class="form-body">
+														<div class="alert alert-danger display-hide">
+															<button class="close" data-close="alert"></button>
+															You have some form errors. Please check below.
+														</div>
+														<div class="form-group  margin-top-20">
+															<label class="control-label col-md-3">Name <span class="required"> * </span>
+															</label>
+															<div class="col-md-4">
+																<input hidden="true" type="text" id="id" name="id" th:value="${emptyRB.id}"/>
+																<div class="input-icon right">
+																	<i class="fa"></i> 
+																	<input type="text" class="form-control" name="name" th:value="${emptyRB.name}"/>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+													<button type="submit" class="btn green">Save</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+								<!-- END Create modal for a new type -->								
+								
+								<!-- BEGIN Create modal for each type -->
+								<state th:each="rb : ${rBs}">
+									<div class="modal fade" th:id="${'basicRB' + {rb.id}}" tabindex="-1" role="basic" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+													<h4 class="modal-title">Save Entity Document Registered by</h4>
+												</div>
+												<form th:action="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${entityId}__/documentpackage/__${dpId}__/entitydocument/registeredby/save}" id="form_sample_2" class="form-horizontal" method="post">
+													<div class="portlet-body">
+														<div class="form-body">
+															<div class="alert alert-danger display-hide">
+																<button class="close" data-close="alert"></button>
+																You have some form errors. Please check below.
+															</div>
+															<div class="form-group  margin-top-20">
+																<label class="control-label col-md-3">Name <span class="required"> * </span>
+																</label>
+																<div class="col-md-4">
+																	<input hidden="true" type="text" id="id" name="id" th:value="${rb.id}"/>
+																	<div class="input-icon right">
+																		<i class="fa"></i> 
+																		<input type="text" class="form-control" name="name" th:value="${rb.name}"/>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+														<button type="submit" class="btn green">Save</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</state>
+								<!-- END Create modal for each type -->
+							</div>
+						</div>
+						<!-- END BORDERED TABLE PORTLET-->
+					</div>
+				</div>
+			</div>
+			<!-- END CONTENT BODY -->
+		</div>
+		<!-- END CONTENT -->
+		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
+	</div>
+	<!-- END CONTAINER -->
+	<div th:replace="layout :: footer" />
+	<div th:replace="fragments/footer :: footer-js" />
+	<script th:src="@{/assets/pages/scripts/ui-modals.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/pages/scripts/form-validation.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/pages/scripts/components-date-time-pickers.min.js}" type="text/javascript"></script>
+</body>
+</html>

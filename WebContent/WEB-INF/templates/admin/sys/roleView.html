@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+
+
+
+<body>
+
+	<div class="tabbable-custom ">
+		<ul class="nav nav-tabs " id="role_tabs">
+			<li class="active">
+				<a href="#userListOfRole" data-toggle="tab">Пользователи</a>
+			</li>
+			<li>
+				<a href="#permissionListOfRole" data-toggle="tab">Разрешения</a>
+			</li>
+			
+		</ul>
+		
+		<div class="tab-content">
+			<div class="tab-pane active" id="userListOfRole">
+
+
+				<table
+					class="table table-hover table-condensed table-striped table-bordered compact condensed"
+					id="userTable">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+							<th>Code</th>
+							<th>Role</th>
+							<th>View</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+
+					<tbody>
+
+						<tr th:each="userInList : ${role.users}">
+							<td th:text="${userInList.id}">Id</td>
+							<td th:text="${userInList.username}">Name</td>
+							<td><a th:href="@{/user/__${userInList.id}__/details}"
+								role="button" class="btn btn-xs green-stripe"> View </a></td>
+							<td><a data-remote="false" data-toggle="modal"
+								data-target="#roleFormModal"
+								th:href="@{/user/__${userInList.id}__/edit}"
+								role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
+
+							<td>
+								<form th:action="@{/user/__${userInList.id}__/remove}"
+									method="post">
+									<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+								</form>
+							</td>
+						</tr>
+					</tbody>
+
+				</table>
+
+
+
+			</div>
+			
+			
+			<div class="tab-pane" id="permissionListOfRole">
+
+
+				<table
+					class="table table-hover table-condensed table-striped table-bordered compact condensed"
+					id="permissionTable">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+							<th>View</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+
+					<tbody>
+
+						<tr th:each="permissionInList : ${role.permissions}">
+							<td th:text="${permissionInList.id}">Id</td>
+							<td th:text="${permissionInList.name}">Name</td>
+							<td><a th:href="@{/permission/__${permissionInList.id}__/details}"
+								role="button" class="btn btn-xs green-stripe"> View </a></td>
+							<td><a data-remote="false" data-toggle="modal"
+								data-target="#roleFormModal"
+								th:href="@{/permission/__${permissionInList.id}__/edit}"
+								role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
+
+							<td>
+								<form th:action="@{/permission/__${permissionInList.id}__/remove}"
+									method="post">
+									<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+								</form>
+							</td>
+						</tr>
+					</tbody>
+
+				</table>
+
+
+
+			</div>
+			
+		</div>
+	</div>
+
+</body>
+</html>

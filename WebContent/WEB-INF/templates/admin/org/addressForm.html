@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+
+
+
+<body>
+
+	<form th:action="@{/organization/save}" id="form_sample_2"
+		class="form-horizontal" method="post" th:object="${organization}">
+		<div class="form-body">
+			<div class="alert alert-danger display-hide">
+				<button class="close" data-close="alert"></button>
+				You have some form errors. Please check below.
+			</div>
+			<!-- 
+                     <div class="alert alert-success display-hide">
+                     	<button class="close" data-close="alert"></button> Your form validation is successful! 
+                     </div>
+                     -->
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Name <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+					<input hidden="true" type="text" id="id" name="id"
+						th:field="${organization.id}" />
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="name" th:field="${organization.name}" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Description <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="description" th:field="${organization.description}" />
+					</div>
+				</div>
+			</div>
+			
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Address Line <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="address.line" th:field="${organization.address.line}" />
+					</div>
+				</div>
+			</div>			
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Region<span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<select th:field="*{address.region}">
+					  <option th:each="regionInList : ${regionList}" 
+					          th:value="${regionInList.id}" 
+					          th:text="${regionInList.name}">Region</option>
+					</select>
+
+				</div>
+			</div>			
+			
+			
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">District<span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<select th:field="*{address.district}">
+					  <option th:each="districtInList : ${districtList}" 
+					          th:value="${districtInList.id}" 
+					          th:text="${districtInList.name}">District</option>
+					</select>
+
+				</div>
+			</div>	
+			
+			
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Aokmotu<span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<select th:field="*{address.aokmotu}">
+					  <option th:each="aokmotuInList : ${aokmotuList}" 
+					          th:value="${aokmotuInList.id}" 
+					          th:text="${aokmotuInList.name}">Aokmotu</option>
+					</select>
+
+				</div>
+			</div>	
+			
+			
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Village<span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<select th:field="*{address.village}">
+					  <option th:each="villageInList : ${villageList}" 
+					          th:value="${villageInList.id}" 
+					          th:text="${villageInList.name}">Village</option>
+					</select>
+
+				</div>
+			</div>		
+			
+			
+			
+
+
+													
+			
+			
+						
+		</div>
+		<div class="form-actions">
+			<div class="row">
+				<div class="col-md-offset-3 col-md-9">
+					<button type="submit" class="btn green">Submit</button>
+					<button type="button" class="btn default"
+						onclick="window.location.href='/organization/list'">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</form>
+
+</body>
+</html>

@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>MFLoan | Collateral Agreement Details</title>
+<div th:replace="fragments/header :: header-css" />
+<link th:href="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}" rel="stylesheet" type="text/css" />
+</head>
+<body
+	class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
+	<!-- BEGIN HEADER -->
+	<div th:replace="layout :: header-top" />
+	<!-- END HEADER -->
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div th:replace="layout :: page-container-sidebar" />
+		<!-- END SIDEBAR -->
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<!-- BEGIN CONTENT BODY -->
+			<div class="page-content">
+				<!-- BEGIN PAGE HEADER-->
+				<h1 class="page-title">
+					Collateral Agreement Details
+					<small>create, view, edit, delete collateral agreement details </small>
+				</h1>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li><i class="icon-home"></i> <a th:href="@{/}">Home</a> <i class="fa fa-angle-right"></i></li>
+						<li><a th:href="@{/manage/collateral/list}">Collaterals</a> <i class="fa fa-angle-right"></i></li>
+						<li><a th:href="@{/manage/collateral/__${collateralId}__/view}">Collateral</a> <i class="fa fa-angle-right"></i></li>
+						<li><span>Collateral Agreement</span></li>
+					</ul>
+					<div class="page-toolbar">
+						<div class="btn-group pull-right">
+							<button type="button"
+								class="btn btn-fit-height grey-salt dropdown-toggle"
+								data-toggle="dropdown" data-hover="dropdown" data-delay="1000"
+								data-close-others="true">
+								Actions <i class="fa fa-angle-down"></i>
+							</button>
+							<ul class="dropdown-menu pull-right" role="menu">
+								<li><a href="#"> <i class="icon-bell"></i> Action </a></li>
+								<li><a href="#"> <i class="icon-shield"></i> Another action </a></li>
+								<li><a href="#"> <i class="icon-user"></i> Something else here </a></li>
+								<li class="divider"></li>
+								<li><a href="#"> <i class="icon-bag"></i> Separated link </a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- END PAGE HEADER-->
+				<div class="row">
+					<div class="col-md-12">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-green"></i> 
+									<span class="caption-subject font-green sbold uppercase" th:text="'Agreement number : '+${agreement.agreementNumber}">123</span>
+								</div>
+							</div>
+							<div class="portlet-body form">
+								<form class="form-horizontal" role="form">
+									<div class="form-body" style="padding: 20px">
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Id:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${agreement.id}">1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Agreement number:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${agreement.agreementNumber}">Coll 1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Agreement date:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${agreement.agreementDate}">1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Collateral office reg number:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${agreement.collateralOfficeRegNumber}">Coll 1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Collateral office reg date:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${agreement.collateralOfficeRegDate}">1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Notary office reg number:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${agreement.notaryOfficeRegNumber}">Coll 1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Notary office reg date:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${agreement.notaryOfficeRegDate}">1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Arrest reg number:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${agreement.arrestRegNumber}">Coll 1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="control-label col-md-3">Arrest reg date:</label>
+													<div class="col-md-9">
+														<p class="form-control-static" th:text="${agreement.arrestRegDate}">1</p>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
+										</div>
+										<!--/row-->
+									</div>
+								</form>
+							</div>
+						</div>
+						<!-- END BORDERED TABLE PORTLET-->
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-md-12">
+						<div class="tabbable-line boxless tabbable-reversed">
+							<ul class="nav nav-tabs">
+								<li class="active"><a href="#tab_0" data-toggle="tab"> Collateral Inspection </a></li>
+								<li><a href="#tab_1" data-toggle="tab"> Collateral Arrest Free </a></li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane active" id="tab_0">
+									<div class="row">
+										<div class="col-md-12">
+											<!-- BEGIN BORDERED TABLE PORTLET-->
+											<div class="portlet light portlet-fit ">
+												<div class="portlet-body">
+													<div class="table-toolbar">
+														<div class="row">
+															<div class="col-md-6">
+																<div class="btn-group">
+																	<a class="btn green" data-toggle="modal" href="#largeInspectionNew">
+																	Add New Collateral Inspection <i class="fa fa-plus"></i>
+																	</a>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="table-scrollable table-scrollable-borderless">
+														<table class="table table-hover table-light" id="orders">
+															<thead>
+																<tr>
+																	<th>Id</th>
+																	<th>Name</th>
+																	<!-- <th>View Details</th> -->
+																	<th>Edit</th>
+																	<th>Delete</th>
+																</tr>
+															</thead>
+															<tbody>
+																<ordercheck th:if="${#lists.isEmpty(inspections)}">
+																	<tr class="no-records-found" style="text-align: center;">
+																		<td colspan="5">No matching records found</td>
+																	</tr>
+																</ordercheck>
+																<order th:each="inspection : ${inspections}">
+																	<tr class="clickable-row">
+																		<td th:text="${inspection.id}">Id</td>
+																		<td th:text="${inspection.name}">Name</td>
+																		<!-- 
+																		<td>
+																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/term/__${term.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
+																		</td>
+																		 -->
+																		<td>
+																			<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#largeInspection' + {inspection.id}}">Edit</a>
+																		</td>
+																		<td>
+																			<form th:action="@{/manage/collateral/__${collateralId}__/collateralagreement/__${agreementId}__/inspection/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+																				<input hidden="true" type="text" id="id" name="id" th:value="${inspection.id}" />
+																				<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+																			</form>
+																		</td>
+																	</tr>
+																</order>
+															</tbody>
+														</table>
+													</div>
+													
+													<!-- BEGIN Create modal for a new inspection -->
+													<div class="modal fade bs-modal-lg" id="largeInspectionNew" tabindex="-1" role="dialog" aria-hidden="true">
+						                                <div class="modal-dialog modal-lg">
+						                                    <div class="modal-content">
+						                                        <div class="modal-header">
+						                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+						                                            <h4 class="modal-title">Save Collateral Inspection</h4>
+						                                        </div>
+																<form th:action="@{/manage/collateral/__${collateralId}__/collateralagreement/__${agreementId}__/inspection/save}" id="form_sample_2" class="form-horizontal" method="post">
+																	<div class="portlet-body">
+								                                        <div class="form-body">
+								                                            <div class="alert alert-danger display-hide">
+								                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
+								                                            </div>
+								                                            
+								                                            <div class="form-group  margin-top-20">
+								                                                <label class="control-label col-md-3">Name</label>
+								                                                <div class="col-md-4">
+								                                                	<input hidden="true" type="text" id="id" name="id" th:value="${emptyInspection.id}"/>
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="name" th:value="${emptyInspection.name}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                        </div>
+								                                	</div>
+																	<div class="modal-footer">
+																		<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+																		<button type="submit" class="btn green">Save</button>
+																	</div>
+																</form>	                                        
+						                                    </div>
+						                                </div>
+						                            </div>
+						                            <!-- END Create modal for a new inspection -->
+													
+													<!-- BEGIN Create modal for each inspection -->
+													<state th:each="inspection : ${inspections}">
+														<div class="modal fade bs-modal-lg" th:id="${'largeInspection' + {inspection.id}}" tabindex="-1" role="basic" aria-hidden="true">
+															<div class="modal-dialog modal-lg">
+																<div class="modal-content">
+																	<div class="modal-header">
+																		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+																		<h4 class="modal-title">Save Collateral Inspection</h4>
+																	</div>
+																	<form th:action="@{/manage/collateral/__${collateralId}__/collateralagreement/__${agreementId}__/inspection/save}" id="form_sample_2" class="form-horizontal" method="post">
+																		<div class="portlet-body">
+								                                        <div class="form-body">
+								                                            <div class="alert alert-danger display-hide">
+								                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
+								                                            </div>
+								                                            
+								                                            <div class="form-group  margin-top-20">
+								                                                <label class="control-label col-md-3">Name</label>
+								                                                <div class="col-md-4">
+								                                                	<input hidden="true" type="text" id="id" name="id" th:value="${inspection.id}"/>
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="name" th:value="${inspection.name}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                        </div>
+								                                	</div>
+																	<div class="modal-footer">
+																		<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+																		<button type="submit" class="btn green">Save</button>
+																	</div>
+																	</form>
+																</div>
+															</div>
+														</div>
+													</state>
+													<!-- END Create modal for each inspection -->
+													
+												</div>
+											</div>
+											<!-- END BORDERED TABLE PORTLET-->
+										</div>
+									</div>
+								</div>
+								
+								<div class="tab-pane" id="tab_1">
+									<div class="row">
+										<div class="col-md-12">
+											<!-- BEGIN BORDERED TABLE PORTLET-->
+											<div class="portlet light portlet-fit ">
+												<div class="portlet-body">
+													<div class="table-toolbar">
+														<div class="row">
+															<div class="col-md-6">
+																<div class="btn-group">
+																	<a class="btn green" data-toggle="modal" href="#largeAFNew">
+																	Add New Arrest Free <i class="fa fa-plus"></i>
+																	</a>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="table-scrollable table-scrollable-borderless">
+														<table class="table table-hover table-light" id="orders">
+															<thead>
+																<tr>
+																	<th>Id</th>
+																	<th>Name</th>
+																	<!-- <th>View Details</th> -->
+																	<th>Edit</th>
+																	<th>Delete</th>
+																</tr>
+															</thead>
+															<tbody>
+																<ordercheck th:if="${#lists.isEmpty(AFs)}">
+																	<tr class="no-records-found" style="text-align: center;">
+																		<td colspan="5">No matching records found</td>
+																	</tr>
+																</ordercheck>
+																<order th:each="af : ${AFs}">
+																	<tr class="clickable-row">
+																		<td th:text="${af.id}">Id</td>
+																		<td th:text="${af.name}">Name</td>
+																		<!-- 
+																		<td>
+																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/wo/__${wo.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
+																		</td>
+																		 -->
+																		<td>
+																			<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#largeAF' + {af.id}}">Edit</a>
+																		</td>
+																		<td>
+																			<form th:action="@{/manage/collateral/__${collateralId}__/collateralagreement/__${agreementId}__/af/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+																				<input hidden="true" type="text" id="id" name="id" th:value="${af.id}" />
+																				<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+																			</form>
+																		</td>
+																	</tr>
+																</order>
+															</tbody>
+														</table>
+													</div>
+													
+													<!-- BEGIN Create modal for a new arrest free -->
+													<div class="modal fade bs-modal-lg" id="largeAFNew" tabindex="-1" role="dialog" aria-hidden="true">
+						                                <div class="modal-dialog modal-lg">
+						                                    <div class="modal-content">
+						                                        <div class="modal-header">
+						                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+						                                            <h4 class="modal-title">Save Arrest Free</h4>
+						                                        </div>
+																<form th:action="@{/manage/collateral/__${collateralId}__/collateralagreement/__${agreementId}__/af/save}" id="form_sample_2" class="form-horizontal" method="post">
+																	<div class="portlet-body">
+								                                        <div class="form-body">
+								                                            <div class="alert alert-danger display-hide">
+								                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
+								                                            </div>
+								                                            
+								                                            <div class="form-group  margin-top-20">
+								                                                <label class="control-label col-md-3">Name</label>
+								                                                <div class="col-md-4">
+								                                                	<input hidden="true" type="text" id="id" name="id" th:value="${emptyAF.id}"/>
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="name" th:value="${emptyAF.name}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                        </div>
+								                                	</div>
+																	<div class="modal-footer">
+																		<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+																		<button type="submit" class="btn green">Save</button>
+																	</div>
+																</form>	                                        
+						                                    </div>
+						                                </div>
+						                            </div>
+						                            <!-- END Create modal for a new arrest freef -->
+													
+													<!-- BEGIN Create modal for each arrest free -->
+													<state th:each="af : ${AFs}">
+														<div class="modal fade bs-modal-lg" th:id="${'largeAF' + {af.id}}" tabindex="-1" role="basic" aria-hidden="true">
+															<div class="modal-dialog modal-lg">
+																<div class="modal-content">
+																	<div class="modal-header">
+																		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+																		<h4 class="modal-title">Save Arrest Free</h4>
+																	</div>
+																	<form th:action="@{/manage/collateral/__${collateralId}__/collateralagreement/__${agreementId}__/af/save}" id="form_sample_2" class="form-horizontal" method="post">
+																		<div class="portlet-body">
+								                                        <div class="form-body">
+								                                            <div class="alert alert-danger display-hide">
+								                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
+								                                            </div>
+								                                            
+								                                            <div class="form-group  margin-top-20">
+								                                                <label class="control-label col-md-3">Date</label>
+								                                                <div class="col-md-4">
+								                                                	<input hidden="true" type="text" id="id" name="id" th:value="${af.id}"/>
+								                                                    <div class="input-icon right">
+								                                                        <i class="fa"></i>
+								                                                        <input type="text" class="form-control" name="name" th:value="${af.name}"/> 
+								                                                    </div>
+								                                                </div>
+								                                            </div>
+								                                            
+								                                        </div>
+								                                	</div>
+																	<div class="modal-footer">
+																		<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+																		<button type="submit" class="btn green">Save</button>
+																	</div>
+																	</form>
+																</div>
+															</div>
+														</div>
+													</state>
+													<!-- END Create modal for each loan -->
+													
+												</div>
+											</div>
+											<!-- END BORDERED TABLE PORTLET-->
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			<!-- END CONTENT BODY -->
+		</div>
+		<!-- END CONTENT -->
+		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
+	</div>
+	<!-- END CONTAINER -->
+	<div th:replace="layout :: footer" />
+	<div th:replace="fragments/footer :: footer-js" />
+	<script th:src="@{/assets/pages/scripts/ui-modals.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/pages/scripts/form-validation.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/pages/scripts/components-date-time-pickers.min.js}" type="text/javascript"></script>
+</body>
+</html>

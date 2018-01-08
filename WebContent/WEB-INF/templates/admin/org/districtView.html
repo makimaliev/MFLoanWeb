@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+
+
+
+<body>
+
+
+
+
+	<div class="tabbable-custom ">
+		<ul class="nav nav-tabs " id="district_tabs">
+			<li class="active">
+				<a href="#aokmotuListOfDistrict" data-toggle="tab">А.Округ</a>
+			</li>
+			<li>
+				<a href="#seloListOfDistrict" data-toggle="tab">Село</a>
+			</li>
+			<li>
+				<a href="#debtorListOfDistrict" data-toggle="tab">Заемщик</a>
+			</li>
+			<li>
+				<a href="#loanListOfDistrict" data-toggle="tab">Кредитный договор</a>
+			</li>
+		</ul>
+		
+		<div class="tab-content">
+
+			<div class="tab-pane active" id="aokmotuListOfDistrict">
+			
+			
+<table
+					class="table table-hover table-condensed table-striped table-bordered compact condensed"
+					id="aokmotuTable">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+							<th>Code</th>
+							<th>District</th>
+							<th>View</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+
+					<tbody>
+
+						<tr th:each="aokmotuInList : ${district.aokmotu}">
+							<td th:text="${aokmotuInList.id}">Id</td>
+							<td th:text="${aokmotuInList.name}">Name</td>
+							<td th:text="${aokmotuInList.code}">Code</td>
+							<td th:text="${aokmotuInList.district.name}">District</td>
+							<td><a th:href="@{/aokmotu/__${aokmotuInList.id}__/details}"
+								role="button" class="btn btn-xs green-stripe"> View </a></td>
+							<td><a data-remote="false" data-toggle="modal"
+								data-target="#districtFormModal"
+								th:href="@{/aokmotu/__${aokmotuInList.id}__/edit}"
+								role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
+
+							<td>
+								<form th:action="@{/aokmotu/__${aokmotuInList.id}__/remove}"
+									method="post">
+									<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+								</form>
+							</td>
+						</tr>
+					</tbody>
+
+				</table>			
+			
+			
+			
+			
+			
+			
+			</div>
+			<div class="tab-pane" id="seloListOfDistrict">
+			</div>
+			<div class="tab-pane" id="debtorListOfDistrict">
+			</div>
+			<div class="tab-pane" id="loanListOfDistrict">
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
