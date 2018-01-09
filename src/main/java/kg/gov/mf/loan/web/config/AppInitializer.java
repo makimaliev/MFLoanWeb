@@ -41,27 +41,3 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 	private static final int FILE_SIZE_THRESHOLD = 0; // Size threshold after which files will be written to disk
  
 }
-
-/*
-
-import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
-
-public class ApplicationInitializer implements WebApplicationInitializer {
-
-	public void onStartup(ServletContext servletContext) throws ServletException {
-		AnnotationConfigWebApplicationContext applicationMainContext = new AnnotationConfigWebApplicationContext();
-		applicationMainContext.setConfigLocation("kg.gov.mf.loan.web.config");
-		ServletRegistration.Dynamic dispatcher = servletContext.addServlet("JavaDispatcher",
-				new DispatcherServlet(applicationMainContext));
-		dispatcher.setLoadOnStartup(1);
-		dispatcher.addMapping("/");
-	}
-}
-
-*/
