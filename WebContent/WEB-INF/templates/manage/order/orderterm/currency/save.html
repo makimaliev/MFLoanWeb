@@ -23,13 +23,14 @@
 			<div class="page-content">
 				<!-- BEGIN PAGE HEADER-->
 				<h1 class="page-title">
-					Credit Orders 
+					Order Term Currencies
 					<small>create, view, edit, delete credit orders and their types, states </small>
 				</h1>
 				<div class="page-bar">
 					<ul class="page-breadcrumb">
 						<li><i class="icon-home"></i> <a th:href="@{/}">Home</a> <i class="fa fa-angle-right"></i></li>
-						<li><span>Credit Orders</span></li>
+						<li><a th:href="@{/manage/order/orderterm/currency/list}">Order Term Currencies</a> <i class="fa fa-angle-right"></i></li>
+						<li><span>Save Order Term Currency</span></li>
 					</ul>
 					<div class="page-toolbar">
 						<div class="btn-group pull-right">
@@ -49,72 +50,40 @@
 				<!-- END PAGE HEADER-->
 
 				<div class="row">
-					<div class="col-md-12">
+					<div class="col-md-6">
 						<!-- BEGIN BORDERED TABLE PORTLET-->
 						<div class="portlet light portlet-fit ">
 							<div class="portlet-title">
 								<div class="caption">
 									<i class="icon-settings font-green"></i> 
-									<span class="caption-subject font-green sbold uppercase">Credit Orders</span>
+									<span class="caption-subject font-green sbold uppercase">Save Order Term Currency</span>
 								</div>
 							</div>
-							<div class="portlet-body">
-								<div class="table-toolbar">
-									<div class="row">
-										<div class="col-md-6">
-											<div class="btn-group">
-												<a th:href="@{/manage/order/0/save}" class="btn green">Add New Credit Order <i class="fa fa-plus"></i></a>
+							<form th:action="@{/manage/order/orderterm/currency/save}" id="form_sample_2" class="form-horizontal" method="post">
+								<div class="portlet-body">
+									<div class="form-body">
+										<div class="alert alert-danger display-hide">
+											<button class="close" data-close="alert"></button>
+											You have some form errors. Please check below.
+										</div>
+										<div class="form-group  margin-top-20">
+											<label class="control-label col-md-3">Name <span class="required"> * </span>
+											</label>
+											<div class="col-md-4">
+												<input hidden="true" type="text" id="id" name="id" th:value="${currency.id}"/>
+												<div class="input-icon right">
+													<i class="fa"></i> 
+													<input type="text" class="form-control" name="name" th:value="${currency.name}"/>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-								<div class="table-scrollable table-scrollable-borderless">
-									<table class="table table-hover table-light" id="orders">
-										<thead>
-											<tr>
-												<th>Id</th>
-												<th>Registration number</th>
-												<th>Registration date</th>
-												<th>Description</th>
-												<th>Credit Order State</th>
-												<th>Credit Order Type</th>
-												<th>View Details</th>
-												<th>Edit</th>
-												<th>Delete</th>
-											</tr>
-										</thead>
-										<tbody>
-											<ordercheck th:if="${#lists.isEmpty(orders)}">
-												<tr class="no-records-found" style="text-align: center;">
-													<td colspan="8">No matching records found</td>
-												</tr>
-											</ordercheck>
-											<order th:each="o : ${orders}">
-												<tr class="clickable-row">
-													<td th:text="${o.id}">Id</td>
-													<td th:text="${o.regNumber}">AB0C1234</td>
-													<td th:text="${o.regDate}">01.01.2017</td>
-													<td th:text="${o.description}">Description here</td>
-													<td th:text="${o.creditOrderState.name}">Active</td>
-													<td th:text="${o.creditOrderType.name}">RPKR</td>
-													<td>
-														<a th:href="@{/manage/order/__${o.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
-													</td>
-													<td>
-														<a th:href="@{/manage/order/__${o.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
-													</td>
-													<td>
-														<form th:action="@{/manage/order/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-															<input hidden="true" type="text" id="id" name="id" th:value="${o.id}" />
-															<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
-														</form>
-													</td>
-												</tr>
-											</order>
-										</tbody>
-									</table>
+								<div class="modal-footer">
+									<button type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
+									<button type="submit" class="btn green">Save</button>
 								</div>
-							</div>
+							</form>
 						</div>
 						<!-- END BORDERED TABLE PORTLET-->
 					</div>

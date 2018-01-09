@@ -79,6 +79,23 @@ public class OrderDocumentPackageController {
         return "/manage/order/orderdocumentpackage/view";
     }
 	
+	@RequestMapping(value="/manage/order/{orderId}/orderdocumentpackage/{dpId}/save", method=RequestMethod.GET)
+	public String formOrderDocumentPackage(ModelMap model, @PathVariable("orderId")Long orderId, @PathVariable("dpId")Long dpId)
+	{
+		if(dpId == 0)
+		{
+			model.addAttribute("documentPackage", new OrderDocumentPackage());
+		}
+			
+		
+		if(dpId > 0)
+		{
+			model.addAttribute("documentPackage", oDPService.findById(dpId));
+		}
+		model.addAttribute("orderId", orderId);
+		return "/manage/order/orderdocumentpackage/save";
+	}
+	
 	@RequestMapping(value="/manage/order/{orderId}/orderdocumentpackage/save", method=RequestMethod.POST)
 	public String saveOrderDocumentPackage(OrderDocumentPackage oDP, 
 			@PathVariable("orderId")Long orderId, ModelMap model)
