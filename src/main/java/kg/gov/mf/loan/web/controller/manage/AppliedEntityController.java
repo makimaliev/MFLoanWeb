@@ -20,6 +20,8 @@ import kg.gov.mf.loan.manage.model.entitydocument.EntityDocument;
 import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentRegisteredBy;
 import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentState;
 import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityList;
+import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityListState;
+import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityListType;
 import kg.gov.mf.loan.manage.model.orderdocument.OrderDocument;
 import kg.gov.mf.loan.manage.model.orderdocumentpackage.OrderDocumentPackage;
 import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageService;
@@ -91,6 +93,27 @@ public class AppliedEntityController {
         return "/manage/order/entitylist/entity/view";
     }
 	
+	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/save", method=RequestMethod.GET)
+	public String formeAppliedEntityList(ModelMap model, @PathVariable("orderId")Long orderId, @PathVariable("listId")Long listId, @PathVariable("entityId")Long entityId)
+	{
+		if(entityId == 0)
+		{
+			model.addAttribute("entity", new AppliedEntity());
+		}
+			
+		
+		if(entityId > 0)
+		{
+			model.addAttribute("entity", entityService.findById(entityId));
+		}
+		model.addAttribute("orderId", orderId);
+		model.addAttribute("listId", listId);
+		List<AppliedEntityState> states = entityStateService.findAll();
+        model.addAttribute("states", states);
+			
+		return "/manage/order/entitylist/entity/save";
+	}
+	
 	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/save", method=RequestMethod.POST)
 	public String saveAppliedEntity(
 			AppliedEntity entity, 
@@ -127,8 +150,33 @@ public class AppliedEntityController {
 		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/view";
     }
 	
-	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/state/save", method=RequestMethod.POST)
-    public String saveAppliedEntityState(AppliedEntityState state, @PathVariable("orderId")Long orderId, @PathVariable("listId")Long listId, ModelMap model) {
+	@RequestMapping(value = { "/manage/order/entitylist/entity/state/list" }, method = RequestMethod.GET)
+    public String listAppliedEntityStates(ModelMap model) {
+ 
+		List<AppliedEntityState> states = entityStateService.findAll();
+		model.addAttribute("states", states);
+        
+        model.addAttribute("loggedinuser", Utils.getPrincipal());
+        return "/manage/order/entitylist/entity/state/list";
+    }
+	
+	@RequestMapping(value="/manage/order/entitylist/entity/state/{stateId}/save", method=RequestMethod.GET)
+	public String formEState(ModelMap model, @PathVariable("stateId")Long stateId)
+	{
+		if(stateId == 0)
+		{
+			model.addAttribute("eState", new AppliedEntityState());
+		}
+		
+		if(stateId > 0)
+		{
+			model.addAttribute("eState", entityStateService.findById(stateId));
+		}
+		return "/manage/order/entitylist/entity/state/save";
+	}
+	
+	@RequestMapping(value="/manage/order/entitylist/entity/state/save", method=RequestMethod.POST)
+    public String saveAppliedEntityState(AppliedEntityState state, ModelMap model) {
 		if(state != null && state.getId() == 0)
 			entityStateService.save(new AppliedEntityState(state.getName()));
 		
@@ -136,14 +184,14 @@ public class AppliedEntityController {
 			entityStateService.update(state);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
-        return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/view";
+        return "redirect:" + "/manage/order/entitylist/entity/state/list";
     }
 	
-	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/state/delete", method=RequestMethod.POST)
-    public String deleteAppliedEntityState(long id, @PathVariable("orderId")Long orderId, @PathVariable("listId")Long listId) {
+	@RequestMapping(value="/manage/order/entitylist/entity/state/delete", method=RequestMethod.POST)
+    public String deleteAppliedEntityState(long id) {
 		if(id > 0)
 			entityStateService.deleteById(id);
-		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/view";
+		return "redirect:" + "/manage/order/entitylist/entity/state/list";
     }
 	
 	private void addPackagesAndDocuments(Long orderId, AppliedEntity newEntity) {

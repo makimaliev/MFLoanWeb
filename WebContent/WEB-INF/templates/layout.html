@@ -482,6 +482,17 @@
 											<ul class="sub-menu">
 												<li class="nav-item "><a th:href="@{/manage/order/entitylist/state/list}" class="nav-link "> <span class="title"> List applied entity list states</span></a></li>
 												<li class="nav-item "><a th:href="@{/manage/order/entitylist/type/list}" class="nav-link "> <span class="title"> List applied entity list types</span></a></li>
+												<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Applied entity <span class="arrow"></span></a>
+													<ul class="sub-menu">
+														<li class="nav-item "><a th:href="@{/manage/order/entitylist/entity/state/list}" class="nav-link "> <span class="title"> List applied entity states</span></a></li>
+														<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Document Package <span class="arrow"></span></a>
+															<ul class="sub-menu">
+																<li class="nav-item "><a th:href="@{/manage/order/entitylist/entity/documentpackage/state/list}" class="nav-link "> <span class="title"> List document package states</span></a></li>
+																<li class="nav-item "><a th:href="@{/manage/order/entitylist/entity/documentpackage/type/list}" class="nav-link "> <span class="title"> List document package types</span></a></li>
+															</ul>
+														</li>
+													</ul>
+												</li>
 											</ul>
 										</li>
 										<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Order term <span class="arrow"></span></a>
