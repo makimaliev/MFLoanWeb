@@ -9,7 +9,7 @@
 
 <body>
 
-	<form th:action="@{/cSystem/save}" id="form_sample_2"
+	<form th:action="@{/cSystem/save}" id="cSystemForm"
 		class="form-horizontal" method="post" th:object="${cSystem}">
 		<div class="form-body">
 			<div class="alert alert-danger display-hide">
@@ -38,13 +38,16 @@
 		<div class="form-actions">
 			<div class="row">
 				<div class="col-md-offset-3 col-md-9">
-					<button type="submit" class="btn green">Submit</button>
+					<button id="cSystemSubmitButton" type="submit" class="btn green">Submit</button>
 					<button type="button" class="btn default"
 						onclick="window.location.href='/cSystem/list'">Cancel</button>
 				</div>
 			</div>
 		</div>
 	</form>
+	
+	<script>
+	
 
 </body>
 </html>

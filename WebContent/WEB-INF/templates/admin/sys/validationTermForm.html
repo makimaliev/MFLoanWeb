@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">
+
+</head>
+
+
+
+<body>
+
+	<form th:action="@{/validationTerm/save}" id="myform"
+		class="form-horizontal" method="post">
+		<div class="form-body">
+			<div class="alert alert-danger display-hide">
+				<button class="close" data-close="alert"></button>
+				You have some form errors. Please check below.
+			</div>
+			<!-- 
+                     <div class="alert alert-success display-hide">
+                     	<button class="close" data-close="alert"></button> Your form validation is successful! 
+                     </div>
+                     -->
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Name <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+					<input hidden="true" type="text" id="id" name="id"
+						th:value="${validationTerm.id}" />
+					<input hidden="true" type="text" id="objectFieldId" name="objectField.id"
+						th:field="${validationTerm.objectField.id}" />
+												
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" id="name" class="form-control"
+							name="name" th:value="${validationTerm.name}" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Description <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" id="description" class="form-control"
+							name="description" th:value="${validationTerm.description}" />
+					</div>
+				</div>
+			</div>
+			
+						<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Max length<span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="max_length" th:field="${validationTerm.max_length}" />
+					</div>
+				</div>
+			</div>
+			
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Min length<span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="min_length" th:field="${validationTerm.min_length}" />
+					</div>
+				</div>
+			</div>
+			
+			
+
+		</div>
+		
+		<div class="form-actions">
+			<div class="row">
+				<div class="col-md-offset-3 col-md-9">
+					<button type="submit" class="btn green">Submit</button>
+					<button type="button" class="btn default"
+						onclick="window.location.href='/validationTerm/list'">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</form>
+
+
+
+
+
+</body>
+</html>

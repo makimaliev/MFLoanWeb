@@ -46,7 +46,7 @@
 						<tr th:each="employmentHistoryEventInList : ${employmentHistory.employmentHistoryEvent}">
 							<td th:text="${employmentHistoryEventInList.id}">Id</td>
 							<td th:text="${employmentHistoryEventInList.name}">Name</td>
-							<td th:text="${employmentHistoryEventInList.date}">Code</td>
+							<td th:text="${#dates.format(employmentHistoryEventInList.date, 'd MMM yyyy г.')}">Code</td>
 							<td th:text="${employmentHistoryEventInList.employmentHistoryEventType.name}">EmploymentHistoryEventTypeName</td>
 							<td th:text="${employmentHistoryEventInList.employmentHistory.number}">EmploymentHistory</td>
 							<td><a th:href="@{/employmentHistoryEvent/__${employmentHistoryEventInList.id}__/details}"

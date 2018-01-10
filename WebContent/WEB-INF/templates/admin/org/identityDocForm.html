@@ -113,8 +113,17 @@
 				<div class="col-md-4">
 					<div class="input-group date date-picker"
 						data-date-format="dd.mm.yyyy" id="identityDocDate">
-						<input type="text" class="form-control" name="date"
-							th:value="${identityDoc.date}" /> <span class="input-group-btn">
+						
+						
+						<input 	type="text" 
+								class="form-control form-control-inline input-medium date-picker" 
+								size="16" 
+								name="date"
+								th:value="${identityDoc.date}"
+								data-date-format="dd.mm.yyyy" 
+								/>
+								
+								<span class="input-group-btn">
 							<button class="btn default" type="button">
 								<i class="fa fa-calendar"></i>
 							</button>
@@ -196,6 +205,9 @@
 			</div>
 		</div>
 	</form>
+
+
+
 
 
 </body>

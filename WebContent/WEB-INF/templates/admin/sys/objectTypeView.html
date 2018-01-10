@@ -8,7 +8,233 @@
 
 <body>
 
- Permission details 
+
+
+
+				<div class="row">
+
+					<div class="col-md-12">
+
+
+
+						<div class="row">
+							<div class="col-md-12">
+								<div class="panel panel-primary">
+									<div class="panel-heading">
+										<h3 class="panel-title">Information</h3>
+									</div>
+									<div class="panel-body">
+										<dl class="dl-horizontal">
+
+										</dl>
+
+
+										<dl class="dl-horizontal">
+											<dt>Name</dt>
+											<dd th:text="${objectType.name}">${Village.name}</dd>
+										</dl>
+
+
+
+
+
+
+
+
+						<div class="tabbable-custom ">
+							<ul class="nav nav-tabs " id="information_tabs">
+								<li class="active"><a href="#tab_15_1" data-toggle="tab">
+										Fields </a></li>
+								<li><a href="#tab_15_2" data-toggle="tab"> Events </a></li>
+								<li><a href="#tab_15_3" data-toggle="tab"> Fix Terms </a></li>
+
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane active" id="tab_15_1">
+
+								
+								
+									<div class="row">
+										<div class="col-md-12">
+
+
+								<div>
+									<table class="table table-hover table-condensed table-striped table-bordered compact condensed" id="objectFieldTable">
+										<thead>
+											<tr>
+												<th>Id</th>
+												<th>Name</th>
+												<th>Description</th>
+												<th>MEthodName</th>
+												<th>View</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+
+										<tbody>
+											
+											<tr th:each="s : ${objectType?.objectField}">
+												<td th:text="${s.id}">Id</td>
+												<td th:text="${s.name}">Name</td>
+												<td th:text="${s?.description}">Name</td>
+												<td th:text="${s?.methodName}">Name</td>    
+												<td>
+													<a  th:href="@{/objectField/__${s.id}__/details}"
+													role="button" class="btn btn-xs green-stripe"> View
+													</a>
+												</td> 
+												<td>
+													<a data-remote="false" data-toggle="modal"
+													data-target="#objectTypeFormModal" th:href="@{/objectField/__${s.id}__/edit}"
+													role="button" class="btn btn-xs blue-stripe"> Edit
+													</a>
+												</td>
+												<td>
+													<form th:action="@{/objectField/__${s.id}__/remove}" method="post">
+														<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+													</form>
+												</td>
+											</tr>
+										</tbody>
+
+									</table>
+								</div>
+
+										</div>
+
+
+									</div>
+
+
+								</div>
+								
+								
+								<div class="tab-pane" id="tab_15_2">
+								<table class="table table-hover table-condensed table-striped table-bordered compact condensed" id="objectFieldTable">
+										<thead>
+											<tr>
+												<th>Id</th>
+												<th>Name</th>
+												<th>Description</th>
+
+												<th>View</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+
+										<tbody>
+											
+											<tr th:each="s : ${objectType?.objectEvent}">
+												<td th:text="${s.id}">Id</td>
+												<td th:text="${s.name}">Name</td>
+												<td th:text="${s?.description}">Name</td>
+												<td>
+													<a  th:href="@{/objectEvent/__${s.id}__/details}"
+													role="button" class="btn btn-xs green-stripe"> View
+													</a>
+												</td> 
+												<td>
+													<a data-remote="false" data-toggle="modal"
+													data-target="#objectTypeFormModal" th:href="@{/objectEvent/__${s.id}__/edit}"
+													role="button" class="btn btn-xs blue-stripe"> Edit
+													</a>
+												</td>
+												<td>
+													<form th:action="@{/objectEvent/__${s.id}__/remove}" method="post">
+														<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+													</form>
+												</td>
+											</tr>
+										</tbody>
+
+									</table>
+
+								</div>
+							
+							
+								<div class="tab-pane" id="tab_15_3">
+								<table class="table table-hover table-condensed table-striped table-bordered compact condensed" id="fixTermTable">
+										<thead>
+											<tr>
+												<th>Id</th>
+												<th>Name</th>
+												<th>Description</th>
+
+												<th>View</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+
+										<tbody>
+											
+											<tr th:each="s : ${objectType?.fixTerm}">
+												<td th:text="${s.id}">Id</td>
+												<td th:text="${s.name}">Name</td>
+												<td th:text="${s?.description}">Name</td>
+												<td>
+													<a  th:href="@{/objectEvent/__${s.id}__/details}"
+													role="button" class="btn btn-xs green-stripe"> View
+													</a>
+												</td> 
+												<td>
+													<a data-remote="false" data-toggle="modal"
+													data-target="#objectTypeFormModal" th:href="@{/fixTerm/__${s.id}__/edit}"
+													role="button" class="btn btn-xs blue-stripe"> Edit
+													</a>
+												</td>
+												<td>
+													<form th:action="@{/fixTerm/__${s.id}__/remove}" method="post">
+														<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+													</form>
+												</td>
+											</tr>
+										</tbody>
+
+									</table>
+
+								</div>
+							
+							</div>
+						</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+									</div>
+								</div>
+							</div>
+
+
+						</div>
+
+
+
+
+
+
+					</div>
+				</div>
+
+
+
+
+
  
 </body>
 </html>

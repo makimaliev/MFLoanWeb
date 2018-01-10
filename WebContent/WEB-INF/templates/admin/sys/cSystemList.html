@@ -20,7 +20,7 @@
 
 </head>
 
-<body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
+<body id="bodyPart" class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
 	
 	<!-- BEGIN HEADER -->
 	<div th:replace="layout :: header-top"></div>
@@ -37,7 +37,7 @@
 		<div class="page-content-wrapper">
 
 			<!-- BEGIN CONTENT BODY -->
-			<div class="page-content">
+			<div class="page-content" id="cSystemListBodyPage">
 
 				<div class="row">
 					<div class="col-md-12">
@@ -85,6 +85,8 @@
 								</div>
 
 
+
+
 								<div class="col-md-12">
 
 									<!-- Default bootstrap modal example -->
@@ -100,7 +102,78 @@
 													</button>
 													<h4 class="modal-title" id="myModalLabel">Modal title</h4>
 												</div>
-												<div class="modal-body">...</div>
+												<div class="modal-body">
+												
+												
+												
+												
+												
+												
+												
+
+	<form th:action="@{/cSystem/save}" id="cSystemForm"
+		class="form-horizontal" method="post" th:object="${cSystem}">
+		<div class="form-body">
+			<div class="alert alert-danger display-hide">
+				<button class="close" data-close="alert"></button>
+				You have some form errors. Please check below.
+			</div>
+			<!-- 
+                     <div class="alert alert-success display-hide">
+                     	<button class="close" data-close="alert"></button> Your form validation is successful! 
+                     </div>
+                     -->
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Name <span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+					<input hidden="true" type="text" id="id" name="id"
+						th:field="${cSystem.id}" />
+						
+					<input hidden="true" type="text" id="openModal" name="openModal" th:value="${openModal}"/>
+
+
+						
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="name" th:field="${cSystem.name}" />
+							<p th:errors="*{name}">Incorrect name</p>
+							
+           
+            <script th:inline="javascript">
+            /*<![CDATA[*/
+
+            	
+
+            /*]]>*/
+            </script> 							
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-actions">
+			<div class="row">
+				<div class="col-md-offset-3 col-md-9">
+					<button id="cSystemSubmitButton" type="submit" class="btn green">Submit</button>
+					<button type="button" class="btn default"
+						onclick="window.location.href='/cSystem/list'">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</form>
+	
+												
+												
+												
+												
+												
+												
+												
+												
+												
+												
+												</div>
 												<div class="modal-footer">
 													
 												</div>
@@ -122,7 +195,11 @@
 										<a data-remote="false" data-toggle="modal"
 											data-target="#cSystemFormModal" th:href="@{/information/add}"
 											role="button" class="btn btn-large btn-primary"> Add
-											System Information</a>											
+											System Information</a>	
+											
+										<a class="btn green" data-toggle="modal" href="#cSystemFormModal">
+												Add New Applied Entity List <i class="fa fa-plus"></i>
+										</a>																					
 									</div>
 								</div>
 							</div>
@@ -130,8 +207,7 @@
 						<!-- END BORDERED TABLE PORTLET-->
 					</div>
 				</div>
-				
-				
+		
 			<div class="row">
 				<div class="col-md-12">
 
@@ -166,6 +242,11 @@
 		<script type="text/javascript">
 		$(document).ready(function() {
 
+			
+			var openModal = $("#openModal").val();
+			
+			if(openModal == "1") $('#cSystemFormModal').modal('show');
+			
 			var table = $('#cSystemTable').DataTable({
 		    	stateSave: true,
 		    	"language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
@@ -195,20 +276,23 @@
 			});
 		</script>
            
+          
+           
+           
+<!-- END PAGE LEVEL PLUGINS            
+            
 	<script type="text/javascript">
 	$("#cSystemFormModal").on("show.bs.modal", function(e) {
 		
 	    var link = $(e.relatedTarget);
 	    
+	    
 	    var cSystemID = $("#cSystem_id").val();
 
-	    if(link.attr("href").indexOf('information/add')>0)
-	    
+	    if(link.attr("href").indexOf('district/add')>0)
 	    {
-	    	var url = link.attr("href");
-	    	 
-	    	$(this).find(".modal-title").html(url.replace("/information/add","/1/"+cSystemID+"/information/add"));
-		    $(this).find(".modal-body").load(url.replace("/information/add","/1/"+cSystemID+"/information/add"));
+	    	$(this).find(".modal-title").html(link.attr("href").replace("/district/add","/cSystem/"+cSystemID+"/district/add"));
+		    $(this).find(".modal-body").load(link.attr("href").replace("/district/add","/cSystem/"+cSystemID+"/district/add"));
 	    }
 	    else
     	{
@@ -217,15 +301,15 @@
     	}
 	});
 	
-	
 
 	
-</script>           
+</script> 
+	-->
+
+           
             
             
-            
-            
-            
+
             
             
             

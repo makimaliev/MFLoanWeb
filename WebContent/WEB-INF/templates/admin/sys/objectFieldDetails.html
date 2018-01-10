@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
-
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <head>
 <title></title>
 
@@ -11,19 +9,12 @@
 <link
 	th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}"
 	rel="stylesheet" type="text/css" />
-<link th:href="@{/assets/global/plugins/datatables/datatables.min.css}"
+<link
+	th:href="@{/assets/global/plugins/datatables/datatables.min.css}"
 	rel="stylesheet" type="text/css" />
 <link
 	th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}"
 	rel="stylesheet" type="text/css" />
-	
-	  <style type="text/css">
-table.KeyTable tr.focus {
-outline: 3px solid #3366FF;
-outline-offset: -3px;
-}
-
-  </style>
 
 </head>
 
@@ -47,14 +38,18 @@ outline-offset: -3px;
 			<!-- BEGIN CONTENT BODY -->
 			<div class="page-content">
 
-				<div class="row">
+			
+			
+			
+			
+			<div class="row">
 					<div class="col-md-12">
 						<!-- BEGIN BORDERED TABLE PORTLET-->
 						<div class="portlet portlet-fit ">
 							<div class="portlet-body">
 								<table
-									class="table compact"
-									id="objectTypeTable">
+									class="table table-hover table-condensed table-striped table-bordered compact condensed"
+									id="objectFieldTable">
 									<thead>
 										<tr>
 											<th>Id</th>
@@ -65,17 +60,17 @@ outline-offset: -3px;
 										</tr>
 									</thead>
 									<tbody>
-										<tr th:each="s : ${objectTypeList}">
-											<td th:text="${s.id}">Id</td>
-											<td th:text="${s.name}">Name</td>
-											<td><a th:href="@{/objectType/__${s.id}__/details}"
-												objectType="button" class="btn btn-xs green-stripe"> View </a></td>
+										<tr >
+											<td th:text="${objectField.id}">Id</td>
+											<td th:text="${objectField.name}">Name</td>
+											<td><a th:href="@{/objectField/__${objectField.id}__/details}"
+												objectField="button" class="btn btn-xs green-stripe"> View </a></td>
 											<td><a data-remote="false" data-toggle="modal"
-												data-target="#objectTypeFormModal"
-												th:href="@{/objectType/__${s.id}__/edit}" objectType="button"
+												data-target="#objectFieldFormModal"
+												th:href="@{/objectField/__${objectField.id}__/edit}" objectField="button"
 												class="btn btn-xs blue-stripe"> Edit </a></td>
 											<td>
-												<form th:action="@{/objectType/__${s.id}__/remove}"
+												<form th:action="@{/objectField/__${objectField.id}__/remove}"
 													method="post">
 													<button type="submit" class="btn btn-xs red-stripe">
 														Delete</button>
@@ -87,8 +82,8 @@ outline-offset: -3px;
 								<div class="col-md-12">
 
 									<!-- Default bootstrap modal example -->
-									<div class="modal fade" id="objectTypeFormModal" tabindex="-1"
-										objectType="dialog" aria-labelledby="myModalLabel"
+									<div class="modal fade" id="objectFieldFormModal" tabindex="-1"
+										objectField="dialog" aria-labelledby="myModalLabel"
 										aria-hidden="true">
 										<div class="modal-dialog">
 											<div class="modal-content">
@@ -110,28 +105,16 @@ outline-offset: -3px;
 										</div>
 									</div>
 								</div>
-
+								
 								<div class="row">
 									<div class="col-md-12">
 										<a data-remote="false" data-toggle="modal"
-											data-target="#objectTypeFormModal" th:href="@{/objectType/add}"
+											data-target="#objectFieldFormModal" th:href="@{/validationTerm/add}"
 											role="button" class="btn btn-large btn-primary"> Add
-											ObjectType</a> 
-											
-										<a data-remote="false" data-toggle="modal"
-											data-target="#objectTypeFormModal" th:href="@{/objectField/add}"
-											role="button" class="btn btn-large btn-primary"> Add
-											ObjectField</a>
-										<a data-remote="false" data-toggle="modal"
-											data-target="#objectTypeFormModal" th:href="@{/objectEvent/add}"
-											role="button" class="btn btn-large btn-primary"> Add
-											ObjectEvent</a> 	 	
-									    <a data-remote="false" data-toggle="modal"
-											data-target="#objectTypeFormModal" th:href="@{/fixTerm/add}"
-											role="button" class="btn btn-large btn-primary"> Add
-											FixTerm</a> 
+											Validation Term</a> 
 									</div>
 								</div>
+
 							</div>
 						</div>
 						<!-- END BORDERED TABLE PORTLET-->
@@ -140,12 +123,17 @@ outline-offset: -3px;
 
 				
 				</div>
-
+			
+			
+			
+			
+			
+			
+			
 				<div class="row">
-
 					<div class="col-md-12">
 
-						<input hidden="true" type="text" id="objectType_id" name="objectType_id" />
+						<input hidden="true" type="text" id="objectField_id" name="objectField_id" th:value="${objectField.id}" />
 
 						<div id="content"></div>
 
@@ -175,10 +163,10 @@ outline-offset: -3px;
 	<!-- BEGIN PAGE LEVEL SCRIPTS -->
 
 
-	<script type="text/javascript">
+<script type="text/javascript">
 		$(document).ready(function() {
 
-			var table = $('#objectTypeTable').DataTable({
+			var table = $('#objectFieldTable').DataTable({
 		    	stateSave: true,
 		    	"language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
 	    		"info":     false,
@@ -192,30 +180,14 @@ outline-offset: -3px;
 
 				var rowData = datatable.row(cell.index().row).data();
 
-				$("#objectType_id").val(rowData[0]);
+				$("#objectField_id").val(rowData[0]);
 				
-				var sUrl ="/MFCredit/objectType/" + rowData[0]+"/view";
+				var sUrl ="/MFCredit/objectField/" + rowData[0]+"/view";
 				
 				$.get(sUrl, function(data) {
 
 					$('#content').html(data);
 				});
-				
-				
-				
-				
-				
-				var row = datatable.row( cell.index().row );
-
-
-	      table.$('tr.info').removeClass('info');
-				$( row.node() ).addClass( "info" );
-
-				var rowData = row.data();
-				
-
-				var colData = datatable.cell( { focused: true } ).data();
-				
 
 				});
 
@@ -223,27 +195,17 @@ outline-offset: -3px;
 		</script>
 
 	<script type="text/javascript">
-	$("#objectTypeFormModal").on("show.bs.modal", function(e) {
+	$("#objectFieldFormModal").on("show.bs.modal", function(e) {
 		
 	    var link = $(e.relatedTarget);
 	    
 	    
-	    var objectTypeID = $("#objectType_id").val();
+	    var objectFieldID = $("#objectField_id").val();
 
-	    if(link.attr("href").indexOf('objectField/add')>0)
+	    if(link.attr("href").indexOf('validationTerm/add')>0)
 	    {
-	    	$(this).find(".modal-title").html(link.attr("href").replace("/objectField/add","/objectType/"+objectTypeID+"/objectField/add"));
-		    $(this).find(".modal-body").load(link.attr("href").replace("/objectField/add","/objectType/"+objectTypeID+"/objectField/add"));
-	    }
-	    else if(link.attr("href").indexOf('objectEvent/add')>0)
-	    {
-	    	$(this).find(".modal-title").html(link.attr("href").replace("/objectEvent/add","/objectType/"+objectTypeID+"/objectEvent/add"));
-		    $(this).find(".modal-body").load(link.attr("href").replace("/objectEvent/add","/objectType/"+objectTypeID+"/objectEvent/add"));
-	    }
-	    else if(link.attr("href").indexOf('fixTerm/add')>0)
-	    {
-	    	$(this).find(".modal-title").html(link.attr("href").replace("/fixTerm/add","/objectType/"+objectTypeID+"/fixTerm/add"));
-		    $(this).find(".modal-body").load(link.attr("href").replace("/fixTerm/add","/objectType/"+objectTypeID+"/fixTerm/add"));
+	    	$(this).find(".modal-title").html(link.attr("href").replace("/validationTerm/add","/objectField/"+objectFieldID+"/validationTerm/add"));
+		    $(this).find(".modal-body").load(link.attr("href").replace("/validationTerm/add","/objectField/"+objectFieldID+"/validationTerm/add"));
 	    }
 	    else
     	{
@@ -256,7 +218,6 @@ outline-offset: -3px;
 
 	
 </script>
-
 
 
 

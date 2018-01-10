@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />	
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <head>
 
 </head>
@@ -10,33 +10,22 @@
 
 <body>
 
-	<form th:action="@{/employmentHistoryEvent/save}" id="form_sample_2" th:object="${employmentHistoryEvent}"
-		class="form-horizontal" method="post">
+	<form th:action="@{/employmentHistoryEvent/save}" id="form_sample_2"
+		th:object="${employmentHistoryEvent}" class="form-horizontal"
+		method="post">
 		<div class="form-body">
-			<div class="alert alert-danger display-hide">
-				<button class="close" data-close="alert"></button>
-				You have some form errors. Please check below.
-			</div>
-			<!-- 
-                     <div class="alert alert-success display-hide">
-                     	<button class="close" data-close="alert"></button> Your form validation is successful! 
-                     </div>
-                     -->
 			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Name <span
-					class="required"> * </span>
-				</label>
+				<label class="control-label col-md-3">Name </label>
 				<div class="col-md-4">
-					<input hidden="true" type="text" id="id" name="id"
-						th:value="*{id}" />
-						
+					<input hidden="true" type="text" id="id" name="id" th:value="*{id}" />
+
 					<div class="input-icon right">
 						<i class="fa"></i> <input type="text" class="form-control"
 							name="name" th:value="*{name}" />
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="form-group  margin-top-20">
 				<label class="control-label col-md-3">Employment History<span
 					class="required"> * </span>
@@ -44,30 +33,54 @@
 				<div class="col-md-4">
 
 					<select th:field="*{employmentHistory}">
-					  <option th:each="employmentHistoryInList : ${employmentHistoryList}" 
-					          th:value="${{employmentHistoryInList}}"
-					          th:text="${employmentHistoryInList.number}">Region</option>
+						<option
+							th:each="employmentHistoryInList : ${employmentHistoryList}"
+							th:value="${{employmentHistoryInList}}"
+							th:text="${employmentHistoryInList.number}">EmpHistory
+							number</option>
 					</select>
 
 				</div>
 			</div>
-			
-			
-<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Employment History Evenet Type<span
-					class="required"> * </span>
+
+
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Employment History
+					Evenet Type<span class="required"> * </span>
 				</label>
 				<div class="col-md-4">
 
 					<select th:field="*{employmentHistoryEventType}">
-					  <option th:each="employmentHistoryEventTypeInList : ${employmentHistoryEventTypeList}" 
-					          th:value="${{employmentHistoryEventTypeInList}}"
-					          th:text="${employmentHistoryEventTypeInList.name}">Region</option>
+						<option
+							th:each="employmentHistoryEventTypeInList : ${employmentHistoryEventTypeList}"
+							th:value="${{employmentHistoryEventTypeInList}}"
+							th:text="${employmentHistoryEventTypeInList.name}">employmentHistoryEventTypeInList.name</option>
 					</select>
 
 				</div>
-			</div>	
-				
+			</div>
+
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">date</label>
+				<div class="col-md-4">
+					<div class="input-group date date-picker"
+						data-date-format="dd.mm.yyyy" id="eventDate">
+						<input type="text"
+							class="form-control" name="date" th:field="*{date}" /> <span
+							class="input-group-btn">
+							<button class="btn default" type="button">
+								<i class="fa fa-calendar"></i>
+							</button>
+						</span>
+					</div>
+					<!-- /input-group -->
+					<span class="help-block"> select a date </span>
+				</div>
+				<script>
+	$('#eventDate').datepicker();
+	</script>
+			</div>
+
 		</div>
 		<div class="form-actions">
 			<div class="row">
