@@ -20,8 +20,6 @@ import kg.gov.mf.loan.manage.model.entitydocument.EntityDocument;
 import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentRegisteredBy;
 import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentState;
 import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityList;
-import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityListState;
-import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityListType;
 import kg.gov.mf.loan.manage.model.orderdocument.OrderDocument;
 import kg.gov.mf.loan.manage.model.orderdocumentpackage.OrderDocumentPackage;
 import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageService;
@@ -75,15 +73,6 @@ public class AppliedEntityController {
 		AppliedEntity entity = entityService.findById(entityId);
         model.addAttribute("entity", entity);
         
-        List<DocumentPackageState> states = dpStateService.findAll();
-        model.addAttribute("states", states);
-		model.addAttribute("emptyState", new DocumentPackageState());
-		
-		List<DocumentPackageType> types = dpTypeService.findAll();
-        model.addAttribute("types", types);
-        model.addAttribute("emptyType", new DocumentPackageType());
-        
-        model.addAttribute("emptyDP", new DocumentPackage());
         model.addAttribute("dPackages", entity.getDocumentPackage());
         
         model.addAttribute("orderId", orderId);

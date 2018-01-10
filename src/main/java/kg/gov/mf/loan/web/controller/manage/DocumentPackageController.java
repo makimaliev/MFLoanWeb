@@ -19,8 +19,6 @@ import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackageState;
 import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackageType;
 import kg.gov.mf.loan.manage.model.entity.AppliedEntity;
 import kg.gov.mf.loan.manage.model.entitydocument.EntityDocument;
-import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentRegisteredBy;
-import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentState;
 import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageService;
 import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageStateService;
 import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageTypeService;
@@ -68,14 +66,6 @@ public class DocumentPackageController {
 		DocumentPackage dp = dpService.findById(dpId);
         model.addAttribute("dp", dp);
         
-        List<EntityDocumentState> states = edStateService.findAll();
-        model.addAttribute("states", states);
-		model.addAttribute("emptyState", new EntityDocumentState());
-		
-		List<EntityDocumentRegisteredBy> rBs = rbService.findAll();
-		model.addAttribute("rBs", rBs);
-		model.addAttribute("emptyRB", new EntityDocumentRegisteredBy());
-		
 		model.addAttribute("emptyED", new EntityDocument());
 		model.addAttribute("entityDocuments", dp.getEntityDocument());
         
@@ -87,6 +77,38 @@ public class DocumentPackageController {
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "/manage/order/entitylist/entity/documentpackage/view";
     }
+	
+	
+	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/{dpId}/save", method=RequestMethod.GET)
+	public String formDocumentPackage(
+			ModelMap model, 
+			@PathVariable("orderId")Long orderId, 
+			@PathVariable("listId")Long listId, 
+			@PathVariable("entityId")Long entityId,
+			@PathVariable("dpId")Long dpId)
+	{
+		if(dpId == 0)
+		{
+			model.addAttribute("dp", new DocumentPackage());
+		}
+			
+		
+		if(dpId > 0)
+		{
+			model.addAttribute("dp", dpService.findById(dpId));
+		}
+		model.addAttribute("orderId", orderId);
+		model.addAttribute("listId", listId);
+		model.addAttribute("entityId", entityId);
+		
+		List<DocumentPackageState> states = dpStateService.findAll();
+        model.addAttribute("states", states);
+		
+		List<DocumentPackageType> types = dpTypeService.findAll();
+        model.addAttribute("types", types);
+		
+		return "/manage/order/entitylist/entity/documentpackage/save";
+	}
 	
 	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/save", method=RequestMethod.POST)
 	public String saveDocumentPackage(
@@ -134,13 +156,33 @@ public class DocumentPackageController {
 		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/view";
     }
 	
-	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/state/save", method=RequestMethod.POST)
-    public String saveDocumentPackageState(
-    		DocumentPackageState state, 
-    		@PathVariable("orderId")Long orderId, 
-    		@PathVariable("listId")Long listId,
-    		@PathVariable("entityId")Long entityId,
-    		ModelMap model) {
+	@RequestMapping(value = { "/manage/order/entitylist/entity/documentpackage/state/list" }, method = RequestMethod.GET)
+    public String listDPStates(ModelMap model) {
+ 
+		List<DocumentPackageState> states = dpStateService.findAll();
+		model.addAttribute("states", states);
+        
+        model.addAttribute("loggedinuser", Utils.getPrincipal());
+        return "/manage/order/entitylist/entity/documentpackage/state/list";
+    }
+	
+	@RequestMapping(value="/manage/order/entitylist/entity/documentpackage/state/{stateId}/save", method=RequestMethod.GET)
+	public String formDPState(ModelMap model, @PathVariable("stateId")Long stateId)
+	{
+		if(stateId == 0)
+		{
+			model.addAttribute("dpState", new DocumentPackageState());
+		}
+		
+		if(stateId > 0)
+		{
+			model.addAttribute("dpState", dpStateService.findById(stateId));
+		}
+		return "/manage/order/entitylist/entity/documentpackage/state/save";
+	}
+	
+	@RequestMapping(value="/manage/order/entitylist/entity/documentpackage/state/save", method=RequestMethod.POST)
+    public String saveDocumentPackageState(DocumentPackageState state, ModelMap model) {
 		if(state != null && state.getId() == 0)
 			dpStateService.save(new DocumentPackageState(state.getName()));
 		
@@ -148,27 +190,43 @@ public class DocumentPackageController {
 			dpStateService.update(state);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
-        return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/view";
+        return "redirect:" + "/manage/order/entitylist/entity/documentpackage/state/list";
     }
 	
-	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/state/delete", method=RequestMethod.POST)
-    public String deleteDocumentPackageState(
-    		long id, 
-    		@PathVariable("orderId")Long orderId, 
-    		@PathVariable("listId")Long listId,
-    		@PathVariable("entityId")Long entityId) {
+	@RequestMapping(value="/manage/order/entitylist/entity/documentpackage/state/delete", method=RequestMethod.POST)
+    public String deleteDocumentPackageState(long id) {
 		if(id > 0)
 			dpStateService.deleteById(id);
-		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/view";
+		return "redirect:" + "/manage/order/entitylist/entity/documentpackage/state/list";
     }
 	
-	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/type/save", method=RequestMethod.POST)
-    public String saveDocumentPackageType(
-    		DocumentPackageType type, 
-    		@PathVariable("orderId")Long orderId, 
-    		@PathVariable("listId")Long listId,
-    		@PathVariable("entityId")Long entityId,
-    		ModelMap model) {
+	@RequestMapping(value = { "/manage/order/entitylist/entity/documentpackage/type/list" }, method = RequestMethod.GET)
+    public String listDPTypes(ModelMap model) {
+ 
+		List<DocumentPackageType> types = dpTypeService.findAll();
+		model.addAttribute("types", types);
+        
+        model.addAttribute("loggedinuser", Utils.getPrincipal());
+        return "/manage/order/entitylist/entity/documentpackage/type/list";
+    }
+	
+	@RequestMapping(value="/manage/order/entitylist/entity/documentpackage/type/{typeId}/save", method=RequestMethod.GET)
+	public String formDPType(ModelMap model, @PathVariable("typeId")Long typeId)
+	{
+		if(typeId == 0)
+		{
+			model.addAttribute("dpType", new DocumentPackageType());
+		}
+		
+		if(typeId > 0)
+		{
+			model.addAttribute("dpType", dpTypeService.findById(typeId));
+		}
+		return "/manage/order/entitylist/entity/documentpackage/type/save";
+	}
+	
+	@RequestMapping(value="/manage/order/entitylist/entity/documentpackage/type/save", method=RequestMethod.POST)
+    public String saveDocumentPackageType(DocumentPackageType type, ModelMap model) {
 		if(type != null && type.getId() == 0)
 			dpTypeService.save(new DocumentPackageType(type.getName()));
 		
@@ -176,18 +234,14 @@ public class DocumentPackageController {
 			dpTypeService.update(type);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
-        return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/view";
+        return "redirect:" + "/manage/order/entitylist/entity/documentpackage/type/list";
     }
 	
-	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/type/delete", method=RequestMethod.POST)
-    public String deleteDocumentPackageType(
-    		long id, 
-    		@PathVariable("orderId")Long orderId, 
-    		@PathVariable("listId")Long listId,
-    		@PathVariable("entityId")Long entityId) {
+	@RequestMapping(value="/manage/order/entitylist/entity/documentpackage/type/delete", method=RequestMethod.POST)
+    public String deleteDocumentPackageType(long id) {
 		if(id > 0)
 			dpTypeService.deleteById(id);
-		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/view";
+		return "redirect:" + "/manage/order/entitylist/entity/documentpackage/type/list";
     }
 
 }
