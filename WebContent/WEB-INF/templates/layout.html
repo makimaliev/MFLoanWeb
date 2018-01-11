@@ -585,26 +585,46 @@
 
 						</li>						
 
-						<li class="nav-item  "><a href="javascript:;"
-							class="nav-link nav-toggle"> <i class="icon-diamond"></i> <span
-								class="title">Manage</span> <span class="arrow"></span>
-						</a>
+						<li class="nav-item  "><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-diamond"></i> <span class="title">Manage</span> <span class="arrow"></span></a>
 							<ul class="sub-menu">
-								<li class="nav-item  "><a th:href="@{/manage/order/list}"
-									class="nav-link ">List orders</a></li>
-								<li class="nav-item  ">
-										<a th:href="@{/manage/debtor/list}" class="nav-link ">List debtors</a>
-	                                </li>
-	                                <li class="nav-item  ">
-										<a th:href="@{/manage/loan/list}" class="nav-link ">List loans</a>
-	                                </li>
-	                                <li class="nav-item  ">
-										<a th:href="@{/manage/collateral/list}" class="nav-link ">List collaterals</a>
-	                                </li>
-	                                <li class="nav-item  ">
-										<a th:href="@{/manage/collection/list}" class="nav-link ">List collections</a>
-	                                </li>
-							</ul></li>						
+								<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Orders <span class="arrow"></span></a>
+									<ul class="sub-menu">
+										<li class="nav-item "><a th:href="@{/manage/order/list}" class="nav-link "> <span class="title"> List orders</span></a></li>
+										<li class="nav-item "><a th:href="@{/manage/order/state/list}" class="nav-link "> <span class="title"> List order states</span></a></li>
+										<li class="nav-item "><a th:href="@{/manage/order/type/list}" class="nav-link "> <span class="title"> List order types</span></a></li>
+										<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Applied entity list <span class="arrow"></span></a>
+											<ul class="sub-menu">
+												<li class="nav-item "><a th:href="@{/manage/order/entitylist/state/list}" class="nav-link "> <span class="title"> List applied entity list states</span></a></li>
+												<li class="nav-item "><a th:href="@{/manage/order/entitylist/type/list}" class="nav-link "> <span class="title"> List applied entity list types</span></a></li>
+											</ul>
+										</li>
+										<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Order term <span class="arrow"></span></a>
+											<ul class="sub-menu">
+												<li class="nav-item "><a th:href="@{/manage/order/orderterm/fund/list}" class="nav-link "> <span class="title"> List order term funds</span></a></li>
+												<li class="nav-item "><a th:href="@{/manage/order/orderterm/currency/list}" class="nav-link "> <span class="title"> List order term currencies</span></a></li>
+												<li class="nav-item "><a th:href="@{/manage/order/orderterm/freqtype/list}" class="nav-link "> <span class="title"> List order term frequency types</span></a></li>
+												<li class="nav-item "><a th:href="@{/manage/order/orderterm/rateperiod/list}" class="nav-link "> <span class="title"> List order term rate periods</span></a></li>
+												<li class="nav-item "><a th:href="@{/manage/order/orderterm/ratetype/list}" class="nav-link "> <span class="title"> List order term floating rate types</span></a></li>
+												<li class="nav-item "><a th:href="@{/manage/order/orderterm/transactionorder/list}" class="nav-link "> <span class="title"> List order term transaction orders</span></a></li>
+												<li class="nav-item "><a th:href="@{/manage/order/orderterm/daysmethod/list}" class="nav-link "> <span class="title"> List order term days methods</span></a></li>
+												<li class="nav-item "><a th:href="@{/manage/order/orderterm/accrmethod/list}" class="nav-link "> <span class="title"> List order term accr methods</span></a></li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Debtors <span class="arrow"></span></a>
+									<ul class="sub-menu">
+										<li class="nav-item "><a th:href="@{/manage/debtor/list}" class="nav-link "> <span class="title"> List debtors</span></a></li>
+										<li class="nav-item "><a th:href="@{/manage/debtor/type/list}" class="nav-link "> <span class="title"> List debtor types</span></a></li>
+										<li class="nav-item "><a th:href="@{/manage/debtor/orgform/list}" class="nav-link "> <span class="title"> List organization forms</span></a></li>
+										<li class="nav-item "><a th:href="@{/manage/debtor/worksector/list}" class="nav-link "> <span class="title"> List work sectors</span></a></li>
+									</ul>
+								</li>
+								<li class="nav-item  "><a th:href="@{/manage/loan/list}" class="nav-link ">List loans</a></li>
+	                            <li class="nav-item  "><a th:href="@{/manage/collateral/list}" class="nav-link ">List collaterals</a></li>
+	                            <li class="nav-item  "><a th:href="@{/manage/collection/list}" class="nav-link ">List collections</a></li>
+							</ul>
+						</li>						
 
 
 
