@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="sender">
+    <div class="modal fade" id="senderDataModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header"><h3 class="modal-title">Add Sender Data</h3></div>
+                <div class="modal-body form">
+                    <form action="#" id="senderDataForm" class="form-horizontal">
+                        <div class="form-body">
+
+                            <input type="hidden" th:value="${document.id}" name="id"/>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Registered Date</label>
+                                <div class="col-md-6"><input type='text'class="form-control" name="registeredDate" th:value="${senderData.registeredDate}"/></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Registered №</label>
+                                <div class="col-md-6"><input type="text" class="form-control" name="registeredNumber" th:value="${senderData.registeredNumber}"/></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Due Date</label>
+                                <div class="col-md-6"><input type='text' class="form-control" name="dueDate" th:value="${senderData.dueDate}"/></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Responsible</label>
+                                <div class="col-md-6">
+                                    <select class="form-control" name="responsible.id" th:field="*{senderData.responsible.id}">
+                                        <option value=""> *** Select Responsible *** </option>
+                                        <option th:each="r : ${responsible}"
+                                                th:value="${r.id}"
+                                                th:text="${r.name}">Responsible</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Executor</label>
+                                <div class="col-md-6">
+                                    <select class="form-control" name="executor.id" th:field="*{senderData.executor.id}">
+                                        <option value=""> *** Select Executor *** </option>
+                                        <option th:each="e : ${executor}"
+                                                th:value="${e.id}"
+                                                th:text="${e.name}">Executor</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Information</label>
+                                <div class="col-md-6">
+                                    <select class="form-control" name="information.id" th:field="*{senderData.information.id}">
+                                        <option value=""> *** Select Information *** </option>
+                                        <option th:each="i : ${information}"
+                                                th:value="${i.id}"
+                                                th:text="${i.name}">Information</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSaveSender" onclick="save_sender()" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:fragment="receiver">
+    <div class="modal fade" id="receiverDataModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header"><h3 class="modal-title">Add Receiver Data</h3></div>
+                <div class="modal-body form">
+
+                    <form action="#" id="receiverDataForm" class="form-horizontal">
+                        <div class="form-body">
+
+                            <input type="hidden" th:value="${document.id}" name="id"/>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Registered Date</label>
+                                <div class="col-md-6"><input type='text'class="form-control" name="registeredDate"/></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Registered №</label>
+                                <div class="col-md-6"><input type="text" class="form-control" name="registeredNumber"/></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Due Date</label>
+                                <div class="col-md-6"><input type='text' class="form-control" name="dueDate"/></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Responsible</label>
+                                <div class="col-md-6">
+                                    <select class="form-control" name="responsible.id">
+                                        <option value=""> *** Select Responsible *** </option>
+                                        <option th:each="r : ${responsible}"
+                                                th:value="${r.id}"
+                                                th:text="${r.name}">Responsible</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Executor</label>
+                                <div class="col-md-6">
+                                    <select class="form-control" name="executor.id">
+                                        <option value=""> *** Select Executor *** </option>
+                                        <option th:each="e : ${executor}"
+                                                th:value="${e.id}"
+                                                th:text="${e.name}">Executor</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Information</label>
+                                <div class="col-md-6">
+                                    <select class="form-control" name="information.id">
+                                        <option value=""> *** Select Information *** </option>
+                                        <option th:each="i : ${information}"
+                                                th:value="${i.id}"
+                                                th:text="${i.name}">Information</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSaveReceiver" onclick="save_receiver()" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:fragment="result">
+    <div class="modal fade" id="resultDataModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header"><h3 class="modal-title" id="modal-title">Add Result Data</h3></div>
+                <div class="modal-body form">
+
+                    <form action="#" id="resultDataForm" class="form-horizontal">
+                        <div class="form-body">
+
+                            <input type="hidden" th:value="${document.id}" name="id"/>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Close Date</label>
+                                <div class="col-md-6">
+                                    <input type='text'class="form-control" name="close_date"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Result Status</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="resultStatus"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Information</label>
+                                <div class="col-md-6">
+                                    <select class="form-control" name="information.id">
+                                        <option value=""> *** Select Information *** </option>
+                                        <option th:each="i : ${information}"
+                                                th:value="${i.id}"
+                                                th:text="${i.name}">Information</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Responsible</label>
+                                <div class="col-md-6">
+                                    <select class="form-control" name="responsible.id">
+                                        <option value=""> *** Select Responsible *** </option>
+                                        <option th:each="r : ${responsible}"
+                                                th:value="${r.id}"
+                                                th:text="${r.name}">Responsible</option>
+                                    </select>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSaveResult" onclick="save_result()" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
