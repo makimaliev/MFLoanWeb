@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>MFLoan | Debtors</title>
+<title>MFLoan | Credit Orders</title>
 <div th:replace="fragments/header :: header-css" />
 <link th:href="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css}" rel="stylesheet" type="text/css" />
 <link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
@@ -23,13 +23,13 @@
 			<div class="page-content">
 				<!-- BEGIN PAGE HEADER-->
 				<h1 class="page-title">
-					Debtors 
-					<small>create, view, edit, delete debtors and their types, organization forms and work sectors </small>
+					Work Sectors
+					<small>create, view, edit, delete credit orders and their types, states </small>
 				</h1>
 				<div class="page-bar">
 					<ul class="page-breadcrumb">
 						<li><i class="icon-home"></i> <a th:href="@{/}">Home</a> <i class="fa fa-angle-right"></i></li>
-						<li><span>Debtors</span></li>
+						<li><span>Work Sectors</span></li>
 					</ul>
 					<div class="page-toolbar">
 						<div class="btn-group pull-right">
@@ -49,13 +49,13 @@
 				<!-- END PAGE HEADER-->
 
 				<div class="row">
-					<div class="col-md-12">
+					<div class="col-md-6">
 						<!-- BEGIN BORDERED TABLE PORTLET-->
 						<div class="portlet light portlet-fit ">
 							<div class="portlet-title">
 								<div class="caption">
 									<i class="icon-settings font-green"></i> 
-									<span class="caption-subject font-green sbold uppercase">Debtors</span>
+									<span class="caption-subject font-green sbold uppercase">Work Sectors</span>
 								</div>
 							</div>
 							<div class="portlet-body">
@@ -63,53 +63,42 @@
 									<div class="row">
 										<div class="col-md-6">
 											<div class="btn-group">
-												<a th:href="@{/manage/debtor/0/save}" class="btn green">Add New Debtor <i class="fa fa-plus"></i></a>
+												<a th:href="@{/manage/debtor/worksector/0/save}" class="btn green">Add New Work Sector <i class="fa fa-plus"></i></a>
 											</div>
 										</div>
 									</div>
 								</div>
 								<div class="table-scrollable table-scrollable-borderless">
-									<table class="table table-hover table-light" id="orders">
+									<table class="table table-hover table-light">
 										<thead>
 											<tr>
-												<th>Id</th>
 												<th>Name</th>
-												<th>Type</th>
-												<th>Organization form</th>
-												<th>Work sector</th>
-												<th>View Details</th>
 												<th>Edit</th>
 												<th>Delete</th>
 											</tr>
 										</thead>
 										<tbody>
-											<ordercheck th:if="${#lists.isEmpty(debtors)}">
+											<statecheck th:if="${#lists.isEmpty(workSectors)}">
 												<tr class="no-records-found" style="text-align: center;">
 													<td colspan="8">No matching records found</td>
 												</tr>
-											</ordercheck>
-											<order th:each="debtor : ${debtors}">
-												<tr class="clickable-row">
-													<td th:text="${debtor.id}">Id</td>
-													<td th:text="${debtor.name}">AB0C1234</td>
-													<td th:text="${debtor.debtorType.name}">Type</td>
-													<td th:text="${debtor.orgForm.name}">Org form</td>
-													<td th:text="${debtor.workSector.name}">Work sector</td>
+											</statecheck>
+											<state th:each="t : ${workSectors}">
+												<tr>
+													<td th:text="${t.name}">Name</td>
 													<td>
-														<a th:href="@{/manage/debtor/__${debtor.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
+														<a th:href="@{/manage/debtor/worksector/__${t.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
 													</td>
 													<td>
-														<a th:href="@{/manage/debtor/__${debtor.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
-													</td>
-													<td>
-														<form th:action="@{/manage/debtor/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-															<input hidden="true" type="text" id="id" name="id" th:value="${debtor.id}" />
+														<form th:action="@{/manage/debtor/worksector/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+															<input hidden="true" type="text" id="id" name="id" th:value="${t.id}" />
 															<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
 														</form>
 													</td>
 												</tr>
-											</order>
+											</state>
 										</tbody>
+
 									</table>
 								</div>
 							</div>

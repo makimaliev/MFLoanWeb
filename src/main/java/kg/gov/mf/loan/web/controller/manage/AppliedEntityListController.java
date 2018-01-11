@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import kg.gov.mf.loan.manage.model.entity.AppliedEntity;
-import kg.gov.mf.loan.manage.model.entity.AppliedEntityState;
 import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityList;
 import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityListState;
 import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityListType;

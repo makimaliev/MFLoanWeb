@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import kg.gov.mf.loan.manage.model.order.CreditOrderState;
+import kg.gov.mf.loan.manage.model.order.CreditOrderType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -80,14 +82,6 @@ public class DebtorController {
         List<OrderTermCurrency> currs = currService.findAll();
         model.addAttribute("currencies", currs);
         
-        List<LoanType> types = loanTypeService.findAll();
-        model.addAttribute("types", types);
-        model.addAttribute("emptyType", new LoanType());
-        
-        List<LoanState> states = loanStateService.findAll();
-        model.addAttribute("states", states);
-        model.addAttribute("emptyState", new LoanState());
-        
         model.addAttribute("agreements", agreementService.findAll());
         
         model.addAttribute("emptyLoan", new Loan());
@@ -103,26 +97,38 @@ public class DebtorController {
 	
 	@RequestMapping(value = { "/manage/debtor/", "/manage/debtor/list" }, method = RequestMethod.GET)
     public String listDebtors(ModelMap model) {
- 
-		List<DebtorType> types = debtorTypeService.findAll();
-		model.addAttribute("types", types);
-		model.addAttribute("emptyType", new DebtorType());
-		
-		List<OrganizationForm> forms = formService.findAll();
-		model.addAttribute("forms", forms);
-		model.addAttribute("emptyForm", new OrganizationForm());
-		
-		List<WorkSector> sectors = sectorService.findAll();
-		model.addAttribute("sectors", sectors);
-		model.addAttribute("emptySector", new WorkSector());
 		
         List<Debtor> debtors = debtorService.findAll();
         model.addAttribute("debtors", debtors);
-        model.addAttribute("emptyDebtor", new Debtor());
-        
+
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "/manage/debtor/list";
     }
+
+	@RequestMapping(value="/manage/debtor/{debtorId}/save", method=RequestMethod.GET)
+	public String formDebtor(ModelMap model, @PathVariable("debtorId")Long debtorId)
+	{
+		if(debtorId == 0)
+		{
+			model.addAttribute("debtor", new Debtor());
+		}
+
+		if(debtorId > 0)
+		{
+			model.addAttribute("debtor", debtorService.findById(debtorId));
+		}
+
+		List<DebtorType> types = debtorTypeService.findAll();
+		model.addAttribute("types", types);
+
+		List<OrganizationForm> forms = formService.findAll();
+		model.addAttribute("forms", forms);
+
+		List<WorkSector> sectors = sectorService.findAll();
+		model.addAttribute("sectors", sectors);
+
+		return "/manage/debtor/save";
+	}
 	
 	@RequestMapping(value="/manage/debtor/save", method=RequestMethod.POST)
 	public String saveDebtor(Debtor debtor, long typeId, long orgFormId, long workSectorId)
@@ -151,7 +157,33 @@ public class DebtorController {
 			debtorService.deleteById(id);
         return "redirect:" + "/manage/debtor/list";
     }
-	
+
+    //BEGIN - TYPE
+	@RequestMapping(value = { "/manage/debtor/type/list" }, method = RequestMethod.GET)
+	public String listDebtorTypes(ModelMap model) {
+
+		List<DebtorType> types = debtorTypeService.findAll();
+		model.addAttribute("types", types);
+
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
+		return "/manage/debtor/type/list";
+	}
+
+	@RequestMapping(value="/manage/debtor/type/{typeId}/save", method=RequestMethod.GET)
+	public String formDebtorType(ModelMap model, @PathVariable("typeId")Long typeId)
+	{
+		if(typeId == 0)
+		{
+			model.addAttribute("debtorType", new DebtorType());
+		}
+
+		if(typeId > 0)
+		{
+			model.addAttribute("debtorType", debtorTypeService.findById(typeId));
+		}
+		return "/manage/debtor/type/save";
+	}
+
 	@RequestMapping(value="/manage/debtor/type/save", method=RequestMethod.POST)
     public String saveDebtorType(DebtorType type,  ModelMap model) {
 		if(type != null && type.getId() == 0)
@@ -161,16 +193,43 @@ public class DebtorController {
 			debtorTypeService.update(type);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
-        return "redirect:" + "/manage/debtor/list";
+        return "redirect:" + "/manage/debtor/type/list";
     }
 	
 	@RequestMapping(value="/manage/debtor/type/delete", method=RequestMethod.POST)
     public String deleteDebtorType(long id) {
 		if(id > 0)
 			debtorTypeService.deleteById(id);
-        return "redirect:" + "/manage/debtor/list";
+        return "redirect:" + "/manage/debtor/type/list";
     }
-	
+    //END - TYPE
+
+	//BEGIN - ORGFORM
+	@RequestMapping(value = { "/manage/debtor/orgform/list" }, method = RequestMethod.GET)
+	public String listOrgForm(ModelMap model) {
+
+		List<OrganizationForm> orgForms = formService.findAll();
+		model.addAttribute("orgForms", orgForms);
+
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
+		return "/manage/debtor/orgform/list";
+	}
+
+	@RequestMapping(value="/manage/debtor/orgform/{formId}/save", method=RequestMethod.GET)
+	public String formOrgForm(ModelMap model, @PathVariable("formId")Long formId)
+	{
+		if(formId == 0)
+		{
+			model.addAttribute("orgForm", new OrganizationForm());
+		}
+
+		if(formId > 0)
+		{
+			model.addAttribute("orgForm", formService.findById(formId));
+		}
+		return "/manage/debtor/orgform/save";
+	}
+
 	@RequestMapping(value="/manage/debtor/orgform/save", method=RequestMethod.POST)
     public String saveOrgForm(OrganizationForm form,  ModelMap model) {
 		if(form != null && form.getId() == 0)
@@ -180,16 +239,43 @@ public class DebtorController {
 			formService.update(form);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
-        return "redirect:" + "/manage/debtor/list";
+        return "redirect:" + "/manage/debtor/orgform/list";
     }
 	
 	@RequestMapping(value="/manage/debtor/orgform/delete", method=RequestMethod.POST)
     public String deleteOgrForm(long id) {
 		if(id > 0)
 			formService.deleteById(id);
-        return "redirect:" + "/manage/debtor/list";
+        return "redirect:" + "/manage/debtor/orgform/list";
     }
-	
+    //END - ORGFORM
+
+	//BEGIN - WORK SECTOR
+	@RequestMapping(value = { "/manage/debtor/worksector/list" }, method = RequestMethod.GET)
+	public String listWorkSector(ModelMap model) {
+
+		List<WorkSector> workSectors = sectorService.findAll();
+		model.addAttribute("workSectors", workSectors);
+
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
+		return "/manage/debtor/worksector/list";
+	}
+
+	@RequestMapping(value="/manage/debtor/worksector/{sectorId}/save", method=RequestMethod.GET)
+	public String formWorkSector(ModelMap model, @PathVariable("sectorId")Long sectorId)
+	{
+		if(sectorId == 0)
+		{
+			model.addAttribute("workSector", new WorkSector());
+		}
+
+		if(sectorId > 0)
+		{
+			model.addAttribute("workSector", sectorService.findById(sectorId));
+		}
+		return "/manage/debtor/worksector/save";
+	}
+
 	@RequestMapping(value="/manage/debtor/worksector/save", method=RequestMethod.POST)
     public String saveWorkSector(WorkSector sector,  ModelMap model) {
 		if(sector != null && sector.getId() == 0)
@@ -199,14 +285,15 @@ public class DebtorController {
 			sectorService.update(sector);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
-        return "redirect:" + "/manage/debtor/list";
+        return "redirect:" + "/manage/debtor/worksector/list";
     }
 	
 	@RequestMapping(value="/manage/debtor/worksector/delete", method=RequestMethod.POST)
     public String deleteWorkSector(long id) {
 		if(id > 0)
 			sectorService.deleteById(id);
-        return "redirect:" + "/manage/debtor/list";
+        return "redirect:" + "/manage/debtor/worksector/list";
     }
+	//END - WORK SECTOR
 	
 }

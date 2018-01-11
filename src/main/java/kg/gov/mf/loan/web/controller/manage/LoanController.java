@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import kg.gov.mf.loan.manage.model.collateral.Collateral;
 import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
+import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityList;
+import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityListState;
+import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityListType;
 import kg.gov.mf.loan.manage.model.loan.Bankrupt;
 import kg.gov.mf.loan.manage.model.loan.CreditTerm;
 import kg.gov.mf.loan.manage.model.loan.DebtTransfer;
@@ -185,6 +188,30 @@ public class LoanController {
         return "/manage/debtor/loan/view";
     }
 	
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/save", method=RequestMethod.GET)
+	public String formeAppliedEntityList(ModelMap model, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId)
+	{
+		if(loanId == 0)
+		{
+			model.addAttribute("loan", new Loan());
+		}
+			
+		
+		if(loanId > 0)
+		{
+			model.addAttribute("loan", loanService.findById(loanId));
+		}
+		model.addAttribute("debtorId", debtorId);
+		
+		List<LoanType> types = loanTypeService.findAll();
+        model.addAttribute("types", types);
+        
+        List<LoanState> states = loanStateService.findAll();
+        model.addAttribute("states", states);
+			
+		return "/manage/debtor/loan/save";
+	}
+	
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/save", method=RequestMethod.POST)
 	public String saveLoan(Loan loan,
 			long currencyId,
@@ -255,9 +282,34 @@ public class LoanController {
 			loanService.deleteById(id);
 		return "redirect:" + "/manage/debtor/{debtorId}/view";
     }
-	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/state/save", method=RequestMethod.POST)
-    public String saveLoanState(LoanState state, @PathVariable("debtorId")Long debtorId, ModelMap model) {
+
+	@RequestMapping(value = { "/manage/debtor/loan/state/list" }, method = RequestMethod.GET)
+	public String listLoanStates(ModelMap model) {
+
+		List<LoanState> states = loanStateService.findAll();
+		model.addAttribute("states", states);
+
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
+		return "/manage/debtor/loan/state/list";
+	}
+
+	@RequestMapping(value="/manage/debtor/loan/state/{stateId}/save", method=RequestMethod.GET)
+	public String formLoanState(ModelMap model, @PathVariable("stateId")Long stateId)
+	{
+		if(stateId == 0)
+		{
+			model.addAttribute("loanState", new LoanState());
+		}
+
+		if(stateId > 0)
+		{
+			model.addAttribute("loanState", loanStateService.findById(stateId));
+		}
+		return "/manage/debtor/loan/state/save";
+	}
+
+	@RequestMapping(value="/manage/debtor/loan/state/save", method=RequestMethod.POST)
+    public String saveLoanState(LoanState state, ModelMap model) {
 		if(state != null && state.getId() == 0)
 			loanStateService.save(new LoanState(state.getName()));
 		
@@ -265,11 +317,43 @@ public class LoanController {
 			loanStateService.update(state);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
-        return "redirect:" + "/manage/debtor/{debtorId}/view";
+        return "redirect:" + "/manage/debtor/loan/state/list";
     }
+
+	@RequestMapping(value="/manage/debtor/loan/state/delete", method=RequestMethod.POST)
+	public String deleteLoanState(long id) {
+		if(id > 0)
+			loanStateService.deleteById(id);
+		return "redirect:" + "/manage/debtor/loan/state/list";
+	}
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/type/save", method=RequestMethod.POST)
-    public String saveLoanType(LoanType type, @PathVariable("debtorId")Long debtorId, ModelMap model) {
+	@RequestMapping(value = { "/manage/debtor/loan/type/list" }, method = RequestMethod.GET)
+	public String listLoanTypes(ModelMap model) {
+
+		List<LoanType> types = loanTypeService.findAll();
+		model.addAttribute("types", types);
+
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
+		return "/manage/debtor/loan/type/list";
+	}
+
+	@RequestMapping(value="/manage/debtor/loan/type/{typeId}/save", method=RequestMethod.GET)
+	public String formLoanType(ModelMap model, @PathVariable("typeId")Long typeId)
+	{
+		if(typeId == 0)
+		{
+			model.addAttribute("loanType", new LoanState());
+		}
+
+		if(typeId > 0)
+		{
+			model.addAttribute("loanType", loanTypeService.findById(typeId));
+		}
+		return "/manage/debtor/loan/type/save";
+	}
+
+	@RequestMapping(value="/manage/debtor/loan/type/save", method=RequestMethod.POST)
+    public String saveLoanType(LoanType type, ModelMap model) {
 		if(type != null && type.getId() == 0)
 			loanTypeService.save(new LoanType(type.getName()));
 		
@@ -277,21 +361,14 @@ public class LoanController {
 			loanTypeService.update(type);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
-		return "redirect:" + "/manage/debtor/{debtorId}/view";
-    }
+		return "redirect:" + "/manage/debtor/loan/type/list";
+	}
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/state/delete", method=RequestMethod.POST)
-    public String deleteLoanState(long id, @PathVariable("debtorId")Long debtorId) {
-		if(id > 0)
-			loanStateService.deleteById(id);
-		return "redirect:" + "/manage/debtor/{debtorId}/view";
-    }
-	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/type/delete", method=RequestMethod.POST)
-    public String deleteLoanType(long id, @PathVariable("debtorId")Long debtorId) {
+	@RequestMapping(value="/manage/debtor/loan/type/delete", method=RequestMethod.POST)
+    public String deleteLoanType(long id) {
 		if(id > 0)
 			loanTypeService.deleteById(id);
-		return "redirect:" + "/manage/debtor/{debtorId}/view";
+		return "redirect:" + "/manage/debtor/loan/type/list";
     }
 
 }
