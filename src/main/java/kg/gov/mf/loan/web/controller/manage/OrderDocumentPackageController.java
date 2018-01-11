@@ -66,11 +66,6 @@ public class OrderDocumentPackageController {
 		OrderDocumentPackage oDP = oDPService.findById(oDPId);
         model.addAttribute("oDP", oDP);
         
-        List<OrderDocumentType> types = typeService.findAll();
-        model.addAttribute("types", types);
-        model.addAttribute("emptyType", new OrderDocumentType());
-        
-        model.addAttribute("emptyDocument", new OrderDocument());
         model.addAttribute("documents", oDP.getOrderDocument());
         
         model.addAttribute("orderId", orderId);

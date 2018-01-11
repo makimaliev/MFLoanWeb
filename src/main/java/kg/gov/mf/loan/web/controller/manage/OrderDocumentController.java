@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackage;
+import kg.gov.mf.loan.manage.model.entity.AppliedEntity;
+import kg.gov.mf.loan.manage.model.entity.AppliedEntityState;
 import kg.gov.mf.loan.manage.model.entitydocument.EntityDocument;
 import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentRegisteredBy;
 import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentState;
@@ -61,6 +63,27 @@ public class OrderDocumentController {
 		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
 	    binder.registerCustomEditor(Date.class, editor);
 	}
+	
+	@RequestMapping(value="/manage/order/{orderId}/orderdocumentpackage/{dpId}/orderdocument/{docId}/save", method=RequestMethod.GET)
+	public String formeAppliedEntityList(ModelMap model, @PathVariable("orderId")Long orderId, @PathVariable("dpId")Long dpId, @PathVariable("docId")Long docId)
+	{
+		if(docId == 0)
+		{
+			model.addAttribute("doc", new OrderDocument());
+		}
+			
+		
+		if(docId > 0)
+		{
+			model.addAttribute("doc", odService.findById(docId));
+		}
+		model.addAttribute("orderId", orderId);
+		model.addAttribute("dpId", dpId);
+		List<OrderDocumentType> types = oDTypeService.findAll();
+        model.addAttribute("types", types);
+			
+		return "/manage/order/orderdocumentpackage/orderdocument/save";
+	}
 
 	@RequestMapping(value="/manage/order/{orderId}/orderdocumentpackage/{oDPId}/orderdocument/save", method=RequestMethod.POST)
 	public String saveOrderDocument(
@@ -103,8 +126,33 @@ public class OrderDocumentController {
 		return "redirect:" + "/manage/order/{orderId}/orderdocumentpackage/{oDPId}/view";
     }
 	
-	@RequestMapping(value="/manage/order/{orderId}/orderdocumentpackage/{oDPId}/orderdocument/type/save", method=RequestMethod.POST)
-    public String saveOrderDocumentType(OrderDocumentType type, @PathVariable("orderId")Long orderId, @PathVariable("oDPId")Long oDPId, ModelMap model) {
+	@RequestMapping(value = { "/manage/order/orderdocumentpackage/orderdocument/type/list" }, method = RequestMethod.GET)
+    public String listODTypes(ModelMap model) {
+ 
+		List<OrderDocumentType> types = oDTypeService.findAll();
+		model.addAttribute("odTypes", types);
+        
+        model.addAttribute("loggedinuser", Utils.getPrincipal());
+        return "/manage/order/orderdocumentpackage/orderdocument/type/list";
+    }
+	
+	@RequestMapping(value="/manage/order/orderdocumentpackage/orderdocument/type/{typeId}/save", method=RequestMethod.GET)
+	public String formODType(ModelMap model, @PathVariable("typeId")Long typeId)
+	{
+		if(typeId == 0)
+		{
+			model.addAttribute("odType", new OrderDocumentType());
+		}
+		
+		if(typeId > 0)
+		{
+			model.addAttribute("odType", oDTypeService.findById(typeId));
+		}
+		return "/manage/order/orderdocumentpackage/orderdocument/type/save";
+	}
+	
+	@RequestMapping(value="/manage/order/orderdocumentpackage/orderdocument/type/save", method=RequestMethod.POST)
+    public String saveOrderDocumentType(OrderDocumentType type, ModelMap model) {
 		if(type != null && type.getId() == 0)
 			oDTypeService.save(new OrderDocumentType(type.getName()));
 		
@@ -112,14 +160,14 @@ public class OrderDocumentController {
 			oDTypeService.update(type);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
-        return "redirect:" + "/manage/order/{orderId}/orderdocumentpackage/{oDPId}/view";
+        return "redirect:" + "/manage/order/orderdocumentpackage/orderdocument/type/list";
     }
 	
-	@RequestMapping(value="/manage/order/{orderId}/orderdocumentpackage/{oDPId}/orderdocument/type/delete", method=RequestMethod.POST)
-    public String deleteOrderDocumentType(long id, @PathVariable("orderId")Long orderId, @PathVariable("oDPId")Long oDPId) {
+	@RequestMapping(value="/manage/order/orderdocumentpackage/orderdocument/type/delete", method=RequestMethod.POST)
+    public String deleteOrderDocumentType(long id) {
 		if(id > 0)
 			oDTypeService.deleteById(id);
-		return "redirect:" + "/manage/order/{orderId}/orderdocumentpackage/{oDPId}/view";
+		return "redirect:" + "/manage/order/orderdocumentpackage/orderdocument/type/list";
     }
 	
 	private void addToEntities(OrderDocument doc, Long oDPId) {
