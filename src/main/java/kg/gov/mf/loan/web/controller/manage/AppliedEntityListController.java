@@ -62,10 +62,6 @@ public class AppliedEntityListController {
 		AppliedEntityList list = listService.findById(listId);
         model.addAttribute("entityList", list);
         
-        List<AppliedEntityState> states = entityStateService.findAll();
-        model.addAttribute("states", states);
-		model.addAttribute("emptyState", new AppliedEntityState());
-		
 		model.addAttribute("emptyEntity", new AppliedEntity());
         model.addAttribute("entities", list.getAppliedEntity());
         
