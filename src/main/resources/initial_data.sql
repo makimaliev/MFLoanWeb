@@ -45,115 +45,115 @@ INSERT INTO `mfloan`.`user_role` (`user_id`,`role_id`) VALUES (2,2);
 
 /* ADD ORG FORM */
 
-INSERT INTO `mfloan`.`orgform` (`enabled`, `name`) VALUES (true, 'Р®СЂ. Р»РёС†Рѕ');
-INSERT INTO `mfloan`.`orgform` (`enabled`, `name`) VALUES (true, 'Р¤РёР·. Р»РёС†Рѕ');
+INSERT INTO `mfloan`.`orgform` (`enabled`, `name`) VALUES (true, 'Юр. лицо');
+INSERT INTO `mfloan`.`orgform` (`enabled`, `name`) VALUES (true, 'Физ. лицо');
 
 
 
 /* ADD REGION */
 
-INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Р‘Р°С‚РєРµРЅСЃРєР°СЏ РѕР±Р»Р°СЃС‚СЊ','РЎРћРђРўР• РєРѕРґ РѕР±Р»Р°СЃС‚Рё');
-INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Р–Р°Р»Р°Р»-РђР±Р°РґСЃРєР°СЏ РѕР±Р»Р°СЃС‚СЊ','РЎРћРђРўР• РєРѕРґ РѕР±Р»Р°СЃС‚Рё');
-INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('РћС€СЃРєР°СЏ РѕР±Р»Р°СЃС‚СЊ','РЎРћРђРўР• РєРѕРґ РѕР±Р»Р°СЃС‚Рё');
-INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('РўР°Р»Р°СЃСЃРєР°СЏ РѕР±Р»Р°СЃС‚СЊ','РЎРћРђРўР• РєРѕРґ РѕР±Р»Р°СЃС‚Рё');
-INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('РќР°СЂС‹РЅСЃРєР°СЏ РѕР±Р»Р°СЃС‚СЊ','РЎРћРђРўР• РєРѕРґ РѕР±Р»Р°СЃС‚Рё');
-INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('РСЃСЃС‹Рє-РљСѓР»СЊСЃРєР°СЏ РѕР±Р»Р°СЃС‚СЊ','РЎРћРђРўР• РєРѕРґ РѕР±Р»Р°СЃС‚Рё');
-INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Р§СѓР№СЃРєР°СЏ РѕР±Р»Р°СЃС‚СЊ','РЎРћРђРўР• РєРѕРґ РѕР±Р»Р°СЃС‚Рё');
-INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Рі.Р‘РёС€РєРµРє','РЎРћРђРўР• РєРѕРґ РіРѕСЂРѕРґР°');
+INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Баткенская область','СОАТЕ код области');
+INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Жалал-Абадская область','СОАТЕ код области');
+INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Ошская область','СОАТЕ код области');
+INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Таласская область','СОАТЕ код области');
+INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Нарынская область','СОАТЕ код области');
+INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Иссык-Кульская область','СОАТЕ код области');
+INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Чуйская область','СОАТЕ код области');
+INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('г.Бишкек','СОАТЕ код города');
 
 /* ADD DISTRICT */
 
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Р‘Р°С‚РєРµРЅСЃРєРёР№ СЂР°Р№РѕРЅ','РЎРћРђРўР• РєРѕРґ СЂР°Р№РѕРЅР°',1);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Р›СЏР№Р»СЏРєСЃРєРёР№ СЂР°Р№РѕРЅ','РЎРћРђРўР• РєРѕРґ СЂР°Р№РѕРЅР°',1);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('РљР°РґР°РјР¶Р°Р№СЃРєРёР№ СЂР°Р№РѕРЅ','РЎРћРђРўР• РєРѕРґ СЂР°Р№РѕРЅР°',1);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Баткенский район','СОАТЕ код района',1);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Ляйлякский район','СОАТЕ код района',1);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Кадамжайский район','СОАТЕ код района',1);
 
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('РђРєСЃС‹Р№СЃРєРёР№ СЂР°Р№РѕРЅ','РЎРћРђРўР• РєРѕРґ СЂР°Р№РѕРЅР°',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('РђР»Р°-Р‘СѓРєРёРЅСЃРєРёР№ СЂР°Р№РѕРЅ','РЎРћРђРўР• РєРѕРґ СЂР°Р№РѕРЅР°',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('РЎСѓР·Р°РєСЃРєРёР№ СЂР°Р№РѕРЅ','РЎРћРђРўР• РєРѕРґ СЂР°Р№РѕРЅР°',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Р‘Р°Р·Р°СЂ-РљРѕСЂРіРѕРЅСЃРєРёР№ СЂР°Р№РѕРЅ','РЎРћРђРўР• РєРѕРґ СЂР°Р№РѕРЅР°',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('РќРѕРѕРєРµРЅСЃРєРёР№ СЂР°Р№РѕРЅ','РЎРћРђРўР• РєРѕРґ СЂР°Р№РѕРЅР°',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Р§Р°С‚РєР°Р»СЊСЃРєРёР№ СЂР°Р№РѕРЅ','РЎРћРђРўР• РєРѕРґ СЂР°Р№РѕРЅР°',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('РўРѕРєС‚РѕРіСѓР»СЊСЃРєРёР№ СЂР°Р№РѕРЅ','РЎРћРђРўР• РєРѕРґ СЂР°Р№РѕРЅР°',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('РўРѕРіСѓР·-РўРѕСЂРѕСѓР·СЃРєРёР№ СЂР°Р№РѕРЅ','РЎРћРђРўР• РєРѕРґ СЂР°Р№РѕРЅР°',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Рі.Р–Р°Р»Р°Р»-РђР±Р°Рґ','РЎРћРђРўР• РєРѕРґ РіРѕСЂРѕРґР°',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Рі.РљР°СЂР°-РљСѓР»СЊ','РЎРћРђРўР• РєРѕРґ РіРѕСЂРѕРґР°',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Рі.РўР°С€-РљСѓРјС‹СЂ','РЎРћРђРўР• РєРѕРґ РіРѕСЂРѕРґР°',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Рі.РљРѕРє-Р–Р°РЅРіР°Рє','РЎРћРђРўР• РєРѕРґ РіРѕСЂРѕРґР°',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Рі.РљРѕС‡РєРѕСЂ-РђС‚Р°','РЎРћРђРўР• РєРѕРґ РіРѕСЂРѕРґР°',2);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Аксыйский район','СОАТЕ код района',2);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Ала-Букинский район','СОАТЕ код района',2);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Сузакский район','СОАТЕ код района',2);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Базар-Коргонский район','СОАТЕ код района',2);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Ноокенский район','СОАТЕ код района',2);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Чаткальский район','СОАТЕ код района',2);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Токтогульский район','СОАТЕ код района',2);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Тогуз-Тороузский район','СОАТЕ код района',2);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('г.Жалал-Абад','СОАТЕ код города',2);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('г.Кара-Куль','СОАТЕ код города',2);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('г.Таш-Кумыр','СОАТЕ код города',2);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('г.Кок-Жангак','СОАТЕ код города',2);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('г.Кочкор-Ата','СОАТЕ код города',2);
 
 
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('РђСЂР°РІР°РЅСЃРєРёР№ СЂР°Р№РѕРЅ','РЎРћРђРўР• РєРѕРґ СЂР°Р№РѕРЅР°',3);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('РђР»Р°Р№СЃРєРёР№ СЂР°Р№РѕРЅ','РЎРћРђРўР• РєРѕРґ СЂР°Р№РѕРЅР°',3);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('РљР°СЂР°-РЎСѓР№СЃРєРёР№ СЂР°Р№РѕРЅ','РЎРћРђРўР• РєРѕРґ СЂР°Р№РѕРЅР°',3);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('РљР°СЂР°-РљСѓР»СЊРґР¶РёРЅСЃРєРёР№ СЂР°Р№РѕРЅ','РЎРћРђРўР• РєРѕРґ СЂР°Р№РѕРЅР°',3);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Р§РѕРЅ-РђР»Р°Р№СЃРєРёР№ СЂР°Р№РѕРЅ','РЎРћРђРўР• РєРѕРґ СЂР°Р№РѕРЅР°',3);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('РЈР·РіРµРЅСЃРєРёР№ СЂР°Р№РѕРЅ','РЎРћРђРўР• РєРѕРґ СЂР°Р№РѕРЅР°',3);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('РќРѕРѕРєР°С‚СЃРєРёР№ СЂР°Р№РѕРЅ','РЎРћРђРўР• РєРѕРґ СЂР°Р№РѕРЅР°',3);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Рі.РћС€','РЎРћРђРўР• РєРѕРґ РіРѕСЂРѕРґР°',3);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Араванский район','СОАТЕ код района',3);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Алайский район','СОАТЕ код района',3);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Кара-Суйский район','СОАТЕ код района',3);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Кара-Кульджинский район','СОАТЕ код района',3);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Чон-Алайский район','СОАТЕ код района',3);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Узгенский район','СОАТЕ код района',3);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Ноокатский район','СОАТЕ код района',3);
+INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('г.Ош','СОАТЕ код города',3);
 
 
 
 /* ADD AOKMOTU */
 
-INSERT INTO `mfloan`.`aokmotu` (`name`,`code`,`district_id`) VALUES ('РђРѕРєРјРѕС‚Сѓ в„–1 1.СЂР°Р№РѕРЅР°','РЎРћРђРўР• РєРѕРґ Р°РѕРєРјРѕС‚Сѓ',1);
-INSERT INTO `mfloan`.`aokmotu` (`name`,`code`,`district_id`) VALUES ('РђРѕРєРјРѕС‚Сѓ в„–2 1.СЂР°Р№РѕРЅР°','РЎРћРђРўР• РєРѕРґ Р°РѕРєРјРѕС‚Сѓ',1);
-INSERT INTO `mfloan`.`aokmotu` (`name`,`code`,`district_id`) VALUES ('РђРѕРєРјРѕС‚Сѓ в„–3 1.СЂР°Р№РѕРЅР°','РЎРћРђРўР• РєРѕРґ Р°РѕРєРјРѕС‚Сѓ',1);
+INSERT INTO `mfloan`.`aokmotu` (`name`,`code`,`district_id`) VALUES ('Аокмоту №1 1.района','СОАТЕ код аокмоту',1);
+INSERT INTO `mfloan`.`aokmotu` (`name`,`code`,`district_id`) VALUES ('Аокмоту №2 1.района','СОАТЕ код аокмоту',1);
+INSERT INTO `mfloan`.`aokmotu` (`name`,`code`,`district_id`) VALUES ('Аокмоту №3 1.района','СОАТЕ код аокмоту',1);
 
-INSERT INTO `mfloan`.`aokmotu` (`name`,`code`,`district_id`) VALUES ('РђРѕРєРјРѕС‚Сѓ в„–1 2.СЂР°Р№РѕРЅР°','РЎРћРђРўР• РєРѕРґ Р°РѕРєРјРѕС‚Сѓ',2);
-INSERT INTO `mfloan`.`aokmotu` (`name`,`code`,`district_id`) VALUES ('РђРѕРєРјРѕС‚Сѓ в„–2 2.СЂР°Р№РѕРЅР°','РЎРћРђРўР• РєРѕРґ Р°РѕРєРјРѕС‚Сѓ',2);
-INSERT INTO `mfloan`.`aokmotu` (`name`,`code`,`district_id`) VALUES ('РђРѕРєРјРѕС‚Сѓ в„–3 2.СЂР°Р№РѕРЅР°','РЎРћРђРўР• РєРѕРґ Р°РѕРєРјРѕС‚Сѓ',2);
+INSERT INTO `mfloan`.`aokmotu` (`name`,`code`,`district_id`) VALUES ('Аокмоту №1 2.района','СОАТЕ код аокмоту',2);
+INSERT INTO `mfloan`.`aokmotu` (`name`,`code`,`district_id`) VALUES ('Аокмоту №2 2.района','СОАТЕ код аокмоту',2);
+INSERT INTO `mfloan`.`aokmotu` (`name`,`code`,`district_id`) VALUES ('Аокмоту №3 2.района','СОАТЕ код аокмоту',2);
 
 
 
 /* ADD VILLAGE */
 
-INSERT INTO `mfloan`.`village` (`name`,`code`,`aokmotu_id`) VALUES ('РЎРµР»Рѕ в„–1 1.Р°РѕРєРјРѕС‚Сѓ','РЎРћРђРўР• РєРѕРґ СЃРµР»Р°',1);
-INSERT INTO `mfloan`.`village` (`name`,`code`,`aokmotu_id`) VALUES ('РЎРµР»Рѕ в„–2 1.Р°РѕРєРјРѕС‚Сѓ','РЎРћРђРўР• РєРѕРґ СЃРµР»Р°',1);
-INSERT INTO `mfloan`.`village` (`name`,`code`,`aokmotu_id`) VALUES ('РЎРµР»Рѕ в„–3 1.Р°РѕРєРјРѕС‚Сѓ','РЎРћРђРўР• РєРѕРґ СЃРµР»Р°',1);
+INSERT INTO `mfloan`.`village` (`name`,`code`,`aokmotu_id`) VALUES ('Село №1 1.аокмоту','СОАТЕ код села',1);
+INSERT INTO `mfloan`.`village` (`name`,`code`,`aokmotu_id`) VALUES ('Село №2 1.аокмоту','СОАТЕ код села',1);
+INSERT INTO `mfloan`.`village` (`name`,`code`,`aokmotu_id`) VALUES ('Село №3 1.аокмоту','СОАТЕ код села',1);
 
-INSERT INTO `mfloan`.`village` (`name`,`code`,`aokmotu_id`) VALUES ('РЎРµР»Рѕ в„–1 2.Р°РѕРєРјРѕС‚Сѓ','РЎРћРђРўР• РєРѕРґ СЃРµР»Р°',2);
-INSERT INTO `mfloan`.`village` (`name`,`code`,`aokmotu_id`) VALUES ('РЎРµР»Рѕ в„–2 2.Р°РѕРєРјРѕС‚Сѓ','РЎРћРђРўР• РєРѕРґ СЃРµР»Р°',2);
-INSERT INTO `mfloan`.`village` (`name`,`code`,`aokmotu_id`) VALUES ('РЎРµР»Рѕ в„–3 2.Р°РѕРєРјРѕС‚Сѓ','РЎРћРђРўР• РєРѕРґ СЃРµР»Р°',2);
+INSERT INTO `mfloan`.`village` (`name`,`code`,`aokmotu_id`) VALUES ('Село №1 2.аокмоту','СОАТЕ код села',2);
+INSERT INTO `mfloan`.`village` (`name`,`code`,`aokmotu_id`) VALUES ('Село №2 2.аокмоту','СОАТЕ код села',2);
+INSERT INTO `mfloan`.`village` (`name`,`code`,`aokmotu_id`) VALUES ('Село №3 2.аокмоту','СОАТЕ код села',2);
 
 
 
 /* ADD IDENTITY DOC GIVEN BY */
 
-INSERT INTO `mfloan`.`identity_doc_given_by` (`enabled`, `name`) VALUES (true, 'РњРљРљ');
-INSERT INTO `mfloan`.`identity_doc_given_by` (`enabled`, `name`) VALUES (true, 'РњРёРЅРёСЃС‚РµСЂСЃС‚РІРѕ СЋСЃС‚РёС†РёРё');
+INSERT INTO `mfloan`.`identity_doc_given_by` (`enabled`, `name`) VALUES (true, 'МКК');
+INSERT INTO `mfloan`.`identity_doc_given_by` (`enabled`, `name`) VALUES (true, 'Министерство юстиции');
 
 
 
 /* ADD IDENTITY DOC TYPE */
 
-INSERT INTO `mfloan`.`identity_doc_type` (`enabled`, `name`) VALUES (true, 'РџР°СЃРїРѕСЂС‚');
-INSERT INTO `mfloan`.`identity_doc_type` (`enabled`, `name`) VALUES (true, 'РЎРІРёРґРµС‚РµР»СЊСЃС‚РІРѕ Рѕ СЂРµРіРёСЃС‚СЂР°С†РёРё');
+INSERT INTO `mfloan`.`identity_doc_type` (`enabled`, `name`) VALUES (true, 'Паспорт');
+INSERT INTO `mfloan`.`identity_doc_type` (`enabled`, `name`) VALUES (true, 'Свидетельство о регистрации');
 
 
 
 /* ADD EMPLOYMENT HISTORY EVENT TYPE */
 
-INSERT INTO `mfloan`.`employment_history_event_type` (`name`) VALUES ('Р”Р°С‚Р° СЂРѕР¶РґРµРЅРёСЏ');
-INSERT INTO `mfloan`.`employment_history_event_type` (`name`) VALUES ('РЈС‡РµР±Р° - РІС‹СЃС€РµРµ РѕР±СЂР°Р·РѕРІР°РЅРёРµ');
-INSERT INTO `mfloan`.`employment_history_event_type` (`name`) VALUES ('РџСЂРёРЅСЏС‚РёРµ РЅР° СЂР°Р±РѕС‚Сѓ');
-INSERT INTO `mfloan`.`employment_history_event_type` (`name`) VALUES ('РЈРІРѕР»СЊРЅРµРЅРёРµ СЃ СЂР°Р±РѕС‚С‹');
-INSERT INTO `mfloan`.`employment_history_event_type` (`name`) VALUES ('РќР°РіСЂР°Р¶РґРµРЅРёРµ');
-INSERT INTO `mfloan`.`employment_history_event_type` (`name`) VALUES ('Р”РёСЃС†РёРїР»РёРЅР°СЂРЅРѕРµ РІР·С‹СЃРєР°РЅРёРµ');
+INSERT INTO `mfloan`.`employment_history_event_type` (`name`) VALUES ('Дата рождения');
+INSERT INTO `mfloan`.`employment_history_event_type` (`name`) VALUES ('Учеба - высшее образование');
+INSERT INTO `mfloan`.`employment_history_event_type` (`name`) VALUES ('Принятие на работу');
+INSERT INTO `mfloan`.`employment_history_event_type` (`name`) VALUES ('Увольнение с работы');
+INSERT INTO `mfloan`.`employment_history_event_type` (`name`) VALUES ('Награждение');
+INSERT INTO `mfloan`.`employment_history_event_type` (`name`) VALUES ('Дисциплинарное взыскание');
 
 
 
 
 /* ADD cSYSTEM */
 
-INSERT INTO `mfloan`.`c_system` (`name`) VALUES ('РђРЎРЈР‘Рљ');
+INSERT INTO `mfloan`.`c_system` (`name`) VALUES ('АСУБК');
 INSERT INTO `mfloan`.`c_system` (`name`) VALUES ('Rm1');
 
 
 
 /* ADD OBJECT TYPE */
 
-INSERT INTO `mfloan`.`object_type` (`name`,`code`) VALUES ('РЎРёСЃС‚РµРјР°','cSystem');
-INSERT INTO `mfloan`.`object_type` (`name`,`code`) VALUES ('РћСЂРіР°РЅРёР·Р°С†РёСЏ','Organization');
+INSERT INTO `mfloan`.`object_type` (`name`,`code`) VALUES ('Система','cSystem');
+INSERT INTO `mfloan`.`object_type` (`name`,`code`) VALUES ('Организация','Organization');
 
 /* ADD OBJECT EVENT */
 
@@ -165,14 +165,14 @@ INSERT INTO `mfloan`.`object_event` (`description`, `name`, `object_type_id`) VA
 
 /* ADD OBJECT FIELD */
 
-INSERT INTO `mfloan`.`object_field` (`name`,`description`,`method_name`,`object_type_id`) VALUES ('id','РРґРµРЅС‚РёС„РёРєР°С†РёРѕРЅРЅС‹Р№ РЅРѕРјРµСЂ СЃРёСЃС‚РµРјС‹','getId',1);
-INSERT INTO `mfloan`.`object_field` (`name`,`description`,`method_name`,`object_type_id`) VALUES ('name','РќР°РёРјРµРЅРѕРІР°РЅРёРµ СЃРёСЃС‚РµРјС‹','getName',1);
+INSERT INTO `mfloan`.`object_field` (`name`,`description`,`method_name`,`object_type_id`) VALUES ('id','Идентификационный номер системы','getId',1);
+INSERT INTO `mfloan`.`object_field` (`name`,`description`,`method_name`,`object_type_id`) VALUES ('name','Наименование системы','getName',1);
 
 
 
 /* ADD OBJECT VALIDATION TERM */
 
-INSERT INTO `mfloan`.`validation_term` (`object_field_id`,`name`,`description`,`max_length`,`min_length`) VALUES (2,'РџСЂРѕРІРµСЂРєР° РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ','Р”Р»РёРЅР° РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ ',2,10);
+INSERT INTO `mfloan`.`validation_term` (`object_field_id`,`name`,`description`,`max_length`,`min_length`) VALUES (2,'Проверка наименования','Длина наименования ',2,10);
 
 
 
@@ -187,8 +187,8 @@ INSERT INTO `mfloan`.`identity_doc` (`enabled`, `name`, `number`, `pin`,  `ident
 
 /* ADD IDENTITY DOC DETAILS */ 
 
-INSERT INTO `mfloan`.`identity_doc_details` (`firstname`, `fullname`, `lastname`, `midname`, `identity_doc_id`) VALUES ('1', 'Р“РѕСЃР°РіРµРЅС‚СЃС‚РІРѕ', '1', '1', '1');
-INSERT INTO `mfloan`.`identity_doc_details` (`firstname`, `fullname`, `lastname`, `midname`, `identity_doc_id`) VALUES ('РђР·Р°РјР°С‚', 'РЎР»Р°РјРєСѓР»РѕРІ Рђ.Рћ.', 'РЎР»Р°РјРєСѓР»РѕРІ', 'РћРјСѓСЂРіР°Р·РёРµРІРёС‡', '2');
+INSERT INTO `mfloan`.`identity_doc_details` (`firstname`, `fullname`, `lastname`, `midname`, `identity_doc_id`) VALUES ('1', 'Госагентство', '1', '1', '1');
+INSERT INTO `mfloan`.`identity_doc_details` (`firstname`, `fullname`, `lastname`, `midname`, `identity_doc_id`) VALUES ('Азамат', 'Сламкулов А.О.', 'Сламкулов', 'Омургазиевич', '2');
 
 UPDATE `mfloan`.`identity_doc` SET `identity_doc_details_id`='1' WHERE `id`='1';
 UPDATE `mfloan`.`identity_doc` SET `identity_doc_details_id`='2' WHERE `id`='2';
@@ -219,7 +219,7 @@ INSERT INTO `mfloan`.`organization` (`description`, `enabled`, `name`, `address_
 
 /* ADD PERSON */ 
 
-INSERT INTO `mfloan`.`person` (`description`, `enabled`, `name`, `address_id`, `contact_id`, `identity_doc_id`) VALUES ('Fiz', true, 'РЎР»Р°РјРєСѓР»РѕРІ', '2', '2', '2');
+INSERT INTO `mfloan`.`person` (`description`, `enabled`, `name`, `address_id`, `contact_id`, `identity_doc_id`) VALUES ('Fiz', true, 'Сламкулов', '2', '2', '2');
 
 /* ADD BANK DATA */ 
 
@@ -228,24 +228,24 @@ INSERT INTO `mfloan`.`bank_data` (`account_number`, `bik`, `description`, `is_pr
 
 /* ADD DEPARTMENT */ 
 
-INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organization_id`) VALUES ('Р СѓРєРѕРІРѕРґСЃС‚РІРѕ Р“РђРЈР‘Рљ', true, 'Р СѓРєРѕРІРѕРґСЃС‚РІРѕ', '1');
-INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organization_id`) VALUES ('РЈРїСЂР°РІР»РµРЅРёРµ в„–1', true, 'РЈРїСЂР°РІР»РµРЅРёРµ РџР РћРњ', '1');
-INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organization_id`) VALUES ('РЈРїСЂР°РІР»РµРЅРёРµ в„–2', true, 'РЈРїСЂР°РІР»РµРЅРёРµ РђРџРљ', '1');
-INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organization_id`) VALUES ('РЈРїСЂР°РІР»РµРЅРёРµ в„–3', true, 'РЈРїСЂР°РІР»РµРЅРёРµ Р®Р ', '1');
-INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organization_id`) VALUES ('РЈРїСЂР°РІР»РµРЅРёРµ в„–4', true, 'РЈРїСЂР°РІР»РµРЅРёРµ РћРљРџ', '1');
+INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organization_id`) VALUES ('Руководство ГАУБК', true, 'Руководство', '1');
+INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organization_id`) VALUES ('Управление №1', true, 'Управление ПРОМ', '1');
+INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organization_id`) VALUES ('Управление №2', true, 'Управление АПК', '1');
+INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organization_id`) VALUES ('Управление №3', true, 'Управление ЮР', '1');
+INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organization_id`) VALUES ('Управление №4', true, 'Управление ОКП', '1');
 
 /* ADD DEPARTMENT */ 
 
-INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('Р”РёСЂРµРєС‚РѕСЂ', '1');
-INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('Р—Р°Рј РґРёСЂРµРєС‚РѕСЂР°', '1');
-INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('РќР°С‡Р°Р»СЊРЅРёРє СѓРїСЂР°РІР»РµРЅРёСЏ', '2');
-INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('РќР°С‡Р°Р»СЊРЅРёРє СѓРїСЂР°РІР»РµРЅРёСЏ', '3');
-INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('РќР°С‡Р°Р»СЊРЅРёРє СѓРїСЂР°РІР»РµРЅРёСЏ', '4');
-INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('РќР°С‡Р°Р»СЊРЅРёРє СѓРїСЂР°РІР»РµРЅРёСЏ', '5');
+INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('Директор', '1');
+INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('Зам директора', '1');
+INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('Начальник управления', '2');
+INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('Начальник управления', '3');
+INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('Начальник управления', '4');
+INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('Начальник управления', '5');
 
 /* ADD STAFF */
 
-INSERT INTO `mfloan`.`staff` (`enabled`, `name`, `department_id`, `organization_id`, `person_id`, `position_id`) VALUES (true, 'РЎР»Р°РјРєСѓР»РѕРІ Рђ.Рћ.', '1', '1', '1', '1');
+INSERT INTO `mfloan`.`staff` (`enabled`, `name`, `department_id`, `organization_id`, `person_id`, `position_id`) VALUES (true, 'Сламкулов А.О.', '1', '1', '1', '1');
 
 
 /* ADD EMPLOYMENT HISTORY */
@@ -262,13 +262,13 @@ INSERT INTO `mfloan`.`employment_history_event` (`date`,`name`, `employmentHisto
 
 /* ADD MESSAGE RESOURCE */
 
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Please login', 'РђРІС‚РѕСЂРёР·Р°С†РёСЏ Р±РѕР»СѓРЅСѓР·', 'login.form.title', 'РђРІС‚РѕСЂРёР·РёСЂСѓР№С‚РµСЃСЊ РїРѕР¶Р°Р»СѓР№СЃС‚Р°');
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Username', 'РљС‹СЃРєР° Р°С‚С‹РЅС‹Р·', 'login.form.input.username', 'РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ');
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Password', 'РЎС‹СЂ СЃРѕР·', 'login.form.input.password', 'РџР°СЂРѕР»СЊ');
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Enter', 'РљРёСЂСѓСѓ', 'login.form.button.login', 'Р’С…РѕРґ');
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Name', 'РђС‚Р°Р»С‹С€С‹', 'label.orgForm.name', 'РќР°РёРјРµРЅРѕРІР°РЅРёРµ');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Please login', 'Авторизация болунуз', 'login.form.title', 'Авторизируйтесь пожалуйста');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Username', 'Кыска атыныз', 'login.form.input.username', 'Имя пользователя');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Password', 'Сыр соз', 'login.form.input.password', 'Пароль');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Enter', 'Кируу', 'login.form.button.login', 'Вход');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Name', 'Аталышы', 'label.orgForm.name', 'Наименование');
 
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Name2', 'РђС‚Р°Р»С‹С€С‹2', 'asdf', 'РќР°РёРјРµРЅРѕРІР°РЅРёРµ2');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Name2', 'Аталышы2', 'asdf', 'Наименование2');
 
 
 
