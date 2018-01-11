@@ -1,2 +1,5 @@
 /target/
-/MFLoanWeb.iml
+/bin/
+.classpath
+.project
+.settings
