@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  
 @Configuration
 @EnableTransactionManagement
-@ComponentScan({"kg.gov.mf.loan.config"})
+@ComponentScan({"kg.gov.mf.loan.web.config"})
 @PropertySource(value = { "classpath:application.properties" })
 public class HibernateConfiguration {
  
