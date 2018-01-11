@@ -87,7 +87,6 @@ public class OrderTermController {
 		OrderTerm term = orderTermService.findById(termId);
 		model.addAttribute("term", term);
 		
-		model.addAttribute("emptyTemplate", new AgreementTemplate());
         model.addAttribute("templates", term.getAgreementTemplate());
 		
         model.addAttribute("orderId", orderId);
