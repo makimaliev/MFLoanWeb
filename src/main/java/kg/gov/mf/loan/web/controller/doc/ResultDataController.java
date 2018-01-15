@@ -20,11 +20,11 @@ public class ResultDataController {
     {
         if((resultData.getId() == null) || (resultData.getId() == 0))
         {
-            this.resultDataService.add(resultData);
+            this.resultDataService.create(resultData);
         }
         else
         {
-            this.resultDataService.update(resultData);
+            this.resultDataService.edit(resultData);
         }
         return "OK";
     }
@@ -33,7 +33,7 @@ public class ResultDataController {
     @ResponseBody
     public String DeleteResultData(@ModelAttribute("resultData") ResultData resultData)
     {
-        this.resultDataService.remove(resultData);
+        this.resultDataService.deleteById(resultData);
         return "OK";
     }
 }

@@ -1,4 +1,13 @@
+INSERT INTO `mfloan`.`cat_document_type` (`version`, `name`, `internalName`) VALUES ('1', 'Внутренний', 'internal');
+INSERT INTO `mfloan`.`cat_document_type` (`version`, `name`, `internalName`) VALUES ('1', 'Входяший', 'incoming');
+INSERT INTO `mfloan`.`cat_document_type` (`version`, `name`, `internalName`) VALUES ('1', 'Исходяший', 'outgoing');
+INSERT INTO `mfloan`.`cat_document_type` (`version`, `name`, `internalName`) VALUES ('1', 'Архив', 'archived');
 
+INSERT INTO `mfloan`.`cat_document_subtype` (`version`, `name`, `documentType_id`) VALUES ('1', 'Служебная записка', '1');
+INSERT INTO `mfloan`.`cat_document_subtype` (`version`, `name`, `documentType_id`) VALUES ('1', 'Заявление', '1');
+INSERT INTO `mfloan`.`cat_document_subtype` (`version`, `name`, `documentType_id`) VALUES ('1', 'Приказ', '1');
+INSERT INTO `mfloan`.`cat_document_subtype` (`version`, `name`, `documentType_id`) VALUES ('1', 'Договор', '1');
+INSERT INTO `mfloan`.`cat_document_subtype` (`version`, `name`, `documentType_id`) VALUES ('1', 'Протокол', '1');
 
 
 

@@ -12,84 +12,24 @@
 </head>
 <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
 
+<div th:replace="doc/document/content :: document"></div>
+
 <div th:replace="layout :: header-top"></div>
 
-<div class="modal fade" id="modal_form" role="dialog">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header"><h3 class="modal-title" id="modal-title">Document Form</h3></div>
-			<div class="modal-body form">
-
-				<form action="#" id="form" class="form-horizontal">
-					<input type="hidden" value="" name="id"/>
-					<div class="form-body">
-
-						<div class="form-group">
-							<label class="control-label col-md-4">Title<span class="required"> * </span></label>
-							<div class="col-md-6">
-								<input name="title" placeholder="Title" class="form-control" type="text">
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="control-label col-md-4">Description<span class="required"> * </span></label>
-							<div class="col-md-6">
-								<input name="description" placeholder="Description" class="form-control" type="text">
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="control-label col-md-4">Document Type<span class="required"> * </span></label>
-							<div class="col-md-6">
-								<select class="form-control" name="documentType.id">
-									<option value=""> *** Select Document Type *** </option>
-									<option th:each="dt : ${documentType}"
-											th:value="${dt.id}"
-											th:text="${dt.name}">Document Type</option>
-								</select>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="control-label col-md-4">Document SubType<span class="required"> * </span></label>
-							<div class="col-md-6">
-								<select class="form-control" name="documentSubType.id">
-									<option value=""> *** Select Document Sub Type *** </option>
-									<option th:each="dst : ${documentSubType}"
-											th:value="${dst.id}"
-											th:text="${dst.name}">Document SubType</option>
-								</select>
-							</div>
-						</div>
-
-					</div>
-				</form>
-
-			</div>
-			<div class="modal-footer">
-				<button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
-				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-			</div>
-		</div>
-	</div>
-</div>
-
 <div class="page-container">
+
 	<div th:replace="layout :: page-container-sidebar" />
 
 	<div class="page-content-wrapper">
 		<div class="page-content">
-
 			<div class="row">
 				<div class="col-md-12">
-
 					<table class="table table-hover table-condensed table-striped table-bordered compact condensed" id="documentTable">
 						<thead>
 						<tr>
 							<th>Id</th>
 							<th>Title</th>
 							<th>Description</th>
-							<th>Document Type</th>
 							<th>Document SubType</th>
 							<th>View</th>
 							<th>Edit</th>
@@ -103,12 +43,16 @@
 				</div>
 			</div>
 
-			<div class="row">
+			<span class="row">
 				<div class="col-md-12">
-					<button class="btn btn-success" onclick="add_document()"><i class="glyphicon glyphicon-plus"></i> Add Document </button>
+					<button class="btn btn-primary"> Filter </button>
 				</div>
-			</div>
-
+				<div class="col-md-12" th:if="${type} == 'internal'">
+					<span th:each="dst : ${documentSubType}">
+						<a href="#" class="btn btn-success" th:onclick="'create_document(\'' + ${dst.name} +'\',\''+ ${dst.documentType.id} +'\',\''+ ${dst.id} + '\');'" th:text="${dst.name}"> New Document </a>
+					</span>
+				</div>
+			</span>
 		</div>
 	</div>
 
@@ -119,9 +63,10 @@
 
 <script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
 <script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>
-<script type="text/javascript">
+<script th:inline="javascript">
 
     var table;
+    var documentType;
 
     $(document).ready(function() {
 
@@ -130,14 +75,13 @@
             "language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
             "info":     false,
             "ajax": {
-                "url" : "/MFLoanWeb/doc/all",
+                "url" : "/MFLoanWeb/doc/" + [[${type}]],
                 "dataSrc": ""
             },
             "columns": [
                 { "data": "id" },
                 { "data": "title" },
                 { "data": "description" },
-                { "data": "documentType.name" },
                 { "data": "documentSubType.name" },
                 { "data": "id" },
                 { "data": "id" },
@@ -146,20 +90,20 @@
             keys: { focus: ':eq(0)' },
             "columnDefs": [
                 {
-                    "targets": [5],
+                    "targets": [4],
                     "render": function (data, type, row) {
                         return "<a href='/MFLoanWeb/doc/view/" + data + "' role='button' class='btn btn-xs green-stripe'> View </a>"
                     }
                 },
                 {
-                    "targets": [6],
+                    "targets": [5],
                     "orderable": false,
                     "render": function (data, type, row) {
                         return '<a data-toggle="modal" data-target="#modal_form" href="#" onclick="edit_document(' + data + ');" role="button" class="btn btn-xs blue-stripe"> Edit </a>'
                     }
                 },
                 {
-                    "targets": [7],
+                    "targets": [6],
                     "orderable": false,
                     "render": function (data, type, row) {
                         return '<a href="#" onclick="delete_document(' + data + ');" role="button" class="btn btn-xs red-stripe"> Delete </a>'
@@ -168,12 +112,15 @@
             ],
         });
     });
-    function add_document() {
+    function create_document(title, doctype, docsubtype) {
         $(".form-group").removeClass("has-error");
         $("#form")[0].reset();
         $('[name="id"]').val(0);
 
-        formState(false, "New Document");
+        $('[name="documentType.id"]').val([[${documentTypeId}]]);
+        $('[name="documentSubType.id"]').val(docsubtype);
+
+        formState(false, title);
 
         $('[name="tabs"]').hide();
         $("#btnSave").text('Create');
@@ -214,7 +161,7 @@
             });
         }
     }
-    function save() {
+    function save_document() {
         $("#btnSave").text('Saving...');
         $("#btnSave").attr('disabled',true);
         $.ajax({
@@ -231,7 +178,7 @@
                 alert("Erooooooooor");
             }
         });
-        $("#modal_form").modal('hide');
+        $("#documentModal").modal('hide');
         $('#btnSave').text('Save');
         $('#btnSave').attr('disabled',false);
     }
@@ -263,9 +210,42 @@
             $('#btnSave').show();
 		}
         $(".modal-title").text(mtitle);
-        $("#modal_form").modal('show');
+        $("#documentModal").modal('show');
     }
 
+    /*
+    $( "#rt" ).change(
+        function() {
+            var html = '<option value=""> *** Select Responsible *** </option>';
+            var selection = $(this).val();
+            var data;
+
+            if (selection == 1)
+			{
+                data = [[${staff}]];
+			}
+            else if (selection == 2)
+			{
+                data = [[${department}]];
+			}
+            else if (selection == 3)
+            {
+                data = [[${organization}]];
+            }
+            else if (selection == 4)
+            {
+                data = [[${person}]];
+            }
+
+            var len = data.length;
+            for ( var i = 0; i < len; i++) {
+                html += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+            }
+            html += '</option>';
+            $('#responsible').html(html);
+    	}
+    );
+	*/
 </script>
 
 </body>

@@ -519,14 +519,6 @@
 						</li>
 
 
-
-
-
-
-
-
-
-
 						<li class="nav-item  "><a href="javascript:;"
 							class="nav-link nav-toggle"> <i class="icon-diamond"></i> <span
 								class="title">Система</span> <span class="arrow"></span>
@@ -615,15 +607,6 @@
 												</li>
 											</ul>
 										</li>
-										<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Order Document Package <span class="arrow"></span></a>
-											<ul class="sub-menu">
-												<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Order Document <span class="arrow"></span></a>
-													<ul class="sub-menu">
-														<li class="nav-item "><a th:href="@{/manage/order/orderdocumentpackage/orderdocument/type/list}" class="nav-link "> <span class="title"> List order document types</span></a></li>
-													</ul>
-												</li>
-											</ul>
-										</li>
 										<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Order term <span class="arrow"></span></a>
 											<ul class="sub-menu">
 												<li class="nav-item "><a th:href="@{/manage/order/orderterm/fund/list}" class="nav-link "> <span class="title"> List order term funds</span></a></li>
@@ -644,21 +627,22 @@
 										<li class="nav-item "><a th:href="@{/manage/debtor/type/list}" class="nav-link "> <span class="title"> List debtor types</span></a></li>
 										<li class="nav-item "><a th:href="@{/manage/debtor/orgform/list}" class="nav-link "> <span class="title"> List organization forms</span></a></li>
 										<li class="nav-item "><a th:href="@{/manage/debtor/worksector/list}" class="nav-link "> <span class="title"> List work sectors</span></a></li>
-										<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Loan <span class="arrow"></span></a>
-											<ul class="sub-menu">
-												<li class="nav-item "><a th:href="@{/manage/debtor/loan/state/list}" class="nav-link "> <span class="title"> List loan states</span></a></li>
-												<li class="nav-item "><a th:href="@{/manage/debtor/loan/type/list}" class="nav-link "> <span class="title"> List loan types</span></a></li>
-											</ul>
-										</li>
 									</ul>
 								</li>
 								<li class="nav-item  "><a th:href="@{/manage/loan/list}" class="nav-link ">List loans</a></li>
 	                            <li class="nav-item  "><a th:href="@{/manage/collateral/list}" class="nav-link ">List collaterals</a></li>
 	                            <li class="nav-item  "><a th:href="@{/manage/collection/list}" class="nav-link ">List collections</a></li>
 							</ul>
-						</li>						
+						</li>
 
-
+						<li class="nav-item  "><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-book-open"></i> <span class="title">Documents</span> <span class="arrow"></span></a>
+							<ul class="sub-menu">
+								<li class="nav-item"><a th:href="@{/doc(type='internal')}" class="nav-link ">Internal</a></li>
+								<li class="nav-item"><a th:href="@{/doc(type='incoming')}" class="nav-link ">Incoming</a></li>
+								<li class="nav-item"><a th:href="@{/doc(type='outgoing')}" class="nav-link ">Outgoing</a></li>
+								<li class="nav-item"><a th:href="@{/doc(type='archived')}" class="nav-link ">Archive</a></li>
+							</ul>
+						</li>
 
 					</ul>
 					<!-- END SIDEBAR MENU -->

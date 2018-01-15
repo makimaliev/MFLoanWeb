@@ -21,11 +21,11 @@ public class ReceiverDataController {
     {
         if((receiverData.getId() == null) || (receiverData.getId() == 0))
         {
-            this.receiverDataService.add(receiverData);
+            this.receiverDataService.create(receiverData);
         }
         else
         {
-            this.receiverDataService.update(receiverData);
+            this.receiverDataService.edit(receiverData);
         }
         return "OK";
     }
@@ -34,7 +34,7 @@ public class ReceiverDataController {
     @ResponseBody
     public String DeleteReceiverData(@ModelAttribute("receiverData") ReceiverData receiverData)
     {
-        this.receiverDataService.remove(receiverData);
+        this.receiverDataService.deleteById(receiverData);
         return "OK";
     }
 }

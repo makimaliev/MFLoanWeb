@@ -20,11 +20,11 @@ public class SenderDataController {
     {
         if((senderData.getId() == null) || (senderData.getId() == 0))
         {
-            this.senderDataService.add(senderData);
+            this.senderDataService.create(senderData);
         }
         else
         {
-            this.senderDataService.update(senderData);
+            this.senderDataService.edit(senderData);
         }
         return "OK";
     }
@@ -33,7 +33,7 @@ public class SenderDataController {
     @ResponseBody
     public String DeleteSenderData(@ModelAttribute("senderData") SenderData senderData)
     {
-        this.senderDataService.remove(senderData);
+        this.senderDataService.deleteById(senderData);
         return "OK";
     }
 }
