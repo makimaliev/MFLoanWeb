@@ -178,17 +178,21 @@
 	                                                 </div>
 	                                             </div>
 	                                         </div>
-	                                         
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Parent loan
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" disabled="disabled">
-	                                                     <option
-										               th:value="${loan.parentLoan!=null} ? ${loan.parentLoan.id} : null"
-										               th:text="${loan.parentLoan!=null} ? ${loan.parentLoan.regNumber} : 'Select...'"
-										               selected="selected">Category 1</option>
+	                                                 <select class="form-control" name="parentLoanId">
+	                                                     <option value="">Select...</option>
+	                                                     <states th:each="tLoan : ${tLoans}">
+	                                                     <option th:if="${loan.id > 0 and loan.parentLoan!=null and tLoan.id == loan.parentLoan.id}"
+										               th:value="${tLoan.id}"
+										               th:text="${tLoan.regNumber}" selected="selected">Category 1</option>
+										        <option th:unless="${loan.id > 0 and loan.parentLoan!=null and tLoan.id == loan.parentLoan.id}"
+										               th:value="${tLoan.id}"
+										              th:text="${tLoan.regNumber}">Category 1</option>
+										        </states>
 	                                                 </select>
 	                                             </div>
 	                                         </div>
@@ -209,6 +213,21 @@
 										               th:value="${order.id}"
 										              th:text="${order.regNumber} + ' ' + ${order.regDate}">Category 1</option>
 										        </states>
+	                                                 </select>
+	                                             </div>
+	                                         </div>
+	                                         
+	                                         <div class="form-group">
+	                                             <label class="control-label col-md-3">Collateral Agreements
+	                                                 <span class="required"> * </span>
+	                                             </label>
+	                                             <div class="col-md-4">
+	                                                 <select class="form-control" name="agreementIdList" multiple="multiple">
+	                                                     <option th:each="agreement : ${agreements}"
+										               th:value="${agreement.id}"
+										               th:text="${agreement.agreementNumber}"
+										               th:selected="${loan.collateralAgreements.contains(agreement)}">Category 1
+										               </option>
 	                                                 </select>
 	                                             </div>
 	                                         </div>

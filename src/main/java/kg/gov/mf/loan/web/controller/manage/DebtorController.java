@@ -4,8 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import kg.gov.mf.loan.manage.model.order.CreditOrderState;
-import kg.gov.mf.loan.manage.model.order.CreditOrderType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -21,8 +19,6 @@ import kg.gov.mf.loan.manage.model.debtor.DebtorType;
 import kg.gov.mf.loan.manage.model.debtor.OrganizationForm;
 import kg.gov.mf.loan.manage.model.debtor.WorkSector;
 import kg.gov.mf.loan.manage.model.loan.Loan;
-import kg.gov.mf.loan.manage.model.loan.LoanState;
-import kg.gov.mf.loan.manage.model.loan.LoanType;
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
 import kg.gov.mf.loan.manage.model.orderterm.OrderTermCurrency;
 import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
@@ -79,14 +75,7 @@ public class DebtorController {
 		Debtor debtor = debtorService.findById(debtorId);
         model.addAttribute("debtor", debtor);
         
-        List<OrderTermCurrency> currs = currService.findAll();
-        model.addAttribute("currencies", currs);
-        
-        model.addAttribute("agreements", agreementService.findAll());
-        
-        model.addAttribute("emptyLoan", new Loan());
         model.addAttribute("loans", debtor.getLoan());
-        model.addAttribute("tLoans", debtor.getLoan());
         
         List<CreditOrder> orders = orderService.findAll();
         model.addAttribute("orders", orders);

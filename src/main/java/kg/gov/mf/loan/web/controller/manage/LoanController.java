@@ -22,9 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import kg.gov.mf.loan.manage.model.collateral.Collateral;
 import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
-import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityList;
-import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityListState;
-import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityListType;
 import kg.gov.mf.loan.manage.model.loan.Bankrupt;
 import kg.gov.mf.loan.manage.model.loan.CreditTerm;
 import kg.gov.mf.loan.manage.model.loan.DebtTransfer;
@@ -40,6 +37,7 @@ import kg.gov.mf.loan.manage.model.loan.ReconstructedList;
 import kg.gov.mf.loan.manage.model.loan.SupervisorPlan;
 import kg.gov.mf.loan.manage.model.loan.TargetedUse;
 import kg.gov.mf.loan.manage.model.loan.WriteOff;
+import kg.gov.mf.loan.manage.model.orderterm.OrderTermCurrency;
 import kg.gov.mf.loan.manage.model.orderterm.OrderTermDaysMethod;
 import kg.gov.mf.loan.manage.model.orderterm.OrderTermFloatingRateType;
 import kg.gov.mf.loan.manage.model.orderterm.OrderTermRatePeriod;
@@ -191,17 +189,29 @@ public class LoanController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/save", method=RequestMethod.GET)
 	public String formeAppliedEntityList(ModelMap model, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId)
 	{
+		Debtor debtor = debtorService.findById(debtorId);
+		model.addAttribute("debtorId", debtorId);
+		
+		//Get all loans except this loan
+		Set<Loan> tLoans = debtor.getLoan();
+		tLoans.remove(loanService.findById(loanId));
+        model.addAttribute("tLoans", tLoans);
+        
+        model.addAttribute("agreements", agreementService.findAll());
+        model.addAttribute("orders", orderService.findAll());
+		
 		if(loanId == 0)
 		{
 			model.addAttribute("loan", new Loan());
 		}
 			
-		
 		if(loanId > 0)
 		{
 			model.addAttribute("loan", loanService.findById(loanId));
 		}
-		model.addAttribute("debtorId", debtorId);
+		
+		List<OrderTermCurrency> currs = currService.findAll();
+        model.addAttribute("currencies", currs);
 		
 		List<LoanType> types = loanTypeService.findAll();
         model.addAttribute("types", types);
@@ -237,7 +247,7 @@ public class LoanController {
 					false,
 					orderService.findById(creditOrderId));
 			
-			if(parentLoanId > 0)
+			if(parentLoanId != null && parentLoanId > 0)
 			{
 				Loan parentLoan = loanService.findById(parentLoanId);
 				newLoan.setParentLoan(parentLoan);
@@ -250,13 +260,17 @@ public class LoanController {
 			loggerLoan.info("createLoan : {}", newLoan);
 			Set<CollateralAgreement> cAgreements = new HashSet<>();
 			
-			for (String agreementId : agreementIdList) {
-				CollateralAgreement tA = agreementService.findById(Long.parseLong(agreementId));
-				cAgreements.add(tA);
+			if(agreementIdList != null)
+			{
+				for (String agreementId : agreementIdList) {
+					CollateralAgreement tA = agreementService.findById(Long.parseLong(agreementId));
+					cAgreements.add(tA);
+				}
+				
+				if(cAgreements.size()>0)
+					newLoan.setCollateralAgreements(cAgreements);
 			}
 			
-			if(cAgreements.size()>0)
-				newLoan.setCollateralAgreements(cAgreements);
 			loanService.save(newLoan);
 		}
 			
@@ -268,8 +282,19 @@ public class LoanController {
 			loan.setCreditOrder(orderService.findById(creditOrderId));
 			loan.setParentLoan(loanService.findById(loan.getId()).getParentLoan());
 			
-			loggerLoan.info("updateLoan : {}", loan);
+			Set<CollateralAgreement> cAgreements = new HashSet<>();
+			if(agreementIdList != null)
+			{
+				for (String agreementId : agreementIdList) {
+					CollateralAgreement tA = agreementService.findById(Long.parseLong(agreementId));
+					cAgreements.add(tA);
+				}
+				
+				if(cAgreements.size()>0)
+					loan.setCollateralAgreements(cAgreements);
+			}
 			
+			loggerLoan.info("updateLoan : {}", loan);
 			loanService.update(loan);
 		}
 			
