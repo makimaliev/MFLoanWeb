@@ -37,18 +37,13 @@ public class BankruptController {
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/bankrupt/save"})
     public String saveBankrupt(Bankrupt bankrupt, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
-		Loan loan = loanService.findById(loanId);
-		if(bankrupt != null && bankrupt.getId() == 0)
-		{
-			Bankrupt newBankrupt = new Bankrupt(bankrupt.getStartedOnDate(), bankrupt.getFinishedOnDate());
-			newBankrupt.setLoan(loan);
-			bankruptService.save(newBankrupt);
-		}
+		Loan loan = loanService.getById(loanId);
+		bankrupt.setLoan(loan);
 		
-		if(bankrupt != null && bankrupt.getId() > 0)
-		{
+		if(bankrupt.getId() == null || bankrupt.getId() == 0)
+			bankruptService.add(bankrupt);
+		else
 			bankruptService.update(bankrupt);
-		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_9";
     }
@@ -56,7 +51,7 @@ public class BankruptController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/bankrupt/delete", method=RequestMethod.POST)
     public String deleteBankrupt(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			bankruptService.deleteById(id);
+			bankruptService.remove(bankruptService.getById(id));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_9";
     }
 

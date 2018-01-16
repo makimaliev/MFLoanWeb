@@ -36,28 +36,13 @@ public class CollateralSummaryController {
 	@RequestMapping(value = { "/manage/collateral/{collateralId}/summary/save"})
     public String saveCollateralSummary(CollateralSummary summary, @PathVariable("collateralId")Long collateralId,  ModelMap model)
     {
-		Collateral collateral = collateralService.findById(collateralId);
-		if(summary != null && summary.getId() == 0)
-		{
-			CollateralSummary newSummary = new CollateralSummary(summary.getOnDate(), 
-					summary.getAgreementQuantity(), 
-					summary.getAgreementQuantity(), 
-					summary.getCollateralLoanCoverRatio(), 
-					summary.getCollateralAmount(), 
-					summary.getLoanAmount(),
-					summary.getItemAverageCondition(), 
-					summary.getItemWorstCondition(), 
-					summary.getItemAvgConditionByCollateral(), 
-					summary.getItemAvgConditionByLoan());
-			
-			newSummary.setCollateral(collateral);
-			summaryService.save(newSummary);
-		}
+		Collateral collateral = collateralService.getById(collateralId);
+		summary.setCollateral(collateral);
 		
-		if(summary != null && summary.getId() > 0)
-		{
+		if(summary.getId() == null || summary.getId() == 0)
+			summaryService.add(summary);
+		else
 			summaryService.update(summary);
-		}
 		
 		return "redirect:" + "/manage/collateral/{collateralId}/view#tab_1";
     }
@@ -66,7 +51,7 @@ public class CollateralSummaryController {
     public String deleteCollateralSummary(long id, @PathVariable("collateralId")Long collateralId)
     {
 		if(id > 0)
-			summaryService.deleteById(id);
+			summaryService.remove(summaryService.getById(id));
 		
 		return "redirect:" + "/manage/collateral/{collateralId}/view#tab_1";
     }

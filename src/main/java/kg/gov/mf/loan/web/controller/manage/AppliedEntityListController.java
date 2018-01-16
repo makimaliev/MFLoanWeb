@@ -58,12 +58,9 @@ public class AppliedEntityListController {
 	@RequestMapping(value = { "/manage/order/{orderId}/entitylist/{listId}/view"})
     public String viewEntityList(ModelMap model, @PathVariable("orderId")Long orderId, @PathVariable("listId")Long listId) {
 
-		AppliedEntityList list = listService.findById(listId);
+		AppliedEntityList list = listService.getById(listId);
         model.addAttribute("entityList", list);
-        
-		model.addAttribute("emptyEntity", new AppliedEntity());
-        model.addAttribute("entities", list.getAppliedEntity());
-        
+        model.addAttribute("entities", list.getAppliedEntities());
         model.addAttribute("orderId", orderId);
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -81,12 +78,12 @@ public class AppliedEntityListController {
 		
 		if(listId > 0)
 		{
-			model.addAttribute("entityList", listService.findById(listId));
+			model.addAttribute("entityList", listService.getById(listId));
 		}
 		model.addAttribute("orderId", orderId);
-		List<AppliedEntityListState> states = elStateService.findAll();
+		List<AppliedEntityListState> states = elStateService.list();
         model.addAttribute("states", states);
-		List<AppliedEntityListType> types = elTypeService.findAll();
+		List<AppliedEntityListType> types = elTypeService.list();
         model.addAttribute("types", types);
 			
 		return "/manage/order/entitylist/save";
@@ -94,41 +91,36 @@ public class AppliedEntityListController {
 	
 	
 	@RequestMapping(value="/manage/order/{orderId}/entitylist/save", method=RequestMethod.POST)
-	public String saveAppliedEntityList(AppliedEntityList list, long stateId, long typeId, 
+	public String saveAppliedEntityList(AppliedEntityList list,  
 			@PathVariable("orderId")Long orderId, ModelMap model)
 	{
-		CreditOrder creditOrder = orderService.findById(orderId);
 		loggerEntityList.info("Entity List : {}", list);
-		if(list != null && list.getId() == 0)
+		CreditOrder creditOrder = orderService.getById(orderId);
+		list.setCreditOrder(creditOrder);
+		if(list.getId() == null || list.getId() == 0)
 		{
-			AppliedEntityList newList = new AppliedEntityList(list.getListNumber(), list.getListDate(), 
-					elStateService.findById(stateId), elTypeService.findById(typeId));
-			newList.setCreditOrder(creditOrder);
-			listService.save(newList);
+			listService.add(list);
 		}
 			
-		
 		if(list != null && list.getId() > 0)
 		{
-			list.setAppliedEntityListState(elStateService.findById(stateId));
-			list.setAppliedEntityListType(elTypeService.findById(typeId));
 			listService.update(list);
 		}
-			
+		
 		return "redirect:" + "/manage/order/{orderId}/view";
 	}
 	
 	@RequestMapping(value="/manage/order/{orderId}/entitylist/delete", method=RequestMethod.POST)
     public String deleteAppliedEntityList(long id, @PathVariable("orderId")Long orderId) {
 		if(id > 0)
-			listService.deleteById(id);
+			listService.remove(listService.getById(id));
 		return "redirect:" + "/manage/order/{orderId}/view";
     }
 	
 	@RequestMapping(value = { "/manage/order/entitylist/state/list" }, method = RequestMethod.GET)
     public String listAppliedEntityListStates(ModelMap model) {
  
-		List<AppliedEntityListState> states = elStateService.findAll();
+		List<AppliedEntityListState> states = elStateService.list();
 		model.addAttribute("states", states);
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -145,7 +137,7 @@ public class AppliedEntityListController {
 		
 		if(stateId > 0)
 		{
-			model.addAttribute("elState", elStateService.findById(stateId));
+			model.addAttribute("elState", elStateService.getById(stateId));
 		}
 		return "/manage/order/entitylist/state/save";
 	}
@@ -153,10 +145,9 @@ public class AppliedEntityListController {
 	
 	@RequestMapping(value="/manage/order/entitylist/state/save", method=RequestMethod.POST)
     public String saveAppliedEntityListState(AppliedEntityListState state, ModelMap model) {
-		if(state != null && state.getId() == 0)
-			elStateService.save(new AppliedEntityListState(state.getName()));
-		
-		if(state != null && state.getId() > 0)
+		if(state.getId() == null || state.getId() == 0)
+			elStateService.add(state);
+		else
 			elStateService.update(state);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -166,14 +157,14 @@ public class AppliedEntityListController {
 	@RequestMapping(value="/manage/order/entitylist/state/delete", method=RequestMethod.POST)
     public String deleteAppliedEntityListState(long id) {
 		if(id > 0)
-			elStateService.deleteById(id);
+			elStateService.remove(elStateService.getById(id));
 		return "redirect:" + "/manage/order/entitylist/state/list";
     }
 	
 	@RequestMapping(value = { "/manage/order/entitylist/type/list" }, method = RequestMethod.GET)
     public String listAppliedEntityListTypes(ModelMap model) {
  
-		List<AppliedEntityListType> types = elTypeService.findAll();
+		List<AppliedEntityListType> types = elTypeService.list();
 		model.addAttribute("types", types);
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -190,17 +181,16 @@ public class AppliedEntityListController {
 		
 		if(typeId > 0)
 		{
-			model.addAttribute("elType", elTypeService.findById(typeId));
+			model.addAttribute("elType", elTypeService.getById(typeId));
 		}
 		return "/manage/order/entitylist/type/save";
 	}
 	
 	@RequestMapping(value="/manage/order/entitylist/type/save", method=RequestMethod.POST)
     public String saveAppliedEntityListType(AppliedEntityListType type, ModelMap model) {
-		if(type != null && type.getId() == 0)
-			elTypeService.save(new AppliedEntityListType(type.getName()));
-		
-		if(type != null && type.getId() > 0)
+		if(type.getId() == null || type.getId() == 0)
+			elTypeService.add(type);
+		else
 			elTypeService.update(type);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -210,7 +200,7 @@ public class AppliedEntityListController {
 	@RequestMapping(value="/manage/order/entitylist/type/delete", method=RequestMethod.POST)
     public String deleteAppliedEntityListType(long id) {
 		if(id > 0)
-			elTypeService.deleteById(id);
+			elTypeService.remove(elTypeService.getById(id));
 		return "redirect:" + "/manage/order/entitylist/type/list";
     }
 	

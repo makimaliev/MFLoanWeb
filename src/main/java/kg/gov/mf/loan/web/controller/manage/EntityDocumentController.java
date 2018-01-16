@@ -55,7 +55,7 @@ public class EntityDocumentController {
     		@PathVariable("dpId")Long dpId,
     		@PathVariable("edId")Long edId) {
 
-		EntityDocument ed = edService.findById(edId);
+		EntityDocument ed = edService.getById(edId);
         model.addAttribute("ed", ed);
         
         model.addAttribute("orderId", orderId);
@@ -85,17 +85,17 @@ public class EntityDocumentController {
 		
 		if(edId > 0)
 		{
-			model.addAttribute("ed", edService.findById(edId));
+			model.addAttribute("ed", edService.getById(edId));
 		}
 		model.addAttribute("orderId", orderId);
 		model.addAttribute("listId", listId);
 		model.addAttribute("entityId", entityId);
 		model.addAttribute("dpId", dpId);
 		
-		List<EntityDocumentState> states = edStateService.findAll();
+		List<EntityDocumentState> states = edStateService.list();
         model.addAttribute("states", states);
 		
-		List<EntityDocumentRegisteredBy> rBs = edRBService.findAll();
+		List<EntityDocumentRegisteredBy> rBs = edRBService.list();
 		model.addAttribute("rBs", rBs);
 		
 		return "/manage/order/entitylist/entity/documentpackage/entitydocument/save";
@@ -104,41 +104,19 @@ public class EntityDocumentController {
 	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/{dpId}/entitydocument/save", method=RequestMethod.POST)
 	public String saveEntityDocument(
 			EntityDocument doc, 
-			long rbId,
-			long stateId,
 			@PathVariable("orderId")Long orderId, 
 			@PathVariable("listId")Long listId,
 			@PathVariable("entityId")Long entityId,
 			@PathVariable("dpId")Long dpId,
 			ModelMap model)
 	{
-		DocumentPackage dPackage = dpService.findById(dpId);
+		DocumentPackage dPackage = dpService.getById(dpId);
+		doc.setDocumentPackage(dPackage);
 		
-		if(doc != null && doc.getId() == 0)
-		{
-			EntityDocument newDoc = new EntityDocument(
-					doc.getName(),
-					doc.getCompletedBy(),
-					doc.getCompletedDate(),
-					doc.getCompletedDescription(),
-					doc.getApprovedBy(),
-					doc.getApprovedDate(),
-					doc.getApprovedDescription(),
-					doc.getRegisteredNumber(),
-					doc.getRegisteredDate(),
-					doc.getRegisteredDescription(),
-					edRBService.findById(rbId),
-					edStateService.findById(stateId));
-			newDoc.setDocumentPackage(dPackage);
-			edService.save(newDoc);
-		}
-			
-		if(doc != null && doc.getId() > 0)
-		{
-			doc.setRegisteredBy(edRBService.findById(rbId));
-			doc.setEntityDocumentState(edStateService.findById(stateId));
+		if(doc.getId() == null || doc.getId() == 0)
+			edService.add(doc);
+		else
 			edService.update(doc);
-		}
 			
 		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/{dpId}/view";
 	}
@@ -146,14 +124,14 @@ public class EntityDocumentController {
 	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/{dpId}/entitydocument/delete", method=RequestMethod.POST)
     public String deleteDocumentPackage(long id, @PathVariable("orderId")Long orderId, @PathVariable("listId")Long listId, @PathVariable("entityId")Long entityId, @PathVariable("dpId")Long dpId) {
 		if(id > 0)
-			edService.deleteById(id);
+			edService.remove(edService.getById(id));
 		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/{dpId}/view";
     }
 
 	@RequestMapping(value = { "/manage/order/entitylist/entity/documentpackage/entitydocument/state/list" }, method = RequestMethod.GET)
     public String listEDStates(ModelMap model) {
  
-		List<EntityDocumentState> states = edStateService.findAll();
+		List<EntityDocumentState> states = edStateService.list();
 		model.addAttribute("states", states);
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -170,17 +148,16 @@ public class EntityDocumentController {
 		
 		if(stateId > 0)
 		{
-			model.addAttribute("edState", edStateService.findById(stateId));
+			model.addAttribute("edState", edStateService.getById(stateId));
 		}
 		return "/manage/order/entitylist/entity/documentpackage/entitydocument/state/save";
 	}	
 	
 	@RequestMapping(value="/manage/order/entitylist/entity/documentpackage/entitydocument/state/save", method=RequestMethod.POST)
     public String saveEntityDocumentState(EntityDocumentState state, ModelMap model) {
-		if(state != null && state.getId() == 0)
-			edStateService.save(new EntityDocumentState(state.getName()));
-		
-		if(state != null && state.getId() > 0)
+		if(state.getId() == null || state.getId() == 0)
+			edStateService.add(state);
+		else
 			edStateService.update(state);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -190,14 +167,14 @@ public class EntityDocumentController {
 	@RequestMapping(value="/manage/order/entitylist/entity/documentpackage/entitydocument/state/delete", method=RequestMethod.POST)
     public String deleteEntityDocumentState(long id) {
 		if(id > 0)
-			edStateService.deleteById(id);
+			edStateService.remove(edStateService.getById(id));
 		return "redirect:" + "/manage/order/entitylist/entity/documentpackage/entitydocument/state/list";
     }
 	
 	@RequestMapping(value = { "/manage/order/entitylist/entity/documentpackage/entitydocument/registeredby/list" }, method = RequestMethod.GET)
     public String listEDRBs(ModelMap model) {
  
-		List<EntityDocumentRegisteredBy> rBs = edRBService.findAll();
+		List<EntityDocumentRegisteredBy> rBs = edRBService.list();
 		model.addAttribute("rBs", rBs);
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -214,17 +191,16 @@ public class EntityDocumentController {
 		
 		if(rbId > 0)
 		{
-			model.addAttribute("edRB", edRBService.findById(rbId));
+			model.addAttribute("edRB", edRBService.getById(rbId));
 		}
 		return "/manage/order/entitylist/entity/documentpackage/entitydocument/registeredby/save";
 	}
 	
 	@RequestMapping(value="/manage/order/entitylist/entity/documentpackage/entitydocument/registeredby/save", method=RequestMethod.POST)
     public String saveEntityDocumentRegisteredBy(EntityDocumentRegisteredBy rb,	ModelMap model) {
-		if(rb != null && rb.getId() == 0)
-			edRBService.save(new EntityDocumentRegisteredBy(rb.getName()));
-		
-		if(rb != null && rb.getId() > 0)
+		if(rb.getId() == null || rb.getId() == 0)
+			edRBService.add(rb);
+		else
 			edRBService.update(rb);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -234,7 +210,7 @@ public class EntityDocumentController {
 	@RequestMapping(value="/manage/order/entitylist/entity/documentpackage/entitydocument/registeredby/delete", method=RequestMethod.POST)
     public String deleteEntityDocumentRegisteredBy(long id) {
 		if(id > 0)
-			edRBService.deleteById(id);
+			edRBService.remove(edRBService.getById(id));
 		return "redirect:" + "/manage/order/entitylist/entity/documentpackage/entitydocument/registeredby/list";
     }
 	

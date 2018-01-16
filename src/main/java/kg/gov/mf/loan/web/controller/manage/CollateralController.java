@@ -28,7 +28,7 @@ public class CollateralController {
 	@RequestMapping(value = { "/manage/collateral/list"})
     public String listCollaterals(ModelMap model) {
 		
-		List<Collateral> colls = collService.findAll(); 
+		List<Collateral> colls = collService.list(); 
 		model.addAttribute("colls", colls);
 		
 		return "/manage/collateral/list";
@@ -38,14 +38,14 @@ public class CollateralController {
 	@RequestMapping(value = { "/manage/collateral/{collateralId}/view"})
     public String viewLoan(ModelMap model, @PathVariable("collateralId")Long collateralId) {
 		
-		Collateral collateral = collService.findById(collateralId);
+		Collateral collateral = collService.getById(collateralId);
 		
 		model.addAttribute("collateral", collateral);
 		
-		model.addAttribute("agreements", collateral.getAgreement());
+		model.addAttribute("agreements", collateral.getAgreements());
 		model.addAttribute("emptyAgreement", new CollateralAgreement());
 		
-		model.addAttribute("summaries", collateral.getCollateralSummary());
+		model.addAttribute("summaries", collateral.getCollateralSummaries());
 		model.addAttribute("emptySummary", new CollateralSummary());
 		
 		return "/manage/collateral/view";
@@ -62,7 +62,7 @@ public class CollateralController {
 
 		if(collateralId > 0)
 		{
-			model.addAttribute("collateral", collService.findById(collateralId));
+			model.addAttribute("collateral", collService.getById(collateralId));
 		}
 
 		return "/manage/collateral/save";
@@ -71,18 +71,13 @@ public class CollateralController {
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/collateral/save"})
     public String saveCollateral(Collateral coll, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
-		Loan loan = loanService.findById(loanId);
-		if(coll != null && coll.getId() == 0)
-		{
-			Collateral newColl = new Collateral(coll.getName());
-			newColl.setLoan(loan);
-			collService.save(newColl);
-		}
+		Loan loan = loanService.getById(loanId);
+		coll.setLoan(loan);
 		
-		if(coll != null && coll.getId() > 0)
-		{
+		if(coll.getId() == null || coll.getId() == 0)
+			collService.add(coll);
+		else			
 			collService.update(coll);
-		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_10";
     }
@@ -90,7 +85,7 @@ public class CollateralController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/collateral/delete", method=RequestMethod.POST)
     public String deleteCollateral(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			collService.deleteById(id);
+			collService.remove(collService.getById(id));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_10";
     }
 	

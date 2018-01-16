@@ -2,7 +2,6 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import kg.gov.mf.loan.manage.model.collateral.Collateral;
-import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.loan.Bankrupt;
 import kg.gov.mf.loan.manage.model.loan.CreditTerm;
@@ -111,7 +109,7 @@ public class LoanController {
 	@RequestMapping(value = { "/manage/loan/list"})
     public String listLoans(ModelMap model) {
 		
-		List<Loan> loans = loanService.findAll(); 
+		List<Loan> loans = loanService.list(); 
 		model.addAttribute("loans", loans);
 		
 		return "/manage/loan/list";
@@ -121,63 +119,63 @@ public class LoanController {
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/view"})
     public String viewLoan(ModelMap model, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 
-		Loan loan = loanService.findById(loanId);
+		Loan loan = loanService.getById(loanId);
         model.addAttribute("loan", loan);
         
-        model.addAttribute("terms", loan.getCreditTerm());
+        model.addAttribute("terms", loan.getCreditTerms());
         model.addAttribute("emptyTerm", new CreditTerm());
         
-        model.addAttribute("WOs", loan.getWriteOff());
+        model.addAttribute("WOs", loan.getWriteOffs());
         model.addAttribute("emptyWO", new WriteOff());
         
-        model.addAttribute("SPs", loan.getSupervisorPlan());
+        model.addAttribute("SPs", loan.getSupervisorPlans());
         model.addAttribute("emptySP", new SupervisorPlan());
         
-        model.addAttribute("PaymentSchedules", loan.getPaymentSchedule());
+        model.addAttribute("PaymentSchedules", loan.getPaymentSchedules());
         model.addAttribute("emptyPaymentSchedule", new PaymentSchedule());
         
-        List<InstallmentState> iStates = iStateService.findAll();
+        List<InstallmentState> iStates = iStateService.list();
         model.addAttribute("iStates", iStates);
         model.addAttribute("emptyState", new InstallmentState());
         
-        model.addAttribute("Payments", loan.getPayment());
+        model.addAttribute("Payments", loan.getPayments());
         model.addAttribute("emptyPayment", new Payment());
         
-        List<PaymentType> pTypes = pTypeService.findAll();
+        List<PaymentType> pTypes = pTypeService.list();
         model.addAttribute("pTypes", pTypes);
         model.addAttribute("emptyType", new PaymentType());
         
-        List<OrderTermRatePeriod> ratePeriods = ratePeriodService.findAll();
+        List<OrderTermRatePeriod> ratePeriods = ratePeriodService.list();
         model.addAttribute("ratePeriods", ratePeriods);
         
-        List<OrderTermFloatingRateType> rateTypes = rateTypeService.findAll();
+        List<OrderTermFloatingRateType> rateTypes = rateTypeService.list();
         model.addAttribute("rateTypes", rateTypes);
         model.addAttribute("popots", rateTypes);
         model.addAttribute("poiots", rateTypes);
         
-        List<OrderTermTransactionOrder> txOrders = txOrderService.findAll();
+        List<OrderTermTransactionOrder> txOrders = txOrderService.list();
         model.addAttribute("tXs", txOrders);
         
-        List<OrderTermDaysMethod> daysMethods = daysMethodService.findAll();
+        List<OrderTermDaysMethod> daysMethods = daysMethodService.list();
         model.addAttribute("dimms", daysMethods);
         model.addAttribute("diyms", daysMethods);
         
         model.addAttribute("LGs", loan.getLoanGoods());
         model.addAttribute("emptyLG", new LoanGoods());
         
-        model.addAttribute("DTs", loan.getDebtTransfer());
+        model.addAttribute("DTs", loan.getDebtTransfers());
         model.addAttribute("emptyDT", new DebtTransfer());
         
-        model.addAttribute("TUs", loan.getTargetedUse());
+        model.addAttribute("TUs", loan.getTargetedUses());
         model.addAttribute("emptyTU", new TargetedUse());
         
-        model.addAttribute("RLs", loan.getReconstructedList());
+        model.addAttribute("RLs", loan.getReconstructedLists());
         model.addAttribute("emptyRL", new ReconstructedList());
         
-        model.addAttribute("Bankrupts", loan.getBankrupt());
+        model.addAttribute("Bankrupts", loan.getBankrupts());
         model.addAttribute("emptyBankrupt", new Bankrupt());
         
-        model.addAttribute("Collaterals", loan.getCollateral());
+        model.addAttribute("Collaterals", loan.getCollaterals());
         model.addAttribute("emptyCollateral", new Collateral());
         
         model.addAttribute("debtorId", debtorId);
@@ -189,16 +187,16 @@ public class LoanController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/save", method=RequestMethod.GET)
 	public String formeAppliedEntityList(ModelMap model, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId)
 	{
-		Debtor debtor = debtorService.findById(debtorId);
+		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtorId", debtorId);
 		
 		//Get all loans except this loan
-		Set<Loan> tLoans = debtor.getLoan();
-		tLoans.remove(loanService.findById(loanId));
+		Set<Loan> tLoans = debtor.getLoans();
+		tLoans.remove(loanService.getById(loanId));
         model.addAttribute("tLoans", tLoans);
         
-        model.addAttribute("agreements", agreementService.findAll());
-        model.addAttribute("orders", orderService.findAll());
+        model.addAttribute("agreements", agreementService.list());
+        model.addAttribute("orders", orderService.list());
 		
 		if(loanId == 0)
 		{
@@ -207,16 +205,16 @@ public class LoanController {
 			
 		if(loanId > 0)
 		{
-			model.addAttribute("loan", loanService.findById(loanId));
+			model.addAttribute("loan", loanService.getById(loanId));
 		}
 		
-		List<OrderTermCurrency> currs = currService.findAll();
+		List<OrderTermCurrency> currs = currService.list();
         model.addAttribute("currencies", currs);
 		
-		List<LoanType> types = loanTypeService.findAll();
+		List<LoanType> types = loanTypeService.list();
         model.addAttribute("types", types);
         
-        List<LoanState> states = loanStateService.findAll();
+        List<LoanState> states = loanStateService.list();
         model.addAttribute("states", states);
 			
 		return "/manage/debtor/loan/save";
@@ -224,76 +222,58 @@ public class LoanController {
 	
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/save", method=RequestMethod.POST)
 	public String saveLoan(Loan loan,
-			long currencyId,
-			long typeId,
-			long stateId,
-			long creditOrderId,
-			String[] agreementIdList,
 			@RequestParam(required=false) Long parentLoanId,
+			String[] agreementIdList,
 			@PathVariable("debtorId")Long debtorId, 
 			ModelMap model)
 	{
 		
-		Debtor debtor = debtorService.findById(debtorId);
-		if(loan != null && loan.getId() == 0)
+		Debtor debtor = debtorService.getById(debtorId);
+		loan.setDebtor(debtor);
+		
+		if(loan.getId() == null || loan.getId() == 0)
 		{
-			Loan newLoan = new Loan(loan.getRegNumber(), 
-					loan.getRegDate(), 
-					loan.getAmount(), 
-					currService.findById(currencyId),
-					loanTypeService.findById(typeId),
-					loanStateService.findById(stateId),
-					loan.getSupervisorId(),
-					false,
-					orderService.findById(creditOrderId));
-			
 			if(parentLoanId != null && parentLoanId > 0)
 			{
-				Loan parentLoan = loanService.findById(parentLoanId);
-				newLoan.setParentLoan(parentLoan);
+				Loan parentLoan = loanService.getById(parentLoanId);
+				loan.setParentLoan(parentLoan);
 				parentLoan.setHasSubLoan(true);
 				loanService.update(parentLoan);
 			}
 			
-			newLoan.setDebtor(debtor);
-			
-			loggerLoan.info("createLoan : {}", newLoan);
+			/*
 			Set<CollateralAgreement> cAgreements = new HashSet<>();
 			
 			if(agreementIdList != null)
 			{
 				for (String agreementId : agreementIdList) {
-					CollateralAgreement tA = agreementService.findById(Long.parseLong(agreementId));
-					cAgreements.add(tA);
-				}
-				
-				if(cAgreements.size()>0)
-					newLoan.setCollateralAgreements(cAgreements);
-			}
-			
-			loanService.save(newLoan);
-		}
-			
-		if(loan != null && loan.getId() > 0)
-		{
-			loan.setCurrency(currService.findById(currencyId));
-			loan.setLoanType(loanTypeService.findById(typeId));
-			loan.setLoanState(loanStateService.findById(stateId));
-			loan.setCreditOrder(orderService.findById(creditOrderId));
-			loan.setParentLoan(loanService.findById(loan.getId()).getParentLoan());
-			
-			Set<CollateralAgreement> cAgreements = new HashSet<>();
-			if(agreementIdList != null)
-			{
-				for (String agreementId : agreementIdList) {
-					CollateralAgreement tA = agreementService.findById(Long.parseLong(agreementId));
+					CollateralAgreement tA = agreementService.getById(Long.parseLong(agreementId));
 					cAgreements.add(tA);
 				}
 				
 				if(cAgreements.size()>0)
 					loan.setCollateralAgreements(cAgreements);
 			}
-			
+			*/
+			loggerLoan.info("createLoan : {}", loan);
+			loanService.add(loan);
+		}
+		else
+		{
+			loan.setParentLoan(loanService.getById(loan.getId()).getParentLoan());
+			/*
+			Set<CollateralAgreement> cAgreements = new HashSet<>();
+			if(agreementIdList != null)
+			{
+				for (String agreementId : agreementIdList) {
+					CollateralAgreement tA = agreementService.getById(Long.parseLong(agreementId));
+					cAgreements.add(tA);
+				}
+				
+				if(cAgreements.size()>0)
+					loan.setCollateralAgreements(cAgreements);
+			}
+			*/
 			loggerLoan.info("updateLoan : {}", loan);
 			loanService.update(loan);
 		}
@@ -304,14 +284,14 @@ public class LoanController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/delete", method=RequestMethod.POST)
     public String deleteLoan(long id, @PathVariable("debtorId")Long debtorId) {
 		if(id > 0)
-			loanService.deleteById(id);
+			loanService.remove(loanService.getById(id));
 		return "redirect:" + "/manage/debtor/{debtorId}/view";
     }
 
 	@RequestMapping(value = { "/manage/debtor/loan/state/list" }, method = RequestMethod.GET)
 	public String listLoanStates(ModelMap model) {
 
-		List<LoanState> states = loanStateService.findAll();
+		List<LoanState> states = loanStateService.list();
 		model.addAttribute("states", states);
 
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -328,17 +308,16 @@ public class LoanController {
 
 		if(stateId > 0)
 		{
-			model.addAttribute("loanState", loanStateService.findById(stateId));
+			model.addAttribute("loanState", loanStateService.getById(stateId));
 		}
 		return "/manage/debtor/loan/state/save";
 	}
 
 	@RequestMapping(value="/manage/debtor/loan/state/save", method=RequestMethod.POST)
     public String saveLoanState(LoanState state, ModelMap model) {
-		if(state != null && state.getId() == 0)
-			loanStateService.save(new LoanState(state.getName()));
-		
-		if(state != null && state.getId() > 0)
+		if(state.getId() == null || state.getId() == 0)
+			loanStateService.add(state);
+		else
 			loanStateService.update(state);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -348,14 +327,14 @@ public class LoanController {
 	@RequestMapping(value="/manage/debtor/loan/state/delete", method=RequestMethod.POST)
 	public String deleteLoanState(long id) {
 		if(id > 0)
-			loanStateService.deleteById(id);
+			loanStateService.remove(loanStateService.getById(id));
 		return "redirect:" + "/manage/debtor/loan/state/list";
 	}
 	
 	@RequestMapping(value = { "/manage/debtor/loan/type/list" }, method = RequestMethod.GET)
 	public String listLoanTypes(ModelMap model) {
 
-		List<LoanType> types = loanTypeService.findAll();
+		List<LoanType> types = loanTypeService.list();
 		model.addAttribute("types", types);
 
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -372,17 +351,16 @@ public class LoanController {
 
 		if(typeId > 0)
 		{
-			model.addAttribute("loanType", loanTypeService.findById(typeId));
+			model.addAttribute("loanType", loanTypeService.getById(typeId));
 		}
 		return "/manage/debtor/loan/type/save";
 	}
 
 	@RequestMapping(value="/manage/debtor/loan/type/save", method=RequestMethod.POST)
     public String saveLoanType(LoanType type, ModelMap model) {
-		if(type != null && type.getId() == 0)
-			loanTypeService.save(new LoanType(type.getName()));
-		
-		if(type != null && type.getId() > 0)
+		if(type.getId() == null && type.getId() == 0)
+			loanTypeService.add(type);
+		else
 			loanTypeService.update(type);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -392,7 +370,7 @@ public class LoanController {
 	@RequestMapping(value="/manage/debtor/loan/type/delete", method=RequestMethod.POST)
     public String deleteLoanType(long id) {
 		if(id > 0)
-			loanTypeService.deleteById(id);
+			loanTypeService.remove(loanTypeService.getById(id));
 		return "redirect:" + "/manage/debtor/loan/type/list";
     }
 

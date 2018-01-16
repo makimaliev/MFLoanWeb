@@ -52,51 +52,17 @@ public class CreditTermController {
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/term/save"})
     public String saveCreditTerm(CreditTerm term,
-    		long ratePeriodId,
-    		long rateTypeId,
-    		long popotId,
-    		long poiotId,
-    		long txOrderId,
-    		long dimmId,
-    		long diymId,
     		@PathVariable("debtorId")Long debtorId, 
     		@PathVariable("loanId")Long loanId,
     		ModelMap model) {
 		
-		Loan loan = loanService.findById(loanId);
+		Loan loan = loanService.getById(loanId);
+		term.setLoan(loan);
 		
-		if(term != null && term.getId() == 0)
-		{
-			CreditTerm newTerm  = new CreditTerm(
-					term.getStartDate(), 
-					term.getInterestRateValue(),
-					ratePeriodService.findById(ratePeriodId),
-					rateTypeService.findById(rateTypeId),
-					term.getPenaltyOnPrincipleOverdueRateValue(),
-					rateTypeService.findById(popotId),
-					term.getPenaltyOnInterestOverdueRateValue(),
-					rateTypeService.findById(poiotId),
-					term.getPenaltyLimitPercent(),
-					term.getPenaltyLimitEndDate(),
-					txOrderService.findById(txOrderId),
-					daysMethodService.findById(dimmId),
-					daysMethodService.findById(diymId));
-			
-			newTerm.setLoan(loan);
-			termService.save(newTerm);
-		}
-		
-		if(term != null && term.getId() > 0)
-		{
-			term.setRatePeriod(ratePeriodService.findById(ratePeriodId));
-			term.setFloatingRateType(rateTypeService.findById(rateTypeId));
-			term.setPenaltyOnPrincipleOverdueRateType(rateTypeService.findById(popotId));
-			term.setPenaltyOnInterestOverdueRateType(rateTypeService.findById(poiotId));
-			term.setTransactionOrder(txOrderService.findById(txOrderId));
-			term.setDaysInMonthMethod(daysMethodService.findById(dimmId));
-			term.setDaysInYearMethod(daysMethodService.findById(diymId));
+		if(term.getId() == null || term.getId() == 0)
+			termService.add(term);
+		else
 			termService.update(term);
-		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
 	}
@@ -104,7 +70,7 @@ public class CreditTermController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/term/delete", method=RequestMethod.POST)
     public String deleteCreditTerm(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			termService.deleteById(id);
+			termService.remove(termService.getById(id));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	

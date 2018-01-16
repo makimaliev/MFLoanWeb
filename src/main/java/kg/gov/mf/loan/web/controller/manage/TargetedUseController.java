@@ -37,18 +37,13 @@ public class TargetedUseController {
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/targeteduse/save"})
     public String saveTargetedUse(TargetedUse tu, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
-		Loan loan = loanService.findById(loanId);
-		if(tu != null && tu.getId() == 0)
-		{
-			TargetedUse newTU = new TargetedUse(tu.getTargetedUseResultId(), tu.getCreatedById(), tu.getCreatedDate(), tu.getApprovedById(), tu.getApprovedDate(), tu.getCheckedById(), tu.getCheckedDate(), tu.getAttachmentId());
-			newTU.setLoan(loan);
-			tuService.save(newTU);
-		}
+		Loan loan = loanService.getById(loanId);
+		tu.setLoan(loan);
 		
-		if(tu != null && tu.getId() > 0)
-		{
+		if(tu.getId() == null || tu.getId() == 0)
+			tuService.add(tu);
+		else
 			tuService.update(tu);
-		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_7";
     }
@@ -56,7 +51,7 @@ public class TargetedUseController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/targeteduse/delete", method=RequestMethod.POST)
     public String deleteTargetedUse(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			tuService.deleteById(id);
+			tuService.remove(tuService.getById(id));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_7";
     }
 

@@ -46,14 +46,14 @@ public class CollateralAgreementController {
 	@RequestMapping(value = { "/manage/collateral/{collateralId}/collateralagreement/{agreementId}/view"})
     public String viewAgreement(ModelMap model, @PathVariable("collateralId")Long collateralId, @PathVariable("agreementId")Long agreementId) {
 		
-		CollateralAgreement agreement = agreementService.findById(agreementId);
+		CollateralAgreement agreement = agreementService.getById(agreementId);
 		
 		model.addAttribute("agreement", agreement);
 		
-		model.addAttribute("inspections", agreement.getCollateralInspection());
+		model.addAttribute("inspections", agreement.getCollateralInspections());
 	    model.addAttribute("emptyInspection", new CollateralInspection());
 	    
-	    model.addAttribute("AFs", agreement.getCollateralArrestFree());
+	    model.addAttribute("AFs", agreement.getCollateralArrestFrees());
 	    model.addAttribute("emptyAF", new CollateralArrestFree());
 		
 		return "/manage/collateral/collateralagreement/view";
@@ -63,21 +63,13 @@ public class CollateralAgreementController {
 	@RequestMapping(value = { "/manage/collateral/{collateralId}/agreement/save"})
     public String saveCollateralAgreement(CollateralAgreement agreement, @PathVariable("collateralId")Long collateralId,  ModelMap model)
     {
-		Collateral collateral = collateralService.findById(collateralId);
-		if(agreement != null && agreement.getId() == 0)
-		{
-			CollateralAgreement newAgreement = new CollateralAgreement(
-					agreement.getAgreementNumber(), agreement.getAgreementDate(), agreement.getCollateralOfficeRegNumber(), 
-					agreement.getCollateralOfficeRegDate(), agreement.getNotaryOfficeRegNumber(), agreement.getNotaryOfficeRegDate(), 
-					agreement.getArrestRegNumber(), agreement.getArrestRegDate());
-			newAgreement.setCollateral(collateral);
-			agreementService.save(newAgreement);
-		}
+		Collateral collateral = collateralService.getById(collateralId);
+		agreement.setCollateral(collateral);
 		
-		if(agreement != null && agreement.getId() > 0)
-		{
+		if(agreement.getId() == null || agreement.getId() == 0)
+			agreementService.add(agreement);
+		else
 			agreementService.update(agreement);
-		}
 		
 		return "redirect:" + "/manage/collateral/{collateralId}/view";
     }
@@ -86,7 +78,7 @@ public class CollateralAgreementController {
     public String deleteCollateralAgreement(long id, @PathVariable("collateralId")Long collateralId)
     {
 		if(id > 0)
-			agreementService.deleteById(id);
+			agreementService.remove(agreementService.getById(id));
 		
 		return "redirect:" + "/manage/collateral/{collateralId}/view";
     }
@@ -94,19 +86,13 @@ public class CollateralAgreementController {
 	@RequestMapping(value = { "/manage/collateral/{collateralId}/collateralagreement/{agreementId}/inspection/save"})
     public String saveCollateralInspection(CollateralInspection inspection, @PathVariable("collateralId")Long collateralId, @PathVariable("agreementId")Long agreementId)
     {
-		CollateralAgreement agreement = agreementService.findById(agreementId);
-		if(inspection != null && inspection.getId() == 0)
-		{
-			CollateralInspection newInspection = new CollateralInspection(inspection.getName());
-			newInspection.setCollateralAgreement(agreement);
-			
-			inspectionService.save(newInspection);
-		}
+		CollateralAgreement agreement = agreementService.getById(agreementId);
+		inspection.setCollateralAgreement(agreement);
 		
-		if(inspection != null && inspection.getId() > 0)
-		{
+		if(inspection.getId() == null || inspection.getId() == 0)
+			inspectionService.add(inspection);
+		else		
 			inspectionService.update(inspection);
-		}
 		
 		return "redirect:" + "/manage/collateral/{collateralId}/collateralagreement/{agreementId}/view#tab_0";
     }
@@ -115,7 +101,7 @@ public class CollateralAgreementController {
     public String deleteCollateralInspection(long id, @PathVariable("collateralId")Long collateralId, @PathVariable("agreementId")Long agreementId)
     {
 		if(id > 0)
-			inspectionService.deleteById(id);
+			inspectionService.remove(inspectionService.getById(id));
 		
 		return "redirect:" + "/manage/collateral/{collateralId}/collateralagreement/{agreementId}/view#tab_0";
     }
@@ -123,18 +109,13 @@ public class CollateralAgreementController {
 	@RequestMapping(value = { "/manage/collateral/{collateralId}/collateralagreement/{agreementId}/af/save"})
     public String saveArrestFree(CollateralArrestFree af, @PathVariable("collateralId")Long collateralId, @PathVariable("agreementId")Long agreementId)
     {
-		CollateralAgreement agreement = agreementService.findById(agreementId);
-		if(af != null && af.getId() == 0)
-		{
-			CollateralArrestFree newAF = new CollateralArrestFree(af.getName());
-			newAF.setCollateralAgreement(agreement);
-			afService.save(newAF);
-		}
+		CollateralAgreement agreement = agreementService.getById(agreementId);
+		af.setCollateralAgreement(agreement);
 		
-		if(af != null && af.getId() > 0)
-		{
+		if(af.getId() == null || af.getId() == 0)
+			afService.add(af);
+		else
 			afService.update(af);
-		}
 		
 		return "redirect:" + "/manage/collateral/{collateralId}/collateralagreement/{agreementId}/view#tab_1";
     }
@@ -143,7 +124,7 @@ public class CollateralAgreementController {
     public String deleteCollateralArrestFree(long id, @PathVariable("collateralId")Long collateralId, @PathVariable("agreementId")Long agreementId)
     {
 		if(id > 0)
-			afService.deleteById(id);
+			afService.remove(afService.getById(id));
 		
 		return "redirect:" + "/manage/collateral/{collateralId}/collateralagreement/{agreementId}/view#tab_1";
     }

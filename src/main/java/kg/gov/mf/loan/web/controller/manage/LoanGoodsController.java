@@ -24,18 +24,13 @@ public class LoanGoodsController {
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/loangoods/save"})
     public String saveLoanGoods(LoanGoods lg, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
-		Loan loan = loanService.findById(loanId);
-		if(lg != null && lg.getId() == 0)
-		{
-			LoanGoods newLG = new LoanGoods(lg.getQuantity(), lg.getUnitTypeId(), lg.getGoodsTypeId());
-			newLG.setLoan(loan);
-			lgService.save(newLG);
-		}
+		Loan loan = loanService.getById(loanId);
+		lg.setLoan(loan);
 		
-		if(lg != null && lg.getId() > 0)
-		{
+		if(lg.getId() == null || lg.getId() == 0)
+			lgService.add(lg);
+		else		
 			lgService.update(lg);
-		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_5";
     }
@@ -43,7 +38,7 @@ public class LoanGoodsController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/loangoods/delete", method=RequestMethod.POST)
     public String deleteLoanGoods(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			lgService.deleteById(id);
+			lgService.remove(lgService.getById(id));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_5";
     }
 

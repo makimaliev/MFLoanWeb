@@ -1,8 +1,6 @@
 package kg.gov.mf.loan.web.controller.manage;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,17 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackage;
-import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackageState;
-import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackageType;
 import kg.gov.mf.loan.manage.model.entity.AppliedEntity;
 import kg.gov.mf.loan.manage.model.entity.AppliedEntityState;
-import kg.gov.mf.loan.manage.model.entitydocument.EntityDocument;
-import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentRegisteredBy;
-import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentState;
 import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityList;
-import kg.gov.mf.loan.manage.model.orderdocument.OrderDocument;
-import kg.gov.mf.loan.manage.model.orderdocumentpackage.OrderDocumentPackage;
 import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageService;
 import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageStateService;
 import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageTypeService;
@@ -70,10 +60,10 @@ public class AppliedEntityController {
 	@RequestMapping(value = { "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/view"})
     public String viewEntity(ModelMap model, @PathVariable("orderId")Long orderId, @PathVariable("listId")Long listId, @PathVariable("entityId")Long entityId) {
 
-		AppliedEntity entity = entityService.findById(entityId);
+		AppliedEntity entity = entityService.getById(entityId);
         model.addAttribute("entity", entity);
         
-        model.addAttribute("dPackages", entity.getDocumentPackage());
+        model.addAttribute("dPackages", entity.getDocumentPackages());
         
         model.addAttribute("orderId", orderId);
         model.addAttribute("listId", listId);
@@ -93,11 +83,11 @@ public class AppliedEntityController {
 		
 		if(entityId > 0)
 		{
-			model.addAttribute("entity", entityService.findById(entityId));
+			model.addAttribute("entity", entityService.getById(entityId));
 		}
 		model.addAttribute("orderId", orderId);
 		model.addAttribute("listId", listId);
-		List<AppliedEntityState> states = entityStateService.findAll();
+		List<AppliedEntityState> states = entityStateService.list();
         model.addAttribute("states", states);
 			
 		return "/manage/order/entitylist/entity/save";
@@ -106,43 +96,33 @@ public class AppliedEntityController {
 	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/save", method=RequestMethod.POST)
 	public String saveAppliedEntity(
 			AppliedEntity entity, 
-			long stateId, 
 			@PathVariable("orderId")Long orderId, 
 			@PathVariable("listId")Long listId, 
 			ModelMap model)
 	{
-		AppliedEntityList list = listService.findById(listId);
+		AppliedEntityList list = listService.getById(listId);
+		entity.setAppliedEntityList(list);
 		
-		if(entity != null && entity.getId() == 0)
-		{
-			AppliedEntity newEntity = new AppliedEntity(entity.getName(), entityStateService.findById(stateId));
-			newEntity.setAppliedEntityList(list);
-			entityService.save(newEntity);
-			
-			addPackagesAndDocuments(orderId, newEntity);
-			
-		}
-			
-		if(entity != null && entity.getId() > 0)
-		{
-			entity.setAppliedEntityState(entityStateService.findById(stateId));
+		if(entity.getId() == null || entity.getId() == 0)
+			entityService.add(entity);
+			//ddPackagesAndDocuments(orderId, newEntity);
+		else
 			entityService.update(entity);
-		}
 			
-			return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/view";
+		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/view";
 	}
 	
 	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/delete", method=RequestMethod.POST)
     public String deleteAppliedEntity(long id, @PathVariable("orderId")Long orderId, @PathVariable("listId")Long listId) {
 		if(id > 0)
-			entityService.deleteById(id);
+			entityService.remove(entityService.getById(id));
 		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/view";
     }
 	
 	@RequestMapping(value = { "/manage/order/entitylist/entity/state/list" }, method = RequestMethod.GET)
     public String listAppliedEntityStates(ModelMap model) {
  
-		List<AppliedEntityState> states = entityStateService.findAll();
+		List<AppliedEntityState> states = entityStateService.list();
 		model.addAttribute("states", states);
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -159,17 +139,16 @@ public class AppliedEntityController {
 		
 		if(stateId > 0)
 		{
-			model.addAttribute("eState", entityStateService.findById(stateId));
+			model.addAttribute("eState", entityStateService.getById(stateId));
 		}
 		return "/manage/order/entitylist/entity/state/save";
 	}
 	
 	@RequestMapping(value="/manage/order/entitylist/entity/state/save", method=RequestMethod.POST)
     public String saveAppliedEntityState(AppliedEntityState state, ModelMap model) {
-		if(state != null && state.getId() == 0)
-			entityStateService.save(new AppliedEntityState(state.getName()));
-		
-		if(state != null && state.getId() > 0)
+		if(state.getId() == null || state.getId() == 0)
+			entityStateService.add(state);
+		else
 			entityStateService.update(state);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -179,10 +158,11 @@ public class AppliedEntityController {
 	@RequestMapping(value="/manage/order/entitylist/entity/state/delete", method=RequestMethod.POST)
     public String deleteAppliedEntityState(long id) {
 		if(id > 0)
-			entityStateService.deleteById(id);
+			entityStateService.remove(entityStateService.getById(id));
 		return "redirect:" + "/manage/order/entitylist/entity/state/list";
     }
 	
+	/*
 	private void addPackagesAndDocuments(Long orderId, AppliedEntity newEntity) {
 		Set<OrderDocumentPackage> oDPs = orderService.findById(orderId).getOrderDocumentPackage();
 		for (OrderDocumentPackage orderDocumentPackage : oDPs) {
@@ -258,5 +238,6 @@ public class AppliedEntityController {
 		
 		return result;
 	}
+	*/
 
 }

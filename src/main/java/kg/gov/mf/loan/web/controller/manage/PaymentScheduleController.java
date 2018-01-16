@@ -41,28 +41,18 @@ public class PaymentScheduleController {
 	}
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/paymentschedule/save"})
-    public String savePaymentSchedule(PaymentSchedule paymentSchedule, long installmentStateId, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
+    public String savePaymentSchedule(PaymentSchedule paymentSchedule, 
+    		@PathVariable("debtorId")Long debtorId, 
+    		@PathVariable("loanId")Long loanId, 
+    		ModelMap model)
     {
-		Loan loan = loanService.findById(loanId);
-		if(paymentSchedule != null && paymentSchedule.getId() == 0)
-		{
-			PaymentSchedule newPaymentSchedule = new PaymentSchedule(
-					paymentSchedule.getExpectedDate(), 
-					paymentSchedule.getDisbursement(),
-					paymentSchedule.getPrincipalPayment(),
-					paymentSchedule.getInterestPayment(),
-					paymentSchedule.getCollectedInterestPayment(),
-					paymentSchedule.getCollectedPenaltyPayment(),
-					installmentStateService.findById(installmentStateId));
-			newPaymentSchedule.setLoan(loan);
-			paymentScheduleService.save(newPaymentSchedule);
-		}
+		Loan loan = loanService.getById(loanId);
+		paymentSchedule.setLoan(loan);
 		
-		if(paymentSchedule != null && paymentSchedule.getId() > 0)
-		{
-			paymentSchedule.setInstallmentState(installmentStateService.findById(installmentStateId));
+		if(paymentSchedule.getId() == null || paymentSchedule.getId() == 0)
+			paymentScheduleService.add(paymentSchedule);
+		else
 			paymentScheduleService.update(paymentSchedule);
-		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_2";
     }
@@ -70,16 +60,15 @@ public class PaymentScheduleController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/paymentschedule/delete", method=RequestMethod.POST)
     public String deletePaymentSchedule(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			paymentScheduleService.deleteById(id);
+			paymentScheduleService.remove(paymentScheduleService.getById(id));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_2";
     }
 
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/paymentschedule/installmentstate/save", method=RequestMethod.POST)
     public String saveInstallmentState(@PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, InstallmentState state, ModelMap model) {
-		if(state != null && state.getId() == 0)
-			installmentStateService.save(new InstallmentState(state.getName()));
-		
-		if(state != null && state.getId() > 0)
+		if(state.getId() == null || state.getId() == 0)
+			installmentStateService.add(state);
+		else
 			installmentStateService.update(state);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -89,7 +78,7 @@ public class PaymentScheduleController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/paymentschedule/installmentstate/delete", method=RequestMethod.POST)
     public String deleteInstallmentState(long id) {
 		if(id > 0)
-			installmentStateService.deleteById(id);
+			installmentStateService.remove(installmentStateService.getById(id));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_2";
     }
 	

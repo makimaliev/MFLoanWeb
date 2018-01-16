@@ -41,21 +41,13 @@ public class DebtTransferController {
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/debttransfer/save"})
     public String saveDebtTransfer(DebtTransfer dt, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
-		Loan loan = loanService.findById(loanId);
-		if(dt != null && dt.getId() == 0)
-		{
-			DebtTransfer newDT = new DebtTransfer(dt.getNumber(), dt.getDate(), dt.getQuantity(), 
-					dt.getPricePerUnit(), dt.getUnitTypeId(), dt.getTotalCost(), 
-					dt.getTransferPaymentId(), dt.getTransferCreditId(), dt.getTransferPersonId(), dt.getGoodsTypeId());
-			newDT.setLoan(loan);
-			loggerDT.info("createDT : {}", newDT);
-			dtService.save(newDT);
-		}
+		Loan loan = loanService.getById(loanId);
+		dt.setLoan(loan);
 		
-		if(dt != null && dt.getId() > 0)
-		{
+		if(dt.getId() == null || dt.getId() == 0)
+			dtService.add(dt);
+		else
 			dtService.update(dt);
-		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_6";
     }
@@ -63,7 +55,7 @@ public class DebtTransferController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/debttransfer/delete", method=RequestMethod.POST)
     public String deleteDebtTransfer(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			dtService.deleteById(id);
+			dtService.remove(dtService.getById(id));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_6";
     }
 	

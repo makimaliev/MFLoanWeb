@@ -37,25 +37,13 @@ public class WriteOffController {
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/wo/save"})
     public String saveWriteOff(WriteOff wo, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
-		Loan loan = loanService.findById(loanId);
-		if(wo != null && wo.getId() == 0)
-		{
-			WriteOff newWO = new WriteOff(
-					wo.getDate(), 
-					wo.getTotalAmount(),
-					wo.getPrincipal(),
-					wo.getInterest(), 
-					wo.getPenalty(),
-					wo.getFee(), 
-					wo.getDescription());
-			newWO.setLoan(loan);
-			woService.save(newWO);
-		}
+		Loan loan = loanService.getById(loanId);
+		wo.setLoan(loan);
 		
-		if(wo != null && wo.getId() > 0)
-		{
+		if(wo.getId() == null || wo.getId() == 0)
+			woService.add(wo);
+		else
 			woService.update(wo);
-		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_1";
     }
@@ -63,7 +51,7 @@ public class WriteOffController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/wo/delete", method=RequestMethod.POST)
     public String deleteWriteOff(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			woService.deleteById(id);
+			woService.remove(woService.getById(id));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_1";
     }
 	

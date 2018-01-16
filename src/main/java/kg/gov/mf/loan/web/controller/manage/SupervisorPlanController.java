@@ -37,18 +37,13 @@ public class SupervisorPlanController {
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/sp/save"})
     public String saveSupervisorPlan(SupervisorPlan sp, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
-		Loan loan = loanService.findById(loanId);
-		if(sp != null && sp.getId() == 0)
-		{
-			SupervisorPlan newSP = new SupervisorPlan(sp.getDate(), sp.getAmount(), sp.getPrincipal(), sp.getInterest(), sp.getPenalty(), sp.getFee(), sp.getDescription());
-			newSP.setLoan(loan);
-			spService.save(newSP);
-		}
+		Loan loan = loanService.getById(loanId);
+		sp.setLoan(loan);
 		
-		if(sp != null && sp.getId() > 0)
-		{
+		if(sp.getId() == null || sp.getId() == 0)
+			spService.add(sp);
+		else
 			spService.update(sp);
-		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_4";
     }
@@ -56,7 +51,7 @@ public class SupervisorPlanController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/sp/delete", method=RequestMethod.POST)
     public String deleteSupervisorPlan(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			spService.deleteById(id);
+			spService.remove(spService.getById(id));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_4";
     }
 }

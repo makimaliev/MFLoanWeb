@@ -41,30 +41,15 @@ public class PaymentController {
 	}
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/payment/save"})
-    public String savePayment(Payment payment, long paymentTypeId, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
+    public String savePayment(Payment payment, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
-		Loan loan = loanService.findById(loanId);
-		if(payment != null && payment.getId() == 0)
-		{
-			Payment newPayment = new Payment(
-					payment.getPaymentDate(),
-					payment.getTotalAmount(),
-					payment.getPrincipal(),
-					payment.getInterest(),
-					payment.getPenalty(),
-					payment.getFee(),
-					payment.getNumber(),
-					pTypeService.findById(paymentTypeId));
-					
-			newPayment.setLoan(loan);
-			paymentService.save(newPayment);
-		}
+		Loan loan = loanService.getById(loanId);
+		payment.setLoan(loan);
 		
-		if(payment != null && payment.getId() > 0)
-		{
-			payment.setPaymentType(pTypeService.findById(paymentTypeId));
+		if(payment.getId() == null || payment.getId() == 0)
+			paymentService.add(payment);
+		else
 			paymentService.update(payment);
-		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_3";
     }
@@ -72,16 +57,15 @@ public class PaymentController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/payment/delete", method=RequestMethod.POST)
     public String deletePayment(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			paymentService.deleteById(id);
+			paymentService.remove(paymentService.getById(id));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_3";
     }
 
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/payment/type/save", method=RequestMethod.POST)
     public String savePaymentType(@PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, PaymentType type, ModelMap model) {
-		if(type != null && type.getId() == 0)
-			pTypeService.save(new PaymentType(type.getName()));
-		
-		if(type != null && type.getId() > 0)
+		if(type.getId() == null || type.getId() == 0)
+			pTypeService.add(type);
+		else
 			pTypeService.update(type);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -91,7 +75,7 @@ public class PaymentController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/payment/type/delete", method=RequestMethod.POST)
     public String deletePaymentType(long id) {
 		if(id > 0)
-			pTypeService.deleteById(id);
+			pTypeService.remove(pTypeService.getById(id));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_3";
     }
 

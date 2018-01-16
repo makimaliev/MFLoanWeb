@@ -35,20 +35,18 @@ public class ReconstructedListController {
 	}
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/reconstructedlist/save"})
-    public String saveReconstructedList(ReconstructedList rl, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
+    public String saveReconstructedList(ReconstructedList rl, 
+    		@PathVariable("debtorId")Long debtorId, 
+    		@PathVariable("loanId")Long loanId, 
+    		ModelMap model)
     {
-		Loan loan = loanService.findById(loanId);
-		if(rl != null && rl.getId() == 0)
-		{
-			ReconstructedList newRL = new ReconstructedList(rl.getOnDate(), rl.getOldLoanId());
-			newRL.setLoan(loan);
-			rlService.save(newRL);
-		}
+		Loan loan = loanService.getById(loanId);
+		rl.setLoan(loan);
 		
-		if(rl != null && rl.getId() > 0)
-		{
+		if(rl.getId() == null || rl.getId() == 0)
+			rlService.add(rl);
+		else
 			rlService.update(rl);
-		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_8";
     }
@@ -56,7 +54,7 @@ public class ReconstructedListController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/reconstructedlist/delete", method=RequestMethod.POST)
     public String deleteReconstructedList(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			rlService.deleteById(id);
+			rlService.remove(rlService.getById(id));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_8";
     }
 

@@ -2,8 +2,6 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -15,14 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackage;
-import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackageState;
-import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackageType;
-import kg.gov.mf.loan.manage.model.entity.AppliedEntity;
-import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityList;
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
-import kg.gov.mf.loan.manage.model.orderdocument.OrderDocument;
-import kg.gov.mf.loan.manage.model.orderdocument.OrderDocumentType;
 import kg.gov.mf.loan.manage.model.orderdocumentpackage.OrderDocumentPackage;
 import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageService;
 import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageStateService;
@@ -63,10 +54,10 @@ public class OrderDocumentPackageController {
 	@RequestMapping(value = { "/manage/order/{orderId}/orderdocumentpackage/{oDPId}/view"})
     public String viewOrderDocumentPackage(ModelMap model, @PathVariable("orderId")Long orderId, @PathVariable("oDPId")Long oDPId) {
 
-		OrderDocumentPackage oDP = oDPService.findById(oDPId);
+		OrderDocumentPackage oDP = oDPService.getById(oDPId);
         model.addAttribute("oDP", oDP);
         
-        model.addAttribute("documents", oDP.getOrderDocument());
+        model.addAttribute("documents", oDP.getOrderDocuments());
         
         model.addAttribute("orderId", orderId);
         
@@ -85,7 +76,7 @@ public class OrderDocumentPackageController {
 		
 		if(dpId > 0)
 		{
-			model.addAttribute("documentPackage", oDPService.findById(dpId));
+			model.addAttribute("documentPackage", oDPService.getById(dpId));
 		}
 		model.addAttribute("orderId", orderId);
 		return "/manage/order/orderdocumentpackage/save";
@@ -95,23 +86,16 @@ public class OrderDocumentPackageController {
 	public String saveOrderDocumentPackage(OrderDocumentPackage oDP, 
 			@PathVariable("orderId")Long orderId, ModelMap model)
 	{
-		CreditOrder creditOrder = orderService.findById(orderId);
-		if(oDP != null && oDP.getId() == 0)
-		{
-			OrderDocumentPackage newODP = new OrderDocumentPackage(oDP.getName());
-			newODP.setCreditOrder(creditOrder);
-			oDPService.save(newODP);
-			
+		CreditOrder creditOrder = orderService.getById(orderId);
+		oDP.setCreditOrder(creditOrder);
+		
+		if(oDP.getId() == null || oDP.getId() == 0)
+			oDPService.add(oDP);
 			//add this document package to all entities under this credit
 			//addToEntities(creditOrder, oDP, newODP);
-		}
-			
-		
-		if(oDP != null && oDP.getId() > 0)
-		{
+		else
 			oDPService.update(oDP);
 			//updateInEntities(creditOrder, oDP);
-		}
 			
 		return "redirect:" + "/manage/order/{orderId}/view#tab_1";
 	}
@@ -119,13 +103,14 @@ public class OrderDocumentPackageController {
 	@RequestMapping(value="/manage/order/{orderId}/orderdocumentpackage/delete", method=RequestMethod.POST)
     public String deleteOrderDocumentPackage(long id, @PathVariable("orderId")Long orderId) {
 		if(id > 0) {
-			oDPService.deleteById(id);
+			oDPService.remove(oDPService.getById(id));
 			//deleteInEntities(id);
 		}
 			
 		return "redirect:" + "/manage/order/{orderId}/view#tab_1";
     }
 	
+	/*
 	private void addToEntities(CreditOrder creditOrder, OrderDocumentPackage oDP, OrderDocumentPackage newODP) {
 		Set<AppliedEntityList> lists = creditOrder.getAppliedEntityList();
 		for (AppliedEntityList list : lists) {
@@ -180,4 +165,5 @@ public class OrderDocumentPackageController {
 		
 		return result;
 	}
+	*/
 }
