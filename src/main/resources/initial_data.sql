@@ -270,6 +270,39 @@ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALU
 
 INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Name2', 'Аталышы2', 'asdf', 'Наименование2');
 
+/* ADD CREDIT ORDER STATE AND TYPE */
 
+INSERT INTO `mfloan`.`creditorderstate` (`version`,`name`) VALUES (1,'Order State 1');
+INSERT INTO `mfloan`.`creditordertype` (`version`,`name`) VALUES (1,'Order Type 1');
 
+/* ADD ENTITY LIST STATE AND TYPE */
+INSERT INTO `mfloan`.`appliedentityliststate` (`version`,`name`) VALUES (1,'List State 1');
+INSERT INTO `mfloan`.`appliedentitylisttype` (`version`,`name`) VALUES (1,'List Type 1');
 
+/* ADD ORDER DOC TYPE */
+INSERT INTO `mfloan`.`orderdocumenttype` (`version`,`name`) VALUES (1,'Order Document Type 1');
+
+/* ADD ORDER TERM PROPS */
+INSERT INTO `mfloan`.`ordertermfund` (`version`,`name`) VALUES (1,'Fund 1');
+INSERT INTO `mfloan`.`ordertermcurrency` (`version`,`name`) VALUES (1,'KGS');
+INSERT INTO `mfloan`.`ordertermcurrency` (`version`,`name`) VALUES (1,'RUB');
+INSERT INTO `mfloan`.`ordertermcurrency` (`version`,`name`) VALUES (1,'USD');
+INSERT INTO `mfloan`.`ordertermfrequencytype` (`version`,`name`) VALUES (1,'Freq Type 1');
+INSERT INTO `mfloan`.`ordertermrateperiod` (`version`,`name`) VALUES (1,'Rate Period 1');
+INSERT INTO `mfloan`.`ordertermfloatingratetype` (`version`,`name`) VALUES (1,'Floating Rate Type 1');
+INSERT INTO `mfloan`.`ordertermtransactionorder` (`version`,`name`) VALUES (1,'Tx Order 1');
+INSERT INTO `mfloan`.`ordertermdaysmethod` (`version`,`name`) VALUES (1,'Days Method 1');
+INSERT INTO `mfloan`.`ordertermaccrmethod` (`version`,`name`) VALUES (1,'Accr Method 1');
+
+/* ADD DEBTOR PROPS */
+INSERT INTO `mfloan`.`debtortype` (`version`,`name`) VALUES (1,'Debtor Type 1');
+INSERT INTO `mfloan`.`orgform` (`version`,`name`) VALUES (1,'Org Form 1');
+INSERT INTO `mfloan`.`worksector` (`version`,`name`) VALUES (1,'Work Sector 1');
+
+/* ADD LOAN PROPS */
+INSERT INTO `mfloan`.`loanstate` (`version`,`name`) VALUES (1,'Loan State 1');
+INSERT INTO `mfloan`.`loantype` (`version`,`name`) VALUES (1,'Loan Type 1');
+
+/* ADD INSTALLMENT STATE AND PAYMENT TYPE*/
+INSERT INTO `mfloan`.`installmentstate` (`version`,`name`) VALUES (1,'Installment State 1');
+INSERT INTO `mfloan`.`paymenttype` (`version`,`name`) VALUES (1,'Installment State 1');

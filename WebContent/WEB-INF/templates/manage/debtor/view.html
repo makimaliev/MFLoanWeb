@@ -208,6 +208,85 @@
 						<!-- END BORDERED TABLE PORTLET-->
 					</div>
 				</div>
+				
+				<div class="row">
+					<div class="col-md-12">
+						<div class="portlet light portlet-fit">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-green"></i> 
+									<span class="caption-subject font-green sbold uppercase">Collateral Agreements</span>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<div class="table-toolbar">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="btn-group">
+												<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/0/save}" class="btn green">Add New Collateral Agreement <i class="fa fa-plus"></i></a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="table-scrollable table-scrollable-borderless">
+									<table class="table table-hover table-light"
+										id="entityLists">
+										<thead>
+											<tr>
+												<th>Id</th>
+												<th>Agreement number</th>
+												<th>Agreement date</th>
+												<th>Collateral office reg num</th>
+												<th>Collateral office reg date</th>
+												<th>Notary office reg number</th>
+												<th>Notary office reg date</th>
+												<th>Arrest reg number</th>
+												<th>Arrest reg date</th>
+												<th>View Details</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+	
+										<tbody>
+											<statecheck th:if="${#lists.isEmpty(agreements)}">
+											<tr class="no-records-found" style="text-align: center;">
+												<td colspan="13">No matching records found</td>
+											</tr>
+											</statecheck>
+											<state th:each="agreement : ${agreements}">
+											<tr class="clickable-row">
+												<td th:text="${agreement.id}">Id</td>
+												<td th:text="${agreement.agreementNumber}">AB0C1234</td>
+												<td th:text="${agreement.agreementDate}"></td>
+												<td th:text="${agreement.collateralOfficeRegNumber}">Id</td>
+												<td th:text="${agreement.collateralOfficeRegDate}">Id</td>
+												<td th:text="${agreement.notaryOfficeRegNumber}">Id</td>
+												<td th:text="${agreement.notaryOfficeRegDate}">Id</td>
+												<td th:text="${agreement.arrestRegNumber}">Id</td>
+												<td th:text="${agreement.arrestRegDate}">Id</td>
+												<td>
+													<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreement.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
+												</td>
+												<td>
+													<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreement.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
+												</td>
+												<td>
+													<form th:action="@{/manage/debtor/__${debtorId}__/collateralagreement/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+														<input hidden="true" type="text" id="id" name="id" th:value="${agreement.id}" />
+														<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+													</form>
+												</td>
+											</tr>
+											</state>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
 			</div>
 			<!-- END CONTENT BODY -->
 		</div>

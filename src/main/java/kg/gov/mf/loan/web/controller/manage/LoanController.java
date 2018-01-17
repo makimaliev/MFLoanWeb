@@ -17,23 +17,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import kg.gov.mf.loan.manage.model.collateral.Collateral;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
-import kg.gov.mf.loan.manage.model.loan.Bankrupt;
-import kg.gov.mf.loan.manage.model.loan.CreditTerm;
-import kg.gov.mf.loan.manage.model.loan.DebtTransfer;
-import kg.gov.mf.loan.manage.model.loan.InstallmentState;
 import kg.gov.mf.loan.manage.model.loan.Loan;
-import kg.gov.mf.loan.manage.model.loan.LoanGoods;
 import kg.gov.mf.loan.manage.model.loan.LoanState;
 import kg.gov.mf.loan.manage.model.loan.LoanType;
-import kg.gov.mf.loan.manage.model.loan.Payment;
-import kg.gov.mf.loan.manage.model.loan.PaymentSchedule;
-import kg.gov.mf.loan.manage.model.loan.PaymentType;
-import kg.gov.mf.loan.manage.model.loan.ReconstructedList;
-import kg.gov.mf.loan.manage.model.loan.SupervisorPlan;
-import kg.gov.mf.loan.manage.model.loan.TargetedUse;
-import kg.gov.mf.loan.manage.model.loan.WriteOff;
 import kg.gov.mf.loan.manage.model.orderterm.OrderTermCurrency;
 import kg.gov.mf.loan.manage.model.orderterm.OrderTermDaysMethod;
 import kg.gov.mf.loan.manage.model.orderterm.OrderTermFloatingRateType;
@@ -122,27 +109,10 @@ public class LoanController {
         model.addAttribute("loan", loan);
         
         model.addAttribute("terms", loan.getCreditTerms());
-        model.addAttribute("emptyTerm", new CreditTerm());
-        
         model.addAttribute("WOs", loan.getWriteOffs());
-        model.addAttribute("emptyWO", new WriteOff());
-        
         model.addAttribute("SPs", loan.getSupervisorPlans());
-        model.addAttribute("emptySP", new SupervisorPlan());
-        
         model.addAttribute("PaymentSchedules", loan.getPaymentSchedules());
-        model.addAttribute("emptyPaymentSchedule", new PaymentSchedule());
-        
-        List<InstallmentState> iStates = iStateService.list();
-        model.addAttribute("iStates", iStates);
-        model.addAttribute("emptyState", new InstallmentState());
-        
         model.addAttribute("Payments", loan.getPayments());
-        model.addAttribute("emptyPayment", new Payment());
-        
-        List<PaymentType> pTypes = pTypeService.list();
-        model.addAttribute("pTypes", pTypes);
-        model.addAttribute("emptyType", new PaymentType());
         
         List<OrderTermRatePeriod> ratePeriods = ratePeriodService.list();
         model.addAttribute("ratePeriods", ratePeriods);
@@ -160,23 +130,11 @@ public class LoanController {
         model.addAttribute("diyms", daysMethods);
         
         model.addAttribute("LGs", loan.getLoanGoods());
-        model.addAttribute("emptyLG", new LoanGoods());
-        
         model.addAttribute("DTs", loan.getDebtTransfers());
-        model.addAttribute("emptyDT", new DebtTransfer());
-        
         model.addAttribute("TUs", loan.getTargetedUses());
-        model.addAttribute("emptyTU", new TargetedUse());
-        
         model.addAttribute("RLs", loan.getReconstructedLists());
-        model.addAttribute("emptyRL", new ReconstructedList());
-        
         model.addAttribute("Bankrupts", loan.getBankrupts());
-        model.addAttribute("emptyBankrupt", new Bankrupt());
-        
         model.addAttribute("Collaterals", loan.getCollaterals());
-        model.addAttribute("emptyCollateral", new Collateral());
-        
         model.addAttribute("debtorId", debtorId);
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -231,44 +189,15 @@ public class LoanController {
 		
 		if(loan.getId() == null || loan.getId() == 0)
 		{
-			/*
-			Set<CollateralAgreement> cAgreements = new HashSet<>();
-			
-			if(agreementIdList != null)
-			{
-				for (String agreementId : agreementIdList) {
-					CollateralAgreement tA = agreementService.getById(Long.parseLong(agreementId));
-					cAgreements.add(tA);
-				}
-				
-				if(cAgreements.size()>0)
-					loan.setCollateralAgreements(cAgreements);
-			}
-			*/
 			loggerLoan.info("createLoan : {}", loan);
 			if(loan.getParentLoan().getId() == 0)
 				loan.setParentLoan(null);
 			else
 				loan.setParentLoan(loanService.getById(loan.getParentLoan().getId()));
-			System.out.println(loan.getParentLoan());
 			loanService.add(loan);
 		}
 		else
 		{
-			//loan.setParentLoan(loanService.getById(loan.getId()).getParentLoan());
-			/*
-			Set<CollateralAgreement> cAgreements = new HashSet<>();
-			if(agreementIdList != null)
-			{
-				for (String agreementId : agreementIdList) {
-					CollateralAgreement tA = agreementService.getById(Long.parseLong(agreementId));
-					cAgreements.add(tA);
-				}
-				
-				if(cAgreements.size()>0)
-					loan.setCollateralAgreements(cAgreements);
-			}
-			*/
 			loggerLoan.info("updateLoan : {}", loan);
 			loanService.update(loan);
 		}

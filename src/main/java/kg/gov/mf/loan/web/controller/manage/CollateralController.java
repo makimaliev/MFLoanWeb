@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import kg.gov.mf.loan.manage.model.collateral.Collateral;
-import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
 import kg.gov.mf.loan.manage.model.collateral.CollateralSummary;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.service.collateral.CollateralService;
@@ -42,14 +41,34 @@ public class CollateralController {
 		
 		model.addAttribute("collateral", collateral);
 		
-		model.addAttribute("agreements", collateral.getAgreements());
-		model.addAttribute("emptyAgreement", new CollateralAgreement());
-		
 		model.addAttribute("summaries", collateral.getCollateralSummaries());
 		model.addAttribute("emptySummary", new CollateralSummary());
 		
 		return "/manage/collateral/view";
 		
+	}
+	
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/collateral/{collId}/save", method=RequestMethod.GET)
+	public String formCreditTerm(ModelMap model, 
+			@PathVariable("debtorId")Long debtorId, 
+			@PathVariable("loanId")Long loanId,
+			@PathVariable("collId")Long collId)
+	{
+		
+		if(collId == 0)
+		{
+			model.addAttribute("coll", new Collateral());
+		}
+			
+		if(collId > 0)
+		{
+			model.addAttribute("coll", collService.getById(collId));
+		}
+		
+        model.addAttribute("debtorId", debtorId);
+        model.addAttribute("loanId", loanId);
+			
+		return "/manage/debtor/loan/collateral/save";
 	}
 	
 	@RequestMapping(value="/manage/collateral/{collateralId}/save", method=RequestMethod.GET)

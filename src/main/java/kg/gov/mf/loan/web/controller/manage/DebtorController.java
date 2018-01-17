@@ -74,6 +74,7 @@ public class DebtorController {
         model.addAttribute("debtor", debtor);
         
         model.addAttribute("loans", debtor.getLoans());
+        model.addAttribute("agreements", agreementService.list());
         
         List<CreditOrder> orders = orderService.list();
         model.addAttribute("orders", orders);

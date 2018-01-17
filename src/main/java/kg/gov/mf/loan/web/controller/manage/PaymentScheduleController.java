@@ -90,23 +90,48 @@ public class PaymentScheduleController {
 			paymentScheduleService.remove(paymentScheduleService.getById(id));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_2";
     }
-
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/paymentschedule/installmentstate/save", method=RequestMethod.POST)
-    public String saveInstallmentState(@PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, InstallmentState state, ModelMap model) {
+	
+	@RequestMapping(value = { "/manage/debtor/loan/paymentschedule/installmentstate/list" }, method = RequestMethod.GET)
+    public String listAppliedEntityStates(ModelMap model) {
+ 
+		List<InstallmentState> states = installmentStateService.list();
+		model.addAttribute("states", states);
+        
+        model.addAttribute("loggedinuser", Utils.getPrincipal());
+        return "/manage/debtor/loan/paymentschedule/installmentstate/list";
+    }
+	
+	@RequestMapping(value="/manage/debtor/loan/paymentschedule/installmentstate/{stateId}/save", method=RequestMethod.GET)
+	public String formEState(ModelMap model, @PathVariable("stateId")Long stateId)
+	{
+		if(stateId == 0)
+		{
+			model.addAttribute("state", new InstallmentState());
+		}
+		
+		if(stateId > 0)
+		{
+			model.addAttribute("state", installmentStateService.getById(stateId));
+		}
+		return "/manage/debtor/loan/paymentschedule/installmentstate/save";
+	}
+	
+	@RequestMapping(value="/manage/debtor/loan/paymentschedule/installmentstate/save", method=RequestMethod.POST)
+    public String saveInstallmentState(InstallmentState state, ModelMap model) {
 		if(state.getId() == null || state.getId() == 0)
 			installmentStateService.add(state);
 		else
 			installmentStateService.update(state);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_2";
+		return "redirect:" + "/manage/debtor/loan/paymentschedule/installmentstate/list";
     }
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/paymentschedule/installmentstate/delete", method=RequestMethod.POST)
+	@RequestMapping(value="/manage/debtor/loan/paymentschedule/installmentstate/delete", method=RequestMethod.POST)
     public String deleteInstallmentState(long id) {
 		if(id > 0)
 			installmentStateService.remove(installmentStateService.getById(id));
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_2";
+		return "redirect:" + "/manage/debtor/loan/paymentschedule/installmentstate/list";
     }
 	
 }

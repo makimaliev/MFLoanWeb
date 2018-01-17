@@ -648,6 +648,16 @@
 											<ul class="sub-menu">
 												<li class="nav-item "><a th:href="@{/manage/debtor/loan/state/list}" class="nav-link "> <span class="title"> List loan states</span></a></li>
 												<li class="nav-item "><a th:href="@{/manage/debtor/loan/type/list}" class="nav-link "> <span class="title"> List loan types</span></a></li>
+												<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Payment schedule <span class="arrow"></span></a>
+													<ul class="sub-menu">
+														<li class="nav-item "><a th:href="@{/manage/debtor/loan/paymentschedule/installmentstate/list}" class="nav-link "> <span class="title"> List installment states</span></a></li>
+													</ul>
+												</li>
+												<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Payment <span class="arrow"></span></a>
+													<ul class="sub-menu">
+														<li class="nav-item "><a th:href="@{/manage/debtor/loan/payment/type/list}" class="nav-link "> <span class="title"> List payment types</span></a></li>
+													</ul>
+												</li>
 											</ul>
 										</li>
 									</ul>

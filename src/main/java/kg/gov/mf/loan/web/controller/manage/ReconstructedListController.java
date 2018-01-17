@@ -34,6 +34,29 @@ public class ReconstructedListController {
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 	
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/reconstructedlist/{rlId}/save", method=RequestMethod.GET)
+	public String formCreditTerm(ModelMap model, 
+			@PathVariable("debtorId")Long debtorId, 
+			@PathVariable("loanId")Long loanId,
+			@PathVariable("rlId")Long rlId)
+	{
+		
+		if(rlId == 0)
+		{
+			model.addAttribute("rl", new ReconstructedList());
+		}
+			
+		if(rlId > 0)
+		{
+			model.addAttribute("rl", rlService.getById(rlId));
+		}
+		
+        model.addAttribute("debtorId", debtorId);
+        model.addAttribute("loanId", loanId);
+			
+		return "/manage/debtor/loan/reconstructedlist/save";
+	}
+	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/reconstructedlist/save"})
     public String saveReconstructedList(ReconstructedList rl, 
     		@PathVariable("debtorId")Long debtorId, 
