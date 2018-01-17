@@ -34,6 +34,29 @@ public class TargetedUseController {
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 	
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/targeteduse/{tuId}/save", method=RequestMethod.GET)
+	public String formCreditTerm(ModelMap model, 
+			@PathVariable("debtorId")Long debtorId, 
+			@PathVariable("loanId")Long loanId,
+			@PathVariable("tuId")Long tuId)
+	{
+		
+		if(tuId == 0)
+		{
+			model.addAttribute("tu", new TargetedUse());
+		}
+			
+		if(tuId > 0)
+		{
+			model.addAttribute("tu", tuService.getById(tuId));
+		}
+		
+        model.addAttribute("debtorId", debtorId);
+        model.addAttribute("loanId", loanId);
+			
+		return "/manage/debtor/loan/targeteduse/save";
+	}
+	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/targeteduse/save"})
     public String saveTargetedUse(TargetedUse tu, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {

@@ -2,6 +2,7 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -38,6 +39,32 @@ public class PaymentController {
 	{
 		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
 	    binder.registerCustomEditor(Date.class, editor);
+	}
+	
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/payment/{paymentId}/save", method=RequestMethod.GET)
+	public String formCreditTerm(ModelMap model, 
+			@PathVariable("debtorId")Long debtorId, 
+			@PathVariable("loanId")Long loanId,
+			@PathVariable("paymentId")Long paymentId)
+	{
+		
+		if(paymentId == 0)
+		{
+			model.addAttribute("payment", new Payment());
+		}
+			
+		if(paymentId > 0)
+		{
+			model.addAttribute("payment", paymentService.getById(paymentId));
+		}
+		
+		List<PaymentType> pTypes = pTypeService.list();
+        model.addAttribute("pTypes", pTypes);
+		
+        model.addAttribute("debtorId", debtorId);
+        model.addAttribute("loanId", loanId);
+			
+		return "/manage/debtor/loan/payment/save";
 	}
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/payment/save"})

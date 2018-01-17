@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import kg.gov.mf.loan.manage.model.collateral.Collateral;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
@@ -185,7 +184,7 @@ public class LoanController {
     }
 	
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/save", method=RequestMethod.GET)
-	public String formeAppliedEntityList(ModelMap model, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId)
+	public String formLoan(ModelMap model, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId)
 	{
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtorId", debtorId);
@@ -222,7 +221,6 @@ public class LoanController {
 	
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/save", method=RequestMethod.POST)
 	public String saveLoan(Loan loan,
-			@RequestParam(required=false) Long parentLoanId,
 			String[] agreementIdList,
 			@PathVariable("debtorId")Long debtorId, 
 			ModelMap model)
@@ -233,14 +231,6 @@ public class LoanController {
 		
 		if(loan.getId() == null || loan.getId() == 0)
 		{
-			if(parentLoanId != null && parentLoanId > 0)
-			{
-				Loan parentLoan = loanService.getById(parentLoanId);
-				loan.setParentLoan(parentLoan);
-				parentLoan.setHasSubLoan(true);
-				loanService.update(parentLoan);
-			}
-			
 			/*
 			Set<CollateralAgreement> cAgreements = new HashSet<>();
 			
@@ -256,11 +246,16 @@ public class LoanController {
 			}
 			*/
 			loggerLoan.info("createLoan : {}", loan);
+			if(loan.getParentLoan().getId() == 0)
+				loan.setParentLoan(null);
+			else
+				loan.setParentLoan(loanService.getById(loan.getParentLoan().getId()));
+			System.out.println(loan.getParentLoan());
 			loanService.add(loan);
 		}
 		else
 		{
-			loan.setParentLoan(loanService.getById(loan.getId()).getParentLoan());
+			//loan.setParentLoan(loanService.getById(loan.getId()).getParentLoan());
 			/*
 			Set<CollateralAgreement> cAgreements = new HashSet<>();
 			if(agreementIdList != null)
@@ -358,7 +353,7 @@ public class LoanController {
 
 	@RequestMapping(value="/manage/debtor/loan/type/save", method=RequestMethod.POST)
     public String saveLoanType(LoanType type, ModelMap model) {
-		if(type.getId() == null && type.getId() == 0)
+		if(type.getId() == null || type.getId() == 0)
 			loanTypeService.add(type);
 		else
 			loanTypeService.update(type);

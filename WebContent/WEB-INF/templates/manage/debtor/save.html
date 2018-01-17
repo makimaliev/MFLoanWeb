@@ -85,19 +85,11 @@
 												<span class="required"> * </span>
 											</label>
 											<div class="col-md-4">
-												<select class="form-control" name="typeId">
-													<option value="">Select...</option>
-													<states th:each="type : ${types}">
-														<option th:if="${debtor.id > 0 and type.name == debtor.debtorType.name}"
-																th:value="${type.id}"
-																th:text="${type.name}"
-																selected="selected">Category 1</option>
-														<option th:unless="${debtor.id > 0 and type.name == debtor.debtorType.name}"
-																th:value="${type.id}"
-																th:text="${type.name}">Category 1</option>
-													</states>
+                                              		<select class="form-control" th:field="${debtor.debtorType.id}"  id="debtorType">
+												    <option value="0">Select...</option>
+												    <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
 												</select>
-											</div>
+                                              </div>
 										</div>
 
 										<div class="form-group">
@@ -105,19 +97,11 @@
 												<span class="required"> * </span>
 											</label>
 											<div class="col-md-4">
-												<select class="form-control" name="orgFormId">
-													<option value="">Select...</option>
-													<states th:each="form : ${forms}">
-														<option th:if="${debtor.id > 0 and form.name == debtor.orgForm.name}"
-																th:value="${form.id}"
-																th:text="${form.name}"
-																selected="selected">Category 1</option>
-														<option th:unless="${debtor.id > 0 and form.name == debtor.orgForm.name}"
-																th:value="${form.id}"
-																th:text="${form.name}">Category 1</option>
-													</states>
+                                              		<select class="form-control" th:field="${debtor.orgForm.id}"  id="orgForm">
+												    <option value="0">Select...</option>
+												    <option th:each="form : ${forms}" th:value="${form.id}" th:text="${form.name}"></option>
 												</select>
-											</div>
+                                              </div>
 										</div>
 
 										<div class="form-group">
@@ -125,21 +109,12 @@
 												<span class="required"> * </span>
 											</label>
 											<div class="col-md-4">
-												<select class="form-control" name="workSectorId">
-													<option value="">Select...</option>
-													<states th:each="sector : ${sectors}">
-														<option th:if="${debtor.id > 0 and sector.name == debtor.workSector.name}"
-																th:value="${sector.id}"
-																th:text="${sector.name}"
-																selected="selected">Category 1</option>
-														<option th:unless="${debtor.id > 0 and sector.name == debtor.workSector.name}"
-																th:value="${sector.id}"
-																th:text="${sector.name}">Category 1</option>
-													</states>
+                                              		<select class="form-control" th:field="${debtor.workSector.id}"  id="workSector">
+												    <option value="0">Select...</option>
+												    <option th:each="sector : ${sectors}" th:value="${sector.id}" th:text="${sector.name}"></option>
 												</select>
-											</div>
+                                              </div>
 										</div>
-
 									</div>
 								</div>
 								<div class="modal-footer">

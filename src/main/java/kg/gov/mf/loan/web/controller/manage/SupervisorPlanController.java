@@ -34,6 +34,29 @@ public class SupervisorPlanController {
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 	
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/sp/{spId}/save", method=RequestMethod.GET)
+	public String formCreditTerm(ModelMap model, 
+			@PathVariable("debtorId")Long debtorId, 
+			@PathVariable("loanId")Long loanId,
+			@PathVariable("spId")Long spId)
+	{
+		
+		if(spId == 0)
+		{
+			model.addAttribute("sp", new SupervisorPlan());
+		}
+			
+		if(spId > 0)
+		{
+			model.addAttribute("sp", spService.getById(spId));
+		}
+		
+        model.addAttribute("debtorId", debtorId);
+        model.addAttribute("loanId", loanId);
+			
+		return "/manage/debtor/loan/sp/save";
+	}
+	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/sp/save"})
     public String saveSupervisorPlan(SupervisorPlan sp, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {

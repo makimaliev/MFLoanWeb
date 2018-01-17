@@ -37,6 +37,29 @@ public class DebtTransferController {
 		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
 	    binder.registerCustomEditor(Date.class, editor);
 	}
+
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/debttransfer/{dtId}/save", method=RequestMethod.GET)
+	public String formCreditTerm(ModelMap model, 
+			@PathVariable("debtorId")Long debtorId, 
+			@PathVariable("loanId")Long loanId,
+			@PathVariable("dtId")Long dtId)
+	{
+		
+		if(dtId == 0)
+		{
+			model.addAttribute("dt", new DebtTransfer());
+		}
+			
+		if(dtId > 0)
+		{
+			model.addAttribute("dt", dtService.getById(dtId));
+		}
+		
+        model.addAttribute("debtorId", debtorId);
+        model.addAttribute("loanId", loanId);
+			
+		return "/manage/debtor/loan/debttransfer/save";
+	}
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/debttransfer/save"})
     public String saveDebtTransfer(DebtTransfer dt, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)

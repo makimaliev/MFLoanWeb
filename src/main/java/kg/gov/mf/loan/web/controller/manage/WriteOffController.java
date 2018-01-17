@@ -34,6 +34,29 @@ public class WriteOffController {
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 	
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/wo/{woId}/save", method=RequestMethod.GET)
+	public String formCreditTerm(ModelMap model, 
+			@PathVariable("debtorId")Long debtorId, 
+			@PathVariable("loanId")Long loanId,
+			@PathVariable("woId")Long woId)
+	{
+		
+		if(woId == 0)
+		{
+			model.addAttribute("wo", new WriteOff());
+		}
+			
+		if(woId > 0)
+		{
+			model.addAttribute("wo", woService.getById(woId));
+		}
+		
+        model.addAttribute("debtorId", debtorId);
+        model.addAttribute("loanId", loanId);
+			
+		return "/manage/debtor/loan/wo/save";
+	}
+	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/wo/save"})
     public String saveWriteOff(WriteOff wo, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {

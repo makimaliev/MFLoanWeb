@@ -2,6 +2,7 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -38,6 +39,32 @@ public class PaymentScheduleController {
 	{
 		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
 	    binder.registerCustomEditor(Date.class, editor);
+	}
+	
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/paymentschedule/{psId}/save", method=RequestMethod.GET)
+	public String formCreditTerm(ModelMap model, 
+			@PathVariable("debtorId")Long debtorId, 
+			@PathVariable("loanId")Long loanId,
+			@PathVariable("psId")Long psId)
+	{
+		
+		if(psId == 0)
+		{
+			model.addAttribute("paymentSchedule", new PaymentSchedule());
+		}
+			
+		if(psId > 0)
+		{
+			model.addAttribute("paymentSchedule", paymentScheduleService.getById(psId));
+		}
+		
+		List<InstallmentState> iStates = installmentStateService.list();
+        model.addAttribute("iStates", iStates);
+		
+        model.addAttribute("debtorId", debtorId);
+        model.addAttribute("loanId", loanId);
+			
+		return "/manage/debtor/loan/paymentschedule/save";
 	}
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/paymentschedule/save"})

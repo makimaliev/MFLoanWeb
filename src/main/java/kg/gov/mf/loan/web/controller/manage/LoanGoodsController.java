@@ -21,6 +21,29 @@ public class LoanGoodsController {
 	@Autowired
 	LoanGoodsService lgService;
 	
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/loangoods/{lgId}/save", method=RequestMethod.GET)
+	public String formCreditTerm(ModelMap model, 
+			@PathVariable("debtorId")Long debtorId, 
+			@PathVariable("loanId")Long loanId,
+			@PathVariable("lgId")Long lgId)
+	{
+		
+		if(lgId == 0)
+		{
+			model.addAttribute("lg", new LoanGoods());
+		}
+			
+		if(lgId > 0)
+		{
+			model.addAttribute("lg", lgService.getById(lgId));
+		}
+		
+        model.addAttribute("debtorId", debtorId);
+        model.addAttribute("loanId", loanId);
+			
+		return "/manage/debtor/loan/loangoods/save";
+	}
+	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/loangoods/save"})
     public String saveLoanGoods(LoanGoods lg, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
