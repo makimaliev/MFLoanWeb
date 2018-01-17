@@ -3,6 +3,7 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -78,7 +80,7 @@ public class CollateralAgreementController {
 	{
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtorId", debtorId);
-		model.addAttribute("loans", debtor.getLoans());
+		model.addAttribute("tLoans", debtor.getLoans());
 		
 		if(agreementId == 0)
 		{
@@ -101,6 +103,7 @@ public class CollateralAgreementController {
     {
 		if(agreement.getId() == null || agreement.getId() == 0)
 		{
+			/*
 			Set<Loan> cLoans = new HashSet<>();
 			if(loanIdList != null)
 			{
@@ -112,11 +115,13 @@ public class CollateralAgreementController {
 				if(cLoans.size()>0)
 					agreement.setLoans(cLoans);
 			}
+			*/
 			
 			agreementService.add(agreement);
 		}
 		else
 		{
+			/*
 			Set<Loan> cLoans = new HashSet<>();
 			if(loanIdList != null)
 			{
@@ -128,6 +133,7 @@ public class CollateralAgreementController {
 				if(cLoans.size()>0)
 					agreement.setLoans(cLoans);
 			}
+			*/
 			agreementService.update(agreement);
 		}
 		

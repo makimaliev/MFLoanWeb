@@ -60,7 +60,7 @@
 								</div>
 							</div>
 							
-							<form th:action="@{/manage/debtor/__${debtorId}__/collateralagreement/save}" id="form_sample_2" class="form-horizontal" method="post">
+							<form th:action="@{/manage/debtor/__${debtorId}__/collateralagreement/save}" th:object="${agreement}" id="form_sample_2" class="form-horizontal" method="post">
 								<div class="portlet-body">
 	                                     <div class="form-body">
 	                                         <div class="alert alert-danger display-hide">
@@ -72,10 +72,10 @@
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                             	<input hidden="true" type="text" id="id" name="id" th:value="${agreement.id}"/>
+	                                             	<input type="hidden" th:field="*{id}"/>
 	                                                 <div class="input-icon right">
 	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="agreementNumber" th:value="${agreement.agreementNumber}"/> 
+	                                                     <input type="text" class="form-control" th:field="*{agreementNumber}"/> 
 	                                                 </div>
 	                                             </div>
 	                                         </div>
@@ -84,7 +84,7 @@
 	                                             <label class="control-label col-md-3">Agreement Date</label>
 	                                             <div class="col-md-4">
 	                                                 <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
-	                                                     <input type="text" class="form-control" name="agreementDate" th:value="${agreement.agreementDate}"/>
+	                                                     <input type="text" class="form-control" th:field="*{agreementDate}"/>
 	                                                     <span class="input-group-btn">
 	                                                         <button class="btn default" type="button">
 	                                                             <i class="fa fa-calendar"></i>
@@ -102,7 +102,7 @@
 	                                             <div class="col-md-4">
 	                                                 <div class="input-icon right">
 	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="collateralOfficeRegNumber" th:value="${agreement.collateralOfficeRegNumber}"/> 
+	                                                     <input type="text" class="form-control" th:field="*{collateralOfficeRegNumber}"/> 
 	                                                 </div>
 	                                             </div>
 	                                         </div>
@@ -111,7 +111,7 @@
 	                                             <label class="control-label col-md-3">Collateral office registration date</label>
 	                                             <div class="col-md-4">
 	                                                 <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
-	                                                     <input type="text" class="form-control" name="collateralOfficeRegDate" th:value="${agreement.collateralOfficeRegDate}"/>
+	                                                     <input type="text" class="form-control" th:field="*{collateralOfficeRegDate}"/>
 	                                                     <span class="input-group-btn">
 	                                                         <button class="btn default" type="button">
 	                                                             <i class="fa fa-calendar"></i>
@@ -129,7 +129,7 @@
 	                                             <div class="col-md-4">
 	                                                 <div class="input-icon right">
 	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="notaryOfficeRegNumber" th:value="${agreement.notaryOfficeRegNumber}"/> 
+	                                                     <input type="text" class="form-control" th:field="*{notaryOfficeRegNumber}"/> 
 	                                                 </div>
 	                                             </div>
 	                                         </div>
@@ -138,7 +138,7 @@
 	                                             <label class="control-label col-md-3">Notary office registration date</label>
 	                                             <div class="col-md-4">
 	                                                 <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
-	                                                     <input type="text" class="form-control" name="notaryOfficeRegDate" th:value="${agreement.notaryOfficeRegDate}"/>
+	                                                     <input type="text" class="form-control" th:field="*{notaryOfficeRegDate}"/>
 	                                                     <span class="input-group-btn">
 	                                                         <button class="btn default" type="button">
 	                                                             <i class="fa fa-calendar"></i>
@@ -156,7 +156,7 @@
 	                                             <div class="col-md-4">
 	                                                 <div class="input-icon right">
 	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="arrestRegNumber" th:value="${agreement.arrestRegNumber}"/> 
+	                                                     <input type="text" class="form-control" th:field="*{arrestRegNumber}"/> 
 	                                                 </div>
 	                                             </div>
 	                                         </div>
@@ -165,7 +165,7 @@
 	                                             <label class="control-label col-md-3">Arrest registration date</label>
 	                                             <div class="col-md-4">
 	                                                 <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
-	                                                     <input type="text" class="form-control" name="arrestRegDate" th:value="${agreement.arrestRegDate}"/>
+	                                                     <input type="text" class="form-control" th:field="*{arrestRegDate}"/>
 	                                                     <span class="input-group-btn">
 	                                                         <button class="btn default" type="button">
 	                                                             <i class="fa fa-calendar"></i>
@@ -181,12 +181,12 @@
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="loanIdList" multiple="multiple">
-	                                                     <option th:each="loan : ${loans}"
-										               th:value="${loan.id}"
-										               th:text="${loan.regNumber}">Category 1
-										               </option>
-	                                                 </select>
+	                                             	<select class="form-control" id="loans" th:field="*{loans}" multiple="multiple">
+														<option th:each="loan : ${tLoans}"
+																th:value="${{loan}}"
+																th:text="${loan.regNumber}">
+														</option>
+													</select>
 	                                             </div>
 	                                         </div>
 	                                         
