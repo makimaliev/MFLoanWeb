@@ -39,6 +39,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 import kg.gov.mf.loan.admin.org.converter.*;
 import kg.gov.mf.loan.admin.sys.converter.*;
 import kg.gov.mf.loan.admin.sys.service.MessageResourceService;
+import kg.gov.mf.loan.output.report.converter.ReportFormatter;
 
 
 
@@ -88,6 +89,9 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 
     @Autowired
     SupervisorTermFormatter supervisorTermFormatter;    
+    
+    @Autowired
+    ReportFormatter reportFormatter;    
     
     
     @Autowired
@@ -228,6 +232,7 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         registry.addFormatter(employmentHistoryEventTypeFormatter);    
         
         registry.addFormatter(supervisorTermFormatter);
+        registry.addFormatter(reportFormatter);
 
         
         
