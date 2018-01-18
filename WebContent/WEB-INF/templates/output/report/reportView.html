@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+
+<body>
+
+	<div class="tabbable-custom ">
+		<ul class="nav nav-tabs " id="region_tabs">
+			<li class="active">
+				<a href="#districtListOfRegion" data-toggle="tab">Район</a>
+			</li>
+			<li>
+				<a href="#aokmotuListOfRegion" data-toggle="tab">А.Округ</a>
+			</li>
+			<li>
+				<a href="#seloListOfRegion" data-toggle="tab">Село</a>
+			</li>
+			<li>
+				<a href="#debtorListOfRegion" data-toggle="tab">Заемщик</a>
+			</li>
+			<li>
+				<a href="#loanListOfRegion" data-toggle="tab">Кредитный договор</a>
+			</li>
+		</ul>
+		
+		<div class="tab-content">
+			<div class="tab-pane active" id="templateOfReport">
+
+
+				<table
+					class="table table-hover table-condensed table-striped table-bordered compact condensed"
+					id="districtTable">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+							<th>View</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+
+					<tbody>
+
+						<tr th:each="reportTemplateInList : ${report.reportTemplate}">
+							<td th:text="${reportTemplateInList.id}">Id</td>
+							<td th:text="${reportTemplateInList.name}">Name</td>
+							<td th:text="${reportTemplateInList.report.name}">Report</td>
+							<td><a th:href="@{/reportTemplate/__${reportTemplateInList.id}__/details}"
+								role="button" class="btn btn-xs green-stripe"> View </a></td>
+							<td><a data-remote="false" data-toggle="modal"
+								data-target="#reportFormModal"
+								th:href="@{/reportTemplate/__${reportTemplateInList.id}__/edit}"
+								role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
+
+							<td>
+								<form th:action="@{/reportTemplate/__${reportTemplateInList.id}__/remove}"
+									method="post">
+									<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+								</form>
+							</td>
+						</tr>
+					</tbody>
+
+				</table>
+
+
+
+			</div>
+			<div class="tab-pane" id="aokmotuListOfRegion">
+			
+			</div>
+			<div class="tab-pane" id="seloListOfRegion">
+			</div>
+			<div class="tab-pane" id="debtorListOfRegion">
+			</div>
+			<div class="tab-pane" id="loanListOfRegion">
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

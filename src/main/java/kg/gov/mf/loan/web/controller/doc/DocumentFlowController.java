@@ -1,5 +1,10 @@
 package kg.gov.mf.loan.web.controller.doc;
 
+
+import kg.gov.mf.loan.admin.org.service.DepartmentService;
+import kg.gov.mf.loan.admin.org.service.OrganizationService;
+import kg.gov.mf.loan.admin.org.service.PersonService;
+import kg.gov.mf.loan.admin.org.service.StaffService;
 import kg.gov.mf.loan.doc.model.*;
 import kg.gov.mf.loan.doc.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +45,35 @@ public class DocumentFlowController {
     @Autowired
     InformationService informationService;
 
-    @RequestMapping(value = "/doc")
-    public String listDocuments(Model model) {
 
-        model.addAttribute("documentType", documentTypeService.list());
-        model.addAttribute("documentSubType", documentSubTypeService.list());
+    //**************************************************************************************
+    @Autowired
+    StaffService staffService;
+
+    @Autowired
+    DepartmentService departmentService;
+
+    @Autowired
+    OrganizationService organizationService;
+
+    @Autowired
+    PersonService personService;
+    //**************************************************************************************
+
+    @RequestMapping(value = "/doc", params = "type")
+    public String listDocuments(@RequestParam("type") String type, Model model) {
+
+        /*
+        model.addAttribute("staff", staffService.findAll());
+        model.addAttribute("department", departmentService.findAll());
+        model.addAttribute("organization", organizationService.findAll());
+        model.addAttribute("person", personService.findAll());
+        */
+        
+        model.addAttribute("documentType", documentTypeService.findAll());
+        model.addAttribute("documentTypeId", documentTypeService.getIdByInternalname(type));
+        model.addAttribute("documentSubType", documentSubTypeService.findAll());
+        model.addAttribute("type", type);
         model.addAttribute("user", getPrincipal());
         return "/doc/document/index";
     }
@@ -52,17 +81,17 @@ public class DocumentFlowController {
     @RequestMapping(value = "/doc/view/{id}")
     public String viewDocument(@PathVariable("id") Long id, Model model) {
 
-        model.addAttribute("document", documentService.getById(id));
-        model.addAttribute("documentType", documentTypeService.list());
-        model.addAttribute("documentSubType", documentSubTypeService.list());
+        model.addAttribute("document", documentService.findById(id));
+        model.addAttribute("documentType", documentTypeService.findAll());
+        model.addAttribute("documentSubType", documentSubTypeService.findAll());
 
-        model.addAttribute("senderData", senderDataService.getById(id));
-        model.addAttribute("receiverData", receiverDataService.getById(id));
-        model.addAttribute("resultData", resultDataService.getById(id));
+        model.addAttribute("senderData", senderDataService.findById(id));
+        model.addAttribute("receiverData", receiverDataService.findById(id));
+        model.addAttribute("resultData", resultDataService.findById(id));
 
-        model.addAttribute("responsible", responsibleService.list());
-        model.addAttribute("executor", executorService.list());
-        model.addAttribute("information", informationService.list());
+        model.addAttribute("responsible", responsibleService.findAll());
+        model.addAttribute("executor", executorService.findAll());
+        model.addAttribute("information", informationService.findAll());
 
         return "/doc/document/view";
     }
@@ -71,14 +100,14 @@ public class DocumentFlowController {
     @ResponseBody
     public Document getDocumentString(@PathVariable("id") Long id)
     {
-        return documentService.getById(id);
+        return documentService.findById(id);
     }
 
     @RequestMapping("/doc/all")
     @ResponseBody
     public List<Document> allDocuments()
     {
-        return documentService.list();
+        return documentService.findAll();
     }
 
     @RequestMapping("/doc/internal")
@@ -102,16 +131,23 @@ public class DocumentFlowController {
         return documentService.outgoingDocuments();
     }
 
+    @RequestMapping("/doc/archived")
+    @ResponseBody
+    public List<Document> archivedDocuments()
+    {
+        return documentService.archivedDocuments();
+    }
+
     @RequestMapping(value= "/doc/add")
     @ResponseBody
     public String SaveOrUpdateDocument(@ModelAttribute("document") Document document) {
         if((document.getId() == null) || (document.getId() == 0))
         {
-            this.documentService.add(document);
+            this.documentService.create(document);
         }
         else
         {
-            this.documentService.update(document);
+            this.documentService.edit(document);
         }
         return "OK";
     }
@@ -119,7 +155,7 @@ public class DocumentFlowController {
     @RequestMapping("/doc/remove/{id}")
     @ResponseBody
     public String removeDocument(@ModelAttribute("document") Document document) {
-        this.documentService.remove(document);
+        this.documentService.deleteById(document);
         return "OK";
     }
 

@@ -45,8 +45,8 @@ INSERT INTO `mfloan`.`user_role` (`user_id`,`role_id`) VALUES (2,2);
 
 /* ADD ORG FORM */
 
-INSERT INTO `mfloan`.`orgform` (`enabled`, `name`) VALUES (true, 'ёр. лицо');
-INSERT INTO `mfloan`.`orgform` (`enabled`, `name`) VALUES (true, '‘из. лицо');
+INSERT INTO `mfloan`.`org_form` (`enabled`, `name`) VALUES (true, 'ёр. лицо');
+INSERT INTO `mfloan`.`org_form` (`enabled`, `name`) VALUES (true, '‘из. лицо');
 
 
 
@@ -250,7 +250,7 @@ INSERT INTO `mfloan`.`staff` (`enabled`, `name`, `department_id`, `organization_
 
 /* ADD EMPLOYMENT HISTORY */
 
-INSERT INTO `mfloan`.`employmenthistory` (`number`, `staff_id`) VALUES ('number', '1');
+INSERT INTO `mfloan`.`employment_history` (`number`, `staff_id`) VALUES ('number', '1');
 UPDATE `mfloan`.`staff` SET `employment_history_id`='1' WHERE `id`='1';
 
 
