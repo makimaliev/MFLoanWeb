@@ -57,13 +57,13 @@ public class BankruptController {
 		return "/manage/debtor/loan/bankrupt/save";
 	}
 	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/bankrupt/save"})
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/bankrupt/save"}, method=RequestMethod.POST)
     public String saveBankrupt(Bankrupt bankrupt, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
 		Loan loan = loanService.getById(loanId);
 		bankrupt.setLoan(loan);
 		
-		if(bankrupt.getId() == null || bankrupt.getId() == 0)
+		if(bankrupt.getId() == 0)
 			bankruptService.add(bankrupt);
 		else
 			bankruptService.update(bankrupt);

@@ -187,7 +187,7 @@ public class LoanController {
 		Debtor debtor = debtorService.getById(debtorId);
 		loan.setDebtor(debtor);
 		
-		if(loan.getId() == null || loan.getId() == 0)
+		if(loan.getId() == 0)
 		{
 			loggerLoan.info("createLoan : {}", loan);
 			if(loan.getParentLoan().getId() == 0)
@@ -239,7 +239,7 @@ public class LoanController {
 
 	@RequestMapping(value="/manage/debtor/loan/state/save", method=RequestMethod.POST)
     public String saveLoanState(LoanState state, ModelMap model) {
-		if(state.getId() == null || state.getId() == 0)
+		if(state.getId() == 0)
 			loanStateService.add(state);
 		else
 			loanStateService.update(state);
@@ -282,7 +282,7 @@ public class LoanController {
 
 	@RequestMapping(value="/manage/debtor/loan/type/save", method=RequestMethod.POST)
     public String saveLoanType(LoanType type, ModelMap model) {
-		if(type.getId() == null || type.getId() == 0)
+		if(type.getId() == 0)
 			loanTypeService.add(type);
 		else
 			loanTypeService.update(type);

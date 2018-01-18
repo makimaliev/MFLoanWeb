@@ -68,13 +68,13 @@ public class PaymentController {
 		return "/manage/debtor/loan/payment/save";
 	}
 	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/payment/save"})
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/payment/save"}, method=RequestMethod.POST)
     public String savePayment(Payment payment, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
 		Loan loan = loanService.getById(loanId);
 		payment.setLoan(loan);
 		
-		if(payment.getId() == null || payment.getId() == 0)
+		if(payment.getId() == 0)
 			paymentService.add(payment);
 		else
 			paymentService.update(payment);
@@ -116,7 +116,7 @@ public class PaymentController {
 
 	@RequestMapping(value="/manage/debtor/loan/payment/type/save", method=RequestMethod.POST)
     public String savePaymentType(PaymentType type, ModelMap model) {
-		if(type.getId() == null || type.getId() == 0)
+		if(type.getId() == 0)
 			pTypeService.add(type);
 		else
 			pTypeService.update(type);

@@ -57,7 +57,7 @@ public class ReconstructedListController {
 		return "/manage/debtor/loan/reconstructedlist/save";
 	}
 	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/reconstructedlist/save"})
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/reconstructedlist/save"}, method=RequestMethod.POST)
     public String saveReconstructedList(ReconstructedList rl, 
     		@PathVariable("debtorId")Long debtorId, 
     		@PathVariable("loanId")Long loanId, 
@@ -66,7 +66,7 @@ public class ReconstructedListController {
 		Loan loan = loanService.getById(loanId);
 		rl.setLoan(loan);
 		
-		if(rl.getId() == null || rl.getId() == 0)
+		if(rl.getId() == 0)
 			rlService.add(rl);
 		else
 			rlService.update(rl);

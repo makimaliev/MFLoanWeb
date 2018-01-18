@@ -93,7 +93,7 @@ public class CreditTermController {
 		return "/manage/debtor/loan/term/save";
 	}
 	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/term/save"})
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/term/save"}, method=RequestMethod.POST)
     public String saveCreditTerm(CreditTerm term,
     		@PathVariable("debtorId")Long debtorId, 
     		@PathVariable("loanId")Long loanId,
@@ -102,7 +102,7 @@ public class CreditTermController {
 		Loan loan = loanService.getById(loanId);
 		term.setLoan(loan);
 		
-		if(term.getId() == null || term.getId() == 0)
+		if(term.getId() == 0)
 			termService.add(term);
 		else
 			termService.update(term);

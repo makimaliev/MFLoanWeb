@@ -11,7 +11,7 @@ public class LoanFormatter implements Formatter<Loan> {
 
 	@Override
 	public String print(Loan loan, Locale locale) {
-		return loan.getId().toString();
+		return String.valueOf(loan.getId());
 	}
 
 	@Override

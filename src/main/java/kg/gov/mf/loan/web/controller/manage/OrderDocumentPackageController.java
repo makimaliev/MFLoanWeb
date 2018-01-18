@@ -89,7 +89,7 @@ public class OrderDocumentPackageController {
 		CreditOrder creditOrder = orderService.getById(orderId);
 		oDP.setCreditOrder(creditOrder);
 		
-		if(oDP.getId() == null || oDP.getId() == 0)
+		if(oDP.getId() == 0)
 			oDPService.add(oDP);
 			//add this document package to all entities under this credit
 			//addToEntities(creditOrder, oDP, newODP);

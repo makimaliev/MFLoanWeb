@@ -181,7 +181,7 @@
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                             	<select class="form-control" id="loans" th:field="*{loans}" multiple="multiple">
+	                                             	<select class="form-control" th:field="*{loans}" multiple="multiple">
 														<option th:each="loan : ${tLoans}"
 																th:value="${{loan}}"
 																th:text="${loan.regNumber}">

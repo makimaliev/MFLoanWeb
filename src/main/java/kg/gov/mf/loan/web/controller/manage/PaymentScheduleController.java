@@ -67,7 +67,7 @@ public class PaymentScheduleController {
 		return "/manage/debtor/loan/paymentschedule/save";
 	}
 	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/paymentschedule/save"})
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/paymentschedule/save"}, method=RequestMethod.POST)
     public String savePaymentSchedule(PaymentSchedule paymentSchedule, 
     		@PathVariable("debtorId")Long debtorId, 
     		@PathVariable("loanId")Long loanId, 
@@ -76,7 +76,7 @@ public class PaymentScheduleController {
 		Loan loan = loanService.getById(loanId);
 		paymentSchedule.setLoan(loan);
 		
-		if(paymentSchedule.getId() == null || paymentSchedule.getId() == 0)
+		if(paymentSchedule.getId() == 0)
 			paymentScheduleService.add(paymentSchedule);
 		else
 			paymentScheduleService.update(paymentSchedule);
@@ -118,7 +118,7 @@ public class PaymentScheduleController {
 	
 	@RequestMapping(value="/manage/debtor/loan/paymentschedule/installmentstate/save", method=RequestMethod.POST)
     public String saveInstallmentState(InstallmentState state, ModelMap model) {
-		if(state.getId() == null || state.getId() == 0)
+		if(state.getId() == 0)
 			installmentStateService.add(state);
 		else
 			installmentStateService.update(state);

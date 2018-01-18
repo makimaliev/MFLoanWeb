@@ -61,13 +61,13 @@ public class DebtTransferController {
 		return "/manage/debtor/loan/debttransfer/save";
 	}
 	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/debttransfer/save"})
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/debttransfer/save"}, method=RequestMethod.POST)
     public String saveDebtTransfer(DebtTransfer dt, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
 		Loan loan = loanService.getById(loanId);
 		dt.setLoan(loan);
 		
-		if(dt.getId() == null || dt.getId() == 0)
+		if(dt.getId() == 0)
 			dtService.add(dt);
 		else
 			dtService.update(dt);

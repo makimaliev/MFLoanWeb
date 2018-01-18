@@ -71,29 +71,13 @@ public class CollateralController {
 		return "/manage/debtor/loan/collateral/save";
 	}
 	
-	@RequestMapping(value="/manage/collateral/{collateralId}/save", method=RequestMethod.GET)
-	public String formCollateral(ModelMap model, @PathVariable("collateralId")Long collateralId)
-	{
-		if(collateralId == 0)
-		{
-			model.addAttribute("collateral", new Collateral());
-		}
-
-		if(collateralId > 0)
-		{
-			model.addAttribute("collateral", collService.getById(collateralId));
-		}
-
-		return "/manage/collateral/save";
-	}
-	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/collateral/save"})
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/collateral/save"}, method=RequestMethod.POST)
     public String saveCollateral(Collateral coll, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
 		Loan loan = loanService.getById(loanId);
 		coll.setLoan(loan);
 		
-		if(coll.getId() == null || coll.getId() == 0)
+		if(coll.getId() == 0)
 			collService.add(coll);
 		else			
 			collService.update(coll);

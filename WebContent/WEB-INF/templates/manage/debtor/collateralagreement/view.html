@@ -169,305 +169,77 @@
 						<!-- END BORDERED TABLE PORTLET-->
 					</div>
 				</div>
-				
 				<div class="row">
 					<div class="col-md-12">
-						<div class="tabbable-line boxless tabbable-reversed">
-							<ul class="nav nav-tabs">
-								<li class="active"><a href="#tab_0" data-toggle="tab"> Collateral Inspection </a></li>
-								<li><a href="#tab_1" data-toggle="tab"> Collateral Arrest Free </a></li>
-							</ul>
-							<div class="tab-content">
-								<div class="tab-pane active" id="tab_0">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-body">
+								<div class="table-toolbar">
 									<div class="row">
-										<div class="col-md-12">
-											<!-- BEGIN BORDERED TABLE PORTLET-->
-											<div class="portlet light portlet-fit ">
-												<div class="portlet-body">
-													<div class="table-toolbar">
-														<div class="row">
-															<div class="col-md-6">
-																<div class="btn-group">
-																	<a class="btn green" data-toggle="modal" href="#largeInspectionNew">
-																	Add New Collateral Inspection <i class="fa fa-plus"></i>
-																	</a>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light" id="orders">
-															<thead>
-																<tr>
-																	<th>Id</th>
-																	<th>Name</th>
-																	<!-- <th>View Details</th> -->
-																	<th>Edit</th>
-																	<th>Delete</th>
-																</tr>
-															</thead>
-															<tbody>
-																<ordercheck th:if="${#lists.isEmpty(inspections)}">
-																	<tr class="no-records-found" style="text-align: center;">
-																		<td colspan="5">No matching records found</td>
-																	</tr>
-																</ordercheck>
-																<order th:each="inspection : ${inspections}">
-																	<tr class="clickable-row">
-																		<td th:text="${inspection.id}">Id</td>
-																		<td th:text="${inspection.name}">Name</td>
-																		<!-- 
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/term/__${term.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
-																		</td>
-																		 -->
-																		<td>
-																			<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#largeInspection' + {inspection.id}}">Edit</a>
-																		</td>
-																		<td>
-																			<form th:action="@{/manage/collateral/__${collateralId}__/collateralagreement/__${agreementId}__/inspection/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-																				<input hidden="true" type="text" id="id" name="id" th:value="${inspection.id}" />
-																				<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
-																			</form>
-																		</td>
-																	</tr>
-																</order>
-															</tbody>
-														</table>
-													</div>
-													
-													<!-- BEGIN Create modal for a new inspection -->
-													<div class="modal fade bs-modal-lg" id="largeInspectionNew" tabindex="-1" role="dialog" aria-hidden="true">
-						                                <div class="modal-dialog modal-lg">
-						                                    <div class="modal-content">
-						                                        <div class="modal-header">
-						                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-						                                            <h4 class="modal-title">Save Collateral Inspection</h4>
-						                                        </div>
-																<form th:action="@{/manage/collateral/__${collateralId}__/collateralagreement/__${agreementId}__/inspection/save}" id="form_sample_2" class="form-horizontal" method="post">
-																	<div class="portlet-body">
-								                                        <div class="form-body">
-								                                            <div class="alert alert-danger display-hide">
-								                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
-								                                            </div>
-								                                            
-								                                            <div class="form-group  margin-top-20">
-								                                                <label class="control-label col-md-3">Name</label>
-								                                                <div class="col-md-4">
-								                                                	<input hidden="true" type="text" id="id" name="id" th:value="${emptyInspection.id}"/>
-								                                                    <div class="input-icon right">
-								                                                        <i class="fa"></i>
-								                                                        <input type="text" class="form-control" name="name" th:value="${emptyInspection.name}"/> 
-								                                                    </div>
-								                                                </div>
-								                                            </div>
-								                                            
-								                                        </div>
-								                                	</div>
-																	<div class="modal-footer">
-																		<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
-																		<button type="submit" class="btn green">Save</button>
-																	</div>
-																</form>	                                        
-						                                    </div>
-						                                </div>
-						                            </div>
-						                            <!-- END Create modal for a new inspection -->
-													
-													<!-- BEGIN Create modal for each inspection -->
-													<state th:each="inspection : ${inspections}">
-														<div class="modal fade bs-modal-lg" th:id="${'largeInspection' + {inspection.id}}" tabindex="-1" role="basic" aria-hidden="true">
-															<div class="modal-dialog modal-lg">
-																<div class="modal-content">
-																	<div class="modal-header">
-																		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-																		<h4 class="modal-title">Save Collateral Inspection</h4>
-																	</div>
-																	<form th:action="@{/manage/collateral/__${collateralId}__/collateralagreement/__${agreementId}__/inspection/save}" id="form_sample_2" class="form-horizontal" method="post">
-																		<div class="portlet-body">
-								                                        <div class="form-body">
-								                                            <div class="alert alert-danger display-hide">
-								                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
-								                                            </div>
-								                                            
-								                                            <div class="form-group  margin-top-20">
-								                                                <label class="control-label col-md-3">Name</label>
-								                                                <div class="col-md-4">
-								                                                	<input hidden="true" type="text" id="id" name="id" th:value="${inspection.id}"/>
-								                                                    <div class="input-icon right">
-								                                                        <i class="fa"></i>
-								                                                        <input type="text" class="form-control" name="name" th:value="${inspection.name}"/> 
-								                                                    </div>
-								                                                </div>
-								                                            </div>
-								                                            
-								                                        </div>
-								                                	</div>
-																	<div class="modal-footer">
-																		<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
-																		<button type="submit" class="btn green">Save</button>
-																	</div>
-																	</form>
-																</div>
-															</div>
-														</div>
-													</state>
-													<!-- END Create modal for each inspection -->
-													
-												</div>
+										<div class="col-md-6">
+											<div class="btn-group">
+												<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/0/save}" class="btn green">Add New Collateral Item <i class="fa fa-plus"></i></a>
 											</div>
-											<!-- END BORDERED TABLE PORTLET-->
 										</div>
 									</div>
 								</div>
-								
-								<div class="tab-pane" id="tab_1">
-									<div class="row">
-										<div class="col-md-12">
-											<!-- BEGIN BORDERED TABLE PORTLET-->
-											<div class="portlet light portlet-fit ">
-												<div class="portlet-body">
-													<div class="table-toolbar">
-														<div class="row">
-															<div class="col-md-6">
-																<div class="btn-group">
-																	<a class="btn green" data-toggle="modal" href="#largeAFNew">
-																	Add New Arrest Free <i class="fa fa-plus"></i>
-																	</a>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light" id="orders">
-															<thead>
-																<tr>
-																	<th>Id</th>
-																	<th>Name</th>
-																	<!-- <th>View Details</th> -->
-																	<th>Edit</th>
-																	<th>Delete</th>
-																</tr>
-															</thead>
-															<tbody>
-																<ordercheck th:if="${#lists.isEmpty(AFs)}">
-																	<tr class="no-records-found" style="text-align: center;">
-																		<td colspan="5">No matching records found</td>
-																	</tr>
-																</ordercheck>
-																<order th:each="af : ${AFs}">
-																	<tr class="clickable-row">
-																		<td th:text="${af.id}">Id</td>
-																		<td th:text="${af.name}">Name</td>
-																		<!-- 
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/wo/__${wo.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
-																		</td>
-																		 -->
-																		<td>
-																			<a class="btn btn-outline btn-circle btn-sm blue" data-toggle="modal" th:href="${'#largeAF' + {af.id}}">Edit</a>
-																		</td>
-																		<td>
-																			<form th:action="@{/manage/collateral/__${collateralId}__/collateralagreement/__${agreementId}__/af/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-																				<input hidden="true" type="text" id="id" name="id" th:value="${af.id}" />
-																				<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
-																			</form>
-																		</td>
-																	</tr>
-																</order>
-															</tbody>
-														</table>
-													</div>
-													
-													<!-- BEGIN Create modal for a new arrest free -->
-													<div class="modal fade bs-modal-lg" id="largeAFNew" tabindex="-1" role="dialog" aria-hidden="true">
-						                                <div class="modal-dialog modal-lg">
-						                                    <div class="modal-content">
-						                                        <div class="modal-header">
-						                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-						                                            <h4 class="modal-title">Save Arrest Free</h4>
-						                                        </div>
-																<form th:action="@{/manage/collateral/__${collateralId}__/collateralagreement/__${agreementId}__/af/save}" id="form_sample_2" class="form-horizontal" method="post">
-																	<div class="portlet-body">
-								                                        <div class="form-body">
-								                                            <div class="alert alert-danger display-hide">
-								                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
-								                                            </div>
-								                                            
-								                                            <div class="form-group  margin-top-20">
-								                                                <label class="control-label col-md-3">Name</label>
-								                                                <div class="col-md-4">
-								                                                	<input hidden="true" type="text" id="id" name="id" th:value="${emptyAF.id}"/>
-								                                                    <div class="input-icon right">
-								                                                        <i class="fa"></i>
-								                                                        <input type="text" class="form-control" name="name" th:value="${emptyAF.name}"/> 
-								                                                    </div>
-								                                                </div>
-								                                            </div>
-								                                            
-								                                        </div>
-								                                	</div>
-																	<div class="modal-footer">
-																		<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
-																		<button type="submit" class="btn green">Save</button>
-																	</div>
-																</form>	                                        
-						                                    </div>
-						                                </div>
-						                            </div>
-						                            <!-- END Create modal for a new arrest freef -->
-													
-													<!-- BEGIN Create modal for each arrest free -->
-													<state th:each="af : ${AFs}">
-														<div class="modal fade bs-modal-lg" th:id="${'largeAF' + {af.id}}" tabindex="-1" role="basic" aria-hidden="true">
-															<div class="modal-dialog modal-lg">
-																<div class="modal-content">
-																	<div class="modal-header">
-																		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-																		<h4 class="modal-title">Save Arrest Free</h4>
-																	</div>
-																	<form th:action="@{/manage/collateral/__${collateralId}__/collateralagreement/__${agreementId}__/af/save}" id="form_sample_2" class="form-horizontal" method="post">
-																		<div class="portlet-body">
-								                                        <div class="form-body">
-								                                            <div class="alert alert-danger display-hide">
-								                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
-								                                            </div>
-								                                            
-								                                            <div class="form-group  margin-top-20">
-								                                                <label class="control-label col-md-3">Date</label>
-								                                                <div class="col-md-4">
-								                                                	<input hidden="true" type="text" id="id" name="id" th:value="${af.id}"/>
-								                                                    <div class="input-icon right">
-								                                                        <i class="fa"></i>
-								                                                        <input type="text" class="form-control" name="name" th:value="${af.name}"/> 
-								                                                    </div>
-								                                                </div>
-								                                            </div>
-								                                            
-								                                        </div>
-								                                	</div>
-																	<div class="modal-footer">
-																		<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
-																		<button type="submit" class="btn green">Save</button>
-																	</div>
-																	</form>
-																</div>
-															</div>
-														</div>
-													</state>
-													<!-- END Create modal for each loan -->
-													
-												</div>
-											</div>
-											<!-- END BORDERED TABLE PORTLET-->
-										</div>
-									</div>
+								<div class="table-scrollable table-scrollable-borderless">
+									<table class="table table-hover table-light" id="orders">
+										<thead>
+											<tr>
+												<th>Id</th>
+												<th>Name</th>
+												<th>Description</th>
+												<th>Item Type</th>
+												<th>Quantity</th>
+												<th>Quantity Type</th>
+												<th>Collateral Value</th>
+												<th>Estimated Value</th>
+												<th>Condition Type</th>
+												<th>View Details</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+										<tbody>
+											<itemcheck th:if="${#lists.isEmpty(items)}">
+												<tr class="no-records-found" style="text-align: center;">
+													<td colspan="11">No matching records found</td>
+												</tr>
+											</itemcheck>
+											<item th:each="item : ${items}">
+												<tr class="clickable-row">
+													<td th:text="${item.id}">Id</td>
+													<td th:text="${item.name}"></td>
+													<td th:text="${item.description}"></td>
+													<td th:text="${item.itemType.name}"></td>
+													<td th:text="${item.quantity}"></td>
+													<td th:text="${item.quantityType.name}"></td>
+													<td th:text="${item.collateralValue}"></td>
+													<td th:text="${item.estimatedValue}"></td>
+													<td th:text="${item.conditionType.name}"></td>
+													<td>
+														<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${item.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
+													</td>
+													<td>
+														<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${item.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
+													</td>
+													<td>
+														<form th:action="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+															<input hidden="true" type="text" id="id" name="id" th:value="${item.id}" />
+															<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+														</form>
+													</td>
+												</tr>
+											</item>
+										</tbody>
+									</table>
 								</div>
 							</div>
 						</div>
+						<!-- END BORDERED TABLE PORTLET-->
 					</div>
 				</div>
-				
 			</div>
 			<!-- END CONTENT BODY -->
 		</div>
