@@ -3,6 +3,7 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -16,14 +17,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
 import kg.gov.mf.loan.manage.model.collateral.CollateralItem;
+import kg.gov.mf.loan.manage.model.collateral.CollateralItemArrestFree;
 import kg.gov.mf.loan.manage.model.collateral.CollateralItemDetails;
+import kg.gov.mf.loan.manage.model.collateral.CollateralItemInspectionResult;
 import kg.gov.mf.loan.manage.model.collateral.ConditionType;
+import kg.gov.mf.loan.manage.model.collateral.InspectionResultType;
 import kg.gov.mf.loan.manage.model.collateral.ItemType;
 import kg.gov.mf.loan.manage.model.collateral.QuantityType;
+import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
+import kg.gov.mf.loan.manage.service.collateral.CollateralItemArrestFreeService;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemDetailsService;
+import kg.gov.mf.loan.manage.service.collateral.CollateralItemInspectionResultService;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemService;
 import kg.gov.mf.loan.manage.service.collateral.ConditionTypeService;
+import kg.gov.mf.loan.manage.service.collateral.InspectionResultTypeService;
 import kg.gov.mf.loan.manage.service.collateral.ItemTypeService;
 import kg.gov.mf.loan.manage.service.collateral.QuantityTypeService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
@@ -52,12 +60,31 @@ public class CollateralItemController {
 	
 	@Autowired
 	CollateralItemDetailsService itemDetailsService;
+	
+	@Autowired
+	CollateralItemArrestFreeService afService;
 
+	@Autowired
+	CollateralItemInspectionResultService insService;
+	
+	@Autowired
+	InspectionResultTypeService insTypeService;
+	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
 		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
 	    binder.registerCustomEditor(Date.class, editor);
+	}
+	
+	@RequestMapping(value = { "/manage/collateralitem/list"})
+    public String listCollateralItems(ModelMap model) {
+		
+		List<CollateralItem> items = itemService.list(); 
+		model.addAttribute("items", items);
+		
+		return "/manage/collateralitem/list";
+		
 	}
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/view"})
@@ -73,6 +100,9 @@ public class CollateralItemController {
 		CollateralItemDetails tDetails = tItem.getCollateralItemDetails();
 		model.addAttribute("item", tItem);
 		model.addAttribute("itemDetails", tDetails);
+		
+		model.addAttribute("aFs", tItem.getCollateralItemArrestFree());
+		model.addAttribute("inpections", tItem.getCollateralItemInspectionResults());
 		
 		return "/manage/debtor/collateralagreement/collateralitem/view";
 		
@@ -121,11 +151,13 @@ public class CollateralItemController {
 		if(item.getId() == 0)
 		{
 			item.setCollateralItemDetails(itemDetails);
+			itemDetails.setCollateralItem(item);
 			itemService.add(item);
 		}
 		else
 		{
 			item.setCollateralItemDetails(itemDetails);
+			itemDetails.setCollateralItem(item);
 			itemService.update(item);
 		}
 			
@@ -140,6 +172,148 @@ public class CollateralItemController {
 			itemService.remove(itemService.getById(id));
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/view";
+    }
+	
+	@RequestMapping(value="/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/arrestfree/{afId}/save", method=RequestMethod.GET)
+	public String formItemArrestFree(ModelMap model, 
+			@PathVariable("debtorId")Long debtorId,
+			@PathVariable("agreementId")Long agreementId,
+			@PathVariable("itemId")Long itemId,
+			@PathVariable("afId")Long afId)
+	{
+		if(afId == 0)
+		{
+			model.addAttribute("af", new CollateralItemArrestFree());
+		}
+
+		if(afId > 0)
+		{
+			model.addAttribute("af", afService.getById(afId));
+		}
+		return "/manage/debtor/collateralagreement/collateralitem/arrestfree/save";
+	}
+
+	@RequestMapping(value="/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/arrestfree/save", method=RequestMethod.POST)
+    public String saveItemArrestFree(CollateralItemArrestFree af,  
+    		ModelMap model,
+    		@PathVariable("debtorId")Long debtorId,
+			@PathVariable("agreementId")Long agreementId,
+			@PathVariable("itemId")Long itemId) {
+		
+		CollateralItem item = itemService.getById(itemId);
+		item.setCollateralItemArrestFree(null);
+		item.setCollateralItemArrestFree(af);
+		af.setCollateralItem(item);
+		
+		if(af.getId() == 0)
+			afService.add(af);
+		else
+			afService.update(af);
+		
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
+        return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/view";
+    }
+	
+	@RequestMapping(value="/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/arrestfree/delete", method=RequestMethod.POST)
+    public String deleteItemArrestFree(long id, @PathVariable("itemId")Long itemId) {
+		if(id > 0) {
+			afService.remove(afService.getById(id));
+			CollateralItem item = itemService.getById(itemId);
+			item.setCollateralItemArrestFree(null);
+		}
+			
+        return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/view";
+    }
+	
+	@RequestMapping(value="/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/insresult/{insId}/save", method=RequestMethod.GET)
+	public String formItemInspectionResult(ModelMap model, 
+			@PathVariable("debtorId")Long debtorId,
+			@PathVariable("agreementId")Long agreementId,
+			@PathVariable("itemId")Long itemId,
+			@PathVariable("insId")Long insId)
+	{
+		if(insId == 0)
+		{
+			model.addAttribute("ins", new CollateralItemInspectionResult());
+		}
+
+		if(insId > 0)
+		{
+			model.addAttribute("ins", insService.getById(insId));
+		}
+		
+		model.addAttribute("types", insTypeService.list());
+		
+		return "/manage/debtor/collateralagreement/collateralitem/insresult/save";
+	}
+
+	@RequestMapping(value="/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/insresult/save", method=RequestMethod.POST)
+    public String saveItemInspectionResult(CollateralItemInspectionResult ins,  
+    		ModelMap model,
+    		@PathVariable("debtorId")Long debtorId,
+			@PathVariable("agreementId")Long agreementId,
+			@PathVariable("itemId")Long itemId) {
+		
+		CollateralItem item = itemService.getById(itemId);
+		ins.setCollateralItem(item);
+		
+		if(ins.getId() == 0)
+			insService.add(ins);
+		else
+			insService.update(ins);
+		
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
+        return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/view";
+    }
+	
+	@RequestMapping(value="/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/insresult/delete", method=RequestMethod.POST)
+    public String deleteItemInspectionResult(long id) {
+		if(id > 0)
+			insService.remove(insService.getById(id));
+        return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/view";
+    }
+	
+	@RequestMapping(value = { "/manage/debtor/collateralagreement/collateralitem/insresult/resulttype/list" }, method = RequestMethod.GET)
+	public String listInspectionResultTypes(ModelMap model) {
+
+		List<InspectionResultType> types = insTypeService.list();
+		model.addAttribute("types", types);
+
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
+		return "/manage/debtor/collateralagreement/collateralitem/insresult/resulttype/list";
+	}
+
+	@RequestMapping(value="/manage/debtor/collateralagreement/collateralitem/insresult/resulttype/{typeId}/save", method=RequestMethod.GET)
+	public String formInspectionResultType(ModelMap model, @PathVariable("typeId")Long typeId)
+	{
+		if(typeId == 0)
+		{
+			model.addAttribute("type", new InspectionResultType());
+		}
+
+		if(typeId > 0)
+		{
+			model.addAttribute("type", insTypeService.getById(typeId));
+		}
+		return "/manage/debtor/collateralagreement/collateralitem/insresult/resulttype/save";
+	}
+
+	@RequestMapping(value="/manage/debtor/collateralagreement/collateralitem/insresult/resulttype/save", method=RequestMethod.POST)
+    public String saveInspectionResultType(InspectionResultType type,  ModelMap model) {
+		if(type.getId() == 0)
+			insTypeService.add(type);
+		else
+			insTypeService.update(type);
+		
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
+        return "redirect:" + "/manage/debtor/collateralagreement/collateralitem/insresult/resulttype/list";
+    }
+	
+	@RequestMapping(value="/manage/debtor/collateralagreement/collateralitem/insresult/resulttype/delete", method=RequestMethod.POST)
+    public String deleteInspectionResultType(long id) {
+		if(id > 0)
+			insTypeService.remove(insTypeService.getById(id));
+        return "redirect:" + "/manage/debtor/collateralagreement/collateralitem/insresult/resulttype/list";
     }
 	
 	//BEGIN - ITEM TYPE

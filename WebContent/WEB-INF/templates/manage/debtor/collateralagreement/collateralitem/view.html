@@ -281,13 +281,15 @@
 							</div>
 							<div class="portlet-body">
 								<div class="table-toolbar">
-									<div class="row">
-										<div class="col-md-6">
-											<div class="btn-group">
-												<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/0/save}" class="btn green">Add Arrest Free Info <i class="fa fa-plus"></i></a>
+									<itemcheck th:if="${#lists.isEmpty(aFs)}">
+										<div class="row">
+											<div class="col-md-6">
+												<div class="btn-group">
+													<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${itemId}__/arrestfree/0/save}" class="btn green">Add Arrest Free Info <i class="fa fa-plus"></i></a>
+												</div>
 											</div>
 										</div>
-									</div>
+									</itemcheck>
 								</div>
 								<div class="table-scrollable table-scrollable-borderless">
 									<table class="table table-hover table-light" id="orders">
@@ -297,11 +299,11 @@
 												<th>On Date</th>
 												<th>Arrest Free By</th>
 												<th>Edit</th>
-												<th>Delete</th>
+												<!-- <th>Delete</th> -->
 											</tr>
 										</thead>
 										<tbody>
-											<itemcheck th:if="${#lists.isEmpty(items)}">
+											<itemcheck th:if="${#lists.isEmpty(aFs)}">
 												<tr class="no-records-found" style="text-align: center;">
 													<td colspan="5">No matching records found</td>
 												</tr>
@@ -312,14 +314,16 @@
 													<td th:text="${af.onDate}"></td>
 													<td th:text="${af.arrestFreeBy}"></td>
 													<td>
-														<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${item.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
+														<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${itemId}__/arrestfree/__${af.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
 													</td>
+													<!-- 
 													<td>
-														<form th:action="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-															<input hidden="true" type="text" id="id" name="id" th:value="${item.id}" />
+														<form th:action="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${itemId}__/arrestfree/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+															<input hidden="true" type="text" id="id" name="id" th:value="${af.id}" />
 															<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
 														</form>
 													</td>
+													 -->
 												</tr>
 											</item>
 										</tbody>
@@ -340,7 +344,7 @@
 									<div class="row">
 										<div class="col-md-6">
 											<div class="btn-group">
-												<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/0/save}" class="btn green">Add Item Inspection Result <i class="fa fa-plus"></i></a>
+												<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${itemId}__/insresult/0/save}" class="btn green">Add Item Inspection Result <i class="fa fa-plus"></i></a>
 											</div>
 										</div>
 									</div>
@@ -357,7 +361,7 @@
 											</tr>
 										</thead>
 										<tbody>
-											<itemcheck th:if="${#lists.isEmpty(items)}">
+											<itemcheck th:if="${#lists.isEmpty(inpections)}">
 												<tr class="no-records-found" style="text-align: center;">
 													<td colspan="5">No matching records found</td>
 												</tr>
@@ -366,13 +370,13 @@
 												<tr class="clickable-row">
 													<td th:text="${ins.id}">Id</td>
 													<td th:text="${ins.onDate}"></td>
-													<td th:text="${ins.inspectionResultType}"></td>
+													<td th:text="${ins.inspectionResultType.name}"></td>
 													<td>
-														<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${item.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
+														<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${itemId}__/insresult/__${ins.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
 													</td>
 													<td>
-														<form th:action="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-															<input hidden="true" type="text" id="id" name="id" th:value="${item.id}" />
+														<form th:action="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${itemId}__/insresult/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+															<input hidden="true" type="text" id="id" name="id" th:value="${ins.id}" />
 															<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
 														</form>
 													</td>
