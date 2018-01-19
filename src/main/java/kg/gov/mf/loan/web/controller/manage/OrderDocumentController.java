@@ -89,7 +89,7 @@ public class OrderDocumentController {
 		OrderDocumentPackage oDP = oDPService.getById(oDPId);
 		doc.setOrderDocumentPackage(oDP);
 		
-		if(doc.getId() == null || doc.getId() == 0)
+		if(doc.getId() == 0)
 		{
 			odService.add(doc);
 			//add new document under entity packages
@@ -141,7 +141,7 @@ public class OrderDocumentController {
 	
 	@RequestMapping(value="/manage/order/orderdocumentpackage/orderdocument/type/save", method=RequestMethod.POST)
     public String saveOrderDocumentType(OrderDocumentType type, ModelMap model) {
-		if(type.getId() == null || type.getId() == 0)
+		if(type.getId() == 0)
 			oDTypeService.add(type);
 		else
 			oDTypeService.update(type);

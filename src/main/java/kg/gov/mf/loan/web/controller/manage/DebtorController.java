@@ -74,6 +74,7 @@ public class DebtorController {
         model.addAttribute("debtor", debtor);
         
         model.addAttribute("loans", debtor.getLoans());
+        model.addAttribute("agreements", agreementService.list());
         
         List<CreditOrder> orders = orderService.list();
         model.addAttribute("orders", orders);
@@ -120,7 +121,7 @@ public class DebtorController {
 	@RequestMapping(value="/manage/debtor/save", method=RequestMethod.POST)
 	public String saveDebtor(Debtor debtor)
 	{
-		if(debtor.getId() == null || debtor.getId() == 0)
+		if(debtor.getId() == 0)
 			debtorService.add(debtor);
 		else
 			debtorService.update(debtor);
@@ -163,7 +164,7 @@ public class DebtorController {
 
 	@RequestMapping(value="/manage/debtor/type/save", method=RequestMethod.POST)
     public String saveDebtorType(DebtorType type,  ModelMap model) {
-		if(type.getId() == null || type.getId() == 0)
+		if(type.getId() == 0)
 			debtorTypeService.add(type);
 		else
 			debtorTypeService.update(type);
@@ -208,7 +209,7 @@ public class DebtorController {
 
 	@RequestMapping(value="/manage/debtor/orgform/save", method=RequestMethod.POST)
     public String saveOrgForm(OrganizationForm form,  ModelMap model) {
-		if(form.getId() == null || form.getId() == 0)
+		if(form.getId() == 0)
 			formService.add(form);
 		else
 			formService.update(form);
@@ -253,7 +254,7 @@ public class DebtorController {
 
 	@RequestMapping(value="/manage/debtor/worksector/save", method=RequestMethod.POST)
     public String saveWorkSector(WorkSector sector,  ModelMap model) {
-		if(sector.getId() == null || sector.getId() == 0)
+		if(sector.getId() == 0)
 			sectorService.add(sector);
 		else
 			sectorService.update(sector);

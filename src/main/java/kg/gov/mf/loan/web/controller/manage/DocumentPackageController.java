@@ -121,7 +121,7 @@ public class DocumentPackageController {
 		AppliedEntity entity = entityService.getById(entityId);
 		dp.setAppliedEntity(entity);
 		
-		if(dp.getId() == null || dp.getId() == 0)
+		if(dp.getId() == 0)
 			dpService.add(dp);
 		else
 			dpService.update(dp);
@@ -164,7 +164,7 @@ public class DocumentPackageController {
 	
 	@RequestMapping(value="/manage/order/entitylist/entity/documentpackage/state/save", method=RequestMethod.POST)
     public String saveDocumentPackageState(DocumentPackageState state, ModelMap model) {
-		if(state.getId() == null || state.getId() == 0)
+		if(state.getId() == 0)
 			dpStateService.add(state);
 		else
 			dpStateService.update(state);
@@ -207,7 +207,7 @@ public class DocumentPackageController {
 	
 	@RequestMapping(value="/manage/order/entitylist/entity/documentpackage/type/save", method=RequestMethod.POST)
     public String saveDocumentPackageType(DocumentPackageType type, ModelMap model) {
-		if(type.getId() == null || type.getId() == 0)
+		if(type.getId() == 0)
 			dpTypeService.add(type);
 		else
 			dpTypeService.update(type);

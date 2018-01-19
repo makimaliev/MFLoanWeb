@@ -57,13 +57,13 @@ public class SupervisorPlanController {
 		return "/manage/debtor/loan/sp/save";
 	}
 	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/sp/save"})
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/sp/save"}, method=RequestMethod.POST)
     public String saveSupervisorPlan(SupervisorPlan sp, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
 		Loan loan = loanService.getById(loanId);
 		sp.setLoan(loan);
 		
-		if(sp.getId() == null || sp.getId() == 0)
+		if(sp.getId() == 0)
 			spService.add(sp);
 		else
 			spService.update(sp);

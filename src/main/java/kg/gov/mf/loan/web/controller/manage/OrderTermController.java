@@ -143,7 +143,7 @@ public class OrderTermController {
 		CreditOrder creditOrder = orderService.getById(orderId);
 		term.setCreditOrder(creditOrder);
 		
-		if(term.getId() == null || term.getId() == 0)
+		if(term.getId() == 0)
 			orderTermService.add(term);
 		else
 			orderTermService.update(term);
@@ -186,7 +186,7 @@ public class OrderTermController {
 	
 	@RequestMapping(value="/manage/order/orderterm/fund/save", method=RequestMethod.POST)
     public String saveOrderTermFund(OrderTermFund fund, ModelMap model) {
-		if(fund.getId() == null || fund.getId() == 0)
+		if(fund.getId() == 0)
 			fundService.add(fund);
 		else
 			fundService.update(fund);
@@ -231,7 +231,7 @@ public class OrderTermController {
 	
 	@RequestMapping(value="/manage/order/orderterm/currency/save", method=RequestMethod.POST)
     public String saveOrderTermCurrency(OrderTermCurrency curr, ModelMap model) {
-		if(curr.getId() == null || curr.getId() == 0)
+		if(curr.getId() == 0)
 			currService.add(curr);
 		else
 			currService.update(curr);
@@ -276,7 +276,7 @@ public class OrderTermController {
 	
 	@RequestMapping(value="/manage/order/orderterm/freqtype/save", method=RequestMethod.POST)
     public String saveOrderTermFreqType(OrderTermFrequencyType freqType, ModelMap model) {
-		if(freqType.getId() == null || freqType.getId() == 0)
+		if(freqType.getId() == 0)
 			freqTypeService.add(freqType);
 		else
 			freqTypeService.update(freqType);
@@ -321,7 +321,7 @@ public class OrderTermController {
 	
 	@RequestMapping(value="/manage/order/orderterm/rateperiod/save", method=RequestMethod.POST)
     public String saveOrderTermRatePeriod(OrderTermRatePeriod ratePeriod, ModelMap model) {
-		if(ratePeriod.getId() == null || ratePeriod.getId() == 0)
+		if(ratePeriod.getId() == 0)
 			ratePeriodService.add(ratePeriod);
 		else
 			ratePeriodService.update(ratePeriod);
@@ -366,7 +366,7 @@ public class OrderTermController {
 	
 	@RequestMapping(value="/manage/order/orderterm/ratetype/save", method=RequestMethod.POST)
     public String saveOrderTermFloatingRateType(OrderTermFloatingRateType rateType, ModelMap model) {
-		if(rateType.getId() == null || rateType.getId() == 0)
+		if(rateType.getId() == 0)
 			rateTypeService.add(rateType);
 		else
 			rateTypeService.update(rateType);
@@ -411,7 +411,7 @@ public class OrderTermController {
 	
 	@RequestMapping(value="/manage/order/orderterm/transactionorder/save", method=RequestMethod.POST)
     public String saveOrderTermTransactionOrder(OrderTermTransactionOrder txOrder, ModelMap model) {
-		if(txOrder.getId() == null || txOrder.getId() == 0)
+		if(txOrder.getId() == 0)
 			txOrderService.add(txOrder);
 		else
 			txOrderService.update(txOrder);
@@ -456,7 +456,7 @@ public class OrderTermController {
 	
 	@RequestMapping(value="/manage/order/orderterm/daysmethod/save", method=RequestMethod.POST)
     public String saveOrderTermDaysMethod(OrderTermDaysMethod dMethod, ModelMap model) {
-		if(dMethod.getId() == null || dMethod.getId() == 0)
+		if(dMethod.getId() == 0)
 			daysMethodService.add(dMethod);
 		else
 			daysMethodService.update(dMethod);
@@ -501,7 +501,7 @@ public class OrderTermController {
 	
 	@RequestMapping(value="/manage/order/orderterm/accrmethod/save", method=RequestMethod.POST)
     public String saveOrderTermAccrMethod(OrderTermAccrMethod accrMethod, ModelMap model) {
-		if(accrMethod.getId() == null || accrMethod.getId() == 0)
+		if(accrMethod.getId() == 0)
 			accrMethodService.add(accrMethod);
 		else
 			accrMethodService.update(accrMethod);

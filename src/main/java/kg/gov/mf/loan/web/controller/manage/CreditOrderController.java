@@ -137,7 +137,7 @@ public class CreditOrderController {
 	public String saveCreditOrder(CreditOrder creditOrder)
 	{
 		loggerOrder.info("Order : {}", creditOrder);
-		if(creditOrder.getId() == null || creditOrder.getId() == 0)
+		if(creditOrder.getId() == 0)
 			creditOrderService.add(creditOrder);
 		else
 			creditOrderService.update(creditOrder);
@@ -178,7 +178,7 @@ public class CreditOrderController {
 	
 	@RequestMapping(value="/manage/order/state/save", method=RequestMethod.POST)
     public String saveCreditOrderState(CreditOrderState state, ModelMap model) {
-		if(state.getId() == null || state.getId() == 0)
+		if(state.getId() == 0)
 			creditOrderStateService.add(state);
 		else
 			creditOrderStateService.update(state);
@@ -222,7 +222,7 @@ public class CreditOrderController {
 	@RequestMapping(value="/manage/order/type/save", method=RequestMethod.POST)
     public String saveCreditOrderType(CreditOrderType type,  ModelMap model) {
 		
-		if(type.getId() == null || type.getId() == 0)
+		if(type.getId() == 0)
 			creditOrderTypeService.add(type);
 		else
 			creditOrderTypeService.update(type);

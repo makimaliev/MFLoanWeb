@@ -44,13 +44,13 @@ public class LoanGoodsController {
 		return "/manage/debtor/loan/loangoods/save";
 	}
 	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/loangoods/save"})
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/loangoods/save"}, method=RequestMethod.POST)
     public String saveLoanGoods(LoanGoods lg, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
 		Loan loan = loanService.getById(loanId);
 		lg.setLoan(loan);
 		
-		if(lg.getId() == null || lg.getId() == 0)
+		if(lg.getId() == 0)
 			lgService.add(lg);
 		else		
 			lgService.update(lg);

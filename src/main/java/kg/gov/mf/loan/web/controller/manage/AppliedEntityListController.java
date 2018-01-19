@@ -97,7 +97,7 @@ public class AppliedEntityListController {
 		loggerEntityList.info("Entity List : {}", list);
 		CreditOrder creditOrder = orderService.getById(orderId);
 		list.setCreditOrder(creditOrder);
-		if(list.getId() == null || list.getId() == 0)
+		if(list.getId() == 0)
 		{
 			listService.add(list);
 		}
@@ -145,7 +145,7 @@ public class AppliedEntityListController {
 	
 	@RequestMapping(value="/manage/order/entitylist/state/save", method=RequestMethod.POST)
     public String saveAppliedEntityListState(AppliedEntityListState state, ModelMap model) {
-		if(state.getId() == null || state.getId() == 0)
+		if(state.getId() == 0)
 			elStateService.add(state);
 		else
 			elStateService.update(state);
@@ -188,7 +188,7 @@ public class AppliedEntityListController {
 	
 	@RequestMapping(value="/manage/order/entitylist/type/save", method=RequestMethod.POST)
     public String saveAppliedEntityListType(AppliedEntityListType type, ModelMap model) {
-		if(type.getId() == null || type.getId() == 0)
+		if(type.getId() == 0)
 			elTypeService.add(type);
 		else
 			elTypeService.update(type);

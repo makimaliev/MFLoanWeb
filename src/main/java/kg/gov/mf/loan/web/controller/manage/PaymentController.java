@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import kg.gov.mf.loan.manage.model.loan.InstallmentState;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.model.loan.Payment;
 import kg.gov.mf.loan.manage.model.loan.PaymentType;
@@ -67,13 +68,13 @@ public class PaymentController {
 		return "/manage/debtor/loan/payment/save";
 	}
 	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/payment/save"})
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/payment/save"}, method=RequestMethod.POST)
     public String savePayment(Payment payment, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
 		Loan loan = loanService.getById(loanId);
 		payment.setLoan(loan);
 		
-		if(payment.getId() == null || payment.getId() == 0)
+		if(payment.getId() == 0)
 			paymentService.add(payment);
 		else
 			paymentService.update(payment);
@@ -87,23 +88,48 @@ public class PaymentController {
 			paymentService.remove(paymentService.getById(id));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_3";
     }
+	
+	@RequestMapping(value = { "/manage/debtor/loan/payment/type/list" }, method = RequestMethod.GET)
+    public String listAppliedEntityStates(ModelMap model) {
+ 
+		List<PaymentType> types = pTypeService.list();
+		model.addAttribute("types", types);
+        
+        model.addAttribute("loggedinuser", Utils.getPrincipal());
+        return "/manage/debtor/loan/payment/type/list";
+    }
+	
+	@RequestMapping(value="/manage/debtor/loan/payment/type/{typeId}/save", method=RequestMethod.GET)
+	public String formEState(ModelMap model, @PathVariable("typeId")Long typeId)
+	{
+		if(typeId == 0)
+		{
+			model.addAttribute("type", new PaymentType());
+		}
+		
+		if(typeId > 0)
+		{
+			model.addAttribute("type", pTypeService.getById(typeId));
+		}
+		return "/manage/debtor/loan/payment/type/save";
+	}
 
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/payment/type/save", method=RequestMethod.POST)
-    public String savePaymentType(@PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, PaymentType type, ModelMap model) {
-		if(type.getId() == null || type.getId() == 0)
+	@RequestMapping(value="/manage/debtor/loan/payment/type/save", method=RequestMethod.POST)
+    public String savePaymentType(PaymentType type, ModelMap model) {
+		if(type.getId() == 0)
 			pTypeService.add(type);
 		else
 			pTypeService.update(type);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_3";
+		return "redirect:" + "/manage/debtor/loan/payment/type/list";
     }
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/payment/type/delete", method=RequestMethod.POST)
+	@RequestMapping(value="/manage/debtor/loan/payment/type/delete", method=RequestMethod.POST)
     public String deletePaymentType(long id) {
 		if(id > 0)
 			pTypeService.remove(pTypeService.getById(id));
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_3";
+		return "redirect:" + "/manage/debtor/loan/payment/type/list";
     }
 
 }

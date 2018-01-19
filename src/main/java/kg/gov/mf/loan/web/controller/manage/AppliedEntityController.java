@@ -103,7 +103,7 @@ public class AppliedEntityController {
 		AppliedEntityList list = listService.getById(listId);
 		entity.setAppliedEntityList(list);
 		
-		if(entity.getId() == null || entity.getId() == 0)
+		if(entity.getId() == 0)
 			entityService.add(entity);
 			//ddPackagesAndDocuments(orderId, newEntity);
 		else
@@ -146,7 +146,7 @@ public class AppliedEntityController {
 	
 	@RequestMapping(value="/manage/order/entitylist/entity/state/save", method=RequestMethod.POST)
     public String saveAppliedEntityState(AppliedEntityState state, ModelMap model) {
-		if(state.getId() == null || state.getId() == 0)
+		if(state.getId() == 0)
 			entityStateService.add(state);
 		else
 			entityStateService.update(state);

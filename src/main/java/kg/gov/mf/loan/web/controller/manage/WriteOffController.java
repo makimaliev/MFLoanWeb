@@ -57,13 +57,13 @@ public class WriteOffController {
 		return "/manage/debtor/loan/wo/save";
 	}
 	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/wo/save"})
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/wo/save"}, method=RequestMethod.POST)
     public String saveWriteOff(WriteOff wo, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
 		Loan loan = loanService.getById(loanId);
 		wo.setLoan(loan);
 		
-		if(wo.getId() == null || wo.getId() == 0)
+		if(wo.getId() == 0)
 			woService.add(wo);
 		else
 			woService.update(wo);

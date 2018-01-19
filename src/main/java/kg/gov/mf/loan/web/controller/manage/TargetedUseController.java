@@ -57,13 +57,13 @@ public class TargetedUseController {
 		return "/manage/debtor/loan/targeteduse/save";
 	}
 	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/targeteduse/save"})
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/targeteduse/save"}, method=RequestMethod.POST)
     public String saveTargetedUse(TargetedUse tu, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
 		Loan loan = loanService.getById(loanId);
 		tu.setLoan(loan);
 		
-		if(tu.getId() == null || tu.getId() == 0)
+		if(tu.getId() == 0)
 			tuService.add(tu);
 		else
 			tuService.update(tu);

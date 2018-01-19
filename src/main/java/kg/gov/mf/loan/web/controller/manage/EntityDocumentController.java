@@ -113,7 +113,7 @@ public class EntityDocumentController {
 		DocumentPackage dPackage = dpService.getById(dpId);
 		doc.setDocumentPackage(dPackage);
 		
-		if(doc.getId() == null || doc.getId() == 0)
+		if(doc.getId() == 0)
 			edService.add(doc);
 		else
 			edService.update(doc);
@@ -155,7 +155,7 @@ public class EntityDocumentController {
 	
 	@RequestMapping(value="/manage/order/entitylist/entity/documentpackage/entitydocument/state/save", method=RequestMethod.POST)
     public String saveEntityDocumentState(EntityDocumentState state, ModelMap model) {
-		if(state.getId() == null || state.getId() == 0)
+		if(state.getId() == 0)
 			edStateService.add(state);
 		else
 			edStateService.update(state);
@@ -198,7 +198,7 @@ public class EntityDocumentController {
 	
 	@RequestMapping(value="/manage/order/entitylist/entity/documentpackage/entitydocument/registeredby/save", method=RequestMethod.POST)
     public String saveEntityDocumentRegisteredBy(EntityDocumentRegisteredBy rb,	ModelMap model) {
-		if(rb.getId() == null || rb.getId() == 0)
+		if(rb.getId() == 0)
 			edRBService.add(rb);
 		else
 			edRBService.update(rb);

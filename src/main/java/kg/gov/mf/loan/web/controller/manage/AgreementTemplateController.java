@@ -64,7 +64,7 @@ public class AgreementTemplateController {
 		OrderTerm term = termService.getById(termId);
 		template.setOrderTerm(term);
 		
-		if(template.getId() == null || template.getId() == 0)
+		if(template.getId() == 0)
 			templateService.add(template);
 		else
 			templateService.update(template);
