@@ -20,6 +20,7 @@ import kg.gov.mf.loan.manage.model.debtor.OrganizationForm;
 import kg.gov.mf.loan.manage.model.debtor.WorkSector;
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
 import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
+import kg.gov.mf.loan.manage.service.collection.CollectionProcedureService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorTypeService;
 import kg.gov.mf.loan.manage.service.debtor.OrganizationFormService;
@@ -60,6 +61,9 @@ public class DebtorController {
 	@Autowired
 	CollateralAgreementService agreementService;
 	
+	@Autowired
+	CollectionProcedureService procService;
+	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
@@ -75,6 +79,7 @@ public class DebtorController {
         
         model.addAttribute("loans", debtor.getLoans());
         model.addAttribute("agreements", agreementService.list());
+        model.addAttribute("procs", procService.list());
         
         List<CreditOrder> orders = orderService.list();
         model.addAttribute("orders", orders);

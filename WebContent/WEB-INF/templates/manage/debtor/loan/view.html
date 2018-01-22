@@ -195,17 +195,18 @@
 					<div class="col-md-12">
 						<div class="tabbable-line boxless tabbable-reversed">
 							<ul class="nav nav-tabs">
-								<li class="active"><a href="#tab_0" data-toggle="tab"> Credit Term </a></li>
-								<li><a href="#tab_1" data-toggle="tab"> Write Off </a></li>
-								<li><a href="#tab_2" data-toggle="tab"> Payment Schedule </a></li>
-								<li><a href="#tab_3" data-toggle="tab"> Payment </a></li>
-								<li><a href="#tab_4" data-toggle="tab"> Supervisor Plan </a></li>
+								<li class="active"><a href="#tab_0" data-toggle="tab"> Credit Terms </a></li>
+								<li><a href="#tab_1" data-toggle="tab"> Write Offs </a></li>
+								<li><a href="#tab_2" data-toggle="tab"> Payment Schedules </a></li>
+								<li><a href="#tab_3" data-toggle="tab"> Payments </a></li>
+								<li><a href="#tab_4" data-toggle="tab"> Supervisor Plans </a></li>
 								<li><a href="#tab_5" data-toggle="tab">Loan Goods </a></li>
-								<li><a href="#tab_6" data-toggle="tab"> Debt Transfer </a></li>
-								<li><a href="#tab_7" data-toggle="tab"> Targeted Use </a></li>
-								<li><a href="#tab_8" data-toggle="tab"> Reconstructed List </a></li>
-								<li><a href="#tab_9" data-toggle="tab"> Bankrupt </a></li>
-								<li><a href="#tab_10" data-toggle="tab"> Collateral </a></li>
+								<li><a href="#tab_6" data-toggle="tab"> Debt Transfers </a></li>
+								<li><a href="#tab_7" data-toggle="tab"> Targeted Uses </a></li>
+								<li><a href="#tab_8" data-toggle="tab"> Reconstructed Lists </a></li>
+								<li><a href="#tab_9" data-toggle="tab"> Bankrupts </a></li>
+								<li><a href="#tab_10" data-toggle="tab"> Collaterals </a></li>
+								<li><a href="#tab_11" data-toggle="tab"> Collection Phases </a></li>
 							</ul>
 							<div class="tab-content">
 								<div class="tab-pane active" id="tab_0">
@@ -971,6 +972,76 @@
 																		<td>
 																			<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collateral/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
 																				<input hidden="true" type="text" id="id" name="id" th:value="${coll.id}" />
+																				<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+																			</form>
+																		</td>
+																	</tr>
+																</order>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+											<!-- END BORDERED TABLE PORTLET-->
+										</div>
+									</div>
+								</div>
+								
+								<div class="tab-pane" id="tab_11">
+									<div class="row">
+										<div class="col-md-12">
+											<!-- BEGIN BORDERED TABLE PORTLET-->
+											<div class="portlet light portlet-fit ">
+												<div class="portlet-body">
+													<div class="table-toolbar">
+														<div class="row">
+															<div class="col-md-6">
+																<div class="btn-group">
+																	<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collectionphase/0/save}" class="btn green">Add New Collection Phase <i class="fa fa-plus"></i></a>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="table-scrollable table-scrollable-borderless">
+														<table class="table table-hover table-light" id="orders">
+															<thead>
+																<tr>
+																	<th>Id</th>
+																	<th>Start Date</th>
+																	<th>Close Date</th>
+																	<th>Last Event</th>
+																	<th>Last Status Id</th>
+																	<th>Phase Status</th>
+																	<th>Phase Type</th>
+																	<th>View Details</th>
+																	<th>Edit</th>
+																	<th>Delete</th>
+																</tr>
+															</thead>
+															<tbody>
+																<ordercheck th:if="${#lists.isEmpty(phases)}">
+																	<tr class="no-records-found" style="text-align: center;">
+																		<td colspan="10">No matching records found</td>
+																	</tr>
+																</ordercheck>
+																<order th:each="phase : ${phases}">
+																	<tr class="clickable-row">
+																		<td th:text="${phase.id}"></td>
+																		<td th:text="${phase.startDate}"></td>
+																		<td th:text="${phase.closeDate}"></td>
+																		<td th:text="${phase.lastEvent}"></td>
+																		<td th:text="${phase.lastStatusId}"></td>
+																		<td th:text="${phase.phaseStatus}"></td>
+																		<td th:text="${phase.phaseType}"></td>
+																		<td>
+																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collectionphase/__${phase.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
+																		</td>
+																		<td>
+																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collectionphase/__${phase.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
+																		</td>
+																		<td>
+																			<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collectionphase/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+																				<input hidden="true" type="text" id="id" name="id" th:value="${phase.id}" />
 																				<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
 																			</form>
 																		</td>

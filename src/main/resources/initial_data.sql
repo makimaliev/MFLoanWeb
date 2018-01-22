@@ -305,4 +305,21 @@ INSERT INTO `mfloan`.`loantype` (`version`,`name`) VALUES (1,'Loan Type 1');
 
 /* ADD INSTALLMENT STATE AND PAYMENT TYPE*/
 INSERT INTO `mfloan`.`installmentstate` (`version`,`name`) VALUES (1,'Installment State 1');
-INSERT INTO `mfloan`.`paymenttype` (`version`,`name`) VALUES (1,'Installment State 1');
+INSERT INTO `mfloan`.`paymenttype` (`version`,`name`) VALUES (1,'Payment Type 1');
+
+/* ADD COLLATERAL PROPS */
+INSERT INTO `mfloan`.`collateralitemtype` (`version`,`name`) VALUES (1,'Item Type 1');
+INSERT INTO `mfloan`.`collateralquantitytype` (`version`,`name`) VALUES (1,'Quantity Type 1');
+INSERT INTO `mfloan`.`collateralconditiontype` (`version`,`name`) VALUES (1,'Condition  Type 1');
+
+INSERT INTO `mfloan`.`inspectionresulttype` (`version`,`name`) VALUES (1,'Inspection Result Type 1');
+
+INSERT INTO `mfloan`.`creditorder` (`version`, `description`, `regDate`, `regNumber`, `creditOrderStateId`, `creditOrderTypeId`) values (1, 'Order desc 1', '2018-01-01', 'REG-1234',1,1);
+
+/* ADD COLLECTION PROPS */
+INSERT INTO `mfloan`.`procedurestatus` (`version`,`name`) VALUES (1,'Proc Status 1');
+INSERT INTO `mfloan`.`proceduretype` (`version`,`name`) VALUES (1,'Proc Type 1');
+INSERT INTO `mfloan`.`phasestatus` (`version`,`name`) VALUES (1,'Phase Status 1');
+INSERT INTO `mfloan`.`phasetype` (`version`,`name`) VALUES (1,'Phase Type 1');
+INSERT INTO `mfloan`.`eventstatus` (`version`,`name`) VALUES (1,'Event Status 1');
+INSERT INTO `mfloan`.`eventtype` (`version`,`name`) VALUES (1,'Event Type 1');

@@ -676,16 +676,30 @@
 												</li>
 											</ul>
 										</li>
-										
+										<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Collection Procedure <span class="arrow"></span></a>
+											<ul class="sub-menu">
+												<li class="nav-item "><a th:href="@{/manage/debtor/collectionprocedure/status/list}" class="nav-link "> <span class="title"> List procedure statuses</span></a></li>
+												<li class="nav-item "><a th:href="@{/manage/debtor/collectionprocedure/type/list}" class="nav-link "> <span class="title"> List procedure types</span></a></li>
+												<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Collection Phase <span class="arrow"></span></a>
+													<ul class="sub-menu">
+														<li class="nav-item "><a th:href="@{/manage/debtor/collectionprocedure/collectionphase/status/list}" class="nav-link "> <span class="title"> List phase statuses</span></a></li>
+														<li class="nav-item "><a th:href="@{/manage/debtor/collectionprocedure/collectionphase/type/list}" class="nav-link "> <span class="title"> List phase types</span></a></li>
+														<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Collection Event <span class="arrow"></span></a>
+															<ul class="sub-menu">
+																<li class="nav-item "><a th:href="@{/manage/debtor/collectionprocedure/collectionphase/collectionevent/status/list}" class="nav-link "> <span class="title"> List event statuses</span></a></li>
+																<li class="nav-item "><a th:href="@{/manage/debtor/collectionprocedure/collectionphase/collectionevent/type/list}" class="nav-link "> <span class="title"> List event types</span></a></li>
+															</ul>
+														</li>
+													</ul>
+												</li>
+											</ul>
+										</li>
 									</ul>
 								</li>
 								<li class="nav-item  "><a th:href="@{/manage/loan/list}" class="nav-link ">List loans</a></li>
 	                            <li class="nav-item  "><a th:href="@{/manage/collection/list}" class="nav-link ">List collections</a></li>
 							</ul>
 						</li>						
-
-
-
 					</ul>
 					<!-- END SIDEBAR MENU -->
 				</div>

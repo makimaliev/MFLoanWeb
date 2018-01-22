@@ -3,7 +3,6 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -24,7 +23,6 @@ import kg.gov.mf.loan.manage.model.collateral.ConditionType;
 import kg.gov.mf.loan.manage.model.collateral.InspectionResultType;
 import kg.gov.mf.loan.manage.model.collateral.ItemType;
 import kg.gov.mf.loan.manage.model.collateral.QuantityType;
-import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemArrestFreeService;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemDetailsService;
