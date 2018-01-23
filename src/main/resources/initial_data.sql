@@ -267,6 +267,7 @@ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALU
 INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Password', 'Сыр соз', 'login.form.input.password', 'Пароль');
 INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Enter', 'Кируу', 'login.form.button.login', 'Вход');
 INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Name', 'Аталышы', 'label.orgForm.name', 'Наименование');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Forgot password?', 'Сыр созду унуттунузбу?', 'login.forgot.password', 'Забыли пароль?');
 
 INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Name2', 'Аталышы2', 'asdf', 'Наименование2');
 
@@ -314,7 +315,21 @@ INSERT INTO `mfloan`.`collateralconditiontype` (`version`,`name`) VALUES (1,'Con
 
 INSERT INTO `mfloan`.`inspectionresulttype` (`version`,`name`) VALUES (1,'Inspection Result Type 1');
 
+/* ADD ORDERS AND SUBS */
+
 INSERT INTO `mfloan`.`creditorder` (`version`, `description`, `regDate`, `regNumber`, `creditOrderStateId`, `creditOrderTypeId`) values (1, 'Order desc 1', '2018-01-01', 'REG-1234',1,1);
+INSERT INTO `mfloan`.`creditorder` (`version`, `description`, `regDate`, `regNumber`, `creditOrderStateId`, `creditOrderTypeId`) values (1, 'New order', '2017-10-20', 'REG-111',1,1);
+INSERT INTO `mfloan`.`creditorder` (`version`, `description`, `regDate`, `regNumber`, `creditOrderStateId`, `creditOrderTypeId`) values (1, 'Credit Order 333', '2018-01-01', 'REG-333',1,1);
+
+INSERT INTO `mfloan`.`appliedentitylist` (`version`,`listDate`,`listNumber`,`appliedEntityListStateId`,`appliedEntityListTypeId`,`creditOrderId`)VALUES(1,'2018-01-01','List 1',1,1,1);
+
+INSERT INTO `mfloan`.`orderdocumentpackage` (`version`,`name`,`creditOrderId`) VALUES (1,'Document Package 1',1);
+
+INSERT INTO `mfloan`.`orderdocument` (`version`,`name`,`orderDocumentPackageId`,`orderDocumentTypeId`) VALUES (1, 'Passport', 1,1);
+INSERT INTO `mfloan`.`orderdocument` (`version`,`name`,`orderDocumentPackageId`,`orderDocumentTypeId`) VALUES (1, 'Driver License', 1,1);
+
+INSERT INTO `mfloan`.`orderterm` (`version`,`amount`,`collateralFree`,`description`,`earlyRepaymentAllowed`,`firstInstallmentDate`,`frequencyQuantity`,`graceOnInterestAccrDays`,`graceOnInterestAccrInst`,`graceOnInterestPaymentDays`,`graceOnInterestPaymentInst`,`graceOnPrinciplePaymentDays`,`graceOnPrinciplePaymentInst`,`installmentFirstDay`,`installmentQuantity`,`interestRateValue`,`lastInstallmentDate`,`maxDaysDisbFirstInst`,`minDaysDisbFirstInst`,`penaltyLimitPercent`,`penaltyOnInterestOverdueRateValue`,`penaltyOnPrincipleOverdueRateValue`,`creditOrderId`,`currencyId`,`daysInMonthMethodId`,`daysInYearMethodId`,`frequencyTypeId`,`fundId`,`interestAccrMethodId`,`interestRateValuePerPeriodId`,`interestTypeId`,`penaltyOnInterestOverdueTypeId`,`penaltyOnPrincipleOverdueTypeId`,`transactionOrderId`) 
+VALUES (1, 1000, 1, 'Order Term 1', 1, '2018-01-01', 2, 9, 8, 7, 6, 5, 4, 10, 100, 11, '2018-01-01', 3, 2, 1223, 33, 22, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
 /* ADD COLLECTION PROPS */
 INSERT INTO `mfloan`.`procedurestatus` (`version`,`name`) VALUES (1,'Proc Status 1');
