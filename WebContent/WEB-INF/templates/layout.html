@@ -370,21 +370,30 @@
 
 							<!-- BEGIN LANGUAGE BAR -->
 							<!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-							<li class="dropdown dropdown-language"><a
+							<li class="dropdown dropdown-language" th:switch="__${#locale}__"><a
 								href="javascript:;" class="dropdown-toggle"
 								data-toggle="dropdown" data-hover="dropdown"
 								data-close-others="true"> <img alt=""
 									th:src="@{/assets/global/img/flags/} + ${#locale} + '.png'" />
-									<span class="langname"
-									th:text="${#strings.toUpperCase(#locale)}">RU</span> <i
-									class="fa fa-angle-down"></i>
+									<span class="langname" th:text="${#strings.toUpperCase(#locale)}"></span> <i class="fa fa-angle-down"></i>
 							</a>
-								<ul class="dropdown-menu">
-									<li><a th:with="lang=(__${#locale}__ ==  'en'?'ru':'en')"
-										th:href="'?language='+ ${lang}"> <img alt=""
-											th:src="@{/assets/global/img/flags/} + ${lang} +'.png'"
-											th:text="${#strings.toUpperCase(lang)}" /></a></li>
-								</ul></li>
+							<!-- th:with="lang=(__${#locale}__ ==  'en'?'ru':'en')" -->
+								<ul class="dropdown-menu" th:case="'kg'">
+									<!-- <li><a th:href="'?language=kg'"><img alt="" th:src="@{/assets/global/img/flags/kg.png}"/>KG</a></li> -->
+									<li><a th:href="'?language=ru'"><img alt="" th:src="@{/assets/global/img/flags/ru.png}"/>RU</a></li>
+									<li><a th:href="'?language=en'"><img alt="" th:src="@{/assets/global/img/flags/en.png}"/>EN</a></li>
+								</ul>
+								<ul class="dropdown-menu" th:case="'ru'">
+									<li><a th:href="'?language=kg'"><img alt="" th:src="@{/assets/global/img/flags/kg.png}"/>KG</a></li>
+									<!-- <li><a th:href="'?language=ru'"><img alt="" th:src="@{/assets/global/img/flags/ru.png}"/>RU</a></li> -->
+									<li><a th:href="'?language=en'"><img alt="" th:src="@{/assets/global/img/flags/en.png}"/>EN</a></li>
+								</ul>
+								<ul class="dropdown-menu" th:case="*">
+									<li><a th:href="'?language=kg'"><img alt="" th:src="@{/assets/global/img/flags/kg.png}"/>KG</a></li>
+									<li><a th:href="'?language=ru'"><img alt="" th:src="@{/assets/global/img/flags/ru.png}"/>RU</a></li>
+									<!-- <li><a th:href="'?language=en'"><img alt="" th:src="@{/assets/global/img/flags/en.png}"/>EN</a></li>-->
+								</ul>
+								</li>
 							<!-- END LANGUAGE BAR -->
 
 							<!-- BEGIN QUICK SIDEBAR TOGGLER -->
