@@ -62,7 +62,13 @@ public class ReportTemplateController {
 	@RequestMapping(value = "/reportTemplate/add", method = RequestMethod.GET)
 	public String getReportTemplateAddForm(Model model) {
 
-		model.addAttribute("reportTemplate", new ReportTemplate());
+		ReportTemplate modelReportTemplate = new ReportTemplate();
+		
+		modelReportTemplate.setReport(this.reportService.findById((long)1));
+		model.addAttribute("reportList", this.reportService.findAll());		
+		
+		model.addAttribute("reportTemplate",modelReportTemplate);
+		
 
 		return "output/report/reportTemplateForm";
 	}
@@ -83,6 +89,8 @@ public class ReportTemplateController {
 	@RequestMapping("/reportTemplate/{id}/edit")
 	public String getReportTemplateEditForm(@PathVariable("id") long id, Model model) {
 		model.addAttribute("reportTemplate", this.reportTemplateService.findById(id));
+		model.addAttribute("reportList", this.reportService.findAll());
+		
 		return "output/report/reportTemplateForm";
 
 	}
@@ -90,6 +98,10 @@ public class ReportTemplateController {
 	@RequestMapping(value = "/reportTemplate/save", method = RequestMethod.POST)
 	public String saveReportTemplateAndRedirectToReportTemplateList(@Validated @ModelAttribute("reportTemplate") ReportTemplate reportTemplate, BindingResult result) {
 
+		Report report = this.reportService.findById(reportTemplate.getReport().getId());
+		
+		reportTemplate.setReport(report);
+		
 		if (result.hasErrors()) {
 			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
 		} else if (reportTemplate.getId() == 0) {

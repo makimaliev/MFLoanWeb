@@ -10,7 +10,7 @@
 
 <body>
 
-	<form th:action="@{/reportTemplate/save}" id="form_sample_2"  th:object="${reportTemplate}"
+	<form th:action="@{/generationParameter/save}" id="form_sample_2"  th:object="${generationParameter}"
 		class="form-horizontal" method="post">
 		<div class="form-body">
 			<div class="alert alert-danger display-hide">
@@ -29,8 +29,7 @@
 				<div class="col-md-4">
 					<input hidden="true" type="text" id="id" name="id"
 						th:value="*{id}" />
-					<input hidden="true" type="text" id="report.id" name="report.id"
-						th:value="*{report.id}" />
+
 						
 						
 					<div class="input-icon right">
@@ -51,7 +50,7 @@
 				<div class="col-md-offset-3 col-md-9">
 					<button type="submit" class="btn green">Submit</button>
 					<button type="button" class="btn default"
-						onclick="window.location.href='/reportTemplate/list'">Cancel</button>
+						onclick="window.location.href='/generationParameter/list'">Cancel</button>
 				</div>
 			</div>
 		</div>

@@ -40,6 +40,7 @@ import kg.gov.mf.loan.admin.org.converter.*;
 import kg.gov.mf.loan.admin.sys.converter.*;
 import kg.gov.mf.loan.admin.sys.service.MessageResourceService;
 import kg.gov.mf.loan.output.report.converter.ReportFormatter;
+import kg.gov.mf.loan.output.report.converter.ReportTemplateFormatter;
 
 
 
@@ -92,7 +93,9 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     
     @Autowired
     ReportFormatter reportFormatter;    
-    
+
+    @Autowired
+    ReportTemplateFormatter reportTemplateFormatter;        
     
     @Autowired
     private MessageResourceService messageResourceService;    
@@ -233,6 +236,7 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         
         registry.addFormatter(supervisorTermFormatter);
         registry.addFormatter(reportFormatter);
+        registry.addFormatter(reportTemplateFormatter);
 
         
         

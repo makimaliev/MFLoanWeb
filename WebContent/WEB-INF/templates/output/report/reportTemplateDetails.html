@@ -107,12 +107,7 @@
 								</div>
 
 								<div class="row">
-									<div class="col-md-12">
-										<a data-remote="false" data-toggle="modal"
-											data-target="#reportTemplateFormModal" th:href="@{/reportTemplate/__${reportTemplate.id}__/reportTemplateTemplate/add}"
-											role="button" class="btn btn-large btn-primary"> Add
-											Template</a>
-									</div>
+
 								</div>
 							</div>
 						</div>
@@ -201,7 +196,7 @@
 	    
 	    var reportTemplateID = $("#reportTemplate_id").val();
 
-	    if(link.attr("href").indexOf('reportTemplateTemplate/add')>0)
+	    if(link.attr("href").indexOf('generationParameter/add')>0)
 	    {
 	    	$(this).find(".modal-title").html(link.attr("href"));
 		    $(this).find(".modal-body").load(link.attr("href"));
