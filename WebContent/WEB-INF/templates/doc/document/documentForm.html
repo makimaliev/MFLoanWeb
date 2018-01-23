@@ -5,74 +5,138 @@
     <title>Title</title>
 </head>
 <body>
-<div th:fragment="document">
+<div th:fragment="doc">
     <div class="modal fade" id="documentModal" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header"><h3 class="modal-title" id="modal-title">Document Form</h3></div>
                 <div class="modal-body form">
 
-                    <form action="#" id="form" class="form-horizontal">
-                        <input type="hidden" value="" name="id"/>
-                        <input type="hidden" th:value="${documentTypeId}" name="documentType.id"/>
-                        <input type="hidden" value="" name="documentSubType.id"/>
+                    <form action="#" id="form" method="post" class="form-horizontal" th:object="${document}">
+
+                        <input type="hidden" value="" th:field="*{id}"/>
+                        <input type="hidden" value="" th:field="*{documentType.id}"/>
+                        <input type="hidden" value="" th:field="*{documentSubType.id}"/>
+                        <input type="hidden" value="" th:field="*{senderStatus}"/>
+
+                        <!--input type="hidden" value="" th:field="*{senderResponsible.staff.id}" name="senderResponsible.staff.id"/>
+                        <input type="hidden" value="" th:field="*{senderResponsible.department.id}" name="senderResponsible.department.id"/>
+                        <input type="hidden" value="" th:field="*{senderResponsible.organization.id}" name="senderResponsible.organization.id"/>
+                        <input type="hidden" value="" th:field="*{senderResponsible.person.id}" name="senderResponsible.person.id"/-->
 
                         <div class="form-body">
 
                             <div class="form-group">
                                 <label class="control-label col-md-4">Title<span class="required"> * </span></label>
                                 <div class="col-md-6">
-                                    <input name="title" placeholder="Title" class="form-control" type="text">
+                                    <input th:field="*{title}" placeholder="Title" class="form-control" type="text">
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="control-label col-md-4">Description<span class="required"> * </span></label>
                                 <div class="col-md-6">
-                                    <input name="description" placeholder="Description" class="form-control" type="text">
+                                    <input th:field="*{description}" placeholder="Description" class="form-control" type="text">
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col"><!-- FROM -->
-                                    <div class="form-group">
-                                        <label class="control-label col-md-4">Sender type<span class="required"> * </span></label>
-                                        <div class="col-md-6">
-                                            <select class="form-control" id="rt">
-                                                <option value=""> *** Select Responsible *** </option>
-                                                <option value="1">Staff</option>
-                                                <option value="2">Department</option>
-                                                <option value="3">Organization</option>
-                                                <option value="4">Person</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <!--div class="form-group">
-                                        <label class="control-label col-md-4">Sender name<span class="required"> * </span></label>
-                                        <div class="col-md-6">
-                                            <select class="form-control" id="responsible">
-                                                <option value=""> *** Select Responsible *** </option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="control-label col-md-4">Sender name<span class="required"> * </span></label>
-                                        <div class="col-md-6">
-                                            <select class="form-control">
-                                                <option value=""> *** Select Responsible *** </option>
-                                                <option th:each="s : ${staff}"
-                                                        th:value="${s.id}"
-                                                        th:text="${s.name}">Responsible</option>
-                                            </select>
-                                        </div>
-                                    </div-->
-
-                                </div>
-
-
+                            <!-- ********************************************************************************************** -->
+                            <div class="form-group">
+                                <label class="control-label">Sender type<span class="required"> * </span></label>
+                                <select class="form-control" id="sr" th:field="*{senderResponsible.responsibleType}">
+                                    <option th:each="r,i : ${responsibles}"
+                                            th:value="${i.index + 1}"
+                                            th:text="${r}">Responsible</option>
+                                </select>
                             </div>
+
+
+                            <div class="form-group" name="si1" >
+                                <label class="control-label">Sender name<span class="required"> * </span></label>
+                                <select class="form-control"  multiple="true" th:field="*{senderResponsible.staff}">
+                                    <option th:each="p : ${staff}"
+                                            th:value="${p.id}"
+                                            th:text="${p.name}">Responsible</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" name="si2">
+                                <label class="control-label">Sender name<span class="required"> * </span></label>
+                                <select class="form-control"  multiple="true" th:field="*{senderResponsible.departments}">
+                                    <option th:each="p : ${department}"
+                                            th:value="${p.id}"
+                                            th:text="${p.name}">Responsible</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" name="si3">
+                                <label class="control-label">Sender name<span class="required"> * </span></label>
+                                <select class="form-control"  multiple="true" th:field="*{senderResponsible.organizations}">
+                                    <option th:each="p : ${organization}"
+                                            th:value="${p.id}"
+                                            th:text="${p.name}">Responsible</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" name="si4">
+                                <label class="control-label">Sender name<span class="required"> * </span></label>
+                                <select class="form-control"  multiple="true" th:field="*{senderResponsible.person}">
+                                    <option th:each="p : ${person}"
+                                            th:value="${p.id}"
+                                            th:text="${p.name}">Responsible</option>
+                                </select>
+                            </div>
+
+                            <!-- ********************************************************************************************** -->
+
+                            <div class="form-group">
+                                <label class="control-label">Receiver type<span class="required"> * </span></label>
+                                <select class="form-control" id="rr" th:field="*{receiverResponsible.responsibleType}">
+                                    <option th:each="r,i : ${responsibles}"
+                                            th:value="${i.index + 1}"
+                                            th:text="${r}">Responsible</option>
+                                </select>
+                            </div>
+
+
+                            <div class="form-group" name="ri1" >
+                                <label class="control-label">Receiver name<span class="required"> * </span></label>
+                                <select class="form-control"  multiple="true" th:field="*{receiverResponsible.staff}">
+                                    <option th:each="p : ${staff}"
+                                            th:value="${p.id}"
+                                            th:text="${p.name}">Responsible</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" name="ri2">
+                                <label class="control-label">Receiver name<span class="required"> * </span></label>
+                                <select class="form-control"  multiple="true" th:field="*{receiverResponsible.departments}">
+                                    <option th:each="p : ${department}"
+                                            th:value="${p.id}"
+                                            th:text="${p.name}">Responsible</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" name="ri3">
+                                <label class="control-label">Receiver name<span class="required"> * </span></label>
+                                <select class="form-control"  multiple="true" th:field="*{receiverResponsible.organizations}">
+                                    <option th:each="p : ${organization}"
+                                            th:value="${p.id}"
+                                            th:text="${p.name}">Responsible</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" name="ri4">
+                                <label class="control-label">Receiver name<span class="required"> * </span></label>
+                                <select class="form-control"  multiple="true" th:field="*{receiverResponsible.person}">
+                                    <option th:each="p : ${person}"
+                                            th:value="${p.id}"
+                                            th:text="${p.name}">Responsible</option>
+                                </select>
+                            </div>
+
+                            <!-- ********************************************************************************************** -->
+
 
                         </div>
                     </form>
@@ -237,7 +301,7 @@
     <div class="modal fade" id="resultDataModal" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header"><h3 class="modal-title" id="modal-title">Add Result Data</h3></div>
+                <div class="modal-header"><h3 class="modal-title">Add Result Data</h3></div>
                 <div class="modal-body form">
 
                     <form action="#" id="resultDataForm" class="form-horizontal">

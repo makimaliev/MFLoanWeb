@@ -58,7 +58,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     	CharacterEncodingFilter filter = new CharacterEncodingFilter();
         filter.setEncoding("UTF-8");
         filter.setForceEncoding(true);
-        http.addFilterBefore(filter,CsrfFilter.class);        
+        //http.addFilterBefore(filter,CsrfFilter.class);
     	
     	http.csrf().disable()
         .authorizeRequests()

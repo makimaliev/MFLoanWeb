@@ -12,7 +12,7 @@
 </head>
 <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
 
-<div th:replace="doc/document/content :: document"></div>
+<div th:replace="doc/document/documentForm.html :: doc"></div>
 
 <div th:replace="layout :: header-top"></div>
 
@@ -26,18 +26,20 @@
 				<div class="col-md-12">
 					<table class="table table-hover table-condensed table-striped table-bordered compact condensed" id="documentTable">
 						<thead>
-						<tr>
-							<th>Id</th>
-							<th>Title</th>
-							<th>Description</th>
-							<th>Document SubType</th>
-							<th>View</th>
-							<th>Edit</th>
-							<th>Delete</th>
-						</tr>
+							<tr>
+								<th>Id</th>
+								<th>Title</th>
+								<th>Description</th>
+								<th>Document SubType</th>
+								<th>Sender</th>
+								<th>Receiver</th>
+								<th>View</th>
+								<th>Edit</th>
+								<th>Delete</th>
+							</tr>
 						</thead>
-
-						<tbody></tbody>
+						<tbody>
+						</tbody>
 					</table>
 
 				</div>
@@ -47,9 +49,9 @@
 				<div class="col-md-12">
 					<button class="btn btn-primary"> Filter </button>
 				</div>
-				<div class="col-md-12" th:if="${type} == 'internal'">
+				<div class="col-md-12" th:if="${type == 'internal' or type == 'outgoing'}">
 					<span th:each="dst : ${documentSubType}">
-						<a href="#" class="btn btn-success" th:onclick="'create_document(\'' + ${dst.name} +'\',\''+ ${dst.documentType.id} +'\',\''+ ${dst.id} + '\');'" th:text="${dst.name}"> New Document </a>
+						<a href="#" class="btn btn-success" th:onclick="'create_document(\'' + ${dst.name}  +'\',\''+ ${dst.id} + '\');'" th:text="${dst.name}"> New Document </a>
 					</span>
 				</div>
 			</span>
@@ -65,187 +67,203 @@
 <script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>
 <script th:inline="javascript">
 
-    var table;
-    var documentType;
+	var table;
+	var responsibles = [[${responsibles}]]
 
-    $(document).ready(function() {
+    var si = 0;
+    var sitems = [
+        $('[name="si1"]'),
+        $('[name="si2"]'),
+        $('[name="si3"]'),
+        $('[name="si4"]')
+    ];
+    var ri = 0;
+    var ritems = [
+        $('[name="ri1"]'),
+        $('[name="ri2"]'),
+        $('[name="ri3"]'),
+        $('[name="ri4"]')
+    ];
 
-        table = $("#documentTable").DataTable({
-			"processing": true,
-            "language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
-            "info":     false,
-            "ajax": {
-                "url" : "/MFLoanWeb/doc/" + [[${type}]],
-                "dataSrc": ""
-            },
-            "columns": [
-                { "data": "id" },
-                { "data": "title" },
-                { "data": "description" },
-                { "data": "documentSubType.name" },
-                { "data": "id" },
-                { "data": "id" },
-                { "data": "id" }
-            ],
-            keys: { focus: ':eq(0)' },
-            "columnDefs": [
-                {
-                    "targets": [4],
-                    "render": function (data, type, row) {
-                        return "<a href='/MFLoanWeb/doc/view/" + data + "' role='button' class='btn btn-xs green-stripe'> View </a>"
-                    }
-                },
-                {
-                    "targets": [5],
-                    "orderable": false,
-                    "render": function (data, type, row) {
-                        return '<a data-toggle="modal" data-target="#modal_form" href="#" onclick="edit_document(' + data + ');" role="button" class="btn btn-xs blue-stripe"> Edit </a>'
-                    }
-                },
-                {
-                    "targets": [6],
-                    "orderable": false,
-                    "render": function (data, type, row) {
-                        return '<a href="#" onclick="delete_document(' + data + ');" role="button" class="btn btn-xs red-stripe"> Delete </a>'
-                    }
-                },
-            ],
-        });
-    });
-    function create_document(title, doctype, docsubtype) {
-        $(".form-group").removeClass("has-error");
-        $("#form")[0].reset();
-        $('[name="id"]').val(0);
+	$(document).ready(function() {
 
-        $('[name="documentType.id"]').val([[${documentTypeId}]]);
-        $('[name="documentSubType.id"]').val(docsubtype);
+        $('[name="si1"]').show();
+		$('[name="si2"]').hide();
+		$('[name="si3"]').hide();
+		$('[name="si4"]').hide();
 
-        formState(false, title);
+        $('[name="ri1"]').show();
+        $('[name="ri2"]').hide();
+        $('[name="ri3"]').hide();
+        $('[name="ri4"]').hide();
 
-        $('[name="tabs"]').hide();
-        $("#btnSave").text('Create');
-    }
-    function edit_document(id) {
-        $("#form")[0].reset();
-        $(".form-group").removeClass('has-error');
-        $("#btnSave").text('Update');
-        $.ajax({
-            url : "/MFLoanWeb/doc/" + id,
-            type: "GET",
-            dataType: "JSON",
-            success: function(data) {
-                formState(false, "Edit Document");
-                loadData(data);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                alert("Error get data from ajax");
-            }
-        });
-    }
-    function delete_document(id) {
-        if(confirm('Are you sure delete this data?'))
-        {
-            $.ajax({
-                url : "/MFLoanWeb/doc/remove/" + id,
-                type: "POST",
-                dataType: "text",
-                success: function(data)
-                {
-                    reload_table();
-                    alert("Document succesfully delted!");
-                },
-                error: function (jqXHR, textStatus, errorThrown)
-                {
-                    alert('Error deleting Document!');
+		table = $("#documentTable").DataTable({
+		"processing": true,
+		"language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
+		"info":     false,
+		"ajax": {
+			"url" : "/MFLoanWeb/doc/" + [[${type}]],
+			"dataSrc": ""
+		},
+		"columns": [
+			{ "data": "id" },
+			{ "data": "title" },
+			{ "data": "description" },
+			{ "data": "documentSubType.name" },
+			{ "data": function(data, type, row) {
+			    	return responsibles[data.senderResponsible.responsibleType - 1];
+            	}
+			},
+            { "data": function(data, type, row) {
+                    return responsibles[data.receiverResponsible.responsibleType - 1];
                 }
-            });
-        }
-    }
-    function save_document() {
-        $("#btnSave").text('Saving...');
-        $("#btnSave").attr('disabled',true);
-        $.ajax({
-            url : "/MFLoanWeb/doc/add",
-            type: "POST",
-            data: $('#form').serialize(),
-            dataType: "text",
-            success: function(data)
-            {
-                reload_table();
             },
-            error: function (jqXHR, textStatus, errorThrown)
-            {
-                alert("Erooooooooor");
-            }
-        });
-        $("#documentModal").modal('hide');
-        $('#btnSave').text('Save');
-        $('#btnSave').attr('disabled',false);
-    }
-    function reload_table() {
-        table.ajax.reload(null,false);
-    }
-    function loadData(item) {
+			{ "data": "id",
+				"render" : function(data, type, row) {
+			    	return "<a href='/MFLoanWeb/doc/view/" + data + "' role='button' class='btn btn-xs green-stripe'> View </a>"; }
+			},
+			{ "data": "id",
+				"render" : function(data, type, row) {
+			    	return '<a data-toggle="modal" data-target="#modal_form" href="#" onclick="edit_document(' + data + ');" role="button" class="btn btn-xs blue-stripe"> Edit </a>'; }
+			},
+			{ "data": "id",
+				"render" : function(data, type, row) {
+			    	return '<a href="#" onclick="delete_document(' + data + ');" role="button" class="btn btn-xs red-stripe"> Delete </a>'; }
+			}
+		],
+		keys: { focus: ':eq(0)' },
 
-        $('[name="id"]').val(item.id);
-        $('[name="title"]').val(item.title);
-        $('[name="description"]').val(item.description);
-        $('[name="documentType.id"]').val(item.documentType.id);
-        $('[name="documentSubType.id"]').val(item.documentSubType.id);
-    }
-    function formState(state, mtitle) {
+		});
+	});
+	function create_document(title, docsubtype) {
 
-        $('[name="tabs"]').show();
+		$("#form")[0].reset();
+        $('[name="document.id"]').val(0);
+		$('[name="documentSubType.id"]').val(docsubtype);
+        $('[name="documentType.id"]').val([[${documentTypeId}]]);
 
-        $('[name="title"]').attr('disabled', state);
-        $('[name="description"]').attr('disabled', state);
-        $('[name="documentType.id"]').attr('disabled', state);
-        $('[name="documentSubType.id"]').attr('disabled', state);
-
-        if(state) {
-            $('#btnSave').hide();
-        }
-        else
-		{
-            $('#btnSave').show();
+		formState(false, title);
+	}
+	function edit_document(id) {
+		$("#form")[0].reset();
+		$.ajax({
+		url : "/MFLoanWeb/doc/" + id,
+		type: "GET",
+		dataType: "JSON",
+		success: function(data) {
+			formState(false, "Edit Document");
+			loadData(data);
+		},
+		error: function (jqXHR, textStatus, errorThrown) {
+			alert("Error get data from ajax");
 		}
-        $(".modal-title").text(mtitle);
-        $("#documentModal").modal('show');
+		});
+	}
+	function delete_document(id) {
+		if(confirm('Are you sure delete this data?'))
+		{
+			$.ajax({
+				url : "/MFLoanWeb/doc/remove/" + id,
+				type: "POST",
+				dataType: "text",
+				success: function(data)
+				{
+					reload_table();
+				},
+				error: function (jqXHR, textStatus, errorThrown)
+				{
+					alert('Error deleting Document!');
+				}
+			});
+		}
+	}
+	function save_document() {
+		$.ajax({
+			url : "/MFLoanWeb/doc/add",
+			type: "POST",
+			data: $('#form').serialize(),
+			dataType: "text",
+			success: function(data)
+			{
+				reload_table();
+			},
+            error: function (jqXHR, textStatus, errorThrown) {
+			    alert("Error saving Document");
+            }
+		});
+		$("#documentModal").modal('hide');
+	}
+	function reload_table() {
+		table.ajax.reload(null,false);
+	}
+	function loadData(item) {
+
+		$('[name="id"]').val(item.id);
+		$('[name="title"]').val(item.title);
+		$('[name="description"]').val(item.description);
+		$('[name="documentType.id"]').val(item.documentType.id);
+		$('[name="documentSubType.id"]').val(item.documentSubType.id);
+
+		$('[name="documentSubType.id"]').val(item.documentSubType.id);
+	}
+	function formState(state, mtitle) {
+
+		$('[name="tabs"]').show();
+
+		$('[name="title"]').attr('disabled', state);
+		$('[name="description"]').attr('disabled', state);
+		$('[name="documentType.id"]').attr('disabled', state);
+		$('[name="documentSubType.id"]').attr('disabled', state);
+
+		if(state) {
+			$('#btnSave').hide();
+		}
+		else
+		{
+			$('#btnSave').show();
+		}
+		$(".modal-title").text(mtitle);
+		$("#documentModal").modal('show');
+	}
+
+    function initSelectSender(itm) {
+
+        if(itm != si)
+        {
+            sitems[si].hide();
+            sitems[itm].show();
+            si = itm;
+        }
+
+    }
+    function initSelectReceiver(itm) {
+
+        if(itm != ri)
+        {
+            ritems[ri].hide();
+            ritems[itm].show();
+            ri = itm;
+        }
+
     }
 
-    /*
-    $( "#rt" ).change(
-        function() {
-            var html = '<option value=""> *** Select Responsible *** </option>';
-            var selection = $(this).val();
-            var data;
+    $("#sr").change(function() {
+        var selection = $(this).val();
+        initSelectSender(selection - 1);
+    });
+    $("#rr").change(function() {
+        var selection = $(this).val();
+        initSelectReceiver(selection - 1);
+    });
+    $("#documentModal").on("show.bs.modal", function(e) {
+        var sr = $("#sr").val();
+        initSelectSender(sr - 1);
 
-            if (selection == 1)
-			{
-                data = [[${staff}]];
-			}
-            else if (selection == 2)
-			{
-                data = [[${department}]];
-			}
-            else if (selection == 3)
-            {
-                data = [[${organization}]];
-            }
-            else if (selection == 4)
-            {
-                data = [[${person}]];
-            }
+        var rr = $("#rr").val();
+        initSelectReceiver(rr - 1)
 
-            var len = data.length;
-            for ( var i = 0; i < len; i++) {
-                html += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
-            }
-            html += '</option>';
-            $('#responsible').html(html);
-    	}
-    );
-	*/
+    });
+
 </script>
 
 </body>
