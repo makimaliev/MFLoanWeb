@@ -1,6 +1,8 @@
 package kg.gov.mf.loan.web.controller.manage;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,9 +11,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackage;
+import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackageState;
+import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackageType;
 import kg.gov.mf.loan.manage.model.entity.AppliedEntity;
 import kg.gov.mf.loan.manage.model.entity.AppliedEntityState;
+import kg.gov.mf.loan.manage.model.entitydocument.EntityDocument;
+import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentRegisteredBy;
+import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentState;
 import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityList;
+import kg.gov.mf.loan.manage.model.orderdocument.OrderDocument;
+import kg.gov.mf.loan.manage.model.orderdocumentpackage.OrderDocumentPackage;
 import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageService;
 import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageStateService;
 import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageTypeService;
@@ -104,8 +114,10 @@ public class AppliedEntityController {
 		entity.setAppliedEntityList(list);
 		
 		if(entity.getId() == 0)
+		{
 			entityService.add(entity);
-			//ddPackagesAndDocuments(orderId, newEntity);
+			addPackagesAndDocuments(orderId, entity);
+		}
 		else
 			entityService.update(entity);
 			
@@ -162,82 +174,90 @@ public class AppliedEntityController {
 		return "redirect:" + "/manage/order/entitylist/entity/state/list";
     }
 	
-	/*
-	private void addPackagesAndDocuments(Long orderId, AppliedEntity newEntity) {
-		Set<OrderDocumentPackage> oDPs = orderService.findById(orderId).getOrderDocumentPackage();
-		for (OrderDocumentPackage orderDocumentPackage : oDPs) {
-			DocumentPackage dp = new DocumentPackage(orderDocumentPackage.getName(), 
-					new Date(0), 
-					new Date(0), 
-					0.0, 
-					0.0, 
-					0.0, 
-					getDummyPackageState(), 
-					getDummyPackageType());
-			dp.setOrderDocumentPackageId(orderDocumentPackage.getId());
-			dp.setAppliedEntity(newEntity);
-			dpService.save(dp);
+	private void addPackagesAndDocuments(Long orderId, AppliedEntity entity) {
+		Set<OrderDocumentPackage> oDPs = orderService.getById(orderId).getOrderDocumentPackages();
+		for (OrderDocumentPackage odp : oDPs) {
+			DocumentPackage dp = new DocumentPackage();
+			dp.setName(odp.getName());
+			dp.setCompletedDate(new Date(0));
+			dp.setApprovedDate(new Date(0));
+			dp.setCompletedRatio(0.0);
+			dp.setApprovedRatio(0.0);
+			dp.setRegisteredRatio(0.0);
+			dp.setDocumentPackageState(getDummyPackageState());
+			dp.setDocumentPackageType(getDummyPackageType());
+			dp.setOrderDocumentPackageId(odp.getId());
+			dp.setAppliedEntity(entity);
+			dpService.add(dp);
 			
-			Set<OrderDocument> docs = orderDocumentPackage.getOrderDocument();
-			for (OrderDocument orderDocument : docs) {
-				EntityDocument newDoc = new EntityDocument(
-						orderDocument.getName(), 
-						0L, 
-						new Date(0), 
-						"", 
-						0L, 
-						new Date(0), 
-						"", 
-						"123", 
-						new Date(0), 
-						"", 
-						getDummyDocumentRB(), 
-						getDummyDocumentState());
+			Set<OrderDocument> docs = odp.getOrderDocuments();
+			for (OrderDocument od : docs) {
+				EntityDocument newDoc = new EntityDocument();
+				newDoc.setName(od.getName());
+				newDoc.setCompletedBy(0L);
+				newDoc.setCompletedDate(new Date(0));
+				newDoc.setCompletedDescription("");
+				newDoc.setApprovedBy(0L);
+				newDoc.setApprovedDate(new Date(0));
+				newDoc.setApprovedDescription("");
+				newDoc.setRegisteredNumber("123");
+				newDoc.setRegisteredDate(new Date(0));
+				newDoc.setRegisteredDescription("");
+				newDoc.setRegisteredBy(getDummyDocumentRB());
+				newDoc.setEntityDocumentState(getDummyDocumentState());
 				newDoc.setDocumentPackage(dp);
-				edService.save(newDoc);
+				edService.add(newDoc);
 			}
 		}
 	}
 	
 	private DocumentPackageState getDummyPackageState() {
-		DocumentPackageState result = dpStateService.findByName("Dummy State");
+		DocumentPackageState result = dpStateService.getByName("Dummy State");
 		if(result == null) {
-			result = new DocumentPackageState("Dummy State");
-			dpStateService.save(result);
+			result = new DocumentPackageState();
+			result.setVersion(1);
+			result.setName("Dummy State");
+			dpStateService.add(result);
 		}
 		
 		return result;
 	}
 	
 	private DocumentPackageType getDummyPackageType() {
-		DocumentPackageType result = dpTypeService.findByName("Dummy Type");
+		DocumentPackageType result = dpTypeService.getByName("Dummy Type");
 		if(result == null) {
-			result = new DocumentPackageType("Dummy Type");
-			dpTypeService.save(result);
+			result = new DocumentPackageType();
+			result.setVersion(1);
+			result.setName("Dummy Type");
+			dpTypeService.add(result);
 		}
 		
 		return result;
 	}
 	
+	
 	private EntityDocumentState getDummyDocumentState() {
-		EntityDocumentState result = edStateService.findByName("Dummy State");
+		EntityDocumentState result = edStateService.getByName("Dummy State");
 		if(result == null) {
-			result = new EntityDocumentState("Dummy State");
-			edStateService.save(result);
+			result = new EntityDocumentState();
+			result.setVersion(1);
+			result.setName("Dummy State");
+			edStateService.add(result);
 		}
 		
 		return result;
 	}
 	
 	private EntityDocumentRegisteredBy getDummyDocumentRB() {
-		EntityDocumentRegisteredBy result = edRBService.findByName("Dummy RB");
+		EntityDocumentRegisteredBy result = edRBService.getByName("Dummy RB");
 		if(result == null) {
-			result = new EntityDocumentRegisteredBy("Dummy RB");
-			edRBService.save(result);
+			result = new EntityDocumentRegisteredBy();
+			result.setVersion(1);
+			result.setName("Dummy RB");
+			edRBService.add(result);
 		}
 		
 		return result;
 	}
-	*/
 
 }

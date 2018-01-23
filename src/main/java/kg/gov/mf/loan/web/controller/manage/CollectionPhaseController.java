@@ -2,7 +2,9 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -16,12 +18,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
 import kg.gov.mf.loan.manage.model.collection.CollectionProcedure;
+import kg.gov.mf.loan.manage.model.collection.PhaseDetails;
 import kg.gov.mf.loan.manage.model.collection.PhaseStatus;
 import kg.gov.mf.loan.manage.model.collection.PhaseType;
+import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
 import kg.gov.mf.loan.manage.service.collection.CollectionProcedureService;
 import kg.gov.mf.loan.manage.service.collection.PhaseStatusService;
 import kg.gov.mf.loan.manage.service.collection.PhaseTypeService;
+import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.web.util.Utils;
 
 @Controller
@@ -38,6 +43,9 @@ public class CollectionPhaseController {
 	
 	@Autowired
 	PhaseTypeService typeService;
+	
+	@Autowired
+	LoanService loanService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -56,7 +64,9 @@ public class CollectionPhaseController {
 		model.addAttribute("procId", procId);
 		
 		CollectionPhase phase = phaseService.getById(phaseId);
+		PhaseDetails phaseDetails = phase.getPhaseDetails();
 		model.addAttribute("phase", phase);
+		model.addAttribute("phaseDetails", phaseDetails);
 		
 		model.addAttribute("events", phase.getCollectionEvents());
 		
@@ -72,15 +82,20 @@ public class CollectionPhaseController {
 	{
 		model.addAttribute("debtorId", debtorId);
 		model.addAttribute("procId", procId);
+		model.addAttribute("tLoans", loanService.list());
 		
 		if(phaseId == 0)
 		{
 			model.addAttribute("phase", new CollectionPhase());
+			model.addAttribute("phaseDetails", new PhaseDetails());
 		}
 			
 		if(phaseId > 0)
 		{
-			model.addAttribute("phase", phaseService.getById(phaseId));
+			CollectionPhase phase = phaseService.getById(phaseId);
+			PhaseDetails phaseDetails = phase.getPhaseDetails();
+			model.addAttribute("phase", phase);
+			model.addAttribute("phaseDetails", phaseDetails);
 		}
 		
 		model.addAttribute("statuses", statusService.list());
@@ -91,6 +106,7 @@ public class CollectionPhaseController {
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/save"}, method=RequestMethod.POST)
     public String saveCollateralItem(CollectionPhase phase, 
+    		PhaseDetails phaseDetails,
     		@PathVariable("debtorId")Long debtorId,
     		@PathVariable("procId")Long procId,
     		ModelMap model)
@@ -100,10 +116,30 @@ public class CollectionPhaseController {
 		
 		if(phase.getId() == 0)
 		{
+			Set<Loan> loans = new HashSet<Loan>();
+			for (Loan loan : phase.getLoans()) {
+				loans.add(loanService.getById(loan.getId()));
+			}
+			phase.setLoans(loans);
+			for (Loan loan : loans) {
+				loan.setCollectionPhase(phase);
+			}
+			phase.setPhaseDetails(phaseDetails);
+			phaseDetails.setCollectionPhase(phase);
 			phaseService.add(phase);
 		}
 		else
 		{
+			Set<Loan> loans = new HashSet<Loan>();
+			for (Loan loan : phase.getLoans()) {
+				loans.add(loanService.getById(loan.getId()));
+			}
+			phase.setLoans(loans);
+			for (Loan loan : loans) {
+				loan.setCollectionPhase(phase);
+			}
+			phase.setPhaseDetails(phaseDetails);
+			phaseDetails.setCollectionPhase(phase);
 			phaseService.update(phase);
 		}
 			

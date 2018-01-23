@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import kg.gov.mf.loan.manage.model.collection.CollectionEvent;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
+import kg.gov.mf.loan.manage.model.collection.EventDetails;
 import kg.gov.mf.loan.manage.model.collection.EventStatus;
 import kg.gov.mf.loan.manage.model.collection.EventType;
 import kg.gov.mf.loan.manage.service.collection.CollectionEventService;
@@ -60,11 +61,16 @@ public class CollectionEventController {
 		if(eventId == 0)
 		{
 			model.addAttribute("event", new CollectionEvent());
+			model.addAttribute("eventDetails", new EventDetails());
 		}
 			
 		if(eventId > 0)
 		{
-			model.addAttribute("event", eventService.getById(eventId));
+			
+			CollectionEvent event = eventService.getById(eventId);
+			EventDetails eventDetails = event.getEventDetails();
+			model.addAttribute("event", event);
+			model.addAttribute("eventDetails", eventDetails);
 		}
 		
 		model.addAttribute("statuses", statusService.list());
@@ -75,6 +81,7 @@ public class CollectionEventController {
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/collectionevent/save"}, method=RequestMethod.POST)
     public String saveCollectionEvent(CollectionEvent event, 
+    		EventDetails eventDetails,
     		@PathVariable("debtorId")Long debtorId,
     		@PathVariable("procId")Long procId,
     		@PathVariable("phaseId")Long phaseId,
@@ -85,10 +92,14 @@ public class CollectionEventController {
 		
 		if(event.getId() == 0)
 		{
+			event.setEventDetails(eventDetails);
+			eventDetails.setCollectionEvent(event);
 			eventService.add(event);
 		}
 		else
 		{
+			event.setEventDetails(eventDetails);
+			eventDetails.setCollectionEvent(event);
 			eventService.update(event);
 		}
 			

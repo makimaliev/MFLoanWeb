@@ -90,9 +90,12 @@ public class OrderDocumentPackageController {
 		oDP.setCreditOrder(creditOrder);
 		
 		if(oDP.getId() == 0)
+		{
 			oDPService.add(oDP);
 			//add this document package to all entities under this credit
-			//addToEntities(creditOrder, oDP, newODP);
+			//addToEntities(creditOrder, oDP);
+		}
+			
 		else
 			oDPService.update(oDP);
 			//updateInEntities(creditOrder, oDP);
@@ -111,22 +114,22 @@ public class OrderDocumentPackageController {
     }
 	
 	/*
-	private void addToEntities(CreditOrder creditOrder, OrderDocumentPackage oDP, OrderDocumentPackage newODP) {
-		Set<AppliedEntityList> lists = creditOrder.getAppliedEntityList();
+	private void addToEntities(CreditOrder creditOrder, OrderDocumentPackage oDP) {
+		Set<AppliedEntityList> lists = creditOrder.getAppliedEntityLists();
 		for (AppliedEntityList list : lists) {
-			Set<AppliedEntity> entities = list.getAppliedEntity();
+			Set<AppliedEntity> entities = list.getAppliedEntities();
 			for (AppliedEntity entity : entities) {
-				DocumentPackage dp = new DocumentPackage(oDP.getName(), 
-						new Date(0), 
-						new Date(0), 
-						0.0, 
-						0.0, 
-						0.0, 
-						getDummyState(), 
-						getDummyType());
-				dp.setOrderDocumentPackageId(newODP.getId());
+				DocumentPackage dp = new DocumentPackage();
+				dp.setName(oDP.getName());
+				dp.setCompletedDate(new Date(0));
+				dp.setApprovedDate(new Date(0));
+				dp.setCompletedRatio(0.0);
+				dp.setApprovedRatio(0.0);
+				dp.setRegisteredRatio(0.0);
+				dp.setDocumentPackageState(getDummyState());
+				dp.setDocumentPackageType(getDummyType());
 				dp.setAppliedEntity(entity);
-				dpService.save(dp);
+				dpService.add(dp);
 			}
 		}
 	}
@@ -147,20 +150,24 @@ public class OrderDocumentPackageController {
 	}
 	
 	private DocumentPackageState getDummyState() {
-		DocumentPackageState result = dpStateService.findByName("Dummy State");
+		DocumentPackageState result = dpStateService.getByName("Dummy State");
 		if(result == null) {
-			result = new DocumentPackageState("Dummy State");
-			dpStateService.save(result);
+			result = new DocumentPackageState();
+			result.setVersion(1);
+			result.setName("Dummy State");
+			dpStateService.add(result);
 		}
 		
 		return result;
 	}
 	
 	private DocumentPackageType getDummyType() {
-		DocumentPackageType result = dpTypeService.findByName("Dummy Type");
+		DocumentPackageType result = dpTypeService.getByName("Dummy Type");
 		if(result == null) {
-			result = new DocumentPackageType("Dummy Type");
-			dpTypeService.save(result);
+			result = new DocumentPackageType();
+			result.setVersion(1);
+			result.setName("Dummy Type");
+			dpTypeService.add(result);
 		}
 		
 		return result;
