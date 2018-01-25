@@ -34,28 +34,39 @@ public class WriteOffController {
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/wo/save"})
-    public String saveWriteOff(WriteOff wo, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
-    {
-		Loan loan = loanService.findById(loanId);
-		if(wo != null && wo.getId() == 0)
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/wo/{woId}/save", method=RequestMethod.GET)
+	public String formCreditTerm(ModelMap model, 
+			@PathVariable("debtorId")Long debtorId, 
+			@PathVariable("loanId")Long loanId,
+			@PathVariable("woId")Long woId)
+	{
+		
+		if(woId == 0)
 		{
-			WriteOff newWO = new WriteOff(
-					wo.getDate(), 
-					wo.getTotalAmount(),
-					wo.getPrincipal(),
-					wo.getInterest(), 
-					wo.getPenalty(),
-					wo.getFee(), 
-					wo.getDescription());
-			newWO.setLoan(loan);
-			woService.save(newWO);
+			model.addAttribute("wo", new WriteOff());
+		}
+			
+		if(woId > 0)
+		{
+			model.addAttribute("wo", woService.getById(woId));
 		}
 		
-		if(wo != null && wo.getId() > 0)
-		{
+        model.addAttribute("debtorId", debtorId);
+        model.addAttribute("loanId", loanId);
+			
+		return "/manage/debtor/loan/wo/save";
+	}
+	
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/wo/save"}, method=RequestMethod.POST)
+    public String saveWriteOff(WriteOff wo, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
+    {
+		Loan loan = loanService.getById(loanId);
+		wo.setLoan(loan);
+		
+		if(wo.getId() == 0)
+			woService.add(wo);
+		else
 			woService.update(wo);
-		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_1";
     }
@@ -63,7 +74,7 @@ public class WriteOffController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/wo/delete", method=RequestMethod.POST)
     public String deleteWriteOff(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			woService.deleteById(id);
+			woService.remove(woService.getById(id));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_1";
     }
 	

@@ -194,19 +194,11 @@
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="rbId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="rb : ${rBs}">
-	                                                     <option th:if="${ed.id > 0 and rb.name == ed.registeredBy.name}"
-										               th:value="${rb.id}"
-										               th:text="${rb.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${ed.id > 0 and rb.name == ed.registeredBy.name}"
-										               th:value="${rb.id}"
-										               th:text="${rb.name}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
+	                                               		<select class="form-control" th:field="${ed.registeredBy.id}"  id="registeredBy">
+														    <option value="0">Select...</option>
+														    <option th:each="rb : ${rBs}" th:value="${rb.id}" th:text="${rb.name}"></option>
+														</select>
+	                                               </div>
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
@@ -226,19 +218,11 @@
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="stateId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="state : ${states}">
-	                                                     <option th:if="${ed.id > 0 and state.name == ed.entityDocumentState.name}"
-										               th:value="${state.id}"
-										               th:text="${state.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${ed.id > 0 and state.name == ed.entityDocumentState.name}"
-										               th:value="${state.id}"
-										               th:text="${state.name}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
+	                                               		<select class="form-control" th:field="${ed.entityDocumentState.id}"  id="entityDocumentState">
+														    <option value="0">Select...</option>
+														    <option th:each="state : ${states}" th:value="${state.id}" th:text="${state.name}"></option>
+														</select>
+	                                               </div>
 	                                         </div>
 	                                     </div>
 	                             	</div>

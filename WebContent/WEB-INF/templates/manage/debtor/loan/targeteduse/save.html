@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>MFLoan | Credit Orders</title>
+<div th:replace="fragments/header :: header-css" />
+<link th:href="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}" rel="stylesheet" type="text/css" />
+</head>
+<body
+	class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
+	<!-- BEGIN HEADER -->
+	<div th:replace="layout :: header-top" />
+	<!-- END HEADER -->
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div th:replace="layout :: page-container-sidebar" />
+		<!-- END SIDEBAR -->
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<!-- BEGIN CONTENT BODY -->
+			<div class="page-content">
+				<!-- BEGIN PAGE HEADER-->
+				<h1 class="page-title">
+					Targeted Use
+					<small>create, view, edit, delete credit orders and their types, states </small>
+				</h1>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li><i class="icon-home"></i> <a th:href="@{/}">Home</a> <i class="fa fa-angle-right"></i></li>
+						<li><a th:href="@{/manage/debtor/list}">Debtors</a> <i class="fa fa-angle-right"></i></li>
+						<li><a th:href="@{/manage/debtor/__${debtorId}__/view}">Debtor</a> <i class="fa fa-angle-right"></i></li>
+						<li><a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/view}">Debtor</a> <i class="fa fa-angle-right"></i></li>
+						<li><span>Save Targeted Use</span></li>
+					</ul>
+					<div class="page-toolbar">
+						<div class="btn-group pull-right">
+							<button type="button" class="btn btn-fit-height grey-salt dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
+								Actions <i class="fa fa-angle-down"></i>
+							</button>
+							<ul class="dropdown-menu pull-right" role="menu">
+								<li><a href="#"> <i class="icon-bell"></i> Action </a></li>
+								<li><a href="#"> <i class="icon-shield"></i> Another action </a></li>
+								<li><a href="#"> <i class="icon-user"></i> Something else here </a></li>
+								<li class="divider"></li>
+								<li><a href="#"> <i class="icon-bag"></i> Separated link </a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- END PAGE HEADER-->
+
+				<div class="row">
+					<div class="col-md-12">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-green"></i> 
+									<span class="caption-subject font-green sbold uppercase">Save Targeted Use</span>
+								</div>
+							</div>
+							
+							<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/targeteduse/save}" id="form_sample_2" class="form-horizontal" method="post">
+								<div class="portlet-body">
+	                                     <div class="form-body">
+	                                         <div class="alert alert-danger display-hide">
+	                                             <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
+	                                         </div>
+	                                         
+	                                         <div class="form-group   margin-top-20">
+	                                             <label class="control-label col-md-3">Targeted Use Result Id
+	                                                 <span class="required"> * </span>
+	                                             </label>
+	                                             <div class="col-md-4">
+	                                             	<input hidden="true" type="text" id="id" name="id" th:value="${tu.id}"/>
+	                                                 <div class="input-icon right">
+	                                                     <i class="fa"></i>
+	                                                     <input type="text" class="form-control" name="targetedUseResultId" th:value="${tu.targetedUseResultId}"/> 
+	                                                 </div>
+	                                             </div>
+	                                         </div>
+	                                         
+	                                         <div class="form-group">
+	                                             <label class="control-label col-md-3">Created by id
+	                                                 <span class="required"> * </span>
+	                                             </label>
+	                                             <div class="col-md-4">
+	                                                 <div class="input-icon right">
+	                                                     <i class="fa"></i>
+	                                                     <input type="text" class="form-control" name="createdById" th:value="${tu.createdById}"/> 
+	                                                 </div>
+	                                             </div>
+	                                         </div>
+	                                         
+	                                         <div class="form-group">
+	                                             <label class="control-label col-md-3">Created Date</label>
+	                                             <div class="col-md-4">
+	                                                 <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+	                                                     <input type="text" class="form-control" name="createdDate" th:value="${tu.createdDate}"/>
+	                                                     <span class="input-group-btn">
+	                                                         <button class="btn default" type="button">
+	                                                             <i class="fa fa-calendar"></i>
+	                                                         </button>
+	                                                     </span>
+	                                                 </div>
+	                                                 <span class="help-block"> select a date </span>
+	                                             </div>
+	                                         </div>
+	                                         
+	                                         <div class="form-group">
+	                                             <label class="control-label col-md-3">Approved by id
+	                                                 <span class="required"> * </span>
+	                                             </label>
+	                                             <div class="col-md-4">
+	                                                 <div class="input-icon right">
+	                                                     <i class="fa"></i>
+	                                                     <input type="text" class="form-control" name="approvedById" th:value="${tu.approvedById}"/> 
+	                                                 </div>
+	                                             </div>
+	                                         </div>
+	                                         
+	                                         <div class="form-group">
+	                                             <label class="control-label col-md-3">Approved Date</label>
+	                                             <div class="col-md-4">
+	                                                 <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+	                                                     <input type="text" class="form-control" name="approvedDate" th:value="${tu.approvedDate}"/>
+	                                                     <span class="input-group-btn">
+	                                                         <button class="btn default" type="button">
+	                                                             <i class="fa fa-calendar"></i>
+	                                                         </button>
+	                                                     </span>
+	                                                 </div>
+	                                                 <span class="help-block"> select a date </span>
+	                                             </div>
+	                                         </div>
+	                                         
+	                                         <div class="form-group">
+	                                             <label class="control-label col-md-3">Checked by id
+	                                                 <span class="required"> * </span>
+	                                             </label>
+	                                             <div class="col-md-4">
+	                                                 <div class="input-icon right">
+	                                                     <i class="fa"></i>
+	                                                     <input type="text" class="form-control" name="checkedById" th:value="${tu.checkedById}"/> 
+	                                                 </div>
+	                                             </div>
+	                                         </div>
+	                                         
+	                                         <div class="form-group">
+	                                             <label class="control-label col-md-3">Checked Date</label>
+	                                             <div class="col-md-4">
+	                                                 <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+	                                                     <input type="text" class="form-control" name="checkedDate" th:value="${tu.checkedDate}"/>
+	                                                     <span class="input-group-btn">
+	                                                         <button class="btn default" type="button">
+	                                                             <i class="fa fa-calendar"></i>
+	                                                         </button>
+	                                                     </span>
+	                                                 </div>
+	                                                 <span class="help-block"> select a date </span>
+	                                             </div>
+	                                         </div>
+	                                         
+	                                         <div class="form-group">
+	                                             <label class="control-label col-md-3">Attachment id
+	                                                 <span class="required"> * </span>
+	                                             </label>
+	                                             <div class="col-md-4">
+	                                                 <div class="input-icon right">
+	                                                     <i class="fa"></i>
+	                                                     <input type="text" class="form-control" name="attachmentId" th:value="${tu.attachmentId}"/> 
+	                                                 </div>
+	                                             </div>
+	                                         </div>
+	                                         
+	                                     </div>
+	                             	</div>
+							<div class="modal-footer">
+								<button type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
+								<button type="submit" class="btn green">Save</button>
+							</div>
+							</form>
+						</div>
+						<!-- END BORDERED TABLE PORTLET-->
+					</div>
+				</div>
+			</div>
+			<!-- END CONTENT BODY -->
+		</div>
+		<!-- END CONTENT -->
+		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
+	</div>
+	<!-- END CONTAINER -->
+	<div th:replace="layout :: footer" />
+	<div th:replace="fragments/footer :: footer-js" />
+	<script th:src="@{/assets/pages/scripts/ui-modals.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/pages/scripts/form-validation.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/pages/scripts/components-date-time-pickers.min.js}" type="text/javascript"></script>
+</body>
+</html>

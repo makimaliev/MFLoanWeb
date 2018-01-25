@@ -77,6 +77,7 @@ public class DatabaseDrivenMessageSource extends AbstractMessageSource implement
             Map<String, String> v = new HashMap<>();
             v.put("en", text.getEng());
             v.put("ru", text.getRus());
+            v.put("kg", text.getKgz());
             m.put(text.getMessageKey(), v);
         }
         return m;

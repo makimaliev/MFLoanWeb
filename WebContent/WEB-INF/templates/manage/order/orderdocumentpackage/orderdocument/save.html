@@ -84,19 +84,11 @@
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="typeId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="type : ${types}">
-	                                                     <option th:if="${doc.id > 0 and type.name == doc.orderDocumentType.name}"
-										               th:value="${type.id}"
-										               th:text="${type.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${doc.id > 0 and type.name == doc.orderDocumentType.name}"
-										               th:value="${type.id}"
-										               th:text="${type.name}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
+	                                               		<select class="form-control" th:field="${doc.orderDocumentType.id}"  id="orderDocumentType">
+														    <option value="0">Select...</option>
+														    <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
+														</select>
+	                                               </div>
 	                                         </div>
 	                                     </div>
 	                             	</div>

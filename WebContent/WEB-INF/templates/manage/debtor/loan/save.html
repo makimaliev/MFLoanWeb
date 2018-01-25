@@ -112,39 +112,22 @@
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="currencyId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="currency : ${currencies}">
-	                                                     <option th:if="${loan.id > 0 and currency.name == loan.currency.name}"
-										               th:value="${currency.id}"
-										               th:text="${currency.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${loan.id > 0 and currency.name == loan.currency.name}"
-										               th:value="${currency.id}"
-										               th:text="${currency.name}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
-	                                         </div>
-	                                         
+	                                              		<select class="form-control" th:field="${loan.currency.id}"  id="currency">
+													    <option value="0">Select...</option>
+													    <option th:each="currency : ${currencies}" th:value="${currency.id}" th:text="${currency.name}"></option>
+													</select>
+	                                              </div>
+	                                          </div>
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Loan type
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="typeId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="type : ${types}">
-	                                                     <option th:if="${loan.id > 0 and type.name == loan.loanType.name}"
-										               th:value="${type.id}"
-										               th:text="${type.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${loan.id > 0 and type.name == loan.loanType.name}"
-										               th:value="${type.id}"
-										               th:text="${type.name}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
+	                                              		<select class="form-control" th:field="${loan.loanType.id}"  id="loanType">
+													    <option value="0">Select...</option>
+													    <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
+													</select>
+	                                              </div>
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
@@ -152,19 +135,11 @@
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="stateId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="state : ${states}">
-	                                                     <option th:if="${loan.id > 0 and state.name == loan.loanState.name}"
-										               th:value="${state.id}"
-										               th:text="${state.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${loan.id > 0 and state.name == loan.loanState.name}"
-										               th:value="${state.id}"
-										               th:text="${state.name}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
+	                                              		<select class="form-control" th:field="${loan.loanState.id}"  id="loanState">
+													    <option value="0">Select...</option>
+													    <option th:each="state : ${states}" th:value="${state.id}" th:text="${state.name}"></option>
+													</select>
+	                                              </div>
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
@@ -183,18 +158,11 @@
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="parentLoanId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="tLoan : ${tLoans}">
-	                                                     <option th:if="${loan.id > 0 and loan.parentLoan!=null and tLoan.id == loan.parentLoan.id}"
-										               th:value="${tLoan.id}"
-										               th:text="${tLoan.regNumber}" selected="selected">Category 1</option>
-										        <option th:unless="${loan.id > 0 and loan.parentLoan!=null and tLoan.id == loan.parentLoan.id}"
-										               th:value="${tLoan.id}"
-										              th:text="${tLoan.regNumber}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
+	                                              		<select class="form-control" th:field="${loan.parentLoan.id}"  id="parentLoan">
+													    <option value="0">Select...</option>
+													    <option th:each="tLoan : ${tLoans}" th:value="${tLoan.id}" th:text="${tLoan.regNumber}"></option>
+													</select>
+	                                              </div>
 	                                         </div>
 	                                          
 	                                          <div class="form-group">
@@ -202,36 +170,12 @@
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="creditOrderId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="order : ${orders}">
-	                                                     <option th:if="${loan.id > 0 and order.id == loan.creditOrder.id}"
-										               th:value="${order.id}"
-										               th:text="${order.regNumber} + ' ' + ${order.regDate}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${loan.id > 0 and  order.id == loan.creditOrder.id}"
-										               th:value="${order.id}"
-										              th:text="${order.regNumber} + ' ' + ${order.regDate}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
+	                                              		<select class="form-control" th:field="${loan.creditOrder.id}"  id="creditOrder">
+													    <option value="0">Select...</option>
+													    <option th:each="order : ${orders}" th:value="${order.id}" th:text="${order.regNumber} + ' ' + ${order.regDate}"></option>
+													</select>
+	                                              </div>
 	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">Collateral Agreements
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="agreementIdList" multiple="multiple">
-	                                                     <option th:each="agreement : ${agreements}"
-										               th:value="${agreement.id}"
-										               th:text="${agreement.agreementNumber}"
-										               th:selected="${loan.collateralAgreements.contains(agreement)}">Category 1
-										               </option>
-	                                                 </select>
-	                                             </div>
-	                                         </div>
-	                                          
 	                                     </div>
 	                             	</div>
 							<div class="modal-footer">

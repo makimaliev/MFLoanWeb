@@ -70,10 +70,10 @@ public class AppliedEntityController {
 	@RequestMapping(value = { "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/view"})
     public String viewEntity(ModelMap model, @PathVariable("orderId")Long orderId, @PathVariable("listId")Long listId, @PathVariable("entityId")Long entityId) {
 
-		AppliedEntity entity = entityService.findById(entityId);
+		AppliedEntity entity = entityService.getById(entityId);
         model.addAttribute("entity", entity);
         
-        model.addAttribute("dPackages", entity.getDocumentPackage());
+        model.addAttribute("dPackages", entity.getDocumentPackages());
         
         model.addAttribute("orderId", orderId);
         model.addAttribute("listId", listId);
@@ -93,11 +93,11 @@ public class AppliedEntityController {
 		
 		if(entityId > 0)
 		{
-			model.addAttribute("entity", entityService.findById(entityId));
+			model.addAttribute("entity", entityService.getById(entityId));
 		}
 		model.addAttribute("orderId", orderId);
 		model.addAttribute("listId", listId);
-		List<AppliedEntityState> states = entityStateService.findAll();
+		List<AppliedEntityState> states = entityStateService.list();
         model.addAttribute("states", states);
 			
 		return "/manage/order/entitylist/entity/save";
@@ -106,43 +106,35 @@ public class AppliedEntityController {
 	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/save", method=RequestMethod.POST)
 	public String saveAppliedEntity(
 			AppliedEntity entity, 
-			long stateId, 
 			@PathVariable("orderId")Long orderId, 
 			@PathVariable("listId")Long listId, 
 			ModelMap model)
 	{
-		AppliedEntityList list = listService.findById(listId);
+		AppliedEntityList list = listService.getById(listId);
+		entity.setAppliedEntityList(list);
 		
-		if(entity != null && entity.getId() == 0)
+		if(entity.getId() == 0)
 		{
-			AppliedEntity newEntity = new AppliedEntity(entity.getName(), entityStateService.findById(stateId));
-			newEntity.setAppliedEntityList(list);
-			entityService.save(newEntity);
-			
-			addPackagesAndDocuments(orderId, newEntity);
-			
+			entityService.add(entity);
+			addPackagesAndDocuments(orderId, entity);
 		}
-			
-		if(entity != null && entity.getId() > 0)
-		{
-			entity.setAppliedEntityState(entityStateService.findById(stateId));
+		else
 			entityService.update(entity);
-		}
 			
-			return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/view";
+		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/view";
 	}
 	
 	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/delete", method=RequestMethod.POST)
     public String deleteAppliedEntity(long id, @PathVariable("orderId")Long orderId, @PathVariable("listId")Long listId) {
 		if(id > 0)
-			entityService.deleteById(id);
+			entityService.remove(entityService.getById(id));
 		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/view";
     }
 	
 	@RequestMapping(value = { "/manage/order/entitylist/entity/state/list" }, method = RequestMethod.GET)
     public String listAppliedEntityStates(ModelMap model) {
  
-		List<AppliedEntityState> states = entityStateService.findAll();
+		List<AppliedEntityState> states = entityStateService.list();
 		model.addAttribute("states", states);
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -159,17 +151,16 @@ public class AppliedEntityController {
 		
 		if(stateId > 0)
 		{
-			model.addAttribute("eState", entityStateService.findById(stateId));
+			model.addAttribute("eState", entityStateService.getById(stateId));
 		}
 		return "/manage/order/entitylist/entity/state/save";
 	}
 	
 	@RequestMapping(value="/manage/order/entitylist/entity/state/save", method=RequestMethod.POST)
     public String saveAppliedEntityState(AppliedEntityState state, ModelMap model) {
-		if(state != null && state.getId() == 0)
-			entityStateService.save(new AppliedEntityState(state.getName()));
-		
-		if(state != null && state.getId() > 0)
+		if(state.getId() == 0)
+			entityStateService.add(state);
+		else
 			entityStateService.update(state);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -179,81 +170,91 @@ public class AppliedEntityController {
 	@RequestMapping(value="/manage/order/entitylist/entity/state/delete", method=RequestMethod.POST)
     public String deleteAppliedEntityState(long id) {
 		if(id > 0)
-			entityStateService.deleteById(id);
+			entityStateService.remove(entityStateService.getById(id));
 		return "redirect:" + "/manage/order/entitylist/entity/state/list";
     }
 	
-	private void addPackagesAndDocuments(Long orderId, AppliedEntity newEntity) {
-		Set<OrderDocumentPackage> oDPs = orderService.findById(orderId).getOrderDocumentPackage();
-		for (OrderDocumentPackage orderDocumentPackage : oDPs) {
-			DocumentPackage dp = new DocumentPackage(orderDocumentPackage.getName(), 
-					new Date(0), 
-					new Date(0), 
-					0.0, 
-					0.0, 
-					0.0, 
-					getDummyPackageState(), 
-					getDummyPackageType());
-			dp.setOrderDocumentPackageId(orderDocumentPackage.getId());
-			dp.setAppliedEntity(newEntity);
-			dpService.save(dp);
+	private void addPackagesAndDocuments(Long orderId, AppliedEntity entity) {
+		Set<OrderDocumentPackage> oDPs = orderService.getById(orderId).getOrderDocumentPackages();
+		for (OrderDocumentPackage odp : oDPs) {
+			DocumentPackage dp = new DocumentPackage();
+			dp.setName(odp.getName());
+			dp.setCompletedDate(new Date(0));
+			dp.setApprovedDate(new Date(0));
+			dp.setCompletedRatio(0.0);
+			dp.setApprovedRatio(0.0);
+			dp.setRegisteredRatio(0.0);
+			dp.setDocumentPackageState(getDummyPackageState());
+			dp.setDocumentPackageType(getDummyPackageType());
+			dp.setOrderDocumentPackageId(odp.getId());
+			dp.setAppliedEntity(entity);
+			dpService.add(dp);
 			
-			Set<OrderDocument> docs = orderDocumentPackage.getOrderDocument();
-			for (OrderDocument orderDocument : docs) {
-				EntityDocument newDoc = new EntityDocument(
-						orderDocument.getName(), 
-						0L, 
-						new Date(0), 
-						"", 
-						0L, 
-						new Date(0), 
-						"", 
-						"123", 
-						new Date(0), 
-						"", 
-						getDummyDocumentRB(), 
-						getDummyDocumentState());
+			Set<OrderDocument> docs = odp.getOrderDocuments();
+			for (OrderDocument od : docs) {
+				EntityDocument newDoc = new EntityDocument();
+				newDoc.setName(od.getName());
+				newDoc.setCompletedBy(0L);
+				newDoc.setCompletedDate(new Date(0));
+				newDoc.setCompletedDescription("");
+				newDoc.setApprovedBy(0L);
+				newDoc.setApprovedDate(new Date(0));
+				newDoc.setApprovedDescription("");
+				newDoc.setRegisteredNumber("123");
+				newDoc.setRegisteredDate(new Date(0));
+				newDoc.setRegisteredDescription("");
+				newDoc.setRegisteredBy(getDummyDocumentRB());
+				newDoc.setEntityDocumentState(getDummyDocumentState());
 				newDoc.setDocumentPackage(dp);
-				edService.save(newDoc);
+				edService.add(newDoc);
 			}
 		}
 	}
 	
 	private DocumentPackageState getDummyPackageState() {
-		DocumentPackageState result = dpStateService.findByName("Dummy State");
+		DocumentPackageState result = dpStateService.getByName("Dummy State");
 		if(result == null) {
-			result = new DocumentPackageState("Dummy State");
-			dpStateService.save(result);
+			result = new DocumentPackageState();
+			result.setVersion(1);
+			result.setName("Dummy State");
+			dpStateService.add(result);
 		}
 		
 		return result;
 	}
 	
 	private DocumentPackageType getDummyPackageType() {
-		DocumentPackageType result = dpTypeService.findByName("Dummy Type");
+		DocumentPackageType result = dpTypeService.getByName("Dummy Type");
 		if(result == null) {
-			result = new DocumentPackageType("Dummy Type");
-			dpTypeService.save(result);
+			result = new DocumentPackageType();
+			result.setVersion(1);
+			result.setName("Dummy Type");
+			dpTypeService.add(result);
 		}
 		
 		return result;
 	}
 	
+	
 	private EntityDocumentState getDummyDocumentState() {
-		EntityDocumentState result = edStateService.findByName("Dummy State");
+		EntityDocumentState result = edStateService.getByName("Dummy State");
 		if(result == null) {
-			result = new EntityDocumentState("Dummy State");
-			edStateService.save(result);
+			result = new EntityDocumentState();
+			result.setVersion(1);
+			result.setName("Dummy State");
+			edStateService.add(result);
 		}
 		
 		return result;
 	}
 	
 	private EntityDocumentRegisteredBy getDummyDocumentRB() {
-		EntityDocumentRegisteredBy result = edRBService.findByName("Dummy RB");
+		EntityDocumentRegisteredBy result = edRBService.getByName("Dummy RB");
 		if(result == null) {
-			result = new EntityDocumentRegisteredBy("Dummy RB");
-			edRBService.save(result);
+			result = new EntityDocumentRegisteredBy();
+			result.setVersion(1);
+			result.setName("Dummy RB");
+			edRBService.add(result);
 		}
 		
 		return result;

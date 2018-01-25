@@ -66,7 +66,7 @@
 	                                         <div class="alert alert-danger display-hide">
 	                                             <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
 	                                         </div>
-	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group  margin-top-20">
 	                                             <label class="control-label col-md-3">Description
 	                                                 <span class="required"> * </span>
@@ -80,26 +80,20 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Fund
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="fundId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="fund : ${funds}">
-	                                                     <option th:if="${term.id > 0 and fund.name == term.fund.name}"
-										               th:value="${fund.id}"
-										               th:text="${fund.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${term.id > 0 and fund.name == term.fund.name}"
-										               th:value="${fund.id}"
-										               th:text="${fund.name}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
+	                                               		<select class="form-control" th:field="${term.fund.id}"  id="fund">
+														    <option value="0">Select...</option>
+														    <option th:each="fund : ${funds}" th:value="${fund.id}" th:text="${fund.name}"></option>
+														</select>
+	                                               </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->	                                         
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Amount
 	                                                 <span class="required"> * </span>
@@ -112,26 +106,20 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Currency
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="currId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="curr : ${currencies}">
-	                                                     <option th:if="${term.id > 0 and curr.name == term.currency.name}"
-										               th:value="${curr.id}"
-										               th:text="${curr.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${term.id > 0 and curr.name == term.currency.name}"
-										               th:value="${curr.id}"
-										               th:text="${curr.name}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
+	                                               		<select class="form-control" th:field="${term.currency.id}"  id="currency">
+														    <option value="0">Select...</option>
+														    <option th:each="curr : ${currencies}" th:value="${curr.id}" th:text="${curr.name}"></option>
+														</select>
+	                                               </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                          <div class="form-group">
 	                                             <label class="control-label col-md-3">Frequency Quantity
 	                                                 <span class="required"> * </span>
@@ -144,26 +132,20 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Frequency type
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="freqTypeId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="freq : ${freqTypes}">
-	                                                     <option th:if="${term.id > 0 and freq.name == term.frequencyType.name}"
-										               th:value="${freq.id}"
-										               th:text="${freq.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${term.id > 0 and freq.name == term.frequencyType.name}"
-										               th:value="${freq.id}"
-										               th:text="${freq.name}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
+	                                               		<select class="form-control" th:field="${term.frequencyType.id}"  id="frequencyType">
+														    <option value="0">Select...</option>
+														    <option th:each="freq : ${freqTypes}" th:value="${freq.id}" th:text="${freq.name}"></option>
+														</select>
+	                                               </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Installment Quantity
 	                                                 <span class="required"> * </span>
@@ -176,6 +158,7 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Installment First Day
 	                                                 <span class="required"> * </span>
@@ -188,6 +171,7 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">First Installment Date</label>
 	                                             <div class="col-md-4">
@@ -203,6 +187,7 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Last Installment Date</label>
 	                                             <div class="col-md-4">
@@ -218,6 +203,7 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Min Days Disb First Inst
 	                                                 <span class="required"> * </span>
@@ -230,6 +216,7 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Max Days Disb First Inst
 	                                                 <span class="required"> * </span>
@@ -242,6 +229,7 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Grace On Principle Payment Inst
 	                                                 <span class="required"> * </span>
@@ -254,6 +242,7 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Grace On Principle Payment Days
 	                                                 <span class="required"> * </span>
@@ -266,6 +255,7 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Grace On Interest Payment Inst
 	                                                 <span class="required"> * </span>
@@ -278,6 +268,7 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Grace On Interest Payment Days
 	                                                 <span class="required"> * </span>
@@ -290,6 +281,7 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Grace On Interest Accr Inst
 	                                                 <span class="required"> * </span>
@@ -302,6 +294,7 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Grace On Interest Accr Days
 	                                                 <span class="required"> * </span>
@@ -314,6 +307,7 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Interest Rate Value
 	                                                 <span class="required"> * </span>
@@ -326,46 +320,33 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Interest Rate Value Per Period
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="ratePeriodId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="period : ${ratePeriods}">
-	                                                     <option th:if="${term.id > 0 and period.name == term.interestRateValuePerPeriod.name}"
-										               th:value="${period.id}"
-										               th:text="${period.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${term.id > 0 and period.name == term.interestRateValuePerPeriod.name}"
-										               th:value="${period.id}"
-										               th:text="${period.name}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
+	                                               		<select class="form-control" th:field="${term.interestRateValuePerPeriod.id}"  id="interestRateValuePerPeriod">
+														    <option value="0">Select...</option>
+														    <option th:each="period : ${ratePeriods}" th:value="${period.id}" th:text="${period.name}"></option>
+														</select>
+	                                               </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Interest Type
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="interestTypeId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="type : ${rateTypes}">
-	                                                     <option th:if="${term.id > 0 and type.name == term.interestType.name}"
-										               th:value="${type.id}"
-										               th:text="${type.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${term.id > 0 and type.name == term.interestType.name}"
-										               th:value="${type.id}"
-										               th:text="${type.name}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
+	                                               		<select class="form-control" th:field="${term.interestType.id}"  id="interestType">
+														    <option value="0">Select...</option>
+														    <option th:each="type : ${rateTypes}" th:value="${type.id}" th:text="${type.name}"></option>
+														</select>
+	                                               </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Penalty On Principle Overdue Rate Value
 	                                                 <span class="required"> * </span>
@@ -378,26 +359,20 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Penalty On Principle Overdue Type
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="popotId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="type : ${rateTypes}">
-	                                                     <option th:if="${term.id > 0 and type.name == term.penaltyOnPrincipleOverdueType.name}"
-										               th:value="${type.id}"
-										               th:text="${type.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${term.id > 0 and type.name == term.penaltyOnPrincipleOverdueType.name}"
-										               th:value="${type.id}"
-										               th:text="${type.name}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
+	                                               		<select class="form-control" th:field="${term.penaltyOnPrincipleOverdueType.id}"  id="penaltyOnPrincipleOverdueType">
+														    <option value="0">Select...</option>
+														    <option th:each="type : ${rateTypes}" th:value="${type.id}" th:text="${type.name}"></option>
+														</select>
+	                                               </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Penalty On Interest Overdue Rate Value
 	                                                 <span class="required"> * </span>
@@ -410,106 +385,72 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Penalty On Interest Overdue Type
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="poiotId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="type : ${rateTypes}">
-	                                                     <option th:if="${term.id > 0 and type.name == term.penaltyOnInterestOverdueType.name}"
-										               th:value="${type.id}"
-										               th:text="${type.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${term.id > 0 and type.name == term.penaltyOnInterestOverdueType.name}"
-										               th:value="${type.id}"
-										               th:text="${type.name}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
+	                                               		<select class="form-control" th:field="${term.penaltyOnInterestOverdueType.id}"  id="penaltyOnInterestOverdueType">
+														    <option value="0">Select...</option>
+														    <option th:each="type : ${rateTypes}" th:value="${type.id}" th:text="${type.name}"></option>
+														</select>
+	                                               </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Days In Year Method
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="diyMethodId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="method : ${daysMethods}">
-	                                                     <option th:if="${term.id > 0 and method.name == term.daysInYearMethod.name}"
-										               th:value="${method.id}"
-										               th:text="${method.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${term.id > 0 and method.name == term.daysInYearMethod.name}"
-										               th:value="${method.id}"
-										               th:text="${method.name}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
+	                                               		<select class="form-control" th:field="${term.daysInYearMethod.id}"  id="daysInYearMethod">
+														    <option value="0">Select...</option>
+														    <option th:each="method : ${daysMethods}" th:value="${method.id}" th:text="${method.name}"></option>
+														</select>
+	                                               </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Days In Month Method
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="dimMethodId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="method : ${daysMethods}">
-	                                                     <option th:if="${term.id > 0 and method.name == term.daysInMonthMethod.name}"
-										               th:value="${method.id}"
-										               th:text="${method.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${term.id > 0 and method.name == term.daysInMonthMethod.name}"
-										               th:value="${method.id}"
-										               th:text="${method.name}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
+	                                               		<select class="form-control" th:field="${term.daysInMonthMethod.id}"  id="daysInMonthMethod">
+														    <option value="0">Select...</option>
+														    <option th:each="method : ${daysMethods}" th:value="${method.id}" th:text="${method.name}"></option>
+														</select>
+	                                               </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Transaction Order
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="txOrderId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="order : ${txOrders}">
-	                                                     <option th:if="${term.id > 0 and order.name == term.transactionOrder.name}"
-										               th:value="${order.id}"
-										               th:text="${order.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${term.id > 0 and order.name == term.transactionOrder.name}"
-										               th:value="${order.id}"
-										               th:text="${order.name}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
+	                                               		<select class="form-control" th:field="${term.transactionOrder.id}"  id="transactionOrder">
+														    <option value="0">Select...</option>
+														    <option th:each="order : ${txOrders}" th:value="${order.id}" th:text="${order.name}"></option>
+														</select>
+	                                               </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Interest Accr Method
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="intAccrId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="method : ${accrMethods}">
-	                                                     <option th:if="${term.id > 0 and method.name == term.interestAccrMethod.name}"
-										               th:value="${method.id}"
-										               th:text="${method.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${term.id > 0 and method.name == term.interestAccrMethod.name}"
-										               th:value="${method.id}"
-										               th:text="${method.name}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
+	                                               		<select class="form-control" th:field="${term.interestAccrMethod.id}"  id="interestAccrMethod">
+														    <option value="0">Select...</option>
+														    <option th:each="method : ${accrMethods}" th:value="${method.id}" th:text="${method.name}"></option>
+														</select>
+	                                               </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Early Repayment Allowed
 	                                                 <span class="required"> * </span>
@@ -522,6 +463,7 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Penalty Limit Percent
 	                                                 <span class="required"> * </span>
@@ -534,6 +476,7 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">Collateral Free
 	                                                 <span class="required"> * </span>

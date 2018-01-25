@@ -66,6 +66,8 @@
 	                                         <div class="alert alert-danger display-hide">
 	                                             <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
 	                                         </div>
+	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group  margin-top-20">
 	                                             <label class="control-label col-md-3">List Number
 	                                                 <span class="required"> * </span>
@@ -78,6 +80,8 @@
 	                                                 </div>
 	                                             </div>
 	                                         </div>
+	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
 	                                             <label class="control-label col-md-3">List Date</label>
 	                                             <div class="col-md-4">
@@ -92,44 +96,33 @@
 	                                                 <span class="help-block"> select a date </span>
 	                                             </div>
 	                                         </div>
+	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">Applied Entity List State
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="stateId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="state : ${states}">
-	                                                     <option th:if="${entityList.id > 0 and state.name == entityList.appliedEntityListState.name}"
-										               th:value="${state.id}"
-										               th:text="${state.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${entityList.id > 0 and state.name == entityList.appliedEntityListState.name}"
-										               th:value="${state.id}"
-										               th:text="${state.name}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
-	                                         </div>
+	                                               <label class="control-label col-md-3">Applied Entity List State
+	                                                   <span class="required"> * </span>
+	                                               </label>
+	                                               <div class="col-md-4">
+	                                               		<select class="form-control" th:field="${entityList.appliedEntityListState.id}"  id="appliedEntityListState">
+														    <option value="0">Select...</option>
+														    <option th:each="state : ${states}" th:value="${state.id}" th:text="${state.name}"></option>
+														</select>
+	                                               </div>
+	                                           </div>
+	                                         
+	                                         <!-- ********************************************************************************************* -->
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">Applied Entity List Type
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="typeId">
-	                                                     <option value="">Select...</option>
-	                                                     <types th:each="type : ${types}">
-	                                                     <option th:if="${entityList.id > 0 and type.name == entityList.appliedEntityListType.name}"
-										               th:value="${type.id}"
-										               th:text="${type.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${entityList.id > 0 and type.name == entityList.appliedEntityListType.name}"
-										               th:value="${type.id}"
-										               th:text="${type.name}">Category 1</option>
-	                                                     </types>
-	                                                 </select>
-	                                             </div>
-	                                         </div>
+	                                               <label class="control-label col-md-3">Applied Entity List Type
+	                                                   <span class="required"> * </span>
+	                                               </label>
+	                                               <div class="col-md-4">
+	                                               		<select class="form-control" th:field="${entityList.appliedEntityListType.id}"  id="appliedEntityListType">
+														    <option value="0">Select...</option>
+														    <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
+														</select>
+	                                               </div>
+	                                           </div>
+	                                         
 	                                     </div>
 	                             	</div>
 								<div class="modal-footer">

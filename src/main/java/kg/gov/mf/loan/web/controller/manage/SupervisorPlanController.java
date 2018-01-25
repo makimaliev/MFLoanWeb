@@ -34,21 +34,39 @@ public class SupervisorPlanController {
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/sp/save"})
-    public String saveSupervisorPlan(SupervisorPlan sp, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
-    {
-		Loan loan = loanService.findById(loanId);
-		if(sp != null && sp.getId() == 0)
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/sp/{spId}/save", method=RequestMethod.GET)
+	public String formCreditTerm(ModelMap model, 
+			@PathVariable("debtorId")Long debtorId, 
+			@PathVariable("loanId")Long loanId,
+			@PathVariable("spId")Long spId)
+	{
+		
+		if(spId == 0)
 		{
-			SupervisorPlan newSP = new SupervisorPlan(sp.getDate(), sp.getAmount(), sp.getPrincipal(), sp.getInterest(), sp.getPenalty(), sp.getFee(), sp.getDescription());
-			newSP.setLoan(loan);
-			spService.save(newSP);
+			model.addAttribute("sp", new SupervisorPlan());
+		}
+			
+		if(spId > 0)
+		{
+			model.addAttribute("sp", spService.getById(spId));
 		}
 		
-		if(sp != null && sp.getId() > 0)
-		{
+        model.addAttribute("debtorId", debtorId);
+        model.addAttribute("loanId", loanId);
+			
+		return "/manage/debtor/loan/sp/save";
+	}
+	
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/sp/save"}, method=RequestMethod.POST)
+    public String saveSupervisorPlan(SupervisorPlan sp, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
+    {
+		Loan loan = loanService.getById(loanId);
+		sp.setLoan(loan);
+		
+		if(sp.getId() == 0)
+			spService.add(sp);
+		else
 			spService.update(sp);
-		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_4";
     }
@@ -56,7 +74,7 @@ public class SupervisorPlanController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/sp/delete", method=RequestMethod.POST)
     public String deleteSupervisorPlan(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			spService.deleteById(id);
+			spService.remove(spService.getById(id));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_4";
     }
 }

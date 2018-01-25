@@ -84,19 +84,11 @@
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
-	                                                 <select class="form-control" name="stateId">
-	                                                     <option value="">Select...</option>
-	                                                     <states th:each="state : ${states}">
-	                                                     <option th:if="${entity.id > 0 and state.name == entity.appliedEntityState.name}"
-										               th:value="${state.id}"
-										               th:text="${state.name}"
-										               selected="selected">Category 1</option>
-										        <option th:unless="${entity.id > 0 and state.name == entity.appliedEntityState.name}"
-										               th:value="${state.id}"
-										               th:text="${state.name}">Category 1</option>
-										        </states>
-	                                                 </select>
-	                                             </div>
+	                                               		<select class="form-control" th:field="${entity.appliedEntityState.id}"  id="appliedEntityState">
+														    <option value="0">Select...</option>
+														    <option th:each="state : ${states}" th:value="${state.id}" th:text="${state.name}"></option>
+														</select>
+	                                               </div>
 	                                         </div>
 	                                     </div>
 	                             	</div>
