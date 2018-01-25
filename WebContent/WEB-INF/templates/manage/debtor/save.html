@@ -118,8 +118,6 @@
                                               </div>
 										</div>
 										
-										
-										
 										<div class="form-group">
 											<label class="control-label col-md-3">Owner
 												<span class="required"> * </span>
@@ -129,8 +127,8 @@
 												    <option value="0">Select...</option>
 												    <option th:each="entity : ${entities}" 
 												    th:value="${{entity}}"
-												    th:selected="(${entity.entityId} == *{owner.entityId})" 
-												    th:text="${entity.name} + ' ' + ${entity.ownerType} + ' ' + ${entity.entityId} "></option>
+												    th:selected="(${entity.id} == *{owner.id})" 
+												    th:text="${entity.name} + ',' + ${entity.ownerType} + ',' + ${entity.entityId} "></option>
 												</select>
                                               </div>
 										</div>
@@ -156,7 +154,7 @@
 	function updateTOwner(sel)
 	{
 		var data =$('#ownerSelect option:selected').text();
-		var arr = data.split(' ');
+		var arr = data.split(',');
 	    $("#ownerEntityId").val(arr[2]);
 	    $("#ownerName").val(arr[0]);
 	    $("#ownerType").val(arr[1]);

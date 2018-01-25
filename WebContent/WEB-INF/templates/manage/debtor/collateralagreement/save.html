@@ -72,6 +72,9 @@
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
+	                                             	<input hidden="true" type="text" id="ownerEntityId" name="owner.entityId" th:field="*{owner.entityId}" />
+													<input hidden="true" type="text" id="ownerName" name="owner.name" th:field="*{owner.name}" />
+													<input hidden="true" type="text" id="ownerType" name="owner.ownerType" th:field="*{owner.ownerType}" />
 	                                             	<input type="hidden" th:field="*{id}"/>
 	                                                 <div class="input-icon right">
 	                                                     <i class="fa"></i>
@@ -190,6 +193,21 @@
 	                                             </div>
 	                                         </div>
 	                                         
+	                                         <div class="form-group">
+											<label class="control-label col-md-3">Owner
+												<span class="required"> * </span>
+											</label>
+											<div class="col-md-4">
+                                              		<select class="form-control" th:field="*{owner}" id="ownerSelect" onchange="updateTOwner(this);">
+												    <option value="0">Select...</option>
+												    <option th:each="entity : ${entities}" 
+												    th:value="${{entity}}"
+												    th:selected="(${entity.id} == *{owner.id})" 
+												    th:text="${entity.name} + ',' + ${entity.ownerType} + ',' + ${entity.entityId} "></option>
+												</select>
+                                              </div>
+										</div>
+	                                         
 	                                     </div>
 	                             	</div>
 							<div class="modal-footer">
@@ -207,6 +225,16 @@
 		<!-- END CONTENT -->
 		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
 	</div>
+	<script type="text/javascript">
+	function updateTOwner(sel)
+	{
+		var data =$('#ownerSelect option:selected').text();
+		var arr = data.split(',');
+	    $("#ownerEntityId").val(arr[2]);
+	    $("#ownerName").val(arr[0]);
+	    $("#ownerType").val(arr[1]);
+	}
+	</script>
 	<!-- END CONTAINER -->
 	<div th:replace="layout :: footer" />
 	<div th:replace="fragments/footer :: footer-js" />

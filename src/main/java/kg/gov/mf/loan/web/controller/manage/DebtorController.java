@@ -145,6 +145,7 @@ public class DebtorController {
 		{
 			Debtor debtor = new Debtor();
 			Owner owner = new Owner();
+			owner.setId(-1);
 			debtor.setOwner(owner);
 			model.addAttribute("debtor", debtor);
 		}

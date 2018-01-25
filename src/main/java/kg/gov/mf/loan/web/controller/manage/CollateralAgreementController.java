@@ -1,7 +1,9 @@
 package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -13,10 +15,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import kg.gov.mf.loan.admin.org.model.Organization;
+import kg.gov.mf.loan.admin.org.model.Person;
+import kg.gov.mf.loan.admin.org.service.OrganizationService;
+import kg.gov.mf.loan.admin.org.service.PersonService;
 import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
+import kg.gov.mf.loan.manage.model.debtor.Owner;
+import kg.gov.mf.loan.manage.model.debtor.OwnerType;
 import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
+import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 
 @Controller
 public class CollateralAgreementController {
@@ -26,6 +35,15 @@ public class CollateralAgreementController {
 	
 	@Autowired
 	DebtorService debtorService;
+	
+	@Autowired
+	PersonService personService;
+	
+	@Autowired
+	OrganizationService orgService;
+	
+	@Autowired
+	OwnerService ownerService;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -54,14 +72,40 @@ public class CollateralAgreementController {
 		model.addAttribute("debtorId", debtorId);
 		model.addAttribute("tLoans", debtor.getLoans());
 		
+		List<Owner> entities = new ArrayList<Owner>();
+		List<Person> persons = personService.findAll();
+		List<Organization> orgs = orgService.findAll();
+		for (Person p : persons) {
+			entities.add(new Owner(OwnerType.PERSON, p));
+		}
+		
+		for (Organization org : orgs) {
+			entities.add(new Owner(OwnerType.ORGANIZATION, org));
+		}
+		
+		model.addAttribute("entities", entities);
+		
+		
 		if(agreementId == 0)
 		{
-			model.addAttribute("agreement", new CollateralAgreement());
+			CollateralAgreement agreement = new CollateralAgreement();
+			Owner owner = new Owner();
+			owner.setId(-1);
+			agreement.setOwner(owner);
+			model.addAttribute("agreement", agreement);
 		}
 			
 		if(agreementId > 0)
 		{
-			model.addAttribute("agreement", agreementService.getById(agreementId));
+			CollateralAgreement agreement = agreementService.getById(agreementId);
+			Owner owner = agreement.getOwner();
+			for (Owner entity : entities) {
+				if(owner.getEntityId() == entity.getEntityId() && owner.getOwnerType().equals(entity.getOwnerType())) {
+					entities.remove(entity);
+					entities.add(owner);
+				}
+			}
+			model.addAttribute("agreement", agreement);
 		}
 		
 		return "/manage/debtor/collateralagreement/save";
