@@ -34,42 +34,21 @@ public class ReconstructedListController {
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/reconstructedlist/{rlId}/save", method=RequestMethod.GET)
-	public String formCreditTerm(ModelMap model, 
-			@PathVariable("debtorId")Long debtorId, 
-			@PathVariable("loanId")Long loanId,
-			@PathVariable("rlId")Long rlId)
-	{
-		
-		if(rlId == 0)
-		{
-			model.addAttribute("rl", new ReconstructedList());
-		}
-			
-		if(rlId > 0)
-		{
-			model.addAttribute("rl", rlService.getById(rlId));
-		}
-		
-        model.addAttribute("debtorId", debtorId);
-        model.addAttribute("loanId", loanId);
-			
-		return "/manage/debtor/loan/reconstructedlist/save";
-	}
-	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/reconstructedlist/save"}, method=RequestMethod.POST)
-    public String saveReconstructedList(ReconstructedList rl, 
-    		@PathVariable("debtorId")Long debtorId, 
-    		@PathVariable("loanId")Long loanId, 
-    		ModelMap model)
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/reconstructedlist/save"})
+    public String saveReconstructedList(ReconstructedList rl, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
-		Loan loan = loanService.getById(loanId);
-		rl.setLoan(loan);
+		Loan loan = loanService.findById(loanId);
+		if(rl != null && rl.getId() == 0)
+		{
+			ReconstructedList newRL = new ReconstructedList(rl.getOnDate(), rl.getOldLoanId());
+			newRL.setLoan(loan);
+			rlService.save(newRL);
+		}
 		
-		if(rl.getId() == 0)
-			rlService.add(rl);
-		else
+		if(rl != null && rl.getId() > 0)
+		{
 			rlService.update(rl);
+		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_8";
     }
@@ -77,7 +56,7 @@ public class ReconstructedListController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/reconstructedlist/delete", method=RequestMethod.POST)
     public String deleteReconstructedList(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			rlService.remove(rlService.getById(id));
+			rlService.deleteById(id);
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_8";
     }
 

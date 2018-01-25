@@ -34,39 +34,21 @@ public class BankruptController {
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/bankrupt/{bankruptId}/save", method=RequestMethod.GET)
-	public String formCreditTerm(ModelMap model, 
-			@PathVariable("debtorId")Long debtorId, 
-			@PathVariable("loanId")Long loanId,
-			@PathVariable("bankruptId")Long bankruptId)
-	{
-		
-		if(bankruptId == 0)
-		{
-			model.addAttribute("bankrupt", new Bankrupt());
-		}
-			
-		if(bankruptId > 0)
-		{
-			model.addAttribute("bankrupt", bankruptService.getById(bankruptId));
-		}
-		
-        model.addAttribute("debtorId", debtorId);
-        model.addAttribute("loanId", loanId);
-			
-		return "/manage/debtor/loan/bankrupt/save";
-	}
-	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/bankrupt/save"}, method=RequestMethod.POST)
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/bankrupt/save"})
     public String saveBankrupt(Bankrupt bankrupt, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
-		Loan loan = loanService.getById(loanId);
-		bankrupt.setLoan(loan);
+		Loan loan = loanService.findById(loanId);
+		if(bankrupt != null && bankrupt.getId() == 0)
+		{
+			Bankrupt newBankrupt = new Bankrupt(bankrupt.getStartedOnDate(), bankrupt.getFinishedOnDate());
+			newBankrupt.setLoan(loan);
+			bankruptService.save(newBankrupt);
+		}
 		
-		if(bankrupt.getId() == 0)
-			bankruptService.add(bankrupt);
-		else
+		if(bankrupt != null && bankrupt.getId() > 0)
+		{
 			bankruptService.update(bankrupt);
+		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_9";
     }
@@ -74,7 +56,7 @@ public class BankruptController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/bankrupt/delete", method=RequestMethod.POST)
     public String deleteBankrupt(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			bankruptService.remove(bankruptService.getById(id));
+			bankruptService.deleteById(id);
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_9";
     }
 

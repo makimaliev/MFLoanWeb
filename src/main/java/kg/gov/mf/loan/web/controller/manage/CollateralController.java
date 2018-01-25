@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import kg.gov.mf.loan.manage.model.collateral.Collateral;
+import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
 import kg.gov.mf.loan.manage.model.collateral.CollateralSummary;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.service.collateral.CollateralService;
@@ -27,7 +28,7 @@ public class CollateralController {
 	@RequestMapping(value = { "/manage/collateral/list"})
     public String listCollaterals(ModelMap model) {
 		
-		List<Collateral> colls = collService.list(); 
+		List<Collateral> colls = collService.findAll(); 
 		model.addAttribute("colls", colls);
 		
 		return "/manage/collateral/list";
@@ -37,50 +38,51 @@ public class CollateralController {
 	@RequestMapping(value = { "/manage/collateral/{collateralId}/view"})
     public String viewLoan(ModelMap model, @PathVariable("collateralId")Long collateralId) {
 		
-		Collateral collateral = collService.getById(collateralId);
+		Collateral collateral = collService.findById(collateralId);
 		
 		model.addAttribute("collateral", collateral);
 		
-		model.addAttribute("summaries", collateral.getCollateralSummaries());
+		model.addAttribute("agreements", collateral.getAgreement());
+		model.addAttribute("emptyAgreement", new CollateralAgreement());
+		
+		model.addAttribute("summaries", collateral.getCollateralSummary());
 		model.addAttribute("emptySummary", new CollateralSummary());
 		
 		return "/manage/collateral/view";
 		
 	}
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/collateral/{collId}/save", method=RequestMethod.GET)
-	public String formCreditTerm(ModelMap model, 
-			@PathVariable("debtorId")Long debtorId, 
-			@PathVariable("loanId")Long loanId,
-			@PathVariable("collId")Long collId)
+	@RequestMapping(value="/manage/collateral/{collateralId}/save", method=RequestMethod.GET)
+	public String formCollateral(ModelMap model, @PathVariable("collateralId")Long collateralId)
 	{
-		
-		if(collId == 0)
+		if(collateralId == 0)
 		{
-			model.addAttribute("coll", new Collateral());
+			model.addAttribute("collateral", new Collateral());
 		}
-			
-		if(collId > 0)
+
+		if(collateralId > 0)
 		{
-			model.addAttribute("coll", collService.getById(collId));
+			model.addAttribute("collateral", collService.findById(collateralId));
 		}
-		
-        model.addAttribute("debtorId", debtorId);
-        model.addAttribute("loanId", loanId);
-			
-		return "/manage/debtor/loan/collateral/save";
+
+		return "/manage/collateral/save";
 	}
 	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/collateral/save"}, method=RequestMethod.POST)
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/collateral/save"})
     public String saveCollateral(Collateral coll, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
-		Loan loan = loanService.getById(loanId);
-		coll.setLoan(loan);
+		Loan loan = loanService.findById(loanId);
+		if(coll != null && coll.getId() == 0)
+		{
+			Collateral newColl = new Collateral(coll.getName());
+			newColl.setLoan(loan);
+			collService.save(newColl);
+		}
 		
-		if(coll.getId() == 0)
-			collService.add(coll);
-		else			
+		if(coll != null && coll.getId() > 0)
+		{
 			collService.update(coll);
+		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_10";
     }
@@ -88,7 +90,7 @@ public class CollateralController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/collateral/delete", method=RequestMethod.POST)
     public String deleteCollateral(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			collService.remove(collService.getById(id));
+			collService.deleteById(id);
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_10";
     }
 	

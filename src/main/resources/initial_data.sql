@@ -221,6 +221,9 @@ INSERT INTO `mfloan`.`address` (`line`, `address_details_id`, `aokmotu_id`, `dis
 INSERT INTO `mfloan`.`contact` (`name`) VALUES ('phone number1');
 INSERT INTO `mfloan`.`contact` (`name`) VALUES ('phone number2');
 
+/* ADD STAFF */
+
+INSERT INTO `mfloan`.`staff` (`enabled`, `name`, `department_id`, `organization_id`, `person_id`, `position_id`) VALUES (true, 'Сламкулов А.О.', '1', '1', '1', '1');
 
 /* ADD ORGANIZATION */ 
 
@@ -230,11 +233,6 @@ INSERT INTO `mfloan`.`organization` (`description`, `enabled`, `name`, `address_
 
 INSERT INTO `mfloan`.`person` (`description`, `enabled`, `name`, `address_id`, `contact_id`, `identity_doc_id`) VALUES ('Fiz', true, 'Сламкулов', '2', '2', '2');
 
-/* ADD BANK DATA */ 
-
-INSERT INTO `mfloan`.`bank_data` (`account_number`, `bik`, `description`, `is_primary`, `name`, `organization_id`) VALUES ('number1', 'bik1', 'description1', true, 'name1', '1');
-INSERT INTO `mfloan`.`bank_data` (`account_number`, `bik`, `description`, `is_primary`, `name`, `organization_id`) VALUES ('number2', 'bik2', 'description2', false, 'name2', '1');
-
 /* ADD DEPARTMENT */ 
 
 INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organization_id`) VALUES ('Руководство ГАУБК', true, 'Руководство', '1');
@@ -242,6 +240,11 @@ INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organizati
 INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organization_id`) VALUES ('Управление №2', true, 'Управление АПК', '1');
 INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organization_id`) VALUES ('Управление №3', true, 'Управление ЮР', '1');
 INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organization_id`) VALUES ('Управление №4', true, 'Управление ОКП', '1');
+
+/* ADD BANK DATA */ 
+
+INSERT INTO `mfloan`.`bank_data` (`account_number`, `bik`, `description`, `is_primary`, `name`, `organization_id`) VALUES ('number1', 'bik1', 'description1', true, 'name1', '1');
+INSERT INTO `mfloan`.`bank_data` (`account_number`, `bik`, `description`, `is_primary`, `name`, `organization_id`) VALUES ('number2', 'bik2', 'description2', false, 'name2', '1');
 
 /* ADD DEPARTMENT */ 
 
@@ -252,9 +255,7 @@ INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('Начальник упр
 INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('Начальник управления', '4');
 INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('Начальник управления', '5');
 
-/* ADD STAFF */
 
-INSERT INTO `mfloan`.`staff` (`enabled`, `name`, `department_id`, `organization_id`, `person_id`, `position_id`) VALUES (true, 'Сламкулов А.О.', '1', '1', '1', '1');
 
 
 /* ADD EMPLOYMENT HISTORY */

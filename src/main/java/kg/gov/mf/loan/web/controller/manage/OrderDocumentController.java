@@ -3,6 +3,7 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -14,6 +15,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackage;
+import kg.gov.mf.loan.manage.model.entity.AppliedEntity;
+import kg.gov.mf.loan.manage.model.entity.AppliedEntityState;
+import kg.gov.mf.loan.manage.model.entitydocument.EntityDocument;
+import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentRegisteredBy;
+import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentState;
 import kg.gov.mf.loan.manage.model.orderdocument.OrderDocument;
 import kg.gov.mf.loan.manage.model.orderdocument.OrderDocumentType;
 import kg.gov.mf.loan.manage.model.orderdocumentpackage.OrderDocumentPackage;
@@ -68,11 +75,11 @@ public class OrderDocumentController {
 		
 		if(docId > 0)
 		{
-			model.addAttribute("doc", odService.getById(docId));
+			model.addAttribute("doc", odService.findById(docId));
 		}
 		model.addAttribute("orderId", orderId);
 		model.addAttribute("dpId", dpId);
-		List<OrderDocumentType> types = oDTypeService.list();
+		List<OrderDocumentType> types = oDTypeService.findAll();
         model.addAttribute("types", types);
 			
 		return "/manage/order/orderdocumentpackage/orderdocument/save";
@@ -81,22 +88,27 @@ public class OrderDocumentController {
 	@RequestMapping(value="/manage/order/{orderId}/orderdocumentpackage/{oDPId}/orderdocument/save", method=RequestMethod.POST)
 	public String saveOrderDocument(
 			OrderDocument doc, 
+			long typeId, 
 			@PathVariable("orderId")Long orderId, 
 			@PathVariable("oDPId")Long oDPId, 
 			ModelMap model)
 	{
 		
-		OrderDocumentPackage oDP = oDPService.getById(oDPId);
-		doc.setOrderDocumentPackage(oDP);
+		OrderDocumentPackage oDP = oDPService.findById(oDPId);
 		
-		if(doc.getId() == 0)
+		if(doc != null && doc.getId() == 0)
 		{
-			odService.add(doc);
+			OrderDocument newOD = new OrderDocument(doc.getName(), oDTypeService.findById(typeId));
+			newOD.setOrderDocumentPackage(oDP);
+			odService.save(newOD);
+			
 			//add new document under entity packages
 			//addToEntities(doc, oDPId);
 		}
-		else
+			
+		if(doc != null && doc.getId() > 0)
 		{
+			doc.setOrderDocumentType(oDTypeService.findById(typeId));
 			odService.update(doc);
 			//updateInEntities(doc, oDPId);
 		}
@@ -107,7 +119,7 @@ public class OrderDocumentController {
 	@RequestMapping(value="/manage/order/{orderId}/orderdocumentpackage/{oDPId}/orderdocument/delete", method=RequestMethod.POST)
     public String deleteOrderDocument(long id, @PathVariable("orderId")Long orderId, @PathVariable("oDPId")Long oDPId) {
 		if(id > 0) {
-			odService.remove(odService.getById(id));
+			odService.deleteById(id);
 			//TODO: delete from entities as well
 		}
 			
@@ -117,7 +129,7 @@ public class OrderDocumentController {
 	@RequestMapping(value = { "/manage/order/orderdocumentpackage/orderdocument/type/list" }, method = RequestMethod.GET)
     public String listODTypes(ModelMap model) {
  
-		List<OrderDocumentType> types = oDTypeService.list();
+		List<OrderDocumentType> types = oDTypeService.findAll();
 		model.addAttribute("odTypes", types);
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -134,16 +146,17 @@ public class OrderDocumentController {
 		
 		if(typeId > 0)
 		{
-			model.addAttribute("odType", oDTypeService.getById(typeId));
+			model.addAttribute("odType", oDTypeService.findById(typeId));
 		}
 		return "/manage/order/orderdocumentpackage/orderdocument/type/save";
 	}
 	
 	@RequestMapping(value="/manage/order/orderdocumentpackage/orderdocument/type/save", method=RequestMethod.POST)
     public String saveOrderDocumentType(OrderDocumentType type, ModelMap model) {
-		if(type.getId() == 0)
-			oDTypeService.add(type);
-		else
+		if(type != null && type.getId() == 0)
+			oDTypeService.save(new OrderDocumentType(type.getName()));
+		
+		if(type != null && type.getId() > 0)
 			oDTypeService.update(type);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -153,11 +166,10 @@ public class OrderDocumentController {
 	@RequestMapping(value="/manage/order/orderdocumentpackage/orderdocument/type/delete", method=RequestMethod.POST)
     public String deleteOrderDocumentType(long id) {
 		if(id > 0)
-			oDTypeService.remove(oDTypeService.getById(id));
+			oDTypeService.deleteById(id);
 		return "redirect:" + "/manage/order/orderdocumentpackage/orderdocument/type/list";
     }
 	
-	/*
 	private void addToEntities(OrderDocument doc, Long oDPId) {
 		
 		List<DocumentPackage> dps = dpService.findByOrderDocumentPackageId(oDPId);
@@ -211,5 +223,5 @@ public class OrderDocumentController {
 		
 		return result;
 	}
-	*/
+	
 }

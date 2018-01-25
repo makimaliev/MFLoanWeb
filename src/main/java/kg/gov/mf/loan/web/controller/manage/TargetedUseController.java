@@ -34,39 +34,21 @@ public class TargetedUseController {
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/targeteduse/{tuId}/save", method=RequestMethod.GET)
-	public String formCreditTerm(ModelMap model, 
-			@PathVariable("debtorId")Long debtorId, 
-			@PathVariable("loanId")Long loanId,
-			@PathVariable("tuId")Long tuId)
-	{
-		
-		if(tuId == 0)
-		{
-			model.addAttribute("tu", new TargetedUse());
-		}
-			
-		if(tuId > 0)
-		{
-			model.addAttribute("tu", tuService.getById(tuId));
-		}
-		
-        model.addAttribute("debtorId", debtorId);
-        model.addAttribute("loanId", loanId);
-			
-		return "/manage/debtor/loan/targeteduse/save";
-	}
-	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/targeteduse/save"}, method=RequestMethod.POST)
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/targeteduse/save"})
     public String saveTargetedUse(TargetedUse tu, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
-		Loan loan = loanService.getById(loanId);
-		tu.setLoan(loan);
+		Loan loan = loanService.findById(loanId);
+		if(tu != null && tu.getId() == 0)
+		{
+			TargetedUse newTU = new TargetedUse(tu.getTargetedUseResultId(), tu.getCreatedById(), tu.getCreatedDate(), tu.getApprovedById(), tu.getApprovedDate(), tu.getCheckedById(), tu.getCheckedDate(), tu.getAttachmentId());
+			newTU.setLoan(loan);
+			tuService.save(newTU);
+		}
 		
-		if(tu.getId() == 0)
-			tuService.add(tu);
-		else
+		if(tu != null && tu.getId() > 0)
+		{
 			tuService.update(tu);
+		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_7";
     }
@@ -74,7 +56,7 @@ public class TargetedUseController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/targeteduse/delete", method=RequestMethod.POST)
     public String deleteTargetedUse(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			tuService.remove(tuService.getById(id));
+			tuService.deleteById(id);
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_7";
     }
 

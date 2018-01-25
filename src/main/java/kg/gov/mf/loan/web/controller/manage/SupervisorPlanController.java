@@ -34,39 +34,21 @@ public class SupervisorPlanController {
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/sp/{spId}/save", method=RequestMethod.GET)
-	public String formCreditTerm(ModelMap model, 
-			@PathVariable("debtorId")Long debtorId, 
-			@PathVariable("loanId")Long loanId,
-			@PathVariable("spId")Long spId)
-	{
-		
-		if(spId == 0)
-		{
-			model.addAttribute("sp", new SupervisorPlan());
-		}
-			
-		if(spId > 0)
-		{
-			model.addAttribute("sp", spService.getById(spId));
-		}
-		
-        model.addAttribute("debtorId", debtorId);
-        model.addAttribute("loanId", loanId);
-			
-		return "/manage/debtor/loan/sp/save";
-	}
-	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/sp/save"}, method=RequestMethod.POST)
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/sp/save"})
     public String saveSupervisorPlan(SupervisorPlan sp, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
-		Loan loan = loanService.getById(loanId);
-		sp.setLoan(loan);
+		Loan loan = loanService.findById(loanId);
+		if(sp != null && sp.getId() == 0)
+		{
+			SupervisorPlan newSP = new SupervisorPlan(sp.getDate(), sp.getAmount(), sp.getPrincipal(), sp.getInterest(), sp.getPenalty(), sp.getFee(), sp.getDescription());
+			newSP.setLoan(loan);
+			spService.save(newSP);
+		}
 		
-		if(sp.getId() == 0)
-			spService.add(sp);
-		else
+		if(sp != null && sp.getId() > 0)
+		{
 			spService.update(sp);
+		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_4";
     }
@@ -74,7 +56,7 @@ public class SupervisorPlanController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/sp/delete", method=RequestMethod.POST)
     public String deleteSupervisorPlan(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			spService.remove(spService.getById(id));
+			spService.deleteById(id);
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_4";
     }
 }

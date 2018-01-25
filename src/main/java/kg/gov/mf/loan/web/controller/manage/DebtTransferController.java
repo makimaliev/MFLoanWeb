@@ -37,40 +37,25 @@ public class DebtTransferController {
 		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
 	    binder.registerCustomEditor(Date.class, editor);
 	}
-
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/debttransfer/{dtId}/save", method=RequestMethod.GET)
-	public String formCreditTerm(ModelMap model, 
-			@PathVariable("debtorId")Long debtorId, 
-			@PathVariable("loanId")Long loanId,
-			@PathVariable("dtId")Long dtId)
-	{
-		
-		if(dtId == 0)
-		{
-			model.addAttribute("dt", new DebtTransfer());
-		}
-			
-		if(dtId > 0)
-		{
-			model.addAttribute("dt", dtService.getById(dtId));
-		}
-		
-        model.addAttribute("debtorId", debtorId);
-        model.addAttribute("loanId", loanId);
-			
-		return "/manage/debtor/loan/debttransfer/save";
-	}
 	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/debttransfer/save"}, method=RequestMethod.POST)
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/debttransfer/save"})
     public String saveDebtTransfer(DebtTransfer dt, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
-		Loan loan = loanService.getById(loanId);
-		dt.setLoan(loan);
+		Loan loan = loanService.findById(loanId);
+		if(dt != null && dt.getId() == 0)
+		{
+			DebtTransfer newDT = new DebtTransfer(dt.getNumber(), dt.getDate(), dt.getQuantity(), 
+					dt.getPricePerUnit(), dt.getUnitTypeId(), dt.getTotalCost(), 
+					dt.getTransferPaymentId(), dt.getTransferCreditId(), dt.getTransferPersonId(), dt.getGoodsTypeId());
+			newDT.setLoan(loan);
+			loggerDT.info("createDT : {}", newDT);
+			dtService.save(newDT);
+		}
 		
-		if(dt.getId() == 0)
-			dtService.add(dt);
-		else
+		if(dt != null && dt.getId() > 0)
+		{
 			dtService.update(dt);
+		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_6";
     }
@@ -78,7 +63,7 @@ public class DebtTransferController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/debttransfer/delete", method=RequestMethod.POST)
     public String deleteDebtTransfer(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			dtService.remove(dtService.getById(id));
+			dtService.deleteById(id);
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_6";
     }
 	

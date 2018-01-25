@@ -2,6 +2,8 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -13,7 +15,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackage;
+import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackageState;
+import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackageType;
+import kg.gov.mf.loan.manage.model.entity.AppliedEntity;
+import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityList;
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
+import kg.gov.mf.loan.manage.model.orderdocument.OrderDocument;
+import kg.gov.mf.loan.manage.model.orderdocument.OrderDocumentType;
 import kg.gov.mf.loan.manage.model.orderdocumentpackage.OrderDocumentPackage;
 import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageService;
 import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageStateService;
@@ -54,10 +63,10 @@ public class OrderDocumentPackageController {
 	@RequestMapping(value = { "/manage/order/{orderId}/orderdocumentpackage/{oDPId}/view"})
     public String viewOrderDocumentPackage(ModelMap model, @PathVariable("orderId")Long orderId, @PathVariable("oDPId")Long oDPId) {
 
-		OrderDocumentPackage oDP = oDPService.getById(oDPId);
+		OrderDocumentPackage oDP = oDPService.findById(oDPId);
         model.addAttribute("oDP", oDP);
         
-        model.addAttribute("documents", oDP.getOrderDocuments());
+        model.addAttribute("documents", oDP.getOrderDocument());
         
         model.addAttribute("orderId", orderId);
         
@@ -76,7 +85,7 @@ public class OrderDocumentPackageController {
 		
 		if(dpId > 0)
 		{
-			model.addAttribute("documentPackage", oDPService.getById(dpId));
+			model.addAttribute("documentPackage", oDPService.findById(dpId));
 		}
 		model.addAttribute("orderId", orderId);
 		return "/manage/order/orderdocumentpackage/save";
@@ -86,19 +95,23 @@ public class OrderDocumentPackageController {
 	public String saveOrderDocumentPackage(OrderDocumentPackage oDP, 
 			@PathVariable("orderId")Long orderId, ModelMap model)
 	{
-		CreditOrder creditOrder = orderService.getById(orderId);
-		oDP.setCreditOrder(creditOrder);
-		
-		if(oDP.getId() == 0)
+		CreditOrder creditOrder = orderService.findById(orderId);
+		if(oDP != null && oDP.getId() == 0)
 		{
-			oDPService.add(oDP);
+			OrderDocumentPackage newODP = new OrderDocumentPackage(oDP.getName());
+			newODP.setCreditOrder(creditOrder);
+			oDPService.save(newODP);
+			
 			//add this document package to all entities under this credit
-			//addToEntities(creditOrder, oDP);
+			//addToEntities(creditOrder, oDP, newODP);
 		}
 			
-		else
+		
+		if(oDP != null && oDP.getId() > 0)
+		{
 			oDPService.update(oDP);
 			//updateInEntities(creditOrder, oDP);
+		}
 			
 		return "redirect:" + "/manage/order/{orderId}/view#tab_1";
 	}
@@ -106,30 +119,29 @@ public class OrderDocumentPackageController {
 	@RequestMapping(value="/manage/order/{orderId}/orderdocumentpackage/delete", method=RequestMethod.POST)
     public String deleteOrderDocumentPackage(long id, @PathVariable("orderId")Long orderId) {
 		if(id > 0) {
-			oDPService.remove(oDPService.getById(id));
+			oDPService.deleteById(id);
 			//deleteInEntities(id);
 		}
 			
 		return "redirect:" + "/manage/order/{orderId}/view#tab_1";
     }
 	
-	/*
-	private void addToEntities(CreditOrder creditOrder, OrderDocumentPackage oDP) {
-		Set<AppliedEntityList> lists = creditOrder.getAppliedEntityLists();
+	private void addToEntities(CreditOrder creditOrder, OrderDocumentPackage oDP, OrderDocumentPackage newODP) {
+		Set<AppliedEntityList> lists = creditOrder.getAppliedEntityList();
 		for (AppliedEntityList list : lists) {
-			Set<AppliedEntity> entities = list.getAppliedEntities();
+			Set<AppliedEntity> entities = list.getAppliedEntity();
 			for (AppliedEntity entity : entities) {
-				DocumentPackage dp = new DocumentPackage();
-				dp.setName(oDP.getName());
-				dp.setCompletedDate(new Date(0));
-				dp.setApprovedDate(new Date(0));
-				dp.setCompletedRatio(0.0);
-				dp.setApprovedRatio(0.0);
-				dp.setRegisteredRatio(0.0);
-				dp.setDocumentPackageState(getDummyState());
-				dp.setDocumentPackageType(getDummyType());
+				DocumentPackage dp = new DocumentPackage(oDP.getName(), 
+						new Date(0), 
+						new Date(0), 
+						0.0, 
+						0.0, 
+						0.0, 
+						getDummyState(), 
+						getDummyType());
+				dp.setOrderDocumentPackageId(newODP.getId());
 				dp.setAppliedEntity(entity);
-				dpService.add(dp);
+				dpService.save(dp);
 			}
 		}
 	}
@@ -150,27 +162,22 @@ public class OrderDocumentPackageController {
 	}
 	
 	private DocumentPackageState getDummyState() {
-		DocumentPackageState result = dpStateService.getByName("Dummy State");
+		DocumentPackageState result = dpStateService.findByName("Dummy State");
 		if(result == null) {
-			result = new DocumentPackageState();
-			result.setVersion(1);
-			result.setName("Dummy State");
-			dpStateService.add(result);
+			result = new DocumentPackageState("Dummy State");
+			dpStateService.save(result);
 		}
 		
 		return result;
 	}
 	
 	private DocumentPackageType getDummyType() {
-		DocumentPackageType result = dpTypeService.getByName("Dummy Type");
+		DocumentPackageType result = dpTypeService.findByName("Dummy Type");
 		if(result == null) {
-			result = new DocumentPackageType();
-			result.setVersion(1);
-			result.setName("Dummy Type");
-			dpTypeService.add(result);
+			result = new DocumentPackageType("Dummy Type");
+			dpTypeService.save(result);
 		}
 		
 		return result;
 	}
-	*/
 }

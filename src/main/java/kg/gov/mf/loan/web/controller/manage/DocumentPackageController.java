@@ -63,11 +63,11 @@ public class DocumentPackageController {
     		@PathVariable("entityId")Long entityId,
     		@PathVariable("dpId")Long dpId) {
 
-		DocumentPackage dp = dpService.getById(dpId);
+		DocumentPackage dp = dpService.findById(dpId);
         model.addAttribute("dp", dp);
         
 		model.addAttribute("emptyED", new EntityDocument());
-		model.addAttribute("entityDocuments", dp.getEntityDocuments());
+		model.addAttribute("entityDocuments", dp.getEntityDocument());
         
         model.addAttribute("orderId", orderId);
         model.addAttribute("listId", listId);
@@ -95,16 +95,16 @@ public class DocumentPackageController {
 		
 		if(dpId > 0)
 		{
-			model.addAttribute("dp", dpService.getById(dpId));
+			model.addAttribute("dp", dpService.findById(dpId));
 		}
 		model.addAttribute("orderId", orderId);
 		model.addAttribute("listId", listId);
 		model.addAttribute("entityId", entityId);
 		
-		List<DocumentPackageState> states = dpStateService.list();
+		List<DocumentPackageState> states = dpStateService.findAll();
         model.addAttribute("states", states);
 		
-		List<DocumentPackageType> types = dpTypeService.list();
+		List<DocumentPackageType> types = dpTypeService.findAll();
         model.addAttribute("types", types);
 		
 		return "/manage/order/entitylist/entity/documentpackage/save";
@@ -113,18 +113,37 @@ public class DocumentPackageController {
 	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/save", method=RequestMethod.POST)
 	public String saveDocumentPackage(
 			DocumentPackage dp, 
+			long stateId,
+			long typeId,
 			@PathVariable("orderId")Long orderId, 
 			@PathVariable("listId")Long listId,
 			@PathVariable("entityId")Long entityId,
 			ModelMap model)
 	{
-		AppliedEntity entity = entityService.getById(entityId);
-		dp.setAppliedEntity(entity);
+		AppliedEntity entity = entityService.findById(entityId);
 		
-		if(dp.getId() == 0)
-			dpService.add(dp);
-		else
+		if(dp != null && dp.getId() == 0)
+		{
+			DocumentPackage newDP = new DocumentPackage(
+					dp.getName(),
+					dp.getCompletedDate(),
+					dp.getApprovedDate(),
+					dp.getCompletedRatio(), 
+					dp.getApprovedRatio(), 
+					dp.getRegisteredRatio(),
+					dpStateService.findById(stateId),
+					dpTypeService.findById(typeId));
+					
+			newDP.setAppliedEntity(entity);
+			dpService.save(newDP);
+		}
+			
+		if(dp != null && dp.getId() > 0)
+		{
+			dp.setDocumentPackageState(dpStateService.findById(stateId));
+			dp.setDocumentPackageType(dpTypeService.findById(typeId));
 			dpService.update(dp);
+		}
 			
 		
 		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/view";
@@ -133,14 +152,14 @@ public class DocumentPackageController {
 	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/delete", method=RequestMethod.POST)
     public String deleteDocumentPackage(long id, @PathVariable("orderId")Long orderId, @PathVariable("listId")Long listId, @PathVariable("entityId")Long entityId) {
 		if(id > 0)
-			dpService.remove(dpService.getById(id));
+			dpService.deleteById(id);
 		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/view";
     }
 	
 	@RequestMapping(value = { "/manage/order/entitylist/entity/documentpackage/state/list" }, method = RequestMethod.GET)
     public String listDPStates(ModelMap model) {
  
-		List<DocumentPackageState> states = dpStateService.list();
+		List<DocumentPackageState> states = dpStateService.findAll();
 		model.addAttribute("states", states);
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -157,16 +176,17 @@ public class DocumentPackageController {
 		
 		if(stateId > 0)
 		{
-			model.addAttribute("dpState", dpStateService.getById(stateId));
+			model.addAttribute("dpState", dpStateService.findById(stateId));
 		}
 		return "/manage/order/entitylist/entity/documentpackage/state/save";
 	}
 	
 	@RequestMapping(value="/manage/order/entitylist/entity/documentpackage/state/save", method=RequestMethod.POST)
     public String saveDocumentPackageState(DocumentPackageState state, ModelMap model) {
-		if(state.getId() == 0)
-			dpStateService.add(state);
-		else
+		if(state != null && state.getId() == 0)
+			dpStateService.save(new DocumentPackageState(state.getName()));
+		
+		if(state != null && state.getId() > 0)
 			dpStateService.update(state);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -176,14 +196,14 @@ public class DocumentPackageController {
 	@RequestMapping(value="/manage/order/entitylist/entity/documentpackage/state/delete", method=RequestMethod.POST)
     public String deleteDocumentPackageState(long id) {
 		if(id > 0)
-			dpStateService.remove(dpStateService.getById(id));
+			dpStateService.deleteById(id);
 		return "redirect:" + "/manage/order/entitylist/entity/documentpackage/state/list";
     }
 	
 	@RequestMapping(value = { "/manage/order/entitylist/entity/documentpackage/type/list" }, method = RequestMethod.GET)
     public String listDPTypes(ModelMap model) {
  
-		List<DocumentPackageType> types = dpTypeService.list();
+		List<DocumentPackageType> types = dpTypeService.findAll();
 		model.addAttribute("types", types);
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -200,16 +220,17 @@ public class DocumentPackageController {
 		
 		if(typeId > 0)
 		{
-			model.addAttribute("dpType", dpTypeService.getById(typeId));
+			model.addAttribute("dpType", dpTypeService.findById(typeId));
 		}
 		return "/manage/order/entitylist/entity/documentpackage/type/save";
 	}
 	
 	@RequestMapping(value="/manage/order/entitylist/entity/documentpackage/type/save", method=RequestMethod.POST)
     public String saveDocumentPackageType(DocumentPackageType type, ModelMap model) {
-		if(type.getId() == 0)
-			dpTypeService.add(type);
-		else
+		if(type != null && type.getId() == 0)
+			dpTypeService.save(new DocumentPackageType(type.getName()));
+		
+		if(type != null && type.getId() > 0)
 			dpTypeService.update(type);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -219,7 +240,7 @@ public class DocumentPackageController {
 	@RequestMapping(value="/manage/order/entitylist/entity/documentpackage/type/delete", method=RequestMethod.POST)
     public String deleteDocumentPackageType(long id) {
 		if(id > 0)
-			dpTypeService.remove(dpTypeService.getById(id));
+			dpTypeService.deleteById(id);
 		return "redirect:" + "/manage/order/entitylist/entity/documentpackage/type/list";
     }
 

@@ -21,39 +21,21 @@ public class LoanGoodsController {
 	@Autowired
 	LoanGoodsService lgService;
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/loangoods/{lgId}/save", method=RequestMethod.GET)
-	public String formCreditTerm(ModelMap model, 
-			@PathVariable("debtorId")Long debtorId, 
-			@PathVariable("loanId")Long loanId,
-			@PathVariable("lgId")Long lgId)
-	{
-		
-		if(lgId == 0)
-		{
-			model.addAttribute("lg", new LoanGoods());
-		}
-			
-		if(lgId > 0)
-		{
-			model.addAttribute("lg", lgService.getById(lgId));
-		}
-		
-        model.addAttribute("debtorId", debtorId);
-        model.addAttribute("loanId", loanId);
-			
-		return "/manage/debtor/loan/loangoods/save";
-	}
-	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/loangoods/save"}, method=RequestMethod.POST)
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/loangoods/save"})
     public String saveLoanGoods(LoanGoods lg, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
     {
-		Loan loan = loanService.getById(loanId);
-		lg.setLoan(loan);
+		Loan loan = loanService.findById(loanId);
+		if(lg != null && lg.getId() == 0)
+		{
+			LoanGoods newLG = new LoanGoods(lg.getQuantity(), lg.getUnitTypeId(), lg.getGoodsTypeId());
+			newLG.setLoan(loan);
+			lgService.save(newLG);
+		}
 		
-		if(lg.getId() == 0)
-			lgService.add(lg);
-		else		
+		if(lg != null && lg.getId() > 0)
+		{
 			lgService.update(lg);
+		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_5";
     }
@@ -61,7 +43,7 @@ public class LoanGoodsController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/loangoods/delete", method=RequestMethod.POST)
     public String deleteLoanGoods(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 		if(id > 0)
-			lgService.remove(lgService.getById(id));
+			lgService.deleteById(id);
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_5";
     }
 

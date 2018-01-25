@@ -44,14 +44,13 @@
                             <div class="form-group">
                                 <label class="control-label">Sender type<span class="required"> * </span></label>
                                 <select class="form-control" id="sr" th:field="*{senderResponsible.responsibleType}">
-                                    <option th:each="r,i : ${responsibles}"
+                                    <option th:each="r,i : ${responsible}"
                                             th:value="${i.index + 1}"
                                             th:text="${r}">Responsible</option>
                                 </select>
                             </div>
 
-
-                            <div class="form-group" name="si1" >
+                            <div class="form-group" name="si1">
                                 <label class="control-label">Sender name<span class="required"> * </span></label>
                                 <select class="form-control"  multiple="true" th:field="*{senderResponsible.staff}">
                                     <option th:each="p : ${staff}"
@@ -59,6 +58,7 @@
                                             th:text="${p.name}">Responsible</option>
                                 </select>
                             </div>
+
 
                             <div class="form-group" name="si2">
                                 <label class="control-label">Sender name<span class="required"> * </span></label>
@@ -87,12 +87,12 @@
                                 </select>
                             </div>
 
-                            <!-- ********************************************************************************************** -->
+                            <!-- **********************************************************************************************-->
 
                             <div class="form-group">
                                 <label class="control-label">Receiver type<span class="required"> * </span></label>
                                 <select class="form-control" id="rr" th:field="*{receiverResponsible.responsibleType}">
-                                    <option th:each="r,i : ${responsibles}"
+                                    <option th:each="r,i : ${responsible}"
                                             th:value="${i.index + 1}"
                                             th:text="${r}">Responsible</option>
                                 </select>

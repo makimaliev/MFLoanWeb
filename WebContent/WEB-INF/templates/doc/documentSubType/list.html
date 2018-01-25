@@ -32,14 +32,14 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr class="clickable-row" th:each="dt : ${documentTypes}">
+                        <tr class="clickable-row" th:each="dt : ${documentSubTypes}">
                             <td th:text="${dt.id}"></td>
                             <td th:text="${dt.name}"></td>
                             <td>
-                                <a href="#" role="button" class="btn btn-xs blue-stripe" th:href="@{/doc/documentType/edit/__${dt.id}__}"> Edit </a>
+                                <a href="#" role="button" class="btn btn-xs blue-stripe" th:href="@{/doc/documentSubType/edit/__${dt.id}__}"> Edit </a>
                             </td>
                             <td>
-                                <a href="#" role="button" class="btn btn-xs red-stripe"  th:href="@{/doc/documentType/delete/__${dt.id}__}"> Delete </a>
+                                <a href="#" role="button" class="btn btn-xs red-stripe"  th:href="@{/doc/documentSubType/delete/__${dt.id}__}"> Delete </a>
                             </td>
                         </tbody>
                     </table>
@@ -48,7 +48,7 @@
             </div>
             <span class="row">
 				<div class="col-md-12">
-                    <a th:href="@{/doc/documentType/new}" class="btn btn-success"> New </a>
+                    <a th:href="@{/doc/documentSubType/new}" class="btn btn-success"> New </a>
 				</div>
 			</span>
 

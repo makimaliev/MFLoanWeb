@@ -16,11 +16,6 @@
 </head>
 <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
 
-<div th:replace="doc/document/documentForm :: sender"></div>
-<!--div th:replace="doc/document/documentForm :: receiver"></div>
-<div th:replace="doc/document/documentForm :: result"></div-->
-
-
 <div th:replace="layout :: header-top"></div>
 
 <div class="page-container">
@@ -46,12 +41,12 @@
 
                             <div class="form-group">
                                 <label class="control-label col-md-4">Document Type : </label>
-                                <div class="col-md-6"><label class="form-control-static" th:text="*{document.documentType.name}"></label></div>
+                                <div class="col-md-6"><label class="form-control-static" th:text="${document.documentType.name}"></label></div>
                             </div>
 
                             <div class="form-group">
                                 <label class="control-label col-md-4">Document SubType : </label>
-                                <div class="col-md-6"><label class="form-control-static" th:text="*{document.documentSubType.name}"></label></div>
+                                <div class="col-md-6"><label class="form-control-static" th:text="${document.documentSubType.name}"></label></div>
                             </div>
 
                             <div>
@@ -71,34 +66,51 @@
                             <div class="tab-content clearfix">
                                 <div class="tab-pane active" id="tab_sender">
 
+
                                     <div class="form-group">
                                         <label class="control-label col-md-2">Registered Date : </label>
-                                        <div class="col-md-10"><label class="form-control-static" th:text="${#dates.format(senderData.registeredDate, 'dd MMMM yyyy')}"></label></div>
+                                        <div class="col-md-10"><label class="form-control-static" th:text="${#dates.format(document.senderRegisteredDate, 'dd MMMM yyyy')}"></label></div>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-md-2">Registered № : </label>
-                                        <div class="col-md-10"><label class="form-control-static" th:text="${senderData.registeredNumber}"></label></div>
+                                        <div class="col-md-10"><label class="form-control-static" th:text="${document.senderRegisteredNumber}"></label></div>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-md-2">Due Date : </label>
-                                        <div class="col-md-10"><label class="form-control-static" th:text="${#dates.format(senderData.dueDate, 'dd MMMM yyyy')}"></label></div>
+                                        <div class="col-md-10"><label class="form-control-static" th:text="${#dates.format(document.senderDueDate, 'dd MMMM yyyy')}"></label></div>
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-2">Responsible : </label>
-                                        <div class="col-md-10"><label class="form-control-static" th:text="${senderData.responsible?.name}"></label></div>
+                                        <div class="col-md-10">
+                                            <label class="control-label">Responsible : </label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <ul th:each="s : ${document.senderResponsible.staff}">
+                                                <li><label class="form-control-static" th:text="${s.name}"></label></li>
+                                            </ul>
+                                            <ul th:each="s : ${document.senderResponsible.departments}">
+                                                <li><label class="form-control-static" th:text="${s.name}"></label></li>
+                                            </ul>
+                                            <ul th:each="s : ${document.senderResponsible.organizations}">
+                                                <li><label class="form-control-static" th:text="${s.name}"></label></li>
+                                            </ul>
+                                            <ul th:each="s : ${document.senderResponsible.person}">
+                                                <li><label class="form-control-static" th:text="${s.name}"></label></li>
+                                            </ul>
+                                        </div>
+
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-md-2">Executor : </label>
-                                        <div class="col-md-10"><label class="form-control-static" th:text="${senderData.executor?.name}"></label></div>
+                                        <div class="col-md-10"><label class="form-control-static" th:text="${document.senderExecutor?.name}">Executer name</label></div>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-md-2">Information : </label>
-                                        <div class="col-md-10"><label class="form-control-static" th:text="${senderData.information?.name}"></label></div>
+                                        <div class="col-md-10"><label class="form-control-static" th:text="${document.senderInformation?.name}"></label></div>
                                     </div>
 
                                     <div class="form-group col-md-12">
@@ -111,34 +123,47 @@
 
                                     <div class="form-group">
                                         <label class="control-label col-md-2">Registered Date : </label>
-                                        <div class="col-md-10"><label class="form-control-static" th:text="${#dates.format(receiverData.registeredDate, 'dd MMMM yyyy')}"></label></div>
+                                        <div class="col-md-10"><label class="form-control-static" th:text="${#dates.format(document.receiverRegisteredDate, 'dd MMMM yyyy')}"></label></div>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-md-2">Registered № : </label>
-                                        <div class="col-md-10"><label class="form-control-static" th:text="${receiverData.registeredNumber}"></label></div>
+                                        <div class="col-md-10"><label class="form-control-static" th:text="${document.receiverRegisteredNumber}"></label></div>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-md-2">Due Date : </label>
-                                        <div class="col-md-10"><label class="form-control-static" th:text="${#dates.format(receiverData.dueDate, 'dd MMMM yyyy')}"></label></div>
+                                        <div class="col-md-10"><label class="form-control-static" th:text="${#dates.format(document.receiverDueDate, 'dd MMMM yyyy')}"></label></div>
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-2">Responsible : </label>
-                                        <div class="col-md-10"><label class="form-control-static" th:text="${receiverData.responsible?.name}"></label></div>
+                                        <label class="control-label col-md-12">Responsible : </label>
+                                        <div class="col-md-10">
+                                            <ul th:each="s : ${document.receiverResponsible.staff}">
+                                                <li><label class="form-control-static" th:text="${s.name}"></label></li>
+                                            </ul>
+                                            <ul th:each="s : ${document.receiverResponsible.departments}">
+                                                <li><label class="form-control-static" th:text="${s.name}"></label></li>
+                                            </ul>
+                                            <ul th:each="s : ${document.receiverResponsible.organizations}">
+                                                <li><label class="form-control-static" th:text="${s.name}"></label></li>
+                                            </ul>
+                                            <ul th:each="s : ${document.receiverResponsible.person}">
+                                                <li><label class="form-control-static" th:text="${s.name}"></label></li>
+                                            </ul>
+                                        </div>
+
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-md-2">Executor : </label>
-                                        <div class="col-md-10"><label class="form-control-static" th:text="${receiverData.executor?.name}"></label></div>
+                                        <div class="col-md-10"><label class="form-control-static" th:text="${document.receiverExecutor?.name}"></label></div>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-md-2">Information : </label>
-                                        <div class="col-md-10"><label class="form-control-static" th:text="${receiverData.information?.name}"></label></div>
+                                        <div class="col-md-10"><label class="form-control-static" th:text="${document.receiverInformation?.name}"></label></div>
                                     </div>
-
                                     <div class="form-group col-md-12">
                                         <button class="btn btn-success" onclick="save_receiver()"><i class="glyphicon glyphicon-plus"></i> Save Receiver Data </button>
                                         <button class="btn btn-success" onclick="delete_receiver()"><i class="glyphicon glyphicon-plus"></i> Delete Receiver Data </button>
@@ -149,22 +174,17 @@
 
                                     <div class="form-group">
                                         <label class="control-label col-md-4">Close Date : </label>
-                                        <div class="col-md-6"><label class="form-control-static" th:text="${#dates.format(resultData.close_date, 'dd MMMM yyyy')}"></label></div>
+                                        <div class="col-md-6"><label class="form-control-static" th:text="${#dates.format(document.resultCloseDate, 'dd MMMM yyyy')}"></label></div>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-md-4">Result Status : </label>
-                                        <div class="col-md-6"><label class="form-control-static" th:text="${resultData.resultStatus}"></label></div>
+                                        <div class="col-md-6"><label class="form-control-static" th:text="${document.resultStatus}"></label></div>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-md-4">Information : </label>
-                                        <div class="col-md-6"><label class="form-control-static" th:text="*{resultData.information?.name}"></label></div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="control-label col-md-4">Responsible : </label>
-                                        <div class="col-md-6"><label class="form-control-static" th:text="*{resultData.responsible?.name}"></label></div>
+                                        <div class="col-md-6"><label class="form-control-static" th:text="*{document.resultInformation?.name}"></label></div>
                                     </div>
 
                                     <div class="form-group col-md-12">

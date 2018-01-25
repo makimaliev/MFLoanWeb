@@ -18,9 +18,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityList;
+import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityListState;
+import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityListType;
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
 import kg.gov.mf.loan.manage.model.order.CreditOrderState;
 import kg.gov.mf.loan.manage.model.order.CreditOrderType;
+import kg.gov.mf.loan.manage.model.orderdocumentpackage.OrderDocumentPackage;
+import kg.gov.mf.loan.manage.model.orderterm.OrderTerm;
+import kg.gov.mf.loan.manage.model.orderterm.OrderTermAccrMethod;
+import kg.gov.mf.loan.manage.model.orderterm.OrderTermCurrency;
+import kg.gov.mf.loan.manage.model.orderterm.OrderTermDaysMethod;
+import kg.gov.mf.loan.manage.model.orderterm.OrderTermFloatingRateType;
+import kg.gov.mf.loan.manage.model.orderterm.OrderTermFrequencyType;
+import kg.gov.mf.loan.manage.model.orderterm.OrderTermFund;
+import kg.gov.mf.loan.manage.model.orderterm.OrderTermRatePeriod;
+import kg.gov.mf.loan.manage.model.orderterm.OrderTermTransactionOrder;
 import kg.gov.mf.loan.manage.service.entitylist.AppliedEntityListStateService;
 import kg.gov.mf.loan.manage.service.entitylist.AppliedEntityListTypeService;
 import kg.gov.mf.loan.manage.service.order.CreditOrderService;
@@ -93,12 +105,12 @@ public class CreditOrderController {
 	@RequestMapping(value = { "/manage/order/{orderId}/view"})
     public String viewOrder(ModelMap model, @PathVariable("orderId")Long orderId) {
 
-		CreditOrder order = creditOrderService.getById(orderId);
+		CreditOrder order = creditOrderService.findById(orderId);
         model.addAttribute("order", order);
         
-        model.addAttribute("entityLists", order.getAppliedEntityLists());
-        model.addAttribute("orderDocumentPackages", order.getOrderDocumentPackages());
-        model.addAttribute("orderTerms", order.getOrderTerms());
+        model.addAttribute("entityLists", order.getAppliedEntityList());
+        model.addAttribute("orderDocumentPackages", order.getOrderDocumentPackage());
+        model.addAttribute("orderTerms", order.getOrderTerm());
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "/manage/order/view";
@@ -107,7 +119,7 @@ public class CreditOrderController {
 	@RequestMapping(value = { "/manage/order/", "/manage/order/list" }, method = RequestMethod.GET)
     public String listOrders(ModelMap model) {
  
-        List<CreditOrder> orders = creditOrderService.list();
+        List<CreditOrder> orders = creditOrderService.findAll();
         model.addAttribute("orders", orders);
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -124,23 +136,33 @@ public class CreditOrderController {
 		
 		if(orderId > 0)
 		{
-			model.addAttribute("creditOrder", creditOrderService.getById(orderId));
+			model.addAttribute("creditOrder", creditOrderService.findById(orderId));
 		}
-		List<CreditOrderState> states = creditOrderStateService.list();
-		List<CreditOrderType> types = creditOrderTypeService.list();
+		List<CreditOrderState> states = creditOrderStateService.findAll();
+		List<CreditOrderType> types = creditOrderTypeService.findAll();
 		model.addAttribute("states", states);
 		model.addAttribute("types", types);
 		return "/manage/order/save";
 	}
 	
 	@RequestMapping(value="/manage/order/save", method=RequestMethod.POST)
-	public String saveCreditOrder(CreditOrder creditOrder)
+	public String saveCreditOrder(CreditOrder creditOrder, long stateId, long typeId)
 	{
 		loggerOrder.info("Order : {}", creditOrder);
-		if(creditOrder.getId() == 0)
-			creditOrderService.add(creditOrder);
-		else
+		if(creditOrder != null && creditOrder.getId() == 0)
+		{
+			CreditOrder newOrder = new CreditOrder(creditOrder.getRegNumber(), creditOrder.getRegDate(), 
+					creditOrder.getDescription(), creditOrderStateService.findById(stateId), creditOrderTypeService.findById(typeId));
+			creditOrderService.save(newOrder);
+		}
+			
+		
+		if(creditOrder != null && creditOrder.getId() > 0)
+		{
+			creditOrder.setCreditOrderState(creditOrderStateService.findById(stateId));
+			creditOrder.setCreditOrderType(creditOrderTypeService.findById(typeId));
 			creditOrderService.update(creditOrder);
+		}
 			
 		return "redirect:" + "/manage/order/list";
 	}
@@ -148,14 +170,15 @@ public class CreditOrderController {
 	@RequestMapping(value="/manage/order/delete", method=RequestMethod.POST)
     public String deleteCreditOrder(long id) {
 		if(id > 0)
-			creditOrderService.remove(creditOrderService.getById(id));
+			creditOrderService.deleteById(id);
         return "redirect:" + "/manage/order/list";
     }
 	
 	@RequestMapping(value = { "/manage/order/state/list" }, method = RequestMethod.GET)
     public String listOrderStates(ModelMap model) {
  
-		model.addAttribute("states", creditOrderStateService.list());
+		List<CreditOrderState> states = creditOrderStateService.findAll();
+		model.addAttribute("states", states);
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "/manage/order/state/list";
@@ -171,16 +194,17 @@ public class CreditOrderController {
 		
 		if(stateId > 0)
 		{
-			model.addAttribute("orderState", creditOrderStateService.getById(stateId));
+			model.addAttribute("orderState", creditOrderStateService.findById(stateId));
 		}
 		return "/manage/order/state/save";
 	}
 	
 	@RequestMapping(value="/manage/order/state/save", method=RequestMethod.POST)
     public String saveCreditOrderState(CreditOrderState state, ModelMap model) {
-		if(state.getId() == 0)
-			creditOrderStateService.add(state);
-		else
+		if(state != null && state.getId() == 0)
+			creditOrderStateService.save(new CreditOrderState(state.getName()));
+		
+		if(state != null && state.getId() > 0)
 			creditOrderStateService.update(state);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -190,14 +214,14 @@ public class CreditOrderController {
 	@RequestMapping(value="/manage/order/state/delete", method=RequestMethod.POST)
     public String deleteCreditOrderState(long id) {
 		if(id > 0)
-			creditOrderStateService.remove(creditOrderStateService.getById(id));
+			creditOrderStateService.deleteById(id);
         return "redirect:" + "/manage/order/state/list";
     }
 	
 	@RequestMapping(value = { "/manage/order/type/list" }, method = RequestMethod.GET)
     public String listOrderTypes(ModelMap model) {
  
-		List<CreditOrderType> types = creditOrderTypeService.list();
+		List<CreditOrderType> types = creditOrderTypeService.findAll();
 		model.addAttribute("types", types);
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -214,17 +238,17 @@ public class CreditOrderController {
 		
 		if(typeId > 0)
 		{
-			model.addAttribute("orderType", creditOrderTypeService.getById(typeId));
+			model.addAttribute("orderType", creditOrderTypeService.findById(typeId));
 		}
 		return "/manage/order/type/save";
 	}
 	
 	@RequestMapping(value="/manage/order/type/save", method=RequestMethod.POST)
     public String saveCreditOrderType(CreditOrderType type,  ModelMap model) {
+		if(type != null && type.getId() == 0)
+			creditOrderTypeService.save(new CreditOrderType(type.getName()));
 		
-		if(type.getId() == 0)
-			creditOrderTypeService.add(type);
-		else
+		if(type != null && type.getId() > 0)
 			creditOrderTypeService.update(type);
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
@@ -234,7 +258,7 @@ public class CreditOrderController {
 	@RequestMapping(value="/manage/order/type/delete", method=RequestMethod.POST)
     public String deleteCreditOrderType(long id) {
 		if(id > 0)
-			creditOrderTypeService.remove(creditOrderTypeService.getById(id));
+			creditOrderTypeService.deleteById(id);
         return "redirect:" + "/manage/order/type/list";
     }
 }
