@@ -1,12 +1,14 @@
 package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -14,9 +16,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import kg.gov.mf.loan.admin.org.model.Organization;
+import kg.gov.mf.loan.admin.org.model.Person;
+import kg.gov.mf.loan.admin.org.service.OrganizationService;
+import kg.gov.mf.loan.admin.org.service.PersonService;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.debtor.DebtorType;
 import kg.gov.mf.loan.manage.model.debtor.OrganizationForm;
+import kg.gov.mf.loan.manage.model.debtor.Owner;
+import kg.gov.mf.loan.manage.model.debtor.OwnerType;
 import kg.gov.mf.loan.manage.model.debtor.WorkSector;
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
 import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
@@ -24,6 +32,7 @@ import kg.gov.mf.loan.manage.service.collection.CollectionProcedureService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorTypeService;
 import kg.gov.mf.loan.manage.service.debtor.OrganizationFormService;
+import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.manage.service.debtor.WorkSectorService;
 import kg.gov.mf.loan.manage.service.loan.LoanStateService;
 import kg.gov.mf.loan.manage.service.loan.LoanTypeService;
@@ -64,6 +73,15 @@ public class DebtorController {
 	@Autowired
 	CollectionProcedureService procService;
 	
+	@Autowired
+	PersonService personService;
+	
+	@Autowired
+	OrganizationService orgService;
+	
+	@Autowired
+	OwnerService ownerService;
+	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
@@ -99,18 +117,21 @@ public class DebtorController {
     }
 
 	@RequestMapping(value="/manage/debtor/{debtorId}/save", method=RequestMethod.GET)
-	public String formDebtor(ModelMap model, @PathVariable("debtorId")Long debtorId)
+	public String formDebtor(Model model, @PathVariable("debtorId")Long debtorId)
 	{
-		if(debtorId == 0)
-		{
-			model.addAttribute("debtor", new Debtor());
+		List<Owner> entities = new ArrayList<Owner>();
+		List<Person> persons = personService.findAll();
+		List<Organization> orgs = orgService.findAll();
+		for (Person p : persons) {
+			entities.add(new Owner(OwnerType.PERSON, p));
 		}
-
-		if(debtorId > 0)
-		{
-			model.addAttribute("debtor", debtorService.getById(debtorId));
+		
+		for (Organization org : orgs) {
+			entities.add(new Owner(OwnerType.ORGANIZATION, org));
 		}
-
+		
+		model.addAttribute("entities", entities);
+		
 		List<DebtorType> types = debtorTypeService.list();
 		model.addAttribute("types", types);
 
@@ -119,7 +140,28 @@ public class DebtorController {
 
 		List<WorkSector> sectors = sectorService.list();
 		model.addAttribute("sectors", sectors);
+		
+		if(debtorId == 0)
+		{
+			Debtor debtor = new Debtor();
+			Owner owner = new Owner();
+			debtor.setOwner(owner);
+			model.addAttribute("debtor", debtor);
+		}
 
+		if(debtorId > 0)
+		{
+			Debtor debtor = debtorService.getById(debtorId);
+			Owner owner = debtor.getOwner();
+			for (Owner entity : entities) {
+				if(owner.getEntityId() == entity.getEntityId() && owner.getOwnerType().equals(entity.getOwnerType())) {
+					entities.remove(entity);
+					entities.add(owner);
+				}
+			}
+			model.addAttribute("debtor", debtor);
+		}
+		
 		return "/manage/debtor/save";
 	}
 	

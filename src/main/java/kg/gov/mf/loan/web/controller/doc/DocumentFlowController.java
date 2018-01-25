@@ -21,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Null;
 import java.util.*;
 
 @Controller
@@ -86,20 +87,71 @@ public class DocumentFlowController {
     @Autowired
     PersonService personService;
 
+    /*
+    @RequestMapping(value = "/doc", params = "type")
+    public String index(@RequestParam("type") String type, Model model) {
+        if (type == "internal") {
+            model.addAttribute("documents", documentService.internalDocuments());
+        } else if (type == "incoming") {
+            model.addAttribute("documents", documentService.incomingDocuments());
+        } else if (type == "outgoing") {
+            model.addAttribute("documents", documentService.outgoingDocuments());
+        } else if (type == "archived") {
+            model.addAttribute("documents", documentService.archivedDocuments());
+        }
+        String responsible[] = {"Staff", "Department", "Organization", "Person"};
+        model.addAttribute("responsible", responsible);
+        model.addAttribute("documentSubType", documentSubTypeService.findAll());
+        model.addAttribute("type", type);
+        return "/doc/document/list";
+    }
+    @RequestMapping(value = "/doc/document/view")
+    public String viewDocument(@ModelAttribute("document") Document document) {
+        documentService.edit(document);
+        return "/doc/document/view";
+    }
+    @RequestMapping(value = "/doc/new")
+    public String newDocument(Model model) {
+        model.addAttribute("document", new Document());
+        return "/doc/document/edit";
+    }
+    @RequestMapping(value = "/doc/document/edit/{id}")
+    public String editDocument(@PathVariable("id") Long id, Model model) {
+        Document document = documentService.findById(id);
+        model.addAttribute("document", document);
+        return "/doc/document/edit";
+    }
+    @RequestMapping(value = "/doc/document/delete/{id}")
+    public String deleteDocument(@ModelAttribute("documentSubType") DocumentSubType documentSubType) {
+        documentSubTypeService.deleteById(documentSubType);
+        return "redirect:/doc";
+    }
+    @RequestMapping(value = "/doc/document/save")
+    public String saveDocument(@ModelAttribute("documentSubType") DocumentSubType documentSubType) {
+        documentSubTypeService.edit(documentSubType);
+        return "redirect:/doc";
+    }
+    */
 
+    //region Original Code
     @RequestMapping(value = "/doc", params = "type")
     public String listDocuments(@RequestParam("type") String type, Model model) {
 
-        String responsibles[] = {"Staff", "Department", "Organization", "Person"};
-        model.addAttribute("responsibles", responsibles);
-        model.addAttribute("responsiblesList", responsiblesList());
+        model.addAttribute("document", new Document());
+        model.addAttribute("documentType", documentTypeService.findAll());
+        model.addAttribute("documentSubType", documentSubTypeService.findAll());
+        model.addAttribute("type", type);
+
+        String responsible[] = {"Staff", "Department", "Organization", "Person"};
+
+        model.addAttribute("responsible", responsible);
+        model.addAttribute("responsibleList", responsibleList());
 
         model.addAttribute("staff", staffService.findAll());
         model.addAttribute("department", departmentService.findAll());
         model.addAttribute("organization", organizationService.findAll());
         model.addAttribute("person", personService.findAll());
 
-        model.addAttribute("document", new Document());
         model.addAttribute("documentType", documentTypeService.findAll());
         model.addAttribute("documentTypeId", documentTypeService.getIdByInternalname(type));
         model.addAttribute("documentSubType", documentSubTypeService.findAll());
@@ -110,150 +162,9 @@ public class DocumentFlowController {
 
     @RequestMapping(value = "/doc/add", method = RequestMethod.POST)
     @ResponseBody
-    public String SaveOrUpdateDocument(@ModelAttribute("document") Document document, BindingResult result) {
+    public String SaveOrUpdateDocument(@ModelAttribute("document") Document document) {
 
-        Document doc = new Document();
-        doc.setId(document.getId());
-        doc.setTitle(document.getTitle());
-        doc.setDescription(document.getDescription());
-        doc.setDocumentType(documentTypeService.findById(document.getDocumentType().getId()));
-        doc.setDocumentSubType(documentSubTypeService.findById(document.getDocumentSubType().getId()));
-
-        System.out.println(document.getSenderResponsible().getDepartments().isEmpty());
-
-        if(document.getSenderResponsible().getDepartments().size() != 0) {
-            for (Department department : document.getSenderResponsible().getDepartments()) {
-                Department d = departmentService.findById(department.getId());
-                System.out.println(d.getName());
-            }
-        }
-
-
-        System.out.println(document.getReceiverResponsible().getDepartments().isEmpty());
-
-        if(document.getReceiverResponsible().getDepartments().size() != 0) {
-            for (Department department : document.getReceiverResponsible().getDepartments()) {
-                Department d = departmentService.findById(department.getId());
-                System.out.println(d.getName());
-            }
-        }
-
-
-
-        //region Sender
-        doc.setSenderRegisteredNumber(document.getSenderRegisteredNumber());
-        doc.setSenderRegisteredDate(new Date());
-
-        Set<Staff> senderStaff = new HashSet<>();
-        Set<Department> senderDepartment = new HashSet<>();
-        Set<Organization> senderOrganization = new HashSet<>();
-        Set<Person> senderPerson = new HashSet<>();
-
-        Responsible senderResponsible = new Responsible();
-        senderResponsible.setResponsibleType(document.getSenderResponsible().getResponsibleType());
-
-        if(document.getSenderResponsible().getStaff().size() != 0) {
-            for (Staff staff : document.getSenderResponsible().getStaff()) {
-                Staff s = staffService.findById(staff.getId());
-                senderStaff.add(s);
-            }
-        } else {
-            senderStaff = null;
-        }
-
-        if(document.getSenderResponsible().getDepartments().size() != 0) {
-            for (Department department : document.getSenderResponsible().getDepartments()) {
-                Department d = departmentService.findById(department.getId());
-                senderDepartment.add(d);
-            }
-        } else {
-            senderDepartment = null;
-        }
-
-        if(document.getSenderResponsible().getOrganizations().size() != 0) {
-            for (Organization organization : document.getSenderResponsible().getOrganizations()) {
-                Organization o = organizationService.findById(organization.getId());
-                senderOrganization.add(o);
-            }
-        } else {
-            senderOrganization = null;
-        }
-
-        if(document.getSenderResponsible().getPerson().size() != 0) {
-            for (Person person : document.getSenderResponsible().getPerson()) {
-                Person p = personService.findById(person.getId());
-                senderPerson.add(p);
-            }
-        } else {
-            senderPerson = null;
-        }
-
-        senderResponsible.setStaff(senderStaff);
-        senderResponsible.setDepartments(senderDepartment);
-        senderResponsible.setOrganizations(senderOrganization);
-        senderResponsible.setPerson(senderPerson);
-
-        doc.setSenderResponsible(senderResponsible);
-        //endregion
-
-        //region Receiver
-        Set<Staff> receiverStaff = new HashSet<>();
-        Set<Department> receiverDepartment = new HashSet<>();
-        Set<Organization> receiverOrganization = new HashSet<>();
-        Set<Person> receiverPerson = new HashSet<>();
-
-        doc.setReceiverRegisteredNumber(document.getReceiverRegisteredNumber());
-        doc.setReceiverRegisteredDate(new Date());
-
-        Responsible receiverResponsible = new Responsible();
-        receiverResponsible.setResponsibleType(document.getReceiverResponsible().getResponsibleType());
-
-        if(document.getReceiverResponsible().getStaff().size() != 0) {
-            for (Staff staff : document.getReceiverResponsible().getStaff()) {
-                Staff s = staffService.findById(staff.getId());
-                receiverStaff.add(s);
-            }
-        } else {
-            receiverStaff = null;
-        }
-
-        if(document.getReceiverResponsible().getDepartments().size() != 0) {
-            for (Department department : document.getReceiverResponsible().getDepartments()) {
-                Department d = departmentService.findById(department.getId());
-                receiverDepartment.add(d);
-            }
-        } else {
-            receiverDepartment = null;
-        }
-
-        if(document.getReceiverResponsible().getOrganizations().size() != 0) {
-            for (Organization organization : document.getReceiverResponsible().getOrganizations()) {
-                Organization o = organizationService.findById(organization.getId());
-                receiverOrganization.add(o);
-            }
-        } else {
-            receiverOrganization = null;
-        }
-
-        if(document.getReceiverResponsible().getPerson().size() != 0) {
-            for (Person person : document.getReceiverResponsible().getPerson()) {
-                Person p = personService.findById(person.getId());
-                receiverPerson.add(p);
-            }
-        } else {
-            receiverPerson = null;
-        }
-
-        receiverResponsible.setStaff(receiverStaff);
-        receiverResponsible.setDepartments(receiverDepartment);
-        receiverResponsible.setOrganizations(receiverOrganization);
-        receiverResponsible.setPerson(receiverPerson);
-
-        doc.setReceiverResponsible(receiverResponsible);
-        //endregion
-
-
-        if((doc.getId() == null) || (doc.getId() == 0))
+        if((document.getId() == null) || (document.getId() == 0))
         {
             this.documentService.create(document);
         }
@@ -262,28 +173,21 @@ public class DocumentFlowController {
             this.documentService.edit(document);
         }
 
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            return mapper.writeValueAsString(doc);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
         return "ok";
     }
 
     @RequestMapping(value = "/doc/view/{id}")
-    public String viewDocument(@PathVariable("id") Long id, Model model) {
+    public String viewDocument(@PathVariable("id") Long id, Model model)
+    {
         model.addAttribute("document", documentService.findById(id));
-        model.addAttribute("documentType", documentTypeService.findAll());
-        model.addAttribute("documentSubType", documentSubTypeService.findAll());
         return "/doc/document/view";
     }
 
     @RequestMapping("/doc/remove/{id}")
     @ResponseBody
-    public String removeDocument(@ModelAttribute("document") Document document) {
-        this.documentService.deleteById(document);
+    public String removeDocument(@ModelAttribute("document") Document document)
+    {
+        documentService.deleteById(document);
         return "OK";
     }
 
@@ -291,23 +195,14 @@ public class DocumentFlowController {
     @ResponseBody
     public Document getDocumentString(@PathVariable("id") Long id)
     {
-        Document document = documentService.findById(id);
-        return document;
-    }
-
-    @RequestMapping("/doc/all")
-    @ResponseBody
-    public List<Document> allDocuments()
-    {
-        return documentService.findAll();
+        return documentService.findById(id);
     }
 
     @RequestMapping("/doc/internal")
     @ResponseBody
     public List<Document> internalDocuments()
     {
-        List<Document> documents = documentService.internalDocuments();
-        return documents;
+        return documentService.internalDocuments();
     }
 
     @RequestMapping("/doc/incoming")
@@ -344,8 +239,8 @@ public class DocumentFlowController {
         return userName;
     }
 
-    private List<Map<Long, String>> responsiblesList()
-    //private List<List<Resposibles>> responsiblesList()
+    private List<Map<Long, String>> responsibleList()
+    //private List<List<Resposibles>> responsibleList()
     {
 
         //region As LIST
@@ -437,15 +332,6 @@ public class DocumentFlowController {
 
         return map;
     }
+    //endregion
 
-    private Document newDocument()
-    {
-        Responsible sr = new Responsible();
-        Responsible rr = new Responsible();
-        Document doc = new Document();
-        doc.setSenderResponsible(sr);
-        doc.setReceiverResponsible(rr);
-
-        return doc;
-    }
 }

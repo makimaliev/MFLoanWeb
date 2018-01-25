@@ -62,7 +62,7 @@
 
 							<form th:action="@{/manage/debtor/save}" id="form_sample_2" class="form-horizontal" method="post">
 								<div class="portlet-body">
-									<div class="form-body">
+									<div class="form-body" th:object="${debtor}">
 										<div class="alert alert-danger display-hide">
 											<button class="close" data-close="alert"></button> You have some form errors. Please check below.
 										</div>
@@ -72,22 +72,24 @@
 												<span class="required"> * </span>
 											</label>
 											<div class="col-md-4">
-												<input hidden="true" type="text" id="id" name="id" th:value="${debtor.id}"/>
+												<input hidden="true" type="text" id="ownerEntityId" name="owner.entityId" th:field="*{owner.entityId}" />
+												<input hidden="true" type="text" id="ownerName" name="owner.name" th:field="*{owner.name}" />
+												<input hidden="true" type="text" id="ownerType" name="owner.ownerType" th:field="*{owner.ownerType}" />
+												<input type="hidden" th:field="*{id}"/>
 												<div class="input-icon right">
 													<i class="fa"></i>
-													<input type="text" class="form-control" name="name" th:value="${debtor.name}"/>
+													<input type="text" class="form-control" th:field="*{name}"/>
 												</div>
 											</div>
 										</div>
-
 										<div class="form-group">
 											<label class="control-label col-md-3">Type
 												<span class="required"> * </span>
 											</label>
 											<div class="col-md-4">
-                                              		<select class="form-control" th:field="${debtor.debtorType.id}"  id="debtorType">
+                                              		<select class="form-control" th:field="*{debtorType}">
 												    <option value="0">Select...</option>
-												    <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
+												    <option th:each="type : ${types}" th:value="${{type}}" th:text="${type.name}"></option>
 												</select>
                                               </div>
 										</div>
@@ -97,9 +99,9 @@
 												<span class="required"> * </span>
 											</label>
 											<div class="col-md-4">
-                                              		<select class="form-control" th:field="${debtor.orgForm.id}"  id="orgForm">
+                                              		<select class="form-control" th:field="*{orgForm}">
 												    <option value="0">Select...</option>
-												    <option th:each="form : ${forms}" th:value="${form.id}" th:text="${form.name}"></option>
+												    <option th:each="form : ${forms}" th:value="${{form}}" th:text="${form.name}"></option>
 												</select>
                                               </div>
 										</div>
@@ -109,12 +111,30 @@
 												<span class="required"> * </span>
 											</label>
 											<div class="col-md-4">
-                                              		<select class="form-control" th:field="${debtor.workSector.id}"  id="workSector">
+                                              		<select class="form-control" th:field="*{workSector}">
 												    <option value="0">Select...</option>
-												    <option th:each="sector : ${sectors}" th:value="${sector.id}" th:text="${sector.name}"></option>
+												    <option th:each="sector : ${sectors}" th:value="${{sector}}" th:text="${sector.name}"></option>
 												</select>
                                               </div>
 										</div>
+										
+										
+										
+										<div class="form-group">
+											<label class="control-label col-md-3">Owner
+												<span class="required"> * </span>
+											</label>
+											<div class="col-md-4">
+                                              		<select class="form-control" th:field="*{owner}" id="ownerSelect" onchange="updateTOwner(this);">
+												    <option value="0">Select...</option>
+												    <option th:each="entity : ${entities}" 
+												    th:value="${{entity}}"
+												    th:selected="(${entity.entityId} == *{owner.entityId})" 
+												    th:text="${entity.name} + ' ' + ${entity.ownerType} + ' ' + ${entity.entityId} "></option>
+												</select>
+                                              </div>
+										</div>
+										
 									</div>
 								</div>
 								<div class="modal-footer">
@@ -132,6 +152,16 @@
 		<!-- END CONTENT -->
 		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
 	</div>
+	<script type="text/javascript">
+	function updateTOwner(sel)
+	{
+		var data =$('#ownerSelect option:selected').text();
+		var arr = data.split(' ');
+	    $("#ownerEntityId").val(arr[2]);
+	    $("#ownerName").val(arr[0]);
+	    $("#ownerType").val(arr[1]);
+	}
+	</script>
 	<!-- END CONTAINER -->
 	<div th:replace="layout :: footer" />
 	<div th:replace="fragments/footer :: footer-js" />

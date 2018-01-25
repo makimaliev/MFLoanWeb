@@ -3,20 +3,13 @@ package kg.gov.mf.loan.web.config;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import javax.servlet.MultipartConfigElement;
-import javax.servlet.ServletRegistration;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.CacheControl;
 import org.springframework.web.multipart.MultipartResolver;
@@ -36,10 +29,25 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
-import kg.gov.mf.loan.admin.org.converter.*;
-import kg.gov.mf.loan.admin.sys.converter.*;
+import kg.gov.mf.loan.admin.org.converter.DepartmentFormatter;
+import kg.gov.mf.loan.admin.org.converter.DistrictFormatter;
+import kg.gov.mf.loan.admin.org.converter.EmploymentHistoryEventTypeFormatter;
+import kg.gov.mf.loan.admin.org.converter.EmploymentHistoryFormatter;
+import kg.gov.mf.loan.admin.org.converter.IdentityDocGivenByConverter;
+import kg.gov.mf.loan.admin.org.converter.IdentityDocTypeConverter;
+import kg.gov.mf.loan.admin.org.converter.OrganizationFormatter;
+import kg.gov.mf.loan.admin.org.converter.PersonFormatter;
+import kg.gov.mf.loan.admin.org.converter.PositionFormatter;
+import kg.gov.mf.loan.admin.org.converter.RegionFormatter;
+import kg.gov.mf.loan.admin.sys.converter.PermissionFormatter;
+import kg.gov.mf.loan.admin.sys.converter.RoleFormatter;
+import kg.gov.mf.loan.admin.sys.converter.SupervisorTermFormatter;
 import kg.gov.mf.loan.admin.sys.service.MessageResourceService;
-import kg.gov.mf.loan.web.controller.manage.LoanFormatter;
+import kg.gov.mf.loan.manage.converter.DebtorTypeFormatter;
+import kg.gov.mf.loan.manage.converter.LoanFormatter;
+import kg.gov.mf.loan.manage.converter.OrganizationFormFormatter;
+import kg.gov.mf.loan.manage.converter.OwnerFormatter;
+import kg.gov.mf.loan.manage.converter.WorkSectorFormatter;
 
 
 
@@ -48,8 +56,21 @@ import kg.gov.mf.loan.web.controller.manage.LoanFormatter;
 @ComponentScan(basePackages = "kg.gov.mf.loan")
 public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware{
      
+	@Autowired
+	DebtorTypeFormatter debtorTypeFormatter;
+	
+	@Autowired
+	LoanFormatter loanFormatter;
+	
+	@Autowired
+	OrganizationFormFormatter orgFormFormatter;
+	
+	@Autowired
+	OwnerFormatter ownerFormatter;
 
-
+	@Autowired
+	WorkSectorFormatter workSectorFormatter;
+	
     @Autowired
     IdentityDocGivenByConverter identityDocGivenByConverter;    
     
@@ -229,7 +250,12 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         registry.addFormatter(employmentHistoryEventTypeFormatter);    
         
         registry.addFormatter(supervisorTermFormatter);
-        registry.addFormatter(new LoanFormatter());
+        
+        registry.addFormatter(loanFormatter);
+        registry.addFormatter(debtorTypeFormatter);
+        registry.addFormatter(orgFormFormatter);
+        registry.addFormatter(workSectorFormatter);
+        registry.addFormatter(ownerFormatter);
 
         
         
