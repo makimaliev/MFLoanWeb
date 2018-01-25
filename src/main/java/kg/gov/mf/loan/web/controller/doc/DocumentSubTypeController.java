@@ -29,7 +29,7 @@ public class DocumentSubTypeController {
         model.addAttribute("documentSubType", new DocumentSubType());
         model.addAttribute("documentSubTypes", documentSubTypeService.findAll());
 
-        return "/doc/documentSubType/new";
+        return "/doc/documentSubType/edit";
     }
 
     @RequestMapping(value = "/doc/documentSubType/edit/{id}")
@@ -46,13 +46,13 @@ public class DocumentSubTypeController {
     @RequestMapping(value = "/doc/documentSubType/delete/{id}")
     public String deleteDocumentSubType(@ModelAttribute("documentSubType") DocumentSubType documentSubType) {
         documentSubTypeService.deleteById(documentSubType);
-        return "/doc/documentSubType/list";
+        return "redirect:/doc/documentSubType";
     }
 
     @RequestMapping(value = "/doc/documentSubType/save")
     public String saveDocumentSubType(@ModelAttribute("documentSubType") DocumentSubType documentSubType) {
         documentSubTypeService.edit(documentSubType);
-        return "/doc/documentSubType/list";
+        return "redirect:/doc/documentSubType";
     }
 
 }

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>MFLoan | Docflow</title>
+
+    <div th:replace="fragments/header :: header-css"></div>
+
+    <link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}" rel="stylesheet" type="text/css" />
+
+</head>
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
+
+<!--div th:replace="doc/document/documentForm.html :: doc"></div-->
+
+<div th:replace="layout :: header-top"></div>
+
+<div class="page-container">
+
+    <div th:replace="layout :: page-container-sidebar" />
+
+    <div class="page-content-wrapper">
+        <div class="page-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-hover table-condensed table-striped table-bordered compact condensed" id="documentTable">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Document SubType</th>
+                            <th>Sender</th>
+                            <th>Receiver</th>
+                            <th>View</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="document : ${documents}">
+                                <td th:text="${document.id}"></td>
+                                <td th:text="${document.title}"></td>
+                                <td th:text="${document.description}"></td>
+                                <td th:text="${document.documentSubType}"></td>
+
+                                <td th:text="${responsible[__${document.senderResponsible.responsibleType}__ - 1]}"></td>
+                                <td th:text="${responsible[__${document.receiverResponsible.responsibleType}__ - 1]}}"></td>
+
+                                <td><a th:href="@{/doc/view/__${document.id}__}" role='button' class='btn btn-xs green-stripe'> View </a></td>
+                                <td><a th:href="@{/doc/edit/__${document.id}__}" role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
+                                <td><a th:href="@{/doc/delete/__${document.id}__}" role="button" class="btn btn-xs red-stripe"> Delete </a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+            <span class="row">
+				<div class="col-md-12">
+					<button class="btn btn-primary"> Filter </button>
+				</div>
+				<div class="col-md-12" th:if="${type == 'internal' or type == 'outgoing'}">
+					<span th:each="dst : ${documentSubType}">
+						<a th:href="@{/doc/__${type}__/__${dst.id}__}" class="btn btn-success" th:text="${dst.name}"> New Document </a>
+					</span>
+				</div>
+			</span>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="layout :: footer"></div>
+<div th:replace="fragments/footer :: footer-js"></div>
+
+<script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
+<script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>
+<script th:inline="javascript">
+
+    var si = 0;
+    var sitems = [
+        $('[name="si1"]'),
+        $('[name="si2"]'),
+        $('[name="si3"]'),
+        $('[name="si4"]')
+    ];
+    var ri = 0;
+    var ritems = [
+        $('[name="ri1"]'),
+        $('[name="ri2"]'),
+        $('[name="ri3"]'),
+        $('[name="ri4"]')
+    ];
+
+    $(document).ready(function() {
+
+        $('[name="si1"]').show();
+        $('[name="si2"]').hide();
+        $('[name="si3"]').hide();
+        $('[name="si4"]').hide();
+
+        $('[name="ri1"]').show();
+        $('[name="ri2"]').hide();
+        $('[name="ri3"]').hide();
+        $('[name="ri4"]').hide();
+
+    function initSelectSender(itm) {
+
+        if(itm != si)
+        {
+            sitems[si].hide();
+            sitems[itm].show();
+            si = itm;
+        }
+
+    }
+    function initSelectReceiver(itm) {
+        if(itm != ri)
+        {
+            ritems[ri].hide();
+            ritems[itm].show();
+            ri = itm;
+        }
+    }
+
+    $("#sr").change(function() {
+        var selection = $(this).val();
+        initSelectSender(selection - 1);
+    });
+    $("#rr").change(function() {
+        var selection = $(this).val();
+        initSelectReceiver(selection - 1);
+    });
+    $("#documentModal").on("show.bs.modal", function(e) {
+        var sr = $("#sr").val();
+        initSelectSender(sr - 1);
+
+        var rr = $("#rr").val();
+        initSelectReceiver(rr - 1)
+
+    });
+
+</script>
+
+</body>
+</html>

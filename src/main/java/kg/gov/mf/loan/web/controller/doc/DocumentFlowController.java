@@ -87,13 +87,9 @@ public class DocumentFlowController {
     @Autowired
     PersonService personService;
 
+    /*
     @RequestMapping(value = "/doc", params = "type")
-    public String listDocuments(@RequestParam("type") String type, Model model) {
-
-        model.addAttribute("document", new Document());
-        model.addAttribute("documentType", documentTypeService.findAll());
-        model.addAttribute("documentSubType", documentSubTypeService.findAll());
-        model.addAttribute("type", type);
+    public String index(@RequestParam("type") String type, Model model) {
 
         if (type == "internal") {
             model.addAttribute("documents", documentService.internalDocuments());
@@ -104,6 +100,57 @@ public class DocumentFlowController {
         } else if (type == "archived") {
             model.addAttribute("documents", documentService.archivedDocuments());
         }
+
+        String responsible[] = {"Staff", "Department", "Organization", "Person"};
+        model.addAttribute("responsible", responsible);
+
+        model.addAttribute("documentSubType", documentSubTypeService.findAll());
+        model.addAttribute("type", type);
+
+        return "/doc/document/list";
+    }
+
+    @RequestMapping(value = "/doc/document/view")
+    public String viewDocument(@ModelAttribute("document") Document document) {
+        documentService.edit(document);
+        return "/doc/document/view";
+    }
+
+    @RequestMapping(value = "/doc/new")
+    public String newDocument(Model model) {
+        model.addAttribute("document", new Document());
+        return "/doc/document/edit";
+    }
+
+    @RequestMapping(value = "/doc/document/edit/{id}")
+    public String editDocument(@PathVariable("id") Long id, Model model) {
+
+        Document document = documentService.findById(id);
+        model.addAttribute("document", document);
+        return "/doc/document/edit";
+    }
+
+    @RequestMapping(value = "/doc/document/delete/{id}")
+    public String deleteDocument(@ModelAttribute("documentSubType") DocumentSubType documentSubType) {
+        documentSubTypeService.deleteById(documentSubType);
+        return "redirect:/doc";
+    }
+
+    @RequestMapping(value = "/doc/document/save")
+    public String saveDocument(@ModelAttribute("documentSubType") DocumentSubType documentSubType) {
+        documentSubTypeService.edit(documentSubType);
+        return "redirect:/doc";
+    }
+    */
+
+    //region Original Code
+    @RequestMapping(value = "/doc", params = "type")
+    public String listDocuments(@RequestParam("type") String type, Model model) {
+
+        model.addAttribute("document", new Document());
+        model.addAttribute("documentType", documentTypeService.findAll());
+        model.addAttribute("documentSubType", documentSubTypeService.findAll());
+        model.addAttribute("type", type);
 
         String responsible[] = {"Staff", "Department", "Organization", "Person"};
 
@@ -295,4 +342,6 @@ public class DocumentFlowController {
 
         return map;
     }
+    //endregion
+
 }

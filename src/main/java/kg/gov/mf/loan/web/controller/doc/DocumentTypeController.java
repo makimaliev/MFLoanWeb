@@ -28,7 +28,7 @@ public class DocumentTypeController {
         model.addAttribute("documentType", new DocumentType());
         model.addAttribute("documentTypes", documentTypeService.findAll());
 
-        return "/doc/documentType/new";
+        return "/doc/documentType/edit";
     }
 
     @RequestMapping(value = "/doc/documentType/edit/{id}")
@@ -45,12 +45,12 @@ public class DocumentTypeController {
     @RequestMapping(value = "/doc/documentType/delete/{id}")
     public String deletedocumentType(@ModelAttribute("documentType") DocumentType documentType) {
         documentTypeService.deleteById(documentType);
-        return "/doc/documentType/list";
+        return "redirect:/doc/documentType";
     }
 
     @RequestMapping(value = "/doc/documentType/save")
     public String savedocumentType(@ModelAttribute("documentType") DocumentType documentType) {
         documentTypeService.edit(documentType);
-        return "/doc/documentType/list";
+        return "redirect:/doc/documentType";
     }
 }

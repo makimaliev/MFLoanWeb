@@ -708,7 +708,17 @@
 								<li class="nav-item  "><a th:href="@{/manage/loan/list}" class="nav-link ">List loans</a></li>
 	                            <li class="nav-item  "><a th:href="@{/manage/collection/list}" class="nav-link ">List collections</a></li>
 							</ul>
-						</li>						
+						</li>
+
+						<li class="nav-item  "><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-book-open"></i> <span class="title">Documents</span> <span class="arrow"></span></a>
+							<ul class="sub-menu">
+								<li class="nav-item"><a th:href="@{/doc(type='internal')}" class="nav-link ">Internal</a></li>
+								<li class="nav-item"><a th:href="@{/doc(type='incoming')}" class="nav-link ">Incoming</a></li>
+								<li class="nav-item"><a th:href="@{/doc(type='outgoing')}" class="nav-link ">Outgoing</a></li>
+								<li class="nav-item"><a th:href="@{/doc(type='archived')}" class="nav-link ">Archive</a></li>
+							</ul>
+						</li>
+
 					</ul>
 					<!-- END SIDEBAR MENU -->
 				</div>
