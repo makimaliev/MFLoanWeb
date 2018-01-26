@@ -380,17 +380,17 @@
 							<!-- th:with="lang=(__${#locale}__ ==  'en'?'ru':'en')" -->
 								<ul class="dropdown-menu" th:case="'kg'">
 									<!-- <li><a th:href="'?language=kg'"><img alt="" th:src="@{/assets/global/img/flags/kg.png}"/>KG</a></li> -->
-									<li><a th:href="'?language=ru'"><img alt="" th:src="@{/assets/global/img/flags/ru.png}"/>RU</a></li>
-									<li><a th:href="'?language=en'"><img alt="" th:src="@{/assets/global/img/flags/en.png}"/>EN</a></li>
+									<li><a th:href="'?language=ru'"><img alt="" th:src="@{/assets/global/img/flags/ru.png}"/>Русский</a></li>
+									<li><a th:href="'?language=en'"><img alt="" th:src="@{/assets/global/img/flags/en.png}"/>English</a></li>
 								</ul>
 								<ul class="dropdown-menu" th:case="'ru'">
-									<li><a th:href="'?language=kg'"><img alt="" th:src="@{/assets/global/img/flags/kg.png}"/>KG</a></li>
+									<li><a th:href="'?language=kg'"><img alt="" th:src="@{/assets/global/img/flags/kg.png}"/>Кыргызча</a></li>
 									<!-- <li><a th:href="'?language=ru'"><img alt="" th:src="@{/assets/global/img/flags/ru.png}"/>RU</a></li> -->
-									<li><a th:href="'?language=en'"><img alt="" th:src="@{/assets/global/img/flags/en.png}"/>EN</a></li>
+									<li><a th:href="'?language=en'"><img alt="" th:src="@{/assets/global/img/flags/en.png}"/>English</a></li>
 								</ul>
 								<ul class="dropdown-menu" th:case="*">
-									<li><a th:href="'?language=kg'"><img alt="" th:src="@{/assets/global/img/flags/kg.png}"/>KG</a></li>
-									<li><a th:href="'?language=ru'"><img alt="" th:src="@{/assets/global/img/flags/ru.png}"/>RU</a></li>
+									<li><a th:href="'?language=kg'"><img alt="" th:src="@{/assets/global/img/flags/kg.png}"/>Кыргызча</a></li>
+									<li><a th:href="'?language=ru'"><img alt="" th:src="@{/assets/global/img/flags/ru.png}"/>Русский</a></li>
 									<!-- <li><a th:href="'?language=en'"><img alt="" th:src="@{/assets/global/img/flags/en.png}"/>EN</a></li>-->
 								</ul>
 								</li>
@@ -442,12 +442,12 @@
 						
 					<li class="nav-item start active open ">
 					<a href="javascript:;"
-							class="nav-link nav-toggle"> <i class="icon-plane"></i> <span
+							class="nav-link nav-toggle"> <i class="icon-folder"></i> <span
 								class="title">Справочники</span> <span class="arrow"></span>
 						</a>
 							<ul class="sub-menu">
 								<li class="nav-item"><a href="javascript:;"
-									class="nav-link nav-toggle"> <i class="icon-settings"></i>
+									class="nav-link nav-toggle"> <i class="icon-folder"></i>
 										Организация <span class="arrow"></span>
 								</a>
 									<ul class="sub-menu">
@@ -494,7 +494,7 @@
 
 
 								<li class="nav-item"><a href="javascript:;"
-									class="nav-link nav-toggle"> <i class="icon-settings"></i>
+									class="nav-link nav-toggle"> <i class="icon-folder"></i>
 										Система <span class="arrow"></span>
 								</a>
 									<ul class="sub-menu">
@@ -537,7 +537,7 @@
 
 
 						<li class="nav-item  "><a href="javascript:;"
-							class="nav-link nav-toggle"> <i class="icon-diamond"></i> <span
+							class="nav-link nav-toggle"> <i class="icon-settings"></i> <span
 								class="title">Система</span> <span class="arrow"></span>
 						</a>
 
@@ -559,7 +559,7 @@
 						
 						
 <li class="nav-item  "><a href="javascript:;"
-							class="nav-link nav-toggle"> <i class="icon-diamond"></i> <span
+							class="nav-link nav-toggle"> <i class="icon-user"></i> <span
 								class="title">Организация</span> <span class="arrow"></span>
 						</a>
 
@@ -594,25 +594,25 @@
 
 						</li>						
 
-						<li class="nav-item  "><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-diamond"></i> <span class="title">Manage</span> <span class="arrow"></span></a>
+						<li class="nav-item  "><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-wrench"></i> <span class="title">Manage</span> <span class="arrow"></span></a>
 							<ul class="sub-menu">
-								<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Orders <span class="arrow"></span></a>
+								<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-wrench"></i>Orders <span class="arrow"></span></a>
 									<ul class="sub-menu">
 										<li class="nav-item "><a th:href="@{/manage/order/list}" class="nav-link "> <span class="title"> List orders</span></a></li>
 										<li class="nav-item "><a th:href="@{/manage/order/state/list}" class="nav-link "> <span class="title"> List order states</span></a></li>
 										<li class="nav-item "><a th:href="@{/manage/order/type/list}" class="nav-link "> <span class="title"> List order types</span></a></li>
-										<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Applied entity list <span class="arrow"></span></a>
+										<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-wrench"></i>Applied entity list <span class="arrow"></span></a>
 											<ul class="sub-menu">
 												<li class="nav-item "><a th:href="@{/manage/order/entitylist/state/list}" class="nav-link "> <span class="title"> List applied entity list states</span></a></li>
 												<li class="nav-item "><a th:href="@{/manage/order/entitylist/type/list}" class="nav-link "> <span class="title"> List applied entity list types</span></a></li>
-												<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Applied entity <span class="arrow"></span></a>
+												<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-wrench"></i>Applied entity <span class="arrow"></span></a>
 													<ul class="sub-menu">
 														<li class="nav-item "><a th:href="@{/manage/order/entitylist/entity/state/list}" class="nav-link "> <span class="title"> List applied entity states</span></a></li>
-														<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Document Package <span class="arrow"></span></a>
+														<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-wrench"></i>Document Package <span class="arrow"></span></a>
 															<ul class="sub-menu">
 																<li class="nav-item "><a th:href="@{/manage/order/entitylist/entity/documentpackage/state/list}" class="nav-link "> <span class="title"> List document package states</span></a></li>
 																<li class="nav-item "><a th:href="@{/manage/order/entitylist/entity/documentpackage/type/list}" class="nav-link "> <span class="title"> List document package types</span></a></li>
-																<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Entity Document <span class="arrow"></span></a>
+																<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-wrench"></i>Entity Document <span class="arrow"></span></a>
 																	<ul class="sub-menu">
 																		<li class="nav-item "><a th:href="@{/manage/order/entitylist/entity/documentpackage/entitydocument/state/list}" class="nav-link "> <span class="title"> List entity document states</span></a></li>
 																		<li class="nav-item "><a th:href="@{/manage/order/entitylist/entity/documentpackage/entitydocument/registeredby/list}" class="nav-link "> <span class="title"> List entity document registered by</span></a></li>
@@ -624,16 +624,16 @@
 												</li>
 											</ul>
 										</li>
-										<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Order Document Package <span class="arrow"></span></a>
+										<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-wrench"></i>Order Document Package <span class="arrow"></span></a>
 											<ul class="sub-menu">
-												<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Order Document <span class="arrow"></span></a>
+												<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-wrench"></i>Order Document <span class="arrow"></span></a>
 													<ul class="sub-menu">
 														<li class="nav-item "><a th:href="@{/manage/order/orderdocumentpackage/orderdocument/type/list}" class="nav-link "> <span class="title"> List order document types</span></a></li>
 													</ul>
 												</li>
 											</ul>
 										</li>
-										<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Order term <span class="arrow"></span></a>
+										<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-wrench"></i>Order term <span class="arrow"></span></a>
 											<ul class="sub-menu">
 												<li class="nav-item "><a th:href="@{/manage/order/orderterm/fund/list}" class="nav-link "> <span class="title"> List order term funds</span></a></li>
 												<li class="nav-item "><a th:href="@{/manage/order/orderterm/currency/list}" class="nav-link "> <span class="title"> List order term currencies</span></a></li>
@@ -647,36 +647,36 @@
 										</li>
 									</ul>
 								</li>
-								<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Debtors <span class="arrow"></span></a>
+								<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-wrench"></i>Debtors <span class="arrow"></span></a>
 									<ul class="sub-menu">
 										<li class="nav-item "><a th:href="@{/manage/debtor/list}" class="nav-link "> <span class="title"> List debtors</span></a></li>
 										<li class="nav-item "><a th:href="@{/manage/debtor/type/list}" class="nav-link "> <span class="title"> List debtor types</span></a></li>
 										<li class="nav-item "><a th:href="@{/manage/debtor/orgform/list}" class="nav-link "> <span class="title"> List organization forms</span></a></li>
 										<li class="nav-item "><a th:href="@{/manage/debtor/worksector/list}" class="nav-link "> <span class="title"> List work sectors</span></a></li>
-										<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Loan <span class="arrow"></span></a>
+										<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-wrench"></i>Loan <span class="arrow"></span></a>
 											<ul class="sub-menu">
 												<li class="nav-item "><a th:href="@{/manage/debtor/loan/state/list}" class="nav-link "> <span class="title"> List loan states</span></a></li>
 												<li class="nav-item "><a th:href="@{/manage/debtor/loan/type/list}" class="nav-link "> <span class="title"> List loan types</span></a></li>
-												<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Payment schedule <span class="arrow"></span></a>
+												<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-wrench"></i>Payment schedule <span class="arrow"></span></a>
 													<ul class="sub-menu">
 														<li class="nav-item "><a th:href="@{/manage/debtor/loan/paymentschedule/installmentstate/list}" class="nav-link "> <span class="title"> List installment states</span></a></li>
 													</ul>
 												</li>
-												<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Payment <span class="arrow"></span></a>
+												<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-wrench"></i>Payment <span class="arrow"></span></a>
 													<ul class="sub-menu">
 														<li class="nav-item "><a th:href="@{/manage/debtor/loan/payment/type/list}" class="nav-link "> <span class="title"> List payment types</span></a></li>
 													</ul>
 												</li>
 											</ul>
 										</li>
-										<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Collateral Agreement <span class="arrow"></span></a>
+										<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-wrench"></i>Collateral Agreement <span class="arrow"></span></a>
 											<ul class="sub-menu">
-												<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Collateral Item <span class="arrow"></span></a>
+												<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-wrench"></i>Collateral Item <span class="arrow"></span></a>
 													<ul class="sub-menu">
 														<li class="nav-item "><a th:href="@{/manage/debtor/collateralagreement/collateralitem/itemtype/list}" class="nav-link "> <span class="title"> List item types</span></a></li>
 														<li class="nav-item "><a th:href="@{/manage/debtor/collateralagreement/collateralitem/quantitytype/list}" class="nav-link "> <span class="title"> List quantity types</span></a></li>
 														<li class="nav-item "><a th:href="@{/manage/debtor/collateralagreement/collateralitem/conditiontype/list}" class="nav-link "> <span class="title"> List condition types</span></a></li>
-														<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Inspection Result <span class="arrow"></span></a>
+														<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-wrench"></i>Inspection Result <span class="arrow"></span></a>
 															<ul class="sub-menu">
 																<li class="nav-item "><a th:href="@{/manage/debtor/collateralagreement/collateralitem/insresult/resulttype/list}" class="nav-link "> <span class="title"> List result types</span></a></li>
 															</ul>
@@ -685,15 +685,15 @@
 												</li>
 											</ul>
 										</li>
-										<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Collection Procedure <span class="arrow"></span></a>
+										<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-wrench"></i>Collection Procedure <span class="arrow"></span></a>
 											<ul class="sub-menu">
 												<li class="nav-item "><a th:href="@{/manage/debtor/collectionprocedure/status/list}" class="nav-link "> <span class="title"> List procedure statuses</span></a></li>
 												<li class="nav-item "><a th:href="@{/manage/debtor/collectionprocedure/type/list}" class="nav-link "> <span class="title"> List procedure types</span></a></li>
-												<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Collection Phase <span class="arrow"></span></a>
+												<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-wrench"></i>Collection Phase <span class="arrow"></span></a>
 													<ul class="sub-menu">
 														<li class="nav-item "><a th:href="@{/manage/debtor/collectionprocedure/collectionphase/status/list}" class="nav-link "> <span class="title"> List phase statuses</span></a></li>
 														<li class="nav-item "><a th:href="@{/manage/debtor/collectionprocedure/collectionphase/type/list}" class="nav-link "> <span class="title"> List phase types</span></a></li>
-														<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-settings"></i>Collection Event <span class="arrow"></span></a>
+														<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-wrench"></i>Collection Event <span class="arrow"></span></a>
 															<ul class="sub-menu">
 																<li class="nav-item "><a th:href="@{/manage/debtor/collectionprocedure/collectionphase/collectionevent/status/list}" class="nav-link "> <span class="title"> List event statuses</span></a></li>
 																<li class="nav-item "><a th:href="@{/manage/debtor/collectionprocedure/collectionphase/collectionevent/type/list}" class="nav-link "> <span class="title"> List event types</span></a></li>
@@ -706,7 +706,6 @@
 									</ul>
 								</li>
 								<li class="nav-item  "><a th:href="@{/manage/loan/list}" class="nav-link ">List loans</a></li>
-	                            <li class="nav-item  "><a th:href="@{/manage/collection/list}" class="nav-link ">List collections</a></li>
 							</ul>
 						</li>						
 					</ul>

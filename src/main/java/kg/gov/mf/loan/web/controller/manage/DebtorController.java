@@ -158,6 +158,7 @@ public class DebtorController {
 				if(owner.getEntityId() == entity.getEntityId() && owner.getOwnerType().equals(entity.getOwnerType())) {
 					entities.remove(entity);
 					entities.add(owner);
+					break;
 				}
 			}
 			model.addAttribute("debtor", debtor);
@@ -172,7 +173,11 @@ public class DebtorController {
 		if(debtor.getId() == 0)
 			debtorService.add(debtor);
 		else
+		{
+			Owner oldOwner = debtorService.getById(debtor.getId()).getOwner();
 			debtorService.update(debtor);
+			ownerService.remove(oldOwner);
+		}
 			
 		return "redirect:" + "/manage/debtor/list";
 	}

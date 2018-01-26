@@ -103,6 +103,7 @@ public class CollateralAgreementController {
 				if(owner.getEntityId() == entity.getEntityId() && owner.getOwnerType().equals(entity.getOwnerType())) {
 					entities.remove(entity);
 					entities.add(owner);
+					break;
 				}
 			}
 			model.addAttribute("agreement", agreement);
@@ -114,13 +115,16 @@ public class CollateralAgreementController {
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collateralagreement/save"})
     public String saveCollateralAgreement(CollateralAgreement agreement, 
     		@PathVariable("debtorId")Long debtorId,
-    		String[] loanIdList,
     		ModelMap model)
     {
 		if(agreement.getId() == 0)
 			agreementService.add(agreement);
 		else
+		{
+			Owner oldOwner = debtorService.getById(agreement.getId()).getOwner();
 			agreementService.update(agreement);
+			ownerService.remove(oldOwner);
+		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/view";
     }
