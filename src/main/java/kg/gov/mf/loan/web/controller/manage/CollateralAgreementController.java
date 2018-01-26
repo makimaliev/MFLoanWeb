@@ -121,7 +121,7 @@ public class CollateralAgreementController {
 			agreementService.add(agreement);
 		else
 		{
-			Owner oldOwner = debtorService.getById(agreement.getId()).getOwner();
+			Owner oldOwner = agreementService.getById(agreement.getId()).getOwner();
 			agreementService.update(agreement);
 			ownerService.remove(oldOwner);
 		}
