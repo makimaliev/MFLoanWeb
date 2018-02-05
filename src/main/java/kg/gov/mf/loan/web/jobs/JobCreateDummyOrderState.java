@@ -25,12 +25,14 @@ public class JobCreateDummyOrderState implements Job{
     public void execute(JobExecutionContext arg0) throws JobExecutionException
     {
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-        CreditOrderState state = new CreditOrderState();
-        state.setVersion(1);
-        state.setName("Dummy State from job");
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
+
+        CreditOrderState state = new CreditOrderState();
+        state.setVersion(1);
+        state.setName("Dummy State from job " + dateFormat.format(date));
+
         System.out.println("Insertion of order state at:" + dateFormat.format(date));
 
         stateService.add(state);

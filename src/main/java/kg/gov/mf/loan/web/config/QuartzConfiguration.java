@@ -6,8 +6,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.*;
 
-//@Configuration
-//@ComponentScan(basePackages = "kg.gov.mf.loan")
+@Configuration
+@ComponentScan(basePackages = "kg.gov.mf.loan")
 public class QuartzConfiguration {
     @Bean
     public JobDetailFactoryBean jobDetailFactoryBean(){
@@ -20,7 +20,7 @@ public class QuartzConfiguration {
     public CronTriggerFactoryBean cronTriggerFactoryBean(){
         CronTriggerFactoryBean stFactory = new CronTriggerFactoryBean();
         stFactory.setJobDetail(jobDetailFactoryBean().getObject());
-        stFactory.setCronExpression("0 45 16 ? * *"); //trigger job each day at 15:45 PM
+        stFactory.setCronExpression("0 * 10 * * ?"); //trigger job each day at 15:45 PM
         return stFactory;
     }
     @Bean
