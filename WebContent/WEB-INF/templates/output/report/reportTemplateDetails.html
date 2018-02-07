@@ -81,6 +81,16 @@
 								</table>
 								<div class="col-md-12">
 
+
+									<div class="row">
+										<div class="col-md-12">
+											<a data-remote="false" data-toggle="modal"
+											   data-target="#reportTemplateFormModal" th:href="@{/reportTemplate/__${reportTemplate.id}__/generationParameter/add}"
+											   role="button" class="btn btn-large btn-primary"> Add
+												Generation Parameter</a>
+										</div>
+									</div>
+
 									<!-- Default bootstrap modal example -->
 									<div class="modal fade" id="reportTemplateFormModal" tabindex="-1"
 										role="dialog" aria-labelledby="myModalLabel"
@@ -117,15 +127,17 @@
 
 				
 				</div>
-			
-			
-			
-			
+
+
+
 			
 			
 			
 				<div class="row">
 					<div class="col-md-12">
+
+
+
 
 						<input hidden="true" type="text" id="reportTemplate_id" name="reportTemplate_id" th:value="${reportTemplate.id}" />
 
@@ -176,7 +188,7 @@
 
 				$("#reportTemplate_id").val(rowData[0]);
 				
-				var sUrl ="/MFLoanWeb/reportTemplate/" + rowData[0]+"/view";
+				var sUrl ="/reportTemplate/" + rowData[0]+"/view";
 				
 				$.get(sUrl, function(data) {
 

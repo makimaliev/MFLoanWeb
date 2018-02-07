@@ -108,7 +108,7 @@ public class UserController {
 		model.addAttribute("roleList", this.roleService.findAll());		
 		model.addAttribute("supervisorTermList", this.supervisorTermService.findAll());		
 		
-		
+		/*
 		if(this.userService.findById(id).getRoles().isEmpty())
 		{
 			model.addAttribute("selectedRoleList", this.roleService.findById(1));
@@ -117,6 +117,7 @@ public class UserController {
 		{
 			model.addAttribute("selectedRoleList", this.userService.findById(id).getRoles());	
 		}
+		*/
 		
 	
 		

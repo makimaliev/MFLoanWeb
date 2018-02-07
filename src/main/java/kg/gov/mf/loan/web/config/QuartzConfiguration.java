@@ -6,8 +6,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.*;
 
-@Configuration
-@ComponentScan(basePackages = "kg.gov.mf.loan")
+//@Configuration
+//@ComponentScan(basePackages = "kg.gov.mf.loan")
 public class QuartzConfiguration {
     @Bean
     public JobDetailFactoryBean jobDetailFactoryBean(){
@@ -26,7 +26,7 @@ public class QuartzConfiguration {
     @Bean
     public SchedulerFactoryBean schedulerFactoryBean() {
         SchedulerFactoryBean scheduler = new SchedulerFactoryBean();
-        scheduler.setTriggers(cronTriggerFactoryBean().getObject());
+        //scheduler.setTriggers(cronTriggerFactoryBean().getObject());
         return scheduler;
     }
 }

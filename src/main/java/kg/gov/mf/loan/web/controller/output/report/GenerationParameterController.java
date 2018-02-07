@@ -67,19 +67,6 @@ public class GenerationParameterController {
 		return "output/report/generationParameterForm";
 	}
 	
-	@RequestMapping(value = "/reportTemplate/{reportTemplateId}/generationParameter/add", method = RequestMethod.GET)
-	public String getGenerationParameterAddFormWithReportTemplate(@PathVariable("reportTemplateId") long reportTemplateId,Model model) {
-
-		GenerationParameter modelGenerationParameter = new GenerationParameter();
-		
-		
-		model.addAttribute("reportTemplateList", this.reportTemplateService.findAll());		
-		
-		model.addAttribute("generationParameter",modelGenerationParameter);
-
-		return "output/report/generationParameterForm";
-	}	
-
 	@RequestMapping("/generationParameter/{id}/edit")
 	public String getGenerationParameterEditForm(@PathVariable("id") long id, Model model) {
 		model.addAttribute("generationParameter", this.generationParameterService.findById(id));

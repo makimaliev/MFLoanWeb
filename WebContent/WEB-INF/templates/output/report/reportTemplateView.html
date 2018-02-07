@@ -9,7 +9,7 @@
 	<div class="tabbable-custom ">
 		<ul class="nav nav-tabs " id="region_tabs">
 			<li class="active">
-				<a href="#districtListOfRegion" data-toggle="tab">Общая информация</a>
+				<a href="#generationParameters" data-toggle="tab">Параметры формирования</a>
 			</li>
 			<li>
 				<a href="#aokmotuListOfRegion" data-toggle="tab">1</a>
@@ -26,7 +26,7 @@
 		</ul>
 		
 		<div class="tab-content">
-			<div class="tab-pane active" id="templateOfReport">
+			<div class="tab-pane active" id="generationParameters">
 				
 				
 				<table
@@ -36,7 +36,6 @@
 						<tr>
 							<th>Id</th>
 							<th>Name</th>
-							<th>ReportTemplate</th>
 							<th>View</th>
 							<th>Edit</th>
 							<th>Delete</th>
@@ -48,7 +47,6 @@
 						<tr th:each="generationParameterInList : ${reportTemplate.generationParameter}">
 							<td th:text="${generationParameterInList.id}">Id</td>
 							<td th:text="${generationParameterInList.name}">Name</td>
-							<td th:text="${generationParameterInList.reportTemplate.name}">ReportTemplate</td>
 							<td><a th:href="@{/generationParameter/__${generationParameterInList.id}__/details}"
 								role="button" class="btn btn-xs green-stripe"> View </a></td>
 							<td><a data-remote="false" data-toggle="modal"

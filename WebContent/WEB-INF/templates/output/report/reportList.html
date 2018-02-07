@@ -175,9 +175,11 @@
 				var rowData = datatable.row(cell.index().row).data();
 
 				$("#report_id").val(rowData[0]);
-				
-				var sUrl ="/MFLoanWeb/report/" + rowData[0]+"/view";
-				
+
+
+
+				var sUrl ="/report/" + rowData[0]+"/view";
+
 				$.get(sUrl, function(data) {
 
 					$('#content').html(data);
