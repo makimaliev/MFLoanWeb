@@ -90,6 +90,8 @@ public class ReportTemplateController {
 		model.addAttribute("reportList", this.reportService.findAll());
 		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
 
+		model.addAttribute("reportTemplateGenerationParameters", modelReportTemplate.getGenerationParameters());
+
 		model.addAttribute("reportTemplate",modelReportTemplate);
 
 		return "output/report/reportTemplateForm";
@@ -98,9 +100,13 @@ public class ReportTemplateController {
 	@RequestMapping("/reportTemplate/{id}/edit")
 	public String getReportTemplateEditForm(@PathVariable("id") long id, Model model) {
 
-  /*  	ReportTemplate modelReportTemplate = this.reportTemplateService.findById(id);
-    	modelReportTemplate.setGenerationParameter(modelReportTemplate.getGenerationParameter());
+/*
+    	ReportTemplate modelReportTemplate = this.reportTemplateService.findById(id);
+    	modelReportTemplate.setGenerationParameters(this.reportTemplateService.findById(id).getGenerationParameters());
 */
+
+		model.addAttribute("reportTemplateGenerationParameters", this.reportTemplateService.findById(id).getGenerationParameters());
+
 		model.addAttribute("reportTemplate", this.reportTemplateService.findById(id));
 
 		model.addAttribute("reportList", this.reportService.findAll());
@@ -148,10 +154,16 @@ public class ReportTemplateController {
 
 
 	@RequestMapping(value = "/reportTemplate/save", method = RequestMethod.POST)
-	public String saveReportTemplateAndRedirectToReportTemplateList(@Validated @ModelAttribute("reportTemplate") ReportTemplate reportTemplate, BindingResult result) {
+	public String saveReportTemplateAndRedirectToReportTemplateList(@Validated @ModelAttribute("reportTemplate") ReportTemplate reportTemplate,
+																	String[] reportTemplateGenerationParametersIds,
+																	BindingResult result) {
 
 		Report report = this.reportService.findById(reportTemplate.getReport().getId());
-		
+
+		for (String id: reportTemplateGenerationParametersIds)
+		{
+			reportTemplate.getGenerationParameters().add(this.generationParameterService.findById(Long.valueOf(id)));
+		}
 		reportTemplate.setReport(report);
 		
 		if (result.hasErrors()) {

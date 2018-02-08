@@ -28,14 +28,13 @@
 				</label>
 				<div class="col-md-4">
 					<input hidden="true" type="text" id="id" name="id"
-						th:value="*{id}" />
+						th:field="*{id}" />
 					<input hidden="true" type="text" id="report.id" name="report.id"
-						th:value="*{report.id}" />
-						
-						
+						   th:field="*{report.id}" />
+
 					<div class="input-icon right">
 						<i class="fa"></i> <input type="text" class="form-control"
-							name="name" th:value="*{name}" />
+							id="name" name="name" th:field="*{name}" />
 					</div>
 					
 					
@@ -48,14 +47,19 @@
 				</label>
 
 				<div class="col-md-4">
-					<select th:field="*{generationParameter}" multiple="multiple">
-						<option th:each="generationParameter : ${generationParameterList}"
-								th:value="${{generationParameter}}"
-								th:text="${generationParameter.name}"
-
-						>Role</option>
+					<select id="reportTemplate.generationParameters" multiple="multiple" name="reportTemplateGenerationParametersIds">
+						<option th:each="generationParameterInList : ${generationParameterList}"
+								th:value="${generationParameterInList.id}"
+								th:text="${generationParameterInList.name}"
+								th:selected="${reportTemplateGenerationParameters.contains(generationParameterInList)}"/>
 					</select>
 				</div>
+
+
+
+
+
+
 
 			</div>
 
