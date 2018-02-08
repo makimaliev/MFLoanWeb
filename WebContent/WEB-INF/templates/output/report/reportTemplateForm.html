@@ -54,13 +54,37 @@
 								th:selected="${reportTemplateGenerationParameters.contains(generationParameterInList)}"/>
 					</select>
 				</div>
+			</div>
+
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Generation Parameters<span
+						class="required"> * </span>
+				</label>
+
+				<div class="col-md-4">
+					<select id="reportTemplate.filterParameters" multiple="multiple" name="reportTemplateFilterParametersIds">
+						<option th:each="filterParameterInList : ${filterParameterList}"
+								th:value="${filterParameterInList.id}"
+								th:text="${filterParameterInList.name}"
+								th:selected="${reportTemplateFilterParameters.contains(filterParameterInList)}"/>
+					</select>
+				</div>
+			</div>
 
 
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Generation Parameters<span
+						class="required"> * </span>
+				</label>
 
-
-
-
-
+				<div class="col-md-4">
+					<select id="reportTemplate.contentParameters" multiple="multiple" name="reportTemplateContentParametersIds">
+						<option th:each="contentParameterInList : ${contentParameterList}"
+								th:value="${contentParameterInList.id}"
+								th:text="${contentParameterInList.name}"
+								th:selected="${reportTemplateContentParameters.contains(contentParameterInList)}"/>
+					</select>
+				</div>
 			</div>
 
 		</div>

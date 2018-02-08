@@ -25,6 +25,16 @@ public class ReportTemplateController {
 	@Autowired
 	private GenerationParameterService generationParameterService;
 
+
+	@Autowired
+	private FilterParameterService filterParameterService;
+
+
+	@Autowired
+	private ContentParameterService contentParameterService;
+
+
+
 	@Autowired
     private ReportService reportService;
 	
@@ -39,6 +49,8 @@ public class ReportTemplateController {
 		model.addAttribute("reportTemplate", new ReportTemplate());
 		model.addAttribute("reportTemplateList", this.reportTemplateService.findAll());
 		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
+		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
+		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
 
 		return "output/report/reportTemplateList";
 	}
@@ -48,6 +60,8 @@ public class ReportTemplateController {
 
 		ReportTemplate reportTemplate = this.reportTemplateService.findById(id);
 		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
+		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
+		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
 
 		model.addAttribute("reportTemplate", reportTemplate);
 
@@ -59,7 +73,8 @@ public class ReportTemplateController {
 
 		ReportTemplate reportTemplate = this.reportTemplateService.findById(id);
 		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
-
+		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
+		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
 		model.addAttribute("reportTemplate", reportTemplate);
 
 		return "output/report/reportTemplateDetails";
@@ -74,7 +89,8 @@ public class ReportTemplateController {
 		modelReportTemplate.setReport(this.reportService.findById((long)1));
 		model.addAttribute("reportList", this.reportService.findAll());
 		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
-
+		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
+		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
 		model.addAttribute("reportTemplate",modelReportTemplate);
 		
 
@@ -89,8 +105,12 @@ public class ReportTemplateController {
 		modelReportTemplate.setReport(this.reportService.findById(reportId));
 		model.addAttribute("reportList", this.reportService.findAll());
 		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
+		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
+		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
 
 		model.addAttribute("reportTemplateGenerationParameters", modelReportTemplate.getGenerationParameters());
+		model.addAttribute("reportTemplateFilterParameters", modelReportTemplate.getFilterParameters());
+		model.addAttribute("reportTemplateContentParameters", modelReportTemplate.getContentParameters());
 
 		model.addAttribute("reportTemplate",modelReportTemplate);
 
@@ -106,64 +126,48 @@ public class ReportTemplateController {
 */
 
 		model.addAttribute("reportTemplateGenerationParameters", this.reportTemplateService.findById(id).getGenerationParameters());
+		model.addAttribute("reportTemplateFilterParameters", this.reportTemplateService.findById(id).getFilterParameters());
+		model.addAttribute("reportTemplateContentParameters", this.reportTemplateService.findById(id).getContentParameters());
 
 		model.addAttribute("reportTemplate", this.reportTemplateService.findById(id));
 
 		model.addAttribute("reportList", this.reportService.findAll());
 		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
-		
+		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
+		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
+
 		return "output/report/reportTemplateForm";
 
 	}
 
-	@RequestMapping(value = "/reportTemplate/{reportTemplateId}/generationParameter/add", method = RequestMethod.GET)
-	public String getAddGenerationParamtersToReportTemplateForm(@PathVariable("reportTemplateId") long reportTemplateId,Model model) {
-
-		ReportTemplate modelReportTemplate = this.reportTemplateService.findById(reportTemplateId);
-
-
-
-		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
-
-		model.addAttribute("reportTemplate",modelReportTemplate);
-		model.addAttribute("selectedGenerationParameterId",(long)1);
-
-		return "output/report/generationParameterAddToReportTemplateForm";
-	}
-
-	@RequestMapping(value = "/reportTemplate/generationParameter/add", method = RequestMethod.POST)
-	public String addGenerationParameterToReportTemplate(@PathVariable("reportTemplateId")Long reportTemplateId)
-	{
-
-		ReportTemplate reportTemplate = this.reportTemplateService.findById(reportTemplateId);
-
-		System.out.println(reportTemplateId);
-		//GenerationParameter generationParameter = this.generationParameterService.findById(selectedGenerationParameterId);
-
-		//Set<GenerationParameter> generationParameters = reportTemplate.getGenerationParameter();
-
-		//reportTemplate.setGenerationParameter(generationParameters);
-
-
-		this.reportTemplateService.edit(reportTemplate);
-
-		return "redirect:/reportTemplate/list";
-
-	}
-
-
-
 	@RequestMapping(value = "/reportTemplate/save", method = RequestMethod.POST)
 	public String saveReportTemplateAndRedirectToReportTemplateList(@Validated @ModelAttribute("reportTemplate") ReportTemplate reportTemplate,
 																	String[] reportTemplateGenerationParametersIds,
+																	String[] reportTemplateFilterParametersIds,
+																	String[] reportTemplateContentParametersIds,
 																	BindingResult result) {
 
 		Report report = this.reportService.findById(reportTemplate.getReport().getId());
 
+		if(reportTemplateGenerationParametersIds!=null)
 		for (String id: reportTemplateGenerationParametersIds)
 		{
 			reportTemplate.getGenerationParameters().add(this.generationParameterService.findById(Long.valueOf(id)));
 		}
+
+		if(reportTemplateFilterParametersIds!=null)
+		for (String id: reportTemplateFilterParametersIds)
+		{
+			reportTemplate.getFilterParameters().add(this.filterParameterService.findById(Long.valueOf(id)));
+		}
+
+		if(reportTemplateContentParametersIds!=null)
+		for (String id: reportTemplateContentParametersIds)
+		{
+			reportTemplate.getContentParameters().add(this.contentParameterService.findById(Long.valueOf(id)));
+		}
+
+
 		reportTemplate.setReport(report);
 		
 		if (result.hasErrors()) {

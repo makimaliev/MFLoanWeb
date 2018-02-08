@@ -12,10 +12,10 @@
 				<a href="#generationParameters" data-toggle="tab">Параметры формирования</a>
 			</li>
 			<li>
-				<a href="#aokmotuListOfRegion" data-toggle="tab">1</a>
+				<a href="#aokmotuListOfRegion" data-toggle="tab">Параметры фильтрации</a>
 			</li>
 			<li>
-				<a href="#seloListOfRegion" data-toggle="tab">2</a>
+				<a href="#seloListOfRegion" data-toggle="tab">Параметры содержания</a>
 			</li>
 			<li>
 				<a href="#debtorListOfRegion" data-toggle="tab">3</a>
@@ -68,9 +68,82 @@
 				
 			</div>
 			<div class="tab-pane" id="aokmotuListOfRegion">
-			
+
+				<table
+						class="table table-hover table-condensed table-striped table-bordered compact condensed"
+						id="filterParameterTable">
+					<thead>
+					<tr>
+						<th>Id</th>
+						<th>Name</th>
+						<th>View</th>
+						<th>Edit</th>
+						<th>Delete</th>
+					</tr>
+					</thead>
+
+					<tbody>
+
+					<tr th:each="filterParameterInList : ${reportTemplate.filterParameters}">
+						<td th:text="${filterParameterInList.id}">Id</td>
+						<td th:text="${filterParameterInList.name}">Name</td>
+						<td><a th:href="@{/filterParameter/__${filterParameterInList.id}__/details}"
+							   role="button" class="btn btn-xs green-stripe"> View </a></td>
+						<td><a data-remote="false" data-toggle="modal"
+							   data-target="#ReportFormModal"
+							   th:href="@{/filterParameter/__${filterParameterInList.id}__/edit}"
+							   role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
+
+						<td>
+							<form th:action="@{/filterParameter/__${filterParameterInList.id}__/remove}"
+								  method="post">
+								<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+							</form>
+						</td>
+					</tr>
+					</tbody>
+
+				</table>
 			</div>
 			<div class="tab-pane" id="seloListOfRegion">
+
+				<table
+						class="table table-hover table-condensed table-striped table-bordered compact condensed"
+						id="contentParameterTable">
+					<thead>
+					<tr>
+						<th>Id</th>
+						<th>Name</th>
+						<th>View</th>
+						<th>Edit</th>
+						<th>Delete</th>
+					</tr>
+					</thead>
+
+					<tbody>
+
+					<tr th:each="contentParameterInList : ${reportTemplate.contentParameters}">
+						<td th:text="${contentParameterInList.id}">Id</td>
+						<td th:text="${contentParameterInList.name}">Name</td>
+						<td><a th:href="@{/filterParameter/__${contentParameterInList.id}__/details}"
+							   role="button" class="btn btn-xs green-stripe"> View </a></td>
+						<td><a data-remote="false" data-toggle="modal"
+							   data-target="#ReportFormModal"
+							   th:href="@{/contentParameter/__${contentParameterInList.id}__/edit}"
+							   role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
+
+						<td>
+							<form th:action="@{/contentParameter/__${contentParameterInList.id}__/remove}"
+								  method="post">
+								<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+							</form>
+						</td>
+					</tr>
+					</tbody>
+
+				</table>
+
+
 			</div>
 			<div class="tab-pane" id="debtorListOfRegion">
 			</div>
