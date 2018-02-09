@@ -28,22 +28,83 @@
 				</label>
 				<div class="col-md-4">
 					<input hidden="true" type="text" id="id" name="id"
-						th:value="*{id}" />
+						th:field="*{id}" />
 
 						
 						
 					<div class="input-icon right">
 						<i class="fa"></i> <input type="text" class="form-control"
-							name="name" th:value="*{name}" />
+							name="name" th:field="*{name}" />
 					</div>
 					
 					
 				</div>
 			</div>
-			
 
-			
-						
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Position <span
+						class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+												  name="name" th:field="*{postion}" />
+					</div>
+
+
+				</div>
+			</div>
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Position In List <span
+						class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+												  name="name" th:field="*{postionInList}" />
+					</div>
+
+
+				</div>
+			</div>
+
+
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Date <span
+						class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+					<div class="input-group date date-picker" data-date-format="dd.mm.yyyy">
+						<input type="text" class="form-control" name="date" th:field="*{date}"/>
+						<span class="input-group-btn">
+	                                                         <button class="btn default" type="button">
+	                                                             <i class="fa fa-calendar"></i>
+	                                                         </button>
+	                                                     </span>
+					</div>
+
+
+				</div>
+			</div>
+
+
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Generation Parameter Type<span
+						class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<select th:field="*{generationParameterType}">
+						<option th:each="generationParameterTypeInList : ${generationParameterTypeList}"
+								th:value="${{generationParameterTypeInList}}"
+								th:text="${generationParameterTypeInList.name}">Region</option>
+					</select>
+
+				</div>
+			</div>
+
+
+
 		</div>
 		<div class="form-actions">
 			<div class="row">

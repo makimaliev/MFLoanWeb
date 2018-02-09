@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <head>
 <title></title>
 
 <div th:replace="fragments/header :: header-css"></div>
 
-<link
-	th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}"
-	rel="stylesheet" type="text/css" />
-<link
-	th:href="@{/assets/global/plugins/datatables/datatables.min.css}"
-	rel="stylesheet" type="text/css" />
-<link
-	th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}"
-	rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/datatables/datatables.min.css}"     rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}"	rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+	table.KeyTable tr.focus 
+	{
+		outline: 3px solid #3366FF;
+		outline-offset: -3px;
+	}
+</style>
 
 </head>
 
@@ -38,18 +42,14 @@
 			<!-- BEGIN CONTENT BODY -->
 			<div class="page-content">
 
-			
-			
-			
-			
-			<div class="row">
+				<div class="row">
 					<div class="col-md-12">
 						<!-- BEGIN BORDERED TABLE PORTLET-->
 						<div class="portlet portlet-fit ">
 							<div class="portlet-body">
 								<table
-									class="table table-hover table-condensed table-striped table-bordered compact condensed"
-									id="filterParameterTable">
+									class="table compact"
+									id="generationParameterTypeTable">
 									<thead>
 										<tr>
 											<th>Id</th>
@@ -60,17 +60,17 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr >
-											<td th:text="${filterParameter.id}">Id</td>
-											<td th:text="${filterParameter.name}">Name</td>
-											<td><a th:href="@{/filterParameter/__${filterParameter.id}__/details}"
+										<tr th:each="s : ${generationParameterTypeList}">
+											<td th:text="${s.id}">Id</td>
+											<td th:text="${s.name}">Name</td>
+											<td><a th:href="@{/generationParameterType/__${s.id}__/details}"
 												role="button" class="btn btn-xs green-stripe"> View </a></td>
 											<td><a data-remote="false" data-toggle="modal"
-												data-target="#filterParameterFormModal"
-												th:href="@{/filterParameter/__${filterParameter.id}__/edit}" role="button"
+												data-target="#generationParameterTypeFormModal"
+												th:href="@{/generationParameterType/__${s.id}__/edit}" role="button"
 												class="btn btn-xs blue-stripe"> Edit </a></td>
 											<td>
-												<form th:action="@{/filterParameter/__${filterParameter.id}__/remove}"
+												<form th:action="@{/generationParameterType/__${s.id}__/remove}"
 													method="post">
 													<button type="submit" class="btn btn-xs red-stripe">
 														Delete</button>
@@ -82,7 +82,7 @@
 								<div class="col-md-12">
 
 									<!-- Default bootstrap modal example -->
-									<div class="modal fade" id="filterParameterFormModal" tabindex="-1"
+									<div class="modal fade" id="generationParameterTypeFormModal" tabindex="-1"
 										role="dialog" aria-labelledby="myModalLabel"
 										aria-hidden="true">
 										<div class="modal-dialog">
@@ -109,9 +109,9 @@
 								<div class="row">
 									<div class="col-md-12">
 										<a data-remote="false" data-toggle="modal"
-											data-target="#filterParameterFormModal" th:href="@{/filterParameter/__${filterParameter.id}__/filterParameter/add}"
+											data-target="#generationParameterTypeFormModal" th:href="@{/generationParameterType/add}"
 											role="button" class="btn btn-large btn-primary"> Add
-											Generation Parameter</a>
+											GenerationParameterType</a>
 									</div>
 								</div>
 							</div>
@@ -122,17 +122,12 @@
 
 				
 				</div>
-			
-			
-			
-			
-			
-			
-			
+
 				<div class="row">
+
 					<div class="col-md-12">
 
-						<input hidden="true" type="text" id="filterParameter_id" name="filterParameter_id" th:value="${filterParameter.id}" />
+						<input hidden="true" type="text" id="generationParameterType_id" name="generationParameterType_id" />
 
 						<div id="content"></div>
 
@@ -162,10 +157,10 @@
 	<!-- BEGIN PAGE LEVEL SCRIPTS -->
 
 
-<script type="text/javascript">
+	<script type="text/javascript">
 		$(document).ready(function() {
 
-			var table = $('#filterParameterTable').DataTable({
+			var table = $('#generationParameterTypeTable').DataTable({
 		    	stateSave: true,
 		    	"language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
 	    		"info":     false,
@@ -179,14 +174,30 @@
 
 				var rowData = datatable.row(cell.index().row).data();
 
-				$("#filterParameter_id").val(rowData[0]);
+				$("#generationParameterType_id").val(rowData[0]);
 				
-				var sUrl ="/filterParameter/" + rowData[0]+"/view";
+				var sUrl ="/generationParameterType/" + rowData[0]+"/view";
 				
 				$.get(sUrl, function(data) {
 
 					$('#content').html(data);
 				});
+				
+				
+				
+				
+				
+				var row = datatable.row( cell.index().row );
+
+
+	      table.$('tr.info').removeClass('info');
+				$( row.node() ).addClass( "info" );
+
+				var rowData = row.data();
+				
+
+				var colData = datatable.cell( { focused: true } ).data();
+				
 
 				});
 
@@ -194,17 +205,17 @@
 		</script>
 
 	<script type="text/javascript">
-	$("#filterParameterFormModal").on("show.bs.modal", function(e) {
+	$("#generationParameterTypeFormModal").on("show.bs.modal", function(e) {
 		
 	    var link = $(e.relatedTarget);
 	    
 	    
-	    var filterParameterID = $("#filterParameter_id").val();
+	    var generationParameterTypeID = $("#generationParameterType_id").val();
 
-	    if(link.attr("href").indexOf('filterParameter/add')>0)
+	    if(link.attr("href").indexOf('district/add')>0)
 	    {
-	    	$(this).find(".modal-title").html(link.attr("href"));
-		    $(this).find(".modal-body").load(link.attr("href"));
+	    	$(this).find(".modal-title").html(link.attr("href").replace("/district/add","/generationParameterType/"+generationParameterTypeID+"/district/add"));
+		    $(this).find(".modal-body").load(link.attr("href").replace("/district/add","/generationParameterType/"+generationParameterTypeID+"/district/add"));
 	    }
 	    else
     	{
@@ -217,14 +228,6 @@
 
 	
 </script>
-
-
-
-
-
-
-
-
 
 
 

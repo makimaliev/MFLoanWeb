@@ -4,6 +4,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import kg.gov.mf.loan.output.report.converter.GenerationParameterFormatter;
+import kg.gov.mf.loan.output.report.converter.GenerationParameterTypeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -61,6 +62,8 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     @Autowired
     GenerationParameterFormatter generationParameterFormatter;
 
+    @Autowired
+    GenerationParameterTypeFormatter generationParameterTypeFormatter;
 
     @Autowired
 	DebtorTypeFormatter debtorTypeFormatter;
@@ -264,6 +267,7 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         registry.addFormatter(workSectorFormatter);
         registry.addFormatter(ownerFormatter);
         registry.addFormatter(generationParameterFormatter);
+        registry.addFormatter(generationParameterTypeFormatter);
 
         
         

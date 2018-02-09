@@ -49,7 +49,7 @@
 							<div class="portlet-body">
 								<table
 									class="table table-hover table-condensed table-striped table-bordered compact condensed"
-									id="filterParameterTable">
+									id="generationParameterTypeTable">
 									<thead>
 										<tr>
 											<th>Id</th>
@@ -61,16 +61,16 @@
 									</thead>
 									<tbody>
 										<tr >
-											<td th:text="${filterParameter.id}">Id</td>
-											<td th:text="${filterParameter.name}">Name</td>
-											<td><a th:href="@{/filterParameter/__${filterParameter.id}__/details}"
+											<td th:text="${generationParameterType.id}">Id</td>
+											<td th:text="${generationParameterType.name}">Name</td>
+											<td><a th:href="@{/generationParameterType/__${generationParameterType.id}__/details}"
 												role="button" class="btn btn-xs green-stripe"> View </a></td>
 											<td><a data-remote="false" data-toggle="modal"
-												data-target="#filterParameterFormModal"
-												th:href="@{/filterParameter/__${filterParameter.id}__/edit}" role="button"
+												data-target="#generationParameterTypeFormModal"
+												th:href="@{/generationParameterType/__${generationParameterType.id}__/edit}" role="button"
 												class="btn btn-xs blue-stripe"> Edit </a></td>
 											<td>
-												<form th:action="@{/filterParameter/__${filterParameter.id}__/remove}"
+												<form th:action="@{/generationParameterType/__${generationParameterType.id}__/remove}"
 													method="post">
 													<button type="submit" class="btn btn-xs red-stripe">
 														Delete</button>
@@ -82,7 +82,7 @@
 								<div class="col-md-12">
 
 									<!-- Default bootstrap modal example -->
-									<div class="modal fade" id="filterParameterFormModal" tabindex="-1"
+									<div class="modal fade" id="generationParameterTypeFormModal" tabindex="-1"
 										role="dialog" aria-labelledby="myModalLabel"
 										aria-hidden="true">
 										<div class="modal-dialog">
@@ -109,7 +109,7 @@
 								<div class="row">
 									<div class="col-md-12">
 										<a data-remote="false" data-toggle="modal"
-											data-target="#filterParameterFormModal" th:href="@{/filterParameter/__${filterParameter.id}__/filterParameter/add}"
+											data-target="#generationParameterTypeFormModal" th:href="@{/generationParameterType/__${generationParameterType.id}__/generationParameterType/add}"
 											role="button" class="btn btn-large btn-primary"> Add
 											Generation Parameter</a>
 									</div>
@@ -132,7 +132,7 @@
 				<div class="row">
 					<div class="col-md-12">
 
-						<input hidden="true" type="text" id="filterParameter_id" name="filterParameter_id" th:value="${filterParameter.id}" />
+						<input hidden="true" type="text" id="generationParameterType_id" name="generationParameterType_id" th:value="${generationParameterType.id}" />
 
 						<div id="content"></div>
 
@@ -165,7 +165,7 @@
 <script type="text/javascript">
 		$(document).ready(function() {
 
-			var table = $('#filterParameterTable').DataTable({
+			var table = $('#generationParameterTypeTable').DataTable({
 		    	stateSave: true,
 		    	"language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
 	    		"info":     false,
@@ -179,9 +179,9 @@
 
 				var rowData = datatable.row(cell.index().row).data();
 
-				$("#filterParameter_id").val(rowData[0]);
+				$("#generationParameterType_id").val(rowData[0]);
 				
-				var sUrl ="/filterParameter/" + rowData[0]+"/view";
+				var sUrl ="/generationParameterType/" + rowData[0]+"/view";
 				
 				$.get(sUrl, function(data) {
 
@@ -194,14 +194,14 @@
 		</script>
 
 	<script type="text/javascript">
-	$("#filterParameterFormModal").on("show.bs.modal", function(e) {
+	$("#generationParameterTypeFormModal").on("show.bs.modal", function(e) {
 		
 	    var link = $(e.relatedTarget);
 	    
 	    
-	    var filterParameterID = $("#filterParameter_id").val();
+	    var generationParameterTypeID = $("#generationParameterType_id").val();
 
-	    if(link.attr("href").indexOf('filterParameter/add')>0)
+	    if(link.attr("href").indexOf('generationParameterType/add')>0)
 	    {
 	    	$(this).find(".modal-title").html(link.attr("href"));
 		    $(this).find(".modal-body").load(link.attr("href"));

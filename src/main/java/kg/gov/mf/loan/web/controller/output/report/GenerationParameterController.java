@@ -23,8 +23,10 @@ public class GenerationParameterController {
 	
 	@Autowired
     private ReportTemplateService reportTemplateService;
-	
-     
+
+	@Autowired
+	private GenerationParameterTypeService generationParameterTypeService;
+
     public void setGenerationParameterService(GenerationParameterService rs)
     {
         this.generationParameterService = rs;
@@ -34,6 +36,7 @@ public class GenerationParameterController {
 	public String listGenerationParameters(Model model) {
 		model.addAttribute("generationParameter", new GenerationParameter());
 		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
+		model.addAttribute("generationParameterTypeList", this.generationParameterTypeService.findAll());
 
 		return "output/report/generationParameterList";
 	}
@@ -44,6 +47,7 @@ public class GenerationParameterController {
 		GenerationParameter generationParameter = this.generationParameterService.findById(id);
 
 		model.addAttribute("generationParameter", generationParameter);
+		model.addAttribute("generationParameterTypeList", this.generationParameterTypeService.findAll());
 
 		return "output/report/generationParameterView";
 	}
@@ -54,6 +58,7 @@ public class GenerationParameterController {
 		GenerationParameter generationParameter = this.generationParameterService.findById(id);
 
 		model.addAttribute("generationParameter", generationParameter);
+		model.addAttribute("generationParameterTypeList", this.generationParameterTypeService.findAll());
 
 		return "output/report/generationParameterDetails";
 	}	
@@ -63,6 +68,7 @@ public class GenerationParameterController {
 	public String getGenerationParameterAddForm(Model model) {
 
 		model.addAttribute("generationParameter", new GenerationParameter());
+		model.addAttribute("generationParameterTypeList", this.generationParameterTypeService.findAll());
 
 		return "output/report/generationParameterForm";
 	}
@@ -70,6 +76,8 @@ public class GenerationParameterController {
 	@RequestMapping("/generationParameter/{id}/edit")
 	public String getGenerationParameterEditForm(@PathVariable("id") long id, Model model) {
 		model.addAttribute("generationParameter", this.generationParameterService.findById(id));
+		model.addAttribute("generationParameterTypeList", this.generationParameterTypeService.findAll());
+
 		return "output/report/generationParameterForm";
 
 	}
