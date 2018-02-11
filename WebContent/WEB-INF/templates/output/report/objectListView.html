@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+
+<body>
+
+	<div class="tabbable-custom ">
+		<ul class="nav nav-tabs " id="region_tabs">
+			<li class="active">
+				<a href="#districtListOfRegion" data-toggle="tab">Общая информация</a>
+			</li>
+			<li>
+				<a href="#aokmotuListOfRegion" data-toggle="tab">1</a>
+			</li>
+			<li>
+				<a href="#seloListOfRegion" data-toggle="tab">2</a>
+			</li>
+			<li>
+				<a href="#debtorListOfRegion" data-toggle="tab">3</a>
+			</li>
+			<li>
+				<a href="#loanListOfRegion" data-toggle="tab">4</a>
+			</li>
+		</ul>
+		
+		<div class="tab-content">
+			<div class="tab-pane active" id="templateOfReport">
+				
+				
+				<div class="row">
+									<div class="col-md-4">
+										<div class="panel panel-primary">
+
+
+
+
+				<table
+					class="table table-hover table-condensed table-striped table-bordered compact condensed"
+					id="districtTable">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+							<th>Type</th>							
+							<th>View</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+
+					<tbody>
+
+						<tr th:each="objectListValueInList : ${objectList.objectListValues}">
+							<td th:text="${objectListValueInList.id}">Id</td>
+							<td th:text="${objectListValueInList.name}">Name</td>
+							<td th:text="${objectListValueInList.objectList.objectTypeId}">Type</td>
+							<td><a th:href="@{/objectListValue/__${objectListValueInList.id}__/details}"
+								role="button" class="btn btn-xs green-stripe"> View </a></td>
+							<td><a data-remote="false" data-toggle="modal"
+								data-target="#ReportFormModal"
+								th:href="@{/objectListValue/__${objectListValueInList.id}__/edit}"
+								role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
+
+							<td>
+								<form th:action="@{/objectListValue/__${objectListValueInList.id}__/remove}"
+									method="post">
+									<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+								</form>
+							</td>
+						</tr>
+					</tbody>
+
+				</table>
+
+									</div>
+
+
+								</div>
+				
+				
+			</div>
+			<div class="tab-pane" id="aokmotuListOfRegion">
+			
+			</div>
+			<div class="tab-pane" id="seloListOfRegion">
+			</div>
+			<div class="tab-pane" id="debtorListOfRegion">
+			</div>
+			<div class="tab-pane" id="loanListOfRegion">
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
