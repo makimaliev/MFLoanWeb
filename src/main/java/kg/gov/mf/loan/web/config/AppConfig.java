@@ -3,8 +3,11 @@ package kg.gov.mf.loan.web.config;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import kg.gov.mf.loan.output.report.converter.ContentParameterFormatter;
 import kg.gov.mf.loan.output.report.converter.GenerationParameterFormatter;
 import kg.gov.mf.loan.output.report.converter.GenerationParameterTypeFormatter;
+import kg.gov.mf.loan.output.report.converter.ObjectListFormatter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -58,6 +61,13 @@ import kg.gov.mf.loan.manage.converter.WorkSectorFormatter;
 @ComponentScan(basePackages = "kg.gov.mf.loan")
 public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware{
 
+
+    @Autowired
+    ObjectListFormatter objectListFormatter;
+    
+    @Autowired
+    ContentParameterFormatter contentParameterFormatter;
+    
 
     @Autowired
     GenerationParameterFormatter generationParameterFormatter;
@@ -268,6 +278,8 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         registry.addFormatter(ownerFormatter);
         registry.addFormatter(generationParameterFormatter);
         registry.addFormatter(generationParameterTypeFormatter);
+        registry.addFormatter(objectListFormatter);
+        registry.addFormatter(contentParameterFormatter);
 
         
         

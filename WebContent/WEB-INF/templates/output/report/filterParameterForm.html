@@ -40,9 +40,80 @@
 					
 				</div>
 			</div>
+						<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">FilterParameterType<span
+						class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<select th:field="*{filterParameterType}">
+						<option th:each="filterParameterTypeInList : ${T(kg.gov.mf.loan.output.report.model.FilterParameterType).values()}"
+								th:value="${filterParameterTypeInList}"
+								th:text="${filterParameterTypeInList}">Region</option>
+					</select> 
+				</div>
+			</div>
+						<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Object List<span
+						class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<select th:field="*{objectList}">
+						<option th:each="objectListInList : ${objectListList}"
+								th:value="${{objectListInList}}"
+								th:text="${objectListInList.name}">Region</option>
+					</select>
+
+				</div>
+			</div>
+			
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Content Params<span
+						class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<select th:field="*{contentParameter}">
+						<option th:each="contentParameterInList : ${contentParameterList}"
+								th:value="${{contentParameterInList}}"
+								th:text="${contentParameterInList.name}">Region</option>
+					</select>
+
+				</div>
+			</div>
+			
+			
+			
+						<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Comparator<span
+						class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<select th:field="*{comparator}">
+						<option th:each="comparatorInList : ${T(kg.gov.mf.loan.output.report.model.Comparator).values()}"
+								th:value="${comparatorInList}"
+								th:text="${comparatorInList}">Region</option>
+					</select> 
+				</div>
+			</div>		
+			
 			
 
-			
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">Compared Value<span
+					class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+					<div class="input-icon right">
+						<i class="fa"></i> <input type="text" class="form-control"
+							name="comparedValue" th:field="*{comparedValue}" />
+					</div>
+					
+					
+				</div>
+			</div>
 						
 		</div>
 		<div class="form-actions">

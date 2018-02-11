@@ -30,20 +30,32 @@
 				
 				
 				<div class="row">
-									<div class="col-md-4">
+									<div class="col-md-6">
 										<div class="panel panel-primary">
-											<div class="panel-heading">
-												<h3 class="panel-title">Report general information</h3>
-											</div>
 											<div class="panel-body">
 												<dl class="dl-horizontal">
-
+													<dt>Filter Parameter Name</dt>
+													<dd th:text="${filterParameter?.name}">name</dd>
 												</dl>
-
-
 												<dl class="dl-horizontal">
-													<dt>Name</dt>
+													<dt>Object List Name</dt>
+													<dd th:text="${filterParameter?.objectList?.name}">name</dd>
 												</dl>
+												<dl class="dl-horizontal">
+													<dt>Content Parameter Name</dt>
+													<dd th:text="${filterParameter?.contentParameter?.name}">name</dd>
+												</dl>												
+												<dl class="dl-horizontal">
+													<dt>Comparator</dt>
+													<dd th:text="${filterParameter?.comparator}">name</dd>
+												</dl>												
+												
+												<dl class="dl-horizontal">
+													<dt>Compared value</dt>
+													<dd th:text="${filterParameter?.comparedValue}">name</dd>
+												</dl>	
+												
+																								
 											</div>
 										</div>
 

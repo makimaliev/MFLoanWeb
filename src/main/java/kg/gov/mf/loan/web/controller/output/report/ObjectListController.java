@@ -186,16 +186,6 @@ public class ObjectListController {
 			String[] ObjectListValuesIds,BindingResult result) {
 
 		
-		
-		
-		if (objectList.getId() > 0)
-		{
-
-		}
-		
-		
-		
-		
 		if (result.hasErrors()) 
 		{
 			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
@@ -214,6 +204,9 @@ public class ObjectListController {
 			ObjectList modelObjectList = this.objectListService.findById(objectList.getId());
 
 			modelObjectList.getObjectListValues().clear();
+			modelObjectList.setName(objectList.getName());
+			modelObjectList.setObjectTypeId(objectList.getObjectTypeId());
+			
 
 			if(ObjectListValuesIds!=null)
 				for (String id: ObjectListValuesIds)
