@@ -2,6 +2,7 @@ package kg.gov.mf.loan.web.controller.output.report;
 
 import kg.gov.mf.loan.output.report.model.FilterParameter;
 import kg.gov.mf.loan.output.report.service.FilterParameterService;
+import kg.gov.mf.loan.output.report.service.ContentParameterService;
 import kg.gov.mf.loan.output.report.service.ObjectListService;
 import kg.gov.mf.loan.output.report.service.ReportTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,12 @@ public class FilterParameterController {
 	
 	@Autowired
     private ObjectListService objectListService;
-	
+
+	@Autowired
+	private ContentParameterService contentParameterService;
+
+
+
 	@Autowired
     private ReportTemplateService reportTemplateService;
 	
@@ -36,7 +42,8 @@ public class FilterParameterController {
 	public String listFilterParameters(Model model) {
 		model.addAttribute("filterParameter", new FilterParameter());
 		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
-		model.addAttribute("objectListList", this.objectListService.findAll());		
+		model.addAttribute("objectListList", this.objectListService.findAll());
+		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
 
 		return "output/report/filterParameterList";
 	}
@@ -47,7 +54,8 @@ public class FilterParameterController {
 		FilterParameter filterParameter = this.filterParameterService.findById(id);
 
 		model.addAttribute("filterParameter", filterParameter);
-		model.addAttribute("objectListList", this.objectListService.findAll());		
+		model.addAttribute("objectListList", this.objectListService.findAll());
+		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
 
 		return "output/report/filterParameterView";
 	}
@@ -59,7 +67,8 @@ public class FilterParameterController {
 
 		model.addAttribute("filterParameter", filterParameter);
 		model.addAttribute("objectListList", this.objectListService.findAll());
-		
+		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
+
 		return "output/report/filterParameterDetails";
 	}	
     
@@ -69,7 +78,8 @@ public class FilterParameterController {
 
 		model.addAttribute("filterParameter", new FilterParameter());
 		model.addAttribute("objectListList", this.objectListService.findAll());
-		
+		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
+
 		return "output/report/filterParameterForm";
 	}
 	
@@ -77,7 +87,8 @@ public class FilterParameterController {
 	public String getFilterParameterEditForm(@PathVariable("id") long id, Model model) {
 		model.addAttribute("filterParameter", this.filterParameterService.findById(id));
 		model.addAttribute("objectListList", this.objectListService.findAll());
-		
+		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
+
 		return "output/report/filterParameterForm";
 
 	}

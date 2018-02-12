@@ -39,7 +39,7 @@
 							<th>Report</th>
 							<th>View</th>
 							<th>Edit</th>
-							<th>Delete</th>
+							<th>Generate</th>
 						</tr>
 					</thead>
 
@@ -57,9 +57,9 @@
 								role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
 
 							<td>
-								<form th:action="@{/reportTemplate/__${reportTemplateInList.id}__/remove}"
+								<form th:action="@{/reportTemplate/__${reportTemplateInList.id}__/generate}"
 									method="post">
-									<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+									<button type="submit" class="btn btn-xs red-stripe">Generate</button>
 								</form>
 							</td>
 						</tr>

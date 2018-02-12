@@ -1,20 +1,29 @@
 package kg.gov.mf.loan.web.controller.output.report;
 
+import kg.gov.mf.loan.doc.model.Document;
+import kg.gov.mf.loan.output.report.utils.ReportGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import kg.gov.mf.loan.admin.org.model.District;
 import kg.gov.mf.loan.output.report.model.*;
 import kg.gov.mf.loan.output.report.service.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLConnection;
 import java.util.Set;
+
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 
 @Controller
 public class ReportTemplateController {
@@ -190,8 +199,69 @@ public class ReportTemplateController {
 		return "redirect:/reportTemplate/list";
 	}
 
-     
 
-     
+	@RequestMapping("/reportTemplate/{id}/generate")
+	public void generateReportByReportTemplate(@PathVariable("id") long id, HttpServletResponse response) {
+
+    	ReportGenerator reportGenerator = new ReportGenerator();
+
+		ReportTemplate reportTemplate = this.reportTemplateService.findById(id);
+
+    	/*
+		File file = new File(systemFile.getPath());
+
+		String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+		if (mimeType == null) {
+
+			mimeType = "application/octet-stream";
+		}
+
+		response.setContentType(mimeType);
+
+		response.setHeader("Content-Disposition", String.format("inline; filename=\"" + "test.xls"+"\""));
+
+		response.setContentLength((int)file.length());
+
+		InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+
+
+		FileCopyUtils.copy(inputStream, response.getOutputStream());
+
+		ReportTemplate reportTemplate = this.reportTemplateService.findById(id);
+
+
+/*
+		try {
+			FileOutputStream outputStream = new FileOutputStream(FILE_NAME);
+			workbook.write(outputStream);
+			workbook.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+*/
+
+		response.setContentType("application/vnd.ms-excel");
+		response.setHeader("Content-disposition","attachment; filename=report.xls");
+		OutputStream out = null;
+
+
+		try {
+			out = response.getOutputStream();
+			reportGenerator.generateReportByTemplate(reportTemplate).write(out);
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
+
+
+
+
+
+	}
+
 
 }
