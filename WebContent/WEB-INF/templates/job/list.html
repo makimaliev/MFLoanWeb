@@ -65,8 +65,11 @@
 											<div class="btn-group">
 												<a th:href="@{/job/0/save}" class="btn green">Add New Job <i class="fa fa-plus"></i></a>
 											</div>
-											<div class="btn-group " th:if="${started == 1}">
+											<div class="btn-group ">
 												<a th:href="@{/job/startAll}" class="btn blue">Start All Jobs</a>
+											</div>
+											<div class="btn-group ">
+												<a th:href="@{/job/stopAll}" class="btn red">Stop All Jobs</a>
 											</div>
 										</div>
 									</div>
@@ -77,28 +80,39 @@
 											<tr>
 												<th>Name</th>
 												<th>Cron expession</th>
+												<th>On date</th>
 												<th>Enabled</th>
+												<th>State</th>
 												<th>Edit</th>
 												<th>Delete</th>
 											</tr>
 										</thead>
 										<tbody>
-											<ordercheck th:if="${#lists.isEmpty(jobs)}">
+											<ordercheck th:if="${#lists.isEmpty(jobWithStates)}">
 												<tr class="no-records-found" style="text-align: center;">
 													<td colspan="5">No matching records found</td>
 												</tr>
 											</ordercheck>
-											<order th:each="job : ${jobs}">
+											<order th:each="js : ${jobWithStates}">
 												<tr class="clickable-row">
-													<td th:text="${job.name}"></td>
-													<td th:text="${job.cronExpression}"></td>
-													<td th:text="${job.enabled}"></td>
+													<td th:text="${js.key.name}"></td>
+													<td th:text="${js.key.cronExpression}"></td>
+													<td th:text="${js.key.onDate}"></td>
+													<td th:text="${js.key.enabled}"></td>
 													<td>
-														<a th:href="@{/job/__${job.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
+														<statecheck th:if="${js.value == true}">
+															<span class="btn green">Running</span>
+														</statecheck>
+														<statecheck th:unless="${js.value == true}">
+															<span class="btn red">Stopped</span>
+														</statecheck>
+													</td>
+													<td>
+														<a th:href="@{/job/__${js.key.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
 													</td>
 													<td>
 														<form th:action="@{/job/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-															<input hidden="true" type="text" id="id" name="id" th:value="${job.id}" />
+															<input hidden="true" type="text" id="id" name="id" th:value="${js.key.id}" />
 															<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
 														</form>
 													</td>
