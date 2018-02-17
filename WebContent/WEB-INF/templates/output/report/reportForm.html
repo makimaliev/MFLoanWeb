@@ -35,6 +35,19 @@
 					</div>
 				</div>
 			</div>
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3">ReportType<span
+						class="required"> * </span>
+				</label>
+				<div class="col-md-4">
+
+					<select th:field="*{report.reportType}">
+						<option th:each="reportTypeInList : ${T(kg.gov.mf.loan.output.report.model.ReportType).values()}"
+								th:value="${reportTypeInList}"
+								th:text="${reportTypeInList}">Region</option>
+					</select>
+				</div>
+			</div>
 		</div>
 		<div class="form-actions">
 			<div class="row">

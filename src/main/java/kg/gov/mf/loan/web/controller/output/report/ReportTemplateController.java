@@ -2,6 +2,8 @@ package kg.gov.mf.loan.web.controller.output.report;
 
 import kg.gov.mf.loan.doc.model.Document;
 import kg.gov.mf.loan.output.report.utils.ReportGenerator;
+import kg.gov.mf.loan.output.report.utils.ReportGeneratorLoan;
+import kg.gov.mf.loan.output.report.utils.ReportGeneratorPayment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -203,57 +205,50 @@ public class ReportTemplateController {
 	@RequestMapping("/reportTemplate/{id}/generate")
 	public void generateReportByReportTemplate(@PathVariable("id") long id, HttpServletResponse response) {
 
-    	ReportGenerator reportGenerator = new ReportGenerator();
 
-		ReportTemplate reportTemplate = this.reportTemplateService.findById(id);
-
-    	/*
-		File file = new File(systemFile.getPath());
-
-		String mimeType = URLConnection.guessContentTypeFromName(file.getName());
-		if (mimeType == null) {
-
-			mimeType = "application/octet-stream";
-		}
-
-		response.setContentType(mimeType);
-
-		response.setHeader("Content-Disposition", String.format("inline; filename=\"" + "test.xls"+"\""));
-
-		response.setContentLength((int)file.length());
-
-		InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
-
-
-		FileCopyUtils.copy(inputStream, response.getOutputStream());
-
-		ReportTemplate reportTemplate = this.reportTemplateService.findById(id);
-
-
-/*
-		try {
-			FileOutputStream outputStream = new FileOutputStream(FILE_NAME);
-			workbook.write(outputStream);
-			workbook.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-*/
+		ReportGeneratorLoan loanReportGenerator = new ReportGeneratorLoan();
+		ReportGeneratorPayment paymentReportGenerator = new ReportGeneratorPayment();
 
 		response.setContentType("application/vnd.ms-excel");
 		response.setHeader("Content-disposition","attachment; filename=report.xls");
 		OutputStream out = null;
 
+		ReportTemplate reportTemplate = this.reportTemplateService.findById(id);
 
-		try {
-			out = response.getOutputStream();
-			reportGenerator.generateReportByTemplate(reportTemplate).write(out);
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+
+		System.out.println(reportTemplate.getReport().getReportType());
+
+		switch(reportTemplate.getReport().getReportType().toString())
+		{
+			case "LOAN_SUMMARY":
+
+
+				try {
+					out = response.getOutputStream();
+					loanReportGenerator.generateReportByTemplate(reportTemplate).write(out);
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				break;
+
+			case "LOAN_PAYMENT":
+
+				try {
+					out = response.getOutputStream();
+					paymentReportGenerator.generateReportByTemplate(reportTemplate).write(out);
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				break;
+
 		}
+
+
+
 
 
 
