@@ -41,6 +41,7 @@
                                 <label class="control-label col-md-4">Document Type<span class="required"> * </span></label>
                                 <div class="col-md-6">
                                     <select class="form-control" th:field="*{documentType.id}" required>
+                                        <option value=""> *** Select Document Type *** </option>
                                         <option th:each="dt : ${documentTypes}"
                                                 th:value="${{dt}}"
                                                 th:text="${dt.name}">Document Type</option>
@@ -51,6 +52,7 @@
                                 <label class="control-label col-md-4">Document SubType<span class="required"> * </span></label>
                                 <div class="col-md-6">
                                     <select class="form-control" th:field="*{documentSubType.id}" required>
+                                        <option value=""> *** Select Document Sub Type *** </option>
                                         <option th:each="dst : ${documentSubTypes}"
                                                 th:value="${{dst}}"
                                                 th:text="${dst.name}">Document SubType</option>
@@ -99,14 +101,13 @@
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <div class="form-group">
-                                                <label class="control-label col-md-4">Responsible Type<span class="required"> * </span></label>
+                                                <label class="control-label col-md-4">Responsible<span class="required"> * </span></label>
                                                 <div class="col-md-6">
                                                     <select class="form-control" id="sr" th:field="*{senderResponsible.responsibleType}">
-                                                        <option th:each="r : ${responsible}"
-                                                                th:value="${r.key}"
-                                                                th:text="${r.value}">Responsible</option>
+                                                        <option th:each="r, i : ${responsible}"
+                                                                th:value="${i.index + 1}"
+                                                                th:text="${r}">Responsible</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -114,6 +115,15 @@
                                                 <label class="control-label col-md-4">Responsible Staff<span class="required"> * </span></label>
                                                 <div class="col-md-6">
                                                     <select class="form-control" th:field="*{senderResponsible.staff}" multiple="multiple">
+                                                        <option th:each="i : ${staff}"
+                                                                th:value="${{i}}"
+                                                                th:text="${i.name}">Responsible</option>
+                                                    </select>
+                                                </div>
+
+                                                <label class="control-label col-md-4">Executer Staff<span class="required"> * </span></label>
+                                                <div class="col-md-6">
+                                                    <select class="form-control" th:field="*{senderExecutor.staff}" multiple="multiple">
                                                         <option th:each="i : ${staff}"
                                                                 th:value="${{i}}"
                                                                 th:text="${i.name}">Responsible</option>
@@ -129,11 +139,29 @@
                                                                 th:text="${i.name}">Responsible</option>
                                                     </select>
                                                 </div>
+
+                                                <label class="control-label col-md-4">Executer Department<span class="required"> * </span></label>
+                                                <div class="col-md-6">
+                                                    <select class="form-control" th:field="*{senderExecutor.departments}" multiple="multiple">
+                                                        <option th:each="i : ${department}"
+                                                                th:value="${{i}}"
+                                                                th:text="${i.name}">Responsible</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div class="form-group" name="si3">
                                                 <label class="control-label col-md-4">Responsible Organization<span class="required"> * </span></label>
                                                 <div class="col-md-6">
                                                     <select class="form-control"  th:field="*{senderResponsible.organizations}" multiple="multiple">
+                                                        <option th:each="i : ${organization}"
+                                                                th:value="${{i}}"
+                                                                th:text="${i.name}">Responsible</option>
+                                                    </select>
+                                                </div>
+
+                                                <label class="control-label col-md-4">Executer Organization<span class="required"> * </span></label>
+                                                <div class="col-md-6">
+                                                    <select class="form-control"  th:field="*{senderExecutor.organizations}" multiple="multiple">
                                                         <option th:each="i : ${organization}"
                                                                 th:value="${{i}}"
                                                                 th:text="${i.name}">Responsible</option>
@@ -149,49 +177,7 @@
                                                                 th:text="${i.name}">Responsible</option>
                                                     </select>
                                                 </div>
-                                            </div>
 
-                                            <div class="form-group">
-                                                <label class="control-label col-md-4">Executer Type<span class="required"> * </span></label>
-                                                <div class="col-md-6">
-                                                    <select class="form-control" id="se" th:field="*{senderExecutor.executorType}">
-                                                        <option th:each="r : ${responsible}"
-                                                                th:value="${r.key}"
-                                                                th:text="${r.value}">Responsible</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group" name="sei1" >
-                                                <label class="control-label col-md-4">Executer Staff<span class="required"> * </span></label>
-                                                <div class="col-md-6">
-                                                    <select class="form-control" th:field="*{senderExecutor.staff}" multiple="multiple">
-                                                        <option th:each="i : ${staff}"
-                                                                th:value="${{i}}"
-                                                                th:text="${i.name}">Responsible</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group" name="sei2">
-                                                <label class="control-label col-md-4">Executer Department<span class="required"> * </span></label>
-                                                <div class="col-md-6">
-                                                    <select class="form-control" th:field="*{senderExecutor.departments}" multiple="multiple">
-                                                        <option th:each="i : ${department}"
-                                                                th:value="${{i}}"
-                                                                th:text="${i.name}">Responsible</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group" name="sei3">
-                                                <label class="control-label col-md-4">Executer Organization<span class="required"> * </span></label>
-                                                <div class="col-md-6">
-                                                    <select class="form-control"  th:field="*{senderExecutor.organizations}" multiple="multiple">
-                                                        <option th:each="i : ${organization}"
-                                                                th:value="${{i}}"
-                                                                th:text="${i.name}">Responsible</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group" name="sei4">
                                                 <label class="control-label col-md-4">Executer Person<span class="required"> * </span></label>
                                                 <div class="col-md-6">
                                                     <select class="form-control" th:field="*{senderExecutor.person}" multiple="multiple">
@@ -201,43 +187,6 @@
                                                     </select>
                                                 </div>
                                             </div>
-
-                                            <h3>Information</h3>
-                                            <input type="hidden" th:value="1" th:field="*{senderInformation.systemObjectId}"/>
-                                            <input type="hidden" th:value="1" th:field="*{senderInformation.systemObjectTypeId}"/>
-                                            <input type="hidden" th:value="false" th:field="*{senderInformation.isTitle}"/>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-4">Name</label>
-                                                <div class="col-md-6">
-                                                    <input type="text" class="form-control" th:field="*{senderInformation.name}"/>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-4">Description</label>
-                                                <div class="col-md-6">
-                                                    <input type="text" class="form-control" th:field="*{senderInformation.description}"/>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-4">Number</label>
-                                                <div class="col-md-6">
-                                                    <input type="text" class="form-control" th:field="*{senderInformation.number}"/>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-4">Date</label>
-                                                <div class="col-md-6">
-                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
-                                                        <input type="text" class="form-control" th:field="*{senderInformation.date}"/>
-                                                        <span class="input-group-btn">
-                                                            <button class="btn default" type="button">
-                                                                <i class="fa fa-calendar"></i>
-                                                            </button>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
                                         </div>
                                     </div>
                                     <div class="tab-pane" id="tab_receiver">
@@ -277,14 +226,13 @@
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <div class="form-group">
-                                                <label class="control-label col-md-4">Responsible Type<span class="required"> * </span></label>
+                                                <label class="control-label col-md-4">Responsible<span class="required"> * </span></label>
                                                 <div class="col-md-6">
                                                     <select class="form-control" id="rr" th:field="*{receiverResponsible.responsibleType}" required>
-                                                        <option th:each="r : ${responsible}"
-                                                                th:value="${r.key}"
-                                                                th:text="${r.value}">Responsible</option>
+                                                        <option th:each="r,i : ${responsible}"
+                                                                th:value="${i.index + 1}"
+                                                                th:text="${r}">Responsible</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -292,6 +240,15 @@
                                                 <label class="control-label col-md-4">Responsible Staff<span class="required"> * </span></label>
                                                 <div class="col-md-6">
                                                     <select class="form-control" th:field="*{receiverResponsible.staff}" multiple="multiple">
+                                                        <option th:each="i : ${staff}"
+                                                                th:value="${{i}}"
+                                                                th:text="${i.name}">Responsible</option>
+                                                    </select>
+                                                </div>
+
+                                                <label class="control-label col-md-4">Executer Staff<span class="required"> * </span></label>
+                                                <div class="col-md-6">
+                                                    <select class="form-control" th:field="*{receiverExecutor.staff}" multiple="multiple">
                                                         <option th:each="i : ${staff}"
                                                                 th:value="${{i}}"
                                                                 th:text="${i.name}">Responsible</option>
@@ -307,11 +264,29 @@
                                                                 th:text="${i.name}">Responsible</option>
                                                     </select>
                                                 </div>
+
+                                                <label class="control-label col-md-4">Executer Department<span class="required"> * </span></label>
+                                                <div class="col-md-6">
+                                                    <select class="form-control" th:field="*{receiverExecutor.departments}" multiple="multiple">
+                                                        <option th:each="i : ${department}"
+                                                                th:value="${{i}}"
+                                                                th:text="${i.name}">Responsible</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div class="form-group" name="ri3">
                                                 <label class="control-label col-md-4">Responsible Organization<span class="required"> * </span></label>
                                                 <div class="col-md-6">
                                                     <select class="form-control"  th:field="*{receiverResponsible.organizations}" multiple="multiple">
+                                                        <option th:each="i : ${organization}"
+                                                                th:value="${{i}}"
+                                                                th:text="${i.name}">Responsible</option>
+                                                    </select>
+                                                </div>
+
+                                                <label class="control-label col-md-4">Executer Organization<span class="required"> * </span></label>
+                                                <div class="col-md-6">
+                                                    <select class="form-control"  th:field="*{receiverExecutor.organizations}" multiple="multiple">
                                                         <option th:each="i : ${organization}"
                                                                 th:value="${{i}}"
                                                                 th:text="${i.name}">Responsible</option>
@@ -327,49 +302,7 @@
                                                                 th:text="${i.name}">Responsible</option>
                                                     </select>
                                                 </div>
-                                            </div>
 
-                                            <div class="form-group">
-                                                <label class="control-label col-md-4">Executer Type<span class="required"> * </span></label>
-                                                <div class="col-md-6">
-                                                    <select class="form-control" id="re" th:field="*{receiverExecutor.executorType}">
-                                                        <option th:each="r : ${responsible}"
-                                                                th:value="${r.key}"
-                                                                th:text="${r.value}">Responsible</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group" name="rei1" >
-                                                <label class="control-label col-md-4">Executer Staff<span class="required"> * </span></label>
-                                                <div class="col-md-6">
-                                                    <select class="form-control" th:field="*{receiverExecutor.staff}" multiple="multiple">
-                                                        <option th:each="i : ${staff}"
-                                                                th:value="${{i}}"
-                                                                th:text="${i.name}">Responsible</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group" name="rei2">
-                                                <label class="control-label col-md-4">Executer Department<span class="required"> * </span></label>
-                                                <div class="col-md-6">
-                                                    <select class="form-control" th:field="*{receiverExecutor.departments}" multiple="multiple">
-                                                        <option th:each="i : ${department}"
-                                                                th:value="${{i}}"
-                                                                th:text="${i.name}">Responsible</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group" name="rei3">
-                                                <label class="control-label col-md-4">Executer Organization<span class="required"> * </span></label>
-                                                <div class="col-md-6">
-                                                    <select class="form-control"  th:field="*{receiverExecutor.organizations}" multiple="multiple">
-                                                        <option th:each="i : ${organization}"
-                                                                th:value="${{i}}"
-                                                                th:text="${i.name}">Responsible</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group" name="rei4">
                                                 <label class="control-label col-md-4">Executer Person<span class="required"> * </span></label>
                                                 <div class="col-md-6">
                                                     <select class="form-control" th:field="*{receiverExecutor.person}" multiple="multiple">
@@ -379,56 +312,12 @@
                                                     </select>
                                                 </div>
                                             </div>
-
-                                            <h3>Information</h3>
-                                            <input type="hidden" th:value="1" th:field="*{receiverInformation.systemObjectId}"/>
-                                            <input type="hidden" th:value="1" th:field="*{receiverInformation.systemObjectTypeId}"/>
-                                            <input type="hidden" th:value="false" th:field="*{receiverInformation.isTitle}"/>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-4">Name</label>
-                                                <div class="col-md-6">
-                                                    <input type="text" class="form-control" th:field="*{receiverInformation.name}"/>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-4">Description</label>
-                                                <div class="col-md-6">
-                                                    <input type="text" class="form-control" th:field="*{receiverInformation.description}"/>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-4">Number</label>
-                                                <div class="col-md-6">
-                                                    <input type="text" class="form-control" th:field="*{receiverInformation.number}"/>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-4">Date</label>
-                                                <div class="col-md-6">
-                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
-                                                        <input type="text" class="form-control" th:field="*{receiverInformation.date}"/>
-                                                        <span class="input-group-btn">
-                                                            <button class="btn default" type="button">
-                                                                <i class="fa fa-calendar"></i>
-                                                            </button>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <button type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
-                            <button type="submit" class="btn green" name="action" value="create">Создать</button>
-                            <button type="submit" class="btn green" name="action" value="toreconcile">На согласование</button>
-                            <button type="submit" class="btn green" name="action" value="toapprove">На утверждение</button>
-                            <button type="submit" class="btn green" name="action" value="toinform">На ознакомление</button>
-                            <button type="submit" class="btn green" name="action" value="toexecute">На выполнение</button>
-                            <button type="submit" class="btn green" name="action" value="tocorrect">На исправление</button>
-                            <button type="submit" class="btn green" name="action" value="reconcile">Соглосовать</button>
-                            <button type="submit" class="btn green" name="action" value="approve">Утвердить</button>
-                            <button type="submit" class="btn green" name="action" value="reject">Отклонить</button>
+                            <button type="submit" class="btn green">Save</button>
                         </form>
 
                     </div>
@@ -521,29 +410,12 @@
         $('[name="si3"]'),
         $('[name="si4"]')
     ];
-
-    var sei = 0;
-    var seitems = [
-        $('[name="sei1"]'),
-        $('[name="sei2"]'),
-        $('[name="sei3"]'),
-        $('[name="sei4"]')
-    ];
-
     var ri = 0;
     var ritems = [
         $('[name="ri1"]'),
         $('[name="ri2"]'),
         $('[name="ri3"]'),
         $('[name="ri4"]')
-    ];
-
-    var rei = 0;
-    var reitems = [
-        $('[name="rei1"]'),
-        $('[name="rei2"]'),
-        $('[name="rei3"]'),
-        $('[name="rei4"]')
     ];
 
     $(document).ready(function() {
@@ -553,46 +425,27 @@
         $('[name="si3"]').hide();
         $('[name="si4"]').hide();
 
-        $('[name="sei1"]').hide();
-        $('[name="sei2"]').hide();
-        $('[name="sei3"]').hide();
-        $('[name="sei4"]').hide();
-
         $('[name="ri1"]').hide();
         $('[name="ri2"]').hide();
         $('[name="ri3"]').hide();
         $('[name="ri4"]').hide();
 
-        $('[name="rei1"]').hide();
-        $('[name="rei2"]').hide();
-        $('[name="rei3"]').hide();
-        $('[name="rei4"]').hide();
-
         if($('[name="id"]').val() > 0)
         {
-            sv(
-                $('[name="senderResponsible.responsibleType"]').val() - 1,
-                $('[name="receiverResponsible.responsibleType"]').val() - 1,
-                $('[name="senderExecutor.executorType"]').val() - 1,
-                $('[name="receiverExecutor.executorType"]').val() - 1
-            );
+            sv($('[name="senderResponsible.responsibleType"]').val() - 1, $('[name="receiverResponsible.responsibleType"]').val() - 1);
         } else {
             $('[name="si1"]').show();
-            $('[name="sei1"]').show();
             $('[name="ri1"]').show();
-            $('[name="rei1"]').show();
         }
+
     });
 
-    function sv(sr,rr,se, re) {
-        sitems[sr].show();
-        ritems[rr].show();
-        seitems[se].show();
-        reitems[re].show();
-        si = sr;
-        sei = se;
-        ri = rr;
-        rei = re;
+    function sv(s,r)
+    {
+        sitems[s].show();
+        ritems[r].show();
+        si = s;
+        ri = r;
     }
 
     $("#sr").change(function() {
@@ -619,32 +472,6 @@
             ritems[ri].hide();
             ritems[selection].show();
             ri = selection;
-        }
-    });
-    $("#se").change(function() {
-        //$('#senderResponsible.staff').val(null).trigger('change');
-        //$('#senderResponsible.departments').val(null).trigger('change');
-        //$('#senderResponsible.organizations').val(null).trigger('change');
-        //$('#senderResponsible.person').val(null).trigger('change');
-        var selection = $(this).val() - 1;
-        if(selection != sei)
-        {
-            seitems[sei].hide();
-            seitems[selection].show();
-            sei = selection;
-        }
-    });
-    $("#re").change(function() {
-        //$('#receiverResponsible.staff').val(null).trigger('change');
-        //$('#receiverResponsible.departments').val(null).trigger('change');
-        //$('#receiverResponsible.organizations').val(null).trigger('change');
-        //$('#receiverResponsible.person').val(null).trigger('change');
-        var selection = $(this).val() - 1;
-        if(selection != rei)
-        {
-            reitems[rei].hide();
-            reitems[selection].show();
-            rei = selection;
         }
     });
 

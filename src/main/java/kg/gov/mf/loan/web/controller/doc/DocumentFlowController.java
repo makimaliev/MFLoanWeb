@@ -1,8 +1,5 @@
 package kg.gov.mf.loan.web.controller.doc;
 
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import kg.gov.mf.loan.admin.org.model.Department;
 import kg.gov.mf.loan.admin.org.model.Organization;
 import kg.gov.mf.loan.admin.org.model.Person;
@@ -11,51 +8,20 @@ import kg.gov.mf.loan.admin.org.service.DepartmentService;
 import kg.gov.mf.loan.admin.org.service.OrganizationService;
 import kg.gov.mf.loan.admin.org.service.PersonService;
 import kg.gov.mf.loan.admin.org.service.StaffService;
-import kg.gov.mf.loan.doc.model.*;
+import kg.gov.mf.loan.admin.sys.service.InformationService;
+import kg.gov.mf.loan.admin.sys.service.UserService;
+import kg.gov.mf.loan.doc.model.DispatchData;
+import kg.gov.mf.loan.doc.model.Document;
 import kg.gov.mf.loan.doc.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Null;
 import java.util.*;
 
 @Controller
 public class DocumentFlowController {
-
-    public class Resposibles
-    {
-        private Long id;
-        private String Name;
-
-        public Resposibles() {
-        }
-
-        public Resposibles(Long id, String name) {
-            this.id = id;
-            Name = name;
-        }
-
-        public Long getId() {
-            return id;
-        }
-
-        public void setId(Long id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return Name;
-        }
-
-        public void setName(String name) {
-            Name = name;
-        }
-    }
 
     @Autowired
     DocumentService documentService;
@@ -65,9 +31,6 @@ public class DocumentFlowController {
 
     @Autowired
     DocumentSubTypeService documentSubTypeService;
-
-    @Autowired
-    ResponsibleService responsibleService;
 
     @Autowired
     ExecutorService executorService;
@@ -87,261 +50,116 @@ public class DocumentFlowController {
     @Autowired
     PersonService personService;
 
-    /*
-    @RequestMapping(value = "/doc", params = "type")
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    DispatchTypeService dispatchTypeService;
+
+    final static Map<Integer, String> responsible = new HashMap<Integer, String>() {
+        {
+            put(1, "Staff");
+            put(2, "Department");
+            put(3, "Organization");
+            put(4, "Person");
+        }
+    };
+
+    @RequestMapping(value = "/doc", params = "type", method = RequestMethod.GET)
     public String index(@RequestParam("type") String type, Model model) {
 
-        if (type == "internal") {
-            model.addAttribute("documents", documentService.internalDocuments());
-        } else if (type == "incoming") {
-            model.addAttribute("documents", documentService.incomingDocuments());
-        } else if (type == "outgoing") {
-            model.addAttribute("documents", documentService.outgoingDocuments());
-        } else if (type == "archived") {
-            model.addAttribute("documents", documentService.archivedDocuments());
-        }
-
-        String responsible[] = {"Staff", "Department", "Organization", "Person"};
         model.addAttribute("responsible", responsible);
-
+        model.addAttribute("documents", documentService.getDocuments(type));
         model.addAttribute("documentSubType", documentSubTypeService.findAll());
         model.addAttribute("type", type);
 
-        return "/doc/document/list";
+        return "/doc/document/index";
     }
 
-    @RequestMapping(value = "/doc/document/view")
-    public String viewDocument(@ModelAttribute("document") Document document) {
-        documentService.edit(document);
-        return "/doc/document/view";
-    }
+    @RequestMapping(value = "/doc/new", params = {"type", "subtype"}, method = RequestMethod.GET)
+    public String newDocument(@RequestParam("type") String type, @RequestParam("subtype") String subtype, Model model) {
+        Document document = new Document();
+        document.setDocumentType(documentTypeService.getByInternalName(type));
+        document.setDocumentSubType(documentSubTypeService.getByInternalName(subtype));
 
-    @RequestMapping(value = "/doc/new")
-    public String newDocument(Model model) {
-        model.addAttribute("document", new Document());
-        return "/doc/document/edit";
-    }
-
-    @RequestMapping(value = "/doc/document/edit/{id}")
-    public String editDocument(@PathVariable("id") Long id, Model model) {
-
-        Document document = documentService.findById(id);
         model.addAttribute("document", document);
-        return "/doc/document/edit";
-    }
-
-    @RequestMapping(value = "/doc/document/delete/{id}")
-    public String deleteDocument(@ModelAttribute("documentSubType") DocumentSubType documentSubType) {
-        documentSubTypeService.deleteById(documentSubType);
-        return "redirect:/doc";
-    }
-
-    @RequestMapping(value = "/doc/document/save")
-    public String saveDocument(@ModelAttribute("documentSubType") DocumentSubType documentSubType) {
-        documentSubTypeService.edit(documentSubType);
-        return "redirect:/doc";
-    }
-    */
-
-    //region Original Code
-    @RequestMapping(value = "/doc", params = "type")
-    public String listDocuments(@RequestParam("type") String type, Model model) {
-
-        model.addAttribute("document", new Document());
-        model.addAttribute("documentType", documentTypeService.findAll());
-        model.addAttribute("documentSubType", documentSubTypeService.findAll());
-        model.addAttribute("type", type);
-
-        String responsible[] = {"Staff", "Department", "Organization", "Person"};
+        model.addAttribute("documentTypes", documentTypeService.findAll());
+        model.addAttribute("documentSubTypes", documentSubTypeService.findAll());
 
         model.addAttribute("responsible", responsible);
-        model.addAttribute("responsibleList", responsibleList());
 
         model.addAttribute("staff", staffService.findAll());
         model.addAttribute("department", departmentService.findAll());
         model.addAttribute("organization", organizationService.findAll());
         model.addAttribute("person", personService.findAll());
 
-        model.addAttribute("documentType", documentTypeService.findAll());
-        model.addAttribute("documentTypeId", documentTypeService.getIdByInternalname(type));
-        model.addAttribute("documentSubType", documentSubTypeService.findAll());
-        model.addAttribute("type", type);
-        model.addAttribute("user", getPrincipal());
-        return "/doc/document/index";
+        return "/doc/document/edit";
     }
 
-    @RequestMapping(value = "/doc/add", method = RequestMethod.POST)
-    @ResponseBody
-    public String SaveOrUpdateDocument(@ModelAttribute("document") Document document) {
+    @RequestMapping(value = "/doc/edit/{id}", method = RequestMethod.GET)
+    public String editDocument(@PathVariable("id") final Long id, Model model) {
+
+        model.addAttribute("document", documentService.findById(id));
+        model.addAttribute("documentTypes", documentTypeService.findAll());
+        model.addAttribute("documentSubTypes", documentSubTypeService.findAll());
+
+        model.addAttribute("responsible", responsible);
+
+        model.addAttribute("staff", staffService.findAll());
+        model.addAttribute("department", departmentService.findAll());
+        model.addAttribute("organization", organizationService.findAll());
+        model.addAttribute("person", personService.findAll());
+
+        return "/doc/document/edit";
+    }
+
+    @RequestMapping(value = "/doc/save", method = RequestMethod.POST)
+    public String saveDocument(@ModelAttribute("document") Document document, @RequestParam(value="action") String action) {
+
+        document.getSenderDispatchData().add(setDispatchData(action));
+        document.getReceiverDispatchData().add(setDispatchData(action));
 
         if((document.getId() == null) || (document.getId() == 0))
         {
-            this.documentService.create(document);
+            documentService.create(document);
         }
         else
         {
-            this.documentService.edit(document);
+            for(DispatchData d : documentService.findById(document.getId()).getSenderDispatchData())
+            {
+                document.getSenderDispatchData().add(d);
+            }
+            for(DispatchData d : documentService.findById(document.getId()).getReceiverDispatchData())
+            {
+                document.getReceiverDispatchData().add(d);
+            }
+            documentService.edit(document);
         }
 
-        return "ok";
+        String path = documentTypeService.findById(document.getDocumentType().getId()).getInternalName();
+        return "redirect:/doc?type=" + path;
     }
 
-    @RequestMapping(value = "/doc/view/{id}")
-    public String viewDocument(@PathVariable("id") Long id, Model model)
-    {
+    @RequestMapping(value = "/doc/view/{id}", method = RequestMethod.GET)
+    public String viewDocument(@PathVariable("id") Long id, Model model) {
         model.addAttribute("document", documentService.findById(id));
         return "/doc/document/view";
     }
 
-    @RequestMapping("/doc/remove/{id}")
-    @ResponseBody
-    public String removeDocument(@ModelAttribute("document") Document document)
-    {
+    @RequestMapping(value = "/doc/delete/{id}", method = RequestMethod.GET)
+    public String deleteDocument(@PathVariable("id") Long id) {
+        Document document = documentService.findById(id);
         documentService.deleteById(document);
-        return "OK";
+        return "redirect:/doc?type=" + document.getDocumentType().getInternalName();
     }
 
-    @RequestMapping("/doc/{id}")
-    @ResponseBody
-    public Document getDocumentString(@PathVariable("id") Long id)
-    {
-        return documentService.findById(id);
+    public DispatchData setDispatchData(String internalName) {
+        DispatchData dispatchData = new DispatchData();
+        dispatchData.setDescription(dispatchTypeService.getByInternalName(internalName).getName());
+        dispatchData.setParent(false);
+        dispatchData.setDispatchBy(userService.findById(1L));
+        dispatchData.setDispatchTo(userService.findById(2L));
+        dispatchData.setDispatchType(dispatchTypeService.getByInternalName(internalName));
+        return dispatchData;
     }
-
-    @RequestMapping("/doc/internal")
-    @ResponseBody
-    public List<Document> internalDocuments()
-    {
-        return documentService.internalDocuments();
-    }
-
-    @RequestMapping("/doc/incoming")
-    @ResponseBody
-    public List<Document> incomingDocuments()
-    {
-        return documentService.incomingDocuments();
-    }
-
-    @RequestMapping("/doc/outgoing")
-    @ResponseBody
-    public List<Document> outgoingDocuments()
-    {
-        return documentService.outgoingDocuments();
-    }
-
-    @RequestMapping("/doc/archived")
-    @ResponseBody
-    public List<Document> archivedDocuments()
-    {
-        return documentService.archivedDocuments();
-    }
-
-    private String getPrincipal(){
-
-        String userName = null;
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            userName = ((UserDetails)principal).getUsername();
-        } else {
-            userName = principal.toString();
-        }
-        return userName;
-    }
-
-    private List<Map<Long, String>> responsibleList()
-    //private List<List<Resposibles>> responsibleList()
-    {
-
-        //region As LIST
-        final List<Resposibles> list_staff = new ArrayList<Resposibles>() {
-            {
-                for(Staff s : staffService.findAll())
-                {
-                    add(new Resposibles(s.getId(), s.getName()));
-                }
-            }
-        };
-        final List<Resposibles> list_department = new ArrayList<Resposibles>() {
-            {
-                for(Department d : departmentService.findAll())
-                {
-                    add(new Resposibles(d.getId(), d.getName()));
-                }
-            }
-        };
-        final List<Resposibles> list_organization = new ArrayList<Resposibles>() {
-            {
-                for(Organization o : organizationService.findAll())
-                {
-                    add(new Resposibles(o.getId(), o.getName()));
-                }
-            }
-        };
-        final List<Resposibles> list_person = new ArrayList<Resposibles>() {
-            {
-                for(Person p : personService.findAll())
-                {
-                    add(new Resposibles(p.getId(), p.getName()));
-                }
-            }
-        };
-        List<List<Resposibles>> list = new ArrayList<List<Resposibles>>() {
-            {
-                add(list_staff);
-                add(list_department);
-                add(list_organization);
-                add(list_person);
-            }
-        };
-        //endregion
-
-        //region As MAP
-        final Map<Long, String> map_staff = new HashMap<Long, String>() {
-            {
-                for(Staff s : staffService.findAll())
-                {
-                    put(s.getId(), s.getName());
-                }
-            }
-        };
-        final Map<Long, String> map_department = new HashMap<Long, String>() {
-            {
-                for(Department d : departmentService.findAll())
-                {
-                    put(d.getId(), d.getName());
-                }
-            }
-        };
-        final Map<Long, String> map_organization = new HashMap<Long, String>() {
-            {
-                for(Organization o : organizationService.findAll())
-                {
-                    put(o.getId(), o.getName());
-                }
-            }
-        };
-        final Map<Long, String> map_person = new HashMap<Long, String>() {
-            {
-                for(Person p : personService.findAll())
-                {
-                    put(p.getId(), p.getName());
-                }
-            }
-        };
-
-        List<Map<Long, String>> map = new ArrayList<Map<Long, String>>() {
-            {
-                add(map_staff);
-                add(map_department);
-                add(map_organization);
-                add(map_person);
-            }
-        };
-        //endregion
-
-        return map;
-    }
-    //endregion
-
 }
