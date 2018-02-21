@@ -9,17 +9,8 @@
     <link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
     <link th:href="@{/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}" rel="stylesheet" type="text/css" />
 
-    <link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
-    <link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
-    <link th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}" rel="stylesheet" type="text/css" />
-
 </head>
 <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
-
-<div th:replace="doc/document/content :: sender"></div>
-<div th:replace="doc/document/content :: receiver"></div>
-<div th:replace="doc/document/content :: result"></div>
-
 
 <div th:replace="layout :: header-top"></div>
 
@@ -31,47 +22,29 @@
         <div class="page-content">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="form">
 
-                        <form action="#" id="document_form" class="form-horizontal">
-                            <input type="hidden" th:value="${document.id}" name="id"/>
-                            <div class="form-body">
-                                <div class="form-group">
-                                    <label class="control-label col-md-4">Title<span class="required"> * </span></label>
-                                    <div class="col-md-6"><input name="title" placeholder="Title" class="form-control" type="text" th:value="${document.title}"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-4">Description<span class="required"> * </span></label>
-                                    <div class="col-md-6"><input name="description" placeholder="Description" class="form-control" type="text" th:value="${document.description}"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-4">Document Type<span class="required"> * </span></label>
-                                    <div class="col-md-6">
-                                        <select class="form-control" name="documentType.id" th:field="*{document.documentType.id}">
-                                            <option value=""> *** Select Document Type *** </option>
-                                            <option th:each="dt : ${documentType}"
-                                                    th:value="${dt.id}"
-                                                    th:text="${dt.name}">Document Type</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-4">Document SubType<span class="required"> * </span></label>
-                                    <div class="col-md-6">
-                                        <select class="form-control" name="documentSubType.id" th:field="*{document.documentSubType.id}">
-                                            <option value=""> *** Select Document Sub Type *** </option>
-                                            <option th:each="dst : ${documentSubType}"
-                                                    th:value="${dst.id}"
-                                                    th:text="${dst.name}">Document SubType</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div>
-                                    <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
-                                </div>
+                    <div class="row">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Title : </label>
+                                <div class="col-md-10"><label class="form-control-static" th:text="${document.title}"></label></div>
                             </div>
-                        </form>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Description : </label>
+                                <div class="col-md-10"><label class="form-control-static" th:text="${document.description}"></label></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Document Type : </label>
+                                <div class="col-md-10"><label class="form-control-static" th:text="${document.documentType.name}"></label></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Document SubType : </label>
+                                <div class="col-md-10"><label class="form-control-static" th:text="${document.documentSubType.name}"></label></div>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="row">
                         <div class="tabbable-custom" name="tabs">
                             <ul class="nav nav-tabs ">
                                 <li class="active"><a href="#tab_sender" data-toggle="tab"> Sender Data </a></li>
@@ -80,275 +53,184 @@
                             </ul>
                             <div class="tab-content clearfix">
                                 <div class="tab-pane active" id="tab_sender">
-
-                                    <form action="#" id="senderform" class="form-horizontal">
-
-                                        <input type="hidden" th:value="${document.id}" name="id"/>
-
-                                        <!-- ********************************************************************************************* -->
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4"> Registered Date </label>
-                                            <div class="col-md-6">
-                                                <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
-                                                    <input type="text" class="form-control" name="registeredDate" th:value="${senderData.registeredDate}" required/>
-                                                    <span class="input-group-btn">
-                                                        <button class="btn default" type="button">
-                                                            <i class="fa fa-calendar"></i>
-                                                        </button>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- ********************************************************************************************* -->
-
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4">Registered №</label>
-                                            <div class="col-md-6">
-                                                <input type="text"
-                                                       class="form-control"
-                                                       name="registeredNumber"
-                                                       th:value="${senderData.registeredNumber != null ? senderData.registeredNumber : '' }"
-                                                       required/>
-                                            </div>
-                                        </div>
-
-                                        <!-- ********************************************************************************************* -->
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4"> Due Date </label>
-                                            <div class="col-md-6">
-                                                <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
-                                                    <input type="text" class="form-control" name="dueDate" th:value="${senderData.dueDate}" required/>
-                                                    <span class="input-group-btn">
-                                                        <button class="btn default" type="button">
-                                                            <i class="fa fa-calendar"></i>
-                                                        </button>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- ********************************************************************************************* -->
-
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4">Responsible</label>
-                                            <div class="col-md-6">
-                                                <select class="form-control" name="responsible.id" th:field="*{senderData.responsible.id}">
-                                                    <option value=""> *** Select Responsible *** </option>
-                                                    <option th:each="r : ${responsible}"
-                                                            th:value="${r.id}"
-                                                            th:text="${r.name}">Responsible</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4">Executor</label>
-                                            <div class="col-md-6">
-                                                <select class="form-control" name="executor.id" th:field="*{senderData.executor.id}">
-                                                    <option value=""> *** Select Executor *** </option>
-                                                    <option th:each="e : ${executor}"
-                                                            th:value="${e.id}"
-                                                            th:text="${e.name}">Executor</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4">Information</label>
-                                            <div class="col-md-6">
-                                                <select class="form-control" name="information.id" th:field="*{senderData.information.id}">
-                                                    <option value=""> *** Select Information *** </option>
-                                                    <option th:each="i : ${information}"
-                                                            th:value="${i.id}"
-                                                            th:text="${i.name}">Information</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                    </form>
-                                    <div>
-                                        <button class="btn btn-success" onclick="save_sender()"><i class="glyphicon glyphicon-plus"></i> Save Sender Data </button>
-                                        <button class="btn btn-success" onclick="delete_sender()"><i class="glyphicon glyphicon-plus"></i> Delete Sender Data </button>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Registered Date : </label>
+                                        <div class="col-md-10"><label class="form-control-static" th:text="${#dates.format(document.senderRegisteredDate, 'dd MMMM yyyy')}"></label></div>
                                     </div>
-
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Registered № : </label>
+                                        <div class="col-md-10"><label class="form-control-static" th:text="${document.senderRegisteredNumber}"></label></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Due Date : </label>
+                                        <div class="col-md-10"><label class="form-control-static" th:text="${#dates.format(document.senderDueDate, 'dd MMMM yyyy')}"></label></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <table>
+                                                <thead>
+                                                <tr>
+                                                    <th>Responsibles</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="s : ${document.senderResponsible.staff}">
+                                                    <td th:text="${s.name}"></td>
+                                                </tr>
+                                                <tr th:each="s : ${document.senderResponsible.departments}">
+                                                    <td th:text="${s.name}"></td>
+                                                </tr>
+                                                <tr th:each="s : ${document.senderResponsible.organizations}">
+                                                    <td th:text="${s.name}"></td>
+                                                </tr>
+                                                <tr th:each="s : ${document.senderResponsible.person}">
+                                                    <td th:text="${s.name}"></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                            <hr>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <table>
+                                                <thead>
+                                                <tr>
+                                                    <th>Executor</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="s : ${document.senderExecutor.staff}">
+                                                    <td th:text="${s.name}"></td>
+                                                </tr>
+                                                <tr th:each="s : ${document.senderExecutor.departments}">
+                                                    <td th:text="${s.name}"></td>
+                                                </tr>
+                                                <tr th:each="s : ${document.senderExecutor.organizations}">
+                                                    <td th:text="${s.name}"></td>
+                                                </tr>
+                                                <tr th:each="s : ${document.senderExecutor.person}">
+                                                    <td th:text="${s.name}"></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                            <hr>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Information : </label>
+                                        <div class="col-md-10"><label class="form-control-static" th:text="${document.senderInformation?.name}"></label></div>
+                                    </div>
                                 </div>
                                 <div class="tab-pane" id="tab_receiver">
-
-                                    <form action="#" id="receiverform" class="form-horizontal">
-
-                                        <input type="hidden" th:value="${document.id}" name="id"/>
-
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4"> Registered Date </label>
-                                            <div class="col-md-6">
-                                                <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
-                                                    <input type="text" class="form-control" name="registeredDate" th:value="${receiverData.registeredDate}" required/>
-                                                    <span class="input-group-btn">
-                                                        <button class="btn default" type="button">
-                                                            <i class="fa fa-calendar"></i>
-                                                        </button>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4">Registered №</label>
-                                            <div class="col-md-6">
-                                                <input type="text"
-                                                       class="form-control"
-                                                       name="registeredNumber"
-                                                       th:value="${receiverData.registeredNumber != null ? receiverData.registeredNumber : '' }"/>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4"> Due Date </label>
-                                            <div class="col-md-6">
-                                                <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
-                                                    <input type="text" class="form-control" name="dueDate" th:value="${receiverData.dueDate}" required/>
-                                                    <span class="input-group-btn">
-                                                        <button class="btn default" type="button">
-                                                            <i class="fa fa-calendar"></i>
-                                                        </button>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4">Responsible</label>
-                                            <div class="col-md-6">
-                                                <select class="form-control" name="responsible.id" th:field="*{receiverData.responsible.id}">
-                                                    <option value=""> *** Select Responsible *** </option>
-                                                    <option th:each="r : ${responsible}"
-                                                            th:value="${r.id}"
-                                                            th:text="${r.name}">Responsible</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4">Executor</label>
-                                            <div class="col-md-6">
-                                                <select class="form-control" name="executor.id" th:field="*{receiverData.executor.id}">
-                                                    <option value=""> *** Select Executor *** </option>
-                                                    <option th:each="e : ${executor}"
-                                                            th:value="${e.id}"
-                                                            th:text="${e.name}">Executor</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4">Information</label>
-                                            <div class="col-md-6">
-                                                <select class="form-control" name="information.id" th:field="*{receiverData.information.id}">
-                                                    <option value=""> *** Select Information *** </option>
-                                                    <option th:each="i : ${information}"
-                                                            th:value="${i.id}"
-                                                            th:text="${i.name}">Information</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                    </form>
-
-                                    <div>
-                                        <button class="btn btn-success" onclick="save_receiver()"><i class="glyphicon glyphicon-plus"></i> Save Receiver Data </button>
-                                        <button class="btn btn-success" onclick="delete_receiver()"><i class="glyphicon glyphicon-plus"></i> Delete Receiver Data </button>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Registered Date : </label>
+                                        <div class="col-md-10"><label class="form-control-static" th:text="${#dates.format(document.receiverRegisteredDate, 'dd MMMM yyyy')}"></label></div>
                                     </div>
-
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Registered № : </label>
+                                        <div class="col-md-10"><label class="form-control-static" th:text="${document.receiverRegisteredNumber}"></label></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Due Date : </label>
+                                        <div class="col-md-10"><label class="form-control-static" th:text="${#dates.format(document.receiverDueDate, 'dd MMMM yyyy')}"></label></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <table>
+                                                <thead>
+                                                <tr>
+                                                    <th>Responsibles</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="s : ${document.receiverResponsible.staff}">
+                                                    <td th:text="${s.name}"></td>
+                                                </tr>
+                                                <tr th:each="s : ${document.receiverResponsible.departments}">
+                                                    <td th:text="${s.name}"></td>
+                                                </tr>
+                                                <tr th:each="s : ${document.receiverResponsible.organizations}">
+                                                    <td th:text="${s.name}"></td>
+                                                </tr>
+                                                <tr th:each="s : ${document.receiverResponsible.person}">
+                                                    <td th:text="${s.name}"></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                            <hr>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <table>
+                                                <thead>
+                                                <tr>
+                                                    <th>Executor</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="s : ${document.receiverExecutor.staff}">
+                                                    <td th:text="${s.name}"></td>
+                                                </tr>
+                                                <tr th:each="s : ${document.receiverExecutor.departments}">
+                                                    <td th:text="${s.name}"></td>
+                                                </tr>
+                                                <tr th:each="s : ${document.receiverExecutor.organizations}">
+                                                    <td th:text="${s.name}"></td>
+                                                </tr>
+                                                <tr th:each="s : ${document.receiverExecutor.person}">
+                                                    <td th:text="${s.name}"></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                            <hr>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Information : </label>
+                                        <div class="col-md-10"><label class="form-control-static" th:text="${document.receiverInformation?.name}"></label></div>
+                                    </div>
                                 </div>
                                 <div class="tab-pane" id="tab_result">
-
-                                    <form action="#" id="resultform" class="form-horizontal">
-
-                                        <input type="hidden" th:value="${document.id}" name="id"/>
-
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4"> Close Date </label>
-                                            <div class="col-md-6">
-                                                <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
-                                                    <input type="text" class="form-control" name="close_date" th:value="${resultData.close_date}" required/>
-                                                    <span class="input-group-btn">
-                                                        <button class="btn default" type="button">
-                                                            <i class="fa fa-calendar"></i>
-                                                        </button>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4">Result Status</label>
-                                            <div class="col-md-6">
-                                                <input type="text"
-                                                       class="form-control"
-                                                       name="resultStatus"
-                                                       th:value="${resultData.resultStatus != null ? resultData.resultStatus : '' }"/>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4">Information</label>
-                                            <div class="col-md-6">
-                                                <select class="form-control" name="information.id" th:field="*{resultData.information.id}">
-                                                    <option value=""> *** Select Information *** </option>
-                                                    <option th:each="i : ${information}"
-                                                            th:value="${i.id}"
-                                                            th:text="${i.name}">Information</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4">Responsible</label>
-                                            <div class="col-md-6">
-                                                <select class="form-control" name="responsible.id" th:field="*{resultData.responsible.id}">
-                                                    <option value=""> *** Select Responsible *** </option>
-                                                    <option th:each="r : ${responsible}"
-                                                            th:value="${r.id}"
-                                                            th:text="${r.name}">Responsible</option>
-                                                </select>
-
-                                            </div>
-                                        </div>
-
-                                    </form>
-
-                                    <div>
-                                        <button class="btn btn-success" onclick="save_result()"><i class="glyphicon glyphicon-plus"></i> Save Result Data </button>
-                                        <button class="btn btn-success" onclick="delete_result()"><i class="glyphicon glyphicon-plus"></i> Delete Result Data </button>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4">Close Date : </label>
+                                        <div class="col-md-6"><label class="form-control-static" th:text="${#dates.format(document.resultCloseDate, 'dd MMMM yyyy')}"></label></div>
                                     </div>
-
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4">Result Status : </label>
+                                        <div class="col-md-6"><label class="form-control-static" th:text="${document.resultStatus}"></label></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4">Information : </label>
+                                        <div class="col-md-6"><label class="form-control-static" th:text="*{document.resultInformation?.name}"></label></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <!-------------------------------------------------------------------------------->
+
+                        <button type="button" class="btn green" onclick="window.history.back()">Back</button>
 
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 
 <div th:replace="layout :: footer"></div>
 <div th:replace="fragments/footer :: footer-js"></div>
-
-<script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
-<script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>
 
 <script th:src="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js}" type="text/javascript"></script>
 <script th:src="@{/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"></script>
 <script th:src="@{/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}" type="text/javascript"></script>
 <script th:src="@{/assets/pages/scripts/components-date-time-pickers.min.js}" type="text/javascript"></script>
 
-<script type="text/javascript">
+<!--script type="text/javascript">
 
-    function save() {
+    function edit_document() {
         $.ajax({
             url : "/MFLoanWeb/doc/add",
             type: "POST",
@@ -467,7 +349,7 @@
         });
     }
 
-</script>
+</script-->
 
 </body>
 </html>

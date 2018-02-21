@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -16,39 +17,40 @@ public class DocumentTypeController {
     DocumentTypeService documentTypeService;
 
     @RequestMapping(value = "/doc/documentType")
-    public String listDocumentTypes(Model model) {
+    public String listdocumentTypes(Model model) {
+
         model.addAttribute("documentTypes", documentTypeService.findAll());
         return "/doc/documentType/list";
     }
 
-    @RequestMapping(value = "/doc/documentType/save")
-    public String saveDocumentType(@ModelAttribute("documentType") DocumentType documentType) {
-        if((documentType.getId() == null) || (documentType.getId() == 0))
-        {
-            this.documentTypeService.create(documentType);
-        }
-        else
-        {
-            this.documentTypeService.edit(documentType);
-        }
-        return "/doc/documentType/list";
-    }
+    @RequestMapping(value = "/doc/documentType/new")
+    public String newdocumentType(Model model) {
+        model.addAttribute("documentType", new DocumentType());
+        model.addAttribute("documentTypes", documentTypeService.findAll());
 
-    @RequestMapping(value = "/doc/documentType/delete/{id}")
-    public String deleteDocumentType(@ModelAttribute("documentType") DocumentType documentType) {
-        documentTypeService.deleteById(documentType);
-        return "/doc/documentType/list";
+        return "/doc/documentType/edit";
     }
 
     @RequestMapping(value = "/doc/documentType/edit/{id}")
-    public String editDocumentType(@ModelAttribute("documentType") DocumentType documentType, Model model) {
-        model.addAttribute("documentType", documentTypeService.findById(documentType.getId()));
+    public String editdocumentType(@PathVariable("id") Long id, Model model) {
+
+        DocumentType documentType = documentTypeService.findById(id);
+
+        model.addAttribute("documentType", documentType);
+        model.addAttribute("documentTypes", documentTypeService.findAll());
+
         return "/doc/documentType/edit";
     }
 
-    @RequestMapping(value = "/doc/documentType/new")
-    public String newDocumentType(Model model) {
-        model.addAttribute("documentType", new DocumentType());
-        return "/doc/documentType/edit";
+    @RequestMapping(value = "/doc/documentType/delete/{id}")
+    public String deletedocumentType(@ModelAttribute("documentType") DocumentType documentType) {
+        documentTypeService.deleteById(documentType);
+        return "redirect:/doc/documentType";
+    }
+
+    @RequestMapping(value = "/doc/documentType/save")
+    public String savedocumentType(@ModelAttribute("documentType") DocumentType documentType) {
+        documentTypeService.edit(documentType);
+        return "redirect:/doc/documentType";
     }
 }
