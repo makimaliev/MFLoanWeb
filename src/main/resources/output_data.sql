@@ -35,7 +35,6 @@ CREATE VIEW organization_view AS
     JOIN `mfloan`.`organization` `o` ON ((`a`.`id` = `o`.`address_id`)));
 
 
-
 CREATE VIEW owner_view AS
   SELECT
     `o`.`id`                                     AS `v_owner_id`,
@@ -83,7 +82,7 @@ CREATE VIEW debtor_view AS
   FROM (`mfloan`.`debtor` `d`
     JOIN `mfloan`.`owner_view` `ov` ON ((`ov`.`v_owner_id` = `d`.`ownerId`)));
 
-CREATE VIEW loan_view AS
+CREATE VIEW loan_view3 AS
   SELECT
     `l`.`id`                       AS `v_loan_id`,
     `l`.`amount`                   AS `v_loan_amount`,
@@ -120,8 +119,8 @@ CREATE VIEW loan_view AS
     JOIN `mfloan`.`debtor_view` `dv` ON ((`dv`.`v_debtor_id` = `l`.`debtorId`))) JOIN `mfloan`.`creditOrder` `co`
       ON ((`co`.`id` = `l`.`creditOrderId`))) JOIN `mfloan`.`region` `r`
       ON ((`r`.`id` = `dv`.`v_debtor_region_id`))) JOIN `mfloan`.`district` `d`
-      ON ((`d`.`id` = `dv`.`v_debtor_district_id`)));
-
+      ON ((`d`.`id` = `dv`.`v_debtor_district_id`))
+      join mfloan.workSector ws on ws.id = dv.v_debtor_work_sector_id   );
 
 
 
@@ -145,6 +144,8 @@ CREATE VIEW payment_view AS
     `lv`.`v_debtor_org_form_id`       AS `v_debtor_org_form_id`,
     `lv`.`v_debtor_work_sector_id`    AS `v_debtor_work_sector_id`,
     `lv`.`v_debtor_name`              AS `v_debtor_name`,
+    `lv`.`v_debtor_entity_id`         AS `v_debtor_entity_id`,
+    `lv`.`v_debtor_owner_type`        AS `v_debtor_owner_type`,
     `lv`.`v_debtor_region_id`         AS `v_debtor_region_id`,
     `lv`.`v_debtor_district_id`       AS `v_debtor_district_id`,
     `lv`.`v_debtor_aokmotu_id`        AS `v_debtor_aokmotu_id`,
@@ -158,13 +159,13 @@ CREATE VIEW payment_view AS
     `p`.`fee`                         AS `v_payment_fee`,
     `p`.`interest`                    AS `v_payment_interest`,
     `p`.`number`                      AS `v_payment_number`,
-    `p`.`paymentDate`                 AS `v_payment_payment_date`,
+    `p`.`paymentDate`                 AS `v_payment_date`,
     `p`.`penalty`                     AS `v_payment_penalty`,
     `p`.`principal`                   AS `v_payment_principal`,
     `p`.`totalAmount`                 AS `v_payment_total_amount`,
     `p`.`paymentTypeId`               AS `v_payment_type_id`,
-    `pt`.`name`                       AS `v_payment_type_name`
+    `pt`.`name`                       AS `v_payment_type_name`,
+    `lv`.`v_work_sector_name`         AS `v_work_sector_name`
   FROM ((`mfloan`.`loan_view` `lv`
     JOIN `mfloan`.`payment` `p` ON ((`p`.`loanId` = `lv`.`v_loan_id`))) JOIN `mfloan`.`paymentType` `pt`
       ON ((`pt`.`id` = `p`.`paymentTypeId`)));
-
