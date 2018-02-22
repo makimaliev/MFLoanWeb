@@ -1,3 +1,41 @@
+
+
+INSERT INTO `mfloan`.`report` (`name`, `reportType`) VALUES ('Отчет по задолженности', 'LOAN_SUMMARY');
+INSERT INTO `mfloan`.`report` (`name`, `reportType`) VALUES ('Отчет по погашениям', 'LOAN_PAYMENT');
+INSERT INTO `mfloan`.`report` (`name`, `reportType`) VALUES ('Отчет по графикам', 'LOAN_SCHEDULE');
+INSERT INTO `mfloan`.`report` (`name`, `reportType`) VALUES ('Отчет по плану', 'LOAN_PLAN');
+INSERT INTO `mfloan`.`report` (`name`, `reportType`) VALUES ('Отчет по залогу', 'COLLATERAL_ITEM');
+INSERT INTO `mfloan`.`report` (`name`, `reportType`) VALUES ('Отчет по взысканию', 'COLLECTION_PHASE');
+
+INSERT INTO `mfloan`.`generation_parameter_type` (`name`) VALUES ('Дата расчета');
+INSERT INTO `mfloan`.`generation_parameter_type` (`name`) VALUES ('Дата состояния');
+INSERT INTO `mfloan`.`generation_parameter_type` (`name`) VALUES ('Единица валюты');
+INSERT INTO `mfloan`.`generation_parameter_type` (`name`) VALUES ('1. разрез');
+INSERT INTO `mfloan`.`generation_parameter_type` (`name`) VALUES ('2. разрез');
+INSERT INTO `mfloan`.`generation_parameter_type` (`name`) VALUES ('3. разрез');
+INSERT INTO `mfloan`.`generation_parameter_type` (`name`) VALUES ('4. разрез');
+INSERT INTO `mfloan`.`generation_parameter_type` (`name`) VALUES ('5. разрез');
+INSERT INTO `mfloan`.`generation_parameter_type` (`name`) VALUES ('6. разрез');
+
+
+INSERT INTO `mfloan`.`generation_parameter` (`date`, `name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('2018-01-01', 'на 01.01.2018г.', '1', '1', '0', '1');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('в разрезе областей', '2', '1', '0', '4');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('в разрезе районов', '2', '2', '0', '5');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('в разрезе заемщиков', '2', '3', '0', '6');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('в разрезе кредитов', '2', '4', '0', '7');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('в разрезе погашений', '2', '5', '0', '4');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('в разрезе отраслей', '2', '6', '0', '4');
+
+
+
+
+DROP TABLE IF EXISTS mfloan.person_view;
+DROP TABLE IF EXISTS mfloan.organization_view;
+DROP TABLE IF EXISTS mfloan.owner_view;
+DROP TABLE IF EXISTS mfloan.debtor_view;
+DROP TABLE IF EXISTS mfloan.loan_view;
+DROP TABLE IF EXISTS mfloan.payment_view;
+
 CREATE VIEW person_view AS
   SELECT
     `p`.`id`                 AS `v_person_id`,
@@ -82,7 +120,7 @@ CREATE VIEW debtor_view AS
   FROM (`mfloan`.`debtor` `d`
     JOIN `mfloan`.`owner_view` `ov` ON ((`ov`.`v_owner_id` = `d`.`ownerId`)));
 
-CREATE VIEW loan_view3 AS
+CREATE VIEW loan_view AS
   SELECT
     `l`.`id`                       AS `v_loan_id`,
     `l`.`amount`                   AS `v_loan_amount`,
@@ -114,7 +152,8 @@ CREATE VIEW loan_view3 AS
     `co`.`regNumber`               AS `v_credit_order_regNumber`,
     `co`.`regDate`                 AS `v_credit_order_regDate`,
     `r`.`name`                     AS `v_region_name`,
-    `d`.`name`                     AS `v_district_name`
+    `d`.`name`                     AS `v_district_name`,
+    ws.name as v_work_sector_name
   FROM ((((`mfloan`.`loan` `l`
     JOIN `mfloan`.`debtor_view` `dv` ON ((`dv`.`v_debtor_id` = `l`.`debtorId`))) JOIN `mfloan`.`creditOrder` `co`
       ON ((`co`.`id` = `l`.`creditOrderId`))) JOIN `mfloan`.`region` `r`
