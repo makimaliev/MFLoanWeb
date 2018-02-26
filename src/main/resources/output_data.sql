@@ -42,7 +42,7 @@ INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_li
 INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('5. разрез (погашение)', '2', '5', '0', '8');
 
 
-INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('1. разрезе (отрасль)', '2', '6', '0', '3');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('1. разрезе (отрасль)', '2', '6', '0', '4');
 INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('2. разрезе (отрасль)', '2', '6', '0', '4');
 
 
@@ -118,6 +118,43 @@ INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id
 INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('4', '12');
 
 
+
+
+INSERT INTO `mfloan`.`report_template` (`name`, `report_id`) VALUES ('по республике (область, район, заемщик, кредит', '2');
+INSERT INTO `mfloan`.`report_template` (`name`, `report_id`) VALUES ('по Баткенской области (область, район, заемщик, кредит', '2');
+INSERT INTO `mfloan`.`report_template` (`name`, `report_id`) VALUES ('по Ошской области (область, район, заемщик, кредит', '2');
+
+INSERT INTO `mfloan`.`report_template` (`name`, `report_id`) VALUES ('по республике (отрасль, область, заемщик, кредит', '2');
+
+INSERT INTO `mfloan`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('5', '1');
+INSERT INTO `mfloan`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('6', '2');
+INSERT INTO `mfloan`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('7', '3');
+INSERT INTO `mfloan`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('8', '1');
+
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('5', '1');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('5', '2');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('5', '5');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('5', '8');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('5', '12');
+
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('6', '1');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('6', '2');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('6', '5');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('6', '8');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('6', '12');
+
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('7', '1');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('7', '2');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('7', '5');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('7', '8');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('7', '12');
+
+
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('8', '1');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('8', '18');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('8', '3');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('8', '8');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('8', '12');
 
 
 
@@ -261,48 +298,50 @@ CREATE VIEW loan_view AS
 
 
 
-CREATE VIEW payment_view AS
+CREATE
+VIEW `mfloan`.`payment_view` AS
   SELECT
-    `lv`.`v_loan_id`                  AS `v_loan_id`,
-    `lv`.`v_loan_amount`              AS `v_loan_amount`,
-    `lv`.`v_loan_has_subLoan`         AS `v_loan_has_subLoan`,
-    `lv`.`v_loan_reg_date`            AS `v_loan_reg_date`,
-    `lv`.`v_loan_reg_number`          AS `v_loan_reg_number`,
-    `lv`.`v_loan_supervisor_id`       AS `v_loan_supervisor_id`,
+    `lv`.`v_loan_id` AS `v_loan_id`,
+    `lv`.`v_loan_amount` AS `v_loan_amount`,
+    `lv`.`v_loan_has_subLoan` AS `v_loan_has_subLoan`,
+    `lv`.`v_loan_reg_date` AS `v_loan_reg_date`,
+    `lv`.`v_loan_reg_number` AS `v_loan_reg_number`,
+    `lv`.`v_loan_supervisor_id` AS `v_loan_supervisor_id`,
     `lv`.`v_loan_collection_phase_id` AS `v_loan_collection_phase_id`,
-    `lv`.`v_loan_credit_order_id`     AS `v_loan_credit_order_id`,
-    `lv`.`v_loan_currency_id`         AS `v_loan_currency_id`,
-    `lv`.`v_loan_debtor_id`           AS `v_loan_debtor_id`,
-    `lv`.`v_loan_state_id`            AS `v_loan_state_id`,
-    `lv`.`v_loan_type_id`             AS `v_loan_type_id`,
-    `lv`.`v_loan_parent_loan_id`      AS `v_loan_parent_loan_id`,
-    `lv`.`v_debtor_id`                AS `v_debtor_id`,
-    `lv`.`v_debtor_type_id`           AS `v_debtor_type_id`,
-    `lv`.`v_debtor_org_form_id`       AS `v_debtor_org_form_id`,
-    `lv`.`v_debtor_work_sector_id`    AS `v_debtor_work_sector_id`,
-    `lv`.`v_debtor_name`              AS `v_debtor_name`,
-    `lv`.`v_debtor_entity_id`         AS `v_debtor_entity_id`,
-    `lv`.`v_debtor_owner_type`        AS `v_debtor_owner_type`,
-    `lv`.`v_debtor_region_id`         AS `v_debtor_region_id`,
-    `lv`.`v_debtor_district_id`       AS `v_debtor_district_id`,
-    `lv`.`v_debtor_aokmotu_id`        AS `v_debtor_aokmotu_id`,
-    `lv`.`v_debtor_village_id`        AS `v_debtor_village_id`,
-    `lv`.`v_credit_order_type_id`     AS `v_credit_order_type_id`,
-    `lv`.`v_credit_order_regNumber`   AS `v_credit_order_regNumber`,
-    `lv`.`v_credit_order_regDate`     AS `v_credit_order_regDate`,
-    `lv`.`v_region_name`              AS `v_region_name`,
-    `lv`.`v_district_name`            AS `v_district_name`,
-    `p`.`id`                          AS `v_payment_id`,
-    `p`.`fee`                         AS `v_payment_fee`,
-    `p`.`interest`                    AS `v_payment_interest`,
-    `p`.`number`                      AS `v_payment_number`,
-    `p`.`paymentDate`                 AS `v_payment_date`,
-    `p`.`penalty`                     AS `v_payment_penalty`,
-    `p`.`principal`                   AS `v_payment_principal`,
-    `p`.`totalAmount`                 AS `v_payment_total_amount`,
-    `p`.`paymentTypeId`               AS `v_payment_type_id`,
-    `pt`.`name`                       AS `v_payment_type_name`,
-    `lv`.`v_work_sector_name`         AS `v_work_sector_name`
-  FROM ((`mfloan`.`loan_view` `lv`
-    JOIN `mfloan`.`payment` `p` ON ((`p`.`loanId` = `lv`.`v_loan_id`))) JOIN `mfloan`.`paymentType` `pt`
-      ON ((`pt`.`id` = `p`.`paymentTypeId`)));
+    `lv`.`v_loan_credit_order_id` AS `v_loan_credit_order_id`,
+    `lv`.`v_loan_currency_id` AS `v_loan_currency_id`,
+    `lv`.`v_loan_debtor_id` AS `v_loan_debtor_id`,
+    `lv`.`v_loan_state_id` AS `v_loan_state_id`,
+    `lv`.`v_loan_type_id` AS `v_loan_type_id`,
+    `lv`.`v_loan_parent_loan_id` AS `v_loan_parent_loan_id`,
+    `lv`.`v_debtor_id` AS `v_debtor_id`,
+    `lv`.`v_debtor_type_id` AS `v_debtor_type_id`,
+    `lv`.`v_debtor_org_form_id` AS `v_debtor_org_form_id`,
+    `lv`.`v_debtor_work_sector_id` AS `v_debtor_work_sector_id`,
+    `lv`.`v_debtor_name` AS `v_debtor_name`,
+    `lv`.`v_debtor_entity_id` AS `v_debtor_entity_id`,
+    `lv`.`v_debtor_owner_type` AS `v_debtor_owner_type`,
+    `lv`.`v_debtor_region_id` AS `v_debtor_region_id`,
+    `lv`.`v_debtor_district_id` AS `v_debtor_district_id`,
+    `lv`.`v_debtor_aokmotu_id` AS `v_debtor_aokmotu_id`,
+    `lv`.`v_debtor_village_id` AS `v_debtor_village_id`,
+    `lv`.`v_credit_order_type_id` AS `v_credit_order_type_id`,
+    `lv`.`v_credit_order_regNumber` AS `v_credit_order_regNumber`,
+    `lv`.`v_credit_order_regDate` AS `v_credit_order_regDate`,
+    `lv`.`v_region_name` AS `v_region_name`,
+    `lv`.`v_district_name` AS `v_district_name`,
+    `p`.`id` AS `v_payment_id`,
+    `p`.`fee` AS `v_payment_fee`,
+    `p`.`interest` AS `v_payment_interest`,
+    `p`.`number` AS `v_payment_number`,
+    `p`.`paymentDate` AS `v_payment_date`,
+    `p`.`penalty` AS `v_payment_penalty`,
+    `p`.`principal` AS `v_payment_principal`,
+    `p`.`totalAmount` AS `v_payment_total_amount`,
+    `p`.`paymentTypeId` AS `v_payment_type_id`,
+    `pt`.`name` AS `v_payment_type_name`,
+    `lv`.`v_work_sector_name` AS `v_work_sector_name`
+  FROM
+    ((`mfloan`.`loan_view` `lv`
+      JOIN `mfloan`.`payment` `p` ON ((`p`.`loanId` = `lv`.`v_loan_id`)))
+      JOIN `mfloan`.`paymentType` `pt` ON ((`pt`.`id` = `p`.`paymentTypeId`)))
