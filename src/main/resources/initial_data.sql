@@ -53,13 +53,15 @@ INSERT INTO `mfloan`.`org_form` (`enabled`, `name`) VALUES (true, 'Физ. ли�
 /* ADD REGION */
 
 INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Баткенская область','СОАТЕ код области');
-INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Баткенская область','СОАТЕ код области');
 INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Ошская область','СОАТЕ код области');
 INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Таласская область','СОАТЕ код области');
 INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Нарынская область','СОАТЕ код области');
 INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Иссык-Кульская область','СОАТЕ код области');
 INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Чуйская область','СОАТЕ код области');
 INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('г.Бишкек','СОАТЕ код города');
+INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Жалал-Абадская область','СОАТЕ код области');
+
+
 
 /* ADD DISTRICT */
 
@@ -328,7 +330,7 @@ INSERT INTO `mfloan`.`orderDocumentPackage` (`version`,`name`,`creditOrderId`) V
 INSERT INTO `mfloan`.`orderDocument` (`version`,`name`,`orderDocumentPackageId`,`orderDocumentTypeId`) VALUES (1, 'Passport', 1,1);
 INSERT INTO `mfloan`.`orderDocument` (`version`,`name`,`orderDocumentPackageId`,`orderDocumentTypeId`) VALUES (1, 'Driver License', 1,1);
 
-INSERT INTO `mfloan`.`orderTerm` (`version`,`amount`,`collateralFree`,`description`,`earlyRepaymentAllowed`,`firstInstallmentDate`,`frequencyQuantity`,`graceOnInterestAccrDays`,`graceOnInterestAccrInst`,`graceOnInterestPaymentDays`,`graceOnInterestPaymentInst`,`graceOnPrinciplePaymentDays`,`graceOnPrinciplePaymentInst`,`installmentFirstDay`,`installmentQuantity`,`interestRateValue`,`lastInstallmentDate`,`maxDaysDisbFirstInst`,`minDaysDisbFirstInst`,`penaltyLimitPercent`,`penaltyOnInterestOverdueRateValue`,`penaltyOnPrincipleOverdueRateValue`,`creditOrderId`,`currencyId`,`daysInMonthMethodId`,`daysInYearMethodId`,`frequencyTypeId`,`fundId`,`interestAccrMethodId`,`interestRateValuePerPeriodId`,`interestTypeId`,`penaltyOnInterestOverdueTypeId`,`penaltyOnPrincipleOverdueTypeId`,`transactionOrderId`) 
+INSERT INTO `mfloan`.`orderTerm` (`version`,`amount`,`collateralFree`,`description`,`earlyRepaymentAllowed`,`firstInstallmentDate`,`frequencyQuantity`,`graceOnInterestAccrDays`,`graceOnInterestAccrInst`,`graceOnInterestPaymentDays`,`graceOnInterestPaymentInst`,`graceOnPrinciplePaymentDays`,`graceOnPrinciplePaymentInst`,`installmentFirstDay`,`installmentQuantity`,`interestRateValue`,`lastInstallmentDate`,`maxDaysDisbFirstInst`,`minDaysDisbFirstInst`,`penaltyLimitPercent`,`penaltyOnInterestOverdueRateValue`,`penaltyOnPrincipleOverdueRateValue`,`creditOrderId`,`currencyId`,`daysInMonthMethodId`,`daysInYearMethodId`,`frequencyTypeId`,`fundId`,`interestAccrMethodId`,`interestRateValuePerPeriodId`,`interestTypeId`,`penaltyOnInterestOverdueTypeId`,`penaltyOnPrincipleOverdueTypeId`,`transactionOrderId`)
 VALUES (1, 1000, 1, 'Order Term 1', 1, '2018-01-01', 2, 9, 8, 7, 6, 5, 4, 10, 100, 11, '2018-01-01', 3, 2, 1223, 33, 22, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
 /* ADD COLLECTION PROPS */
