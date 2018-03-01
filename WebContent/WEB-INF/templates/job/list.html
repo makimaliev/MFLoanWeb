@@ -80,9 +80,9 @@
 											<tr>
 												<th>Name</th>
 												<th>Cron expession</th>
-												<th>On date</th>
 												<th>Enabled</th>
 												<th>State</th>
+												<th>View details</th>
 												<th>Edit</th>
 												<th>Delete</th>
 											</tr>
@@ -97,7 +97,6 @@
 												<tr class="clickable-row">
 													<td th:text="${js.key.name}"></td>
 													<td th:text="${js.key.cronExpression}"></td>
-													<td th:text="${js.key.onDate}"></td>
 													<td th:text="${js.key.enabled}"></td>
 													<td>
 														<statecheck th:if="${js.value == true}">
@@ -106,6 +105,9 @@
 														<statecheck th:unless="${js.value == true}">
 															<span class="btn red">Stopped</span>
 														</statecheck>
+													</td>
+													<td>
+														<a th:href="@{/job/__${js.key.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
 													</td>
 													<td>
 														<a th:href="@{/job/__${js.key.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
@@ -135,7 +137,6 @@
 	<!-- END CONTAINER -->
 	<div th:replace="layout :: footer" />
 	<div th:replace="fragments/footer :: footer-js" />
-	<script th:src="@{/assets/pages/scripts/ui-modals.min.js}" type="text/javascript"></script>
 	<script th:src="@{/assets/pages/scripts/form-validation.min.js}" type="text/javascript"></script>
 	<script th:src="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js}" type="text/javascript"></script>
     <script th:src="@{/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"></script>

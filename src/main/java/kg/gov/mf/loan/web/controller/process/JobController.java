@@ -1,7 +1,7 @@
 package kg.gov.mf.loan.web.controller.process;
 
-import kg.gov.mf.loan.process.model.Job;
-import kg.gov.mf.loan.process.service.JobService;
+import kg.gov.mf.loan.process.model.JobItem;
+import kg.gov.mf.loan.process.service.JobItemService;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.reflections.Reflections;
@@ -23,7 +23,7 @@ public class JobController {
     private Scheduler scheduler;
 
     @Autowired
-    JobService jobService;
+    JobItemService jobItemService;
 
     @Autowired
     private ApplicationContext context;
@@ -31,10 +31,10 @@ public class JobController {
     @RequestMapping(value = { "/job/list" }, method = RequestMethod.GET)
     public String listJobs(ModelMap model) throws SchedulerException
     {
-        List<Job> jobs = jobService.list();
-        HashMap<Job, Boolean> jobWithStates = new HashMap<>();
+        List<JobItem> jobs = jobItemService.list();
+        HashMap<JobItem, Boolean> jobWithStates = new HashMap<>();
 
-        for (Job job : jobs)
+        for (JobItem job : jobs)
         {
             jobWithStates.put(job,isJobActive(new JobKey(job.getName(), job.getName())));
         }
@@ -44,18 +44,29 @@ public class JobController {
         return "/job/list";
     }
 
+    @RequestMapping(value="/job/{jobId}/view")
+    public String viewJob(ModelMap model, @PathVariable("jobId")Long jobId)
+    {
+        JobItem job = jobItemService.getById(jobId);
+        model.addAttribute("job", job);
+        model.addAttribute("onDates", job.getOnDates());
+
+        return "/job/view";
+    }
+
+
     @RequestMapping(value="/job/{jobId}/save", method=RequestMethod.GET)
     public String formJob(ModelMap model, @PathVariable("jobId")Long jobId)
     {
 
         if(jobId == 0)
         {
-            model.addAttribute("job", new Job());
+            model.addAttribute("job", new JobItem());
         }
 
         if(jobId > 0)
         {
-            model.addAttribute("job", jobService.getById(jobId));
+            model.addAttribute("job", jobItemService.getById(jobId));
         }
 
         Reflections reflections = new Reflections("kg.gov.mf.loan.process.job");
@@ -72,12 +83,12 @@ public class JobController {
     }
 
     @RequestMapping(value="/job/save", method=RequestMethod.POST)
-    public String saveJob(Job job)
+    public String saveJob(JobItem job)
     {
         if(job.getId() == 0)
-            jobService.add(job);
+            jobItemService.add(job);
         else
-            jobService.update(job);
+            jobItemService.update(job);
 
         return "redirect:" + "/job/list";
     }
@@ -86,12 +97,12 @@ public class JobController {
     public String startAllJobs() throws SchedulerException
     {
 
-        List<Job> jobs = jobService.list();
+        List<JobItem> jobs = jobItemService.list();
 
         Reflections reflections = new Reflections("kg.gov.mf.loan.process.job");
         Set<Class<?>> classes = reflections.getTypesAnnotatedWith(Component.class);
 
-        for (Job jobItem: jobs) {
+        for (JobItem jobItem: jobs) {
             for (Class<?> o: classes
                     ) {
                 if(o.getName().equals(jobItem.getName()) && jobItem.isEnabled())
@@ -99,10 +110,9 @@ public class JobController {
                     JobDetail jobDetail = context.getBean(JobDetail.class, jobItem.getName(), jobItem.getName(), o);
                     Trigger cronTrigger = context.getBean(Trigger.class, jobItem.getCronExpression(), jobItem.getName());
                     if(!isJobActive(jobDetail)){
-                        scheduler.getContext().put("onDate", jobItem.getOnDate());
+                        scheduler.getContext().put("jobItem", jobItem);
                         scheduler.scheduleJob(jobDetail, cronTrigger);
                     }
-
                 }
             }
 
@@ -126,7 +136,7 @@ public class JobController {
     @RequestMapping(value="/job/delete", method=RequestMethod.POST)
     public String deleteJob(long id) {
         if(id > 0)
-            jobService.remove(jobService.getById(id));
+            jobItemService.remove(jobItemService.getById(id));
         return "redirect:" + "/job/list";
     }
 
