@@ -1,31 +1,19 @@
 package kg.gov.mf.loan.web.controller.output.report;
 
-import kg.gov.mf.loan.doc.model.Document;
-import kg.gov.mf.loan.output.report.utils.ReportGenerator;
 import kg.gov.mf.loan.output.report.utils.ReportGeneratorLoan;
 import kg.gov.mf.loan.output.report.utils.ReportGeneratorPayment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import kg.gov.mf.loan.admin.org.model.District;
 import kg.gov.mf.loan.output.report.model.*;
 import kg.gov.mf.loan.output.report.service.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.URLConnection;
-import java.util.Set;
-
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 
 @Controller
 public class ReportTemplateController {
