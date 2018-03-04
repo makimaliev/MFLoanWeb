@@ -136,6 +136,10 @@ public class LoanController {
         model.addAttribute("Bankrupts", loan.getBankrupts());
         model.addAttribute("Collaterals", loan.getCollaterals());
         model.addAttribute("debtorId", debtorId);
+
+		model.addAttribute("detailedSummaries", loan.getLoanDetailedSummaries());
+		model.addAttribute("summaries", loan.getLoanSummaries());
+		model.addAttribute("accrues", loan.getAccrues());
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "/manage/debtor/loan/view";

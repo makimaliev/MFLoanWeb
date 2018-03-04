@@ -207,6 +207,9 @@
 								<li><a href="#tab_9" data-toggle="tab"> Bankrupts </a></li>
 								<li><a href="#tab_10" data-toggle="tab"> Collaterals </a></li>
 								<li><a href="#tab_11" data-toggle="tab"> Collection Phases </a></li>
+								<li><a href="#tab_12" data-toggle="tab"> Loan Detailed Summary </a></li>
+								<li><a href="#tab_13" data-toggle="tab"> Loan Summary </a></li>
+								<li><a href="#tab_14" data-toggle="tab"> Accrue </a></li>
 							</ul>
 							<div class="tab-content">
 								<div class="tab-pane active" id="tab_0">
@@ -1056,7 +1059,227 @@
 										</div>
 									</div>
 								</div>
-								
+
+								<div class="tab-pane" id="tab_12">
+									<div class="row">
+										<div class="col-md-12">
+											<!-- BEGIN BORDERED TABLE PORTLET-->
+											<div class="portlet light portlet-fit ">
+												<div class="portlet-body">
+													<div class="table-scrollable table-scrollable-borderless">
+														<table class="table table-hover table-light" id="orders">
+															<thead>
+															<tr>
+																<th>Id</th>
+																<th>onDate</th>
+																<th>disbursement</th>
+																<th>totalDisbursement</th>
+																<th>principalPayment</th>
+																<th>totalPrincipalPayment</th>
+																<th>principalPaid</th>
+																<th>totalPrincipalPaid</th>
+																<th>principalWriteOff</th>
+																<th>totalPrincipalWriteOff</th>
+																<th>principalOutstanding</th>
+																<th>principalOverdue</th>
+																<th>daysInPeriod</th>
+																<th>interestAccrued</th>
+																<th>totalInterestAccrued</th>
+																<th>totalInterestAccruedOnInterestPayment</th>
+																<th>interestPayment</th>
+																<th>totalInterestPayment</th>
+																<th>collectedInterestPayment</th>
+																<th>totalCollectedInterestPayment</th>
+																<th>collectedInterestDisbursed</th>
+																<th>interestPaid</th>
+																<th>totalInterestPaid</th>
+																<th>interestOutstanding</th>
+																<th>interestOverdue</th>
+																<th>penaltyAccrued</th>
+																<th>totalPenaltyAccrued</th>
+																<th>collectedPenaltyPayment</th>
+																<th>totalCollectedPenaltyPayment</th>
+																<th>collectedPenaltyDisbursed</th>
+																<th>penaltyPaid</th>
+																<th>totalPenaltyPaid</th>
+																<th>penaltyOutstanding</th>
+																<th>penaltyOverdue</th>
+															</tr>
+															</thead>
+															<tbody>
+															<ordercheck th:if="${#lists.isEmpty(detailedSummaries)}">
+																<tr class="no-records-found" style="text-align: center;">
+																	<td colspan="10">No matching records found</td>
+																</tr>
+															</ordercheck>
+															<order th:each="dSummary : ${detailedSummaries}">
+																<tr class="clickable-row">
+																	<td th:text="${dSummary.id}"></td>
+																	<td th:text="${dSummary.onDate}"></td>
+																	<td th:text="${dSummary.disbursement}"></td>
+																	<td th:text="${dSummary.totalDisbursement}"></td>
+																	<td th:text="${dSummary.principalPayment}"></td>
+																	<td th:text="${dSummary.totalPrincipalPayment}"></td>
+																	<td th:text="${dSummary.principalPaid}"></td>
+																	<td th:text="${dSummary.totalPrincipalPaid}"></td>
+																	<td th:text="${dSummary.principalWriteOff}"></td>
+																	<td th:text="${dSummary.totalPrincipalWriteOff}"></td>
+																	<td th:text="${dSummary.principalOutstanding}"></td>
+																	<td th:text="${dSummary.principalOverdue}"></td>
+																	<td th:text="${dSummary.daysInPeriod}"></td>
+																	<td th:text="${dSummary.interestAccrued}"></td>
+																	<td th:text="${dSummary.totalInterestAccrued}"></td>
+																	<td th:text="${dSummary.totalInterestAccruedOnInterestPayment}"></td>
+																	<td th:text="${dSummary.interestPayment}"></td>
+																	<td th:text="${dSummary.totalInterestPayment}"></td>
+																	<td th:text="${dSummary.collectedInterestPayment}"></td>
+																	<td th:text="${dSummary.totalCollectedInterestPayment}"></td>
+																	<td th:text="${dSummary.collectedInterestDisbursed}"></td>
+																	<td th:text="${dSummary.interestPaid}"></td>
+																	<td th:text="${dSummary.totalInterestPaid}"></td>
+																	<td th:text="${dSummary.interestOutstanding}"></td>
+																	<td th:text="${dSummary.interestOverdue}"></td>
+																	<td th:text="${dSummary.penaltyAccrued}"></td>
+																	<td th:text="${dSummary.totalPenaltyAccrued}"></td>
+																	<td th:text="${dSummary.collectedPenaltyPayment}"></td>
+																	<td th:text="${dSummary.totalCollectedPenaltyPayment}"></td>
+																	<td th:text="${dSummary.collectedPenaltyDisbursed}"></td>
+																	<td th:text="${dSummary.penaltyPaid}"></td>
+																	<td th:text="${dSummary.totalPenaltyPaid}"></td>
+																	<td th:text="${dSummary.penaltyOutstanding}"></td>
+																	<td th:text="${dSummary.penaltyOverdue}"></td>
+																</tr>
+															</order>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+											<!-- END BORDERED TABLE PORTLET-->
+										</div>
+									</div>
+								</div>
+
+								<div class="tab-pane" id="tab_13">
+									<div class="row">
+										<div class="col-md-12">
+											<!-- BEGIN BORDERED TABLE PORTLET-->
+											<div class="portlet light portlet-fit ">
+												<div class="portlet-body">
+													<div class="table-scrollable table-scrollable-borderless">
+														<table class="table table-hover table-light" id="orders">
+															<thead>
+															<tr>
+																<th>Id</th>
+																<th>onDate</th>
+																<th>loanAmount</th>
+																<th>totalDisbursed</th>
+																<th>totalPaid</th>
+																<th>paidPrincipal</th>
+																<th>paidInterest</th>
+																<th>paidPenalty</th>
+																<th>paidFee</th>
+																<th>totalOutstanding</th>
+																<th>outstadingPrincipal</th>
+																<th>outstadingInterest</th>
+																<th>outstadingPenalty</th>
+																<th>outstadingFee</th>
+																<th>totalOverdue</th>
+																<th>overduePrincipal</th>
+																<th>overdueInterest</th>
+																<th>overduePenalty</th>
+																<th>overdueFee</th>
+															</tr>
+															</thead>
+															<tbody>
+															<ordercheck th:if="${#lists.isEmpty(summaries)}">
+																<tr class="no-records-found" style="text-align: center;">
+																	<td colspan="10">No matching records found</td>
+																</tr>
+															</ordercheck>
+															<order th:each="summary : ${summaries}">
+																<tr class="clickable-row">
+																	<td th:text="${summary.id}"></td>
+																	<td th:text="${summary.onDate}"></td>
+																	<td th:text="${summary.loanAmount}"></td>
+																	<td th:text="${summary.totalDisbursed}"></td>
+																	<td th:text="${summary.totalPaid}"></td>
+																	<td th:text="${summary.paidPrincipal}"></td>
+																	<td th:text="${summary.paidInterest}"></td>
+																	<td th:text="${summary.paidPenalty}"></td>
+																	<td th:text="${summary.paidFee}"></td>
+																	<td th:text="${summary.totalOutstanding}"></td>
+																	<td th:text="${summary.outstadingPrincipal}"></td>
+																	<td th:text="${summary.outstadingInterest}"></td>
+																	<td th:text="${summary.outstadingPenalty}"></td>
+																	<td th:text="${summary.outstadingFee}"></td>
+																	<td th:text="${summary.totalOverdue}"></td>
+																	<td th:text="${summary.overduePrincipal}"></td>
+																	<td th:text="${summary.overdueInterest}"></td>
+																	<td th:text="${summary.overduePenalty}"></td>
+																	<td th:text="${summary.overdueFee}"></td>
+																</tr>
+															</order>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+											<!-- END BORDERED TABLE PORTLET-->
+										</div>
+									</div>
+								</div>
+
+								<div class="tab-pane" id="tab_14">
+									<div class="row">
+										<div class="col-md-12">
+											<!-- BEGIN BORDERED TABLE PORTLET-->
+											<div class="portlet light portlet-fit ">
+												<div class="portlet-body">
+													<div class="table-scrollable table-scrollable-borderless">
+														<table class="table table-hover table-light" id="orders">
+															<thead>
+															<tr>
+																<th>Id</th>
+																<th>fromDate</th>
+																<th>toDate</th>
+																<th>daysInPeriod</th>
+																<th>interestAccrued</th>
+																<th>penaltyAccrued</th>
+																<th>penaltyOnPrincipalOverdue</th>
+																<th>penaltyOnInterestOverdue</th>
+																<th>lastInstPassed</th>
+															</tr>
+															</thead>
+															<tbody>
+															<ordercheck th:if="${#lists.isEmpty(accrues)}">
+																<tr class="no-records-found" style="text-align: center;">
+																	<td colspan="10">No matching records found</td>
+																</tr>
+															</ordercheck>
+															<order th:each="accrue : ${accrues}">
+																<tr class="clickable-row">
+																	<td th:text="${accrue.id}"></td>
+																	<td th:text="${accrue.fromDate}"></td>
+																	<td th:text="${accrue.toDate}"></td>
+																	<td th:text="${accrue.daysInPeriod}"></td>
+																	<td th:text="${accrue.interestAccrued}"></td>
+																	<td th:text="${accrue.penaltyAccrued}"></td>
+																	<td th:text="${accrue.penaltyOnPrincipalOverdue}"></td>
+																	<td th:text="${accrue.penaltyOnInterestOverdue}"></td>
+																	<td th:text="${accrue.lastInstPassed}"></td>
+																</tr>
+															</order>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+											<!-- END BORDERED TABLE PORTLET-->
+										</div>
+									</div>
+								</div>
+
 							</div>
 						</div>
 					</div>
