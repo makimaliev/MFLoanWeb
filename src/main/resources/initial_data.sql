@@ -45,136 +45,64 @@ INSERT INTO `mfloan`.`user_role` (`user_id`,`role_id`) VALUES (2,2);
 
 /* ADD ORG FORM */
 
-INSERT INTO `mfloan`.`org_form` (`enabled`, `name`) VALUES (true, 'Юр. лицо');
-INSERT INTO `mfloan`.`org_form` (`enabled`, `name`) VALUES (true, 'Физ. лицо');
-
-
-
 /* ADD REGION */
 
-INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Баткенская область','СОАТЕ код области');
-INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Ошская область','СОАТЕ код области');
-INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Таласская область','СОАТЕ код области');
-INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Нарынская область','СОАТЕ код области');
-INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Иссык-Кульская область','СОАТЕ код области');
-INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Чуйская область','СОАТЕ код области');
-INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('г.Бишкек','СОАТЕ код города');
-INSERT INTO `mfloan`.`region` (`name`,`code`) VALUES ('Жалал-Абадская область','СОАТЕ код области');
+
 
 
 
 /* ADD DISTRICT */
 
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Баткенский район','СОАТЕ код района',1);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Ляйлякский район','СОАТЕ код района',1);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Кадамжайский район','СОАТЕ код района',1);
 
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Аксыйский район','СОАТЕ код района',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Ала-Букинский район','СОАТЕ код района',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Сузакский район','СОАТЕ код района',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Базар-Коргонский район','СОАТЕ код района',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Ноокенский район','СОАТЕ код района',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Чаткальский район','СОАТЕ код района',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Токтогульский район','СОАТЕ код района',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Тогуз-Тороузский район','СОАТЕ код района',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('г.Жалал-Абад','СОАТЕ код города',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('г.Кара-Куль','СОАТЕ код города',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('г.Таш-Кумыр','СОАТЕ код города',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('г.Кок-Жангак','СОАТЕ код города',2);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('г.Кочкор-Ата','СОАТЕ код города',2);
-
-
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Араванский район','СОАТЕ код района',3);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Алайский район','СОАТЕ код района',3);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Кара-Суйский район','СОАТЕ код района',3);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Кара-Кульджинский район','СОАТЕ код района',3);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Чон-Алайский район','СОАТЕ код района',3);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Узгенский район','СОАТЕ код района',3);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('Ноокатский район','СОАТЕ код района',3);
-INSERT INTO `mfloan`.`district` (`name`,`code`,`region_id`) VALUES ('г.Ош','СОАТЕ код города',3);
 
 
 
 /* ADD AOKMOTU */
 
-INSERT INTO `mfloan`.`aokmotu` (`name`,`code`,`district_id`) VALUES ('Аокмоту №1 1.района','СОАТЕ код аокмоту',1);
-INSERT INTO `mfloan`.`aokmotu` (`name`,`code`,`district_id`) VALUES ('Аокмоту №2 1.района','СОАТЕ код аокмоту',1);
-INSERT INTO `mfloan`.`aokmotu` (`name`,`code`,`district_id`) VALUES ('Аокмоту №3 1.района','СОАТЕ код аокмоту',1);
 
-INSERT INTO `mfloan`.`aokmotu` (`name`,`code`,`district_id`) VALUES ('Аокмоту №1 2.района','СОАТЕ код аокмоту',2);
-INSERT INTO `mfloan`.`aokmotu` (`name`,`code`,`district_id`) VALUES ('Аокмоту №2 2.района','СОАТЕ код аокмоту',2);
-INSERT INTO `mfloan`.`aokmotu` (`name`,`code`,`district_id`) VALUES ('Аокмоту №3 2.района','СОАТЕ код аокмоту',2);
 
 
 
 /* ADD VILLAGE */
 
-INSERT INTO `mfloan`.`village` (`name`,`code`,`aokmotu_id`) VALUES ('Село №1 1.аокмоту','СОАТЕ код села',1);
-INSERT INTO `mfloan`.`village` (`name`,`code`,`aokmotu_id`) VALUES ('Село №2 1.аокмоту','СОАТЕ код села',1);
-INSERT INTO `mfloan`.`village` (`name`,`code`,`aokmotu_id`) VALUES ('Село №3 1.аокмоту','СОАТЕ код села',1);
 
-INSERT INTO `mfloan`.`village` (`name`,`code`,`aokmotu_id`) VALUES ('Село №1 2.аокмоту','СОАТЕ код села',2);
-INSERT INTO `mfloan`.`village` (`name`,`code`,`aokmotu_id`) VALUES ('Село №2 2.аокмоту','СОАТЕ код села',2);
-INSERT INTO `mfloan`.`village` (`name`,`code`,`aokmotu_id`) VALUES ('Село №3 2.аокмоту','СОАТЕ код села',2);
 
 
 
 /* ADD IDENTITY DOC GIVEN BY */
 
-INSERT INTO `mfloan`.`identity_doc_given_by` (`enabled`, `name`) VALUES (true, 'МКК');
-INSERT INTO `mfloan`.`identity_doc_given_by` (`enabled`, `name`) VALUES (true, 'Министерство юстиции');
 
+INSERT INTO `mfloan`.`identity_doc_given_by` (`enabled`, `name`) VALUES (true, 'MKK');
+INSERT INTO `mfloan`.`identity_doc_given_by` (`enabled`, `name`) VALUES (true, 'Min Just');
 
 
 /* ADD IDENTITY DOC TYPE */
 
-INSERT INTO `mfloan`.`identity_doc_type` (`enabled`, `name`) VALUES (true, 'Паспорт');
-INSERT INTO `mfloan`.`identity_doc_type` (`enabled`, `name`) VALUES (true, 'Свидетельство о регистрации');
-
-
 
 /* ADD EMPLOYMENT HISTORY EVENT TYPE */
-
-INSERT INTO `mfloan`.`employment_history_event_type` (`name`) VALUES ('Дата рождения');
-INSERT INTO `mfloan`.`employment_history_event_type` (`name`) VALUES ('Учеба - высшее образование');
-INSERT INTO `mfloan`.`employment_history_event_type` (`name`) VALUES ('Принятие на работу');
-INSERT INTO `mfloan`.`employment_history_event_type` (`name`) VALUES ('Увольнение с работы');
-INSERT INTO `mfloan`.`employment_history_event_type` (`name`) VALUES ('Награждение');
-INSERT INTO `mfloan`.`employment_history_event_type` (`name`) VALUES ('Дисциплинарное взыскание');
-
 
 
 
 /* ADD cSYSTEM */
 
-INSERT INTO `mfloan`.`c_system` (`name`) VALUES ('АСУБК');
+INSERT INTO `mfloan`.`c_system` (`name`) VALUES ('ASUBK');
 INSERT INTO `mfloan`.`c_system` (`name`) VALUES ('Rm1');
 
 
 
 /* ADD OBJECT TYPE */
 
-INSERT INTO `mfloan`.`object_type` (`name`,`code`) VALUES ('Система','cSystem');
-INSERT INTO `mfloan`.`object_type` (`name`,`code`) VALUES ('Организация','Organization');
+INSERT INTO `mfloan`.`object_type` (`name`,`code`) VALUES ('System','cSystem');
+INSERT INTO `mfloan`.`object_type` (`name`,`code`) VALUES ('Organization','Organization');
 
 /* ADD OBJECT EVENT */
 
-INSERT INTO `mfloan`.`object_event` (`description`, `name`, `object_type_id`) VALUES ('System add event', 'EVENT_SYSTEM_ADD', '1');
-INSERT INTO `mfloan`.`object_event` (`description`, `name`, `object_type_id`) VALUES ('System view event', 'EVENT_SYSTEM_VIEW', '1');
-INSERT INTO `mfloan`.`object_event` (`description`, `name`, `object_type_id`) VALUES ('System update event', 'EVENT_SYSTEM_UPDATE', '1');
-INSERT INTO `mfloan`.`object_event` (`description`, `name`, `object_type_id`) VALUES ('System delete event', 'EVENT_SYSTEM_DELETE', '1');
 
 
 /* ADD OBJECT FIELD */
 
-INSERT INTO `mfloan`.`object_field` (`name`,`description`,`method_name`,`object_type_id`) VALUES ('id','Идентификационный номер системы','getId',1);
-INSERT INTO `mfloan`.`object_field` (`name`,`description`,`method_name`,`object_type_id`) VALUES ('name','Наименование системы','getName',1);
-
-
 
 /* ADD OBJECT VALIDATION TERM */
-
-INSERT INTO `mfloan`.`validation_term` (`object_field_id`,`name`,`description`,`max_length`,`min_length`) VALUES (2,'Проверка наименования','Длина наименования ',2,10);
 
 
 
@@ -184,83 +112,44 @@ INSERT INTO `mfloan`.`validation_term` (`object_field_id`,`name`,`description`,`
 
 /* ADD IDENTITY DOC */ 
 
-INSERT INTO `mfloan`.`identity_doc` (`enabled`, `name`, `number`, `pin`,  `identity_doc_given_by_id`, `identity_doc_type_id`) VALUES (true, 'id doc1', 'id doc number1', 'id doc pin1', '1', '1');
-INSERT INTO `mfloan`.`identity_doc` (`enabled`, `name`, `number`, `pin`,  `identity_doc_given_by_id`, `identity_doc_type_id`) VALUES (true, 'id doc2', 'id doc number2', 'id doc pin2', '1', '1');
 
 /* ADD IDENTITY DOC DETAILS */ 
 
-INSERT INTO `mfloan`.`identity_doc_details` (`firstname`, `fullname`, `lastname`, `midname`, `identity_doc_id`) VALUES ('1', 'Госагентство', '1', '1', '1');
-INSERT INTO `mfloan`.`identity_doc_details` (`firstname`, `fullname`, `lastname`, `midname`, `identity_doc_id`) VALUES ('Азамат', 'Сламкулов А.О.', 'Сламкулов', 'Омургазиевич', '2');
 
-UPDATE `mfloan`.`identity_doc` SET `identity_doc_details_id`='1' WHERE `id`='1';
-UPDATE `mfloan`.`identity_doc` SET `identity_doc_details_id`='2' WHERE `id`='2';
 
 
 /* ADD ADDRESS DETAILS */ 
 
-INSERT INTO `mfloan`.`address_details` (`line1`, `line2`, `name`, `soate_code`) VALUES ('line1', 'line2', 'addess name1', 'soate code1');
-INSERT INTO `mfloan`.`address_details` (`line1`, `line2`, `name`, `soate_code`) VALUES ('line1', 'line2', 'addess name2', 'soate code2');
-
-
 
 /* ADD ADDRESS */ 
-
-INSERT INTO `mfloan`.`address` (`line`, `address_details_id`, `aokmotu_id`, `district_id`, `region_id`, `village_id`) VALUES ('line1', '1', '1', '1', '1', '1');
-INSERT INTO `mfloan`.`address` (`line`, `address_details_id`, `aokmotu_id`, `district_id`, `region_id`, `village_id`) VALUES ('line2', '2', '2', '2', '2', '2');
 
 
 /* ADD CONTACT */ 
 
-INSERT INTO `mfloan`.`contact` (`name`) VALUES ('phone number1');
-INSERT INTO `mfloan`.`contact` (`name`) VALUES ('phone number2');
 
 
 /* ADD ORGANIZATION */ 
 
-INSERT INTO `mfloan`.`organization` (`description`, `enabled`, `name`, `address_id`, `contact_id`, `identity_doc_id`, `org_form_id`) VALUES ('description', true, 'GAUBK', '1', '1', '1', '1');
 
 /* ADD PERSON */ 
 
-INSERT INTO `mfloan`.`person` (`description`, `enabled`, `name`, `address_id`, `contact_id`, `identity_doc_id`) VALUES ('Fiz', true, 'Сламкулов', '2', '2', '2');
-
 /* ADD BANK DATA */ 
 
-INSERT INTO `mfloan`.`bank_data` (`account_number`, `bik`, `description`, `is_primary`, `name`, `organization_id`) VALUES ('number1', 'bik1', 'description1', true, 'name1', '1');
-INSERT INTO `mfloan`.`bank_data` (`account_number`, `bik`, `description`, `is_primary`, `name`, `organization_id`) VALUES ('number2', 'bik2', 'description2', false, 'name2', '1');
 
 /* ADD DEPARTMENT */ 
 
-INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organization_id`) VALUES ('Руководство ГАУБК', true, 'Руководство', '1');
-INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organization_id`) VALUES ('Управление №1', true, 'Управление ПРОМ', '1');
-INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organization_id`) VALUES ('Управление №2', true, 'Управление АПК', '1');
-INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organization_id`) VALUES ('Управление №3', true, 'Управление ЮР', '1');
-INSERT INTO `mfloan`.`department` (`description`, `enabled`, `name`, `organization_id`) VALUES ('Управление №4', true, 'Управление ОКП', '1');
-
-/* ADD DEPARTMENT */ 
-
-INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('Директор', '1');
-INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('Зам директора', '1');
-INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('Начальник управления', '2');
-INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('Начальник управления', '3');
-INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('Начальник управления', '4');
-INSERT INTO `mfloan`.`position` (`name`, `department_id`) VALUES ('Начальник управления', '5');
 
 /* ADD STAFF */
 
-INSERT INTO `mfloan`.`staff` (`enabled`, `name`, `department_id`, `organization_id`, `person_id`, `position_id`) VALUES (true, 'Сламкулов А.О.', '1', '1', '1', '1');
 
 
 /* ADD EMPLOYMENT HISTORY */
-
-INSERT INTO `mfloan`.`employment_history` (`number`, `staff_id`) VALUES ('number', '1');
-UPDATE `mfloan`.`staff` SET `employment_history_id`='1' WHERE `id`='1';
 
 
 
 
 /* ADD EMPLOYMENT HISTORY EVENT */
 
-INSERT INTO `mfloan`.`employment_history_event` (`date`,`name`, `employmentHistory_id`, `employment_history_event_type_id`) VALUES ('2017/01/01','name', '1', '1');
 
 /* ADD MESSAGE RESOURCE */
 
@@ -273,70 +162,96 @@ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALU
 
 INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Name2', 'Аталышы2', 'asdf', 'Наименование2');
 
-/* ADD CREDIT ORDER STATE AND TYPE */
 
-INSERT INTO `mfloan`.`creditOrderState` (`version`,`name`) VALUES (1,'Order State 1');
-INSERT INTO `mfloan`.`creditOrderType` (`version`,`name`) VALUES (1,'Order Type 1');
+
+
+
+
+
+
+
 
 /* ADD ENTITY LIST STATE AND TYPE */
-INSERT INTO `mfloan`.`appliedEntityListState` (`version`,`name`) VALUES (1,'List State 1');
-INSERT INTO `mfloan`.`appliedEntityListType` (`version`,`name`) VALUES (1,'List Type 1');
 
-/* ADD ORDER DOC TYPE */
-INSERT INTO `mfloan`.`orderDocumentType` (`version`,`name`) VALUES (1,'Order Document Type 1');
+INSERT INTO `mfloan`.`appliedEntityListState` (`version`,`name`) VALUES (1,'Разнарядка');
+INSERT INTO `mfloan`.`appliedEntityListState` (`version`,`name`) VALUES (1,'Другое');
 
-/* ADD ORDER TERM PROPS */
-INSERT INTO `mfloan`.`orderTermFund` (`version`,`name`) VALUES (1,'Fund 1');
-INSERT INTO `mfloan`.`orderTermCurrency` (`version`,`name`) VALUES (1,'KGS');
-INSERT INTO `mfloan`.`orderTermCurrency` (`version`,`name`) VALUES (1,'RUB');
-INSERT INTO `mfloan`.`orderTermCurrency` (`version`,`name`) VALUES (1,'USD');
-INSERT INTO `mfloan`.`orderTermFrequencyType` (`version`,`name`) VALUES (1,'Freq Type 1');
-INSERT INTO `mfloan`.`orderTermRatePeriod` (`version`,`name`) VALUES (1,'Rate Period 1');
-INSERT INTO `mfloan`.`orderTermFloatingRateType` (`version`,`name`) VALUES (1,'Floating Rate Type 1');
-INSERT INTO `mfloan`.`orderTermTransactionOrder` (`version`,`name`) VALUES (1,'Tx Order 1');
-INSERT INTO `mfloan`.`orderTermDaysMethod` (`version`,`name`) VALUES (1,'Days Method 1');
-INSERT INTO `mfloan`.`orderTermAccrMethod` (`version`,`name`) VALUES (1,'Accr Method 1');
+INSERT INTO `mfloan`.`appliedEntityListType` (`version`,`name`) VALUES (1,'Список получателей');
+INSERT INTO `mfloan`.`appliedEntityListType` (`version`,`name`) VALUES (1,'Другое');
 
-/* ADD DEBTOR PROPS */
+INSERT INTO `mfloan`.`appliedentitystate` (`version`,`name`) VALUES (1,'На стадии оформления');
+INSERT INTO `mfloan`.`appliedentitystate` (`version`,`name`) VALUES (1,'Оформление завершено');
+INSERT INTO `mfloan`.`appliedentitystate` (`version`,`name`) VALUES (1,'Отказ получателя');
+INSERT INTO `mfloan`.`appliedentitystate` (`version`,`name`) VALUES (1,'Другое');
+
+INSERT INTO `mfloan`.`documentpackagestate` (`version`,`name`) VALUES (1,'На стадии комплектации');
+INSERT INTO `mfloan`.`documentpackagestate` (`version`,`name`) VALUES (1,'Комплектация завершена');
+
+INSERT INTO `mfloan`.`documentpackagetype` (`version`,`name`) VALUES (1,'Кредитный пакет документации');
+INSERT INTO `mfloan`.`documentpackagetype` (`version`,`name`) VALUES (1,'Залоговый пакет документации');
+INSERT INTO `mfloan`.`documentpackagetype` (`version`,`name`) VALUES (1,'Пакет документации для перевод долга');
+INSERT INTO `mfloan`.`documentpackagetype` (`version`,`name`) VALUES (1,'Другое');
+
+INSERT INTO `mfloan`.`entitydocumentstate` (`version`,`name`) VALUES (1,'На стадии коплектации');
+INSERT INTO `mfloan`.`entitydocumentstate` (`version`,`name`) VALUES (1,'Копмлектация завершена');
+INSERT INTO `mfloan`.`entitydocumentstate` (`version`,`name`) VALUES (1,'На стадии проверки');
+INSERT INTO `mfloan`.`entitydocumentstate` (`version`,`name`) VALUES (1,'Проверка зварешена');
+
+INSERT INTO `mfloan`.`entitydocumentregisteredby` (`version`,`name`) VALUES (1,'ГРС');
+INSERT INTO `mfloan`.`entitydocumentregisteredby` (`version`,`name`) VALUES (1,'ЦЗРК');
+INSERT INTO `mfloan`.`entitydocumentregisteredby` (`version`,`name`) VALUES (1,'Нотариус');
+INSERT INTO `mfloan`.`entitydocumentregisteredby` (`version`,`name`) VALUES (1,'Другое');
+
+INSERT INTO `mfloan`.`orderdocumenttype` (`version`,`name`) VALUES (1,'Кредитный договор');
+INSERT INTO `mfloan`.`orderdocumenttype` (`version`,`name`) VALUES (1,'Залоговый договор договор');
+INSERT INTO `mfloan`.`orderdocumenttype` (`version`,`name`) VALUES (1,'Паспорт или свидетельство о регистрации');
+
+INSERT INTO `mfloan`.`orderTermFrequencyType` (`version`,`name`) VALUES (1,'Год');
+INSERT INTO `mfloan`.`orderTermFrequencyType` (`version`,`name`) VALUES (1,'Полугодие');
+INSERT INTO `mfloan`.`orderTermFrequencyType` (`version`,`name`) VALUES (1,'Квартал');
+INSERT INTO `mfloan`.`orderTermFrequencyType` (`version`,`name`) VALUES (1,'Месяц');
+INSERT INTO `mfloan`.`orderTermFrequencyType` (`version`,`name`) VALUES (1,'Неделя');
+INSERT INTO `mfloan`.`orderTermFrequencyType` (`version`,`name`) VALUES (1,'День');
+
+INSERT INTO `mfloan`.`orderTermRatePeriod` (`version`,`name`) VALUES (1,'Год');
+INSERT INTO `mfloan`.`orderTermRatePeriod` (`version`,`name`) VALUES (1,'Полугодие');
+INSERT INTO `mfloan`.`orderTermRatePeriod` (`version`,`name`) VALUES (1,'Квартал');
+INSERT INTO `mfloan`.`orderTermRatePeriod` (`version`,`name`) VALUES (1,'Месяц');
+INSERT INTO `mfloan`.`orderTermRatePeriod` (`version`,`name`) VALUES (1,'Неделя');
+INSERT INTO `mfloan`.`orderTermRatePeriod` (`version`,`name`) VALUES (1,'День');
+
+INSERT INTO `mfloan`.`orderTermTransactionOrder` (`version`,`name`) VALUES (1,'Основная сумма, проценты, штрафы');
+INSERT INTO `mfloan`.`orderTermTransactionOrder` (`version`,`name`) VALUES (1,'Проценты, штрафы, основная сумма');
+INSERT INTO `mfloan`.`orderTermTransactionOrder` (`version`,`name`) VALUES (1,'Другое');
+
+INSERT INTO `mfloan`.`orderTermAccrMethod` (`version`,`name`) VALUES (1,'Простая ставка');
+INSERT INTO `mfloan`.`orderTermAccrMethod` (`version`,`name`) VALUES (1,'Аннуитет');
+INSERT INTO `mfloan`.`orderTermAccrMethod` (`version`,`name`) VALUES (1,'Другое');
+
+
+
+
+INSERT INTO `mfloan`.`orderDocumentType` (`version`,`name`) VALUES (1,'Кредитный договор');
+INSERT INTO `mfloan`.`orderDocumentType` (`version`,`name`) VALUES (1,'Залоговый договор');
+INSERT INTO `mfloan`.`orderDocumentType` (`version`,`name`) VALUES (1,'Паспорт или свидетельство о регистрации');
+
+
+
+
+
+
 INSERT INTO `mfloan`.`debtorType` (`version`,`name`) VALUES (1,'Debtor Type 1');
 INSERT INTO `mfloan`.`orgForm` (`version`,`name`) VALUES (1,'Org Form 1');
-INSERT INTO `mfloan`.`workSector` (`version`,`name`) VALUES (1,'Work Sector 1');
 
-/* ADD LOAN PROPS */
-INSERT INTO `mfloan`.`loanState` (`version`,`name`) VALUES (1,'Loan State 1');
-INSERT INTO `mfloan`.`loanType` (`version`,`name`) VALUES (1,'Loan Type 1');
 
-/* ADD INSTALLMENT STATE AND PAYMENT TYPE*/
-INSERT INTO `mfloan`.`installmentState` (`version`,`name`) VALUES (1,'Installment State 1');
-INSERT INTO `mfloan`.`paymentType` (`version`,`name`) VALUES (1,'Payment Type 1');
 
-/* ADD COLLATERAL PROPS */
-INSERT INTO `mfloan`.`collateralItemType` (`version`,`name`) VALUES (1,'Item Type 1');
-INSERT INTO `mfloan`.`collateralQuantityType` (`version`,`name`) VALUES (1,'Quantity Type 1');
-INSERT INTO `mfloan`.`collateralConditionType` (`version`,`name`) VALUES (1,'Condition  Type 1');
 
-INSERT INTO `mfloan`.`inspectionResultType` (`version`,`name`) VALUES (1,'Inspection Result Type 1');
 
-/* ADD ORDERS AND SUBS */
 
-INSERT INTO `mfloan`.`creditOrder` (`version`, `description`, `regDate`, `regNumber`, `creditOrderStateId`, `creditOrderTypeId`) values (1, 'Order desc 1', '2018-01-01', 'REG-1234',1,1);
-INSERT INTO `mfloan`.`creditOrder` (`version`, `description`, `regDate`, `regNumber`, `creditOrderStateId`, `creditOrderTypeId`) values (1, 'New order', '2017-10-20', 'REG-111',1,1);
-INSERT INTO `mfloan`.`creditOrder` (`version`, `description`, `regDate`, `regNumber`, `creditOrderStateId`, `creditOrderTypeId`) values (1, 'Credit Order 333', '2018-01-01', 'REG-333',1,1);
+INSERT INTO `mfloan`.`installmentState` (`version`,`name`) VALUES (1,'Не подтвержден');
+INSERT INTO `mfloan`.`installmentState` (`version`,`name`) VALUES (1,'Не наступивший');
+INSERT INTO `mfloan`.`installmentState` (`version`,`name`) VALUES (1,'Наступивший');
+INSERT INTO `mfloan`.`installmentState` (`version`,`name`) VALUES (1,'Непогашенный');
+INSERT INTO `mfloan`.`installmentState` (`version`,`name`) VALUES (1,'Погашенный');
 
-INSERT INTO `mfloan`.`appliedEntityList` (`version`,`listDate`,`listNumber`,`appliedEntityListStateId`,`appliedEntityListTypeId`,`creditOrderId`)VALUES(1,'2018-01-01','List 1',1,1,1);
 
-INSERT INTO `mfloan`.`orderDocumentPackage` (`version`,`name`,`creditOrderId`) VALUES (1,'Document Package 1',1);
-
-INSERT INTO `mfloan`.`orderDocument` (`version`,`name`,`orderDocumentPackageId`,`orderDocumentTypeId`) VALUES (1, 'Passport', 1,1);
-INSERT INTO `mfloan`.`orderDocument` (`version`,`name`,`orderDocumentPackageId`,`orderDocumentTypeId`) VALUES (1, 'Driver License', 1,1);
-
-INSERT INTO `mfloan`.`orderTerm` (`version`,`amount`,`collateralFree`,`description`,`earlyRepaymentAllowed`,`firstInstallmentDate`,`frequencyQuantity`,`graceOnInterestAccrDays`,`graceOnInterestAccrInst`,`graceOnInterestPaymentDays`,`graceOnInterestPaymentInst`,`graceOnPrinciplePaymentDays`,`graceOnPrinciplePaymentInst`,`installmentFirstDay`,`installmentQuantity`,`interestRateValue`,`lastInstallmentDate`,`maxDaysDisbFirstInst`,`minDaysDisbFirstInst`,`penaltyLimitPercent`,`penaltyOnInterestOverdueRateValue`,`penaltyOnPrincipleOverdueRateValue`,`creditOrderId`,`currencyId`,`daysInMonthMethodId`,`daysInYearMethodId`,`frequencyTypeId`,`fundId`,`interestAccrMethodId`,`interestRateValuePerPeriodId`,`interestTypeId`,`penaltyOnInterestOverdueTypeId`,`penaltyOnPrincipleOverdueTypeId`,`transactionOrderId`)
-VALUES (1, 1000, 1, 'Order Term 1', 1, '2018-01-01', 2, 9, 8, 7, 6, 5, 4, 10, 100, 11, '2018-01-01', 3, 2, 1223, 33, 22, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
-
-/* ADD COLLECTION PROPS */
-INSERT INTO `mfloan`.`procedureStatus` (`version`,`name`) VALUES (1,'Proc Status 1');
-INSERT INTO `mfloan`.`procedureType` (`version`,`name`) VALUES (1,'Proc Type 1');
-INSERT INTO `mfloan`.`phaseStatus` (`version`,`name`) VALUES (1,'Phase Status 1');
-INSERT INTO `mfloan`.`phaseType` (`version`,`name`) VALUES (1,'Phase Type 1');
-INSERT INTO `mfloan`.`eventStatus` (`version`,`name`) VALUES (1,'Event Status 1');
-INSERT INTO `mfloan`.`eventType` (`version`,`name`) VALUES (1,'Event Type 1');
