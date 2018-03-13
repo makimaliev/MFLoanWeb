@@ -1,5 +1,6 @@
 package kg.gov.mf.loan.web.controller.task;
 
+import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.task.model.Task;
 import kg.gov.mf.loan.task.model.TaskPriority;
@@ -8,7 +9,10 @@ import kg.gov.mf.loan.task.service.TaskService;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -41,6 +45,14 @@ public class TaskController {
     public String listTasks(ModelMap model)
     {
         List<Task> tasks = taskService.list();
+        model.addAttribute("tasks", tasks);
+        return "/task/list";
+    }
+
+    @RequestMapping(value = { "/task/listByUserId/{userId}" }, method = RequestMethod.GET)
+    public String listTasksByUserId(ModelMap model, @PathVariable("userId")Long userId)
+    {
+        List<Task> tasks = taskService.getTasksByUserId(userId);
         model.addAttribute("tasks", tasks);
         return "/task/list";
     }
@@ -96,5 +108,29 @@ public class TaskController {
         if(id > 0)
             taskService.remove(taskService.getById(id));
         return "redirect:" + "/task/list";
+    }
+
+    private String getPrincipal(){
+        String userName = null;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            userName = ((UserDetails)principal).getUsername();
+        } else {
+            userName = principal.toString();
+        }
+        return userName;
+    }
+
+    public User getUser()
+    {
+        String userName = getPrincipal();
+        User user = userService.findByUsername(userName);
+        return user;
+    }
+
+    public List<Task> getUserTasks()
+    {
+        return taskService.getTasksByUserId(getUser().getId());
     }
 }
