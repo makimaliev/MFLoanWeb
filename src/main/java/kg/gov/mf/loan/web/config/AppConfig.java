@@ -3,6 +3,7 @@ package kg.gov.mf.loan.web.config;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import kg.gov.mf.loan.admin.sys.converter.UserFormatter;
 import kg.gov.mf.loan.output.report.converter.ContentParameterFormatter;
 import kg.gov.mf.loan.output.report.converter.GenerationParameterFormatter;
 import kg.gov.mf.loan.output.report.converter.GenerationParameterTypeFormatter;
@@ -99,7 +100,10 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     IdentityDocTypeConverter identityDocTypeConverter;    
 
     @Autowired
-    RoleFormatter roleFormatter;      
+    RoleFormatter roleFormatter;
+
+    @Autowired
+    UserFormatter userFormatter;
 
     @Autowired
     DepartmentFormatter departmentFormatter;
@@ -259,6 +263,7 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         registry.addConverter(identityDocGivenByConverter);
     
         registry.addFormatter(roleFormatter);
+        registry.addFormatter(userFormatter);
         registry.addFormatter(permissionFormatter);
         registry.addFormatter(departmentFormatter);
         registry.addFormatter(organizationFormatter);

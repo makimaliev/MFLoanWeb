@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>MFLoan | Tasks</title>
+<div th:replace="fragments/header :: header-css" />
+<link th:href="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}" rel="stylesheet" type="text/css" />
+</head>
+<body
+	class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
+	<!-- BEGIN HEADER -->
+	<div th:replace="layout :: header-top" />
+	<!-- END HEADER -->
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div th:replace="layout :: page-container-sidebar" />
+		<!-- END SIDEBAR -->
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<!-- BEGIN CONTENT BODY -->
+			<div class="page-content">
+				<!-- BEGIN PAGE HEADER-->
+				<h1 class="page-title">
+					Tasks
+					<small>create, view, edit, delete tasks </small>
+				</h1>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li><i class="icon-home"></i> <a th:href="@{/}">Home</a> <i class="fa fa-angle-right"></i></li>
+						<li><span>Tasks</span></li>
+					</ul>
+					<div class="page-toolbar">
+						<div class="btn-group pull-right">
+							<button type="button" class="btn btn-fit-height grey-salt dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
+								Actions <i class="fa fa-angle-down"></i>
+							</button>
+							<ul class="dropdown-menu pull-right" role="menu">
+								<li><a href="#"> <i class="icon-bell"></i> Action </a></li>
+								<li><a href="#"> <i class="icon-shield"></i> Another action </a></li>
+								<li><a href="#"> <i class="icon-user"></i> Something else here </a></li>
+								<li class="divider"></li>
+								<li><a href="#"> <i class="icon-bag"></i> Separated link </a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- END PAGE HEADER-->
+
+				<div class="row">
+					<div class="col-md-12">
+						<!-- BEGIN BORDERED TABLE PORTLET-->
+						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-green"></i> 
+									<span class="caption-subject font-green sbold uppercase">Tasks</span>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<div class="table-toolbar">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="btn-group">
+												<a th:href="@{/task/0/save}" class="btn green">Add New Task <i class="fa fa-plus"></i></a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="table-scrollable table-scrollable-borderless">
+									<table class="table table-hover table-light" id="orders">
+										<thead>
+											<tr>
+												<th>Summary</th>
+												<th>Description</th>
+												<th>identifiedBy</th>
+												<th>identifiedDate</th>
+												<th>assignedTo</th>
+												<th>status</th>
+												<th>priority</th>
+												<th>targetResolutionDate</th>
+												<th>progress</th>
+												<th>actualResolutionDate</th>
+												<th>resolutionSummary</th>
+												<th>createdOn</th>
+												<th>createdBy</th>
+												<th>modifiedOn</th>
+												<th>modifiedBy</th>
+												<th>Edit</th>
+												<th>Delete</th>
+											</tr>
+										</thead>
+										<tbody>
+											<ordercheck th:if="${#lists.isEmpty(tasks)}">
+												<tr class="no-records-found" style="text-align: center;">
+													<td colspan="5">No matching records found</td>
+												</tr>
+											</ordercheck>
+											<order th:each="task : ${tasks}">
+												<tr class="clickable-row">
+													<td th:text="${task.summary}"></td>
+													<td th:text="${task.description}"></td>
+													<td th:text="${task.identifiedByUserId}"></td>
+													<td th:text="${task.identifiedDate}"></td>
+													<td th:text="${task.assignedToUserId}"></td>
+													<td th:text="${task.status}"></td>
+													<td th:text="${task.priority}"></td>
+													<td th:text="${task.targetResolutionDate}"></td>
+													<td th:text="${task.progress}"></td>
+													<td th:text="${task.actualResolutionDate}"></td>
+													<td th:text="${task.resolutionSummary}"></td>
+													<td th:text="${task.createdOn}"></td>
+													<td th:text="${task.createdBy.username}"></td>
+													<td th:text="${task.modifiedOn}"></td>
+													<td th:text="${task.modifiedByUserId}"></td>
+													<td>
+														<a th:href="@{/task/__${task.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
+													</td>
+													<td>
+														<form th:action="@{/task/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+															<input hidden="true" type="text" id="id" name="id" th:value="${task.id}" />
+															<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+														</form>
+													</td>
+												</tr>
+											</order>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!-- END BORDERED TABLE PORTLET-->
+					</div>
+				</div>
+			</div>
+			<!-- END CONTENT BODY -->
+		</div>
+		<!-- END CONTENT -->
+		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
+	</div>
+	<!-- END CONTAINER -->
+	<div th:replace="layout :: footer" />
+	<div th:replace="fragments/footer :: footer-js" />
+	<script th:src="@{/assets/pages/scripts/form-validation.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/pages/scripts/components-date-time-pickers.min.js}" type="text/javascript"></script>
+</body>
+</html>
