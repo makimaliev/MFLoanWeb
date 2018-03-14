@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="sender">
+
+    <div class="form-group" th:if="${document.senderRegisteredDate}">
+        <label class="control-label col-md-4"> Sender Registered Date </label>
+        <div class="col-md-6">
+            <input type="date" class="form-control" th:field="*{senderRegisteredDate}" th:readonly="${document.senderStatus?.internalName} == 'register'"/>
+        </div>
+    </div>
+
+    <div class="form-group" th:if="${document.senderRegisteredNumber}">
+        <label class="control-label col-md-4"> Sender Registered № </label>
+        <div class="col-md-6">
+            <input class="form-control" th:field="*{senderRegisteredNumber}" readonly th:readonly="${document.senderStatus?.internalName} == 'register'"/>
+        </div>
+    </div>
+
+    <div class="form-group" th:hidden="${sdr_hidden.duedate}">
+        <label class="control-label col-md-4"> Sender Due Date </label>
+        <div class="col-md-6">
+            <input type="date" class="form-control" th:field="*{senderDueDate}" th:readonly="${document.receiverStatus?.internalName} == 'accept'"/>
+        </div>
+    </div>
+
+    <div class="form-group" th:hidden="${sdr_hidden.type}">
+        <label class="control-label col-md-4"> Sender Responsible Type </label>
+        <div class="col-md-6">
+            <select class="form-control" id="sr" th:field="*{senderResponsible.responsibleType}" th:disabled="${document.senderStatus?.internalName} == 'register'">
+                <option th:each="r : ${responsible}"
+                        th:value="${r.key}"
+                        th:text="${r.value}">Responsible</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-4"> Sender Responsible </label>
+
+        <div class="sdr col-md-6" id="si1" th:hidden="${sdr_hidden.staff}">
+            <select class="form-control" th:field="*{senderResponsible.staff}" multiple="multiple" th:disabled="${document.senderStatus?.internalName} == 'register'">
+                <option th:each="i : ${staff}"
+                        th:value="${{i}}"
+                        th:text="${i.name}">Staff</option>
+            </select>
+        </div>
+
+        <div class="sdr col-md-6" id="si2" th:hidden="${sdr_hidden.department}">
+            <select class="form-control" th:field="*{senderResponsible.departments}" multiple="multiple" th:disabled="${document.senderStatus?.internalName} == 'register'">
+                <option th:each="i : ${department}"
+                        th:value="${{i}}"
+                        th:text="${i.name}">Responsible</option>
+            </select>
+        </div>
+
+        <div class="sdr col-md-6" id="si3" th:hidden="${sdr_hidden.organization}">
+            <select class="form-control"  th:field="*{senderResponsible.organizations}" multiple="multiple" th:disabled="${document.senderStatus?.internalName} == 'register'">
+                <option th:each="i : ${organization}"
+                        th:value="${{i}}"
+                        th:text="${i.name}">Responsible</option>
+            </select>
+        </div>
+
+        <div class="sdr col-md-6" id="si4" th:hidden="${sdr_hidden.person}">
+            <select class="form-control" th:field="*{senderResponsible.person}" multiple="multiple" th:disabled="${document.senderStatus?.internalName} == 'register'">
+                <option th:each="i : ${person}"
+                        th:value="${{i}}"
+                        th:text="${i.name}">Responsible</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group" th:hidden="${sdr_hidden.type}">
+        <label class="control-label col-md-4"> Sender Executor Type </label>
+        <div class="col-md-6">
+            <select class="form-control" id="se" th:field="*{senderExecutor.executorType}" th:disabled="${document.senderStatus?.internalName} == 'register'">
+                <option th:each="r : ${responsible}"
+                        th:value="${r.key}"
+                        th:text="${r.value}">Responsible</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-4"> Sender Executor </label>
+
+        <div class="sde col-md-6" id="sei1" th:hidden="${sde_hidden.staff}">
+            <select class="form-control" th:field="*{senderExecutor.staff}" multiple="multiple" th:disabled="${document.senderStatus?.internalName} == 'register'">
+                <option th:each="i : ${staff}"
+                        th:value="${{i}}"
+                        th:text="${i.name}">Responsible</option>
+            </select>
+        </div>
+
+        <div class="sde col-md-6" id="sei2" th:hidden="${sde_hidden.department}">
+            <select class="form-control" th:field="*{senderExecutor.departments}" multiple="multiple" th:disabled="${document.senderStatus?.internalName} == 'register'">
+                <option th:each="i : ${department}"
+                        th:value="${{i}}"
+                        th:text="${i.name}">Responsible</option>
+            </select>
+        </div>
+
+        <div class="sde col-md-6" id="sei3" th:hidden="${sde_hidden.organization}">
+            <select class="form-control"  th:field="*{senderExecutor.organizations}" multiple="multiple" th:disabled="${document.senderStatus?.internalName} == 'register'">
+                <option th:each="i : ${organization}"
+                        th:value="${{i}}"
+                        th:text="${i.name}">Responsible</option>
+            </select>
+        </div>
+
+        <div class="sde col-md-6" id="sei4" th:hidden="${sde_hidden.person}">
+            <select class="form-control" th:field="*{senderExecutor.person}" multiple="multiple" th:disabled="${document.senderStatus?.internalName} == 'register'">
+                <option th:each="i : ${person}"
+                        th:value="${{i}}"
+                        th:text="${i.name}">Responsible</option>
+            </select>
+        </div>
+    </div>
+
+    <!--h3>Information</h3>
+    <input type="hidden" th:value="1" th:field="*{senderInformation.systemObjectId}"/>
+    <input type="hidden" th:value="1" th:field="*{senderInformation.systemObjectTypeId}"/>
+    <input type="hidden" th:value="false" th:field="*{senderInformation.isTitle}"/>
+    <div class="form-group">
+        <label class="control-label col-md-4">Name</label>
+        <div class="col-md-6">
+            <input type="text" class="form-control" th:field="*{senderInformation.name}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-4">Description</label>
+        <div class="col-md-6">
+            <input type="text" class="form-control" th:field="*{senderInformation.description}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-4">Number</label>
+        <div class="col-md-6">
+            <input type="text" class="form-control" th:field="*{senderInformation.number}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-4">Date</label>
+        <div class="col-md-6">
+            <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+                <input type="text" class="form-control" th:field="*{senderInformation.date}"/>
+                <span class="input-group-btn">
+                    <button class="btn default" type="button">
+                        <i class="fa fa-calendar"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div-->
+</div>
+</body>
+</html>

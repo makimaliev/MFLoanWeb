@@ -5,6 +5,7 @@ import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.doc.model.DispatchData;
 import kg.gov.mf.loan.doc.model.DispatchType;
 import kg.gov.mf.loan.doc.model.Document;
+import kg.gov.mf.loan.doc.model.DocumentStatus;
 import kg.gov.mf.loan.doc.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,7 @@ public class DispatchDataController {
     DocumentTypeService documentTypeService;
 
     @Autowired
-    DispatchTypeService dispatchTypeService;
+    DocumentStatusService documentStatusService;
 
     @RequestMapping(value = "/doc/create", method = RequestMethod.POST)
     public String createDocument(@ModelAttribute("document") Document document) {
@@ -109,16 +110,16 @@ public class DispatchDataController {
     }
 
     public DispatchData setDispatchData(String internalName) {
-        return getDispatchData(dispatchTypeService.getByInternalName(internalName), userService.findById(1L), userService.findById(2L), internalName);
+        return getDispatchData(documentStatusService.getByInternalName(internalName), userService.findById(1L), userService.findById(2L), internalName);
     }
 
-    static DispatchData getDispatchData(DispatchType byInternalName, User byId, User byId2, String internalName) {
+    static DispatchData getDispatchData(DocumentStatus documentStatus, User byId, User byId2, String internalName) {
         DispatchData dispatchData = new DispatchData();
-        dispatchData.setDescription(byInternalName.getName());
+        dispatchData.setDescription(documentStatus.getName());
         dispatchData.setParent(false);
         dispatchData.setDispatchBy(byId);
         dispatchData.setDispatchTo(byId2);
-        dispatchData.setDispatchType(byInternalName);
+        dispatchData.setDispatchType(documentStatus);
         return dispatchData;
     }
 }
