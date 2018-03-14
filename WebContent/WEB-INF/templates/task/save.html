@@ -72,7 +72,9 @@
 												<span class="required"> * </span>
 											</label>
 											<div class="col-md-4">
-												<input hidden="true" type="text" id="id" name="id" th:value="${task.id}"/>
+												<input type="hidden" th:field="*{id}"/>
+												<input type="hidden" th:field="*{createdBy}"/>
+												<input type="hidden" th:field="*{createdOn}"/>
 												<div class="input-icon right">
 													<i class="fa"></i>
 													<input type="text" class="form-control" th:field="*{summary}"/>
