@@ -3,7 +3,11 @@ package kg.gov.mf.loan.web.config;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import kg.gov.mf.loan.admin.org.converter.*;
 import kg.gov.mf.loan.admin.sys.converter.UserFormatter;
+import kg.gov.mf.loan.doc.formatter.DocumentFormatter;
+import kg.gov.mf.loan.doc.formatter.DocumentSubTypeFormatter;
+import kg.gov.mf.loan.doc.formatter.DocumentTypeFormatter;
 import kg.gov.mf.loan.output.report.converter.ContentParameterFormatter;
 import kg.gov.mf.loan.output.report.converter.GenerationParameterFormatter;
 import kg.gov.mf.loan.output.report.converter.GenerationParameterTypeFormatter;
@@ -35,16 +39,6 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
-import kg.gov.mf.loan.admin.org.converter.DepartmentFormatter;
-import kg.gov.mf.loan.admin.org.converter.DistrictFormatter;
-import kg.gov.mf.loan.admin.org.converter.EmploymentHistoryEventTypeFormatter;
-import kg.gov.mf.loan.admin.org.converter.EmploymentHistoryFormatter;
-import kg.gov.mf.loan.admin.org.converter.IdentityDocGivenByConverter;
-import kg.gov.mf.loan.admin.org.converter.IdentityDocTypeConverter;
-import kg.gov.mf.loan.admin.org.converter.OrganizationFormatter;
-import kg.gov.mf.loan.admin.org.converter.PersonFormatter;
-import kg.gov.mf.loan.admin.org.converter.PositionFormatter;
-import kg.gov.mf.loan.admin.org.converter.RegionFormatter;
 import kg.gov.mf.loan.admin.sys.converter.PermissionFormatter;
 import kg.gov.mf.loan.admin.sys.converter.RoleFormatter;
 import kg.gov.mf.loan.admin.sys.converter.SupervisorTermFormatter;
@@ -61,6 +55,19 @@ import kg.gov.mf.loan.manage.converter.WorkSectorFormatter;
 @EnableWebMvc
 @ComponentScan(basePackages = "kg.gov.mf.loan")
 public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware{
+
+
+    @Autowired
+    StaffFormatter staffFormatter;
+
+    @Autowired
+    DocumentFormatter documentFormatter;
+
+    @Autowired
+    DocumentTypeFormatter documentTypeFormatter;
+
+    @Autowired
+    DocumentSubTypeFormatter documentSubTypeFormatter;
 
 
     @Autowired
@@ -285,6 +292,12 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         registry.addFormatter(generationParameterTypeFormatter);
         registry.addFormatter(objectListFormatter);
         registry.addFormatter(contentParameterFormatter);
+
+
+        registry.addFormatter(staffFormatter);
+        registry.addFormatter(documentFormatter);
+        registry.addFormatter(documentTypeFormatter);
+        registry.addFormatter(documentSubTypeFormatter);
 
         
         
