@@ -31,28 +31,34 @@ VIEW mfloan.accounts
 AS
 SELECT
   `data`.`id` AS `id`,
+  1 AS `version`,
+  `data`.`internalName` AS `internalName`,
   `data`.`name` AS `name`,
   `data`.`atype` AS `atype`
 FROM (SELECT
     `mfloan`.`organization`.`id` AS `id`,
     `mfloan`.`organization`.`name` AS `name`,
+    'organization' AS `internalName`,
     1 AS `atype`
   FROM `mfloan`.`organization`
   UNION ALL
   SELECT
     `mfloan`.`department`.`id` AS `id`,
     `mfloan`.`department`.`name` AS `name`,
+    'department' AS `internalName`,
     2 AS `atype`
   FROM `mfloan`.`department`
   UNION ALL
   SELECT
     `mfloan`.`staff`.`id` AS `id`,
     `mfloan`.`staff`.`name` AS `name`,
+    'staff' AS `internalName`,
     3 AS `atype`
   FROM `mfloan`.`staff`
   UNION ALL
   SELECT
     `mfloan`.`person`.`id` AS `id`,
     `mfloan`.`person`.`name` AS `name`,
+    'person' AS `internalName`,
     4 AS `atype`
   FROM `mfloan`.`person`) `data`;
