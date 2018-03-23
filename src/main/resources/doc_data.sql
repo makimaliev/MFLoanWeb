@@ -1,13 +1,15 @@
+SET NAMES 'utf8';
+
 INSERT INTO `mfloan`.`cat_document_type` (`version`, `name`, `internalName`) VALUES ('1', 'Внутренний', 'internal');
 INSERT INTO `mfloan`.`cat_document_type` (`version`, `name`, `internalName`) VALUES ('1', 'Входяший', 'incoming');
 INSERT INTO `mfloan`.`cat_document_type` (`version`, `name`, `internalName`) VALUES ('1', 'Исходяший', 'outgoing');
 INSERT INTO `mfloan`.`cat_document_type` (`version`, `name`, `internalName`) VALUES ('1', 'Архив', 'archived');
 
-INSERT INTO `mfloan`.`cat_document_subtype` (`version`, `name`, `internalName`) VALUES ('1', 'Служебная записка', 'zapiska');
-INSERT INTO `mfloan`.`cat_document_subtype` (`version`, `name`, `internalName`) VALUES ('1', 'Заявление', 'zayavleniye');
-INSERT INTO `mfloan`.`cat_document_subtype` (`version`, `name`, `internalName`) VALUES ('1', 'Приказ', 'prikaz');
-INSERT INTO `mfloan`.`cat_document_subtype` (`version`, `name`, `internalName`) VALUES ('1', 'Договор', 'dogovor');
-INSERT INTO `mfloan`.`cat_document_subtype` (`version`, `name`, `internalName`) VALUES ('1', 'Протокол', 'protocol');
+INSERT INTO `mfloan`.`cat_document_subtype` (`version`, `name`, `internalName`, documentSubTypes) VALUES ('1', 'Служебная записка', 'zapiska', 1);
+INSERT INTO `mfloan`.`cat_document_subtype` (`version`, `name`, `internalName`, documentSubTypes) VALUES ('1', 'Заявление', 'zayavleniye', 1);
+INSERT INTO `mfloan`.`cat_document_subtype` (`version`, `name`, `internalName`, documentSubTypes) VALUES ('1', 'Приказ', 'prikaz', 1);
+INSERT INTO `mfloan`.`cat_document_subtype` (`version`, `name`, `internalName`, documentSubTypes) VALUES ('1', 'Договор', 'dogovor', 1);
+INSERT INTO `mfloan`.`cat_document_subtype` (`version`, `name`, `internalName`, documentSubTypes) VALUES ('1', 'Протокол', 'protocol', 1);
 
 INSERT INTO `mfloan`.`cat_document_status` (`version`, `name`, `internalName`) VALUES (1,'Creat','create');
 INSERT INTO `mfloan`.`cat_document_status` (`version`, `name`, `internalName`) VALUES (1,'На согласование','toreconcile');
@@ -20,5 +22,37 @@ INSERT INTO `mfloan`.`cat_document_status` (`version`, `name`, `internalName`) V
 INSERT INTO `mfloan`.`cat_document_status` (`version`, `name`, `internalName`) VALUES (1,'На выполнение','toexecute');
 INSERT INTO `mfloan`.`cat_document_status` (`version`, `name`, `internalName`) VALUES (1,'На ознакомление','toinform');
 INSERT INTO `mfloan`.`cat_document_status` (`version`, `name`, `internalName`) VALUES (1,'Accept','accept');
-INSERT INTO `mfloan`.`cat_document_status` (`version`, `name`, `internalName`) VALUES (1,'start','Start');
-INSERT INTO `mfloan`.`cat_document_status` (`version`, `name`, `internalName`) VALUES (1,'done','Done');
+INSERT INTO `mfloan`.`cat_document_status` (`version`, `name`, `internalName`) VALUES (1,'Start','start');
+INSERT INTO `mfloan`.`cat_document_status` (`version`, `name`, `internalName`) VALUES (1,'Done','done');
+
+CREATE
+DEFINER = 'root'@'localhost'
+VIEW mfloan.accounts
+AS
+SELECT
+  `data`.`id` AS `id`,
+  `data`.`name` AS `name`,
+  `data`.`atype` AS `atype`
+FROM (SELECT
+    `mfloan`.`organization`.`id` AS `id`,
+    `mfloan`.`organization`.`name` AS `name`,
+    1 AS `atype`
+  FROM `mfloan`.`organization`
+  UNION ALL
+  SELECT
+    `mfloan`.`department`.`id` AS `id`,
+    `mfloan`.`department`.`name` AS `name`,
+    2 AS `atype`
+  FROM `mfloan`.`department`
+  UNION ALL
+  SELECT
+    `mfloan`.`staff`.`id` AS `id`,
+    `mfloan`.`staff`.`name` AS `name`,
+    3 AS `atype`
+  FROM `mfloan`.`staff`
+  UNION ALL
+  SELECT
+    `mfloan`.`person`.`id` AS `id`,
+    `mfloan`.`person`.`name` AS `name`,
+    4 AS `atype`
+  FROM `mfloan`.`person`) `data`;

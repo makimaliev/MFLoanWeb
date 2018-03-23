@@ -255,3 +255,4 @@ INSERT INTO `mfloan`.`installmentState` (`version`,`name`) VALUES (1,'Непог
 INSERT INTO `mfloan`.`installmentState` (`version`,`name`) VALUES (1,'Погашенный');
 
 
+

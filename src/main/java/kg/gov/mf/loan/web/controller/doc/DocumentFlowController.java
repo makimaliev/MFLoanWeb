@@ -6,10 +6,7 @@ import kg.gov.mf.loan.admin.org.service.PersonService;
 import kg.gov.mf.loan.admin.org.service.StaffService;
 import kg.gov.mf.loan.admin.sys.service.InformationService;
 import kg.gov.mf.loan.admin.sys.service.UserService;
-import kg.gov.mf.loan.doc.model.DispatchData;
-import kg.gov.mf.loan.doc.model.Document;
-import kg.gov.mf.loan.doc.model.DocumentStatus;
-import kg.gov.mf.loan.doc.model.Executor;
+import kg.gov.mf.loan.doc.model.*;
 import kg.gov.mf.loan.doc.service.DocumentStatusService;
 import kg.gov.mf.loan.doc.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +35,7 @@ public class DocumentFlowController {
     @Autowired
     InformationService informationService;
 
+    /*
     @Autowired
     StaffService staffService;
 
@@ -49,6 +47,7 @@ public class DocumentFlowController {
 
     @Autowired
     PersonService personService;
+    */
 
     @Autowired
     UserService userService;
@@ -56,27 +55,62 @@ public class DocumentFlowController {
     @Autowired
     DocumentStatusService documentStatusService;
 
-    class Element {
+    @Autowired
+    AccountService accountService;
 
-        public boolean regdate;
-        public boolean regno;
-        public boolean duedate;
-        public boolean type;
-        public boolean staff;
-        public boolean organization;
-        public boolean department;
-        public boolean person;
+    class Prop {
 
-        public Element(boolean state)
-        {
-            regdate = state;
-            regno = state;
-            duedate = state;
-            type = state;
-            staff = state;
-            organization = state;
-            department = state;
-            person = state;
+        public boolean title;
+        public boolean description;
+        public boolean documentType;
+        public boolean documentSubType;
+        public boolean generalStatus;
+
+        public boolean senderRegisteredDate;
+        public boolean senderRegisteredNumber;
+        public boolean senderDueDate;
+        public boolean senderExecutorType;
+        public boolean senderExecutor;
+        public boolean senderResponsibleType;
+        public boolean senderResponsible;
+        public boolean senderStatus;
+        public boolean senderInformation;
+
+        public boolean receiverRegisteredDate;
+        public boolean receiverRegisteredNumber;
+        public boolean receiverDueDate;
+        public boolean receiverExecutorType;
+        public boolean receiverExecutor;
+        public boolean receiverResponsibleType;
+        public boolean receiverResponsible;
+        public boolean receiverStatus;
+        public boolean receiverInformation;
+
+        public Prop(boolean state) {
+            title = state;
+            description = state;
+            documentType = state;
+            documentSubType = state;
+            generalStatus = state;
+            senderRegisteredDate = state;
+            senderRegisteredNumber = state;
+            senderDueDate = state;
+            senderExecutorType = state;
+            senderExecutor = state;
+            senderResponsibleType = state;
+            senderResponsible = state;
+            senderStatus = state;
+            senderInformation = state;
+
+            receiverRegisteredDate = state;
+            receiverRegisteredNumber = state;
+            receiverDueDate = state;
+            receiverExecutorType = state;
+            receiverExecutor = state;
+            receiverResponsibleType = state;
+            receiverResponsible = state;
+            receiverStatus = state;
+            receiverInformation = state;
         }
     }
 
@@ -94,7 +128,7 @@ public class DocumentFlowController {
 
         model.addAttribute("responsible", responsible);
         model.addAttribute("documents", documentService.getDocuments(type));
-        model.addAttribute("documentSubType", documentSubTypeService.findAll());
+        model.addAttribute("documentSubTypes", documentTypeService.getByInternalName(type).getDocumentSubTypes());
         model.addAttribute("type", type);
 
         return "/doc/document/index";
@@ -107,44 +141,31 @@ public class DocumentFlowController {
         document.setDocumentType(documentTypeService.getByInternalName(type));
         document.setDocumentSubType(documentSubTypeService.getByInternalName(subtype));
 
-        Element sdr_hidden = new Element(true);
-        sdr_hidden.staff = false;
+        if(type.equals("internal"))
+        {
+            Responsible resp = new Responsible();
+            resp.setResponsibleType(1);
+            document.setSenderResponsible(resp);
 
-        Element sde_hidden = new Element(true);
-        sde_hidden.staff = false;
-
-        Element sdr_readonly = new Element(true);
-        sdr_readonly.staff = false;
-
-        Element sde_readonly = new Element(true);
-        sde_readonly.staff = false;
-
-        model.addAttribute("sdr_hidden", sdr_hidden);
-        model.addAttribute("sde_hidden", sde_hidden);
-        model.addAttribute("sdr_readonly", sdr_readonly);
-        model.addAttribute("sde_readonly", sde_readonly);
-
-        Element rdr_hidden = new Element(false);
-        Element rde_hidden = new Element(true);
-        Element rdr_readonly = new Element(false);
-        Element rde_readonly = new Element(true);
-
-        model.addAttribute("rdr_hidden", rdr_hidden);
-        model.addAttribute("rde_hidden", rde_hidden);
-        model.addAttribute("rdr_readonly", rdr_readonly);
-        model.addAttribute("rde_readonly", rde_readonly);
+            Executor exec = new Executor();
+            exec.setExecutorType(1);
+            document.setSenderExecutor(exec);
+        }
 
         model.addAttribute("document", document);
-        model.addAttribute("documentTypes", documentTypeService.findAll());
-        model.addAttribute("documentSubTypes", documentSubTypeService.findAll());
-        model.addAttribute("documentStatus", documentStatusService.getByInternalName("create"));
-
         model.addAttribute("responsible", responsible);
 
+        model.addAttribute("staff", accountService.getStaff());
+        model.addAttribute("department", accountService.getDepartments());
+        model.addAttribute("organization", accountService.getOrganizations());
+        model.addAttribute("person", accountService.getPerson());
+
+        /*
         model.addAttribute("staff", staffService.findAll());
         model.addAttribute("department", departmentService.findAll());
         model.addAttribute("organization", organizationService.findAll());
         model.addAttribute("person", personService.findAll());
+        */
 
         return "/doc/document/edit";
     }
@@ -152,44 +173,21 @@ public class DocumentFlowController {
     @RequestMapping(value = "/doc/edit/{id}", method = RequestMethod.GET)
     public String editDocument(@PathVariable("id") final Long id, Model model) {
 
-        Document document = documentService.findById(id);
-
-        Element sdr_hidden = new Element(true);
-        sdr_hidden.staff = false;
-
-        Element sde_hidden = new Element(true);
-        sde_hidden.staff = false;
-
-        Element sdr_readonly = new Element(false);
-        Element sde_readonly = new Element(false);
-
-        model.addAttribute("sdr_hidden", sdr_hidden);
-        model.addAttribute("sde_hidden", sde_hidden);
-        model.addAttribute("sdr_readonly", sdr_readonly);
-        model.addAttribute("sde_readonly", sde_readonly);
-
-        Element rdr_hidden = new Element(false);
-        Element rde_hidden = new Element(true);
-        Element rdr_readonly = new Element(false);
-        Element rde_readonly = new Element(true);
-
-        model.addAttribute("rdr_hidden", rdr_hidden);
-        model.addAttribute("rde_hidden", rde_hidden);
-        model.addAttribute("rdr_readonly", rdr_readonly);
-        model.addAttribute("rde_readonly", rde_readonly);
-
-
-        model.addAttribute("document", document);
-        model.addAttribute("documentTypes", documentTypeService.findAll());
-        model.addAttribute("documentSubTypes", documentSubTypeService.findAll());
-        model.addAttribute("documentStatus", documentStatusService.findAll());
-
+        model.addAttribute("document", documentService.findById(id));
         model.addAttribute("responsible", responsible);
 
+        model.addAttribute("staff", accountService.getStaff());
+        model.addAttribute("department", accountService.getDepartments());
+        model.addAttribute("organization", accountService.getOrganizations());
+        model.addAttribute("person", accountService.getPerson());
+
+        /*
         model.addAttribute("staff", staffService.findAll());
         model.addAttribute("department", departmentService.findAll());
         model.addAttribute("organization", organizationService.findAll());
         model.addAttribute("person", personService.findAll());
+        */
+
 
         return "/doc/document/edit";
     }
@@ -203,6 +201,7 @@ public class DocumentFlowController {
             document.setGeneralStatus(documentStatusService.getByInternalName("create"));
             document.setSenderStatus(documentStatusService.getByInternalName("create"));
             documentService.create(document);
+
         } else {
 
             Document doc = documentService.findById(document.getId());
@@ -284,6 +283,6 @@ public class DocumentFlowController {
     }
 
     public DispatchData setDispatchData(String internalName) {
-        return getDispatchData(documentStatusService.getByInternalName(internalName), userService.findById(1L), userService.findById(2L), internalName);
+        return getDispatchData(documentStatusService.getByInternalName(internalName), userService.findById(1L), userService.findById(2L));
     }
 }

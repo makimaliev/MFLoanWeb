@@ -37,7 +37,6 @@
                                     <input class="form-control" type="text" th:field="*{title}"  th:readonly="${document.senderStatus?.internalName} == 'register'"/>
                                 </div>
                             </div>
-
                             <div class="form-group">
                                 <label class="control-label col-md-4"> Description </label>
                                 <div class="col-md-6">
@@ -45,28 +44,18 @@
                                 </div>
                             </div>
 
-                            <hr>
-                            <div class="form-group">
-                                <label class="control-label col-md-4"></label>
+                            <div class="form-group" th:if="${document.senderDispatchData?.size()}">
+                                <label class="control-label col-md-4"> Sender Status </label>
                                 <div class="col-md-6">
-                                    <label class="control-label"> Document Status </label>
+                                    <label class="form-control" th:each="dd : ${document.senderDispatchData}" th:text="${dd.dispatchType?.name} + ' on ' + ${dd.dispatchInitTime}"></label>
                                 </div>
                             </div>
-
-                            <div class="form-group" th:if="${document.senderDispatchData.size()}">
-                                <label class="control-label col-md-4"> Sender </label>
-                                <div class="col-md-6">
-                                    <label class="form-control" th:each="dd : ${document.senderDispatchData}" th:text="${dd.dispatchType.name} + ' on ' + ${dd.dispatchInitTime}"></label>
-                                </div>
-                            </div>
-
-                            <div class="form-group" th:if="${document.receiverDispatchData.size()}">
-                                <label class="control-label col-md-4"> Receiver </label>
+                            <div class="form-group" th:if="${document.receiverDispatchData?.size()}">
+                                <label class="control-label col-md-4"> Receiver Status </label>
                                 <div class="col-md-6">
                                     <label class="form-control" th:each="dd : ${document.receiverDispatchData}" th:text="${dd.dispatchType.name} + ' on ' + ${dd.dispatchInitTime}"></label>
                                 </div>
                             </div>
-                            <hr>
 
                             <div th:replace="doc/document/senderdata :: sender"></div>
                             <div th:replace="doc/document/receiverdata :: receiver"></div>
@@ -110,35 +99,32 @@
 
         if($('#id').val() > 0 || $('#id').val() != null)
         {
-            $('#si' + $('#sr').val()).show();
-            $('#sei' + $('#se').val()).show();
-            $('#ri' + $('#rr').val()).show();
-            $('#rei' + $('#re').val()).show();
-
+            $('#si' + $('#srt_select').val()).show();
+            $('#sei' + $('#set_select').val()).show();
+            $('#ri' + $('#rrt_select').val()).show();
+            $('#rei' + $('#ret_select').val()).show();
         } else {
             $('#si1').show();
             $('#sei1').show();
             $('#ri1').show();
             $('#rei1').show();
         }
+
     });
 
-    $('#sr').change(function(){
+    $('#srt_select').change(function(){
         $('.sdr ').hide();
         $('#si' + $(this).val()).show();
     });
-
-    $('#se').change(function(){
+    $('#set_select').change(function(){
         $('.sde ').hide();
         $('#sei' + $(this).val()).show();
     });
-
-    $('#rr').change(function(){
+    $('#rrt_select').change(function(){
         $('.rdr ').hide();
         $('#ri' + $(this).val()).show();
     });
-
-    $('#re').change(function(){
+    $('#ret_select').change(function(){
         $('.rde ').hide();
         $('#rei' + $(this).val()).show();
     });

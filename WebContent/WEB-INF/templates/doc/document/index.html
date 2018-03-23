@@ -12,8 +12,6 @@
 </head>
 <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
 
-<!--div th:replace="doc/document/documentForm.html :: doc"></div-->
-
 <div th:replace="layout :: header-top"></div>
 
 <div class="page-container">
@@ -31,6 +29,7 @@
                             <th>Title</th>
                             <th>Description</th>
                             <th>Document SubType</th>
+                            <th>Document Status</th>
                             <th>Sender</th>
                             <th>Receiver</th>
                             <th>View</th>
@@ -44,10 +43,9 @@
                                 <td th:text="${document.title}"></td>
                                 <td th:text="${document.description}"></td>
                                 <td th:text="${document.documentSubType.name}"></td>
-
-                                <td th:text="${responsible[__${document.senderResponsible != null ? document.senderResponsible.responsibleType : 0}__]}">None</td>
-                                <td th:text="${responsible[__${document.receiverResponsible != null ? document.receiverResponsible.responsibleType : 0}__]}">None</td>
-
+                                <td th:text="${document.generalStatus?.name}"></td>
+                                <td th:text="${responsible[__${document.senderResponsible?.responsibleType}__ ?: 0]}">None</td>
+                                <td th:text="${responsible[__${document.receiverResponsible?.responsibleType}__ ?: 0]}">None</td>
                                 <td><a th:href="@{/doc/view/__${document.id}__}" role='button' class='btn btn-xs green-stripe'> View </a></td>
                                 <td><a th:href="@{/doc/edit/__${document.id}__}" role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
                                 <td><a th:href="@{/doc/delete/__${document.id}__}" role="button" class="btn btn-xs red-stripe"> Delete </a></td>
@@ -63,7 +61,7 @@
 					<button class="btn btn-primary"> Filter </button>
 				</div>
 				<div class="col-md-12" th:if="${type != 'archived'}">
-					<span th:each="dst : ${documentSubType}">
+					<span th:each="dst : ${documentSubTypes}">
 						<a th:href="@{/doc/new(type=${type}, subtype=${dst.internalName})}" class="btn btn-success" th:text="${dst.name}"> New Document </a>
 					</span>
 				</div>
@@ -83,7 +81,6 @@
     $(document).ready(function() {
 
         var table = $('#documentTable').DataTable({
-            stateSave: true,
             "language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
             "info":     false,
             keys: {

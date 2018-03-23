@@ -111,14 +111,14 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group" th:if="${document.senderExecutor?.executorType}">
                                     <label class="control-label col-md-4"> Sender Executor Type </label>
                                     <div class="col-md-6">
-                                        <label class="form-control" th:text="${responsible[__${document.senderExecutor.executorType}__]}"></label>
+                                        <label class="form-control" th:text="${responsible[__${document.senderExecutor?.executorType}__]}"></label>
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group" th:if="${document.senderExecutor?.executorType}">
                                     <label class="control-label col-md-4"> Sender Executor </label>
 
                                     <div class="sdr col-md-6" th:if="${document.senderExecutor.staff}">
@@ -180,14 +180,14 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group" th:if="${document.receiverExecutor?.executorType}">
                                     <label class="control-label col-md-4"> Receiver Executor Type </label>
                                     <div class="col-md-6">
-                                        <label class="form-control" th:text="${responsible[__${document.receiverExecutor.executorType}__]}"></label>
+                                        <label class="form-control" th:text="${responsible[__${document.receiverExecutor?.executorType}__]}"></label>
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group" th:if="${document.receiverExecutor?.executorType}">
                                     <label class="control-label col-md-4"> Receiver Executor </label>
 
                                     <div class="sdr col-md-6" th:if="${document.receiverExecutor.staff}">
@@ -203,12 +203,11 @@
                                     </div>
 
                                     <div class="sdr col-md-6" th:if="${document.receiverExecutor.person}">
-                                        <label class="form-control" th:each="s : ${document.receiverExecutor.person}" th:text="${s.name}"></label>
+                                        <label class="form-control" th:each="s : ${document.receiverExecutor.person}" th:text="${s.name} "></label>
                                     </div>
 
                                 </div>
                             </div>
-
 
                             <button type="button" class="btn dark btn-outline" onclick="window.history.back()">Back</button>
 

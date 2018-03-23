@@ -110,10 +110,10 @@ public class DispatchDataController {
     }
 
     public DispatchData setDispatchData(String internalName) {
-        return getDispatchData(documentStatusService.getByInternalName(internalName), userService.findById(1L), userService.findById(2L), internalName);
+        return getDispatchData(documentStatusService.getByInternalName(internalName), userService.findById(1L), userService.findById(2L));
     }
 
-    static DispatchData getDispatchData(DocumentStatus documentStatus, User byId, User byId2, String internalName) {
+    static DispatchData getDispatchData(DocumentStatus documentStatus, User byId, User byId2) {
         DispatchData dispatchData = new DispatchData();
         dispatchData.setDescription(documentStatus.getName());
         dispatchData.setParent(false);
