@@ -33,32 +33,27 @@ SELECT
   `data`.`id` AS `id`,
   1 AS `version`,
   `data`.`internalName` AS `internalName`,
-  `data`.`name` AS `name`,
-  `data`.`atype` AS `atype`
+  `data`.`name` AS `name`
 FROM (SELECT
     `mfloan`.`organization`.`id` AS `id`,
     `mfloan`.`organization`.`name` AS `name`,
-    'organization' AS `internalName`,
-    1 AS `atype`
+    'organization' AS `internalName`
   FROM `mfloan`.`organization`
   UNION ALL
   SELECT
     `mfloan`.`department`.`id` AS `id`,
     `mfloan`.`department`.`name` AS `name`,
-    'department' AS `internalName`,
-    2 AS `atype`
+    'department' AS `internalName`
   FROM `mfloan`.`department`
   UNION ALL
   SELECT
     `mfloan`.`staff`.`id` AS `id`,
     `mfloan`.`staff`.`name` AS `name`,
-    'staff' AS `internalName`,
-    3 AS `atype`
+    'staff' AS `internalName`
   FROM `mfloan`.`staff`
   UNION ALL
   SELECT
     `mfloan`.`person`.`id` AS `id`,
     `mfloan`.`person`.`name` AS `name`,
-    'person' AS `internalName`,
-    4 AS `atype`
+    'person' AS `internalName`
   FROM `mfloan`.`person`) `data`;
