@@ -119,6 +119,38 @@
 						<!-- END BORDERED TABLE PORTLET-->
 					</div>
 				</div>
+
+				<div class="row">
+					<div class="form-group col-md-1">
+						<select class="form-control pagination" id="pageSizeSelect">
+							<option th:each="pageSize : ${pageSizes}" th:text="${pageSize}" th:value="${pageSize}"
+									th:selected="${pageSize} == ${selectedPageSize}"></option>
+						</select>
+					</div>
+					<div th:if="${count != 1}" class="form-group col-md-11 pagination-centered">
+						<ul class="pagination">
+							<li th:class="${current == 0} ? disabled">
+								<a class="pageLink" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=1)}">&laquo;</a>
+							</li>
+							<li th:class="${current == 0} ? disabled">
+								<a class="pageLink" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${current})}">&larr;</a>
+							</li>
+							<li th:class="${current == (page - 1)} ? 'active pointer-disabled'"
+								th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+								<a class="pageLink" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${page})}"
+								   th:text="${page}"></a>
+							</li>
+							<li th:class="${current + 1 == count} ? disabled">
+								<a class="pageLink"
+								   th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${current + 2})}">&rarr;</a>
+							</li>
+							<li th:class="${current + 1 == count} ? disabled">
+								<a class="pageLink"
+								   th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${count})}">&raquo;</a>
+							</li>
+						</ul>
+					</div>
+				</div>
 			</div>
 			<!-- END CONTENT BODY -->
 		</div>
@@ -128,7 +160,7 @@
 	<!-- END CONTAINER -->
 	<div th:replace="layout :: footer" />
 	<div th:replace="fragments/footer :: footer-js" />
-	<script th:src="@{/assets/pages/scripts/ui-modals.min.js}" type="text/javascript"></script>
+	<script th:src="@{/js/app.js}" type="text/javascript"></script>
 	<script th:src="@{/assets/pages/scripts/form-validation.min.js}" type="text/javascript"></script>
 	<script th:src="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js}" type="text/javascript"></script>
     <script th:src="@{/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"></script>

@@ -3,7 +3,9 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
+import kg.gov.mf.loan.web.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +13,7 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityList;
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
@@ -82,6 +80,11 @@ public class CreditOrderController {
 	OrderTermAccrMethodService accrMethodService;
 	
 	static final Logger loggerEntityList = LoggerFactory.getLogger(AppliedEntityList.class);
+
+	private static final int BUTTONS_TO_SHOW = 5;
+	private static final int INITIAL_PAGE = 0;
+	private static final int INITIAL_PAGE_SIZE = 5;
+	private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -104,12 +107,25 @@ public class CreditOrderController {
         return "/manage/order/view";
     }
 	
-	@RequestMapping(value = { "/manage/order/", "/manage/order/list" }, method = RequestMethod.GET)
-    public String listOrders(ModelMap model) {
- 
-        List<CreditOrder> orders = creditOrderService.list();
+	@RequestMapping(value = {"/manage/order/list" }, method = RequestMethod.GET)
+    public String listOrders(@RequestParam("pageSize") Optional<Integer> pageSize,
+							 @RequestParam("page") Optional<Integer> page, ModelMap model) {
+
+		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
+		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
+
+		List<CreditOrder> orders = creditOrderService.listByParam("id", evalPage*evalPageSize, evalPageSize);
+		int count = creditOrderService.count();
+
+		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
+
+		model.addAttribute("count", count/evalPageSize+1);
         model.addAttribute("orders", orders);
-        
+		model.addAttribute("selectedPageSize", evalPageSize);
+		model.addAttribute("pageSizes", PAGE_SIZES);
+		model.addAttribute("pager", pager);
+		model.addAttribute("current", evalPage);
+
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "/manage/order/list";
     }
