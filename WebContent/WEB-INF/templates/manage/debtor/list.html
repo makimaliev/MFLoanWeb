@@ -128,23 +128,23 @@
 					<div th:if="${count != 1}" class="form-group col-md-11 pagination-centered">
 						<ul class="pagination">
 							<li th:class="${current == 0} ? disabled">
-								<a class="pageLink" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=1)}">&laquo;</a>
+								<a class="pageLink" th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=1)}">&laquo;</a>
 							</li>
 							<li th:class="${current == 0} ? disabled">
-								<a class="pageLink" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${current})}">&larr;</a>
+								<a class="pageLink" th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${current})}">&larr;</a>
 							</li>
 							<li th:class="${current == (page - 1)} ? 'active pointer-disabled'"
 								th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
-								<a class="pageLink" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${page})}"
+								<a class="pageLink" th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${page})}"
 								   th:text="${page}"></a>
 							</li>
 							<li th:class="${current + 1 == count} ? disabled">
 								<a class="pageLink"
-								   th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${current + 2})}">&rarr;</a>
+								   th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${current + 2})}">&rarr;</a>
 							</li>
 							<li th:class="${current + 1 == count} ? disabled">
 								<a class="pageLink"
-								   th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${count})}">&raquo;</a>
+								   th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${count})}">&raquo;</a>
 							</li>
 						</ul>
 					</div>
