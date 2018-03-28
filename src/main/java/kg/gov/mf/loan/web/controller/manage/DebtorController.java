@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
+import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
+import kg.gov.mf.loan.manage.model.collection.CollectionProcedure;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,6 +102,7 @@ public class DebtorController {
 
         model.addAttribute("loans", debtor.getLoans());
         Set<CollateralAgreement> allAgreements = new HashSet<>();
+        Set<CollectionProcedure> procs = new HashSet<>();
 		for (Loan loan: debtor.getLoans()
 			 ) {
 			Set<CollateralAgreement> agreements = loan.getCollateralAgreements();
@@ -107,9 +110,16 @@ public class DebtorController {
 				 ) {
 				allAgreements.add(agreement);
 			}
+
+			CollectionPhase phase = loan.getCollectionPhase();
+			if(phase != null){
+				if(phase.getCollectionProcedure() != null)
+					procs.add(phase.getCollectionProcedure());
+			}
 		}
+
         model.addAttribute("agreements", allAgreements);
-        model.addAttribute("procs", null);
+        model.addAttribute("procs", procs);
         
         List<CreditOrder> orders = orderService.list();
         model.addAttribute("orders", orders);
