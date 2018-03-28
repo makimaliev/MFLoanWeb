@@ -1,11 +1,10 @@
 package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
+import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -98,10 +97,19 @@ public class DebtorController {
 
 		Debtor debtor = debtorService.getById(debtorId);
         model.addAttribute("debtor", debtor);
-        
+
         model.addAttribute("loans", debtor.getLoans());
-        model.addAttribute("agreements", agreementService.list());
-        model.addAttribute("procs", procService.list());
+        Set<CollateralAgreement> allAgreements = new HashSet<>();
+		for (Loan loan: debtor.getLoans()
+			 ) {
+			Set<CollateralAgreement> agreements = loan.getCollateralAgreements();
+			for (CollateralAgreement agreement: agreements
+				 ) {
+				allAgreements.add(agreement);
+			}
+		}
+        model.addAttribute("agreements", allAgreements);
+        model.addAttribute("procs", null);
         
         List<CreditOrder> orders = orderService.list();
         model.addAttribute("orders", orders);
