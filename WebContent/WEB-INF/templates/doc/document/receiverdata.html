@@ -118,6 +118,21 @@
         </div>
     </div>
 
+    <div class="form-group" th:if="${document.receiverFileName}">
+        <label class="control-label col-md-4"> Receiver Attachment </label>
+        <div class="col-md-6">
+            <input type="hidden" class="form-control" th:field="*{receiverFileName}"/>
+            <label class="form-control" th:text="*{receiverFileName}"/>
+        </div>
+    </div>
+
+    <div class="form-group" th:if="${document.receiverFileName}">
+        <label class="control-label col-md-4"> Add Attachment </label>
+        <div class="col-md-6">
+            <input type="file" class="form-control" id="receiverFile" name="receiverFile"/>
+        </div>
+    </div>
+
     <!--h3>Information</h3>
     <input type="hidden" th:value="1" th:field="*{receiverInformation.systemObjectId}"/>
     <input type="hidden" th:value="1" th:field="*{receiverInformation.systemObjectTypeId}"/>

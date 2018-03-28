@@ -116,6 +116,22 @@
                         th:text="${i.name}">Responsible</option>
             </select>
         </div>
+
+    </div>
+
+    <div class="form-group" th:if="${document.senderFileName}">
+        <label class="control-label col-md-4"> Sender Attachment </label>
+        <div class="col-md-6">
+            <input type="hidden" class="form-control" th:field="*{senderFileName}"/>
+            <a th:href="${'D:\cp' + __${document.senderFileName}__}" class="form-control" th:text="*{senderFileName}"/>
+        </div>
+    </div>
+
+    <div class="form-group" th:if="${document.senderFileName}">
+        <label class="control-label col-md-4"> Add Attachment </label>
+        <div class="col-md-6">
+            <input type="file" class="form-control" id="senderFile" name="senderFile"/>
+        </div>
     </div>
 
     <!--h3>Information</h3>

@@ -25,7 +25,7 @@
                 <div class="col-md-12">
                     <div class="form">
 
-                        <form th:action="@{/doc/save}" id="document_form" class="form-horizontal" th:object="${document}" method="POST">
+                        <form th:action="@{/doc/save}" id="document_form" class="form-horizontal" th:object="${document}" method="POST" enctype="multipart/form-data">
 
                             <input type="hidden" th:field="*{id}"/>
                             <input type="hidden" th:field="*{documentType.id}"/>

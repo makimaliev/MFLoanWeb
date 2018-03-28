@@ -46,14 +46,14 @@
                                 </div>
                             </div>
 
-                            <div class="form-group" th:if="${document.senderDispatchData}">
+                            <div class="form-group" th:if="${document.senderDispatchData?.size()}">
                                 <label class="control-label col-md-4"> Sender </label>
                                 <div class="col-md-6">
                                     <label class="form-control" th:each="dd : ${document.senderDispatchData}" th:text="${dd.dispatchType.name} + ' on ' + ${dd.dispatchInitTime}"></label>
                                 </div>
                             </div>
 
-                            <div class="form-group" th:if="${document.receiverDispatchData}">
+                            <div class="form-group" th:if="${document.receiverDispatchData?.size()}">
                                 <label class="control-label col-md-4"> Receiver </label>
                                 <div class="col-md-6">
                                     <label class="form-control" th:each="dd : ${document.receiverDispatchData}" th:text="${dd.dispatchType.name} + ' on ' + ${dd.dispatchInitTime}"></label>
@@ -139,6 +139,13 @@
 
                                 </div>
 
+                                <div class="form-group">
+                                    <label class="control-label col-md-4"> Sender Attachment </label>
+                                    <div class="col-md-6">
+                                        <a th:href="${'D:\cp\' + document.senderFileName}" class="form-control" th:text="*{senderFileName}"></a>
+                                    </div>
+                                </div>
+
                                 <div class="form-group" th:if="${document.receiverRegisteredDate}">
                                     <label class="control-label col-md-4"> Receiver Registered Date </label>
                                     <div class="col-md-6">
@@ -206,6 +213,13 @@
                                         <label class="form-control" th:each="s : ${document.receiverExecutor.person}" th:text="${s.name} "></label>
                                     </div>
 
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4"> Receiver Attachment </label>
+                                <div class="col-md-6">
+                                    <label class="form-control" th:text="*{receiverFileName}"/>
                                 </div>
                             </div>
 

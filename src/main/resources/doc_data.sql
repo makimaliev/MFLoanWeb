@@ -25,6 +25,8 @@ INSERT INTO `mfloan`.`cat_document_status` (`version`, `name`, `internalName`) V
 INSERT INTO `mfloan`.`cat_document_status` (`version`, `name`, `internalName`) VALUES (1,'Start','start');
 INSERT INTO `mfloan`.`cat_document_status` (`version`, `name`, `internalName`) VALUES (1,'Done','done');
 
+DROP TABLE IF EXISTS `mfloan`.`accounts`;
+
 CREATE
 DEFINER = 'root'@'localhost'
 VIEW mfloan.accounts
@@ -56,4 +58,5 @@ FROM (SELECT
     `mfloan`.`person`.`id` AS `id`,
     `mfloan`.`person`.`name` AS `name`,
     'person' AS `internalName`
-  FROM `mfloan`.`person`) `data`;
+  FROM `mfloan`.`person`) `data`
+  order by id;
