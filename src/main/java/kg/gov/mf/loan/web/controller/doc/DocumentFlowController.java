@@ -12,7 +12,15 @@ import kg.gov.mf.loan.doc.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.ServletContext;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.*;
 
 import static kg.gov.mf.loan.web.controller.doc.DispatchDataController.getDispatchData;
@@ -57,6 +65,9 @@ public class DocumentFlowController {
 
     @Autowired
     AccountService accountService;
+
+    @Autowired
+    ServletContext context;
 
     class Prop {
 
@@ -152,6 +163,8 @@ public class DocumentFlowController {
             document.setSenderExecutor(exec);
         }
 
+        //model.addAttribute("file", new MultipartFile());
+
         model.addAttribute("document", document);
         model.addAttribute("responsible", responsible);
 
@@ -193,15 +206,34 @@ public class DocumentFlowController {
     }
 
     @RequestMapping(value = "/doc/save", method = RequestMethod.POST)
-    public String saveDocument(@ModelAttribute("document") Document document, @RequestParam(value="action") String action) {
+    public String saveDocument(@ModelAttribute("document") Document document, @RequestParam(value="action") String action, @RequestParam("senderFile") MultipartFile senderFile, @RequestParam("receiverFile") MultipartFile receiverFile ) throws IOException {
+
+        String path = "D:\\cp\\";
 
         if((document.getId() == null) || (document.getId() == 0))
         {
             document.getSenderDispatchData().add(setDispatchData("create"));
             document.setGeneralStatus(documentStatusService.getByInternalName("create"));
             document.setSenderStatus(documentStatusService.getByInternalName("create"));
-            documentService.create(document);
 
+            String fileName = null;
+
+            if (!senderFile.isEmpty()) {
+                try {
+                    fileName = senderFile.getOriginalFilename();
+                    byte[] bytes = senderFile.getBytes();
+                    BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(new File(path + fileName)));
+                    buffStream.write(bytes);
+                    buffStream.close();
+
+                    document.setSenderFileName(path + fileName);
+
+                } catch (Exception e) {
+
+                }
+            }
+
+            documentService.create(document);
         } else {
 
             Document doc = documentService.findById(document.getId());
@@ -259,13 +291,30 @@ public class DocumentFlowController {
                 document.getSenderDispatchData().add(setDispatchData(action));
                 document.setGeneralStatus(ds);
                 document.setSenderStatus(ds);
+
+                String fileName = null;
+
+                if (!senderFile.isEmpty()) {
+                    try {
+                        fileName = senderFile.getOriginalFilename();
+                        byte[] bytes = senderFile.getBytes();
+                        BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(new File(path + fileName)));
+                        buffStream.write(bytes);
+                        buffStream.close();
+
+                        document.setSenderFileName(fileName);
+
+                    } catch (Exception e) {
+
+                    }
+                }
             }
 
             documentService.edit(document);
         }
 
-        String path = documentTypeService.findById(document.getDocumentType().getId()).getInternalName();
-        return "redirect:/doc?type=" + path;
+        String url = documentTypeService.findById(document.getDocumentType().getId()).getInternalName();
+        return "redirect:/doc?type=" + url;
     }
 
     @RequestMapping(value = "/doc/view/{id}", method = RequestMethod.GET)
