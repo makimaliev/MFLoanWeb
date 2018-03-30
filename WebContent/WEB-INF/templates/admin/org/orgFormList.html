@@ -3,8 +3,8 @@
 	xmlns:th="http://www.thymeleaf.org">
 <head>
 
-	<title>
-		MFLoan | OrgForms
+	<title th:text="#{label.orgForm.page.title}" >
+		OrgForm List
 	</title>
 	
 	<div  th:replace="fragments/header :: header-css">
@@ -50,10 +50,10 @@
 										<thead>
 											<tr>
 												<th>Id</th>
-												<th th:text="#{__${labelOrgFormName}__}">Name</th>
-												<th>Enabled</th>
-												<th>Edit</th>
-												<th>Delete</th>
+												<th th:text="#{label.orgForm.table.name}">Name</th>
+												<th th:text="#{label.orgForm.table.enabled}">Enabled</th>
+												<th th:text="#{label.orgForm.table.edit}">Edit</th>
+												<th th:text="#{label.orgForm.table.delete}">Delete</th>
 											</tr>
 										</thead>
 
@@ -66,12 +66,12 @@
 												<td>
 													<a data-remote="false" data-toggle="modal"
 													data-target="#orgFormFormModal" th:href="@{/orgForm/__${s.id}__/edit}"
-													role="button" class="btn btn-xs blue-stripe"> Edit
+													role="button" class="btn btn-xs blue-stripe" th:text="#{label.orgForm.button.edit}"> Edit
 													</a>
 												</td>
 												<td>
 													<form th:action="@{/orgForm/__${s.id}__/remove}" method="post">
-														<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+														<button type="submit" class="btn btn-xs red-stripe" th:text="#{label.orgForm.button.delete}">Delete</button>
 													</form>
 												</td>
 											</tr>
@@ -94,14 +94,16 @@
 														aria-label="Close">
 														<span aria-hidden="true">&times;</span>
 													</button>
-													<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+													<h4 class="modal-title" id="myModalLabel" th:text="#{label.orgForm.modal.title}">Modal title</h4>
 												</div>
 												<div class="modal-body">...</div>
 												<div class="modal-footer">
+<!--
 													<button type="button" class="btn btn-default"
-														data-dismiss="modal">Close</button>
-													<button type="button" class="btn btn-primary">Save
+														data-dismiss="modal" th:text="#{label.orgForm.button.close}">Close</button>
+													<button type="button" class="btn btn-primary" th:text="#{label.orgForm.button.save}">Save
 														changes</button>
+-->
 												</div>
 											</div>
 										</div>
@@ -116,7 +118,7 @@
 									<div class="col-md-12">
 										<a data-remote="false" data-toggle="modal"
 											data-target="#orgFormFormModal" th:href="@{/orgForm/add}"
-											role="button" class="btn btn-large btn-primary"> Add
+											role="button" class="btn btn-large btn-primary" th:text="#{label.orgForm.button.add}"> Add
 											OrgForm</a>
 
 
@@ -193,7 +195,7 @@
 				
 				$.get(sUrl, function(data) {
 
-					$('#content').html(data);
+					//$('#content').html(data);
 				});
 
 				});
@@ -211,12 +213,12 @@
 
 	    if(link.attr("href").indexOf('district/add')>0)
 	    {
-	    	$(this).find(".modal-title").html(link.attr("href")+"/"+orgFormID);
+	    	//$(this).find(".modal-title").html(link.attr("href")+"/"+orgFormID);
 		    $(this).find(".modal-body").load(link.attr("href")+"/"+orgFormID);
 	    }
 	    else
     	{
-	    	$(this).find(".modal-title").html(link.attr("href"));
+	    	//$(this).find(".modal-title").html(link.attr("href"));
 		    $(this).find(".modal-body").load(link.attr("href"));
     	}
 	});

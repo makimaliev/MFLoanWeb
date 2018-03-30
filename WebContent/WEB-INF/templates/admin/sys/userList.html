@@ -3,7 +3,7 @@
 	xmlns:th="http://www.thymeleaf.org">
 <head>
 
-	<title>
+	<title th:text="#{label.user.page.title}">
 		MFLoan | Users
 	</title>
 	
@@ -49,11 +49,11 @@
 									<table class="table table-hover table-condensed table-striped table-bordered compact condensed" id="userTable">
 										<thead>
 											<tr>
-												<th>Id</th>
-												<th>Name</th>
-												<th>Edit</th>
-												<th>View</th>
-												<th>Delete</th>
+												<th th:text="#{label.user.table.id}">Id</th>
+												<th th:text="#{label.user.table.name}">Name</th>
+												<th th:text="#{label.user.table.view}">View</th>
+												<th th:text="#{label.user.table.edit}">Edit</th>
+												<th th:text="#{label.user.table.delete}">Delete</th>
 											</tr>
 										</thead>
 
@@ -64,18 +64,18 @@
 												<td th:text="${s.username}">Name</td>
 												<td>
 													<a  th:href="@{/user/__${s.id}__/details}"
-													role="button" class="btn btn-xs green-stripe"> View
+													role="button" class="btn btn-xs green-stripe" th:text="#{label.user.button.view}"> View
 													</a>
 												</td>												
 												<td>
 													<a data-remote="false" data-toggle="modal"
 													data-target="#userFormModal" th:href="@{/user/__${s.id}__/edit}"
-													role="button" class="btn btn-xs blue-stripe"> Edit
+													role="button" class="btn btn-xs blue-stripe" th:text="#{label.user.button.edit}"> Edit
 													</a>
 												</td>
 												<td>
 													<form th:action="@{/user/__${s.id}__/remove}" method="post">
-														<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+														<button type="submit" class="btn btn-xs red-stripe" th:text="#{label.user.button.delete}">Delete</button>
 													</form>
 												</td>
 											</tr>
@@ -98,14 +98,14 @@
 														aria-label="Close">
 														<span aria-hidden="true">&times;</span>
 													</button>
-													<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+													<h4 class="modal-title" id="myModalLabel" th:text="#{label.user.modal.title}">Modal title</h4>
 												</div>
 												<div class="modal-body">...</div>
 												<div class="modal-footer">
-													<button type="button" class="btn btn-default"
-														data-dismiss="modal">Close</button>
-													<button type="button" class="btn btn-primary">Save
-														changes</button>
+													<!--<button type="button" class="btn btn-default"-->
+														<!--data-dismiss="modal" th:text="#{label.user.button.close}">Close</button>-->
+													<!--<button type="button" class="btn btn-primary" th:text="#{label.user.button.save}">Save-->
+														<!--changes</button>-->
 												</div>
 											</div>
 										</div>
@@ -120,10 +120,10 @@
 									<div class="col-md-12">
 										<a data-remote="false" data-toggle="modal"
 											data-target="#userFormModal" th:href="@{/user/add}"
-											role="button" class="btn btn-large btn-primary"> Add User</a>
+											role="button" class="btn btn-large btn-primary" th:text="#{label.user.button.addUser}"> Add User</a>
 										<a data-remote="false" data-toggle="modal"
 											data-target="#userFormModal" th:href="@{/supervisorTerm/add}"
-											role="button" class="btn btn-large btn-primary"> Add
+											role="button" class="btn btn-large btn-primary" th:text="#{label.user.button.addSupervisorTerm}"> Add
 											Supervisor Term</a>
 									</div>
 
@@ -188,11 +188,11 @@
 				
 				$("#user_id").val(rowData[0]);
 				
-				var sUrl ="/MFCredit/user/" + rowData[0]+"/view";
+				var sUrl ="/user/" + rowData[0]+"/view";
 				
 				$.get(sUrl, function(data) {
 
-					$('#content').html(data);
+					// $('#content').html(data);
 				});
 
 				});
@@ -212,18 +212,18 @@
 	    if(link.attr("href").indexOf('child')>0)
 	    
 	    {
-	    	$(this).find(".modal-title").html(link.attr("href").replace("/childuser/add","/user/"+userID+"/user/add"));
+	    	//$(this).find(".modal-title").html(link.attr("href").replace("/childuser/add","/user/"+userID+"/user/add"));
 		    $(this).find(".modal-body").load(link.attr("href").replace("/childuser/add","/user/"+userID+"/user/add"));
 	    }
 	    if(link.attr("href").indexOf('supervisorTerm/add')>0)
 		    
 	    {
-	    	$(this).find(".modal-title").html(link.attr("href").replace("/supervisorTerm/add","/user/"+userID+"/supervisorTerm/add"));
+	    	//$(this).find(".modal-title").html(link.attr("href").replace("/supervisorTerm/add","/user/"+userID+"/supervisorTerm/add"));
 		    $(this).find(".modal-body").load(link.attr("href").replace("/supervisorTerm/add","/user/"+userID+"/supervisorTerm/add"));
 	    }	    
 	    else
     	{
-	    	$(this).find(".modal-title").html(link.attr("href"));
+	    	//$(this).find(".modal-title").html(link.attr("href"));
 		    $(this).find(".modal-body").load(link.attr("href"));
     	}
 	});

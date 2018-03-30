@@ -52,12 +52,12 @@
 									id="regionTable">
 									<thead>
 										<tr>
-											<th>Id</th>
-											<th>Name</th>
-											<th>Code</th>
-											<th>View</th>
-											<th>Edit</th>
-											<th>Delete</th>
+											<th th:text="#{label.region.table.id}">Id</th>
+											<th th:text="#{label.region.table.name}">Name</th>
+											<th th:text="#{label.region.table.code}">Code</th>
+											<th th:text="#{label.region.table.view}">View</th>
+											<th th:text="#{label.region.table.edit}">Edit</th>
+											<th th:text="#{label.region.table.delete}">Delete</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -66,15 +66,15 @@
 											<td th:text="${region.name}">Name</td>
 											<td th:text="${region.code}">Code</td>
 											<td><a th:href="@{/region/__${region.id}__/details}"
-												role="button" class="btn btn-xs green-stripe"> View </a></td>
+												role="button" class="btn btn-xs green-stripe" th:text="#{label.region.button.view}"> View </a></td>
 											<td><a data-remote="false" data-toggle="modal"
 												data-target="#regionFormModal"
 												th:href="@{/region/__${region.id}__/edit}" role="button"
-												class="btn btn-xs blue-stripe"> Edit </a></td>
+												class="btn btn-xs blue-stripe" th:text="#{label.region.button.edit}"> Edit </a></td>
 											<td>
 												<form th:action="@{/region/__${region.id}__/remove}"
 													method="post">
-													<button type="submit" class="btn btn-xs red-stripe">
+													<button type="submit" class="btn btn-xs red-stripe" th:text="#{label.region.button.delete}">
 														Delete</button>
 												</form>
 											</td>
@@ -94,14 +94,14 @@
 														aria-label="Close">
 														<span aria-hidden="true">&times;</span>
 													</button>
-													<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+													<h4 class="modal-title" id="myModalLabel" th:text="#{label.region.modal.title}">Modal title</h4>
 												</div>
 												<div class="modal-body">...</div>
 												<div class="modal-footer">
-													<button type="button" class="btn btn-default"
-														data-dismiss="modal">Close</button>
-													<button type="button" class="btn btn-primary">Save
-														changes</button>
+													<!--<button type="button" class="btn btn-default"-->
+														<!--data-dismiss="modal">Close</button>-->
+													<!--<button type="button" class="btn btn-primary">Save-->
+														<!--changes</button>-->
 												</div>
 											</div>
 										</div>
@@ -112,7 +112,7 @@
 									<div class="col-md-12">
 										<a data-remote="false" data-toggle="modal"
 											data-target="#regionFormModal" th:href="@{/region/__${region.id}__/district/add}"
-											role="button" class="btn btn-large btn-primary"> Add
+											role="button" class="btn btn-large btn-primary" th:text="#{label.region.button.addDistrict}"> Add
 											District</a>
 									</div>
 								</div>
@@ -183,7 +183,7 @@
 
 				$("#region_id").val(rowData[0]);
 				
-				var sUrl ="/MFCredit/region/" + rowData[0]+"/view";
+				var sUrl ="/region/" + rowData[0]+"/view";
 				
 				$.get(sUrl, function(data) {
 

@@ -3,7 +3,7 @@
 	xmlns:th="http://www.thymeleaf.org">
 <head>
 
-	<title>
+	<title th:text="#{label.userDetails.page.title}">
 		MFLoan | Users
 	</title>
 	
@@ -46,34 +46,34 @@
 
 
 
-								<div class="row">
-									<div class="col-md-12">
-										<div class="panel panel-primary">
-											<div class="panel-heading">
-												<h3 class="panel-title">User </h3>
-											</div>
-											<div class="panel-body">
-												<dl class="dl-horizontal">
+								<!--<div class="row">-->
+									<!--<div class="col-md-12">-->
+										<!--<div class="panel panel-primary">-->
+											<!--<div class="panel-heading">-->
+												<!--<h3 class="panel-title">User </h3>-->
+											<!--</div>-->
+											<!--<div class="panel-body">-->
+												<!--<dl class="dl-horizontal">-->
 
-												</dl>
-
-
-												<dl class="dl-horizontal">
-													<dt>Name</dt>
-													<dd th:text="${user.username}">${Village.name}</dd>
-												</dl>
-												
-												
-																<div class="col-md-12">
-
-					<input hidden="true" type="text" id="user_id" name="user_id" th:value="${user.id}"/>
-				</div>
-											</div>
-										</div>
-									</div>
+												<!--</dl>-->
 
 
-								</div>
+												<!--<dl class="dl-horizontal">-->
+													<!--<dt>Name</dt>-->
+													<!--<dd th:text="${user.username}">${Village.name}</dd>-->
+												<!--</dl>-->
+												<!---->
+												<!---->
+																<!--<div class="col-md-12">-->
+
+					<!--<input hidden="true" type="text" id="user_id" name="user_id" th:value="${user.id}"/>-->
+				<!--</div>-->
+											<!--</div>-->
+										<!--</div>-->
+									<!--</div>-->
+
+
+								<!--</div>-->
 
 
 
@@ -104,9 +104,9 @@
 
 			<div class="tabbable-custom ">
 				<ul class="nav nav-tabs " id="user_tabs">
-					<li class="active"><a href="#tab_15_1" data-toggle="tab">
+					<li class="active"><a href="#tab_15_1" data-toggle="tab" th:text="#{label.userDetails.tab.roles}">
 							Roles </a></li>
-					<li><a href="#tab_15_2" data-toggle="tab">=== </a></li>
+					<li><a href="#tab_15_2" data-toggle="tab" th:text="#{label.userDetails.tab.supervisorTerms}">=== </a></li>
 
 				</ul>
 				<div class="tab-content">
@@ -114,16 +114,16 @@
 
 
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-6">
 
 
 
 <table class="table table-hover table-condensed table-striped table-bordered compact condensed" id="userTable">
 										<thead>
 											<tr>
-												<th>Id</th>
-												<th>Name</th>
-												<th>View</th>
+												<th th:text="#{label.role.table.id}">Id</th>
+												<th th:text="#{label.role.table.name}">Name</th>
+												<th th:text="#{label.role.table.view}">View</th>
 											</tr>
 										</thead>
 
@@ -134,7 +134,7 @@
 												<td th:text="${s.name}">Name</td>
 												<td>
 													<a th:href="@{/role/__${s.id}__/details}"
-													role="button" class="btn btn-xs blue-stripe"> View
+													role="button" class="btn btn-xs blue-stripe" th:text="#{label.role.button.view}"> View
 													</a>
 												</td>												
 
@@ -154,7 +154,7 @@
 					</div>
 					<div class="tab-pane" id="tab_15_2">
 
-2
+supervisor terms
 					</div>
 					
 				</div>
