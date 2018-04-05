@@ -1,10 +1,5 @@
 package kg.gov.mf.loan.web.controller.doc;
 
-import kg.gov.mf.loan.admin.org.service.DepartmentService;
-import kg.gov.mf.loan.admin.org.service.OrganizationService;
-import kg.gov.mf.loan.admin.org.service.PersonService;
-import kg.gov.mf.loan.admin.org.service.StaffService;
-import kg.gov.mf.loan.admin.sys.service.InformationService;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.doc.model.*;
 import kg.gov.mf.loan.doc.service.DocumentStatusService;
@@ -12,21 +7,18 @@ import kg.gov.mf.loan.doc.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.ServletContext;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 
-import static kg.gov.mf.loan.web.controller.doc.DispatchDataController.getDispatchData;
-
 @Controller
 public class DocumentFlowController {
+
+    //region Dependencies
 
     @Autowired
     DocumentService documentService;
@@ -38,26 +30,6 @@ public class DocumentFlowController {
     DocumentSubTypeService documentSubTypeService;
 
     @Autowired
-    ExecutorService executorService;
-
-    @Autowired
-    InformationService informationService;
-
-    /*
-    @Autowired
-    StaffService staffService;
-
-    @Autowired
-    DepartmentService departmentService;
-
-    @Autowired
-    OrganizationService organizationService;
-
-    @Autowired
-    PersonService personService;
-    */
-
-    @Autowired
     UserService userService;
 
     @Autowired
@@ -66,8 +38,10 @@ public class DocumentFlowController {
     @Autowired
     AccountService accountService;
 
-    @Autowired
-    ServletContext context;
+    //endregion
+
+    public DocumentFlowController() {
+    }
 
     class Prop {
 
@@ -163,8 +137,6 @@ public class DocumentFlowController {
             document.setSenderExecutor(exec);
         }
 
-        //model.addAttribute("file", new MultipartFile());
-
         model.addAttribute("document", document);
         model.addAttribute("responsible", responsible);
 
@@ -173,18 +145,11 @@ public class DocumentFlowController {
         model.addAttribute("organization", accountService.getOrganizations());
         model.addAttribute("person", accountService.getPerson());
 
-        /*
-        model.addAttribute("staff", staffService.findAll());
-        model.addAttribute("department", departmentService.findAll());
-        model.addAttribute("organization", organizationService.findAll());
-        model.addAttribute("person", personService.findAll());
-        */
-
         return "/doc/document/edit";
     }
 
     @RequestMapping(value = "/doc/edit/{id}", method = RequestMethod.GET)
-    public String editDocument(@PathVariable("id") final Long id, Model model) {
+    public String editDocument(@PathVariable("id") Long id, Model model) {
 
         model.addAttribute("document", documentService.findById(id));
         model.addAttribute("responsible", responsible);
@@ -194,119 +159,90 @@ public class DocumentFlowController {
         model.addAttribute("organization", accountService.getOrganizations());
         model.addAttribute("person", accountService.getPerson());
 
-        /*
-        model.addAttribute("staff", staffService.findAll());
-        model.addAttribute("department", departmentService.findAll());
-        model.addAttribute("organization", organizationService.findAll());
-        model.addAttribute("person", personService.findAll());
-        */
-
-
         return "/doc/document/edit";
     }
 
     @RequestMapping(value = "/doc/save", method = RequestMethod.POST)
-    public String saveDocument(@ModelAttribute("document") Document document, @RequestParam(value="action") String action, @RequestParam("senderFile") MultipartFile senderFile, @RequestParam("receiverFile") MultipartFile receiverFile ) throws IOException {
+    public String saveDocument(@ModelAttribute("document") Document document, @RequestParam("action") String action, @RequestParam("senderFile") MultipartFile senderFile, @RequestParam("receiverFile") MultipartFile receiverFile ) throws IOException {
 
+        //region Attachment
         String path = "D:\\cp\\";
+
+        if (!senderFile.isEmpty())
+        {
+            try {
+                String fileName = null;
+                fileName = senderFile.getOriginalFilename();
+                byte[] bytes = senderFile.getBytes();
+                BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(new File(path + fileName)));
+                buffStream.write(bytes);
+                buffStream.close();
+                document.setSenderFileName(fileName);
+            } catch (Exception e) {
+            }
+        }
+
+        if (!receiverFile.isEmpty())
+        {
+            try {
+                String fileName = null;
+                fileName = receiverFile.getOriginalFilename();
+                byte[] bytes = receiverFile.getBytes();
+                BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(new File(path + fileName)));
+                buffStream.write(bytes);
+                buffStream.close();
+                document.setReceiverFileName(fileName);
+            } catch (Exception e) {
+            }
+        }
+        //endregion
+
+        DocumentStatus ds = documentStatusService.getByInternalName(action);
+        document.setGeneralStatus(ds);
+        DispatchData dd = setDispatchData(action);
 
         if((document.getId() == null) || (document.getId() == 0))
         {
             document.getSenderDispatchData().add(setDispatchData("create"));
-            document.setGeneralStatus(documentStatusService.getByInternalName("create"));
-            document.setSenderStatus(documentStatusService.getByInternalName("create"));
+            document.setSenderStatus(documentStatusService.getByInternalName(action));
+            documentService.create(document);
+        }
+        else
+        {
+            Document doc = documentService.findById(document.getId());
+            document.setSenderDispatchData(doc.getSenderDispatchData()); // add existing DD
+            document.setSenderStatus(doc.getSenderStatus());
 
-            String fileName = null;
+            if(doc.getSenderStatus().getInternalName().equals("approve"))
+            {   // Receiver Data
+                document.setSenderResponsible(doc.getSenderResponsible());
+                document.setSenderExecutor(doc.getSenderExecutor());
+                document.setReceiverResponsible(doc.getReceiverResponsible());
 
-            if (!senderFile.isEmpty()) {
-                try {
-                    fileName = senderFile.getOriginalFilename();
-                    byte[] bytes = senderFile.getBytes();
-                    BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(new File(path + fileName)));
-                    buffStream.write(bytes);
-                    buffStream.close();
+                document.setReceiverDispatchData(doc.getReceiverDispatchData()); // add existing DD
+                document.getReceiverDispatchData().add(dd); // add new DD
+                document.setReceiverStatus(ds);
 
-                    document.setSenderFileName(path + fileName);
+                if(action.equals("accept"))
+                {
+                    document.setReceiverRegisteredNumber("DOCR-" + new Random().nextInt(100));
+                    document.setReceiverRegisteredDate(new Date());
+                }
 
-                } catch (Exception e) {
-
+                if(action.equals("done"))
+                {
+                    document.setReceiverExecutor(doc.getReceiverExecutor());
                 }
             }
-
-            documentService.create(document);
-        } else {
-
-            Document doc = documentService.findById(document.getId());
-            DocumentStatus ds = documentStatusService.getByInternalName(action);
-
-            if(doc.getSenderStatus().getInternalName().equals("toapprove") && action.equals("approve")) {
-
-                document = doc;
-
-                document.getSenderDispatchData().add(setDispatchData(action));
-                document.setGeneralStatus(ds);
+            else
+            {   // Sender Data
                 document.setSenderStatus(ds);
+                document.getSenderDispatchData().add(dd); // add new DD
 
-                DocumentStatus d1 = documentStatusService.getByInternalName("register");
-                document.getSenderDispatchData().add(setDispatchData("register"));
-                document.setGeneralStatus(d1);
-                document.setSenderStatus(d1);
-                document.setSenderRegisteredNumber("DOCS-" + new Random().nextInt(100));
-                document.setSenderRegisteredDate(new Date());
-
-            } else if(doc.getSenderStatus().getInternalName().equals("register") && action.equals("accept")) {
-
-                document = doc;
-
-                document.getReceiverDispatchData().add(setDispatchData(action));
-                document.setGeneralStatus(ds);
-                document.setReceiverStatus(ds);
-
-                document.setReceiverRegisteredNumber("DOCR-" + new Random().nextInt(100));
-                document.setReceiverRegisteredDate(new Date());
-
-            } else if(doc.getReceiverStatus() != null && action.equals("start")) {
-
-                Document d = document;
-
-                document = doc;
-                document.setReceiverExecutor(d.getReceiverExecutor());
-                document.getReceiverDispatchData().add(setDispatchData(action));
-                document.setGeneralStatus(ds);
-                document.setReceiverStatus(ds);
-
-            } else if(doc.getReceiverStatus() != null && action.equals("done")) {
-
-                document = doc;
-
-                document.getReceiverDispatchData().add(setDispatchData(action));
-                document.setGeneralStatus(ds);
-                document.setReceiverStatus(ds);
-
-            } else {
-
-                for (DispatchData d : doc.getSenderDispatchData()) {
-                    document.getSenderDispatchData().add(d);
-                }
-                document.getSenderDispatchData().add(setDispatchData(action));
-                document.setGeneralStatus(ds);
-                document.setSenderStatus(ds);
-
-                String fileName = null;
-
-                if (!senderFile.isEmpty()) {
-                    try {
-                        fileName = senderFile.getOriginalFilename();
-                        byte[] bytes = senderFile.getBytes();
-                        BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(new File(path + fileName)));
-                        buffStream.write(bytes);
-                        buffStream.close();
-
-                        document.setSenderFileName(fileName);
-
-                    } catch (Exception e) {
-
-                    }
+                if(action.equals("approve"))
+                {
+                    document.setSenderRegisteredNumber("DOCS-" + new Random().nextInt(100));
+                    document.setSenderRegisteredDate(new Date());
                 }
             }
 
@@ -331,7 +267,14 @@ public class DocumentFlowController {
         return "redirect:/doc?type=" + document.getDocumentType().getInternalName();
     }
 
-    public DispatchData setDispatchData(String internalName) {
-        return getDispatchData(documentStatusService.getByInternalName(internalName), userService.findById(1L), userService.findById(2L));
+    DispatchData setDispatchData(String internalName) {
+        DocumentStatus documentStatus = documentStatusService.getByInternalName(internalName);
+        DispatchData dispatchData = new DispatchData();
+        dispatchData.setDescription(documentStatus.getName());
+        dispatchData.setParent(false);
+        dispatchData.setDispatchBy(userService.findById(1L));
+        dispatchData.setDispatchTo(userService.findById(2L));
+        dispatchData.setDispatchType(documentStatus);
+        return dispatchData;
     }
 }

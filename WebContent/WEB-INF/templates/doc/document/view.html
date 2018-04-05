@@ -139,7 +139,7 @@
 
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group" th:if="${document.senderFileName != null}">
                                     <label class="control-label col-md-4"> Sender Attachment </label>
                                     <div class="col-md-6">
                                         <a th:href="${'D:\cp\' + document.senderFileName}" class="form-control" th:text="*{senderFileName}"></a>
@@ -216,7 +216,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group" th:if="${document.receiverFileName}">
                                 <label class="control-label col-md-4"> Receiver Attachment </label>
                                 <div class="col-md-6">
                                     <label class="form-control" th:text="*{receiverFileName}"/>
