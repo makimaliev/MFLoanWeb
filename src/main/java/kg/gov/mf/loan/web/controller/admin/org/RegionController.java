@@ -37,7 +37,7 @@ public class RegionController {
 	@RequestMapping("region/{id}/view")
 	public String viewRegionById(@PathVariable("id") long id, Model model) {
 
-		Region region = this.regionService.findById(id);
+		Region region = this.regionService.findByIdFull(id);
 
 		model.addAttribute("region", region);
 
@@ -47,7 +47,7 @@ public class RegionController {
 	@RequestMapping("region/{id}/details")
 	public String viewRegionDetailsById(@PathVariable("id") long id, Model model) {
 
-		Region region = this.regionService.findById(id);
+		Region region = this.regionService.findByIdFull(id);
 
 		model.addAttribute("region", region);
 
@@ -65,7 +65,7 @@ public class RegionController {
 
 	@RequestMapping("/region/{id}/edit")
 	public String getRegionEditForm(@PathVariable("id") long id, Model model) {
-		model.addAttribute("region", this.regionService.findById(id));
+		model.addAttribute("region", this.regionService.findByIdFull(id));
 		return "admin/org/regionForm";
 
 	}

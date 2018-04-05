@@ -1,5 +1,6 @@
 package kg.gov.mf.loan.web.controller.admin.sys;
 
+import kg.gov.mf.loan.admin.org.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,7 +55,9 @@ public class UserController {
         this.supervisorTermService = rs;
     }
     
-    
+
+    @Autowired
+	private StaffService staffService;
     
 	@RequestMapping(value = "/user/list", method = RequestMethod.GET)
 	public String listUsers(Model model) {
@@ -95,7 +98,8 @@ public class UserController {
 		model.addAttribute("user", new User());
 		model.addAttribute("userList", this.userService.findAll());
 		model.addAttribute("roleList", this.roleService.findAll());	
-		model.addAttribute("supervisorTermList", this.supervisorTermService.findAll());		
+		model.addAttribute("supervisorTermList", this.supervisorTermService.findAll());
+		model.addAttribute("staffList", this.staffService.findAll());
 
 		return "admin/sys/userForm";
 	}
@@ -106,21 +110,9 @@ public class UserController {
 		model.addAttribute("user", this.userService.findById(id));
 		model.addAttribute("userList", this.userService.findAll());
 		model.addAttribute("roleList", this.roleService.findAll());		
-		model.addAttribute("supervisorTermList", this.supervisorTermService.findAll());		
-		
-		/*
-		if(this.userService.findById(id).getRoles().isEmpty())
-		{
-			model.addAttribute("selectedRoleList", this.roleService.findById(1));
-		}
-		else
-		{
-			model.addAttribute("selectedRoleList", this.userService.findById(id).getRoles());	
-		}
-		*/
-		
-	
-		
+		model.addAttribute("supervisorTermList", this.supervisorTermService.findAll());
+		model.addAttribute("staffList", this.staffService.findAll());
+
 		return "admin/sys/userForm";
 
 	}

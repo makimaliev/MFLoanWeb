@@ -4,7 +4,7 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <head>
-<title></title>
+<title th:text="#{label.region.page.title}"> Region List</title>
 
 <div th:replace="fragments/header :: header-css"></div>
 
@@ -57,12 +57,12 @@ outline-offset: -3px;
 									id="regionTable">
 									<thead>
 										<tr>
-											<th>Id</th>
-											<th>Name</th>
-											<th>Code</th>
-											<th>View</th>
-											<th>Edit</th>
-											<th>Delete</th>
+											<th th:text="#{label.region.table.id}">Id</th>
+											<th th:text="#{label.region.table.name}">Name</th>
+											<th th:text="#{label.region.table.code}">Code</th>
+											<th th:text="#{label.region.table.view}">View</th>
+											<th th:text="#{label.region.table.edit}">Edit</th>
+											<th th:text="#{label.region.table.delete}">Delete</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -71,15 +71,15 @@ outline-offset: -3px;
 											<td th:text="${s.name}">Name</td>
 											<td th:text="${s.code}">Code</td>
 											<td><a th:href="@{/region/__${s.id}__/details}"
-												role="button" class="btn btn-xs green-stripe"> View </a></td>
+												role="button" class="btn btn-xs green-stripe" th:text="#{label.region.button.view}"> View </a></td>
 											<td><a data-remote="false" data-toggle="modal"
 												data-target="#regionFormModal"
 												th:href="@{/region/__${s.id}__/edit}" role="button"
-												class="btn btn-xs blue-stripe"> Edit </a></td>
+												class="btn btn-xs blue-stripe" th:text="#{label.region.button.edit}"> Edit </a></td>
 											<td>
 												<form th:action="@{/region/__${s.id}__/remove}"
 													method="post">
-													<button type="submit" class="btn btn-xs red-stripe">
+													<button type="submit" class="btn btn-xs red-stripe" th:text="#{label.region.button.delete}">
 														Delete</button>
 												</form>
 											</td>
@@ -99,14 +99,16 @@ outline-offset: -3px;
 														aria-label="Close">
 														<span aria-hidden="true">&times;</span>
 													</button>
-													<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+													<h4 class="modal-title" id="myModalLabel" th:text="#{label.region.modal.title}">Modal title</h4>
 												</div>
 												<div class="modal-body">...</div>
 												<div class="modal-footer">
+<!--
 													<button type="button" class="btn btn-default"
-														data-dismiss="modal">Close</button>
-													<button type="button" class="btn btn-primary">Save
+														data-dismiss="modal" th:text="#{label.region.button.close}">Close</button>
+													<button type="button" class="btn btn-primary" th:text="#{label.region.button.save}">Save
 														changes</button>
+-->
 												</div>
 											</div>
 										</div>
@@ -117,10 +119,10 @@ outline-offset: -3px;
 									<div class="col-md-12">
 										<a data-remote="false" data-toggle="modal"
 											data-target="#regionFormModal" th:href="@{/region/add}"
-											role="button" class="btn btn-large btn-primary"> Add
+											role="button" class="btn btn-large btn-primary" th:text="#{label.region.button.addRegion}"> Add
 											Region</a> <a data-remote="false" data-toggle="modal"
 											data-target="#regionFormModal" th:href="@{/district/add}"
-											role="button" class="btn btn-large btn-primary"> Add
+											role="button" class="btn btn-large btn-primary" th:text="#{label.region.button.addDistrict}"> Add
 											District</a>
 									</div>
 								</div>
@@ -190,7 +192,7 @@ outline-offset: -3px;
 				
 				$.get(sUrl, function(data) {
 
-					$('#content').html(data);
+					//$('#content').html(data);
 				});
 				
 				
@@ -224,12 +226,12 @@ outline-offset: -3px;
 
 	    if(link.attr("href").indexOf('district/add')>0)
 	    {
-	    	$(this).find(".modal-title").html(link.attr("href").replace("/district/add","/region/"+regionID+"/district/add"));
+	    	//$(this).find(".modal-title").html(link.attr("href").replace("/district/add","/region/"+regionID+"/district/add"));
 		    $(this).find(".modal-body").load(link.attr("href").replace("/district/add","/region/"+regionID+"/district/add"));
 	    }
 	    else
     	{
-	    	$(this).find(".modal-title").html(link.attr("href"));
+	    	//$(this).find(".modal-title").html(link.attr("href"));
 		    $(this).find(".modal-body").load(link.attr("href"));
     	}
 	});

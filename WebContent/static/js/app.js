@@ -4,6 +4,7 @@ $(document).ready(function() {
 
 function changePageAndSize() {
     $('#pageSizeSelect').change(function(evt) {
-        window.location.replace("/manage/order/list?pageSize=" + this.value + "&page=1");
+        var currentLocation = window.location.pathname;
+        window.location.replace(currentLocation + "?pageSize=" + this.value + "&page=1");
     });
 }

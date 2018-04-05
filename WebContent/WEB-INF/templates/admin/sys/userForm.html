@@ -16,18 +16,16 @@
 				<button class="close" data-close="alert"></button>
 				You have some form errors. Please check below.
 			</div>
-			<!-- 
-                     <div class="alert alert-success display-hide">
-                     	<button class="close" data-close="alert"></button> Your form validation is successful! 
-                     </div>
-                     -->
 			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Name <span
+				<label class="control-label col-md-3" th:text="#{label.user.modal.username}">Name <span
 					class="required"> * </span>
 				</label>
 				<div class="col-md-4">
 					<input hidden="true" type="text" id="id" name="id"
 						th:field="*{id}" />
+					<input hidden="true" type="text" id="staff.id" name="staff.id"
+						   th:field="*{staff.id}" />
+
 					<div class="input-icon right">
 						<i class="fa"></i> <input type="text" class="form-control"
 							name="name" th:field="*{username}" />
@@ -35,7 +33,7 @@
 				</div>
 			</div>
 			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Password <span
+				<label class="control-label col-md-3" th:text="#{label.user.modal.password}">Password <span
 					class="required"> * </span>
 				</label>
 				<div class="col-md-4">
@@ -47,7 +45,7 @@
 				</div>
 			</div>
 			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Enabled <span
+				<label class="control-label col-md-3" th:text="#{label.user.modal.enabled}">Enabled <span
 					class="required"> * </span>
 				</label>
 				<div class="col-md-4">
@@ -59,7 +57,7 @@
 				</div>
 			</div>
 			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Roles<span
+				<label class="control-label col-md-3" th:text="#{label.user.modal.roles}">Roles<span
 					class="required"> * </span>
 				</label>
 			
@@ -76,7 +74,7 @@
 				
 			</div>	
 			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Supervisor terms<span
+				<label class="control-label col-md-3" th:text="#{label.user.modal.supervisorterms}">Supervisor terms<span
 					class="required"> * </span>
 				</label>
 			
@@ -91,49 +89,23 @@
 				</div>
 				
 				
-			</div>					
-			
-			
-
-			<div class="tabbable-custom ">
-				<ul class="nav nav-tabs ">
-					<li class="active"><a href="#tab_15_11" data-toggle="tab">
-							1 </a></li>
-					<li><a href="#tab_15_21" data-toggle="tab"> 2 </a></li>
-					<li><a href="#tab_15_31" data-toggle="tab"> 3 </a></li>
-				</ul>
-				<div class="tab-content">
-					<div class="tab-pane active" id="tab_15_11">1</div>
-					<div class="tab-pane" id="tab_15_21">2</div>
-
-
-
-
-
-					<div class="tab-pane" id="tab_15_31">3</div>
-
-				</div>
 			</div>
 
+			<div class="form-group  margin-top-20">
+				<label class="control-label col-md-3" th:text="#{label.user.modal.staff}">Staff<span
+						class="required"> * </span>
+				</label>
+
+				<div class="col-md-4">
+					<select th:field="*{staff}">
+						<option th:each="staffInList : ${staffList}"
+								th:value="${{staffInList}}"
+								th:text="${staffInList.name}">Staff</option>
+					</select>
+				</div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+			</div>
 
 		</div>
 		<div class="form-actions">
