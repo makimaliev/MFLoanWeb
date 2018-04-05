@@ -82,6 +82,7 @@
 												<th>Cron expession</th>
 												<th>Enabled</th>
 												<th>State</th>
+												<th>Action</th>
 												<th>View details</th>
 												<th>Edit</th>
 												<th>Delete</th>
@@ -100,11 +101,20 @@
 													<td th:text="${js.key.enabled}"></td>
 													<td>
 														<statecheck th:if="${js.value == true}">
-															<span class="btn green">Running</span>
+															Running
 														</statecheck>
 														<statecheck th:unless="${js.value == true}">
-															<span class="btn red">Stopped</span>
+															Stopped
 														</statecheck>
+													</td>
+													<td>
+														<statecheck th:if="${js.value == true}">
+															<a th:href="@{/job/__${js.key.name}__/stop}" class="btn red">Stop</a>
+														</statecheck>
+														<statecheck th:unless="${js.value == true}">
+															<a th:href="@{/job/__${js.key.name}__/start}" class="btn blue">Start</a>
+														</statecheck>
+
 													</td>
 													<td>
 														<a th:href="@{/job/__${js.key.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>

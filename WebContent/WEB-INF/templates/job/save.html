@@ -81,13 +81,25 @@
 										</div>
 
 										<div class="form-group">
+											<label class="control-label col-md-3">Run now (one time)
+												<span class="required"> * </span>
+											</label>
+											<div class="col-md-4">
+												<div class="input-icon right">
+													<i class="fa"></i>
+													<input type="checkbox" id="checkNow" class="form-control" onclick="updateCron()">
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group">
 											<label class="control-label col-md-3">Cron expression
 												<span class="required"> * </span>
 											</label>
 											<div class="col-md-4">
 												<div class="input-icon right">
 													<i class="fa"></i>
-													<input type="text" class="form-control" th:field="*{cronExpression}"/>
+													<input type="text" id="cronExpression" class="form-control" th:field="*{cronExpression}"/>
 												</div>
 											</div>
 										</div>
@@ -121,6 +133,22 @@
 		<!-- END CONTENT -->
 		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
 	</div>
+	<script type=text/javascript>
+        function updateCron(){
+            if (document.getElementById('checkNow').checked){
+                var now = new Date();
+                now = moment(now).add(1,"m").toDate();
+                var sec = now.getSeconds();
+                var min = now.getMinutes();
+                var hh = now.getHours();
+                var dd = now.getDay() + 1;
+                var mm = now.getMonth() + 1;
+                var yy = now.getFullYear();
+                var exp = sec + " " + min + " " + hh + " " + dd + " " + mm + " ? " + yy;
+                document.getElementById('cronExpression').value = exp;
+            }
+        }
+	</script>
 	<!-- END CONTAINER -->
 	<div th:replace="layout :: footer" />
 	<div th:replace="fragments/footer :: footer-js" />

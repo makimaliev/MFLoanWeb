@@ -31,7 +31,7 @@ public class JobController {
     @RequestMapping(value = { "/job/list" }, method = RequestMethod.GET)
     public String listJobs(ModelMap model) throws SchedulerException
     {
-        List<JobItem> jobs = jobItemService.list();
+        List<JobItem> jobs = jobItemService.listByParam("id");
         HashMap<JobItem, Boolean> jobWithStates = new HashMap<>();
 
         for (JobItem job : jobs)
@@ -93,10 +93,34 @@ public class JobController {
         return "redirect:" + "/job/list";
     }
 
+    @RequestMapping(value = "job/{jobName}/start")
+    public String startJob(@PathVariable("jobName")String jobName) throws SchedulerException
+    {
+        if(jobName!=null)
+        {
+            JobItem jobItem = jobItemService.getByName(jobName);
+            Reflections reflections = new Reflections("kg.gov.mf.loan.process.job");
+            Set<Class<?>> classes = reflections.getTypesAnnotatedWith(Component.class);
+            for (Class<?> o: classes)
+            {
+                if(o.getName().equals(jobName) && jobItem.isEnabled())
+                {
+                    JobDetail jobDetail = context.getBean(JobDetail.class, jobName, jobName, o);
+                    Trigger cronTrigger = context.getBean(Trigger.class, jobItem.getCronExpression(), jobItem.getName());
+                    if(!isJobActive(jobDetail)){
+                        scheduler.getContext().put("jobItem", jobItem);
+                        scheduler.scheduleJob(jobDetail, cronTrigger);
+                    }
+                }
+            }
+        }
+
+        return "redirect:" + "/job/list";
+    }
+
     @RequestMapping(value="/job/startAll")
     public String startAllJobs() throws SchedulerException
     {
-
         List<JobItem> jobs = jobItemService.list();
 
         Reflections reflections = new Reflections("kg.gov.mf.loan.process.job");
@@ -118,6 +142,19 @@ public class JobController {
 
         }
 
+        return "redirect:" + "/job/list";
+    }
+
+    @RequestMapping(value="job/{jobName}/stop")
+    public String stopJob(@PathVariable("jobName")String jobName) throws SchedulerException
+    {
+        for (String groupName : scheduler.getJobGroupNames()) {
+            for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
+                if(jobKey.getName().equals(jobName))
+                    scheduler.deleteJob(jobKey);
+            }
+
+        }
         return "redirect:" + "/job/list";
     }
 
