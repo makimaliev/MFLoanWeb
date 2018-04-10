@@ -78,6 +78,7 @@
 									<table class="table table-hover table-light" id="orders">
 										<thead>
 											<tr>
+												<th>Id</th>
 												<th>Name</th>
 												<th>Cron expession</th>
 												<th>Enabled</th>
@@ -96,6 +97,7 @@
 											</ordercheck>
 											<order th:each="js : ${jobWithStates}">
 												<tr class="clickable-row">
+													<td th:text="${js.key.id}"></td>
 													<td th:text="${js.key.name}"></td>
 													<td th:text="${js.key.cronExpression}"></td>
 													<td th:text="${js.key.enabled}"></td>
@@ -109,10 +111,10 @@
 													</td>
 													<td>
 														<statecheck th:if="${js.value == true}">
-															<a th:href="@{/job/__${js.key.name}__/stop}" class="btn red">Stop</a>
+															<a th:href="@{/job/__${js.key.id}__/stop}" class="btn red">Stop</a>
 														</statecheck>
 														<statecheck th:unless="${js.value == true}">
-															<a th:href="@{/job/__${js.key.name}__/start}" class="btn blue">Start</a>
+															<a th:href="@{/job/__${js.key.id}__/start}" class="btn blue">Start</a>
 														</statecheck>
 
 													</td>
