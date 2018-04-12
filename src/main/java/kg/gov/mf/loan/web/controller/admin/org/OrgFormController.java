@@ -49,8 +49,11 @@ public class OrgFormController {
     
 	@RequestMapping(value = "/orgForm/list", method = RequestMethod.GET)
 	public String listOrgForms(Model model) {
-		model.addAttribute("orgForm", new OrgForm());
-		model.addAttribute("labelOrgFormName", "label.orgForm.name");
+
+    	OrgForm newOrgForm = new OrgForm();
+    	newOrgForm.setEnabled(true);
+
+		model.addAttribute("orgForm", newOrgForm);
 		model.addAttribute("orgFormList", this.orgFormService.findAll());
 
 		return "admin/org/orgFormList";
@@ -79,7 +82,11 @@ public class OrgFormController {
 	@RequestMapping(value = "/orgForm/add", method = RequestMethod.GET)
 	public String getOrgFormAddForm(Model model) {
 
-		model.addAttribute("orgForm", new OrgForm());
+
+		OrgForm newOrgForm = new OrgForm();
+		newOrgForm.setEnabled(true);
+
+		model.addAttribute("orgForm", newOrgForm);
 
 		return "admin/org/orgFormForm";
 	}
