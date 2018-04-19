@@ -51,6 +51,7 @@
 											<tr>
 												<th>Id</th>
 												<th>Name</th>
+												<th>Username</th>
 												<th>Enabled</th>
 												<th>Edit</th>
 												<th>Delete</th>
@@ -61,7 +62,8 @@
 											
 											<tr th:each="s : ${staffList}">
 												<td th:text="${s.id}">Id</td>
-												<td th:text="${s.name}">Name</td>     
+												<td th:text="${s.name}">Name</td>
+												<td th:text="${s.user.username}">Name</td>
 												<td th:text="${s.enabled}">Enabled</td>
 												<td>
 													<a data-remote="false" data-toggle="modal"

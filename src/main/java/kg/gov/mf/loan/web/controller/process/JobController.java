@@ -93,19 +93,19 @@ public class JobController {
         return "redirect:" + "/job/list";
     }
 
-    @RequestMapping(value = "job/{jobName}/start")
-    public String startJob(@PathVariable("jobName")String jobName) throws SchedulerException
+    @RequestMapping(value = "job/{jobId}/start")
+    public String startJob(@PathVariable("jobId")long jobId) throws SchedulerException
     {
-        if(jobName!=null)
+        if(jobId > 0)
         {
-            JobItem jobItem = jobItemService.getByName(jobName);
+            JobItem jobItem = jobItemService.getById(jobId);
             Reflections reflections = new Reflections("kg.gov.mf.loan.process.job");
             Set<Class<?>> classes = reflections.getTypesAnnotatedWith(Component.class);
             for (Class<?> o: classes)
             {
-                if(o.getName().equals(jobName) && jobItem.isEnabled())
+                if(o.getName().equals(jobItem.getName()) && jobItem.isEnabled() && jobItem.getId() == jobId)
                 {
-                    JobDetail jobDetail = context.getBean(JobDetail.class, jobName, jobName, o);
+                    JobDetail jobDetail = context.getBean(JobDetail.class, jobItem.getName(), jobItem.getName(), o);
                     Trigger cronTrigger = context.getBean(Trigger.class, jobItem.getCronExpression(), jobItem.getName());
                     if(!isJobActive(jobDetail)){
                         scheduler.getContext().put("jobItem", jobItem);
@@ -145,15 +145,15 @@ public class JobController {
         return "redirect:" + "/job/list";
     }
 
-    @RequestMapping(value="job/{jobName}/stop")
-    public String stopJob(@PathVariable("jobName")String jobName) throws SchedulerException
+    @RequestMapping(value="job/{jobId}/stop")
+    public String stopJob(@PathVariable("jobId")long jobId) throws SchedulerException
     {
+        JobItem jobItem = jobItemService.getById(jobId);
         for (String groupName : scheduler.getJobGroupNames()) {
             for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
-                if(jobKey.getName().equals(jobName))
+                if(jobKey.getName().equals(jobItem.getName()) && jobItem.getId() == jobId)
                     scheduler.deleteJob(jobKey);
             }
-
         }
         return "redirect:" + "/job/list";
     }

@@ -65,7 +65,7 @@
 												<td th:text="${aokmotuInList.id}">Id</td>
 												<td th:text="${aokmotuInList.name}">Name</td>     
 												<td th:text="${aokmotuInList.code}">Code</td>
-												<td th:text="${aokmotuInList.district.name}">District</td>	
+												<td th:text="${aokmotuInList?.district?.name}">District</td>
 												<td><a th:href="@{/aokmotu/__${aokmotuInList.id}__/details}"
 													role="button" class="btn btn-xs green-stripe"> View </a></td>											
 												<td>

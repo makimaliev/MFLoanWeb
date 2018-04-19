@@ -61,8 +61,9 @@
 											
 											<tr th:each="s : ${orgFormList}">
 												<td th:text="${s.id}">Id</td>
-												<td th:text="${s.name}">Name</td>     
-												<td th:text="${s.enabled}">Enabled</td>
+												<td th:text="${s.name}">Name</td>
+
+												<td th:text="${s.enabled} ? #{label.enabled} : #{label.disabled} ">Enabled</td>
 												<td>
 													<a data-remote="false" data-toggle="modal"
 													data-target="#orgFormFormModal" th:href="@{/orgForm/__${s.id}__/edit}"

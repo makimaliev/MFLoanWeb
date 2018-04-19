@@ -51,6 +51,7 @@
 											<tr>
 												<th th:text="#{label.user.table.id}">Id</th>
 												<th th:text="#{label.user.table.name}">Name</th>
+												<th th:text="#{label.user.table.staff}">Name</th>
 												<th th:text="#{label.user.table.view}">View</th>
 												<th th:text="#{label.user.table.edit}">Edit</th>
 												<th th:text="#{label.user.table.delete}">Delete</th>
@@ -62,6 +63,7 @@
 											<tr th:each="s : ${userList}">
 												<td th:text="${s.id}">Id</td>
 												<td th:text="${s.username}">Name</td>
+												<td th:text="${s?.staff?.name}">Name</td>
 												<td>
 													<a  th:href="@{/user/__${s.id}__/details}"
 													role="button" class="btn btn-xs green-stripe" th:text="#{label.user.button.view}"> View
