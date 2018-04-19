@@ -1,29 +1,22 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <head>
-<title th:text="#{label.region.page.title}"> Region List</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title th:text="#{label.region.page.title}">Region List</title>
 
-<div th:replace="fragments/header :: header-css"></div>
+	<div th:replace="fragments/header :: header-css"></div>
 
-<link
-	th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}"
-	rel="stylesheet" type="text/css" />
-<link th:href="@{/assets/global/plugins/datatables/datatables.min.css}"
-	rel="stylesheet" type="text/css" />
-<link
-	th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}"
-	rel="stylesheet" type="text/css" />
-	
-	  <style type="text/css">
-table.KeyTable tr.focus {
-outline: 3px solid #3366FF;
-outline-offset: -3px;
-}
+	<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
+	<link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
+	<link th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}" rel="stylesheet" type="text/css" />
 
-  </style>
+  	<style type="text/css">
+		table.KeyTable tr.focus {
+			outline: 3px solid #3366FF;
+			outline-offset: -3px;
+		}
+	</style>
 
 </head>
 
@@ -52,9 +45,7 @@ outline-offset: -3px;
 						<!-- BEGIN BORDERED TABLE PORTLET-->
 						<div class="portlet portlet-fit ">
 							<div class="portlet-body">
-								<table
-									class="table compact"
-									id="regionTable">
+								<table class="table compact" id="regionTable">
 									<thead>
 										<tr>
 											<th th:text="#{label.region.table.id}">Id</th>
@@ -71,23 +62,32 @@ outline-offset: -3px;
 											<td th:text="${s.name}">Name</td>
 											<td th:text="${s.code}">Code</td>
 											<td><a th:href="@{/region/__${s.id}__/details}"
-												role="button" class="btn btn-xs green-stripe" th:text="#{label.region.button.view}"> View </a></td>
-											<td><a data-remote="false" data-toggle="modal"
-												data-target="#regionFormModal"
-												th:href="@{/region/__${s.id}__/edit}" role="button"
-												class="btn btn-xs blue-stripe" th:text="#{label.region.button.edit}"> Edit </a></td>
+												   role="button"
+												   class="btn btn-xs green-stripe"
+												   th:text="#{label.region.button.view}">View</a>
+											</td>
+											<td>
+												<a data-remote="false"
+												   data-toggle="modal"
+												   data-target="#regionFormModal"
+												   role="button"
+												   class="btn btn-xs blue-stripe"
+												   th:href="@{/region/__${s.id}__/edit}"
+												   th:text="#{label.region.button.edit}">Edit</a>
+											</td>
 											<td>
 												<form th:action="@{/region/__${s.id}__/remove}"
-													method="post">
-													<button type="submit" class="btn btn-xs red-stripe" th:text="#{label.region.button.delete}">
-														Delete</button>
+													  method="post">
+													<button type="submit"
+															class="btn btn-xs red-stripe"
+															th:text="#{label.region.button.delete}">Delete</button>
 												</form>
 											</td>
 										</tr>
 									</tbody>
 								</table>
-								<div class="col-md-12">
 
+								<div class="col-md-12">
 									<!-- Default bootstrap modal example -->
 									<div class="modal fade" id="regionFormModal" tabindex="-1"
 										role="dialog" aria-labelledby="myModalLabel"
@@ -102,13 +102,11 @@ outline-offset: -3px;
 													<h4 class="modal-title" id="myModalLabel" th:text="#{label.region.modal.title}">Modal title</h4>
 												</div>
 												<div class="modal-body">...</div>
-												<div class="modal-footer">
-<!--
+												<div class="modal-footer"><!--
 													<button type="button" class="btn btn-default"
 														data-dismiss="modal" th:text="#{label.region.button.close}">Close</button>
 													<button type="button" class="btn btn-primary" th:text="#{label.region.button.save}">Save
-														changes</button>
--->
+														changes</button>-->
 												</div>
 											</div>
 										</div>
@@ -117,22 +115,27 @@ outline-offset: -3px;
 
 								<div class="row">
 									<div class="col-md-12">
-										<a data-remote="false" data-toggle="modal"
-											data-target="#regionFormModal" th:href="@{/region/add}"
-											role="button" class="btn btn-large btn-primary" th:text="#{label.region.button.addRegion}"> Add
-											Region</a> <a data-remote="false" data-toggle="modal"
-											data-target="#regionFormModal" th:href="@{/district/add}"
-											role="button" class="btn btn-large btn-primary" th:text="#{label.region.button.addDistrict}"> Add
-											District</a>
+										<a data-remote="false"
+										   data-toggle="modal"
+										   data-target="#regionFormModal"
+										   th:href="@{/region/add}"
+										   role="button"
+										   class="btn btn-large btn-primary"
+										   th:text="#{label.region.button.addRegion}">Add Region</a>
+										<a data-remote="false"
+										   data-toggle="modal"
+										   data-target="#regionFormModal"
+										   th:href="@{/district/add}"
+										   role="button"
+										   class="btn btn-large btn-primary"
+										   th:text="#{label.region.button.addDistrict}">Add District</a>
 									</div>
 								</div>
 							</div>
 						</div>
 						<!-- END BORDERED TABLE PORTLET-->
 					</div>
-				
 
-				
 				</div>
 
 				<div class="row">
@@ -175,7 +178,7 @@ outline-offset: -3px;
 			var table = $('#regionTable').DataTable({
 		    	stateSave: true,
 		    	"language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
-	    		"info":     false,
+	    		"info": false,
 	    		keys: {
 	    	        focus: ':eq(0)'
 	    	    }
