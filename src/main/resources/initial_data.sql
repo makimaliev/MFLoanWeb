@@ -72,9 +72,6 @@ INSERT INTO `mfloan`.`user_role` (`user_id`,`role_id`) VALUES (2,2);
 /* ADD IDENTITY DOC GIVEN BY */
 
 
-INSERT INTO `mfloan`.`identity_doc_given_by` (`enabled`, `name`) VALUES (true, 'MKK');
-INSERT INTO `mfloan`.`identity_doc_given_by` (`enabled`, `name`) VALUES (true, 'Min Just');
-
 
 /* ADD IDENTITY DOC TYPE */
 
@@ -270,32 +267,32 @@ INSERT INTO `mfloan`.`appliedEntityListState` (`version`,`name`) VALUES (1,'Др
 INSERT INTO `mfloan`.`appliedEntityListType` (`version`,`name`) VALUES (1,'Список получателей');
 INSERT INTO `mfloan`.`appliedEntityListType` (`version`,`name`) VALUES (1,'Другое');
 
-INSERT INTO `mfloan`.`appliedentitystate` (`version`,`name`) VALUES (1,'На стадии оформления');
-INSERT INTO `mfloan`.`appliedentitystate` (`version`,`name`) VALUES (1,'Оформление завершено');
-INSERT INTO `mfloan`.`appliedentitystate` (`version`,`name`) VALUES (1,'Отказ получателя');
-INSERT INTO `mfloan`.`appliedentitystate` (`version`,`name`) VALUES (1,'Другое');
+INSERT INTO `mfloan`.`appliedEntityState` (`version`,`name`) VALUES (1,'На стадии оформления');
+INSERT INTO `mfloan`.`appliedEntityState` (`version`,`name`) VALUES (1,'Оформление завершено');
+INSERT INTO `mfloan`.`appliedEntityState` (`version`,`name`) VALUES (1,'Отказ получателя');
+INSERT INTO `mfloan`.`appliedEntityState` (`version`,`name`) VALUES (1,'Другое');
 
-INSERT INTO `mfloan`.`documentpackagestate` (`version`,`name`) VALUES (1,'На стадии комплектации');
-INSERT INTO `mfloan`.`documentpackagestate` (`version`,`name`) VALUES (1,'Комплектация завершена');
+INSERT INTO `mfloan`.`documentPackageState` (`version`,`name`) VALUES (1,'На стадии комплектации');
+INSERT INTO `mfloan`.`documentPackageState` (`version`,`name`) VALUES (1,'Комплектация завершена');
 
-INSERT INTO `mfloan`.`documentpackagetype` (`version`,`name`) VALUES (1,'Кредитный пакет документации');
-INSERT INTO `mfloan`.`documentpackagetype` (`version`,`name`) VALUES (1,'Залоговый пакет документации');
-INSERT INTO `mfloan`.`documentpackagetype` (`version`,`name`) VALUES (1,'Пакет документации для перевод долга');
-INSERT INTO `mfloan`.`documentpackagetype` (`version`,`name`) VALUES (1,'Другое');
+INSERT INTO `mfloan`.`documentPackageType` (`version`,`name`) VALUES (1,'Кредитный пакет документации');
+INSERT INTO `mfloan`.`documentPackageType` (`version`,`name`) VALUES (1,'Залоговый пакет документации');
+INSERT INTO `mfloan`.`documentPackageType` (`version`,`name`) VALUES (1,'Пакет документации для перевод долга');
+INSERT INTO `mfloan`.`documentPackageType` (`version`,`name`) VALUES (1,'Другое');
 
-INSERT INTO `mfloan`.`entitydocumentstate` (`version`,`name`) VALUES (1,'На стадии коплектации');
-INSERT INTO `mfloan`.`entitydocumentstate` (`version`,`name`) VALUES (1,'Копмлектация завершена');
-INSERT INTO `mfloan`.`entitydocumentstate` (`version`,`name`) VALUES (1,'На стадии проверки');
-INSERT INTO `mfloan`.`entitydocumentstate` (`version`,`name`) VALUES (1,'Проверка зварешена');
+INSERT INTO `mfloan`.`entityDocumentState` (`version`,`name`) VALUES (1,'На стадии коплектации');
+INSERT INTO `mfloan`.`entityDocumentState` (`version`,`name`) VALUES (1,'Копмлектация завершена');
+INSERT INTO `mfloan`.`entityDocumentState` (`version`,`name`) VALUES (1,'На стадии проверки');
+INSERT INTO `mfloan`.`entityDocumentState` (`version`,`name`) VALUES (1,'Проверка зварешена');
 
-INSERT INTO `mfloan`.`entitydocumentregisteredby` (`version`,`name`) VALUES (1,'ГРС');
-INSERT INTO `mfloan`.`entitydocumentregisteredby` (`version`,`name`) VALUES (1,'ЦЗРК');
-INSERT INTO `mfloan`.`entitydocumentregisteredby` (`version`,`name`) VALUES (1,'Нотариус');
-INSERT INTO `mfloan`.`entitydocumentregisteredby` (`version`,`name`) VALUES (1,'Другое');
+INSERT INTO `mfloan`.`entityDocumentRegisteredBy` (`version`,`name`) VALUES (1,'ГРС');
+INSERT INTO `mfloan`.`entityDocumentRegisteredBy` (`version`,`name`) VALUES (1,'ЦЗРК');
+INSERT INTO `mfloan`.`entityDocumentRegisteredBy` (`version`,`name`) VALUES (1,'Нотариус');
+INSERT INTO `mfloan`.`entityDocumentRegisteredBy` (`version`,`name`) VALUES (1,'Другое');
 
-INSERT INTO `mfloan`.`orderdocumenttype` (`version`,`name`) VALUES (1,'Кредитный договор');
-INSERT INTO `mfloan`.`orderdocumenttype` (`version`,`name`) VALUES (1,'Залоговый договор договор');
-INSERT INTO `mfloan`.`orderdocumenttype` (`version`,`name`) VALUES (1,'Паспорт или свидетельство о регистрации');
+INSERT INTO `mfloan`.`orderDocumentType` (`version`,`name`) VALUES (1,'Кредитный договор');
+INSERT INTO `mfloan`.`orderDocumentType` (`version`,`name`) VALUES (1,'Залоговый договор договор');
+INSERT INTO `mfloan`.`orderDocumentType` (`version`,`name`) VALUES (1,'Паспорт или свидетельство о регистрации');
 
 INSERT INTO `mfloan`.`orderTermFrequencyType` (`version`,`name`) VALUES (1,'Год');
 INSERT INTO `mfloan`.`orderTermFrequencyType` (`version`,`name`) VALUES (1,'Полугодие');
@@ -322,16 +319,7 @@ INSERT INTO `mfloan`.`orderTermAccrMethod` (`version`,`name`) VALUES (1,'Дру�
 
 
 
-INSERT INTO `mfloan`.`orderDocumentType` (`version`,`name`) VALUES (1,'Кредитный договор');
-INSERT INTO `mfloan`.`orderDocumentType` (`version`,`name`) VALUES (1,'Залоговый договор');
-INSERT INTO `mfloan`.`orderDocumentType` (`version`,`name`) VALUES (1,'Паспорт или свидетельство о регистрации');
 
-
-
-
-
-
-INSERT INTO `mfloan`.`debtorType` (`version`,`name`) VALUES (1,'Debtor Type 1');
 INSERT INTO `mfloan`.`orgForm` (`version`,`name`) VALUES (1,'Org Form 1');
 
 
