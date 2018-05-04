@@ -50,7 +50,6 @@ import kg.gov.mf.loan.manage.converter.OwnerFormatter;
 import kg.gov.mf.loan.manage.converter.WorkSectorFormatter;
 
 
-
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "kg.gov.mf.loan")

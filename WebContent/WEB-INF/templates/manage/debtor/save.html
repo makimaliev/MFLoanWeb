@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <head>
 <title>MFLoan | Credit Orders</title>
 <div th:replace="fragments/header :: header-css" />
@@ -59,85 +60,92 @@
 									<span class="caption-subject font-green sbold uppercase">Save Debtor</span>
 								</div>
 							</div>
-
-							<form th:action="@{/manage/debtor/save}" id="form_sample_2" class="form-horizontal" method="post">
-								<div class="portlet-body">
-									<div class="form-body" th:object="${debtor}">
-										<div class="alert alert-danger display-hide">
-											<button class="close" data-close="alert"></button> You have some form errors. Please check below.
-										</div>
-
-										<div class="form-group  margin-top-20">
-											<label class="control-label col-md-3">Name
-												<span class="required"> * </span>
-											</label>
-											<div class="col-md-4">
-												<input hidden="true" type="text" id="ownerEntityId" name="owner.entityId" th:field="*{owner.entityId}" />
-												<input hidden="true" type="text" id="ownerName" name="owner.name" th:field="*{owner.name}" />
-												<input hidden="true" type="text" id="ownerType" name="owner.ownerType" th:field="*{owner.ownerType}" />
-												<input type="hidden" th:field="*{id}"/>
-												<div class="input-icon right">
-													<i class="fa"></i>
-													<input type="text" class="form-control" th:field="*{name}"/>
-												</div>
+							<form th:action="@{/manage/debtor/0/save}" id="form_sample_2"
+								  class="form-horizontal" method="post">
+								<div class="form-body">
+									<div class="alert alert-danger display-hide">
+										<button class="close" data-close="alert"></button>
+										You have some form errors. Please check below.
+									</div>
+									<!--
+                                             <div class="alert alert-success display-hide">
+                                                 <button class="close" data-close="alert"></button> Your form validation is successful!
+                                             </div>
+                                             -->
+									<div class="form-group  margin-top-20">
+										<label class="control-label col-md-3">Name
+											<span class="required"> * </span>
+										</label>
+										<div class="col-md-4">
+											<input hidden="true" type="text" id="ownerEntityId" name="owner.entityId" th:field="*{owner.entityId}" />
+											<input hidden="true" type="text" id="ownerName" name="owner.name" th:field="*{owner.name}" />
+											<input hidden="true" type="text" id="ownerType" name="owner.ownerType" th:field="*{owner.ownerType}" />
+											<input type="hidden" th:field="*{id}"/>
+											<div class="input-icon right">
+												<i class="fa"></i>
+												<input type="text" class="form-control" th:field="*{name}"/>
 											</div>
 										</div>
-										<div class="form-group">
-											<label class="control-label col-md-3">Type
-												<span class="required"> * </span>
-											</label>
-											<div class="col-md-4">
-                                              		<select class="form-control" th:field="*{debtorType}">
-												    <option value="0">Select...</option>
-												    <option th:each="type : ${types}" th:value="${{type}}" th:text="${type.name}"></option>
-												</select>
-                                              </div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-3">Type
+											<span class="required"> * </span>
+										</label>
+										<div class="col-md-4">
+											<select class="form-control" th:field="*{debtorType}">
+												<option value="0">Select...</option>
+												<option th:each="type : ${types}" th:value="${{type}}" th:text="${type.name}"></option>
+											</select>
 										</div>
+									</div>
 
-										<div class="form-group">
-											<label class="control-label col-md-3">Organization form
-												<span class="required"> * </span>
-											</label>
-											<div class="col-md-4">
-                                              		<select class="form-control" th:field="*{orgForm}">
-												    <option value="0">Select...</option>
-												    <option th:each="form : ${forms}" th:value="${{form}}" th:text="${form.name}"></option>
-												</select>
-                                              </div>
+									<div class="form-group">
+										<label class="control-label col-md-3">Organization form
+											<span class="required"> * </span>
+										</label>
+										<div class="col-md-4">
+											<select class="form-control" th:field="*{orgForm}">
+												<option value="0">Select...</option>
+												<option th:each="form : ${forms}" th:value="${{form}}" th:text="${form.name}"></option>
+											</select>
 										</div>
+									</div>
 
-										<div class="form-group">
-											<label class="control-label col-md-3">Work sector
-												<span class="required"> * </span>
-											</label>
-											<div class="col-md-4">
-                                              		<select class="form-control" th:field="*{workSector}">
-												    <option value="0">Select...</option>
-												    <option th:each="sector : ${sectors}" th:value="${{sector}}" th:text="${sector.name}"></option>
-												</select>
-                                              </div>
+									<div class="form-group">
+										<label class="control-label col-md-3">Work sector
+											<span class="required"> * </span>
+										</label>
+										<div class="col-md-4">
+											<select class="form-control" th:field="*{workSector}">
+												<option value="0">Select...</option>
+												<option th:each="sector : ${sectors}" th:value="${{sector}}" th:text="${sector.name}"></option>
+											</select>
 										</div>
-										
-										<div class="form-group">
-											<label class="control-label col-md-3">Owner
-												<span class="required"> * </span>
-											</label>
-											<div class="col-md-4">
-                                              		<select class="form-control" th:field="*{owner}" id="ownerSelect" onchange="updateTOwner(this);">
-												    <option value="0">Select...</option>
-												    <option th:each="entity : ${entities}" 
-												    th:value="${{entity}}"
-												    th:selected="(${entity.id} == *{owner.id})" 
-												    th:text="${entity.name} + ',' + ${entity.ownerType} + ',' + ${entity.entityId} "></option>
-												</select>
-                                              </div>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-3">Owner
+											<span class="required"> * </span>
+										</label>
+										<div class="col-md-4">
+											<select class="form-control" th:field="*{owner}" id="ownerSelect" onchange="updateTOwner(this);">
+												<option value="0">Select...</option>
+												<option th:each="entity : ${entities}"
+														th:value="${{entity}}"
+														th:selected="(${entity.id} == *{owner.id})"
+														th:text="${entity.name} + ',' + ${entity.ownerType} + ',' + ${entity.entityId} "></option>
+											</select>
 										</div>
-										
 									</div>
 								</div>
-								<div class="modal-footer">
-									<button type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
-									<button type="submit" class="btn green">Save</button>
+								<div class="form-actions">
+									<div class="row">
+										<div class="col-md-offset-3 col-md-9">
+											<button type="submit" class="btn green" th:action="@{/manage/debtor/save}">Submit</button>
+											<button type="button" class="btn default"
+													onclick="window.history.back()">Cancel</button>
+										</div>
+									</div>
 								</div>
 							</form>
 						</div>

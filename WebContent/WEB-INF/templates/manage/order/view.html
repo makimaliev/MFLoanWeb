@@ -23,123 +23,62 @@
 			<!-- BEGIN CONTENT BODY -->
 			<div class="page-content">
 				<!-- BEGIN PAGE HEADER-->
-				<h1 class="page-title">
-					Credit Order Details
-					<small>create, view, edit, delete applied entity lists, mandatory documents and order terms </small>
-				</h1>
-				<div class="page-bar">
-					<ul class="page-breadcrumb">
-						<li><i class="icon-home"></i> <a th:href="@{/}">Home</a> <i class="fa fa-angle-right"></i></li>
-						<li><a th:href="@{/manage/order/list}">Credit Orders</a> <i class="fa fa-angle-right"></i></li>
-						<li><span>Credit Order</span></li>
-					</ul>
-					<div class="page-toolbar">
-						<div class="btn-group pull-right">
-							<button type="button"
-								class="btn btn-fit-height grey-salt dropdown-toggle"
-								data-toggle="dropdown" data-hover="dropdown" data-delay="1000"
-								data-close-others="true">
-								Actions <i class="fa fa-angle-down"></i>
-							</button>
-							<ul class="dropdown-menu pull-right" role="menu">
-								<li><a href="#"> <i class="icon-bell"></i> Action </a></li>
-								<li><a href="#"> <i class="icon-shield"></i> Another action </a></li>
-								<li><a href="#"> <i class="icon-user"></i> Something else here </a></li>
-								<li class="divider"></li>
-								<li><a href="#"> <i class="icon-bag"></i> Separated link </a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
 				<!-- END PAGE HEADER-->
+				<div class="table-scrollable table-scrollable-borderless">
+					<table class="table compact" id="orders">
+						<thead>
+						<tr>
+							<th>label.order.table.id</th>
+							<th>label.order.table.regNum</th>
+							<th>label.order.table.regDate</th>
+							<th>label.order.table.description</th>
+							<th>label.order.table.creditOrderState</th>
+							<th>label.order.table.creditOrderType</th>
+							<th>label.order.table.viewDetails</th>
+							<th>label.order.table.edit</th>
+							<th>label.order.table.delete</th>
+						</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td th:text="${order.id}">Id</td>
+								<td th:text="${order.regNumber}">AB0C1234</td>
+								<td th:text="${order.regDate}">01.01.2017</td>
+								<td th:text="${order.description}">Description here</td>
+								<td th:text="${order.creditOrderState.name}">Active</td>
+								<td th:text="${order.creditOrderType.name}">RPKR</td>
+								<td>
+									<a th:href="@{/manage/order/__${order.id}__/view}" class="btn btn-xs green-stripe">View Details</a>
+								</td>
+								<td>
+									<a th:href="@{/manage/order/__${order.id}__/save}" class="btn btn-xs blue-stripe">Edit</a>
+								</td>
+								<td>
+									<form th:action="@{/manage/order/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+										<input hidden="true" type="text" id="id" name="id" th:value="${order.id}" />
+										<button type="submit" class="btn btn-xs red-stripe" style="color: black">Delete</button>
+									</form>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 				<div class="row">
 					<div class="col-md-12">
-						<!-- BEGIN BORDERED TABLE PORTLET-->
-						<div class="portlet light portlet-fit ">
-							<div class="portlet-title">
-								<div class="caption">
-									<i class="icon-settings font-green"></i> 
-									<span class="caption-subject font-green sbold uppercase" th:text="'Credit Order : '+${order.regNumber}">Credit Order</span>
-								</div>
-							</div>
-							<div class="portlet-body form">
-								<form class="form-horizontal" role="form">
-									<div class="form-body" style="padding: 20px">
-										<div class="row">
-											<div class="col-md-6">
-												<div class="form-group">
-													<label class="control-label col-md-3">Id:</label>
-													<div class="col-md-9">
-														<p class="form-control-static" th:text="${order.id}">1</p>
-													</div>
-												</div>
-											</div>
-											<!--/span-->
-											<div class="col-md-6">
-												<div class="form-group">
-													<label class="control-label col-md-3">Registration number:</label>
-													<div class="col-md-9">
-														<p class="form-control-static" th:text="${order.regNumber}">REG123</p>
-													</div>
-												</div>
-											</div>
-											<!--/span-->
-										</div>
-										<!--/row-->
-										<div class="row">
-											<div class="col-md-6">
-												<div class="form-group">
-													<label class="control-label col-md-3">Registration date:</label>
-													<div class="col-md-9">
-														<p class="form-control-static" th:text="${order.regDate}">01.01.1970</p>
-													</div>
-												</div>
-											</div>
-											<!--/span-->
-											<div class="col-md-6">
-												<div class="form-group">
-													<label class="control-label col-md-3">Description:</label>
-													<div class="col-md-9">
-														<p class="form-control-static" th:text="${order.description}">Description</p>
-													</div>
-												</div>
-											</div>
-											<!--/span-->
-										</div>
-										<!--/row-->
-										<div class="row">
-											<div class="col-md-6">
-												<div class="form-group">
-													<label class="control-label col-md-3">Order State:</label>
-													<div class="col-md-9">
-														<p class="form-control-static" th:text="${order.creditOrderState.name}">Active</p>
-													</div>
-												</div>
-											</div>
-											<!--/span-->
-											<div class="col-md-6">
-												<div class="form-group">
-													<label class="control-label col-md-3">Order Type:</label>
-													<div class="col-md-9">
-														<p class="form-control-static" th:text="${order.creditOrderType.name}">PPKR</p>
-													</div>
-												</div>
-											</div>
-											<!--/span-->
-										</div>
-										<!--/row-->
-									</div>
-								</form>
-							</div>
-						</div>
-						<!-- END BORDERED TABLE PORTLET-->
+						<a th:href="@{/manage/order/__${order.id}__/entitylist/0/save}" role="button"
+						   class="btn btn-large btn-primary" th:text="#{label.order.button.addAppliedEntityList}">Add New Applied Entity List</a>
+						<a th:href="@{/manage/order/__${order.id}__/orderdocumentpackage/0/save}" role="button"
+						   class="btn btn-large btn-primary" th:text="#{label.order.button.addDocumentPackage}">Add New Document Package</a>
+						<a th:href="@{/manage/order/__${order.id}__/orderterm/0/save}" role="button"
+						   class="btn btn-large btn-primary" th:text="#{label.order.button.addOrderTerm}">Add New Order Term</a>
 					</div>
 				</div>
-				
+                <br><br>
 				<div class="row">
 					<div class="col-md-12">
-						<div class="tabbable-line boxless tabbable-reversed">
-							<ul class="nav nav-tabs">
+                        <div id="content">
+						<div class="tabbable-custom">
+							<ul class="nav nav-tabs" >
 								<li class="active"><a href="#tab_0" data-toggle="tab"> Applied Entity Lists </a></li>
 								<li><a href="#tab_1" data-toggle="tab"> Document Packages </a></li>
 								<li><a href="#tab_2" data-toggle="tab"> Order Terms </a></li>
@@ -149,66 +88,43 @@
 									<div class="row">
 										<div class="col-md-12">
 											<div class="portlet light portlet-fit">
-												<div class="portlet-title">
-													<div class="caption">
-														<i class="icon-settings font-green"></i> 
-														<span class="caption-subject font-green sbold uppercase">Applied Entity Lists</span>
-													</div>
-												</div>
 												<div class="portlet-body">
-													<div class="table-toolbar">
-														<div class="row">
-															<div class="col-md-6">
-																<div class="btn-group">
-																	<a th:href="@{/manage/order/__${order.id}__/entitylist/0/save}" class="btn green">Add New Applied Entity List <i class="fa fa-plus"></i></a>
-																</div>
-															</div>
-														</div>
-													</div>
-													
 													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light"
-															id="entityLists">
+														<table class="table table-hover table-scrollable">
 															<thead>
 																<tr>
-																	<th>Id</th>
-																	<th>List number</th>
-																	<th>List date</th>
-																	<th>Entity List State</th>
-																	<th>Entity List Type</th>
-																	<th>View Details</th>
-																	<th>Edit</th>
-																	<th>Delete</th>
+																	<th th:text="#{label.appliedEntityList.table.id}">Id</th>
+																	<th th:text="#{label.appliedEntityList.table.listNum}">List number</th>
+																	<th th:text="#{label.appliedEntityList.table.listDate}">List date</th>
+																	<th th:text="#{label.appliedEntityList.table.entytiListState}">Entity List State</th>
+																	<th th:text="#{label.appliedEntityList.table.entytiListType}">Entity List Type</th>
+																	<th th:text="#{label.appliedEntityList.table.view}">View Details</th>
+																	<th th:text="#{label.appliedEntityList.table.edit}">Edit</th>
+																	<th th:text="#{label.appliedEntityList.table.delete}">Delete</th>
 																</tr>
 															</thead>
-		
+
 															<tbody>
-																<statecheck th:if="${#lists.isEmpty(entityLists)}">
-																<tr class="no-records-found" style="text-align: center;">
-																	<td colspan="8">No matching records found</td>
-																</tr>
-																</statecheck>
-																<state th:each="l : ${entityLists}">
-																<tr class="clickable-row">
+
+																<tr th:each="l : ${entityLists}">
 																	<td th:text="${l.id}">Id</td>
 																	<td th:text="${l.listNumber}">AB0C1234</td>
 																	<td th:text="${l.listDate}">01.01.2017</td>
 																	<td th:text="${l.appliedEntityListState.name}">Active</td>
 																	<td th:text="${l.appliedEntityListType.name}">RPKR</td>
 																	<td>
-																		<a th:href="@{/manage/order/__${order.id}__/entitylist/__${l.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
+																		<a th:href="@{/manage/order/__${order.id}__/appliedEntityList/__${l.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
 																	</td>
 																	<td>
-																		<a th:href="@{/manage/order/__${order.id}__/entitylist/__${l.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
+																		<a th:href="@{/manage/order/__${order.id}__/appliedEntityList/__${l.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
 																	</td>
 																	<td>
-																		<form th:action="@{/manage/order/__${order.id}__/entitylist/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+																		<form th:action="@{/manage/order/__${order.id}__/appliedEntityList/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
 																			<input hidden="true" type="text" id="id" name="id" th:value="${l.id}" />
 																			<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
 																		</form>
 																	</td>
 																</tr>
-																</state>
 															</tbody>
 														</table>
 													</div>
@@ -221,60 +137,38 @@
 									<div class="row">
 										<div class="col-md-12">
 											<div class="portlet light portlet-fit">
-												<div class="portlet-title">
-													<div class="caption">
-														<i class="icon-settings font-green"></i> 
-														<span class="caption-subject font-green sbold uppercase">Document Packages</span>
-													</div>
-												</div>
 												<div class="portlet-body">
-													<div class="table-toolbar">
-														<div class="row">
-															<div class="col-md-6">
-																<div class="btn-group">
-																	<a th:href="@{/manage/order/__${order.id}__/orderdocumentpackage/0/save}" class="btn green">Add New Document Package <i class="fa fa-plus"></i></a>
-																</div>
-															</div>
-														</div>
-													</div>
-													
 													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light"
-															id="entityLists">
+														<table class="table table table-scrollable">
 															<thead>
 																<tr>
-																	<th>Id</th>
-																	<th>Name</th>
-																	<th>View Details</th>
-																	<th>Edit</th>
-																	<th>Delete</th>
+																	<th th:text="#{label.orderDocumentPackage.table.id}">Id</th>
+																	<th th:text="#{label.orderDocumentPackage.table.name}">Name</th>
+																	<th th:text="#{label.orderDocumentPackage.table.view}">View Details</th>
+																	<th th:text="#{label.orderDocumentPackage.table.edit}">Edit</th>
+																	<th th:text="#{label.orderDocumentPackage.table.delete}">Delete</th>
 																</tr>
 															</thead>
 		
 															<tbody>
-																<statecheck th:if="${#lists.isEmpty(orderDocumentPackages)}">
-																<tr class="no-records-found" style="text-align: center;">
-																	<td colspan="5">No matching records found</td>
-																</tr>
-																</statecheck>
-																<state th:each="oDP : ${orderDocumentPackages}">
-																<tr class="clickable-row">
+
+																<tr th:each="oDP : ${orderDocumentPackages}">
 																	<td th:text="${oDP.id}">Id</td>
-																	<td th:text="${oDP.name}">AB0C1234</td>
+																	<td th:text="${oDP.name}">name</td>
 																	<td>
-																		<a th:href="@{/manage/order/__${order.id}__/orderdocumentpackage/__${oDP.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
+																		<a th:href="@{/manage/order/__${orderId}__/oDP/__${oDP.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
 																	</td>
 																	<td>
-																		<a th:href="@{/manage/order/__${order.id}__/orderdocumentpackage/__${oDP.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
+																		<a th:href="@{/manage/order/__${orderId}__/oDP/__${oDP.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
 																	</td>
 																	<td>
-																		<form th:action="@{/manage/order/__${order.id}__/orderdocumentpackage/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+																		<form th:action="@{/manage/order/__${orderId}__/oDP/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
 																			<input hidden="true" type="text" id="id" name="id" th:value="${oDP.id}" />
 																			<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
 																		</form>
 																	</td>
+
 																</tr>
-																</state>
 															</tbody>
 														</table>
 													</div>
@@ -287,75 +181,53 @@
 									<div class="row">
 										<div class="col-md-12">
 											<div class="portlet light portlet-fit">
-												<div class="portlet-title">
-													<div class="caption">
-														<i class="icon-settings font-green"></i> 
-														<span class="caption-subject font-green sbold uppercase">Order Terms</span>
-													</div>
-												</div>
 												<div class="portlet-body">
-													<div class="table-toolbar">
-														<div class="row">
-															<div class="col-md-6">
-																<div class="btn-group">
-																	<a th:href="@{/manage/order/__${order.id}__/orderterm/0/save}" class="btn green">Add New Order Term <i class="fa fa-plus"></i></a>
-																</div>
-															</div>
-														</div>
-													</div>
-													
 													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light"
-															id="entityLists">
+														<table class="table table-hover table-scrollable">
 															<thead>
 																<tr>
-																	<th>Id</th>
-																	<th>Description</th>
-																	<th>Fund</th>
-																	<th>Amount</th>
-																	<th>Currency</th>
-																	<th>Frequency quantity</th>
-																	<th>Frequency type</th>
-																	<th>Installment quantity</th>
-																	<th>Installment first day</th>
-																	<th>First installment date</th>
-																	<th>Last instalment date</th>
-																	<th>Min days disb first installment</th>
-																	<th>Max days disb first istallment</th>
-																	<th>Grace on principle payment installment</th>
-																	<th>Grace on principle payment days</th>
-																	<th>Grace on interest payment installment</th>
-																	<th>Grace on interest payment days</th>
-																	<th>Grace on interest acrr installment</th>
-																	<th>Grace on interest accr days</th>
-																	<th>Interest rate value</th>
-																	<th>Interest rate value per period</th>
-																	<th>Interest type</th>
-																	<th>Penalty on principle overdue rate value</th>
-																	<th>Penalty on principle overdue type</th>
-																	<th>Penalty on interest overdue rate value</th>
-																	<th>Penalty on interest overdue type</th>
-																	<th>Days in year method</th>
-																	<th>Days in month method</th>
-																	<th>Transaction order</th>
-																	<th>Interest accr method</th>
-																	<th>Early repayment allowed</th>
-																	<th>Penalty limit percent</th>
-																	<th>Collateral free</th>
-																	<th>View Details</th>
-																	<th>Edit</th>
-																	<th>Delete</th>
+																	<th th:text="#{label.orderTerm.table.id}">Id</th>
+																	<th th:text="#{label.orderTerm.table.descrition}">Description</th>
+																	<th th:text="#{label.orderTerm.table.fund}">Fund</th>
+																	<th th:text="#{label.orderTerm.table.amount}">Amount</th>
+																	<th th:text="#{label.orderTerm.table.currency}">Currency</th>
+																	<th th:text="#{label.orderTerm.table.frequencyQuantity}">Frequency quantity</th>
+																	<th th:text="#{label.orderTerm.table.frequencyType}">Frequency type</th>
+																	<th th:text="#{label.orderTerm.table.installmentQuantity}">Installment quantity</th>
+																	<th th:text="#{label.orderTerm.table.installmentFirstDay}">Installment first day</th>
+																	<th th:text="#{label.orderTerm.table.firstInstallmentDate}">First installment date</th>
+																	<th th:text="#{label.orderTerm.table.lastInstalmentdate}">Last instalment date</th>
+																	<th th:text="#{label.orderTerm.table.minDaysDisbFirstInstallment}">Min days disb first installment</th>
+																	<th th:text="#{label.orderTerm.table.maxDaysDisbFirstInstallment}">Max days disb first installment</th>
+																	<th th:text="#{label.orderTerm.table.graceOnPrinciplePaymentInstallment}">Grace on principle payment installment</th>
+																	<th th:text="#{label.orderTerm.table.graceOnPrinciplePaymentDays}">Grace on principle payment days</th>
+																	<th th:text="#{label.orderTerm.table.graceOnInterestPaymentInstallment}">Grace on interest payment installment</th>
+																	<th th:text="#{label.orderTerm.table.graceOnInterestPaymentDays}">Grace on interest payment days</th>
+																	<th th:text="#{label.orderTerm.table.graceOnInterestAcrrInstallment}">Grace on interest acrr installment</th>
+																	<th th:text="#{label.orderTerm.table.graceOnInterestAccrDays}">Grace on interest accr days</th>
+																	<th th:text="#{label.orderTerm.table.interestRateValue}">Interest rate value</th>
+																	<th th:text="#{label.orderTerm.table.interestRateValuePerPeriod}">Interest rate value per period</th>
+																	<th th:text="#{label.orderTerm.table.interestType}">Interest type</th>
+																	<th th:text="#{label.orderTerm.table.penaltyOnPrincipleOverdueRateValue}">Penalty on principle overdue rate value</th>
+																	<th th:text="#{label.orderTerm.table.penaltyOnPrincipleOverdueType}">Penalty on principle overdue type</th>
+																	<th th:text="#{label.orderTerm.table.penaltyOnInterestOverdueRateValue}">Penalty on interest overdue rate value</th>
+																	<th th:text="#{label.orderTerm.table.penaltyOnInterestOverdueType}">Penalty on interest overdue type</th>
+																	<th th:text="#{label.orderTerm.table.daysInYearMethod}">Days in year method</th>
+																	<th th:text="#{label.orderTerm.table.daysInMonthMethod}">Days in month method</th>
+																	<th th:text="#{label.orderTerm.table.transactionOrder}">Transaction order</th>
+																	<th th:text="#{label.orderTerm.table.interestAccrMethod}">Interest accr method</th>
+																	<th th:text="#{label.orderTerm.table.earlyRepaymentAllowed}">Early repayment allowed</th>
+																	<th th:text="#{label.orderTerm.table.penaltyLimitPercent}">Penalty limit percent</th>
+																	<th th:text="#{label.orderTerm.table.collateralFree}">Collateral free</th>
+																	<th th:text="#{label.orderTerm.table.view}">View Details</th>
+																	<th th:text="#{label.orderTerm.table.edit}">Edit</th>
+																	<th th:text="#{label.orderTerm.table.delete}">Delete</th>
 																</tr>
 															</thead>
-		
+
 															<tbody>
-																<statecheck th:if="${#lists.isEmpty(orderTerms)}">
-																<tr class="no-records-found" style="text-align: center;">
-																	<td colspan="36">No matching records found</td>
-																</tr>
-																</statecheck>
-																<state th:each="term : ${orderTerms}">
-																<tr class="clickable-row">
+
+																<tr th:each="term : ${orderTerms}">
 																	<td th:text="${term.id}">Id</td>
 																	<td th:text="${term.description}">Desc</td>
 																	<td th:text="${term.fund.name}">Fund</td>
@@ -390,19 +262,18 @@
 																	<td th:text="${term.penaltyLimitPercent}">100</td>
 																	<td th:text="${term.collateralFree}">True</td>
 																	<td>
-																		<a th:href="@{/manage/order/__${order.id}__/orderterm/__${term.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
+																		<a th:href="@{/manage/order/__${order.id}__/term/__${term.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
 																	</td>
 																	<td>
-																		<a th:href="@{/manage/order/__${order.id}__/orderterm/__${term.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
+																		<a th:href="@{/manage/order/__${order.id}__/term/__${term.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
 																	</td>
 																	<td>
-																		<form th:action="@{/manage/order/__${order.id}__/orderterm/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+																		<form th:action="@{/manage/order/__${order.id}__/term/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
 																			<input hidden="true" type="text" id="id" name="id" th:value="${term.id}" />
 																			<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
 																		</form>
 																	</td>
-																</tr>
-																</state>
+																<tr>
 															</tbody>
 														</table>
 													</div>
@@ -414,6 +285,7 @@
 								</div>
 							</div>
 						</div>
+                        </div>
 					</div>
 				</div>
 			</div>

@@ -4,7 +4,9 @@
 	<title th:text="#{label.debtor.page.title}"> Region List</title>
 
 	<div th:replace="fragments/header :: header-css" />
-
+	<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
+	<link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
+	<link th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}" rel="stylesheet" type="text/css" />
 	<style type="text/css">
 		table.KeyTable tr.focus {
 			outline: 3px solid #3366FF;
@@ -77,7 +79,7 @@
 											<td>
 												<a data-remote="false"
 												   data-toggle="modal"
-												   data-target="#regionFormModal"
+												   data-target="#saveModal"
 												   role="button"
 												   class="btn btn-xs blue-stripe"
 												   th:href="@{/manage/debtor/__${debtor.id}__/save}"
@@ -96,10 +98,37 @@
 
 									<table class="dataTable" id="orderTable2"></table>
 								</div>
-
+								<div class="col-md-12">
+									<!-- Default bootstrap modal example -->
+									<div class="modal fade" id="saveModal" tabindex="-1"
+										 role="dialog" aria-labelledby="myModalLabel"
+										 aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal"
+															aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+													<h4 class="modal-title" id="myModalLabel" th:text="#{label.debtor.modal.title}">Modal title</h4>
+												</div>
+												<div class="modal-body">...</div>
+												<div class="modal-footer"><!--
+													<button type="button" class="btn btn-default"
+														data-dismiss="modal" th:text="#{label.region.button.close}">Close</button>
+													<button type="button" class="btn btn-primary" th:text="#{label.region.button.save}">Save
+														changes</button>-->
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 								<div class="row">
 									<div class="col-md-4">
-										<a th:href="@{/manage/debtor/0/save}"
+										<a data-remote="false"
+										   data-toggle="modal"
+										   data-target="#saveModal"
+										   th:href="@{/manage/debtor/0/save}"
 										   role="button"
 										   class="btn btn-large btn-primary"
 										   th:text="#{label.debtor.button.addDebtor}">Add Debtor</a>
@@ -150,5 +179,29 @@
 	<div th:replace="fragments/footer :: footer-js" />
 
 	<script th:src="@{/js/app.js}" type="text/javascript"></script>
+	<script type="text/javascript">
+        $("#saveModal").on("show.bs.modal", function(e) {
+
+            var link = $(e.relatedTarget);
+
+
+            var regionID = $("#form_sample_2").val();
+
+            if(link.attr("href").indexOf('manage/debtor/0/save')>0)
+            {
+                //$(this).find(".modal-title").html(link.attr("href").replace("/district/add","/region/"+regionID+"/district/add"));
+                $(this).find(".modal-body").load(link.attr("href"));
+            }
+            else
+            {
+                //$(this).find(".modal-title").html(link.attr("href"));
+                $(this).find(".modal-body").load(link.attr("href"));
+            }
+        });
+
+
+
+
+	</script>
 </body>
 </html>
