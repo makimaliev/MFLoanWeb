@@ -22,37 +22,7 @@
 		<div class="page-content-wrapper">
 			<!-- BEGIN CONTENT BODY -->
 			<div class="page-content">
-				<!-- BEGIN PAGE HEADER-->
-				<h1 class="page-title">
-					Loan Details
-					<small>create, view, edit, delete credit term, write off, payment schedule, payment and supervisor plan </small>
-				</h1>
-				<div class="page-bar">
-					<ul class="page-breadcrumb">
-						<li><i class="icon-home"></i> <a th:href="@{/}">Home</a> <i class="fa fa-angle-right"></i></li>
-						<li><a th:href="@{/manage/debtor/list}">Debtors</a> <i class="fa fa-angle-right"></i></li>
-						<li><a th:href="@{/manage/debtor/__${debtorId}__/view}">Debtor</a> <i class="fa fa-angle-right"></i></li>
-						<li><span>Loan</span></li>
-					</ul>
-					<div class="page-toolbar">
-						<div class="btn-group pull-right">
-							<button type="button"
-								class="btn btn-fit-height grey-salt dropdown-toggle"
-								data-toggle="dropdown" data-hover="dropdown" data-delay="1000"
-								data-close-others="true">
-								Actions <i class="fa fa-angle-down"></i>
-							</button>
-							<ul class="dropdown-menu pull-right" role="menu">
-								<li><a href="#"> <i class="icon-bell"></i> Action </a></li>
-								<li><a href="#"> <i class="icon-shield"></i> Another action </a></li>
-								<li><a href="#"> <i class="icon-user"></i> Something else here </a></li>
-								<li class="divider"></li>
-								<li><a href="#"> <i class="icon-bag"></i> Separated link </a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-				<!-- END PAGE HEADER-->
+
 				<div class="row">
 					<div class="col-md-12">
 						<!-- BEGIN BORDERED TABLE PORTLET-->
@@ -67,40 +37,37 @@
 								<form class="form-horizontal" role="form">
 									<div class="form-body" style="padding: 20px">
 										<div class="row">
-											<div class="col-md-6">
+											<div class="col-md-3">
 												<div class="form-group">
-													<label class="control-label col-md-3">Id:</label>
-													<div class="col-md-9">
+													<label class="control-label col-md-6">Id:</label>
+													<div class="col-md-6">
 														<p class="form-control-static" th:text="${loan.id}">1</p>
 													</div>
 												</div>
 											</div>
 											<!--/span-->
-											<div class="col-md-6">
+											<div class="col-md-3">
 												<div class="form-group">
-													<label class="control-label col-md-3">Registration number:</label>
-													<div class="col-md-9">
+													<label class="control-label col-md-6">Registration number:</label>
+													<div class="col-md-6">
 														<p class="form-control-static" th:text="${loan.regNumber}">REG123</p>
 													</div>
 												</div>
 											</div>
 											<!--/span-->
-										</div>
-										<!--/row-->
-										<div class="row">
-											<div class="col-md-6">
+											<div class="col-md-3">
 												<div class="form-group">
-													<label class="control-label col-md-3">Registration date:</label>
-													<div class="col-md-9">
+													<label class="control-label col-md-6">Registration date:</label>
+													<div class="col-md-6">
 														<p class="form-control-static" th:text="${loan.regDate}">01.01.1970</p>
 													</div>
 												</div>
 											</div>
 											<!--/span-->
-											<div class="col-md-6">
+											<div class="col-md-3">
 												<div class="form-group">
-													<label class="control-label col-md-3">Amount:</label>
-													<div class="col-md-9">
+													<label class="control-label col-md-6">Amount:</label>
+													<div class="col-md-6">
 														<p class="form-control-static" th:text="${loan.amount}">1000.0</p>
 													</div>
 												</div>
@@ -109,40 +76,37 @@
 										</div>
 										<!--/row-->
 										<div class="row">
-											<div class="col-md-6">
+											<div class="col-md-3">
 												<div class="form-group">
-													<label class="control-label col-md-3">Currency:</label>
-													<div class="col-md-9">
+													<label class="control-label col-md-6">Currency:</label>
+													<div class="col-md-6">
 														<p class="form-control-static" th:text="${loan.currency.name}">RUB</p>
 													</div>
 												</div>
 											</div>
 											<!--/span-->
-											<div class="col-md-6">
+											<div class="col-md-3">
 												<div class="form-group">
-													<label class="control-label col-md-3">Type:</label>
-													<div class="col-md-9">
+													<label class="control-label col-md-6">Type:</label>
+													<div class="col-md-6">
 														<p class="form-control-static" th:text="${loan.loanType.name}">Type 1</p>
 													</div>
 												</div>
 											</div>
 											<!--/span-->
-										</div>
-										<!--/row-->
-										<div class="row">
-											<div class="col-md-6">
+											<div class="col-md-3">
 												<div class="form-group">
-													<label class="control-label col-md-3">State:</label>
-													<div class="col-md-9">
+													<label class="control-label col-md-6">State:</label>
+													<div class="col-md-6">
 														<p class="form-control-static" th:text="${loan.loanState.name}">RUB</p>
 													</div>
 												</div>
 											</div>
 											<!--/span-->
-											<div class="col-md-6">
+											<div class="col-md-3">
 												<div class="form-group">
-													<label class="control-label col-md-3">Supervisor id:</label>
-													<div class="col-md-9">
+													<label class="control-label col-md-6">Supervisor id:</label>
+													<div class="col-md-6">
 														<p class="form-control-static" th:text="${loan.supervisorId}">Type 1</p>
 													</div>
 												</div>
@@ -151,31 +115,28 @@
 										</div>
 										<!--/row-->
 										<div class="row">
-											<div class="col-md-6">
+											<div class="col-md-3">
 												<div class="form-group">
-													<label class="control-label col-md-3">Has sub loan:</label>
-													<div class="col-md-9">
+													<label class="control-label col-md-6">Has sub loan:</label>
+													<div class="col-md-6">
 														<p class="form-control-static" th:text="${loan.hasSubLoan}">true</p>
 													</div>
 												</div>
 											</div>
 											<!--/span-->
-											<div class="col-md-6">
+											<div class="col-md-3">
 												<div class="form-group">
-													<label class="control-label col-md-3">Parent loan id:</label>
-													<div class="col-md-9">
+													<label class="control-label col-md-6">Parent loan id:</label>
+													<div class="col-md-6">
 														<p class="form-control-static" th:text="${loan.parentLoan!=null} ? ${loan.parentLoan.id} : 'null'">1</p>
 													</div>
 												</div>
 											</div>
 											<!--/span-->
-										</div>
-										<!--/row-->
-										<div class="row">
-											<div class="col-md-6">
+											<div class="col-md-3">
 												<div class="form-group">
-													<label class="control-label col-md-3">Credit order id::</label>
-													<div class="col-md-9">
+													<label class="control-label col-md-6">Credit order id::</label>
+													<div class="col-md-6">
 														<p class="form-control-static" th:text="${loan.creditOrder.Id}">1</p>
 													</div>
 												</div>
@@ -277,7 +238,7 @@
 																		</td>
 																		 -->
 																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/term/__${term.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
+																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/term/__${term.id}__/save}" class="btn btn-outline btn-circle btn-sm green">Edit</a>
 																		</td>
 																		<td>
 																			<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/term/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">

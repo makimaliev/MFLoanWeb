@@ -29,62 +29,72 @@
 			<div class="page-content">
 
 				<!-- BEGIN BORDERED TABLE PORTLET-->
-				<div class="portlet portlet-fit ">
-					<div class="portlet-body">
-						<table class="table table-scrollable table-hover table-condensed table-striped table-bordered compact condensed">
-							<thead>
-							<tr>
-								<th th:text="#{label.region.table.id}">Id</th>
-								<th th:text="#{label.debtor.table.name}">Name</th>
-								<th th:text="#{label.debtor.table.type}">Type</th>
-								<th th:text="#{label.debtor.table.workSector}">Work sector</th>
-								<th th:text="#{label.debtor.table.orgForm}">Organization form</th>
-								<th th:text="#{label.debtor.table.view}">View</th>
-								<th th:text="#{label.debtor.table.edit}">Edit</th>
-								<th th:text="#{label.debtor.table.delete}">Delete</th>
-							</tr>
-							</thead>
-							<tbody>
-							<tr>
-								<td th:text="${debtor.id}">Id</td>
-								<td th:text="${debtor.name}">Name</td>
-								<td th:text="${debtor.debtorType.name}">Type</td>
-								<td th:text="${debtor.workSector.name}">Work sector</td>
-								<td th:text="${debtor.orgForm.name}">Organization form</td>
+				<div class="portlet light portlet-fit">
 
-								<td><a th:href="@{/manage/debtor/__${debtor.id}__/view}"
-									   role="button" class="btn btn-xs green-stripe" th:text="#{label.debtor.button.view}"> View </a></td>
-								<td>
-									<a th:href="@{/manage/debtor/__${debtor.id}__/save}"
-									   class="btn btn-xs blue-stripe" th:text="#{label.debtor.button.edit}"> Edit </a></td>
-								<td>
-									<form th:action="@{/manage/debtor/delete}" method="post">
-										<button type="submit"
-												class="btn btn-xs red-stripe"
-												th:text="#{label.debtor.button.delete}">Delete</button>
-									</form>
-								</td>
-							</tr>
-							</tbody>
-						</table>
-
-						<div class="row">
-							<div class="col-md-12">
-								<a th:href="@{/manage/debtor/__${debtorId}__/loan/0/save}"
-								   role="button"
-								   class="btn btn-large btn-primary"
-								   th:text="#{label.debtor.button.addLoan}">Add New Loan</a>
-								<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/0/save}"
-								   role="button"
-								   class="btn btn-large btn-primary"
-								   th:text="#{label.debtor.button.addAgreement}">Add New Collateral Agreement</a>
-								<a th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/0/save}"
-								   role="button"
-								   class="btn btn-large btn-primary"
-								   th:text="#{label.debtor.button.addProcedure}">Add New Collection Procedure</a>
-							</div>
+					<div class="portlet-title">
+						<div class="caption">
+							<i class="icon-settings font-green"></i>
+							<span class="caption-subject font-green sbold uppercase" th:text="'Debtor : '+${debtor.name}">Debtor name</span>
 						</div>
 					</div>
+					<div class="portlet-body form">
+						<form class="form-horizontal" role="form">
+							<div class="form-body" style="padding: 10px 15px">
+								<div class="row">
+									<div class="col-md-4">
+										<div class="form-group">
+											<label class="control-label col-md-3">Id:</label>
+											<div class="col-md-9">
+												<p class="form-control-static" th:text="${debtor.id}">1</p>
+											</div>
+										</div>
+									</div>
+									<!--/span-->
+									<div class="col-md-4">
+										<div class="form-group">
+											<label class="control-label col-md-3">Debtor name:</label>
+											<div class="col-md-9">
+												<p class="form-control-static" th:text="${debtor.name}">Debtor 1</p>
+											</div>
+										</div>
+									</div>
+									<!--/span-->
+									<div class="col-md-4">
+										<div class="form-group">
+											<label class="control-label col-md-3">Type:</label>
+											<div class="col-md-9">
+												<p class="form-control-static" th:text="${debtor.debtorType.name}">Type 1</p>
+											</div>
+										</div>
+									</div>
+									<!--/span-->
+								</div>
+								<!--/row-->
+								<div class="row">
+									<div class="col-md-4">
+										<div class="form-group">
+											<label class="control-label col-md-3">Org.form:</label>
+											<div class="col-md-9">
+												<p class="form-control-static" th:text="${debtor.orgForm.name}">Org form</p>
+											</div>
+										</div>
+									</div>
+									<!--/span-->
+									<div class="col-md-4">
+										<div class="form-group">
+											<label class="control-label col-md-3">Work sector:</label>
+											<div class="col-md-9">
+												<p class="form-control-static" th:text="${debtor.workSector.name}">Work sector</p>
+											</div>
+										</div>
+									</div>
+									<!--/span-->
+								</div>
+								<!--/row-->
+							</div>
+						</form>
+					</div>
+
 				</div>
 				<!-- END BORDERED TABLE PORTLET-->
 
@@ -94,7 +104,7 @@
 						<input hidden="true" type="text" id="debtor_id" name="debtor_id" th:value="${debtor.id}" />
 
 						<div id="content">
-							<div class="tabbable-custom ">
+							<div class="tabbable-line boxless tabbable-reversed">
 								<ul class="nav nav-tabs " id="debtor_tabs">
 									<li class="active">
 										<a href="#loanListOfDebtor" data-toggle="tab" th:text="#{label.loans}">Loans</a>
@@ -111,181 +121,233 @@
 
 									<div class="tab-pane active" id="loanListOfDebtor">
 
+										<div class="row">
+											<div class="col-md-12">
+												<div class="portlet light portlet-fit">
+													<div class="portlet-body">
+														<div class="table-toolbar">
+															<div class="row">
+																<div class="col-md-6">
+																	<div class="btn-group">
+																		<a
+																			th:href="@{/manage/debtor/__${debtorId}__/loan/0/save}"
+																			class="btn green"
+																			th:text="#{label.debtor.button.addLoan}">Add New Loan<i class="fa fa-plus"></i></a>
+																	</div>
+																</div>
+															</div>
+														</div>
 
-										<table
-												class="table table-hover table-scrollable">
-											<thead>
-												<tr>
-													<th th:text="#{label.loan.table.id}">Id</th>
-													<th th:text="#{label.loan.table.regNumber}">Registration number</th>
-													<th th:text="#{label.loan.table.regDate}">Registration date</th>
-													<th th:text="#{label.loan.table.amount}">Amount</th>
-													<th th:text="#{label.loan.table.currency}">Currency</th>
-													<th th:text="#{label.loan.table.type}">Loan type</th>
-													<th th:text="#{label.loan.table.state}">Loan state</th>
-													<th th:text="#{label.loan.table.superId}">Supervisor id</th>
-													<th th:text="#{label.loan.table.hasSubLoan}">Has sub loan</th>
-													<th th:text="#{label.loan.table.parentId}">Parent loan id</th>
-													<th th:text="#{label.loan.table.creditOrderId}">Credit order id</th>
-													<th th:text="#{label.loan.table.view}">View Details</th>
-													<th th:text="#{label.loan.table.edit}">Edit</th>
-													<th th:text="#{label.loan.table.delete}">Delete</th>
-												</tr>
-											</thead>
+														<div class="table-scrollable table-scrollable-borderless">
+															<table class="table table-hover table-light">
+																<thead>
+																	<tr>
+																		<th th:text="#{label.loan.table.id}">Id</th>
+																		<th th:text="#{label.loan.table.regNumber}">Registration number</th>
+																		<th th:text="#{label.loan.table.regDate}">Registration date</th>
+																		<th th:text="#{label.loan.table.amount}">Amount</th>
+																		<th th:text="#{label.loan.table.currency}">Currency</th>
+																		<th th:text="#{label.loan.table.type}">Loan type</th>
+																		<th th:text="#{label.loan.table.state}">Loan state</th>
+																		<th th:text="#{label.loan.table.superId}">Supervisor id</th>
+																		<th th:text="#{label.loan.table.hasSubLoan}">Has sub loan</th>
+																		<th th:text="#{label.loan.table.parentId}">Parent loan id</th>
+																		<th th:text="#{label.loan.table.creditOrderId}">Credit order id</th>
+																		<th th:text="#{label.loan.table.view}">View Details</th>
+																		<th th:text="#{label.loan.table.edit}">Edit</th>
+																		<th th:text="#{label.loan.table.delete}">Delete</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr th:each="loan : ${loans}">
+																		<td th:text="${loan.id}">Id</td>
+																		<td th:text="${loan.regNumber}">REG123</td>
+																		<td th:text="${loan.regDate}">01.01.1970</td>
+																		<td th:text="${loan.amount}">1000.00</td>
+																		<td th:text="${loan.currency.name}">RUB</td>
+																		<td th:text="${loan.loanType.name}">Type 1</td>
+																		<td th:text="${loan.loanState.name}">State 1</td>
+																		<td th:text="${loan.supervisorId}">1</td>
+																		<td th:text="${loan.hasSubLoan}">true</td>
+																		<td th:text="${loan.parentLoan!=null} ? ${loan.parentLoan.id} : 'null'">0</td>
+																		<td th:text="${loan.creditOrder.id}">1</td>
+																		<td>
+																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/view}"
+																			   role="button" class="btn btn-outline btn-circle btn-sm blue"
+																			   th:text="#{label.loan.button.view}"> View </a>
+																		</td>
+																		<td>
+																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/save}"
+																			   role="button" class="btn btn-outline btn-circle btn-sm green"
+																			   th:text="#{label.loan.button.edit}"> Edit </a>
+																		</td>
+																		<td>
+																			<form th:action="@{/manage/debtor/__${debtorId}__/loan/delete}" method="post">
+																				<button type="submit" class="btn btn-outline btn-circle dark btn-sm red" th:text="#{label.loan.button.delete}">Delete</button>
+																			</form>
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
 
-											<tbody>
-												<tr th:each="loan : ${loans}">
-													<td th:text="${loan.id}">Id</td>
-													<td th:text="${loan.regNumber}">REG123</td>
-													<td th:text="${loan.regDate}">01.01.1970</td>
-													<td th:text="${loan.amount}">1000.00</td>
-													<td th:text="${loan.currency.name}">RUB</td>
-													<td th:text="${loan.loanType.name}">Type 1</td>
-													<td th:text="${loan.loanState.name}">State 1</td>
-													<td th:text="${loan.supervisorId}">1</td>
-													<td th:text="${loan.hasSubLoan}">true</td>
-													<td th:text="${loan.parentLoan!=null} ? ${loan.parentLoan.id} : 'null'">0</td>
-													<td th:text="${loan.creditOrder.id}">1</td>
-													<td>
-														<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/view}"
-														   role="button" class="btn btn-xs green-stripe"> View </a>
-													</td>
-													<td>
-														<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/save}"
-														   role="button" class="btn btn-xs blue-stripe"> Edit </a>
-													</td>
-													<td>
-														<form th:action="@{/manage/debtor/__${debtorId}__/loan/delete}" method="post">
-															<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-														</form>
-													</td>
-												</tr>
-											</tbody>
-
-										</table>
 									</div>
 
-									<div class="tab-pane active" id="agreementListOfDebtor">
+									<div class="tab-pane" id="agreementListOfDebtor">
 
+										<div class="row">
+											<div class="col-md-12">
+												<div class="portlet light portlet-fit">
+													<div class="portlet-body">
+														<div class="table-toolbar">
+															<div class="row">
+																<div class="col-md-6">
+																	<div class="btn-group">
+																		<a
+																				th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/0/save}"
+																				class="btn green"
+																				th:text="#{label.debtor.button.addAgreement}">Add New Collateral Agreement<i class="fa fa-plus"></i></a>
+																	</div>
+																</div>
+															</div>
+														</div>
 
-										<table
-												class="table table-hover table-scrollable">
-											<thead>
-											<tr>
-												<th th:text="#{label.agreement.table.id}">Id</th>
-												<th th:text="#{label.agreement.table.number}">Agreement number</th>
-												<th th:text="#{label.agreement.table.date}">Agreement date</th>
-												<th th:text="#{label.agreement.table.collRegNumber}">Collateral office reg num</th>
-												<th th:text="#{label.agreement.table.collRegDate}">Collateral office reg date</th>
-												<th th:text="#{label.agreement.table.notaryRegNumber}">Notary office reg number</th>
-												<th th:text="#{label.agreement.table.notaryRegDate}">Notary office reg date</th>
-												<th th:text="#{label.agreement.table.arrestRegNumber}">Arrest reg number</th>
-												<th th:text="#{label.agreement.table.arrestRegDate}">Arrest reg date</th>
-												<th th:text="#{label.agreement.table.view}">View Details</th>
-												<th th:text="#{label.agreement.table.edit}">Edit</th>
-												<th th:text="#{label.agreement.table.delete}">Delete</th>
-											</tr>
-											</thead>
+														<div class="table-scrollable table-scrollable-borderless">
+															<table class="table table-hover table-light">
+																<thead>
+																<tr>
+																	<th th:text="#{label.agreement.table.id}">Id</th>
+																	<th th:text="#{label.agreement.table.number}">Agreement number</th>
+																	<th th:text="#{label.agreement.table.date}">Agreement date</th>
+																	<th th:text="#{label.agreement.table.collRegNumber}">Collateral office reg num</th>
+																	<th th:text="#{label.agreement.table.collRegDate}">Collateral office reg date</th>
+																	<th th:text="#{label.agreement.table.notaryRegNumber}">Notary office reg number</th>
+																	<th th:text="#{label.agreement.table.notaryRegDate}">Notary office reg date</th>
+																	<th th:text="#{label.agreement.table.arrestRegNumber}">Arrest reg number</th>
+																	<th th:text="#{label.agreement.table.arrestRegDate}">Arrest reg date</th>
+																	<th th:text="#{label.agreement.table.view}">View Details</th>
+																	<th th:text="#{label.agreement.table.edit}">Edit</th>
+																	<th th:text="#{label.agreement.table.delete}">Delete</th>
+																</tr>
+																</thead>
 
-											<tbody>
-											<tr th:each="agreement : ${agreements}">
-												<td th:text="${agreement.id}">Id</td>
-												<td th:text="${agreement.agreementNumber}">AB0C1234</td>
-												<td th:text="${agreement.agreementDate}"></td>
-												<td th:text="${agreement.collateralOfficeRegNumber}">Id</td>
-												<td th:text="${agreement.collateralOfficeRegDate}">Id</td>
-												<td th:text="${agreement.notaryOfficeRegNumber}">Id</td>
-												<td th:text="${agreement.notaryOfficeRegDate}">Id</td>
-												<td th:text="${agreement.arrestRegNumber}">Id</td>
-												<td th:text="${agreement.arrestRegDate}">Id</td>
-												<td>
-													<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreement.id}__/view}"
-													   role="button" class="btn btn-xs green-stripe"> View </a>
-												</td>
-												<td>
-													<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreement.id}__/save}"
-													   role="button" class="btn btn-xs blue-stripe"> Edit </a>
-												</td>
-												<td>
-													<form th:action="@{/manage/debtor/__${debtorId}__/collateralagreement/delete}" method="post">
-														<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-													</form>
-												</td>
-											</tr>
-											</tbody>
+																<tbody>
+																<tr th:each="agreement : ${agreements}">
+																	<td th:text="${agreement.id}">Id</td>
+																	<td th:text="${agreement.agreementNumber}">AB0C1234</td>
+																	<td th:text="${agreement.agreementDate}"></td>
+																	<td th:text="${agreement.collateralOfficeRegNumber}">Id</td>
+																	<td th:text="${agreement.collateralOfficeRegDate}">Id</td>
+																	<td th:text="${agreement.notaryOfficeRegNumber}">Id</td>
+																	<td th:text="${agreement.notaryOfficeRegDate}">Id</td>
+																	<td th:text="${agreement.arrestRegNumber}">Id</td>
+																	<td th:text="${agreement.arrestRegDate}">Id</td>
+																	<td>
+																		<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreement.id}__/view}"
+																		   role="button" class="btn btn-xs green-stripe"
+																		   th:text="#{label.agreement.button.view}"> View </a>
+																	</td>
+																	<td>
+																		<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreement.id}__/save}"
+																		   role="button" class="btn btn-xs blue-stripe"
+																		   th:text="#{label.agreement.button.edit}"> Edit </a>
+																	</td>
+																	<td>
+																		<form th:action="@{/manage/debtor/__${debtorId}__/collateralagreement/delete}" method="post">
+																			<button type="submit"
+																					class="btn btn-xs red-stripe"
+																					th:text="#{label.agreement.button.delete}">Delete</button>
+																		</form>
+																	</td>
+																</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
 
-										</table>
 									</div>
 
-									<div class="tab-pane active" id="procedureListOfDebtor">
+									<div class="tab-pane" id="procedureListOfDebtor">
+
+										<div class="row">
+											<div class="col-md-12">
+												<div class="portlet light portlet-fit">
+													<div class="portlet-body">
+														<div class="table-toolbar">
+															<div class="row">
+																<div class="col-md-6">
+																	<div class="btn-group">
+																		<a
+																				th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/0/save}"
+																				class="btn green"
+																				th:text="#{label.debtor.button.addProcedure}">Add New Collection Procedure<i class="fa fa-plus"></i></a>
+																	</div>
+																</div>
+															</div>
+														</div>
+
+														<div class="table-scrollable table-scrollable-borderless">
+															<table class="table table-hover table-light">
+																<thead>
+																<tr>
+																	<th class="table-id" th:text="#{label.procedure.table.id}">Id</th>
+																	<th th:text="#{label.procedure.table.startDate}">Start Date</th>
+																	<th th:text="#{label.procedure.table.closeDate}">Close Date</th>
+																	<th th:text="#{label.procedure.table.lastPhase}">Last Phase</th>
+																	<th th:text="#{label.procedure.table.lastStatusId}">Last Status Id</th>
+																	<th th:text="#{label.procedure.table.status}">Procedure Status</th>
+																	<th th:text="#{label.procedure.table.type}">Procedure Type</th>
+																	<th th:text="#{label.procedure.table.view}">View Details</th>
+																	<th th:text="#{label.procedure.table.edit}">Edit</th>
+																	<th th:text="#{label.procedure.table.delete}">Delete</th>
+																</tr>
+																</thead>
 
 
-										<table
-												class="table table-hover table-scrollable">
-											<thead>
-											<tr>
-												<th th:text="#{label.procedure.table.id}">Id</th>
-												<th th:text="#{label.procedure.table.startDate}">Start Date</th>
-												<th th:text="#{label.procedure.table.closeDate}">Close Date</th>
-												<th th:text="#{label.procedure.table.lastPhase}">Last Phase</th>
-												<th th:text="#{label.procedure.table.lastStatusId}">Last Status Id</th>
-												<th th:text="#{label.procedure.table.status}">Procedure Status</th>
-												<th th:text="#{label.procedure.table.type}">Procedure Type</th>
-												<th th:text="#{label.procedure.table.view}">View Details</th>
-												<th th:text="#{label.procedure.table.edit}">Edit</th>
-												<th th:text="#{label.procedure.table.delete}">Delete</th>
-											</tr>
-											</thead>
 
-											<tbody>
-											<tr th:each="proc : ${procs}">
-												<td th:text="${proc.id}">Id</td>
-												<td th:text="${proc.startDate}">AB0C1234</td>
-												<td th:text="${proc.closeDate}"></td>
-												<td th:text="${proc.lastPhase}">Id</td>
-												<td th:text="${proc.lastStatusId}">Id</td>
-												<td th:text="${proc.procedureStatus.name}">Id</td>
-												<td th:text="${proc.procedureType.name}">Id</td>
-												<td>
-													<a th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${proc.id}__/view}"
-													   role="button" class="btn btn-xs green-stripe"> View </a>
-												</td>
-												<td>
-													<a th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${proc.id}__/save}"
-													   role="button" class="btn btn-xs blue-stripe"> Edit </a>
-												</td>
-												<td>
-													<form th:action="@{/manage/debtor/__${debtorId}__/collectionprocedure/delete}" method="post">
-														<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-													</form>
-												</td>
+																<tbody>
 
-												<td th:text="${agreement.id}">Id</td>
-												<td th:text="${agreement.agreementNumber}">AB0C1234</td>
-												<td th:text="${agreement.agreementDate}"></td>
-												<td th:text="${agreement.collateralOfficeRegNumber}">Id</td>
-												<td th:text="${agreement.collateralOfficeRegDate}">Id</td>
-												<td th:text="${agreement.notaryOfficeRegNumber}">Id</td>
-												<td th:text="${agreement.notaryOfficeRegDate}">Id</td>
-												<td th:text="${agreement.arrestRegNumber}">Id</td>
-												<td th:text="${agreement.arrestRegDate}">Id</td>
-												<td>
-													<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreement.id}__/view}"
-													   role="button" class="btn btn-xs green-stripe"> View </a>
-												</td>
-												<td>
-													<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreement.id}__/save}"
-													   role="button" class="btn btn-xs blue-stripe"> Edit </a>
-												</td>
-												<td>
-													<form th:action="@{/manage/debtor/__${debtorId}__/collateralagreement/delete}" method="post">
-														<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-													</form>
-												</td>
-											</tr>
-											</tbody>
+																<tr th:each="proc : ${procs}">
+																	<td class="table-id" th:text="${proc.id}">Id</td>
+																	<td th:text="${proc.startDate}">AB0C1234</td>
+																	<td th:text="${proc.closeDate}"></td>
+																	<td th:text="${proc.lastPhase}">Id</td>
+																	<td th:text="${proc.lastStatusId}">Id</td>
+																	<td th:text="${proc.procedureStatus.name}">Id</td>
+																	<td th:text="${proc.procedureType.name}">Id</td>
+																	<td>
+																		<a th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${proc.id}__/view}"
+																		   role="button" class="btn btn-xs green-stripe"
+																		   th:text="#{label.procedure.button.view}"> View </a>
+																	</td>
+																	<td>
+																		<a th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${proc.id}__/save}"
+																		   role="button" class="btn btn-xs blue-stripe"
+																		   th:text="#{label.procedure.button.edit}"> Edit </a>
+																	</td>
+																	<td>
+																		<form th:action="@{/manage/debtor/__${debtorId}__/collectionprocedure/delete}" method="post">
+																			<button type="submit"
+																					class="btn btn-xs red-stripe"
+																					th:text="#{label.procedure.button.delete}">Delete</button>
+																		</form>
+																	</td>
+																</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
 
-										</table>
 									</div>
 
 								</div>
