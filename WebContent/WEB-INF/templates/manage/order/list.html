@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <head>
 <title>MFLoan | Credit Orders</title>
 <div th:replace="fragments/header :: header-css" />
@@ -21,66 +22,36 @@
 		<div class="page-content-wrapper">
 			<!-- BEGIN CONTENT BODY -->
 			<div class="page-content">
-				<!-- BEGIN PAGE HEADER-->
-				<h1 class="page-title">
-					Credit Orders 
-					<small>create, view, edit, delete credit orders and their types, states </small>
-				</h1>
-				<div class="page-bar">
-					<ul class="page-breadcrumb">
-						<li><i class="icon-home"></i> <a th:href="@{/}">Home</a> <i class="fa fa-angle-right"></i></li>
-						<li><span>Credit Orders</span></li>
-					</ul>
-					<div class="page-toolbar">
-						<div class="btn-group pull-right">
-							<button type="button" class="btn btn-fit-height grey-salt dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
-								Actions <i class="fa fa-angle-down"></i>
-							</button>
-							<ul class="dropdown-menu pull-right" role="menu">
-								<li><a href="#"> <i class="icon-bell"></i> Action </a></li>
-								<li><a href="#"> <i class="icon-shield"></i> Another action </a></li>
-								<li><a href="#"> <i class="icon-user"></i> Something else here </a></li>
-								<li class="divider"></li>
-								<li><a href="#"> <i class="icon-bag"></i> Separated link </a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-				<!-- END PAGE HEADER-->
-
 				<div class="row">
 					<div class="col-md-12">
 						<!-- BEGIN BORDERED TABLE PORTLET-->
+                        <div class="table-toolbar">
+                            <div class="row">
+                                <div class="form-group col-md-4 page-size-group">
+                                    <span>Показать</span>
+                                    <select class="form-control page-size-select" id="pageSizeSelect">
+                                        <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}" th:value="${pageSize}"
+                                                th:selected="${pageSize} == ${selectedPageSize}"></option>
+                                    </select>
+                                    <span>записей</span>
+                                </div>
+                            </div>
+                        </div>
 						<div class="portlet light portlet-fit ">
-							<div class="portlet-title">
-								<div class="caption">
-									<i class="icon-settings font-green"></i> 
-									<span class="caption-subject font-green sbold uppercase">Credit Orders</span>
-								</div>
-							</div>
 							<div class="portlet-body">
-								<div class="table-toolbar">
-									<div class="row">
-										<div class="col-md-6">
-											<div class="btn-group">
-												<a th:href="@{/manage/order/0/save}" class="btn green">Add New Credit Order <i class="fa fa-plus"></i></a>
-											</div>
-										</div>
-									</div>
-								</div>
 								<div class="table-scrollable table-scrollable-borderless">
-									<table class="table table-hover table-light" id="orders">
+									<table class="table compact" id="orders">
 										<thead>
 											<tr>
-												<th>Id</th>
-												<th>Registration number</th>
-												<th>Registration date</th>
-												<th>Description</th>
-												<th>Credit Order State</th>
-												<th>Credit Order Type</th>
-												<th>View Details</th>
-												<th>Edit</th>
-												<th>Delete</th>
+												<th>label.order.table.id</th>
+												<th>label.order.table.regNum</th>
+												<th>label.order.table.regDate</th>
+												<th>label.order.table.description</th>
+												<th>label.order.table.creditOrderState</th>
+												<th>label.order.table.creditOrderType</th>
+												<th>label.order.table.viewDetails</th>
+												<th>label.order.table.edit</th>
+												<th>label.order.table.delete</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -98,15 +69,15 @@
 													<td th:text="${o.creditOrderState.name}">Active</td>
 													<td th:text="${o.creditOrderType.name}">RPKR</td>
 													<td>
-														<a th:href="@{/manage/order/__${o.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
+														<a th:href="@{/manage/order/__${o.id}__/view}" class="btn btn-xs green-stripe">View Details</a>
 													</td>
 													<td>
-														<a th:href="@{/manage/order/__${o.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
+														<a th:href="@{/manage/order/__${o.id}__/save}" class="btn btn-xs blue-stripe">Edit</a>
 													</td>
 													<td>
 														<form th:action="@{/manage/order/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
 															<input hidden="true" type="text" id="id" name="id" th:value="${o.id}" />
-															<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
+															<button type="submit" class="btn btn-xs red-stripe" style="color: black">Delete</button>
 														</form>
 													</td>
 												</tr>
@@ -119,15 +90,44 @@
 						<!-- END BORDERED TABLE PORTLET-->
 					</div>
 				</div>
-
-				<div class="row">
-					<div class="form-group col-md-1">
-						<select class="form-control pagination" id="pageSizeSelect">
-							<option th:each="pageSize : ${pageSizes}" th:text="${pageSize}" th:value="${pageSize}"
-									th:selected="${pageSize} == ${selectedPageSize}"></option>
-						</select>
+				<div class="col-md-12">
+					<!-- Default bootstrap modal example -->
+					<div class="modal fade" id="saveModal" tabindex="-1"
+						 role="dialog" aria-labelledby="myModalLabel"
+						 aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+									<h4 class="modal-title" id="myModalLabel" th:text="#{label.order.modal.title}">Modal title</h4>
+								</div>
+								<div class="modal-body">
+								</div>
+								<div class="modal-footer"><!--
+													<button type="button" class="btn btn-default"
+														data-dismiss="modal" th:text="#{label.region.button.close}">Close</button>
+													<button type="button" class="btn btn-primary" th:text="#{label.region.button.save}">Save
+														changes</button>-->
+								</div>
+							</div>
+						</div>
 					</div>
-					<div th:if="${count != 1}" class="form-group col-md-11 pagination-centered">
+				</div>
+				<div class="row" >
+                    <div class="col-md-4">
+						<a data-remote="false"
+						   id="asa"
+						   data-toggle="modal"
+						   data-target="#saveModal"
+						   th:href="@{/manage/order/0/save}"
+						   role="button"
+						   class="btn btn-large btn-primary"
+						   th:text="#{label.order.button.addNewCreditOrder}">Add New Credit Order</a>
+                    </div>
+					<div th:if="${count != 1}" class="form-group col-md-6 pull-right" >
 						<ul class="pagination">
 							<li th:class="${current == 0} ? disabled">
 								<a class="pageLink" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=1)}">&laquo;</a>
@@ -161,5 +161,30 @@
 	<div th:replace="layout :: footer" />
 	<div th:replace="fragments/footer :: footer-js" />
 	<script th:src="@{/js/app.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/moment.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/pages/scripts/components-date-time-pickers.min.js}" type="text/javascript"></script>
+	<script type="text/javascript">
+        $("#saveModal").on("show.bs.modal", function(e) {
+
+            var link = $(e.relatedTarget);
+
+
+            var regionID = $("#saveModal").val();
+
+            if(link.attr("href").indexOf('manage/order/0/saveForm')>0)
+            {
+                //$(this).find(".modal-title").html(link.attr("href").replace("/district/add","/region/"+regionID+"/district/add"));
+                $(this).find(".modal-body").load(link.attr("href"));
+            }
+            else
+            {
+                //$(this).find(".modal-title").html(link.attr("href"));
+                $(this).find(".modal-body").load(link.attr("href"));
+            }
+        });
+	</script>
 </body>
 </html>

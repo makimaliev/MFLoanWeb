@@ -151,6 +151,32 @@ public class DebtorController {
         return "/manage/debtor/list";
     }
 
+	@RequestMapping(value = { "/manage/debtor/search" }, method = RequestMethod.GET)
+	public String searchDebtors(@RequestParam("q") String q, @RequestParam("pageSize") Optional<Integer> pageSize, @RequestParam("page") Optional<Integer> page, ModelMap model) {
+
+		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
+		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
+
+		List<String> fields = new ArrayList<>();
+		fields.add("name");
+
+		List<Debtor> debtors = debtorService.search(q, fields, "id", evalPage*evalPageSize, evalPageSize);
+		int count = debtorService.searchCount();
+
+		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
+
+		model.addAttribute("debtor", new Debtor());
+		model.addAttribute("count", count/evalPageSize+1);
+		model.addAttribute("debtors", debtors);
+		model.addAttribute("selectedPageSize", evalPageSize);
+		model.addAttribute("pageSizes", PAGE_SIZES);
+		model.addAttribute("pager", pager);
+		model.addAttribute("current", evalPage);
+
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
+		return "/manage/debtor/list";
+	}
+
 	@RequestMapping(value="/manage/debtor/{debtorId}/save", method=RequestMethod.GET)
 	public String formDebtor(Model model, @PathVariable("debtorId")Long debtorId)
 	{

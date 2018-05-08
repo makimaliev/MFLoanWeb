@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <head>
 <title>MFLoan | Credit Orders</title>
 <div th:replace="fragments/header :: header-css" />
@@ -59,89 +60,89 @@
 									<span class="caption-subject font-green sbold uppercase">Save Credit Order</span>
 								</div>
 							</div>
-							
-							<form th:action="@{/manage/order/save}" id="formCreditOrder" class="form-horizontal" method="post">
+
+							<form th:action="@{/manage/order/0/save}" id="saveModal" class="form-horizontal" method="post">
 								<div class="portlet-body">
-	                                      <div class="form-body">
-	                                          <div class="alert alert-danger display-hide">
-	                                              <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
-	                                          </div>
-	                                          <!-- ********************************************************************************************* -->
-	                                          <div class="form-group  margin-top-20">
-	                                              <label class="control-label col-md-3">Registration Number
-	                                                  <span class="required"> * </span>
-	                                              </label>
-	                                              <div class="col-md-4">
-	                                              	<input hidden="true" type="text" id="id" name="id" th:value="${creditOrder.id}"/>
-	                                                  <div class="input-icon right">
-	                                                      <i class="fa"></i>
-	                                                      <input type="text" class="form-control" name="regNumber" th:value="${creditOrder.regNumber}"/> 
-	                                                  </div>
-	                                              </div>
-	                                          </div>
-	                                          
-	                                          <!-- ********************************************************************************************* -->
-	                                          <div class="form-group">
-                                              	<label class="control-label col-md-3">Registration Date</label>
-                                              	<div class="col-md-4">
-                                                	<div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
-	                                                    <input type="text" class="form-control" name="regDate" th:value="${creditOrder.regDate}"/>
-	                                                    <span class="input-group-btn">
+									<div class="form-body">
+										<div class="alert alert-danger display-hide">
+											<button class="close" data-close="alert"></button> You have some form errors. Please check below.
+										</div>
+										<!-- ********************************************************************************************* -->
+										<div class="form-group  margin-top-20">
+											<label class="control-label col-md-3">Registration Number
+												<span class="required"> * </span>
+											</label>
+											<div class="col-md-4">
+												<input hidden="true" type="text" id="id" name="id" th:value="${creditOrder.id}"/>
+												<div class="input-icon right">
+													<i class="fa"></i>
+													<input type="text" class="form-control" name="regNumber" th:value="${creditOrder.regNumber}"/>
+												</div>
+											</div>
+										</div>
+
+										<!-- ********************************************************************************************* -->
+										<div class="form-group">
+											<label class="control-label col-md-3">Registration Date</label>
+											<div class="col-md-4">
+												<div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+													<input type="text" class="form-control" name="regDate" th:value="${creditOrder.regDate}"/>
+													<span class="input-group-btn">
 	                                                        <button class="btn default" type="button">
 	                                                            <i class="fa fa-calendar"></i>
 	                                                        </button>
 	                                                    </span>
-                                                	</div>
-                                                	<!-- /input-group -->
-                                                	<span class="help-block"> select a date </span>
-                                               	</div>
-                                           	  </div>
-                                           	  
-                                           	  <!-- ********************************************************************************************* -->
-	                                          <div class="form-group">
-	                                              <label class="control-label col-md-3">Description
-	                                                  <span class="required"> * </span>
-	                                              </label>
-	                                              <div class="col-md-4">
-	                                                  <div class="input-icon right">
-	                                                      <i class="fa"></i>
-	                                                      <input type="text" class="form-control" name="description" th:value="${creditOrder.description}"/> 
-	                                                  </div>
-	                                              </div>
-	                                          </div>
-	                                          
-	                                          <!-- ********************************************************************************************* -->
-	                                          <div class="form-group">
-	                                               <label class="control-label col-md-3">Credit Order State
-	                                                   <span class="required"> * </span>
-	                                               </label>
-	                                               <div class="col-md-4">
-	                                               		<select class="form-control" th:field="${creditOrder.creditOrderState.id}"  id="creditOrderState">
-														    <option value="0">Select...</option>
-														    <option th:each="state : ${states}" th:value="${state.id}" th:text="${state.name}"></option>
-														</select>
-	                                               </div>
-	                                           </div>
-	                                           
-	                                           <!-- ********************************************************************************************* -->
-	                                           <div class="form-group">
-	                                               <label class="control-label col-md-3">Credit Order Type
-	                                                   <span class="required"> * </span>
-	                                               </label>
-	                                               <div class="col-md-4">
-	                                               		<select class="form-control" th:field="${creditOrder.creditOrderType.id}"  id="creditOrderType">
-														    <option value="0">Select...</option>
-														    <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
-														</select>
-	                                               </div>
-	                                           </div>
-	                                      </div>
-	                              	</div>
+												</div>
+												<!-- /input-group -->
+												<span class="help-block"> select a date </span>
+											</div>
+										</div>
+
+										<!-- ********************************************************************************************* -->
+										<div class="form-group">
+											<label class="control-label col-md-3">Description
+												<span class="required"> * </span>
+											</label>
+											<div class="col-md-4">
+												<div class="input-icon right">
+													<i class="fa"></i>
+													<input type="text" class="form-control" name="description" th:value="${creditOrder.description}"/>
+												</div>
+											</div>
+										</div>
+
+										<!-- ********************************************************************************************* -->
+										<div class="form-group">
+											<label class="control-label col-md-3">Credit Order State
+												<span class="required"> * </span>
+											</label>
+											<div class="col-md-4">
+												<select class="form-control" th:field="${creditOrder.creditOrderState.id}"  id="creditOrderState">
+													<option value="0">Select...</option>
+													<option th:each="state : ${states}" th:value="${state.id}" th:text="${state.name}"></option>
+												</select>
+											</div>
+										</div>
+
+										<!-- ********************************************************************************************* -->
+										<div class="form-group">
+											<label class="control-label col-md-3">Credit Order Type
+												<span class="required"> * </span>
+											</label>
+											<div class="col-md-4">
+												<select class="form-control" th:field="${creditOrder.creditOrderType.id}"  id="creditOrderType">
+													<option value="0">Select...</option>
+													<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
 								<div class="modal-footer">
 									<button type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
 									<button type="submit" class="btn green">Save</button>
 								</div>
-							</form>	
+							</form>
 							
 						</div>
 						<!-- END BORDERED TABLE PORTLET-->

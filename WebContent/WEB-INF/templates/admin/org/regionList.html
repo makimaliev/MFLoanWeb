@@ -70,7 +70,7 @@
 												<a data-remote="false"
 												   data-toggle="modal"
 												   data-target="#regionFormModal"
-												   role="button"
+											a	   role="button"
 												   class="btn btn-xs blue-stripe"
 												   th:href="@{/region/__${s.id}__/edit}"
 												   th:text="#{label.region.button.edit}">Edit</a>
@@ -221,10 +221,10 @@
 
 	<script type="text/javascript">
 	$("#regionFormModal").on("show.bs.modal", function(e) {
-		
+
 	    var link = $(e.relatedTarget);
-	    
-	    
+
+
 	    var regionID = $("#region_id").val();
 
 	    if(link.attr("href").indexOf('district/add')>0)
@@ -238,10 +238,10 @@
 		    $(this).find(".modal-body").load(link.attr("href"));
     	}
 	});
-	
-	
 
-	
+
+
+
 </script>
 
 
