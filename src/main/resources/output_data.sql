@@ -169,6 +169,9 @@ DROP TABLE IF EXISTS mfloan.debtor_view;
 DROP TABLE IF EXISTS mfloan.loan_view;
 DROP TABLE IF EXISTS mfloan.payment_view;
 
+DROP TABLE IF EXISTS mfloan.collateral_agreement_view;
+DROP TABLE IF EXISTS mfloan.collateral_item_view;
+
 CREATE VIEW person_view AS
   SELECT
     `p`.`id`                 AS `v_person_id`,
@@ -208,29 +211,47 @@ CREATE VIEW organization_view AS
 
 CREATE VIEW owner_view AS
   SELECT
-    `o`.`id`                                     AS `v_owner_id`,
-    `o`.`version`                                AS `v_owner_version`,
-    `o`.`entityId`                               AS `v_owner_entityId`,
-    `o`.`name`                                   AS `v_owner_name`,
-    `o`.`ownerType`                              AS `v_owner_ownerType`,
     (CASE WHEN (`o`.`ownerType` = 'PERSON')
-      THEN `pv`.`v_person_address_id`
-     ELSE `ov`.`v_organization_address_id` END)  AS `v_owner_address_id`,
+      THEN (SELECT `pv`.`v_person_address_id`
+            FROM `mfloan`.`person_view` `pv`
+            WHERE (`pv`.`v_person_id` = `o`.`entityId`))
+     ELSE (SELECT `ov`.`v_organization_address_id`
+           FROM `mfloan`.`organization_view` `ov`
+           WHERE (`ov`.`v_organization_id` = `o`.`entityId`)) END) AS `v_owner_address_id`,
     (CASE WHEN (`o`.`ownerType` = 'PERSON')
-      THEN `pv`.`v_person_region_id`
-     ELSE `ov`.`v_organization_region_id` END)   AS `v_owner_region_id`,
+      THEN (SELECT `pv`.`v_person_region_id`
+            FROM `mfloan`.`person_view` `pv`
+            WHERE (`pv`.`v_person_id` = `o`.`entityId`))
+     ELSE (SELECT `ov`.`v_organization_region_id`
+           FROM `mfloan`.`organization_view` `ov`
+           WHERE (`ov`.`v_organization_id` = `o`.`entityId`)) END) AS `v_owner_region_id`,
     (CASE WHEN (`o`.`ownerType` = 'PERSON')
-      THEN `pv`.`v_person_district_id`
-     ELSE `ov`.`v_organization_district_id` END) AS `v_owner_district_id`,
+      THEN (SELECT `pv`.`v_person_district_id`
+            FROM `mfloan`.`person_view` `pv`
+            WHERE (`pv`.`v_person_id` = `o`.`entityId`))
+     ELSE (SELECT `ov`.`v_organization_district_id`
+           FROM `mfloan`.`organization_view` `ov`
+           WHERE (`ov`.`v_organization_id` = `o`.`entityId`)) END) AS `v_owner_district_id`,
     (CASE WHEN (`o`.`ownerType` = 'PERSON')
-      THEN `pv`.`v_person_aokmotu_id`
-     ELSE `ov`.`v_organization_aokmotu_id` END)  AS `v_owner_aokmotu_id`,
+      THEN (SELECT `pv`.`v_person_aokmotu_id`
+            FROM `mfloan`.`person_view` `pv`
+            WHERE (`pv`.`v_person_id` = `o`.`entityId`))
+     ELSE (SELECT `ov`.`v_organization_aokmotu_id`
+           FROM `mfloan`.`organization_view` `ov`
+           WHERE (`ov`.`v_organization_id` = `o`.`entityId`)) END) AS `v_owner_aokmotu_id`,
     (CASE WHEN (`o`.`ownerType` = 'PERSON')
-      THEN `pv`.`v_person_village_id`
-     ELSE `ov`.`v_organization_village_id` END)  AS `v_owner_village_id`
-  FROM ((`mfloan`.`owner` `o`
-    JOIN `mfloan`.`person_view` `pv` ON ((`o`.`entityId` = `pv`.`v_person_id`))) JOIN `mfloan`.`organization_view` `ov`
-      ON ((`ov`.`v_organization_id` = `o`.`entityId`)));
+      THEN (SELECT `pv`.`v_person_village_id`
+            FROM `mfloan`.`person_view` `pv`
+            WHERE (`pv`.`v_person_id` = `o`.`entityId`))
+     ELSE (SELECT `ov`.`v_organization_village_id`
+           FROM `mfloan`.`organization_view` `ov`
+           WHERE (`ov`.`v_organization_id` = `o`.`entityId`)) END) AS `v_owner_village_id`,
+    `o`.`id`                                                       AS `id`,
+    `o`.`version`                                                  AS `version`,
+    `o`.`entityId`                                                 AS `entityId`,
+    `o`.`name`                                                     AS `name`,
+    `o`.`ownerType`                                                AS `ownerType`
+  FROM `mfloan`.`owner` `o`;
 
 
 
@@ -243,15 +264,15 @@ CREATE VIEW debtor_view AS
     `d`.`orgFormId`            AS `v_debtor_org_form_id`,
     `d`.`ownerId`              AS `v_debtor_owner_id`,
     `d`.`workSectorId`         AS `v_debtor_work_sector_id`,
-    `ov`.`v_owner_entityId`    AS `v_debtor_entity_id`,
-    `ov`.`v_owner_ownerType`   AS `v_debtor_owner_type`,
+    `ov`.id    AS `v_debtor_entity_id`,
+    `ov`.ownerType   AS `v_debtor_owner_type`,
     `ov`.`v_owner_address_id`  AS `v_debtor_address_id`,
     `ov`.`v_owner_region_id`   AS `v_debtor_region_id`,
     `ov`.`v_owner_district_id` AS `v_debtor_district_id`,
     `ov`.`v_owner_aokmotu_id`  AS `v_debtor_aokmotu_id`,
     `ov`.`v_owner_village_id`  AS `v_debtor_village_id`
-  FROM (`mfloan`.`debtor` `d`
-    JOIN `mfloan`.`owner_view` `ov` ON ((`ov`.`v_owner_id` = `d`.`ownerId`)));
+  FROM `debtor` `d`,owner_view `ov`
+  where d.ownerId = ov.id;
 
 CREATE VIEW loan_view AS
   SELECT
@@ -339,9 +360,100 @@ VIEW `mfloan`.`payment_view` AS
     `p`.`principal` AS `v_payment_principal`,
     `p`.`totalAmount` AS `v_payment_total_amount`,
     `p`.`paymentTypeId` AS `v_payment_type_id`,
+    `p`.exchange_rate                 AS `v_payment_exchange_rate`,
+    `p`.in_loan_currency AS `v_payment_in_loan_currency`,
     `pt`.`name` AS `v_payment_type_name`,
     `lv`.`v_work_sector_name` AS `v_work_sector_name`
   FROM
     ((`mfloan`.`loan_view` `lv`
       JOIN `mfloan`.`payment` `p` ON ((`p`.`loanId` = `lv`.`v_loan_id`)))
       JOIN `mfloan`.`paymentType` `pt` ON ((`pt`.`id` = `p`.`paymentTypeId`)))
+
+
+
+
+CREATE VIEW collateral_agreement_view AS
+  SELECT
+    `ca`.`id`                        AS `v_ca_id`,
+    `ca`.`version`                   AS `v_ca_version`,
+    `ca`.`agreementDate`             AS `v_ca_agreementDate`,
+    `ca`.`agreementNumber`           AS `v_ca_agreementNumber`,
+    `ca`.`arrestRegDate`             AS `v_ca_arrestRegDate`,
+    `ca`.`arrestRegNumber`           AS `v_ca_arrestRegNumber`,
+    `ca`.`collateralOfficeRegDate`   AS `v_ca_collateralOfficeRegDate`,
+    `ca`.`collateralOfficeRegNumber` AS `v_ca_collateralOfficeRegNumber`,
+    `ca`.`notaryOfficeRegDate`       AS `v_ca_notaryOfficeRegDate`,
+    `ca`.`notaryOfficeRegNumber`     AS `v_ca_notaryOfficeRegNumber`,
+    `ca`.`ownerId`                   AS `v_ca_ownerId`,
+    `dv`.`v_debtor_id`               AS `v_debtor_id`,
+    `dv`.`v_debtor_name`             AS `v_debtor_name`,
+    `dv`.`v_debtor_type_id`          AS `v_debtor_type_id`,
+    `dv`.`v_debtor_org_form_id`      AS `v_debtor_org_form_id`,
+    `dv`.`v_debtor_owner_id`         AS `v_debtor_owner_id`,
+    `dv`.`v_debtor_work_sector_id`   AS `v_debtor_work_sector_id`,
+    `dv`.`v_debtor_entity_id`        AS `v_debtor_entity_id`,
+    `dv`.`v_debtor_owner_type`       AS `v_debtor_owner_type`,
+    `dv`.`v_debtor_address_id`       AS `v_debtor_address_id`,
+    `dv`.`v_debtor_region_id`        AS `v_debtor_region_id`,
+    `dv`.`v_debtor_district_id`      AS `v_debtor_district_id`,
+    `dv`.`v_debtor_aokmotu_id`       AS `v_debtor_aokmotu_id`,
+    `dv`.`v_debtor_village_id`       AS `v_debtor_village_id`,
+    `r`.`name`                       AS `v_region_name`,
+    `d`.`name`                       AS `v_district_name`,
+    `ws`.`name`                      AS `v_work_sector_name`
+  FROM ((((((`mfloan`.`collateralAgreement` `ca`
+    JOIN `mfloan`.`debtor_view` `dv`) JOIN `mfloan`.`owner` `o1`) JOIN `mfloan`.`owner` `o2`) JOIN
+    `mfloan`.`region` `r`) JOIN `mfloan`.`district` `d`) JOIN `mfloan`.`workSector` `ws`)
+  WHERE (
+    (`ca`.`ownerId` = `o1`.`id`) AND (`dv`.`v_debtor_owner_id` = `o2`.`id`) AND (`o1`.`entityId` = `o2`.`entityId`) AND
+    (`r`.`id` = `dv`.`v_debtor_region_id`) AND (`d`.`id` = `dv`.`v_debtor_district_id`) AND
+    (`ws`.`id` = `dv`.`v_debtor_work_sector_id`));
+
+
+
+
+CREATE VIEW collateral_item_view AS
+  SELECT
+    `cav`.`v_ca_id`                        AS `v_ca_id`,
+    `cav`.`v_ca_version`                   AS `v_ca_version`,
+    `cav`.`v_ca_agreementDate`             AS `v_ca_agreementDate`,
+    `cav`.`v_ca_agreementNumber`           AS `v_ca_agreementNumber`,
+    `cav`.`v_ca_arrestRegDate`             AS `v_ca_arrestRegDate`,
+    `cav`.`v_ca_arrestRegNumber`           AS `v_ca_arrestRegNumber`,
+    `cav`.`v_ca_collateralOfficeRegDate`   AS `v_ca_collateralOfficeRegDate`,
+    `cav`.`v_ca_collateralOfficeRegNumber` AS `v_ca_collateralOfficeRegNumber`,
+    `cav`.`v_ca_notaryOfficeRegDate`       AS `v_ca_notaryOfficeRegDate`,
+    `cav`.`v_ca_notaryOfficeRegNumber`     AS `v_ca_notaryOfficeRegNumber`,
+    `cav`.`v_ca_ownerId`                   AS `v_ca_ownerId`,
+    `cav`.`v_debtor_id`                    AS `v_debtor_id`,
+    `cav`.`v_debtor_name`                  AS `v_debtor_name`,
+    `cav`.`v_debtor_type_id`               AS `v_debtor_type_id`,
+    `cav`.`v_debtor_org_form_id`           AS `v_debtor_org_form_id`,
+    `cav`.`v_debtor_owner_id`              AS `v_debtor_owner_id`,
+    `cav`.`v_debtor_work_sector_id`        AS `v_debtor_work_sector_id`,
+    `cav`.`v_debtor_entity_id`             AS `v_debtor_entity_id`,
+    `cav`.`v_debtor_owner_type`            AS `v_debtor_owner_type`,
+    `cav`.`v_debtor_address_id`            AS `v_debtor_address_id`,
+    `cav`.`v_debtor_region_id`             AS `v_debtor_region_id`,
+    `cav`.`v_debtor_district_id`           AS `v_debtor_district_id`,
+    `cav`.`v_debtor_aokmotu_id`            AS `v_debtor_aokmotu_id`,
+    `cav`.`v_debtor_village_id`            AS `v_debtor_village_id`,
+    `cav`.`v_region_name`                  AS `v_region_name`,
+    `cav`.`v_district_name`                AS `v_district_name`,
+    `cav`.`v_work_sector_name`             AS `v_work_sector_name`,
+    `ci`.`id`                              AS `v_ci_id`,
+    `ci`.`version`                         AS `v_ci_version`,
+    `ci`.`collateralValue`                 AS `v_ci_collateralValue`,
+    `ci`.`demand_rate`                     AS `v_ci_demand_rate`,
+    `ci`.`description`                     AS `v_ci_description`,
+    `ci`.`estimatedValue`                  AS `v_ci_estimatedValue`,
+    `ci`.`name`                            AS `v_ci_name`,
+    `ci`.`quantity`                        AS `v_ci_quantity`,
+    `ci`.`risk_rate`                       AS `v_ci_risk_rate`,
+    `ci`.`collateralAgreementId`           AS `v_ci_collateralAgreementId`,
+    `ci`.`conditionTypeId`                 AS `v_ci_conditionTypeId`,
+    `ci`.`itemTypeId`                      AS `v_ci_itemTypeId`,
+    `ci`.`quantityTypeId`                  AS `v_ci_quantityTypeId`
+  FROM (`mfloan`.`collateral_agreement_view` `cav`
+    JOIN `mfloan`.`collateralItem` `ci`)
+  WHERE (`ci`.`collateralAgreementId` = `cav`.`v_ca_id`);

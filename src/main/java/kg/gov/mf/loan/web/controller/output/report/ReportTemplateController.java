@@ -1,5 +1,6 @@
 package kg.gov.mf.loan.web.controller.output.report;
 
+import kg.gov.mf.loan.output.report.utils.ReportGeneratorCollateralItem;
 import kg.gov.mf.loan.output.report.utils.ReportGeneratorLoan;
 import kg.gov.mf.loan.output.report.utils.ReportGeneratorPayment;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -197,6 +198,8 @@ public class ReportTemplateController {
 		ReportGeneratorLoan loanReportGenerator = new ReportGeneratorLoan();
 		ReportGeneratorPayment paymentReportGenerator = new ReportGeneratorPayment();
 
+		ReportGeneratorCollateralItem collateralItemReportGenerator = new ReportGeneratorCollateralItem();
+
 		response.setContentType("application/vnd.ms-excel");
 		response.setHeader("Content-disposition","attachment; filename=report.xls");
 		OutputStream out = null;
@@ -226,6 +229,18 @@ public class ReportTemplateController {
 				try {
 					out = response.getOutputStream();
 					paymentReportGenerator.generateReportByTemplate(reportTemplate).write(out);
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				break;
+
+			case "COLLATERAL_ITEM":
+
+				try {
+					out = response.getOutputStream();
+					collateralItemReportGenerator.generateReportByTemplate(reportTemplate).write(out);
 					out.close();
 				} catch (IOException e) {
 					e.printStackTrace();
