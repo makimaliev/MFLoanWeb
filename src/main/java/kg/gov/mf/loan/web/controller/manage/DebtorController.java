@@ -151,6 +151,7 @@ public class DebtorController {
         return "/manage/debtor/list";
     }
 
+    /*
 	@RequestMapping(value = { "/manage/debtor/search" }, method = RequestMethod.GET)
 	public String searchDebtors(@RequestParam("q") String q, @RequestParam("pageSize") Optional<Integer> pageSize, @RequestParam("page") Optional<Integer> page, ModelMap model) {
 
@@ -176,6 +177,7 @@ public class DebtorController {
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
 		return "/manage/debtor/list";
 	}
+	*/
 
 	@RequestMapping(value="/manage/debtor/{debtorId}/save", method=RequestMethod.GET)
 	public String formDebtor(Model model, @PathVariable("debtorId")Long debtorId)
