@@ -23,59 +23,70 @@
         <div class="page-content">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="form">
 
-                        <form th:action="@{/doc/save}" id="document_form" class="form-horizontal" th:object="${document}" method="POST" enctype="multipart/form-data">
-
-                            <input type="hidden" th:field="*{id}"/>
-                            <input type="hidden" th:field="*{documentType.id}"/>
-                            <input type="hidden" th:field="*{documentSubType.id}"/>
-
-                            <div class="form-group">
-                                <label class="control-label col-md-4"> Title </label>
-                                <div class="col-md-6">
-                                    <input class="form-control" th:field="*{title}" th:type="${document.senderStatus?.internalName =='approve' ? 'hidden' : 'text'}"/>
-                                    <label class="form-control" th:text="*{title}" th:if="${document.senderStatus?.internalName} == 'approve'"> Title </label>
-                                </div>
+                    <div class="portlet light portlet-fit ">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="icon-settings font-green"></i>
+                                <span class="caption-subject font-green bold uppercase"> Document detail </span>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-4"> Description </label>
-                                <div class="col-md-6">
-                                    <input class="form-control" th:field="*{description}" th:type="${document.senderStatus?.internalName =='approve' ? 'hidden' : 'text'}"/>
-                                    <label class="form-control" th:text="*{description}" th:if="${document.senderStatus?.internalName} == 'approve'"> Description </label>
-                                </div>
+                        </div>
+                        <div class="portlet-body">
+
+                            <div class="form">
+
+                                <form th:action="@{/doc/save}" id="document_form" class="form-horizontal" th:object="${document}" method="POST" enctype="multipart/form-data">
+
+                                    <input type="hidden" th:field="*{id}"/>
+                                    <input type="hidden" th:field="*{documentType.id}"/>
+                                    <input type="hidden" th:field="*{documentSubType.id}"/>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4"> Title </label>
+                                        <div class="col-md-6">
+                                            <input class="form-control" th:field="*{title}" th:type="${document.senderStatus?.internalName =='approve' ? 'hidden' : 'text'}"/>
+                                            <label class="form-control" th:text="*{title}" th:if="${document.senderStatus?.internalName} == 'approve'"> Title </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4"> Description </label>
+                                        <div class="col-md-6">
+                                            <input class="form-control" th:field="*{description}" th:type="${document.senderStatus?.internalName =='approve' ? 'hidden' : 'text'}"/>
+                                            <label class="form-control" th:text="*{description}" th:if="${document.senderStatus?.internalName} == 'approve'"> Description </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" th:if="${not #lists.isEmpty(document.senderDispatchData)}">
+                                        <label class="control-label col-md-4"> Sender Status </label>
+                                        <div class="col-md-6">
+                                            <label class="form-control" th:each="dd : ${document.senderDispatchData}" th:text="${dd.dispatchType?.name} + ' on ' + ${dd.dispatchInitTime}"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" th:if="${not #lists.isEmpty(document.receiverDispatchData)}">
+                                        <label class="control-label col-md-4"> Receiver Status </label>
+                                        <div class="col-md-6">
+                                            <label class="form-control" th:each="dd : ${document.receiverDispatchData}" th:text="${dd.dispatchType.name} + ' on ' + ${dd.dispatchInitTime}"></label>
+                                        </div>
+                                    </div>
+
+                                    <div th:replace="doc/document/senderdata :: sender"></div>
+                                    <div th:replace="doc/document/receiverdata :: receiver"></div>
+
+                                    <button type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
+
+                                    <button type="submit" class="btn green" name="action" value="create" th:text="${document.id} ? 'Save' : 'Create'" th:if="${document.senderStatus?.internalName} != 'approve'"> Create </button>
+                                    <button type="submit" class="btn green" name="action" value="toapprove" th:if="${document.senderStatus?.internalName} == 'create'"> На утверждение </button>
+                                    <button type="submit" class="btn green" name="action" value="reject" th:if="${document.senderStatus?.internalName} == 'toapprove'"> Reject </button>
+                                    <button type="submit" class="btn green" name="action" value="approve" th:if="${document.senderStatus?.internalName} == 'toapprove'"> Approve </button>
+                                    <button type="submit" class="btn green" name="action" value="accept" th:if="${document.generalStatus?.internalName} == 'approve'"> Accept </button>
+                                    <button type="submit" class="btn green" name="action" value="start" th:if="${document.generalStatus?.internalName} == 'accept'"> Start </button>
+                                    <button type="submit" class="btn green" name="action" value="register" th:if="${document.documentType} == 'incoming'"> Register </button>
+                                    <button type="submit" class="btn green" name="action" value="done" th:if="${document.generalStatus?.internalName} == 'start'"> Done </button>
+
+                                </form>
+
                             </div>
-
-                            <div class="form-group" th:if="${not #lists.isEmpty(document.senderDispatchData)}">
-                                <label class="control-label col-md-4"> Sender Status </label>
-                                <div class="col-md-6">
-                                    <label class="form-control" th:each="dd : ${document.senderDispatchData}" th:text="${dd.dispatchType?.name} + ' on ' + ${dd.dispatchInitTime}"></label>
-                                </div>
-                            </div>
-                            <div class="form-group" th:if="${not #lists.isEmpty(document.receiverDispatchData)}">
-                                <label class="control-label col-md-4"> Receiver Status </label>
-                                <div class="col-md-6">
-                                    <label class="form-control" th:each="dd : ${document.receiverDispatchData}" th:text="${dd.dispatchType.name} + ' on ' + ${dd.dispatchInitTime}"></label>
-                                </div>
-                            </div>
-
-                            <div th:replace="doc/document/senderdata :: sender"></div>
-                            <div th:replace="doc/document/receiverdata :: receiver"></div>
-
-                            <button type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
-
-
-
-                            <button type="submit" class="btn green" name="action" value="create" th:text="${document.id} ? 'Save' : 'Create'" th:if="${document.senderStatus?.internalName} != 'approve'"> Create </button>
-                            <button type="submit" class="btn green" name="action" value="toapprove" th:if="${document.senderStatus?.internalName} == 'create'"> На утверждение </button>
-                            <button type="submit" class="btn green" name="action" value="reject" th:if="${document.senderStatus?.internalName} == 'toapprove'"> Reject </button>
-                            <button type="submit" class="btn green" name="action" value="approve" th:if="${document.senderStatus?.internalName} == 'toapprove'"> Approve </button>
-                            <button type="submit" class="btn green" name="action" value="accept" th:if="${document.generalStatus?.internalName} == 'approve'"> Accept </button>
-                            <button type="submit" class="btn green" name="action" value="start" th:if="${document.generalStatus?.internalName} == 'accept'"> Start </button>
-                            <button type="submit" class="btn green" name="action" value="done" th:if="${document.generalStatus?.internalName} == 'start'"> Done </button>
-
-                        </form>
-
+                        </div>
                     </div>
                 </div>
             </div>

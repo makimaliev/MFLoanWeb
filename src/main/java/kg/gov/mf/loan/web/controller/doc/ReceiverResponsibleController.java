@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class ReceiverResponsibleController {
+public class ReceiverResponsibleController extends BaseController {
 
     @Autowired
     DocumentService documentService;
@@ -23,7 +23,7 @@ public class ReceiverResponsibleController {
 
         if((document.getId() == null) || (document.getId() == 0))
         {
-            documentService.create(document);
+            documentService.save(document);
         }
 
         String path = documentTypeService.findById(document.getDocumentType().getId()).getInternalName();

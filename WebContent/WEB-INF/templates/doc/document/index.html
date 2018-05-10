@@ -13,79 +13,83 @@
 <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
 
 <div th:replace="layout :: header-top"></div>
-
 <div class="page-container">
-
     <div th:replace="layout :: page-container-sidebar" />
-
     <div class="page-content-wrapper">
         <div class="page-content">
             <div class="row">
                 <div class="col-md-12">
-                    <table class="table table-hover table-condensed table-striped table-bordered compact condensed" id="documentTable">
-                        <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Title</th>
-                            <th>Description</th>
-                            <th>Document SubType</th>
-                            <th>Document Status</th>
-                            <th>Sender</th>
-                            <th>Receiver</th>
-                            <th>View</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="document : ${documents}">
-                                <td th:text="${{document}}"></td>
-                                <td th:text="${document.title}"></td>
-                                <td th:text="${document.description}"></td>
-                                <td th:text="${document.documentSubType.name}"></td>
-                                <td th:text="${document.generalStatus?.name}"></td>
-                                <td th:text="${responsible[__${document.senderResponsible?.responsibleType}__ ?: 0]}">None</td>
-                                <td th:text="${responsible[__${document.receiverResponsible?.responsibleType}__ ?: 0]}">None</td>
-                                <td><a th:href="@{/doc/view/__${document.id}__}" role='button' class='btn btn-xs green-stripe'> View </a></td>
-                                <td><a th:href="@{/doc/edit/__${document.id}__}" role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
-                                <td><a th:href="@{/doc/delete/__${document.id}__}" role="button" class="btn btn-xs red-stripe"> Delete </a></td>
-                            </tr>
-                        </tbody>
-                    </table>
+
+                    <div class="portlet light portlet-fit">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="icon-settings font-green"></i>
+                                <span class="caption-subject font-green bold uppercase" th:text="${type.toUpperCase()} + ' Document List'">  </span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-light" id="documentTable">
+                                        <thead>
+                                        <tr>
+                                            <th>№</th>
+                                            <th>Загаловок</th>
+                                            <th>Описание</th>
+                                            <th>Тип документа</th>
+                                            <th>Состояние</th>
+                                            <th>Отправитель</th>
+                                            <th>Получатель</th>
+                                            <th>Просмотр</th>
+                                            <th>Правка</th>
+                                            <th>Удалить</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="document : ${documents}">
+                                            <td th:text="${document.id}"></td>
+                                            <td th:text="${document.title}"></td>
+                                            <td th:text="${document.description}"></td>
+                                            <td th:text="${document.documentSubType.name}"></td>
+                                            <td th:text="${document.generalStatus?.name}"></td>
+                                            <td th:text="${responsible[__${document.senderResponsible?.responsibleType}__ ?: 0]}">None</td>
+                                            <td th:text="${responsible[__${document.receiverResponsible?.responsibleType}__ ?: 0]}">None</td>
+                                            <td><a th:href="@{/doc/view/__${document.id}__}" role='button' class='btn btn-xs green-stripe'> Просмотр </a></td>
+                                            <td><a th:href="@{/doc/edit/__${document.id}__}" role="button" class="btn btn-xs blue-stripe"> Правка </a></td>
+                                            <td><a th:href="@{/doc/delete/__${document.id}__}" role="button" class="btn btn-xs red-stripe"> Удалить </a></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12" th:if="${type != 'archived'}">
+                                    <button class="btn btn-primary"> Filter </button>
+                                    <span th:each="dst : ${documentSubTypes}">
+                                        <a th:href="@{/doc/new(type=${type}, subtype=${dst.internalName})}" class="btn btn-success" th:text="${dst.name}"> New Document </a>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
 
                 </div>
             </div>
-
-            <span class="row">
-				<div class="col-md-12">
-					<button class="btn btn-primary"> Filter </button>
-				</div>
-				<div class="col-md-12" th:if="${type != 'archived'}">
-					<span th:each="dst : ${documentSubTypes}">
-						<a th:href="@{/doc/new(type=${type}, subtype=${dst.internalName})}" class="btn btn-success" th:text="${dst.name}"> New Document </a>
-					</span>
-				</div>
-			</span>
         </div>
     </div>
-
 </div>
 
-<div th:replace="layout :: footer"></div>
-<div th:replace="fragments/footer :: footer-js"></div>
+<div th:replace="layout :: footer"/>
+<div th:replace="fragments/footer :: footer-js"/>
 
 <script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
 <script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>
-
 <script type="text/javascript">
     $(document).ready(function() {
-
-        var table = $('#documentTable').DataTable({
+        $('#documentTable').DataTable({
             "language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
-            "info":     false,
-            keys: {
-                focus: ':eq(0)'
-            }
+            "info":     false
         } );
     });
 </script>
