@@ -73,7 +73,7 @@
                                                 <label class="form-control" th:text="*{senderDueDate}" th:if="${document.senderStatus?.internalName} == 'approve'"> Title </label>
                                             </div>
                                         </div>
-                                        <div class="form-group" th:hidden="${document.documentType.internalName} == 'internal'">
+                                        <div class="form-group">
                                             <label class="control-label col-md-4"> Вид отправителя </label>
                                             <div class="col-md-6" th:hidden="${document.senderStatus?.internalName} == 'approve'">
                                                 <select class="form-control" id="srt_select" th:field="*{senderResponsible.responsibleType}">
@@ -137,7 +137,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group" th:hidden="${document.documentType.internalName} == 'internal'">
+                                        <div class="form-group">
                                             <label class="control-label col-md-4"> Вид исполнителя </label>
                                             <div class="col-md-6" th:hidden="${document.senderStatus?.internalName} == 'approve'">
                                                 <select class="form-control" id="set_select" th:field="*{senderExecutor.executorType}">

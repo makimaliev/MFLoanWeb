@@ -7,8 +7,6 @@ import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.web.util.Utils;
-import org.flowable.engine.ProcessEngine;
-import org.flowable.engine.ProcessEngines;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class BaseController {
@@ -69,13 +67,7 @@ public class BaseController {
         }
     }
 
-    protected ProcessEngine processEngine;
     protected UserService userService;
-
-    @Autowired
-    protected void setProcessEngine() {
-        processEngine = ProcessEngines.getDefaultProcessEngine();
-    }
 
     @Autowired
     protected void setUserService(UserService userService) {
