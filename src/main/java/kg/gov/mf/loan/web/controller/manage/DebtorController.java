@@ -2,14 +2,25 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import com.google.common.base.Joiner;
+import kg.gov.mf.loan.manage.dao.EntitySpecificationsBuilder;
+import kg.gov.mf.loan.manage.dao.debtor.DebtDao;
 import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
 import kg.gov.mf.loan.manage.model.collection.CollectionProcedure;
 import kg.gov.mf.loan.manage.model.loan.Loan;
+import kg.gov.mf.loan.manage.util.SearchOperation;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -82,6 +93,9 @@ public class DebtorController {
 	@Autowired
 	OwnerService ownerService;
 
+	@Autowired
+	DebtDao debtDao;
+
 	private static final int BUTTONS_TO_SHOW = 5;
 	private static final int INITIAL_PAGE = 0;
 	private static final int INITIAL_PAGE_SIZE = 10;
@@ -151,23 +165,42 @@ public class DebtorController {
         return "/manage/debtor/list";
     }
 
-    /*
-	@RequestMapping(value = { "/manage/debtor/search" }, method = RequestMethod.GET)
-	public String searchDebtors(@RequestParam("q") String q, @RequestParam("pageSize") Optional<Integer> pageSize, @RequestParam("page") Optional<Integer> page, ModelMap model) {
+	@RequestMapping(method = RequestMethod.GET, value = "/manage/debtor/search")
+	public String findAllBySpecification(@RequestParam(value = "q") String q,
+										 @RequestParam("pageSize") Optional<Integer> pageSize,
+										 @RequestParam("page") Optional<Integer> page, ModelMap model) {
+		EntitySpecificationsBuilder builder = new EntitySpecificationsBuilder();
+		String operationSetExper = Joiner.on("|").join(SearchOperation.SIMPLE_OPERATION_SET);
+		Pattern pattern = Pattern.compile(
+				"(\\w+?)(" + operationSetExper + ")(\\p{Punct}?)(\\w+?)(\\p{Punct}?),");
+		Matcher matcher = pattern.matcher(q + ",");
+		while (matcher.find()) {
+			builder.with(
+					matcher.group(1),
+					matcher.group(2),
+					matcher.group(4),
+					matcher.group(3),
+					matcher.group(5));
+		}
+
+		Specification<Debtor> spec = builder.build();
 
 		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
 		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
 
-		List<String> fields = new ArrayList<>();
-		fields.add("name");
+		Sort sort = new Sort(new Sort.Order(Sort.Direction.ASC, "id"));
+		Pageable pageable = new PageRequest(0, 20, sort);
 
-		List<Debtor> debtors = debtorService.search(q, fields, "id", evalPage*evalPageSize, evalPageSize);
-		int count = debtorService.searchCount();
+		Page<Debtor> page1 = debtDao.findAll(spec, pageable);
+		List<Debtor> debtors = page1.getContent();
+
+		//List<Debtor> debtors = debtDao.findAll(spec);
+		int count = debtDao.findAll(spec, pageable).getTotalPages();
 
 		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
 
 		model.addAttribute("debtor", new Debtor());
-		model.addAttribute("count", count/evalPageSize+1);
+		model.addAttribute("count", count);
 		model.addAttribute("debtors", debtors);
 		model.addAttribute("selectedPageSize", evalPageSize);
 		model.addAttribute("pageSizes", PAGE_SIZES);
@@ -175,9 +208,9 @@ public class DebtorController {
 		model.addAttribute("current", evalPage);
 
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
+
 		return "/manage/debtor/list";
 	}
-	*/
 
 	@RequestMapping(value="/manage/debtor/{debtorId}/save", method=RequestMethod.GET)
 	public String formDebtor(Model model, @PathVariable("debtorId")Long debtorId)
