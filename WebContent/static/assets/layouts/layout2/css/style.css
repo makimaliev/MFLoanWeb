@@ -15,7 +15,21 @@
     width: auto;
     font-size: 12px;
     padding: 0 8px;
-    height: 31px;
+    height: 32px;
+    margin: 0 5px;
+}
+.page-search{
+    margin-left: 15px;
+}
+.page-search .form-control{
+    height: 32px;
+    font-size: 12px;
+    padding: 0 8px;
+}
+.page-search button,
+.page-search input{
+    display: inline-block;
+    vertical-align: middle;
 }
 
 /*Portlet*/
@@ -92,6 +106,9 @@
 }
 
 /*Buttons*/
+.btn:not(.btn-sm):not(.btn-lg){
+    line-height: 1.5;
+}
 .btn-group-sm>.btn,
 .btn-sm{
     padding: 0 10px;

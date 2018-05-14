@@ -25,20 +25,29 @@
 				<div class="row">
 					<div class="col-md-12">
 						<!-- BEGIN BORDERED TABLE PORTLET-->
-                        <div class="table-toolbar">
-                            <div class="row">
-                                <div class="form-group col-md-4 page-size-group">
-                                    <span>Показать</span>
-                                    <select class="form-control page-size-select" id="pageSizeSelect">
-                                        <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}" th:value="${pageSize}"
-                                                th:selected="${pageSize} == ${selectedPageSize}"></option>
-                                    </select>
-                                    <span>записей</span>
-                                </div>
-                            </div>
-                        </div>
 						<div class="portlet light portlet-fit ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-settings font-green"></i>
+									<span class="caption-subject font-green sbold uppercase">Orders</span>
+								</div>
+							</div>
 							<div class="portlet-body">
+								<div class="table-toolbar">
+									<div class="pull-left">
+										<div class="btn-group">
+											<a th:href="@{/manage/order/0/save}" class="btn green" th:text="#{label.order.button.addNewCreditOrder}">Add New Debtor <i class="fa fa-plus"></i></a>
+										</div>
+									</div>
+									<div class="page-size-group pull-right">
+										<span>Показать</span>
+										<select class="form-control page-size-select" id="pageSizeSelect">
+											<option th:each="pageSize : ${pageSizes}" th:text="${pageSize}" th:value="${pageSize}"
+													th:selected="${pageSize} == ${selectedPageSize}"></option>
+										</select>
+										<span>записей</span>
+									</div>
+								</div>
 								<div class="table-scrollable table-scrollable-borderless">
 									<table class="table compact" id="orders">
 										<thead>
@@ -55,100 +64,64 @@
 											</tr>
 										</thead>
 										<tbody>
-											<ordercheck th:if="${#lists.isEmpty(orders)}">
-												<tr class="no-records-found" style="text-align: center;">
-													<td colspan="8">No matching records found</td>
-												</tr>
-											</ordercheck>
-											<order th:each="o : ${orders}">
-												<tr class="clickable-row">
-													<td th:text="${o.id}">Id</td>
-													<td th:text="${o.regNumber}">AB0C1234</td>
-													<td th:text="${o.regDate}">01.01.2017</td>
-													<td th:text="${o.description}">Description here</td>
-													<td th:text="${o.creditOrderState.name}">Active</td>
-													<td th:text="${o.creditOrderType.name}">RPKR</td>
-													<td>
-														<a th:href="@{/manage/order/__${o.id}__/view}" class="btn btn-xs green-stripe">View Details</a>
-													</td>
-													<td>
-														<a th:href="@{/manage/order/__${o.id}__/save}" class="btn btn-xs blue-stripe">Edit</a>
-													</td>
-													<td>
-														<form th:action="@{/manage/order/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-															<input hidden="true" type="text" id="id" name="id" th:value="${o.id}" />
-															<button type="submit" class="btn btn-xs red-stripe" style="color: black">Delete</button>
-														</form>
-													</td>
-												</tr>
-											</order>
+											<tr th:each="o : ${orders}">
+												<td th:text="${o.id}">Id</td>
+												<td th:text="${o.regNumber}">AB0C1234</td>
+												<td th:text="${o.regDate}">01.01.2017</td>
+												<td th:text="${o.description}">Description here</td>
+												<td th:text="${o.creditOrderState.name}">Active</td>
+												<td th:text="${o.creditOrderType.name}">RPKR</td>
+												<td>
+													<a th:href="@{/manage/order/__${o.id}__/view}"
+													   role="button"
+													   class="btn btn-outline btn-circle btn-sm blue"
+													   th:text="#{label.order.button.view}">View</a>
+												</td>
+												<td>
+													<a class="btn btn-outline btn-circle btn-sm green"
+													   th:href="@{/manage/order/__${o.id}__/save}"
+													   th:text="#{label.order.button.edit}">Edit</a>
+												</td>
+												<td>
+													<form th:action="@{/manage/debtor/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
+														<button type="submit"
+																class="btn btn-outline btn-circle dark btn-sm red"
+																th:text="#{label.order.button.delete}">Delete</button>
+														<input hidden="true" type="text" id="id" name="id" th:value="${o.id}" />
+													</form>
+												</td>
+											</tr>
 										</tbody>
 									</table>
+								</div>
+								<div class="table-toolbar row">
+									<div th:if="${count != 1}" class="col-md-8 pagination-centered pull-right">
+										<ul class="pagination">
+											<li th:class="${current == 0} ? disabled">
+												<a class="pageLink" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=1)}">&laquo;</a>
+											</li>
+											<li th:class="${current == 0} ? disabled">
+												<a class="pageLink" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${current})}">&larr;</a>
+											</li>
+											<li th:class="${current == (page - 1)} ? 'active pointer-disabled'"
+												th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+												<a class="pageLink" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${page})}"
+												   th:text="${page}"></a>
+											</li>
+											<li th:class="${current + 1 == count} ? disabled">
+												<a class="pageLink"
+												   th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${current + 2})}">&rarr;</a>
+											</li>
+											<li th:class="${current + 1 == count} ? disabled">
+												<a class="pageLink"
+												   th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${count})}">&raquo;</a>
+											</li>
+										</ul>
+									</div>
 								</div>
 							</div>
 						</div>
 						<!-- END BORDERED TABLE PORTLET-->
-					</div>
-				</div>
-				<div class="col-md-12">
-					<!-- Default bootstrap modal example -->
-					<div class="modal fade" id="saveModal" tabindex="-1"
-						 role="dialog" aria-labelledby="myModalLabel"
-						 aria-hidden="true">
-						<div class="modal-dialog">
-							<div class="modal-content">
-								<div class="modal-header">
-									<button type="button" class="close" data-dismiss="modal"
-											aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
-									<h4 class="modal-title" id="myModalLabel" th:text="#{label.order.modal.title}">Modal title</h4>
-								</div>
-								<div class="modal-body">
-								</div>
-								<div class="modal-footer"><!--
-													<button type="button" class="btn btn-default"
-														data-dismiss="modal" th:text="#{label.region.button.close}">Close</button>
-													<button type="button" class="btn btn-primary" th:text="#{label.region.button.save}">Save
-														changes</button>-->
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row" >
-                    <div class="col-md-4">
-						<a data-remote="false"
-						   id="asa"
-						   data-toggle="modal"
-						   data-target="#saveModal"
-						   th:href="@{/manage/order/0/save}"
-						   role="button"
-						   class="btn btn-large btn-primary"
-						   th:text="#{label.order.button.addNewCreditOrder}">Add New Credit Order</a>
-                    </div>
-					<div th:if="${count != 1}" class="form-group col-md-6 pull-right" >
-						<ul class="pagination">
-							<li th:class="${current == 0} ? disabled">
-								<a class="pageLink" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=1)}">&laquo;</a>
-							</li>
-							<li th:class="${current == 0} ? disabled">
-								<a class="pageLink" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${current})}">&larr;</a>
-							</li>
-							<li th:class="${current == (page - 1)} ? 'active pointer-disabled'"
-								th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
-								<a class="pageLink" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${page})}"
-								   th:text="${page}"></a>
-							</li>
-							<li th:class="${current + 1 == count} ? disabled">
-								<a class="pageLink"
-								   th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${current + 2})}">&rarr;</a>
-							</li>
-							<li th:class="${current + 1 == count} ? disabled">
-								<a class="pageLink"
-								   th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${count})}">&raquo;</a>
-							</li>
-						</ul>
 					</div>
 				</div>
 			</div>

@@ -15,163 +15,191 @@
 	</style>
 </head>
 <body
-	class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
-	<!-- BEGIN HEADER -->
-	<div th:replace="layout :: header-top" />
-	<!-- END HEADER -->
+		class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
+<!-- BEGIN HEADER -->
+<div th:replace="layout :: header-top" />
+<!-- END HEADER -->
 
-	<!-- BEGIN CONTAINER -->
-	<div class="page-container">
-		<!-- BEGIN SIDEBAR -->
-		<div th:replace="layout :: page-container-sidebar" />
-		<!-- END SIDEBAR -->
-		<!-- BEGIN CONTENT -->
-		<div class="page-content-wrapper">
-			<!-- BEGIN CONTENT BODY -->
-			<div class="page-content">
+<!-- BEGIN CONTAINER -->
+<div class="page-container">
+	<!-- BEGIN SIDEBAR -->
+	<div th:replace="layout :: page-container-sidebar" />
+	<!-- END SIDEBAR -->
+	<!-- BEGIN CONTENT -->
+	<div class="page-content-wrapper">
+		<!-- BEGIN CONTENT BODY -->
+		<div class="page-content">
 
-				<div class="row">
-					<div class="col-md-12">
-						<!-- BEGIN BORDERED TABLE PORTLET-->
-						<div class="portlet light portlet-fit">
-							<div class="portlet-title">
-								<div class="caption">
-									<i class="icon-settings font-green"></i>
-									<span class="caption-subject font-green sbold uppercase">Debtors</span>
-								</div>
-							</div>
-							<div class="portlet-body">
-
-								<div class="table-toolbar">
-									<div class="pull-left">
-										<div class="btn-group">
-											<a th:href="@{/manage/debtor/0/save}" class="btn green" th:text="#{label.debtor.button.addDebtor}">Add New Debtor <i class="fa fa-plus"></i></a>
-										</div>
-									</div>
-									<div class="page-size-group pull-right">
-										<span>Показать</span>
-										<select class="form-control page-size-select" id="pageSizeSelect">
-											<option th:each="pageSize : ${pageSizes}" th:text="${pageSize}" th:value="${pageSize}"
-													th:selected="${pageSize} == ${selectedPageSize}"></option>
-										</select>
-										<span>записей</span>
-									</div>
-								</div>
-
-								<div class="table-scrollable table-scrollable-borderless">
-
-									<table class="table compact" id="orderTable">
-										<thead>
-											<tr>
-												<th class="table-id" th:text="#{label.debtor.table.id}">Id</th>
-												<th th:text="#{label.debtor.table.name}">Name</th>
-												<th th:text="#{label.debtor.table.debtorType}">Type</th>
-												<th th:text="#{label.debtor.table.orgForm}">Organization form</th>
-												<th th:text="#{label.debtor.table.workSector}">Work sector</th>
-												<th th:text="#{label.debtor.table.view}">View Details</th>
-												<th th:text="#{label.debtor.table.edit}">Edit</th>
-												<th th:text="#{label.debtor.table.delete}">Delete</th>
-											</tr>
-										</thead>
-										<tbody>
-										<tr th:each="debtor : ${debtors}">
-											<td class="table-id" th:text="${debtor.id}">Id</td>
-											<td th:text="${debtor.name}">Name</td>
-											<td th:text="${debtor.debtorType.name}">Type</td>
-											<td th:text="${debtor.orgForm.name}">Org form</td>
-											<td th:text="${debtor.workSector.name}">Work sector</td>
-											<td><a th:href="@{/manage/debtor/__${debtor.id}__/view}"
-												   role="button"
-												   class="btn btn-outline btn-circle btn-sm blue"
-												   th:text="#{label.debtor.button.view}">View</a>
-											</td>
-											<td>
-												<a data-remote="false"
-												   data-toggle="modal"
-												   data-target="#saveModal"
-												   role="button"
-												   class="btn btn-outline btn-circle btn-sm green"
-												   th:href="@{/manage/debtor/__${debtor.id}__/save}"
-												   th:text="#{label.debtor.button.edit}">Edit</a>
-											</td>
-											<td>
-												<form th:action="@{/manage/debtor/delete}" method="post">
-													<button type="submit"
-															class="btn btn-outline btn-circle dark btn-sm red"
-															th:text="#{label.debtor.button.delete}">Delete</button>
-												</form>
-											</td>
-										</tr>
-										</tbody>
-									</table>
-
-								</div>
-								<div class="table-toolbar row">
-									<div th:if="${count != 1}" class="col-md-8 pagination-centered pull-right">
-										<ul class="pagination">
-											<li th:class="${current == 0} ? disabled">
-												<a class="pageLink" th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=1)}">&laquo;</a>
-											</li>
-											<li th:class="${current == 0} ? disabled">
-												<a class="pageLink" th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${current})}">&larr;</a>
-											</li>
-											<li th:class="${current == (page - 1)} ? 'active pointer-disabled'"
-												th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
-												<a class="pageLink" th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${page})}"
-												   th:text="${page}"></a>
-											</li>
-											<li th:class="${current + 1 == count} ? disabled">
-												<a class="pageLink"
-												   th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${current + 2})}">&rarr;</a>
-											</li>
-											<li th:class="${current + 1 == count} ? disabled">
-												<a class="pageLink"
-												   th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${count})}">&raquo;</a>
-											</li>
-										</ul>
-									</div>
-								</div>
-
+			<div class="row">
+				<div class="col-md-12">
+					<!-- BEGIN BORDERED TABLE PORTLET-->
+					<div class="portlet light portlet-fit">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="icon-settings font-green"></i>
+								<span class="caption-subject font-green sbold uppercase">Debtors</span>
 							</div>
 						</div>
-						<!-- END BORDERED TABLE PORTLET-->
+						<div class="portlet-body">
+
+							<div class="table-toolbar">
+								<div class="pull-left">
+									<div class="btn-group">
+										<a th:href="@{/manage/debtor/0/save}" class="btn green" th:text="#{label.debtor.button.addDebtor}">Add New Debtor <i class="fa fa-plus"></i></a>
+									</div>
+								</div>
+								<div class="page-search col-md-2 pull-right">
+									<div class="row">
+										<form th:action="@{/manage/debtor/search}" method="get">
+											<input type="hidden" name="pageSize" th:value="${selectedPageSize}">
+											<input type="hidden" name="page" th:value="${current}">
+											<div class="input-group">
+												<input type="text" class="form-control" name="q">
+												<span class="input-group-btn">
+													<button type="submit" class="btn btn-default">Поиск</button>
+										  		</span>
+											</div><!-- /input-group -->
+										</form>
+									</div>
+								</div>
+								<div class="page-size-group pull-right">
+									<span>Показать</span>
+									<select class="form-control page-size-select" id="pageSizeSelect">
+										<option th:each="pageSize : ${pageSizes}" th:text="${pageSize}" th:value="${pageSize}"
+												th:selected="${pageSize} == ${selectedPageSize}"></option>
+									</select>
+									<span>записей</span>
+								</div>
+							</div>
+
+							<div class="table-scrollable table-scrollable-borderless">
+
+								<table class="table compact" id="orderTable">
+									<thead>
+									<tr>
+										<th class="table-id" th:text="#{label.debtor.table.id}">Id</th>
+										<th th:text="#{label.debtor.table.name}">Name</th>
+										<th th:text="#{label.debtor.table.debtorType}">Type</th>
+										<th th:text="#{label.debtor.table.orgForm}">Organization form</th>
+										<th th:text="#{label.debtor.table.workSector}">Work sector</th>
+										<th th:text="#{label.debtor.table.view}">View Details</th>
+										<th th:text="#{label.debtor.table.edit}">Edit</th>
+										<th th:text="#{label.debtor.table.delete}">Delete</th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr th:each="debtor : ${debtors}">
+										<td class="table-id" th:text="${debtor.id}">Id</td>
+										<td th:text="${debtor.name}">Name</td>
+										<td th:text="${debtor.debtorType.name}">Type</td>
+										<td th:text="${debtor.orgForm.name}">Org form</td>
+										<td th:text="${debtor.workSector.name}">Work sector</td>
+										<td><a th:href="@{/manage/debtor/__${debtor.id}__/view}"
+											   role="button"
+											   class="btn btn-outline btn-circle btn-sm blue"
+											   th:text="#{label.debtor.button.view}">View</a>
+										</td>
+										<td>
+											<a class="btn btn-outline btn-circle btn-sm green"
+											   th:href="@{/manage/debtor/__${debtor.id}__/save}"
+											   th:text="#{label.debtor.button.edit}">Edit</a>
+										</td>
+										<td>
+											<form th:action="@{/manage/debtor/delete}" method="post">
+												<button type="submit"
+														class="btn btn-outline btn-circle dark btn-sm red"
+														th:text="#{label.debtor.button.delete}">Delete</button>
+											</form>
+										</td>
+									</tr>
+									</tbody>
+								</table>
+
+							</div>
+							<div class="table-toolbar row">
+								<div th:if="${count != 1}" class="col-md-8 pagination-centered pull-right">
+									<ul class="pagination">
+										<li th:class="${current == 0} ? disabled">
+											<a class="pageLink" th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=1)}">&laquo;</a>
+										</li>
+										<li th:class="${current == 0} ? disabled">
+											<a class="pageLink" th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${current})}">&larr;</a>
+										</li>
+										<li th:class="${current == (page - 1)} ? 'active pointer-disabled'"
+											th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+											<a class="pageLink" th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${page})}"
+											   th:text="${page}"></a>
+										</li>
+										<li th:class="${current + 1 == count} ? disabled">
+											<a class="pageLink"
+											   th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${current + 2})}">&rarr;</a>
+										</li>
+										<li th:class="${current + 1 == count} ? disabled">
+											<a class="pageLink"
+											   th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${count})}">&raquo;</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+
+						</div>
 					</div>
+					<!-- END BORDERED TABLE PORTLET-->
 				</div>
-
 			</div>
-			<!-- END CONTENT BODY -->
+
 		</div>
-		<!-- END CONTENT -->
-		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
+		<!-- END CONTENT BODY -->
 	</div>
-	<!-- END CONTAINER -->
-	<div th:replace="layout :: footer" />
-	<div th:replace="fragments/footer :: footer-js" />
+	<!-- END CONTENT -->
+	<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
+</div>
+<!-- END CONTAINER -->
+<div th:replace="layout :: footer" />
+<div th:replace="fragments/footer :: footer-js" />
 
-	<script th:src="@{/js/app.js}" type="text/javascript"></script>
-	<script type="text/javascript">
-        $("#saveModal").on("show.bs.modal", function(e) {
+<script th:src="@{/js/app.js}" type="text/javascript"></script>
+<script type="text/javascript">
+    $("#saveModal").on("show.bs.modal", function(e) {
 
-            var link = $(e.relatedTarget);
-
-
-            var regionID = $("#form_sample_2").val();
-
-            if(link.attr("href").indexOf('manage/debtor/0/save')>0)
-            {
-                //$(this).find(".modal-title").html(link.attr("href").replace("/district/add","/region/"+regionID+"/district/add"));
-                $(this).find(".modal-body").load(link.attr("href"));
-            }
-            else
-            {
-                //$(this).find(".modal-title").html(link.attr("href"));
-                $(this).find(".modal-body").load(link.attr("href"));
-            }
-        });
+        var link = $(e.relatedTarget);
 
 
+        var regionID = $("#form_sample_2").val();
 
+        if(link.attr("href").indexOf('manage/debtor/0/save')>0)
+        {
+            //$(this).find(".modal-title").html(link.attr("href").replace("/district/add","/region/"+regionID+"/district/add"));
+            $(this).find(".modal-body").load(link.attr("href"));
+        }
+        else
+        {
+            //$(this).find(".modal-title").html(link.attr("href"));
+            $(this).find(".modal-body").load(link.attr("href"));
+        }
+    });
 
-	</script>
+    // $('.page-search button').click(function(e){
+    //     e.preventDefault();
+    //
+    //     var url = '/manage/debtor/search',
+    //         key = $('.page-search input').val();
+    //
+    //     $.ajax
+    //     ({
+    //         type: "POST",
+    //         url: url,
+    //         data: {
+    //             key: key,
+    //         },
+    //         cache: false,
+    //         success: function (data) {
+    //             console.log(data);
+    //         }
+    //     });
+    //
+    // });
+
+</script>
 </body>
 </html>
