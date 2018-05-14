@@ -4,8 +4,8 @@
 
 /* ADD USERS */
 
-INSERT INTO `mfloan`.`users` (`enabled`, `password`, `username`) VALUES (true, 'password', 'admin');
-INSERT INTO `mfloan`.`users` (`enabled`, `password`, `username`) VALUES (true, 'password', 'user');
+INSERT INTO `mfloan`.`users` (`id`, `enabled`, `password`, `username`) VALUES (1, true, 'password', 'admin');
+INSERT INTO `mfloan`.`users` (`id`, `enabled`, `password`, `username`) VALUES (2, true, 'password', 'user');
 
 
 

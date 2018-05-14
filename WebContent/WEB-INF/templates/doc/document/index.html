@@ -24,7 +24,7 @@
                         <div class="portlet-title">
                             <div class="caption">
                                 <i class="icon-settings font-green"></i>
-                                <span class="caption-subject font-green bold uppercase" th:text="${type.toUpperCase()} + ' Document List'">  </span>
+                                <span class="caption-subject font-green bold uppercase" th:text="${title.toUpperCase()}">  </span>
                             </div>
                         </div>
                         <div class="portlet-body">
@@ -36,13 +36,14 @@
                                             <th>№</th>
                                             <th>Загаловок</th>
                                             <th>Описание</th>
+                                            <th th:if="${type == 'archived'}">Вид документа</th>
                                             <th>Тип документа</th>
                                             <th>Состояние</th>
                                             <th>Отправитель</th>
                                             <th>Получатель</th>
                                             <th>Просмотр</th>
-                                            <th>Правка</th>
-                                            <th>Удалить</th>
+                                            <th th:if="${type != 'archived'}">Правка</th>
+                                            <th th:if="${type != 'archived'}">Удалить</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -50,13 +51,14 @@
                                             <td th:text="${document.id}"></td>
                                             <td th:text="${document.title}"></td>
                                             <td th:text="${document.description}"></td>
+                                            <td th:text="${document.documentType.name}" th:if="${type == 'archived'}"></td>
                                             <td th:text="${document.documentSubType.name}"></td>
                                             <td th:text="${document.generalStatus?.name}"></td>
                                             <td th:text="${responsible[__${document.senderResponsible?.responsibleType}__ ?: 0]}">None</td>
                                             <td th:text="${responsible[__${document.receiverResponsible?.responsibleType}__ ?: 0]}">None</td>
                                             <td><a th:href="@{/doc/view/__${document.id}__}" role='button' class='btn btn-xs green-stripe'> Просмотр </a></td>
-                                            <td><a th:href="@{/doc/edit/__${document.id}__}" role="button" class="btn btn-xs blue-stripe"> Правка </a></td>
-                                            <td><a th:href="@{/doc/delete/__${document.id}__}" role="button" class="btn btn-xs red-stripe"> Удалить </a></td>
+                                            <td th:if="${type != 'archived'}"><a th:href="@{/doc/edit/__${document.id}__}" role="button" class="btn btn-xs blue-stripe"> Правка </a></td>
+                                            <td th:if="${type != 'archived'}"><a th:href="@{/doc/delete/__${document.id}__}" role="button" class="btn btn-xs red-stripe" th:if="${document.documentState.toString() == 'DRAFT'}"> Удалить </a></td>
                                         </tr>
                                         </tbody>
                                     </table>

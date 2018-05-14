@@ -27,197 +27,186 @@
                         <div class="portlet-title">
                             <div class="caption">
                                 <i class="icon-settings font-green"></i>
-                                <span class="caption-subject font-green bold uppercase"> Document </span>
+                                <span class="caption-subject font-green bold uppercase"> Просмотр </span>
                             </div>
                         </div>
                         <div class="portlet-body">
                             <div class="form">
-
                                 <div th:object="${document}" class="form-horizontal">
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-4"> Sender </label>
-                                        <div class="col-md-6">
-                                            <label class="form-control" th:each="attachment : ${attachments}" th:text="${attachment.name}"></label>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="form-group">
-                                        <label class="control-label col-md-4"> Title </label>
+                                        <label class="control-label col-md-4"> Загаловок </label>
                                         <div class="col-md-6">
                                             <label class="form-control" type="text" th:text="*{title}"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label col-md-4"> Description </label>
+                                        <label class="control-label col-md-4"> Описание </label>
                                         <div class="col-md-6">
                                             <label class="form-control" type="text" th:text="*{description}"/>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-md-4"></label>
-                                        <div class="col-md-6">
-                                            <label class="control-label"> Document Status </label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" th:if="${document.senderDispatchData?.size()}">
-                                        <label class="control-label col-md-4"> Sender </label>
-                                        <div class="col-md-6">
-                                            <label class="form-control" th:each="dd : ${document.senderDispatchData}" th:text="${dd.dispatchType.name} + ' on ' + ${dd.dispatchInitTime}"></label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" th:if="${document.receiverDispatchData?.size()}">
-                                        <label class="control-label col-md-4"> Receiver </label>
-                                        <div class="col-md-6">
-                                            <label class="form-control" th:each="dd : ${document.receiverDispatchData}" th:text="${dd.dispatchType.name} + ' on ' + ${dd.dispatchInitTime}"></label>
-                                        </div>
-                                    </div>
 
-                                    <div>
-                                        <div class="form-group" th:if="${document.senderRegisteredDate}">
-                                            <label class="control-label col-md-4"> Sender Registered Date </label>
-                                            <div class="col-md-6">
-                                                <label class="form-control" th:text="*{senderRegisteredDate}"/>
-                                            </div>
+                                    <H3> Отправитель </H3>
+                                    <HR>
+                                    <div class="form-group" th:if="*{senderDispatchData?.size()}">
+                                        <label class="control-label col-md-4"> Состояние </label>
+                                        <div class="col-md-6">
+                                            <label class="form-control" th:each="dd : *{senderDispatchData}" th:text="${dd.dispatchType.name} + ' в ' + ${dd.dispatchInitTime}"></label>
                                         </div>
-                                        <div class="form-group" th:if="${document.senderRegisteredNumber}">
-                                            <label class="control-label col-md-4"> Sender Registered № </label>
+                                    </div>
+                                    <div>
+                                        <div class="form-group" th:if="*{senderRegisteredNumber}">
+                                            <label class="control-label col-md-4"> № Регистрации </label>
                                             <div class="col-md-6">
                                                 <label class="form-control" th:text="*{senderRegisteredNumber}"/>
                                             </div>
                                         </div>
-                                        <div class="form-group" th:if="${document.senderDueDate}">
-                                            <label class="control-label col-md-4"> Sender Due Date </label>
+                                        <div class="form-group" th:if="*{senderRegisteredDate}">
+                                            <label class="control-label col-md-4"> Дата регистрации </label>
+                                            <div class="col-md-6">
+                                                <label class="form-control" th:text="*{senderRegisteredDate}"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" th:if="*{senderDueDate}">
+                                            <label class="control-label col-md-4"> Срок </label>
                                             <div class="col-md-6">
                                                 <label class="form-control" th:text="*{senderDueDate}"/>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label col-md-4"> Sender Responsible Type </label>
+                                            <label class="control-label col-md-4"> Вид Ответственного </label>
                                             <div class="col-md-6">
                                                 <label class="form-control" th:text="${responsible[__${document.senderResponsible.responsibleType}__]}"></label>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label col-md-4"> Sender Responsible </label>
-                                            <div class="sdr col-md-6" th:if="${document.senderResponsible.staff}">
-                                                <label class="form-control" th:each="s : ${document.senderResponsible.staff}" th:text="${s.name}"></label>
+                                            <label class="control-label col-md-4"> Ответственный </label>
+                                            <div class="sdr col-md-6" th:if="*{senderResponsible.staff}">
+                                                <label class="form-control" th:each="s : *{senderResponsible.staff}" th:text="${s.name}"></label>
                                             </div>
-                                            <div class="sdr col-md-6" th:if="${document.senderResponsible.departments}">
-                                                <label class="form-control" th:each="s : ${document.senderResponsible.departments}" th:text="${s.name}"></label>
+                                            <div class="sdr col-md-6" th:if="*{senderResponsible.departments}">
+                                                <label class="form-control" th:each="s : *{senderResponsible.departments}" th:text="${s.name}"></label>
                                             </div>
-                                            <div class="sdr col-md-6" th:if="${document.senderResponsible.organizations}">
-                                                <label class="form-control" th:each="s : ${document.senderResponsible.organizations}" th:text="${s.name}"></label>
+                                            <div class="sdr col-md-6" th:if="*{senderResponsible.organizations}">
+                                                <label class="form-control" th:each="s : *{senderResponsible.organizations}" th:text="${s.name}"></label>
                                             </div>
-                                            <div class="sdr col-md-6" th:if="${document.senderResponsible.person}">
-                                                <label class="form-control" th:each="s : ${document.senderResponsible.person}" th:text="${s.name}"></label>
+                                            <div class="sdr col-md-6" th:if="*{senderResponsible.person}">
+                                                <label class="form-control" th:each="s : *{senderResponsible.person}" th:text="${s.name}"></label>
                                             </div>
                                         </div>
 
-                                        <div class="form-group" th:if="${document.senderExecutor?.executorType}">
-                                            <label class="control-label col-md-4"> Sender Executor Type </label>
+                                        <div class="form-group" th:if="*{senderExecutor?.executorType}">
+                                            <label class="control-label col-md-4"> Вид исполнителя </label>
                                             <div class="col-md-6">
                                                 <label class="form-control" th:text="${responsible[__${document.senderExecutor?.executorType}__]}"></label>
                                             </div>
                                         </div>
-                                        <div class="form-group" th:if="${document.senderExecutor?.executorType}">
-                                            <label class="control-label col-md-4"> Sender Executor </label>
+                                        <div class="form-group" th:if="*{senderExecutor?.executorType}">
+                                            <label class="control-label col-md-4"> Испонитель </label>
 
-                                            <div class="sdr col-md-6" th:if="${document.senderExecutor.staff}">
-                                                <label class="form-control" th:each="s : ${document.senderExecutor.staff}" th:text="${s.name}"></label>
+                                            <div class="sdr col-md-6" th:if="*{senderExecutor.staff}">
+                                                <label class="form-control" th:each="s : *{senderExecutor.staff}" th:text="${s.name}"></label>
                                             </div>
 
-                                            <div class="sdr col-md-6" th:if="${document.senderExecutor.departments}">
-                                                <label class="form-control" th:each="s : ${document.senderExecutor.departments}" th:text="${s.name}"></label>
+                                            <div class="sdr col-md-6" th:if="*{senderExecutor.departments}">
+                                                <label class="form-control" th:each="s : *{senderExecutor.departments}" th:text="${s.name}"></label>
                                             </div>
 
-                                            <div class="sdr col-md-6" th:if="${document.senderExecutor.organizations}">
-                                                <label class="form-control" th:each="s : ${document.senderExecutor.organizations}" th:text="${s.name}"></label>
+                                            <div class="sdr col-md-6" th:if="*{senderExecutor.organizations}">
+                                                <label class="form-control" th:each="s : *{senderExecutor.organizations}" th:text="${s.name}"></label>
                                             </div>
 
-                                            <div class="sdr col-md-6" th:if="${document.senderExecutor.person}">
-                                                <label class="form-control" th:each="s : ${document.senderExecutor.person}" th:text="${s.name}"></label>
+                                            <div class="sdr col-md-6" th:if="*{senderExecutor.person}">
+                                                <label class="form-control" th:each="s : *{senderExecutor.person}" th:text="${s.name}"></label>
                                             </div>
 
                                         </div>
-                                        <div class="form-group" th:if="${document.senderFileName != null}">
-                                            <label class="control-label col-md-4"> Sender Attachment </label>
+                                        <div class="form-group" th:if="*{not senderFileName.isEmpty()}">
+                                            <label class="control-label col-md-4"> Прикрепление </label>
                                             <div class="col-md-6">
-                                                <a th:href="${document.senderFileName}" class="form-control" th:text="${document.senderFileName}" th:if="${document.senderFileName != null}"></a>
+                                                <a th:href="@{/doc/download/__${document.senderFileName}__}" class="form-control" th:text="*{senderFileName}"></a>
                                             </div>
                                         </div>
-                                        <div class="form-group" th:if="${document.receiverRegisteredDate}">
-                                            <label class="control-label col-md-4"> Receiver Registered Date </label>
+                                        <H3> Получатель </H3>
+                                        <HR>
+                                        <div class="form-group" th:if="*{receiverDispatchData?.size()}">
+                                            <label class="control-label col-md-4"> Состояние </label>
                                             <div class="col-md-6">
-                                                <label class="form-control" th:text="*{receiverRegisteredDate}"/>
+                                                <label class="form-control" th:each="dd : *{receiverDispatchData}" th:text="${dd.dispatchType.name} + ' в ' + ${dd.dispatchInitTime}"></label>
                                             </div>
                                         </div>
-                                        <div class="form-group" th:if="${document.receiverRegisteredNumber}">
-                                            <label class="control-label col-md-4"> Receiver Registered № </label>
+                                        <div class="form-group" th:if="*{receiverRegisteredNumber}">
+                                            <label class="control-label col-md-4"> № Регистрации </label>
                                             <div class="col-md-6">
                                                 <label class="form-control" th:text="*{receiverRegisteredNumber}"/>
                                             </div>
                                         </div>
+                                        <div class="form-group" th:if="*{receiverRegisteredDate}">
+                                            <label class="control-label col-md-4"> Дата регистрации </label>
+                                            <div class="col-md-6">
+                                                <label class="form-control" th:text="*{receiverRegisteredDate}"/>
+                                            </div>
+                                        </div>
                                         <div class="form-group">
-                                            <label class="control-label col-md-4"> Receiver Responsible Type </label>
+                                            <label class="control-label col-md-4"> Вид Ответственного </label>
                                             <div class="col-md-6">
                                                 <label class="form-control" th:text="${responsible[__${document.receiverResponsible.responsibleType}__]}"></label>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label col-md-4"> Receiver Responsible </label>
+                                            <label class="control-label col-md-4"> Ответственный </label>
 
-                                            <div class="sdr col-md-6" th:if="${document.receiverResponsible.staff}">
-                                                <label class="form-control" th:each="s : ${document.receiverResponsible.staff}" th:text="${s.name}"></label>
+                                            <div class="sdr col-md-6" th:if="*{receiverResponsible.staff}">
+                                                <label class="form-control" th:each="s : *{receiverResponsible.staff}" th:text="${s.name}"></label>
                                             </div>
 
-                                            <div class="sdr col-md-6" th:if="${document.receiverResponsible.departments}">
-                                                <label class="form-control" th:each="s : ${document.receiverResponsible.departments}" th:text="${s.name}"></label>
+                                            <div class="sdr col-md-6" th:if="*{receiverResponsible.departments}">
+                                                <label class="form-control" th:each="s : *{receiverResponsible.departments}" th:text="${s.name}"></label>
                                             </div>
 
-                                            <div class="sdr col-md-6" th:if="${document.receiverResponsible.organizations}">
-                                                <label class="form-control" th:each="s : ${document.receiverResponsible.organizations}" th:text="${s.name}"></label>
+                                            <div class="sdr col-md-6" th:if="*{receiverResponsible.organizations}">
+                                                <label class="form-control" th:each="s : *{receiverResponsible.organizations}" th:text="${s.name}"></label>
                                             </div>
 
-                                            <div class="sdr col-md-6" th:if="${document.receiverResponsible.person}">
-                                                <label class="form-control" th:each="s : ${document.receiverResponsible.person}" th:text="${s.name}"></label>
+                                            <div class="sdr col-md-6" th:if="*{receiverResponsible.person}">
+                                                <label class="form-control" th:each="s : *{receiverResponsible.person}" th:text="${s.name}"></label>
                                             </div>
                                         </div>
-                                        <div class="form-group" th:if="${document.receiverExecutor?.executorType}">
-                                            <label class="control-label col-md-4"> Receiver Executor Type </label>
+                                        <div class="form-group" th:if="*{receiverExecutor?.executorType}">
+                                            <label class="control-label col-md-4"> Вид исполнителя </label>
                                             <div class="col-md-6">
                                                 <label class="form-control" th:text="${responsible[__${document.receiverExecutor?.executorType}__]}"></label>
                                             </div>
                                         </div>
-                                        <div class="form-group" th:if="${document.receiverExecutor?.executorType}">
-                                            <label class="control-label col-md-4"> Receiver Executor </label>
+                                        <div class="form-group" th:if="*{receiverExecutor?.executorType}">
+                                            <label class="control-label col-md-4"> Испонитель </label>
 
-                                            <div class="sdr col-md-6" th:if="${document.receiverExecutor.staff}">
-                                                <label class="form-control" th:each="s : ${document.receiverExecutor.staff}" th:text="${s.name}"></label>
+                                            <div class="sdr col-md-6" th:if="*{receiverExecutor.staff}">
+                                                <label class="form-control" th:each="s : *{receiverExecutor.staff}" th:text="${s.name}"></label>
                                             </div>
 
-                                            <div class="sdr col-md-6" th:if="${document.receiverExecutor.departments}">
-                                                <label class="form-control" th:each="s : ${document.receiverExecutor.departments}" th:text="${s.name}"></label>
+                                            <div class="sdr col-md-6" th:if="*{receiverExecutor.departments}">
+                                                <label class="form-control" th:each="s : *{receiverExecutor.departments}" th:text="${s.name}"></label>
                                             </div>
 
-                                            <div class="sdr col-md-6" th:if="${document.receiverExecutor.organizations}">
-                                                <label class="form-control" th:each="s : ${document.receiverExecutor.organizations}" th:text="${s.name}"></label>
+                                            <div class="sdr col-md-6" th:if="*{receiverExecutor.organizations}">
+                                                <label class="form-control" th:each="s : *{receiverExecutor.organizations}" th:text="${s.name}"></label>
                                             </div>
 
-                                            <div class="sdr col-md-6" th:if="${document.receiverExecutor.person}">
-                                                <label class="form-control" th:each="s : ${document.receiverExecutor.person}" th:text="${s.name} "></label>
+                                            <div class="sdr col-md-6" th:if="*{receiverExecutor.person}">
+                                                <label class="form-control" th:each="s : *{receiverExecutor.person}" th:text="${s.name} "></label>
                                             </div>
 
                                         </div>
                                     </div>
-
-                                    <div class="form-group" th:if="${document.receiverFileName}">
-                                        <label class="control-label col-md-4"> Receiver Attachment </label>
+                                    <div class="form-group" th:if="*{not receiverFileName.isEmpty()}">
+                                        <label class="control-label col-md-4"> Прикрепление </label>
                                         <div class="col-md-6">
-                                            <a th:href="${document.receiverFileName}" class="form-control" th:text="${document.receiverFileName}" th:if="${document.receiverFileName != null}"></a>
+                                            <a th:href="@{/doc/download/__${document.receiverFileName}__}" class="form-control" th:text="*{receiverFileName}"></a>
                                         </div>
                                     </div>
+                                    <HR>
                                     <button type="button" class="btn dark btn-outline" onclick="window.history.back()">Back</button>
 
                                 </div>

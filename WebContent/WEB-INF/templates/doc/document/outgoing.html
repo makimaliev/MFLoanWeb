@@ -30,142 +30,136 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-4"> Загаловок </label>
                                         <div class="col-md-6">
-                                            <input class="form-control" th:field="*{title}" th:type="${document.senderStatus?.internalName =='approve' ? 'hidden' : 'text'}"/>
-                                            <label class="form-control" th:text="*{title}" th:if="${document.senderStatus?.internalName} == 'approve'"> Title </label>
+                                            <input class="form-control" th:field="*{title}" th:type="*{senderStatus?.internalName =='approve' ? 'hidden' : 'text'}"/>
+                                            <label class="form-control" th:text="*{title}" th:if="*{senderStatus?.internalName} == 'approve'"> Title </label>
                                         </div>
                                     </div>
                                     <!-- DESCRIPTION -->
                                     <div class="form-group">
                                         <label class="control-label col-md-4"> Описание </label>
                                         <div class="col-md-6">
-                                            <input class="form-control" th:field="*{description}" th:type="${document.senderStatus?.internalName =='approve' ? 'hidden' : 'text'}"/>
-                                            <label class="form-control" th:text="*{description}" th:if="${document.senderStatus?.internalName} == 'approve'"> Description </label>
+                                            <input class="form-control" th:field="*{description}" th:type="*{senderStatus?.internalName =='approve' ? 'hidden' : 'text'}"/>
+                                            <label class="form-control" th:text="*{description}" th:if="*{senderStatus?.internalName} == 'approve'"> Description </label>
                                         </div>
                                     </div>
                                     <!-- Sender -->
                                     <!-- Sender Status -->
+                                    <H3> Отправитель </H3>
+                                    <HR>
                                     <div class="form-group" th:if="${not #lists.isEmpty(document.senderDispatchData)}">
                                         <label class="control-label col-md-4"> Состояние отправителя </label>
                                         <div class="col-md-6">
-                                            <label class="form-control" th:each="dd : ${document.senderDispatchData}" th:text="${dd.dispatchType?.name} + ' on ' + ${dd.dispatchInitTime}"></label>
+                                            <label class="form-control" th:each="dd : *{senderDispatchData}" th:text="${dd.dispatchType?.name} + ' в ' + ${dd.dispatchInitTime}"></label>
                                         </div>
                                     </div>
-                                    <input type="hidden" th:field="*{senderDueDate}"/>
                                     <div>
-                                        <div class="form-group" th:if="${document.senderRegisteredDate}">
+                                        <div class="form-group" th:if="*{senderRegisteredDate}">
                                             <label class="control-label col-md-4"> Дата регистрации </label>
                                             <div class="col-md-6">
-                                                <input class="form-control" th:field="*{senderRegisteredDate}" th:type="${document.senderStatus?.internalName =='approve' ? 'hidden' : 'date'}"/>
-                                                <label class="form-control" th:text="*{senderRegisteredDate}" th:if="${document.senderStatus?.internalName} == 'approve'"> Title </label>
+                                                <input class="form-control" th:field="*{senderRegisteredDate}" th:type="*{senderStatus?.internalName =='approve' ? 'hidden' : 'date'}"/>
+                                                <label class="form-control" th:text="*{senderRegisteredDate}" th:if="*{senderStatus?.internalName} == 'approve'"> Title </label>
                                             </div>
                                         </div>
-                                        <div class="form-group" th:if="${document.senderRegisteredNumber}">
+                                        <div class="form-group" th:if="*{senderRegisteredNumber}">
                                             <label class="control-label col-md-4"> № регистрации </label>
                                             <div class="col-md-6">
-                                                <input class="form-control" th:field="*{senderRegisteredNumber}" th:type="${document.senderStatus?.internalName =='approve' ? 'hidden' : 'text'}"/>
-                                                <label class="form-control" th:text="*{senderRegisteredNumber}" th:if="${document.senderStatus?.internalName} == 'approve'"> Title </label>
-                                            </div>
-                                        </div>
-                                        <div class="form-group" th:if="${document.senderDueDate}">
-                                            <label class="control-label col-md-4"> Срок </label>
-                                            <div class="col-md-6">
-                                                <input class="form-control" th:field="*{senderDueDate}" th:type="${document.senderStatus?.internalName =='approve' ? 'hidden' : 'date'}"/>
-                                                <label class="form-control" th:text="*{senderDueDate}" th:if="${document.senderStatus?.internalName} == 'approve'"> Title </label>
+                                                <input class="form-control" th:field="*{senderRegisteredNumber}" th:type="*{senderStatus?.internalName =='approve' ? 'hidden' : 'text'}"/>
+                                                <label class="form-control" th:text="*{senderRegisteredNumber}" th:if="*{senderStatus?.internalName} == 'approve'"> Title </label>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-4"> Вид отправителя </label>
-                                            <div class="col-md-6" th:hidden="${document.senderStatus?.internalName} == 'approve'">
+                                            <div class="col-md-6" th:hidden="*{senderStatus?.internalName} == 'approve'">
                                                 <select class="form-control" id="srt_select" th:field="*{senderResponsible.responsibleType}">
                                                     <option th:each="r : ${responsible}"
                                                             th:value="${r.key}"
                                                             th:text="${r.value}">Responsible</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-6" th:if="${document.senderStatus?.internalName} == 'approve'">
+                                            <div class="col-md-6" th:if="*{senderStatus?.internalName} == 'approve'">
                                                 <label class="form-control" th:text="${responsible[__${document.senderResponsible.responsibleType}__]}"> Title </label>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-4"> Отправители </label>
                                             <div class="sdr col-md-6" id="si1">
-                                                <div th:hidden="${document.senderStatus?.internalName} == 'approve'">
+                                                <div th:hidden="*{senderStatus?.internalName} == 'approve'">
                                                     <select class="form-control" th:field="*{senderResponsible.staff}" multiple="multiple">
                                                         <option th:each="i : ${staff}"
                                                                 th:value="${i.id}"
                                                                 th:text="${i.name}">Staff</option>
                                                     </select>
                                                 </div>
-                                                <div th:if="${document.senderStatus?.internalName} == 'approve'">
-                                                    <label class="form-control"  th:each="s : ${document.senderResponsible.staff}" th:text="${s.name}"> Staff </label>
+                                                <div th:if="*{senderStatus?.internalName} == 'approve'">
+                                                    <label class="form-control"  th:each="s : *{senderResponsible.staff}" th:text="${s.name}"> Staff </label>
                                                 </div>
                                             </div>
                                             <div class="sdr col-md-6" id="si2">
-                                                <div th:hidden="${document.senderStatus?.internalName} == 'approve'">
+                                                <div th:hidden="*{senderStatus?.internalName} == 'approve'">
                                                     <select class="form-control" th:field="*{senderResponsible.departments}" multiple="multiple">
                                                         <option th:each="i : ${department}"
                                                                 th:value="${i.id}"
                                                                 th:text="${i.name}">Responsible</option>
                                                     </select>
                                                 </div>
-                                                <div th:if="${document.senderStatus?.internalName} == 'approve'">
-                                                    <label class="form-control"  th:each="s : ${document.senderResponsible.departments}" th:text="${s.name}"> Staff </label>
+                                                <div th:if="*{senderStatus?.internalName} == 'approve'">
+                                                    <label class="form-control"  th:each="s : *{senderResponsible.departments}" th:text="${s.name}"> Staff </label>
                                                 </div>
                                             </div>
                                             <div class="sdr col-md-6" id="si3">
-                                                <div th:hidden="${document.senderStatus?.internalName} == 'approve'">
+                                                <div th:hidden="*{senderStatus?.internalName} == 'approve'">
                                                     <select class="form-control"  th:field="*{senderResponsible.organizations}" multiple="multiple">
                                                         <option th:each="i : ${organization}"
                                                                 th:value="${i.id}"
                                                                 th:text="${i.name}">Responsible</option>
                                                     </select>
                                                 </div>
-                                                <div th:if="${document.senderStatus?.internalName} == 'approve'">
-                                                    <label class="form-control"  th:each="s : ${document.senderResponsible.organizations}" th:text="${s.name}"> Staff </label>
+                                                <div th:if="*{senderStatus?.internalName} == 'approve'">
+                                                    <label class="form-control"  th:each="s : *{senderResponsible.organizations}" th:text="${s.name}"> Staff </label>
                                                 </div>
                                             </div>
                                             <div class="sdr col-md-6" id="si4">
-                                                <div th:hidden="${document.senderStatus?.internalName} == 'approve'">
+                                                <div th:hidden="*{senderStatus?.internalName} == 'approve'">
                                                     <select class="form-control" th:field="*{senderResponsible.person}" multiple="multiple">
                                                         <option th:each="i : ${person}"
                                                                 th:value="${i.id}"
                                                                 th:text="${i.name}">Responsible</option>
                                                     </select>
                                                 </div>
-                                                <div th:if="${document.senderStatus?.internalName} == 'approve'">
-                                                    <label class="form-control"  th:each="s : ${document.senderResponsible.person}" th:text="${s.name}"> Staff </label>
+                                                <div th:if="*{senderStatus?.internalName} == 'approve'">
+                                                    <label class="form-control"  th:each="s : *{senderResponsible.person}" th:text="${s.name}"> Staff </label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-4"> Вид исполнителя </label>
-                                            <div class="col-md-6" th:hidden="${document.senderStatus?.internalName} == 'approve'">
+                                            <div class="col-md-6" th:hidden="*{senderStatus?.internalName} == 'approve'">
                                                 <select class="form-control" id="set_select" th:field="*{senderExecutor.executorType}">
                                                     <option th:each="r : ${responsible}"
                                                             th:value="${r.key}"
                                                             th:text="${r.value}">Responsible</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-6" th:if="${document.senderStatus?.internalName} == 'approve'">
+                                            <div class="col-md-6" th:if="*{senderStatus?.internalName} == 'approve'">
                                                 <label class="form-control" th:text="${responsible[__${document.senderExecutor.executorType}__]}"> Title </label>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-4"> Исполнитель </label>
                                             <div class="sde col-md-6" id="sei1">
-                                                <div th:hidden="${document.senderStatus?.internalName} == 'approve'">
+                                                <div th:hidden="*{senderStatus?.internalName} == 'approve'">
                                                     <select class="form-control" th:field="*{senderExecutor.staff}" multiple="multiple">
                                                         <option th:each="i : ${staff}"
                                                                 th:value="${i.id}"
                                                                 th:text="${i.name}">Responsible</option>
                                                     </select>
                                                 </div>
-                                                <div th:if="${document.senderStatus?.internalName} == 'approve'">
-                                                    <label class="form-control"  th:each="s : ${document.senderExecutor.staff}" th:text="${s.name}"> Staff </label>
+                                                <div th:if="*{senderStatus?.internalName} == 'approve'">
+                                                    <label class="form-control"  th:each="s : *{senderExecutor.staff}" th:text="${s.name}"> Staff </label>
                                                 </div>
                                             </div>
                                             <div class="sde col-md-6" id="sei2">
-                                                <div th:hidden="${document.senderStatus?.internalName} == 'approve'">
+                                                <div th:hidden="*{senderStatus?.internalName} == 'approve'">
                                                     <select class="form-control" th:field="*{senderExecutor.departments}" multiple="multiple">
                                                         <option th:each="i : ${department}"
                                                                 th:value="${i.id}"
@@ -173,227 +167,234 @@
                                                     </select>
                                                 </div>
                                                 <div th:if="${document.senderStatus?.internalName} == 'approve'">
-                                                    <label class="form-control"  th:each="s : ${document.senderExecutor.departments}" th:text="${s.name}"> Staff </label>
+                                                    <label class="form-control"  th:each="s : *{senderExecutor.departments}" th:text="${s.name}"> Staff </label>
                                                 </div>
                                             </div>
                                             <div class="sde col-md-6" id="sei3">
-                                                <div th:hidden="${document.senderStatus?.internalName} == 'approve'">
+                                                <div th:hidden="*{senderStatus?.internalName} == 'approve'">
                                                     <select class="form-control"  th:field="*{senderExecutor.organizations}" multiple="multiple">
                                                         <option th:each="i : ${organization}"
                                                                 th:value="${i.id}"
                                                                 th:text="${i.name}">Responsible</option>
                                                     </select>
                                                 </div>
-                                                <div th:if="${document.senderStatus?.internalName} == 'approve'">
-                                                    <label class="form-control"  th:each="s : ${document.senderExecutor.organizations}" th:text="${s.name}"> Staff </label>
+                                                <div th:if="*{senderStatus?.internalName} == 'approve'">
+                                                    <label class="form-control"  th:each="s : *{senderExecutor.organizations}" th:text="${s.name}"> Staff </label>
                                                 </div>
                                             </div>
                                             <div class="sde col-md-6" id="sei4">
-                                                <div th:hidden="${document.senderStatus?.internalName} == 'approve'">
+                                                <div th:hidden="*{senderStatus?.internalName} == 'approve'">
                                                     <select class="form-control" th:field="*{senderExecutor.person}" multiple="multiple">
                                                         <option th:each="i : ${person}"
                                                                 th:value="${i.id}"
                                                                 th:text="${i.name}">Responsible</option>
                                                     </select>
                                                 </div>
-                                                <div th:if="${document.senderStatus?.internalName} == 'approve'">
-                                                    <label class="form-control"  th:each="s : ${document.senderExecutor.person}" th:text="${s.name}"> Staff </label>
+                                                <div th:if="*{senderStatus?.internalName} == 'approve'">
+                                                    <label class="form-control"  th:each="s : *{senderExecutor.person}" th:text="${s.name}"> Staff </label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
+                                            <label class="control-label col-md-4"> Срок </label>
+                                            <div class="col-md-6">
+                                                <input class="form-control" th:field="*{senderDueDate}" th:type="*{senderStatus?.internalName =='approve' ? 'hidden' : 'date'}"/>
+                                                <label class="form-control" th:text="*{senderDueDate} != null ? *{senderDueDate} : 'Срок не установлен'" th:if="*{senderStatus?.internalName} == 'approve'"> Title </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" th:hidden="*{senderStatus?.internalName} == 'approve' AND *{senderFileName.isEmpty()}">
                                             <input class="form-control" type="hidden" th:field="*{senderFileName}"/>
                                             <label class="control-label col-md-4"> Прикрепление </label>
                                             <div class="col-md-6">
-                                                <div th:hidden="${document.senderFileName != null}">
+                                                <div th:hidden="*{senderStatus?.internalName} == 'approve'">
                                                     <input class="form-control" type="file" id="senderFile" name="senderFile"/>
                                                 </div>
-                                                <a th:href="${document.senderFileName}" class="form-control" th:text="${document.senderFileName}" th:if="${document.senderFileName != null}"></a>
+                                                <a th:href="@{/doc/download/__${document.senderFileName}__}" class="form-control" th:text="*{senderFileName}" th:if="*{senderFileName != null}"></a>
                                             </div>
                                         </div>
                                     </div>
                                     <!-- Receiver -->
                                     <!-- Receiver Status -->
+                                    <H3> Получатель </H3>
+                                    <HR>
                                     <div class="form-group" th:if="${not #lists.isEmpty(document.receiverDispatchData)}">
                                         <label class="control-label col-md-4"> Receiver Status </label>
                                         <div class="col-md-6">
-                                            <label class="form-control" th:each="dd : ${document.receiverDispatchData}" th:text="${dd.dispatchType.name} + ' on ' + ${dd.dispatchInitTime}"></label>
+                                            <label class="form-control" th:each="dd : *{receiverDispatchData}" th:text="${dd.dispatchType.name} + ' в ' + ${dd.dispatchInitTime}"></label>
                                         </div>
                                     </div>
-                                    <input type="hidden" th:field="*{receiverDueDate}"/>
                                     <div>
-                                        <div class="form-group" th:if="${document.receiverRegisteredDate}">
-                                            <label class="control-label col-md-4"> Receiver Registered Date </label>
+                                        <div class="form-group" th:if="*{receiverRegisteredNumber}">
+                                            <label class="control-label col-md-4"> № Регистрации </label>
                                             <div class="col-md-6">
-                                                <input class="form-control" th:field="*{receiverRegisteredDate}" th:type="${document.senderStatus?.internalName =='approve' ? 'hidden' : 'date'}"/>
-                                                <label class="form-control" th:text="*{receiverRegisteredDate}" th:if="${document.senderStatus?.internalName} == 'approve'"> Title </label>
+                                                <input class="form-control" th:field="*{receiverRegisteredNumber}" th:type="*{senderStatus?.internalName =='approve' ? 'hidden' : 'text'}"/>
+                                                <label class="form-control" th:text="*{receiverRegisteredNumber}" th:if="*{senderStatus?.internalName} == 'approve'"> Title </label>
                                             </div>
                                         </div>
-                                        <div class="form-group" th:if="${document.receiverRegisteredNumber}">
-                                            <label class="control-label col-md-4"> Receiver Registered № </label>
+                                        <div class="form-group" th:if="*{receiverRegisteredDate}">
+                                            <label class="control-label col-md-4"> Дата регистрации </label>
                                             <div class="col-md-6">
-                                                <input class="form-control" th:field="*{receiverRegisteredNumber}" th:type="${document.senderStatus?.internalName =='approve' ? 'hidden' : 'text'}"/>
-                                                <label class="form-control" th:text="*{receiverRegisteredNumber}" th:if="${document.senderStatus?.internalName} == 'approve'"> Title </label>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4"> Receiver Due Date </label>
-                                            <div class="col-md-6">
-                                                <input class="form-control" th:field="*{receiverDueDate}" th:type="${document.senderStatus?.internalName =='approve' ? 'hidden' : 'date'}"/>
-                                                <label class="form-control" th:text="*{receiverDueDate}" th:if="${document.senderStatus?.internalName} == 'approve'"> Не установлен </label>
+                                                <input class="form-control" th:field="*{receiverRegisteredDate}" th:type="*{senderStatus?.internalName =='approve' ? 'hidden' : 'date'}"/>
+                                                <label class="form-control" th:text="*{receiverRegisteredDate}" th:if="*{senderStatus?.internalName} == 'approve'"> Title </label>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label col-md-4"> Receiver Responsible Type </label>
-                                            <div class="col-md-6" th:hidden="${document.senderStatus?.internalName} == 'approve'">
+                                            <label class="control-label col-md-4"> Вид ответственного </label>
+                                            <div class="col-md-6" th:hidden="*{senderStatus?.internalName} == 'approve'">
                                                 <select class="form-control" id="rrt_select" th:field="*{receiverResponsible.responsibleType}">
                                                     <option th:each="r : ${responsible}"
                                                             th:value="${r.key}"
                                                             th:text="${r.value}">Responsible</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-6" th:if="${document.senderStatus?.internalName} == 'approve'">
+                                            <div class="col-md-6" th:if="*{senderStatus?.internalName} == 'approve'">
                                                 <label class="form-control" th:text="${responsible[__${document.receiverResponsible.responsibleType}__]}"> Title </label>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label col-md-4"> Receiver Responsible </label>
+                                            <label class="control-label col-md-4"> Ответственный </label>
                                             <div class="rdr col-md-6" id="ri1">
-                                                <div th:hidden="${document.senderStatus?.internalName} == 'approve'">
+                                                <div th:hidden="*{senderStatus?.internalName} == 'approve'">
                                                     <select class="form-control" th:field="*{receiverResponsible.staff}" multiple="multiple">
                                                         <option th:each="i : ${staff}"
                                                                 th:value="${i.id}"
                                                                 th:text="${i.name}">Staff</option>
                                                     </select>
                                                 </div>
-                                                <div th:if="${document.senderStatus?.internalName} == 'approve'">
-                                                    <label class="form-control"  th:each="s : ${document.receiverResponsible.staff}" th:text="${s.name}"> Staff </label>
+                                                <div th:if="*{senderStatus?.internalName} == 'approve'">
+                                                    <label class="form-control"  th:each="s : *{receiverResponsible.staff}" th:text="${s.name}"> Staff </label>
                                                 </div>
                                             </div>
                                             <div class="rdr col-md-6" id="ri2">
-                                                <div th:hidden="${document.senderStatus?.internalName} == 'approve'">
+                                                <div th:hidden="*{senderStatus?.internalName} == 'approve'">
                                                     <select class="form-control" th:field="*{receiverResponsible.departments}" multiple="multiple">
                                                         <option th:each="i : ${department}"
                                                                 th:value="${i.id}"
                                                                 th:text="${i.name}">Responsible</option>
                                                     </select>
                                                 </div>
-                                                <div th:if="${document.senderStatus?.internalName} == 'approve'">
-                                                    <label class="form-control"  th:each="s : ${document.receiverResponsible.departments}" th:text="${s.name}"> Staff </label>
+                                                <div th:if="*{senderStatus?.internalName} == 'approve'">
+                                                    <label class="form-control"  th:each="s : *{receiverResponsible.departments}" th:text="${s.name}"> Staff </label>
                                                 </div>
                                             </div>
                                             <div class="rdr col-md-6" id="ri3">
-                                                <div th:hidden="${document.senderStatus?.internalName} == 'approve'">
+                                                <div th:hidden="*{senderStatus?.internalName} == 'approve'">
                                                     <select class="form-control"  th:field="*{receiverResponsible.organizations}" multiple="multiple">
                                                         <option th:each="i : ${organization}"
                                                                 th:value="${i.id}"
                                                                 th:text="${i.name}">Responsible</option>
                                                     </select>
                                                 </div>
-                                                <div th:if="${document.senderStatus?.internalName} == 'approve'">
-                                                    <label class="form-control"  th:each="s : ${document.receiverResponsible.organizations}" th:text="${s.name}"> Staff </label>
+                                                <div th:if="*{senderStatus?.internalName} == 'approve'">
+                                                    <label class="form-control"  th:each="s : *{receiverResponsible.organizations}" th:text="${s.name}"> Staff </label>
                                                 </div>
                                             </div>
                                             <div class="rdr col-md-6" id="ri4">
-                                                <div th:hidden="${document.senderStatus?.internalName} == 'approve'">
+                                                <div th:hidden="*{senderStatus?.internalName} == 'approve'">
                                                     <select class="form-control" th:field="*{receiverResponsible.person}" multiple="multiple">
                                                         <option th:each="i : ${person}"
                                                                 th:value="${i.id}"
                                                                 th:text="${i.name}">Responsible</option>
                                                     </select>
                                                 </div>
-                                                <div th:if="${document.senderStatus?.internalName} == 'approve'">
-                                                    <label class="form-control"  th:each="s : ${document.receiverResponsible.person}" th:text="${s.name}"> Staff </label>
+                                                <div th:if="*{senderStatus?.internalName} == 'approve'">
+                                                    <label class="form-control"  th:each="s : *{receiverResponsible.person}" th:text="${s.name}"> Staff </label>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group" th:if="${document.senderStatus?.internalName == 'approve'} and ${document.receiverStatus?.internalName == 'accept' or document.receiverStatus?.internalName == 'start' or document.receiverStatus?.internalName == 'done'}">
-                                            <label class="control-label col-md-4"> Receiver Executor Type </label>
-                                            <div class="col-md-6" th:hidden="${document.receiverStatus?.internalName == 'start' or document.receiverStatus?.internalName == 'done'}">
+                                        <div class="form-group" th:if="*{senderStatus?.internalName} == 'approve'">
+                                            <label class="control-label col-md-4"> Вид исполнителя </label>
+                                            <div class="col-md-6" th:hidden="*{receiverStatus?.internalName} == 'register' OR *{receiverStatus?.internalName} == 'archived'">
                                                 <select class="form-control" id="ret_select" th:field="*{receiverExecutor.executorType}">
                                                     <option th:each="r : ${responsible}"
                                                             th:value="${r.key}"
                                                             th:text="${r.value}">Responsible</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-6" th:if="${document.receiverStatus?.internalName == 'start' or document.receiverStatus?.internalName == 'done'}">
+                                            <div class="col-md-6" th:if="*{receiverStatus?.internalName} == 'register' OR *{receiverStatus?.internalName} == 'archived'">
                                                 <label class="form-control" th:text="${responsible[__${document.receiverExecutor.executorType}__]}"> Title </label>
                                             </div>
                                         </div>
-                                        <div class="form-group" th:if="${document.senderStatus?.internalName == 'approve'} and ${document.receiverStatus?.internalName == 'accept' or document.receiverStatus?.internalName == 'start' or document.receiverStatus?.internalName == 'done'}">
-                                            <label class="control-label col-md-4"> Receiver Executor </label>
+                                        <div class="form-group" th:if="*{senderStatus?.internalName} == 'approve'">
+                                            <label class="control-label col-md-4"> Исполнитель </label>
                                             <div class="rde col-md-6" id="rei1">
-                                                <div th:hidden="${document.receiverStatus?.internalName} == 'start' or ${document.receiverStatus?.internalName} == 'done'">
+                                                <div th:hidden="*{receiverStatus?.internalName} == 'register' OR *{receiverStatus?.internalName} == 'archived'">
                                                     <select class="form-control" th:field="*{receiverExecutor.staff}" multiple="multiple">
                                                         <option th:each="i : ${staff}"
                                                                 th:value="${i.id}"
                                                                 th:text="${i.name}">Responsible</option>
                                                     </select>
                                                 </div>
-                                                <div th:if="${document.receiverStatus?.internalName} == 'start' or ${document.receiverStatus?.internalName} == 'done'">
-                                                    <label class="form-control"  th:each="s : ${document.receiverExecutor.staff}" th:text="${s.name}"> Staff </label>
+                                                <div th:if="*{receiverStatus?.internalName} == 'register' OR *{receiverStatus?.internalName} == 'archived'">
+                                                    <label class="form-control"  th:each="s : *{receiverExecutor.staff}" th:text="${s.name}"> Staff </label>
                                                 </div>
                                             </div>
                                             <div class="rde col-md-6" id="rei2">
-                                                <div th:hidden="${document.receiverStatus?.internalName} == 'start' or ${document.receiverStatus?.internalName} == 'done'">
+                                                <div th:hidden="*{receiverStatus?.internalName} == 'register' OR *{receiverStatus?.internalName} == 'archived'">
                                                     <select class="form-control" th:field="*{receiverExecutor.departments}" multiple="multiple">
                                                         <option th:each="i : ${department}"
                                                                 th:value="${i.id}"
                                                                 th:text="${i.name}">Responsible</option>
                                                     </select>
                                                 </div>
-                                                <div th:if="${document.receiverStatus?.internalName} == 'start' or ${document.receiverStatus?.internalName} == 'done'">
-                                                    <label class="form-control"  th:each="s : ${document.receiverExecutor.departments}" th:text="${s.name}"> Staff </label>
+                                                <div th:if="*{receiverStatus?.internalName} == 'register' OR *{receiverStatus?.internalName} == 'archived'">
+                                                    <label class="form-control"  th:each="s : *{receiverExecutor.departments}" th:text="${s.name}"> Staff </label>
                                                 </div>
                                             </div>
                                             <div class="rde col-md-6" id="rei3">
-                                                <div th:hidden="${document.receiverStatus?.internalName} == 'start' or ${document.receiverStatus?.internalName} == 'done'">
+                                                <div th:hidden="*{receiverStatus?.internalName} == 'register' OR *{receiverStatus?.internalName} == 'archived'">
                                                     <select class="form-control"  th:field="*{receiverExecutor.organizations}" multiple="multiple">
                                                         <option th:each="i : ${organization}"
                                                                 th:value="${i.id}"
                                                                 th:text="${i.name}">Responsible</option>
                                                     </select>
                                                 </div>
-                                                <div th:if="${document.receiverStatus?.internalName} == 'start' or ${document.receiverStatus?.internalName} == 'done'">
-                                                    <label class="form-control"  th:each="s : ${document.receiverExecutor.organizations}" th:text="${s.name}"> Staff </label>
+                                                <div th:if="*{receiverStatus?.internalName} == 'register' OR *{receiverStatus?.internalName} == 'archived'">
+                                                    <label class="form-control"  th:each="s : *{receiverExecutor.organizations}" th:text="${s.name}"> Staff </label>
                                                 </div>
                                             </div>
                                             <div class="rde col-md-6" id="rei4">
-                                                <div th:hidden="${document.receiverStatus?.internalName} == 'start' or ${document.receiverStatus?.internalName} == 'done'">
+                                                <div th:hidden="*{receiverStatus?.internalName} == 'register' OR *{receiverStatus?.internalName} == 'archived'">
                                                     <select class="form-control" th:field="*{receiverExecutor.person}" multiple="multiple">
                                                         <option th:each="i : ${person}"
                                                                 th:value="${i.id}"
                                                                 th:text="${i.name}">Responsible</option>
                                                     </select>
                                                 </div>
-                                                <div th:if="${document.receiverStatus?.internalName} == 'start' or ${document.receiverStatus?.internalName} == 'done'">
-                                                    <label class="form-control" th:each="s : ${document.receiverExecutor.person}" th:text="${s.name}"> Staff </label>
+                                                <div th:if="*{receiverStatus?.internalName} == 'register' OR *{receiverStatus?.internalName} == 'archived'">
+                                                    <label class="form-control" th:each="s : *{receiverExecutor.person}" th:text="${s.name}"> Staff </label>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group" th:hidden="${document.receiverStatus == null}">
-                                            <input class="form-control" type="hidden" th:field="*{receiverFileName}"/>
-                                            <label class="control-label col-md-4"> Receiver Attachment </label>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-4"> Срок </label>
                                             <div class="col-md-6">
-                                                <div th:hidden="${document.receiverStatus?.internalName == 'start' or document.receiverStatus?.internalName == 'done'}">
+                                                <input class="form-control" th:field="*{receiverDueDate}" th:type="*{senderStatus?.internalName =='approve' ? 'hidden' : 'date'}"/>
+                                                <label class="form-control" th:text="*{receiverDueDate}" th:if="*{senderStatus?.internalName} == 'approve'"> Не установлен </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" th:hidden="*{receiverStatus?.internalName} != 'register' OR *{receiverStatus?.internalName} != 'archived'">
+                                            <label class="control-label col-md-4"> Прикрепление </label>
+                                            <div class="col-md-6">
+                                                <div th:hidden="*{receiverStatus?.internalName} == 'register' OR *{receiverStatus?.internalName} == 'archived'">
                                                     <input class="form-control" type="file" id="receiverFile" name="receiverFile"/>
                                                 </div>
-                                                <a th:href="${'D:\cp\' + document.receiverFileName}" class="form-control" th:text="${document.receiverFileName}" th:if="${document.receiverStatus?.internalName == 'start' or document.receiverStatus?.internalName == 'done'}"></a>
+                                                <a th:href="@{/doc/download/__${document.receiverFileName}__}" class="form-control" th:text="*{receiverFileName}" th:if="*{receiverStatus?.internalName} == 'register' OR *{receiverStatus?.internalName} == 'archived'"></a>
                                             </div>
                                         </div>
                                     </div>
+                                    <HR>
 
                                     <button type="button" class="btn dark btn-outline" onclick="window.history.back()"> Назад </button>
 
                                     <button type="submit" class="btn green" name="action" value="create" th:if="${documentState} == 'DRAFT'"> Сохранить </button>
 
-                                    <button type="submit" class="btn green" name="action" value="toapprove" th:if="${documentState} == 'DRAFT'"> На утверждение </button>
+                                    <button type="submit" class="btn green" name="action" value="request" th:if="${documentState} == 'DRAFT'"> На утверждение </button>
                                     <button type="submit" class="btn green" name="action" value="reject" th:if="${documentState} == 'WAITING_FOR_APPROVAL'"> Отклонить </button>
                                     <button type="submit" class="btn green" name="action" value="approve" th:if="${documentState} == 'WAITING_FOR_APPROVAL'"> Утвердить </button>
                                     <button type="submit" class="btn green" name="action" value="register" th:if="${documentState} == 'APPROVED'"> Зарегистрировать </button>
-                                    <button type="submit" class="btn green" name="action" value="done" th:if="${documentState} == 'STARTED'"> Заверить </button>
 
-                                    <button type="submit" class="btn green" name="action" value="archive" th:if="${documentState} == 'DONE'"> Архивировать </button>
+                                    <button type="submit" class="btn green" name="action" value="archive" th:if="${documentState} == 'REGISTERED'"> Архивировать </button>
 
                                 </form>
 
