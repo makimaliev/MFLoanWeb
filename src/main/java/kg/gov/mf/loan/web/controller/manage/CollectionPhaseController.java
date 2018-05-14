@@ -64,7 +64,7 @@ public class CollectionPhaseController {
 		model.addAttribute("procId", procId);
 		
 		CollectionPhase phase = phaseService.getById(phaseId);
-		PhaseDetails phaseDetails = phase.getPhaseDetails();
+		Set<PhaseDetails> phaseDetails = phase.getPhaseDetails();
 		model.addAttribute("phase", phase);
 		model.addAttribute("phaseDetails", phaseDetails);
 		
@@ -93,7 +93,7 @@ public class CollectionPhaseController {
 		if(phaseId > 0)
 		{
 			CollectionPhase phase = phaseService.getById(phaseId);
-			PhaseDetails phaseDetails = phase.getPhaseDetails();
+			Set<PhaseDetails> phaseDetails = phase.getPhaseDetails();
 			model.addAttribute("phase", phase);
 			model.addAttribute("phaseDetails", phaseDetails);
 		}
@@ -105,8 +105,8 @@ public class CollectionPhaseController {
 	}
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/save"}, method=RequestMethod.POST)
-    public String saveCollateralItem(CollectionPhase phase, 
-    		PhaseDetails phaseDetails,
+    public String saveCollateralItem(CollectionPhase phase,
+    		Set<PhaseDetails> phaseDetails,
     		@PathVariable("debtorId")Long debtorId,
     		@PathVariable("procId")Long procId,
     		ModelMap model)
@@ -125,7 +125,6 @@ public class CollectionPhaseController {
 				loan.setCollectionPhase(phase);
 			}
 			phase.setPhaseDetails(phaseDetails);
-			phaseDetails.setCollectionPhase(phase);
 			phaseService.add(phase);
 		}
 		else
@@ -139,7 +138,6 @@ public class CollectionPhaseController {
 				loan.setCollectionPhase(phase);
 			}
 			phase.setPhaseDetails(phaseDetails);
-			phaseDetails.setCollectionPhase(phase);
 			phaseService.update(phase);
 		}
 			

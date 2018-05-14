@@ -3,6 +3,7 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -68,7 +69,7 @@ public class CollectionEventController {
 		{
 			
 			CollectionEvent event = eventService.getById(eventId);
-			EventDetails eventDetails = event.getEventDetails();
+			Set<EventDetails> eventDetails = event.getEventDetails();
 			model.addAttribute("event", event);
 			model.addAttribute("eventDetails", eventDetails);
 		}
@@ -81,7 +82,7 @@ public class CollectionEventController {
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/collectionevent/save"}, method=RequestMethod.POST)
     public String saveCollectionEvent(CollectionEvent event, 
-    		EventDetails eventDetails,
+    		Set<EventDetails> eventDetails,
     		@PathVariable("debtorId")Long debtorId,
     		@PathVariable("procId")Long procId,
     		@PathVariable("phaseId")Long phaseId,
@@ -93,13 +94,11 @@ public class CollectionEventController {
 		if(event.getId() == 0)
 		{
 			event.setEventDetails(eventDetails);
-			eventDetails.setCollectionEvent(event);
 			eventService.add(event);
 		}
 		else
 		{
 			event.setEventDetails(eventDetails);
-			eventDetails.setCollectionEvent(event);
 			eventService.update(event);
 		}
 			
