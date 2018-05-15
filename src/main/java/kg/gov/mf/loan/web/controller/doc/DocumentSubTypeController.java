@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/doc")
 public class DocumentSubTypeController extends BaseController {
 
-
     //region Dependancies
     DocumentTypeService documentTypeService;
     DocumentSubTypeService documentSubTypeService;

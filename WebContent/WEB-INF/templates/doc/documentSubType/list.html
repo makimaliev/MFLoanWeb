@@ -39,8 +39,8 @@
                                             <th>№</th>
                                             <th>Тип документа</th>
                                             <th>Название</th>
-                                            <th>Просмотр</th>
-                                            <th>Удалить</th>
+                                            <th>Правка</th>
+                                            <!--th>Удалить</th-->
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -49,7 +49,7 @@
                                             <td th:text="${documentSubType.documentType.name}"></td>
                                             <td th:text="${documentSubType.name}"></td>
                                             <td><a th:href="@{/doc/documentSubType/edit/__${documentSubType.id}__}" role='button' class='btn btn-xs green-stripe'> Правка </a></td>
-                                            <td><a th:href="@{/doc/documentSubType/delete/__${documentSubType.id}__}" role="button" class="btn btn-xs red-stripe"> Удалить </a></td>
+                                            <!--td><a th:href="@{/doc/documentSubType/delete/__${documentSubType.id}__}" role="button" class="btn btn-xs red-stripe"> Удалить </a></td-->
                                         </tr>
                                         </tbody>
                                     </table>
