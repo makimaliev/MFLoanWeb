@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.CacheControl;
 import org.springframework.web.multipart.MultipartResolver;
@@ -43,15 +44,13 @@ import kg.gov.mf.loan.admin.sys.converter.PermissionFormatter;
 import kg.gov.mf.loan.admin.sys.converter.RoleFormatter;
 import kg.gov.mf.loan.admin.sys.converter.SupervisorTermFormatter;
 import kg.gov.mf.loan.admin.sys.service.MessageResourceService;
-import kg.gov.mf.loan.manage.converter.DebtorTypeFormatter;
 import kg.gov.mf.loan.manage.converter.LoanFormatter;
-import kg.gov.mf.loan.manage.converter.OrganizationFormFormatter;
 import kg.gov.mf.loan.manage.converter.OwnerFormatter;
-import kg.gov.mf.loan.manage.converter.WorkSectorFormatter;
 
 
 @Configuration
 @EnableWebMvc
+@EnableSpringDataWebSupport
 @ComponentScan(basePackages = "kg.gov.mf.loan")
 public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware{
 
@@ -82,22 +81,12 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     @Autowired
     GenerationParameterTypeFormatter generationParameterTypeFormatter;
 
-    @Autowired
-	DebtorTypeFormatter debtorTypeFormatter;
-	
 	@Autowired
 	LoanFormatter loanFormatter;
 
-
-	@Autowired
-	OrganizationFormFormatter orgFormFormatter;
-	
 	@Autowired
 	OwnerFormatter ownerFormatter;
 
-	@Autowired
-	WorkSectorFormatter workSectorFormatter;
-	
     @Autowired
     IdentityDocGivenByConverter identityDocGivenByConverter;    
     
@@ -284,9 +273,6 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         registry.addFormatter(supervisorTermFormatter);
         
         registry.addFormatter(loanFormatter);
-        registry.addFormatter(debtorTypeFormatter);
-        registry.addFormatter(orgFormFormatter);
-        registry.addFormatter(workSectorFormatter);
         registry.addFormatter(ownerFormatter);
         registry.addFormatter(generationParameterFormatter);
         registry.addFormatter(generationParameterTypeFormatter);
