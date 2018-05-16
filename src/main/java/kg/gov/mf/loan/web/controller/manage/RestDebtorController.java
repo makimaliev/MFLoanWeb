@@ -1,9 +1,9 @@
 package kg.gov.mf.loan.web.controller.manage;
 
 import com.google.common.base.Joiner;
+import kg.gov.mf.loan.manage.dao.EntitySpecificationsBuilder;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.model.loan.Loan;
-import kg.gov.mf.loan.manage.repository.EntitySpecificationsBuilder;
 import kg.gov.mf.loan.manage.repository.debtor.DebtorRepository;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
@@ -139,7 +139,7 @@ public class RestDebtorController {
 
 		debtor.setDebtorType(debtorRequest.getDebtorType());
 		debtor.setName(debtorRequest.getName());
-		debtor.setOrganizationForm(debtorRequest.getOrganizationForm());
+		debtor.setOrgForm(debtorRequest.getOrgForm());
 		debtor.setWorkSector(debtorRequest.getWorkSector());
 
 		return debtorRepository.save(debtor);
