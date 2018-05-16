@@ -172,7 +172,8 @@ public class DebtorController {
 		EntitySpecificationsBuilder builder = new EntitySpecificationsBuilder();
 		String operationSetExper = Joiner.on("|").join(SearchOperation.SIMPLE_OPERATION_SET);
 		Pattern pattern = Pattern.compile(
-				"(\\w+?)(" + operationSetExper + ")(\\p{Punct}?)(\\w+?)(\\p{Punct}?),");
+				"(\\w+?)(" + operationSetExper + ")(\\p{Punct}?)(\\p{L}+?)(\\p{Punct}?),");
+		q = "name~" + q;
 		Matcher matcher = pattern.matcher(q + ",");
 		while (matcher.find()) {
 			builder.with(
