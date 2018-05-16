@@ -44,8 +44,11 @@ import kg.gov.mf.loan.admin.sys.converter.PermissionFormatter;
 import kg.gov.mf.loan.admin.sys.converter.RoleFormatter;
 import kg.gov.mf.loan.admin.sys.converter.SupervisorTermFormatter;
 import kg.gov.mf.loan.admin.sys.service.MessageResourceService;
+import kg.gov.mf.loan.manage.converter.DebtorTypeFormatter;
 import kg.gov.mf.loan.manage.converter.LoanFormatter;
+import kg.gov.mf.loan.manage.converter.OrganizationFormFormatter;
 import kg.gov.mf.loan.manage.converter.OwnerFormatter;
+import kg.gov.mf.loan.manage.converter.WorkSectorFormatter;
 
 
 @Configuration
@@ -70,10 +73,10 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 
     @Autowired
     ObjectListFormatter objectListFormatter;
-    
+
     @Autowired
     ContentParameterFormatter contentParameterFormatter;
-    
+
 
     @Autowired
     GenerationParameterFormatter generationParameterFormatter;
@@ -81,18 +84,28 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     @Autowired
     GenerationParameterTypeFormatter generationParameterTypeFormatter;
 
-	@Autowired
-	LoanFormatter loanFormatter;
-
-	@Autowired
-	OwnerFormatter ownerFormatter;
+    @Autowired
+    DebtorTypeFormatter debtorTypeFormatter;
 
     @Autowired
-    IdentityDocGivenByConverter identityDocGivenByConverter;    
-    
-  
+    LoanFormatter loanFormatter;
+
+
     @Autowired
-    IdentityDocTypeConverter identityDocTypeConverter;    
+    OrganizationFormFormatter orgFormFormatter;
+
+    @Autowired
+    OwnerFormatter ownerFormatter;
+
+    @Autowired
+    WorkSectorFormatter workSectorFormatter;
+
+    @Autowired
+    IdentityDocGivenByConverter identityDocGivenByConverter;
+
+
+    @Autowired
+    IdentityDocTypeConverter identityDocTypeConverter;
 
     @Autowired
     RoleFormatter roleFormatter;
@@ -111,38 +124,38 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 
     @Autowired
     RegionFormatter regionFormatter;
-    
+
     @Autowired
-    DistrictFormatter districtFormatter;    
-    
+    DistrictFormatter districtFormatter;
+
     @Autowired
-    OrganizationFormatter organizationFormatter;    
-    
+    OrganizationFormatter organizationFormatter;
+
     @Autowired
     PermissionFormatter permissionFormatter;
 
     @Autowired
-    EmploymentHistoryFormatter employmentHistoryFormatter; 
-    
-    @Autowired
-    EmploymentHistoryEventTypeFormatter employmentHistoryEventTypeFormatter; 
+    EmploymentHistoryFormatter employmentHistoryFormatter;
 
     @Autowired
-    SupervisorTermFormatter supervisorTermFormatter;    
-    
-    
+    EmploymentHistoryEventTypeFormatter employmentHistoryEventTypeFormatter;
+
     @Autowired
-    private MessageResourceService messageResourceService;    
-    
+    SupervisorTermFormatter supervisorTermFormatter;
+
+
+    @Autowired
+    private MessageResourceService messageResourceService;
+
     private static final String UTF8 = "UTF-8";
-    
+
     private ApplicationContext applicationContext;
-    
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
-    
+
     /**
      * Configure ViewResolvers to deliver preferred views.
      */
@@ -155,14 +168,14 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         resolver.setCache(false);
         return resolver;
     }
-    
+
     private TemplateEngine templateEngine() {
         SpringTemplateEngine engine = new SpringTemplateEngine();
         engine.setTemplateResolver(templateResolver());
         engine.setMessageSource(getMessageSource());
         return engine;
     }
-    
+
     private ITemplateResolver templateResolver() {
         SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
         resolver.setApplicationContext(applicationContext);
@@ -173,25 +186,25 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         resolver.setCacheable(false);
         return resolver;
     }
-    
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-            registry.addInterceptor(localeChangeInterceptor());
+        registry.addInterceptor(localeChangeInterceptor());
     }
 
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
-            LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
-            localeChangeInterceptor.setParamName("language");
-            return localeChangeInterceptor;
+        LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+        localeChangeInterceptor.setParamName("language");
+        return localeChangeInterceptor;
     }
 
     @Bean(name = "localeResolver")
     public CookieLocaleResolver localeResolver() {
-            CookieLocaleResolver localeResolver = new CookieLocaleResolver();
-            Locale defaultLocale = new Locale("ru");
-            localeResolver.setDefaultLocale(defaultLocale);
-            return localeResolver;
+        CookieLocaleResolver localeResolver = new CookieLocaleResolver();
+        Locale defaultLocale = new Locale("ru");
+        localeResolver.setDefaultLocale(defaultLocale);
+        return localeResolver;
     }
 
     /*
@@ -202,7 +215,6 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
             messageSource.setCacheSeconds(10); //reload messages every 10 seconds
             return messageSource;
     }
-
     */
     @Bean(name = "messageSource")
     public DatabaseDrivenMessageSource getMessageSource() {
@@ -215,12 +227,12 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         resource.setParentMessageSource(databaseDrivenMessageSourceProperties);
         return resource;
     }
-    
-    
+
+
     /*
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
- 
+
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setViewClass(JstlView.class);
         viewResolver.setPrefix("/WEB-INF/views/");
@@ -228,7 +240,7 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         registry.viewResolver(viewResolver);
     }
     */
-     
+
     /**
      * Configure ResourceHandlers to serve static resources like CSS/ Javascript etc...
      */
@@ -239,12 +251,12 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         registry.addResourceHandler("/js/**").addResourceLocations("/static/js/").setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS));
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/").setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS));
     }
-    
+
     @Bean(name = "multipartResolver")
     public MultipartResolver createMultipartResolver() {
         return new StandardServletMultipartResolver();
     }
-    
+
     /**
      * Configure Converter to be used.
      * In our example, we need a converter to convert string values[Roles] to UserProfiles in newUser.jsp
@@ -252,12 +264,12 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     @Override
     public void addFormatters(FormatterRegistry registry) {
 
-  
-        
-        
+
+
+
         registry.addConverter(identityDocTypeConverter);
         registry.addConverter(identityDocGivenByConverter);
-    
+
         registry.addFormatter(roleFormatter);
         registry.addFormatter(userFormatter);
         registry.addFormatter(permissionFormatter);
@@ -266,13 +278,16 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         registry.addFormatter(positionFormatter);
         registry.addFormatter(personFormatter);
         registry.addFormatter(regionFormatter);
-        registry.addFormatter(districtFormatter);            
-        registry.addFormatter(employmentHistoryFormatter);    
-        registry.addFormatter(employmentHistoryEventTypeFormatter);    
-        
+        registry.addFormatter(districtFormatter);
+        registry.addFormatter(employmentHistoryFormatter);
+        registry.addFormatter(employmentHistoryEventTypeFormatter);
+
         registry.addFormatter(supervisorTermFormatter);
-        
+
         registry.addFormatter(loanFormatter);
+        registry.addFormatter(debtorTypeFormatter);
+        registry.addFormatter(orgFormFormatter);
+        registry.addFormatter(workSectorFormatter);
         registry.addFormatter(ownerFormatter);
         registry.addFormatter(generationParameterFormatter);
         registry.addFormatter(generationParameterTypeFormatter);
@@ -285,16 +300,16 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         registry.addFormatter(documentTypeFormatter);
         registry.addFormatter(documentSubTypeFormatter);
 
-        
-        
-        
-  //      registry.addConverter(roleToStringConverter);
-        
+
+
+
+        //      registry.addConverter(roleToStringConverter);
+
     }
-    
-    
-     
- 
+
+
+
+
     /**
      * Configure MessageSource to lookup any validation/error message in internationalized property files
      */
@@ -307,7 +322,7 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         return messageSource;
     }
     */
-     
+
     /**Optional. It's only required when handling '.' in @PathVariables which otherwise ignore everything after last '.' in @PathVaidables argument.
      * It's a known bug in Spring [https://jira.spring.io/browse/SPR-6164], still present in Spring 4.1.7.
      * This is a workaround for this issue.
