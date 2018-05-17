@@ -1,26 +1,22 @@
 package kg.gov.mf.loan.web.controller.manage;
 
-import com.google.common.base.Joiner;
-import kg.gov.mf.loan.manage.dao.EntitySpecificationsBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
+import kg.gov.mf.loan.manage.model.debtor.QDebtor;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.repository.debtor.DebtorRepository;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
-import kg.gov.mf.loan.manage.util.SearchOperation;
 import kg.gov.mf.loan.web.exception.ResourceNotFoundExcption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 
 import javax.validation.Valid;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @RestController
 public class RestDebtorController {
@@ -111,22 +107,9 @@ public class RestDebtorController {
 	@GetMapping("/debtors/search")
 	public Page<Debtor> searchDebtors(Pageable pageable, @RequestParam(value = "q") String q) {
 
-		EntitySpecificationsBuilder builder = new EntitySpecificationsBuilder();
-		String operationSetExper = Joiner.on("|").join(SearchOperation.SIMPLE_OPERATION_SET);
-		Pattern pattern = Pattern.compile(
-				"(\\w+?)(" + operationSetExper + ")(\\p{Punct}?)(\\w+?)(\\p{Punct}?),");
-		Matcher matcher = pattern.matcher(q + ",");
-		while (matcher.find()) {
-			builder.with(
-					matcher.group(1),
-					matcher.group(2),
-					matcher.group(4),
-					matcher.group(3),
-					matcher.group(5));
-		}
-
-		Specification<Debtor> spec = builder.build();
-		return debtorRepository.findAll(spec, pageable);
+		QDebtor debtor = QDebtor.debtor;
+		BooleanExpression hasNameLike = debtor.name.like("%" + q + "%");
+		return debtorRepository.findAll(hasNameLike, pageable);
 	}
 
 	@PutMapping("/debtors/{debtorId}")

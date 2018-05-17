@@ -2,17 +2,14 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import com.google.common.base.Joiner;
-import kg.gov.mf.loan.manage.dao.EntitySpecificationsBuilder;
-import kg.gov.mf.loan.manage.dao.debtor.DebtDao;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
 import kg.gov.mf.loan.manage.model.collection.CollectionProcedure;
+import kg.gov.mf.loan.manage.model.debtor.*;
 import kg.gov.mf.loan.manage.model.loan.Loan;
-import kg.gov.mf.loan.manage.util.SearchOperation;
+import kg.gov.mf.loan.manage.repository.debtor.DebtorRepository;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -20,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -31,12 +27,6 @@ import kg.gov.mf.loan.admin.org.model.Organization;
 import kg.gov.mf.loan.admin.org.model.Person;
 import kg.gov.mf.loan.admin.org.service.OrganizationService;
 import kg.gov.mf.loan.admin.org.service.PersonService;
-import kg.gov.mf.loan.manage.model.debtor.Debtor;
-import kg.gov.mf.loan.manage.model.debtor.DebtorType;
-import kg.gov.mf.loan.manage.model.debtor.OrganizationForm;
-import kg.gov.mf.loan.manage.model.debtor.Owner;
-import kg.gov.mf.loan.manage.model.debtor.OwnerType;
-import kg.gov.mf.loan.manage.model.debtor.WorkSector;
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
 import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
 import kg.gov.mf.loan.manage.service.collection.CollectionProcedureService;
@@ -94,7 +84,7 @@ public class DebtorController {
 	OwnerService ownerService;
 
 	@Autowired
-	DebtDao debtDao;
+	DebtorRepository debtorRepository;
 
 	private static final int BUTTONS_TO_SHOW = 5;
 	private static final int INITIAL_PAGE = 0;
@@ -169,22 +159,6 @@ public class DebtorController {
 	public String findAllBySpecification(@RequestParam(value = "q") String q,
 										 @RequestParam("pageSize") Optional<Integer> pageSize,
 										 @RequestParam("page") Optional<Integer> page, ModelMap model) {
-		EntitySpecificationsBuilder builder = new EntitySpecificationsBuilder();
-		String operationSetExper = Joiner.on("|").join(SearchOperation.SIMPLE_OPERATION_SET);
-		Pattern pattern = Pattern.compile(
-				"(\\w+?)(" + operationSetExper + ")(\\p{Punct}?)(\\p{L}+?)(\\p{Punct}?),");
-		q = "name~" + q;
-		Matcher matcher = pattern.matcher(q + ",");
-		while (matcher.find()) {
-			builder.with(
-					matcher.group(1),
-					matcher.group(2),
-					matcher.group(4),
-					matcher.group(3),
-					matcher.group(5));
-		}
-
-		Specification<Debtor> spec = builder.build();
 
 		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
 		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
@@ -192,11 +166,12 @@ public class DebtorController {
 		Sort sort = new Sort(new Sort.Order(Sort.Direction.ASC, "id"));
 		Pageable pageable = new PageRequest(0, 20, sort);
 
-		Page<Debtor> page1 = debtDao.findAll(spec, pageable);
+		QDebtor debtor = QDebtor.debtor;
+		BooleanExpression hasNameLike = debtor.name.like("%" + q + "%");
+		Page<Debtor> page1 = debtorRepository.findAll(hasNameLike, pageable);
 		List<Debtor> debtors = page1.getContent();
 
-		//List<Debtor> debtors = debtDao.findAll(spec);
-		int count = debtDao.findAll(spec, pageable).getTotalPages();
+		int count = debtorRepository.findAll(hasNameLike, pageable).getTotalPages();
 
 		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
 
