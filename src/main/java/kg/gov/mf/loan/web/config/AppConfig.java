@@ -1,6 +1,8 @@
 package kg.gov.mf.loan.web.config;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import kg.gov.mf.loan.admin.org.converter.*;
@@ -34,6 +36,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.dialect.IDialect;
+import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
@@ -171,8 +175,15 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 
     private TemplateEngine templateEngine() {
         SpringTemplateEngine engine = new SpringTemplateEngine();
+
+        Set<IDialect> dialects = new HashSet<>();
+        dialects.add(new SpringSecurityDialect());
+
+
         engine.setTemplateResolver(templateResolver());
         engine.setMessageSource(getMessageSource());
+
+        engine.setAdditionalDialects(dialects);
         return engine;
     }
 

@@ -362,8 +362,8 @@
 		<!-- END HEADER & CONTENT DIVIDER -->
 	</div>
 	<!-- BEGIN CONTAINER -->
-	<div class="page-container">
-		<div th:fragment="page-container-sidebar">
+	<div class="page-container" >
+		<div th:fragment="page-container-sidebar" >
 			<!-- BEGIN SIDEBAR -->
 			<div class="page-sidebar-wrapper">
 				<!-- END SIDEBAR -->
@@ -382,8 +382,8 @@
 						data-keep-expanded="false" data-auto-scroll="true"
 						data-slide-speed="200">
 						
-						
-					<li class="nav-item start active open ">
+
+					<li sec:authorize="hasRole('ADMIN')" class="nav-item start active open ">
 					<a href="javascript:;"
 							class="nav-link nav-toggle"> <i class="icon-folder"></i> <span
 								class="title">Справочники</span> <span class="arrow"></span>
@@ -461,7 +461,7 @@
 											class="nav-link "> <span class="title"> Право
 													доступа </span>
 										</a></li>
-										
+
 										<li class="nav-item "><a th:href="@{/messageResource/list/}"
 											class="nav-link "> <span class="title"> Текстовые ресурсы </span>
 										</a></li>
@@ -553,7 +553,7 @@
 							</ul>
 						</li>
 
-						<li class="nav-item  "><a href="javascript:;"
+						<li sec:authorize="hasRole('ADMIN')" class="nav-item  "><a href="javascript:;"
 							class="nav-link nav-toggle"> <i class="icon-settings"></i> <span
 								class="title">Система</span> <span class="arrow"></span>
 						</a>
@@ -583,26 +583,26 @@
 								<li class="nav-item "><a th:href="@{/report/list/}"
 														 class="nav-link "> <span class="title"> Отчеты </span>
 								</a></li>
-								<li class="nav-item "><a th:href="@{/reportTemplate/list/}"
+								<li sec:authorize="hasRole('ADMIN')" class="nav-item "><a th:href="@{/reportTemplate/list/}"
 														 class="nav-link "> <span class="title"> Шаблоны
 									</span>
 								</a></li>
-								<li class="nav-item "><a th:href="@{/generationParameter/list/}"
+								<li  sec:authorize="hasRole('ADMIN')" class="nav-item "><a th:href="@{/generationParameter/list/}"
 														 class="nav-link "> <span class="title"> Параметры формирования</span>
 								</a></li>
 								
-								<li class="nav-item "><a th:href="@{/generationParameterType/list/}"
+								<li sec:authorize="hasRole('ADMIN')" class="nav-item "><a th:href="@{/generationParameterType/list/}"
 														 class="nav-link "> <span class="title"> Тип параметра формирования</span>
 								</a></li>
-								<li class="nav-item "><a th:href="@{/filterParameter/list/}"
+								<li sec:authorize="hasRole('ADMIN')" class="nav-item "><a th:href="@{/filterParameter/list/}"
 														 class="nav-link "> <span class="title"> Параметры фильтрации</span>
 								</a></li>
-								<li class="nav-item "><a th:href="@{/objectList/list/}"
+								<li sec:authorize="hasRole('ADMIN')" class="nav-item "><a th:href="@{/objectList/list/}"
 														 class="nav-link "> <span class="title"> Список объектов</span>
 								</a></li>
 								
 								
-								<li class="nav-item "><a th:href="@{/contentParameter/list/}"
+								<li sec:authorize="hasRole('ADMIN')" class="nav-item "><a th:href="@{/contentParameter/list/}"
 														 class="nav-link "> <span class="title"> Параметры содержания</span>
 								</a></li>
 
@@ -610,7 +610,7 @@
 						</li>
 						
 						
-<li class="nav-item  "><a href="javascript:;"
+<li sec:authorize="hasRole('ADMIN')" class="nav-item  "><a href="javascript:;"
 							class="nav-link nav-toggle"> <i class="icon-user"></i> <span
 								class="title">Организация</span> <span class="arrow"></span>
 						</a>
@@ -705,9 +705,18 @@
 
 							</ul>
 						</li>
-						<li class="nav-item  "><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-calendar"></i> <span class="title">Scheduler</span> <span class="arrow"></span></a>
+
+
+
+
+
+
+
+
+						<li class="nav-item  " sec:authorize="hasRole('ADMIN')"><a href="javascript:;" class="nav-link nav-toggle"> <i class="icon-calendar"></i> <span class="title">Scheduler</span> <span class="arrow"></span></a>
 							<ul class="sub-menu">
 								<li class="nav-item "><a th:href="@{/job/list}" class="nav-link "> <span class="title"> List jobs</span></a></li>
+							</ul>
 						</li>
 					</ul>
 					<!-- END SIDEBAR MENU -->
