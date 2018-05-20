@@ -135,7 +135,7 @@ public class PersonController {
 	public String listPersons(Model model) {
 		
 		model.addAttribute("person", new Person());
-		model.addAttribute("personList", this.personService.findAll());
+		model.addAttribute("personList", this.personService.findLast100());
 		return "admin/org/personList";
 	}
 	
@@ -143,7 +143,7 @@ public class PersonController {
 	@RequestMapping(value = "/person/table", method = RequestMethod.GET)
 	public String showPersonTable(Model model) {
 		model.addAttribute("person", new Person());
-		model.addAttribute("personList", this.personService.findAll());
+		model.addAttribute("personList", this.personService.findLast100());
 
 		return "admin/org/personTable";
 	}	

@@ -191,11 +191,11 @@
 
 				$("#region_id").val(rowData[0]);
 				
-				var sUrl ="/MFCredit/region/" + rowData[0]+"/view";
+				var sUrl ="/region/" + rowData[0]+"/view";
 				
 				$.get(sUrl, function(data) {
 
-					//$('#content').html(data);
+					$('#content').html(data);
 				});
 				
 				

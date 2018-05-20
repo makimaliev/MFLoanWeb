@@ -135,7 +135,7 @@ public class OrganizationController {
 	public String listOrganizations(Model model) {
 		
 		model.addAttribute("organization", new Organization());
-		model.addAttribute("organizationList", this.organizationService.findAll());
+		model.addAttribute("organizationList", this.organizationService.findLast100());
 		return "admin/org/organizationList";
 	}
 	
@@ -143,7 +143,7 @@ public class OrganizationController {
 	@RequestMapping(value = "/organization/table", method = RequestMethod.GET)
 	public String showOrganizationTable(Model model) {
 		model.addAttribute("organization", new Organization());
-		model.addAttribute("organizationList", this.organizationService.findAll());
+		model.addAttribute("organizationList", this.organizationService.findLast100());
 
 		return "admin/org/organizationTable";
 	}	
