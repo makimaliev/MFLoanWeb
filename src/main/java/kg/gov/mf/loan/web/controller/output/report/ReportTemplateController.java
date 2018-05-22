@@ -1,8 +1,6 @@
 package kg.gov.mf.loan.web.controller.output.report;
 
-import kg.gov.mf.loan.output.report.utils.ReportGeneratorCollateralItem;
-import kg.gov.mf.loan.output.report.utils.ReportGeneratorLoan;
-import kg.gov.mf.loan.output.report.utils.ReportGeneratorPayment;
+import kg.gov.mf.loan.output.report.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -200,6 +198,12 @@ public class ReportTemplateController {
 
 		ReportGeneratorCollateralItem collateralItemReportGenerator = new ReportGeneratorCollateralItem();
 
+		ReportGeneratorLoanSummary loanSummaryReportGenerator = new ReportGeneratorLoanSummary();
+
+		ReportGeneratorPaymentSchedule paymentScheduleReportGenerator = new ReportGeneratorPaymentSchedule();
+
+		ReportGeneratorCollectionPhase collectionPhaseReportGenerator = new ReportGeneratorCollectionPhase();
+
 		response.setContentType("application/vnd.ms-excel");
 		response.setHeader("Content-disposition","attachment; filename=report.xls");
 		OutputStream out = null;
@@ -216,7 +220,7 @@ public class ReportTemplateController {
 
 				try {
 					out = response.getOutputStream();
-					loanReportGenerator.generateReportByTemplate(reportTemplate).write(out);
+					loanSummaryReportGenerator.generateReportByTemplate(reportTemplate).write(out);
 					out.close();
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -241,6 +245,30 @@ public class ReportTemplateController {
 				try {
 					out = response.getOutputStream();
 					collateralItemReportGenerator.generateReportByTemplate(reportTemplate).write(out);
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				break;
+
+			case "LOAN_SCHEDULE":
+
+				try {
+					out = response.getOutputStream();
+					paymentScheduleReportGenerator.generateReportByTemplate(reportTemplate).write(out);
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				break;
+
+			case "COLLECTION_PHASE":
+
+				try {
+					out = response.getOutputStream();
+					collectionPhaseReportGenerator.generateReportByTemplate(reportTemplate).write(out);
 					out.close();
 				} catch (IOException e) {
 					e.printStackTrace();

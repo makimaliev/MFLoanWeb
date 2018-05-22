@@ -6,6 +6,10 @@
 <link th:href="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css}" rel="stylesheet" type="text/css" />
 <link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
 <link th:href="@{/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}" rel="stylesheet" type="text/css" />
+
+<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}" rel="stylesheet" type="text/css" />
 </head>
 <body
 	class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
@@ -69,7 +73,7 @@
 									</div>
 								</div>
 								<div class="table-scrollable table-scrollable-borderless">
-									<table class="table table-hover table-light" id="orders">
+									<table class="table table-light" id="taskTable">
 										<thead>
 											<tr>
 												<th>Summary</th>
@@ -87,6 +91,7 @@
 												<th>createdBy</th>
 												<th>modifiedOn</th>
 												<th>modifiedBy</th>
+												<th>Open</th>
 												<th>Edit</th>
 												<th>Delete</th>
 											</tr>
@@ -114,6 +119,9 @@
 													<td th:text="${task.createdBy.username}"></td>
 													<td th:text="${task.modifiedOn}"></td>
 													<td th:text="${task.modifiedByUserId}"></td>
+													<td>
+														<a th:href="@{__${task.objectType}__}" class="btn btn-outline btn-circle btn-sm green" th:if="${task.status == 'OPEN'}">Open</a>
+													</td>
 													<td>
 														<a th:href="@{/task/__${task.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
 													</td>
@@ -147,5 +155,16 @@
     <script th:src="@{/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"></script>
     <script th:src="@{/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}" type="text/javascript"></script>
     <script th:src="@{/assets/pages/scripts/components-date-time-pickers.min.js}" type="text/javascript"></script>
+
+	<script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>
+	<script type="text/javascript">
+        $(document).ready(function() {
+            $('#taskTable').DataTable({
+                "language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
+                "info":     false
+            } );
+        });
+	</script>
 </body>
 </html>

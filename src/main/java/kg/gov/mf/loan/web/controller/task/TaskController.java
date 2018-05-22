@@ -49,6 +49,17 @@ public class TaskController {
         return "/task/list";
     }
 
+    @RequestMapping(value = { "/tasks" }, method = RequestMethod.GET)
+    public String tasks(ModelMap model)
+    {
+        List<Task> openTasks = taskService.getOpenTasks(userService.findByUsername(Utils.getPrincipal()).getId());
+        List<Task> closedTasks = taskService.getClosedTasks(userService.findByUsername(Utils.getPrincipal()).getId());
+
+        model.addAttribute("openTasks", openTasks);
+        model.addAttribute("closedTasks", closedTasks);
+        return "/task/tasks";
+    }
+
     @RequestMapping(value = { "/task/listByUserId/{userId}" }, method = RequestMethod.GET)
     public String listTasksByUserId(ModelMap model, @PathVariable("userId")Long userId)
     {

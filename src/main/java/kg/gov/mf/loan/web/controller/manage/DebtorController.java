@@ -2,17 +2,14 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import com.google.common.base.Joiner;
-import kg.gov.mf.loan.manage.dao.EntitySpecificationsBuilder;
-import kg.gov.mf.loan.manage.dao.debtor.DebtDao;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
 import kg.gov.mf.loan.manage.model.collection.CollectionProcedure;
+import kg.gov.mf.loan.manage.model.debtor.*;
 import kg.gov.mf.loan.manage.model.loan.Loan;
-import kg.gov.mf.loan.manage.util.SearchOperation;
+import kg.gov.mf.loan.manage.repository.debtor.DebtorRepository;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -20,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -31,12 +27,6 @@ import kg.gov.mf.loan.admin.org.model.Organization;
 import kg.gov.mf.loan.admin.org.model.Person;
 import kg.gov.mf.loan.admin.org.service.OrganizationService;
 import kg.gov.mf.loan.admin.org.service.PersonService;
-import kg.gov.mf.loan.manage.model.debtor.Debtor;
-import kg.gov.mf.loan.manage.model.debtor.DebtorType;
-import kg.gov.mf.loan.manage.model.debtor.OrganizationForm;
-import kg.gov.mf.loan.manage.model.debtor.Owner;
-import kg.gov.mf.loan.manage.model.debtor.OwnerType;
-import kg.gov.mf.loan.manage.model.debtor.WorkSector;
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
 import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
 import kg.gov.mf.loan.manage.service.collection.CollectionProcedureService;
@@ -53,75 +43,75 @@ import kg.gov.mf.loan.web.util.Utils;
 
 @Controller
 public class DebtorController {
-	
+
 	@Autowired
 	DebtorTypeService debtorTypeService;
-	
+
 	@Autowired
 	OrganizationFormService formService;
-	
+
 	@Autowired
 	WorkSectorService sectorService;
 
 	@Autowired
 	DebtorService debtorService;
-	
+
 	@Autowired
 	OrderTermCurrencyService currService;
-	
+
 	@Autowired
 	LoanTypeService loanTypeService;
-	
+
 	@Autowired
 	LoanStateService loanStateService;
-	
+
 	@Autowired
 	CreditOrderService orderService;
-	
+
 	@Autowired
 	CollateralAgreementService agreementService;
-	
+
 	@Autowired
 	CollectionProcedureService procService;
-	
+
 	@Autowired
 	PersonService personService;
-	
+
 	@Autowired
 	OrganizationService orgService;
-	
+
 	@Autowired
 	OwnerService ownerService;
 
 	@Autowired
-	DebtDao debtDao;
+	DebtorRepository debtorRepository;
 
 	private static final int BUTTONS_TO_SHOW = 5;
 	private static final int INITIAL_PAGE = 0;
 	private static final int INITIAL_PAGE_SIZE = 10;
 	private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
-	
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
 		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
-	    binder.registerCustomEditor(Date.class, editor);
+		binder.registerCustomEditor(Date.class, editor);
 	}
-	
+
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/view"})
-    public String viewOrder(ModelMap model, @PathVariable("debtorId")Long debtorId) {
+	public String viewOrder(ModelMap model, @PathVariable("debtorId")Long debtorId) {
 
 		Debtor debtor = debtorService.getById(debtorId);
-        model.addAttribute("debtor", debtor);
+		model.addAttribute("debtor", debtor);
 
-        model.addAttribute("loans", debtor.getLoans());
-        Set<CollateralAgreement> allAgreements = new HashSet<>();
-        Set<CollectionProcedure> procs = new HashSet<>();
+		model.addAttribute("loans", debtor.getLoans());
+		Set<CollateralAgreement> allAgreements = new HashSet<>();
+		Set<CollectionProcedure> procs = new HashSet<>();
 		for (Loan loan: debtor.getLoans()
-			 ) {
+				) {
 			Set<CollateralAgreement> agreements = loan.getCollateralAgreements();
 			for (CollateralAgreement agreement: agreements
-				 ) {
+					) {
 				allAgreements.add(agreement);
 			}
 
@@ -132,18 +122,18 @@ public class DebtorController {
 			}
 		}
 
-        model.addAttribute("agreements", allAgreements);
-        model.addAttribute("procs", procs);
-        
-        List<CreditOrder> orders = orderService.list();
-        model.addAttribute("orders", orders);
-        
-        model.addAttribute("loggedinuser", Utils.getPrincipal());
-        return "/manage/debtor/view";
-    }
-	
+		model.addAttribute("agreements", allAgreements);
+		model.addAttribute("procs", procs);
+
+		List<CreditOrder> orders = orderService.list();
+		model.addAttribute("orders", orders);
+
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
+		return "/manage/debtor/view";
+	}
+
 	@RequestMapping(value = { "/manage/debtor/", "/manage/debtor/list" }, method = RequestMethod.GET)
-    public String listDebtors(@RequestParam("pageSize") Optional<Integer> pageSize, @RequestParam("page") Optional<Integer> page, ModelMap model) {
+	public String listDebtors(@RequestParam("pageSize") Optional<Integer> pageSize, @RequestParam("page") Optional<Integer> page, ModelMap model) {
 
 		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
 		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
@@ -161,29 +151,14 @@ public class DebtorController {
 		model.addAttribute("pager", pager);
 		model.addAttribute("current", evalPage);
 
-        model.addAttribute("loggedinuser", Utils.getPrincipal());
-        return "/manage/debtor/list";
-    }
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
+		return "/manage/debtor/list";
+	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/manage/debtor/search")
 	public String findAllBySpecification(@RequestParam(value = "q") String q,
 										 @RequestParam("pageSize") Optional<Integer> pageSize,
 										 @RequestParam("page") Optional<Integer> page, ModelMap model) {
-		EntitySpecificationsBuilder builder = new EntitySpecificationsBuilder();
-		String operationSetExper = Joiner.on("|").join(SearchOperation.SIMPLE_OPERATION_SET);
-		Pattern pattern = Pattern.compile(
-				"(\\w+?)(" + operationSetExper + ")(\\p{Punct}?)(\\w+?)(\\p{Punct}?),");
-		Matcher matcher = pattern.matcher(q + ",");
-		while (matcher.find()) {
-			builder.with(
-					matcher.group(1),
-					matcher.group(2),
-					matcher.group(4),
-					matcher.group(3),
-					matcher.group(5));
-		}
-
-		Specification<Debtor> spec = builder.build();
 
 		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
 		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
@@ -191,11 +166,12 @@ public class DebtorController {
 		Sort sort = new Sort(new Sort.Order(Sort.Direction.ASC, "id"));
 		Pageable pageable = new PageRequest(0, 20, sort);
 
-		Page<Debtor> page1 = debtDao.findAll(spec, pageable);
+		QDebtor debtor = QDebtor.debtor;
+		BooleanExpression hasNameLike = debtor.name.like("%" + q + "%");
+		Page<Debtor> page1 = debtorRepository.findAll(hasNameLike, pageable);
 		List<Debtor> debtors = page1.getContent();
 
-		//List<Debtor> debtors = debtDao.findAll(spec);
-		int count = debtDao.findAll(spec, pageable).getTotalPages();
+		int count = debtorRepository.findAll(hasNameLike, pageable).getTotalPages();
 
 		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
 
@@ -221,13 +197,13 @@ public class DebtorController {
 		for (Person p : persons) {
 			entities.add(new Owner(OwnerType.PERSON, p));
 		}
-		
+
 		for (Organization org : orgs) {
 			entities.add(new Owner(OwnerType.ORGANIZATION, org));
 		}
-		
+
 		model.addAttribute("entities", entities);
-		
+
 		List<DebtorType> types = debtorTypeService.list();
 		model.addAttribute("types", types);
 
@@ -236,7 +212,7 @@ public class DebtorController {
 
 		List<WorkSector> sectors = sectorService.list();
 		model.addAttribute("sectors", sectors);
-		
+
 		if(debtorId == 0)
 		{
 			Debtor debtor = new Debtor();
@@ -259,10 +235,10 @@ public class DebtorController {
 			}
 			model.addAttribute("debtor", debtor);
 		}
-		
+
 		return "/manage/debtor/save";
 	}
-	
+
 	@RequestMapping(value="/manage/debtor/save", method=RequestMethod.POST)
 	public String saveDebtor(Debtor debtor)
 	{
@@ -274,18 +250,18 @@ public class DebtorController {
 			debtorService.update(debtor);
 			ownerService.remove(oldOwner);
 		}
-			
+
 		return "redirect:" + "/manage/debtor/list";
 	}
-	
+
 	@RequestMapping(value="/manage/debtor/delete", method=RequestMethod.POST)
-    public String deleteDebtor(long id) {
+	public String deleteDebtor(long id) {
 		if(id > 0)
 			debtorService.remove(debtorService.getById(id));
-        return "redirect:" + "/manage/debtor/list";
-    }
+		return "redirect:" + "/manage/debtor/list";
+	}
 
-    //BEGIN - TYPE
+	//BEGIN - TYPE
 	@RequestMapping(value = { "/manage/debtor/type/list" }, method = RequestMethod.GET)
 	public String listDebtorTypes(ModelMap model) {
 
@@ -312,23 +288,23 @@ public class DebtorController {
 	}
 
 	@RequestMapping(value="/manage/debtor/type/save", method=RequestMethod.POST)
-    public String saveDebtorType(DebtorType type,  ModelMap model) {
+	public String saveDebtorType(DebtorType type,  ModelMap model) {
 		if(type.getId() == 0)
 			debtorTypeService.add(type);
 		else
 			debtorTypeService.update(type);
-		
+
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
-        return "redirect:" + "/manage/debtor/type/list";
-    }
-	
+		return "redirect:" + "/manage/debtor/type/list";
+	}
+
 	@RequestMapping(value="/manage/debtor/type/delete", method=RequestMethod.POST)
-    public String deleteDebtorType(long id) {
+	public String deleteDebtorType(long id) {
 		if(id > 0)
 			debtorTypeService.remove(debtorTypeService.getById(id));
-        return "redirect:" + "/manage/debtor/type/list";
-    }
-    //END - TYPE
+		return "redirect:" + "/manage/debtor/type/list";
+	}
+	//END - TYPE
 
 	//BEGIN - ORGFORM
 	@RequestMapping(value = { "/manage/debtor/orgform/list" }, method = RequestMethod.GET)
@@ -357,23 +333,23 @@ public class DebtorController {
 	}
 
 	@RequestMapping(value="/manage/debtor/orgform/save", method=RequestMethod.POST)
-    public String saveOrgForm(OrganizationForm form,  ModelMap model) {
+	public String saveOrgForm(OrganizationForm form,  ModelMap model) {
 		if(form.getId() == 0)
 			formService.add(form);
 		else
 			formService.update(form);
-		
+
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
-        return "redirect:" + "/manage/debtor/orgform/list";
-    }
-	
+		return "redirect:" + "/manage/debtor/orgform/list";
+	}
+
 	@RequestMapping(value="/manage/debtor/orgform/delete", method=RequestMethod.POST)
-    public String deleteOgrForm(long id) {
+	public String deleteOgrForm(long id) {
 		if(id > 0)
 			formService.remove(formService.getById(id));
-        return "redirect:" + "/manage/debtor/orgform/list";
-    }
-    //END - ORGFORM
+		return "redirect:" + "/manage/debtor/orgform/list";
+	}
+	//END - ORGFORM
 
 	//BEGIN - WORK SECTOR
 	@RequestMapping(value = { "/manage/debtor/worksector/list" }, method = RequestMethod.GET)
@@ -402,22 +378,22 @@ public class DebtorController {
 	}
 
 	@RequestMapping(value="/manage/debtor/worksector/save", method=RequestMethod.POST)
-    public String saveWorkSector(WorkSector sector,  ModelMap model) {
+	public String saveWorkSector(WorkSector sector,  ModelMap model) {
 		if(sector.getId() == 0)
 			sectorService.add(sector);
 		else
 			sectorService.update(sector);
-		
+
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
-        return "redirect:" + "/manage/debtor/worksector/list";
-    }
-	
+		return "redirect:" + "/manage/debtor/worksector/list";
+	}
+
 	@RequestMapping(value="/manage/debtor/worksector/delete", method=RequestMethod.POST)
-    public String deleteWorkSector(long id) {
+	public String deleteWorkSector(long id) {
 		if(id > 0)
 			sectorService.remove(sectorService.getById(id));
-        return "redirect:" + "/manage/debtor/worksector/list";
-    }
+		return "redirect:" + "/manage/debtor/worksector/list";
+	}
 	//END - WORK SECTOR
-	
+
 }

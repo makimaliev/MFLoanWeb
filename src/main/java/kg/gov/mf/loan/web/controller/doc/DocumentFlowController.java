@@ -7,11 +7,8 @@ import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.doc.model.*;
 import kg.gov.mf.loan.doc.service.DocumentStatusService;
 import kg.gov.mf.loan.doc.service.*;
-import kg.gov.mf.loan.doc.model.State;
 import kg.gov.mf.loan.doc.model.Transition;
 import kg.gov.mf.loan.task.model.Task;
-import kg.gov.mf.loan.task.model.TaskPriority;
-import kg.gov.mf.loan.task.model.TaskStatus;
 import kg.gov.mf.loan.task.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLConnection;
@@ -41,27 +37,22 @@ public class DocumentFlowController extends BaseController {
     public void setDocumentService(DocumentService documentService) {
         this.documentService = documentService;
     }
-
     @Autowired
     public void setDocumentTypeService(DocumentTypeService documentTypeService) {
         this.documentTypeService = documentTypeService;
     }
-
     @Autowired
     public void setDocumentSubTypeService(DocumentSubTypeService documentSubTypeService) {
         this.documentSubTypeService = documentSubTypeService;
     }
-
     @Autowired
     public void setDocumentStatusService(DocumentStatusService documentStatusService) {
         this.documentStatusService = documentStatusService;
     }
-
     @Autowired
     public void setAccountService(AccountService accountService) {
         this.accountService = accountService;
     }
-
     @Autowired
     public void setTaskService(TaskService taskService) {
         this.taskService = taskService;
@@ -230,7 +221,7 @@ public class DocumentFlowController extends BaseController {
 
         if(document.getDocumentState().toString() == "DRAFT")
         {
-            for(Task task : taskService.getTasksByObjectId(document.getId()))
+            for(Task task : taskService.getTasksByObjectId(document.getId(), getUser().getId()))
             {
                 taskService.remove(task);
             }
@@ -239,7 +230,7 @@ public class DocumentFlowController extends BaseController {
         return "redirect:/doc?type=" + docType;
     }
 
-    @RequestMapping(value="/download/{attachment}", method = RequestMethod.GET)
+    @RequestMapping(value = "/download/{attachment}", method = RequestMethod.GET)
     public void downloadFile(HttpServletResponse response, @PathVariable("attachment") String attachment) throws IOException {
 
         File file = new File("D:/cp/" + attachment);
@@ -258,29 +249,27 @@ public class DocumentFlowController extends BaseController {
     }
 
     private DispatchData setDispatchData(String internalName) {
+
         DocumentStatus documentStatus = documentStatusService.getByInternalName(internalName);
-
         DispatchData dispatchData = new DispatchData();
-            dispatchData.setDescription(documentStatus.getName());
+        dispatchData.setDescription(documentStatus.getName());
+        dispatchData.setDispatchBy(getUser());
+        dispatchData.setDispatchTo(userService.findById(2L));
+        dispatchData.setDispatchInitTime(new Date());
+        dispatchData.setDispatchType(documentStatus);
 
-            if(documentStatus.getInternalName() == "create")
-            {
-                dispatchData.setParent(true);
-            }
-            else
-            {
-                dispatchData.setParent(false);
-            }
-
-            dispatchData.setDispatchBy(getUser());
-            dispatchData.setDispatchTo(userService.findById(2L));
-            dispatchData.setDispatchInitTime(new Date());
-            dispatchData.setDispatchType(documentStatus);
+        if(documentStatus.getInternalName() == "create")
+        {
+            dispatchData.setParent(true);
+        }
+        else
+        {
+            dispatchData.setParent(false);
+        }
 
         return dispatchData;
     }
-
-    private Task addTask(Document document, String action, Object responsible) {
+    private Task addTask(Document document, Object responsible) {
 
         Integer responsibleType = document.getReceiverResponsible().getResponsibleType();
 
@@ -289,17 +278,12 @@ public class DocumentFlowController extends BaseController {
         task.setSummary("Document : " + document.getGeneralStatus().getInternalName().toUpperCase());
         task.setDescription(document.getDescription());
         task.setResolutionSummary(document.getDescription());
-        task.setProgress(action);
+        task.setProgress(document.getGeneralStatus().getInternalName().toUpperCase());
         task.setIdentifiedByUserId(getUser().getId());
         task.setModifiedByUserId(getUser().getId());
-        task.setIdentifiedDate(new Date());
         task.setObjectType("/doc/edit/" + document.getId());
         task.setObjectId(document.getId());
-        task.setStatus(TaskStatus.OPEN);
-        task.setPriority(TaskPriority.HIGH);
         task.setTargetResolutionDate(document.getReceiverDueDate() != null ? document.getReceiverDueDate() : new Date());
-        task.setCreatedOn(new Date());
-        task.setModifiedOn(new Date());
         task.setCreatedBy(getUser());
 
         if(responsibleType == 1)
@@ -321,7 +305,6 @@ public class DocumentFlowController extends BaseController {
 
         return task;
     }
-
     private Document setER(Document document) {
 
         if(document.getSenderResponsible() != null)
@@ -445,10 +428,7 @@ public class DocumentFlowController extends BaseController {
             }
         return document;
     }
-
     private void saveInternalDocument(Document document, String action) {
-
-        //State state = document.getDocumentState().next(Transition.valueOf(action.toUpperCase()));
 
         DispatchData dispatchData = setDispatchData(action);
         DocumentStatus documentStatus = documentStatusService.getByInternalName(action);
@@ -461,15 +441,13 @@ public class DocumentFlowController extends BaseController {
         {
             document.getSenderDispatchData().add(dispatchData);
             document.setSenderStatus(documentStatus);
-
             document.setDocumentState(document.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
 
             if(action.equals("request"))
             {
                 documentService.save(document);
-
                 for(final Staff s : document.getSenderResponsible().getStaff()) {
-                    taskService.add(addTask(document, action, s));
+                    taskService.add(addTask(document, s));
                 }
             } else {
                 documentService.save(document);
@@ -481,7 +459,6 @@ public class DocumentFlowController extends BaseController {
 
             document.setSenderDispatchData(doc.getSenderDispatchData());            // add existing Sender DispatchData
             document.setSenderStatus(doc.getSenderStatus());                        // add existing Sender DocumentStatus
-
             document.setDocumentState(doc.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
 
             if(doc.getSenderStatus().getInternalName().equals("approve"))
@@ -499,32 +476,32 @@ public class DocumentFlowController extends BaseController {
                     if(responsibleType == 1)
                     {
                         for(Staff s : document.getReceiverResponsible().getStaff()) {
-                            taskService.add(addTask(document, action, s));
+                            taskService.add(addTask(document, s));
                         }
                     }
                     else if(responsibleType == 2)
                     {
                         for(Department d : document.getReceiverResponsible().getDepartments()) {
-                            taskService.add(addTask(document, action, d));
+                            taskService.add(addTask(document, d));
                         }
                     }
                     else if(responsibleType == 3)
                     {
                         for(Organization o : document.getReceiverResponsible().getOrganizations()) {
-                            taskService.add(addTask(document, action, o));
+                            taskService.add(addTask(document, o));
                         }
                     }
                     else
                     {
                         for(Person p : document.getReceiverResponsible().getPerson()) {
-                            taskService.add(addTask(document, action, p));
+                            taskService.add(addTask(document, p));
                         }
                     }
                 }
 
                 if(action.equals("start"))
                 {
-                    completeTask(document.getId());
+                    taskService.completeTask(document.getId(), getUser());
                 }
             }
             else
@@ -535,7 +512,7 @@ public class DocumentFlowController extends BaseController {
                 if(action.equals("request"))
                 {
                     for(final Staff s : doc.getSenderResponsible().getStaff()) {
-                        taskService.add(addTask(document, action, s));
+                        taskService.add(addTask(document, s));
                     }
                 }
 
@@ -543,13 +520,12 @@ public class DocumentFlowController extends BaseController {
                 {
                     document.setSenderRegisteredNumber("DOCS-" + new Random().nextInt(100));
                     document.setSenderRegisteredDate(new Date());
-                    completeTask(document.getId());
+                    taskService.completeTask(document.getId(), getUser());
                 }
             }
             documentService.update(document);
         }
     }
-
     private void saveIncomingDocument(Document document, String action) {
 
         DocumentStatus documentStatus = documentStatusService.getByInternalName(action);
@@ -563,7 +539,6 @@ public class DocumentFlowController extends BaseController {
         {
             document.getSenderDispatchData().add(dispatchData);                     // add new Sender DispatchData
             document.setSenderStatus(documentStatus);                               // update Sender DocumentStatus
-
             document.setDocumentState(document.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
 
             if(action.equals("register"))
@@ -573,7 +548,7 @@ public class DocumentFlowController extends BaseController {
                 documentService.save(document);
 
                 for(final Staff s : document.getSenderResponsible().getStaff()) {
-                    taskService.add(addTask(document, action, s));
+                    taskService.add(addTask(document, s));
                 }
             } else {
                 documentService.save(document);
@@ -585,7 +560,6 @@ public class DocumentFlowController extends BaseController {
 
             document.setSenderDispatchData(doc.getSenderDispatchData());            // add existing Sender DispatchData
             document.setSenderStatus(doc.getSenderStatus());                        // add existing Sender DocumentStatus
-
             document.setDocumentState(doc.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
 
             if(doc.getSenderStatus().getInternalName().equals("register"))
@@ -603,32 +577,32 @@ public class DocumentFlowController extends BaseController {
                     if(responsibleType == 1)
                     {
                         for(Staff s : document.getReceiverResponsible().getStaff()) {
-                            taskService.add(addTask(document, action, s));
+                            taskService.add(addTask(document, s));
                         }
                     }
                     else if(responsibleType == 2)
                     {
                         for(Department d : document.getReceiverResponsible().getDepartments()) {
-                            taskService.add(addTask(document, action, d));
+                            taskService.add(addTask(document, d));
                         }
                     }
                     else if(responsibleType == 3)
                     {
                         for(Organization o : document.getReceiverResponsible().getOrganizations()) {
-                            taskService.add(addTask(document, action, o));
+                            taskService.add(addTask(document, o));
                         }
                     }
                     else
                     {
                         for(Person p : document.getReceiverResponsible().getPerson()) {
-                            taskService.add(addTask(document, action, p));
+                            taskService.add(addTask(document, p));
                         }
                     }
                 }
 
                 if(action.equals("start"))
                 {
-                    completeTask(document.getId());
+                    taskService.completeTask(document.getId(), getUser());
                 }
             }
             else
@@ -645,25 +619,25 @@ public class DocumentFlowController extends BaseController {
                     if(responsibleType == 1)
                     {
                         for(Staff s : document.getReceiverResponsible().getStaff()) {
-                            taskService.add(addTask(document, action, s));
+                            taskService.add(addTask(document, s));
                         }
                     }
                     else if(responsibleType == 2)
                     {
                         for(Department d : document.getReceiverResponsible().getDepartments()) {
-                            taskService.add(addTask(document, action, d));
+                            taskService.add(addTask(document, d));
                         }
                     }
                     else if(responsibleType == 3)
                     {
                         for(Organization o : document.getReceiverResponsible().getOrganizations()) {
-                            taskService.add(addTask(document, action, o));
+                            taskService.add(addTask(document, o));
                         }
                     }
                     else
                     {
                         for(Person p : document.getReceiverResponsible().getPerson()) {
-                            taskService.add(addTask(document, action, p));
+                            taskService.add(addTask(document, p));
                         }
                     }
                 }
@@ -671,7 +645,6 @@ public class DocumentFlowController extends BaseController {
             documentService.update(document);
         }
     }
-
     private void saveOutgoingDocument(Document document, String action) {
 
         DocumentStatus documentStatus = documentStatusService.getByInternalName(action);
@@ -693,7 +666,7 @@ public class DocumentFlowController extends BaseController {
                 document = documentService.save(document);
 
                 for(final Staff s : document.getSenderResponsible().getStaff()) {
-                    taskService.add(addTask(document, action, s));
+                    taskService.add(addTask(document, s));
                 }
             } else {
                 documentService.save(document);
@@ -722,7 +695,7 @@ public class DocumentFlowController extends BaseController {
 
                 if(action.equals("done"))
                 {
-                    completeTask(document.getId());
+                    taskService.completeTask(document.getId(), getUser());
                 }
             }
             else
@@ -733,7 +706,7 @@ public class DocumentFlowController extends BaseController {
                 if(action.equals("request"))
                 {
                     for(final Staff s : doc.getSenderResponsible().getStaff()) {
-                        taskService.add(addTask(document, action, s));
+                        taskService.add(addTask(document, s));
                     }
                 }
 
@@ -741,24 +714,10 @@ public class DocumentFlowController extends BaseController {
                 {
                     document.setSenderRegisteredNumber("DOCS-" + new Random().nextInt(100));
                     document.setSenderRegisteredDate(new Date());
-                    completeTask(document.getId());
+                    taskService.completeTask(document.getId(), getUser());
                 }
             }
             documentService.update(document);
         }
     }
-
-    private void completeTask(Long taskId)
-    {
-        for(Task task : taskService.getTasksByObjectId(taskId)) {
-
-            task.setActualResolutionDate(new Date());
-            task.setModifiedByUserId(getUser().getId());
-            task.setStatus(TaskStatus.CLOSED);
-            task.setModifiedOn(new Date());
-            taskService.update(task);
-        }
-    }
-
-    /**/
 }

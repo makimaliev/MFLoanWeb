@@ -152,7 +152,7 @@ public class LoanController {
 		model.addAttribute("debtorId", debtorId);
 		
 		//Get all loans except this loan
-		Set<Loan> tLoans = debtor.getLoans();
+		Set<Loan> tLoans = null;
 		tLoans.remove(loanService.getById(loanId));
         model.addAttribute("tLoans", tLoans);
         

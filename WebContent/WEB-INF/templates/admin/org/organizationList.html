@@ -52,7 +52,7 @@
 												<th>Id</th>
 												<th>Name</th>
 												<th>Description</th>
-												<th>OrgForm</th>
+
 												<th>View</th>												
 												<th>Edit</th>
 												<th>Delete</th>
@@ -65,7 +65,7 @@
 												<td th:text="${s.id}">Id</td>
 												<td th:text="${s.name}">Name</td>     
 												<td th:text="${s.description}">Description</td>
-												<td th:text="${s.orgForm.name}">Description</td>
+
 												<td><a th:href="@{/organization/__${s.id}__/details}"
 													role="button" class="btn btn-xs green-stripe"> View </a></td>
 												<td>
@@ -200,11 +200,11 @@
 
 				$("#organization_id").val(rowData[0]);
 				
-				var sUrl ="/MFCredit/organization/" + rowData[0]+"/view";
+				var sUrl ="/organization/" + rowData[0]+"/view";
 				
 				$.get(sUrl, function(data) {
 
-					$('#content').html(data);
+					// $('#content').html(data);
 				});
 
 				});

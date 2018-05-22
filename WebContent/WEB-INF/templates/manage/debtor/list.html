@@ -48,8 +48,8 @@
 										<th class="table-id">Id</th>
 										<th th:text="#{label.debtor.table.name}">Name</th>
 										<th th:text="#{label.debtor.table.debtorType}">Type</th>
-										<th th:text="#{label.debtor.table.orgForm}">Organization form</th>
 										<th th:text="#{label.debtor.table.workSector}">Work sector</th>
+										<th th:text="#{label.debtor.table.district}">District</th>
 										<th>&nbsp;</th>
 									</tr>
 									</thead>
@@ -58,8 +58,8 @@
 										<td class="table-id" th:text="${debtor.id}">Id</td>
 										<td th:text="${debtor.name}">Name</td>
 										<td th:text="${debtor.debtorType.name}">Type</td>
-										<td th:text="${debtor.orgForm.name}">Org form</td>
 										<td th:text="${debtor.workSector.name}">Work sector</td>
+										<td th:text="${debtor.owner.address.district.name}">District</td>
 										<td class="table-actions text-right">
 											<span>
 												<div class="dropdown">
