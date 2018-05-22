@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -89,9 +91,54 @@ public class RestDebtorController {
 		return debtorRepository.save(debtor);
 	}
 
-	@GetMapping("/debtors")
-	public Page<Debtor> getAllDebtors(Pageable pageable) {
-		return debtorRepository.findAll(pageable);
+	@PostMapping("/debtors")
+		public DataResponse getAllDebtors(Pageable pageable) {
+
+		/*
+		Calendar cal = Calendar.getInstance();
+		Date today = cal.getTime();
+
+		List<Object> vals = new ArrayList<>();
+		vals.add("Text 1");
+		vals.add(1);
+		vals.add(DateUtils.format(today, DateUtils.FORMAT_POSTGRES_DATE));
+		vals.add("John Doe");
+		vals.add("John Doe");
+		vals.add(100.1);
+		vals.add(10);
+		//vals.add(1);
+		vals.add("Text 2");
+
+        DataResponse<Object> dr = new DataResponse<>();
+        List<List<Object>> data = new ArrayList<>();
+        data.add(vals);
+        dr.setData(data);
+        dr.setRecordsFiltered(10);
+        dr.setRecordsTotal(10);
+        dr.setDraw(1);
+
+        return dr;
+        */
+		DataResponse<Object> dr = new DataResponse<>();
+		List<List<Object>> data = new ArrayList<>();
+		List<Debtor> debtors = debtorRepository.findAll(pageable).getContent();
+		for (Debtor debtor: debtors
+			 ) {
+			List<Object> vals = new ArrayList<>();
+			vals.add(debtor.getId());
+			vals.add(debtor.getName());
+			vals.add(debtor.getWorkSector().getName());
+			vals.add(debtor.getOwner().getAddress().getDistrict().getName());
+			vals.add("<a href=\"javascript:;\" class=\"btn btn-sm btn-outline grey-salsa\"><i class=\"fa fa-search\"></i> View</a>'");
+			data.add(vals);
+		}
+
+		dr.setData(data);
+		dr.setRecordsFiltered(pageable.getPageSize());
+		dr.setRecordsTotal(pageable.getPageSize());
+		dr.setDraw(pageable.getPageNumber());
+
+		return dr;
 	}
 
 	@GetMapping("/debtors/{debtorId}")
