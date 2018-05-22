@@ -18,6 +18,7 @@ import kg.gov.mf.loan.manage.model.debtor.Debtor;
 
 import javax.validation.Valid;
 
+@CrossOrigin(origins = "*")
 @RestController
 public class RestDebtorController {
 
