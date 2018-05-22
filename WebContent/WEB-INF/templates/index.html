@@ -1,71 +1,54 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" >
+<!-- begin::Head -->
 <head>
-    <title>MFLoan | Главная страница</title>
-    <div th:replace="fragments/header :: header-css"/>
+	<title>
+		Главная страница | MFLoan
+	</title>
+
+	<div th:replace="fragments/header :: header-css"/>
 </head>
-    <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
-        <!-- BEGIN HEADER -->
-        <div th:replace="layout :: header-top"/>
-        <!-- END HEADER -->
-        <!-- BEGIN CONTAINER -->
-        <div class="page-container">
-            <!-- BEGIN SIDEBAR -->
-            <div th:replace="layout :: page-container-sidebar"/>
-            <!-- END SIDEBAR -->
-            <!-- BEGIN CONTENT -->
-            <div class="page-content-wrapper">
-                <!-- BEGIN CONTENT BODY -->
-                <div class="page-content">
-                    <!-- BEGIN PAGE HEADER-->
-                    <h1 class="page-title">Welcome page
-                        <small>statistics, charts, recent events and reports</small>
-                    </h1>
-                    <div class="page-bar">
-	                        <ul class="page-breadcrumb">
-	                            <li>
-	                            	<i class="icon-home"></i>
-	                                <span>Home</span>
-	                            </li>
-	                        </ul>
-	                        <div class="page-toolbar">
-	                            <div class="btn-group pull-right">
-	                                <button type="button" class="btn btn-fit-height grey-salt dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true"> Actions
-	                                    <i class="fa fa-angle-down"></i>
-	                                </button>
-	                                <ul class="dropdown-menu pull-right" role="menu">
-	                                    <li>
-	                                        <a href="#">
-	                                            <i class="icon-bell"></i> Action</a>
-	                                    </li>
-	                                    <li>
-	                                        <a href="#">
-	                                            <i class="icon-shield"></i> Another action</a>
-	                                    </li>
-	                                    <li>
-	                                        <a href="#">
-	                                            <i class="icon-user"></i> Something else here</a>
-	                                    </li>
-	                                    <li class="divider"> </li>
-	                                    <li>
-	                                        <a href="#">
-	                                            <i class="icon-bag"></i> Separated link</a>
-	                                    </li>
-	                                </ul>
-	                            </div>
-	                        </div>
-	                    </div>
-                    <!-- END PAGE HEADER-->
-                    <h1 th:text="#{hello}">Welcome</h1>
-                    <p>Some body text will be here</p>
-                </div>
-                <!-- END CONTENT BODY -->
-            </div>
-            <!-- END CONTENT -->
-            <!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
-        </div>
-        <!-- END CONTAINER -->
-        <div th:replace="layout :: footer"/>
-        <div th:replace="fragments/footer :: footer-js"/>
-    </body>
+<!-- end::Head -->
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+	<!-- BEGIN: Header -->
+	<div th:replace="layout/header"/>
+	<!-- END: Header -->
+	<!-- begin::Body -->
+	<div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+		<!-- BEGIN: Left Aside -->
+		<div th:replace="layout/sidebar"/>
+		<!-- END: Left Aside -->
+		<div class="m-grid__item m-grid__item--fluid m-wrapper">
+			<!-- BEGIN: Subheader -->
+			<div class="m-subheader ">
+				<div class="d-flex align-items-center">
+					<div class="mr-auto">
+						<h3 class="m-subheader__title ">
+							Dashboard
+						</h3>
+					</div>
+				</div>
+			</div>
+			<!-- END: Subheader -->
+			<div class="m-content">
+			</div>
+		</div>
+	</div>
+	<!-- end:: Body -->
+	<!-- begin::Footer -->
+	<div th:replace="layout/footer"/>
+	<!-- end::Footer -->
+</div>
+<!-- end:: Page -->
+
+<div th:replace="fragments/footer :: footer-js"/>
+
+<!--begin::Page Snippets -->
+<script th:src="@{/assets/custom/app/js/dashboard.js}" type="text/javascript"></script>
+<!--end::Page Snippets -->
+</body>
+<!-- end::Body -->
 </html>

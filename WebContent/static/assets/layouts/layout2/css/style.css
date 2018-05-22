@@ -1,13 +1,81 @@
+
+/*Page*/
+.page-container-bg-solid .page-content{
+    /*background: #ffffff;*/
+}
+
+/*Table Title*/
+.table-header{
+    margin-bottom: 24px;
+}
+.table-toolbar .table-header{
+    margin-bottom: 0;
+}
+.table-header > * {
+    display: inline-block;
+    vertical-align: middle;
+}
+.table-header h4{
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 32px 0 0;
+}
+.table-header .btn-add{
+    background: #148ff7;
+    color: #fff;
+    font-size: 12px;
+}
+
+/*Tabs*/
+.portlet-tabs .nav-tabs{
+    margin-bottom: 0;
+    border: none;
+}
+.portlet-tabs .nav-tabs li a{
+    font-size: 12px;
+    font-weight: 600;
+}
+.portlet-tabs .nav-tabs li a,
+.portlet-tabs .nav-tabs li a:focus,
+.portlet-tabs .nav-tabs li a:hover,
+.portlet-tabs .nav-tabs>li.active>a,
+.portlet-tabs .nav-tabs>li.active>a:focus,
+.portlet-tabs .nav-tabs>li.active>a:hover{
+    border: none;
+}
+
+/*Pagination*/
 .pagination{
     margin: 0;
     float: right;
 }
-.pagination li a{
+.pagination>.active>a, 
+.pagination>.active>a:focus, 
+.pagination>.active>a:hover, 
+.pagination>.active>span, 
+.pagination>.active>span:focus, 
+.pagination>.active>span:hover{
+    border-color: #3273dc;
+    background-color: #3273dc;
+}
+.table-toolbar .pagination li a,
+.table-toolbar .btn{
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+/*Table Toolbar*/
+.table-toolbar{
+    margin-bottom: 0;
+    padding: 15px;
+}
+.table-toolbar-footer{
+    border-top: 1px solid #e7ecf1;
 }
 .page-size-group > *{
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 600;
     display: inline-block;
     vertical-align: middle;
 }
@@ -16,10 +84,9 @@
     font-size: 12px;
     padding: 0 8px;
     height: 32px;
-    margin: 0 5px;
+    margin-left: 8px;
 }
 .page-search{
-    margin-left: 15px;
 }
 .page-search .form-control{
     height: 32px;
@@ -31,18 +98,28 @@
     display: inline-block;
     vertical-align: middle;
 }
+.page-search .btn{
+    border-color: #c2cad8;
+    border-left: 0;
+    padding: 5px 10px;
+}
 
 /*Portlet*/
+.portlet.light{
+    -webkit-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    -moz-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
 .portlet.light>.portlet-title{
     min-height: auto;
 }
 .portlet.light.portlet-fit>.portlet-title{
-    padding: 10px 15px;
+    padding: 15px;
     margin: 0;
 }
 .portlet.light .portlet-body,
 .portlet.light.portlet-fit>.portlet-body{
-    padding: 10px 15px;
+    padding: 15px;
 }
 .portlet.light>.portlet-title>.caption{
     padding: 0;
@@ -73,6 +150,9 @@
     font-size: 12px;
     font-weight: 600;
 }
+.portlet-body.no-padding{
+    padding: 0 !important;
+}
 
 /*Tabs*/
 .tabbable-line>.nav-tabs>li{
@@ -85,20 +165,34 @@
 }
 
 /* Tables */
-.table-toolbar{
-    margin-bottom: 10px;
+.table-scrollable-no-margin{
+    margin-top: 0 !important;
 }
 .table>thead>tr>th,
 .table>tbody>tr>td{
-    padding: 4px 6px;
+    padding: 4px 8px;
     font-size: 12px;
+}
+.table>thead>tr>th:first-child,
+.table>tbody>tr>td:first-child{
+    padding-left: 15px;
+}
+.table>thead>tr>th:last-child,
+.table>tbody>tr>td:last-child{
+    padding-right: 15px;
+}
+.table>thead>tr>th{
+    background: #e8edf3;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-color: #e8edf3;
+}
+.table>tbody>tr:first-child>td{
+    padding-top: 16px;
 }
 .table-id{
-    /*max-width: 30px;*/
-}
-.table-toolbar .pagination li a,
-.table-toolbar .btn{
-    font-size: 12px;
+    max-width: 48px;
+    overflow: hidden;
 }
 .table>tbody>tr>td .btn{
     background: none;
@@ -107,7 +201,7 @@
 
 /*Buttons*/
 .btn:not(.btn-sm):not(.btn-lg){
-    line-height: 1.5;
+    line-height: 20px;
 }
 .btn-group-sm>.btn,
 .btn-sm{
@@ -116,6 +210,33 @@
 .modal-footer .btn{
     font-size: 12px;
 }
+.btn.btn-outline.blue{
+    border-color: #209cee;
+    color: #209cee;
+}
+.btn.btn-outline.blue.active,
+.btn.btn-outline.blue:active,
+.btn.btn-outline.blue:active:focus,
+.btn.btn-outline.blue:active:hover,
+.btn.btn-outline.blue:focus,
+.btn.btn-outline.blue:hover{
+    background-color: #209cee;
+    border-color: #209cee;
+}
+.btn.btn-outline.green{
+    border-color: #23d160;
+    color: #23d160;
+}
+.btn.btn-outline.green.active,
+.btn.btn-outline.green:active,
+.btn.btn-outline.green:active:focus,
+.btn.btn-outline.green:active:hover,
+.btn.btn-outline.green:focus,
+.btn.btn-outline.green:hover{
+    background-color: #23d160;
+    border-color: #23d160;
+}
+
 
 /*Forms*/
 .form-body .form-group{

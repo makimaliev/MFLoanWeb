@@ -1,90 +1,56 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" >
+<!-- begin::Head -->
 <head>
-	<title th:text="#{label.debtor.page.title}"> Region List</title>
+	<title th:text="#{label.debtor.page.title}"></title>
 
-	<div th:replace="fragments/header :: header-css" />
-	<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
-	<link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
-	<link th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}" rel="stylesheet" type="text/css" />
-	<style type="text/css">
-		table.KeyTable tr.focus {
-			outline: 3px solid #3366FF;
-			outline-offset: -3px;
-		}
-	</style>
+	<div th:replace="fragments/header :: header-css"/>
 </head>
-<body
-		class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
-<!-- BEGIN HEADER -->
-<div th:replace="layout :: header-top" />
-<!-- END HEADER -->
+<!-- end::Head -->
 
-<!-- BEGIN CONTAINER -->
-<div class="page-container">
-	<!-- BEGIN SIDEBAR -->
-	<div th:replace="layout :: page-container-sidebar" />
-	<!-- END SIDEBAR -->
-	<!-- BEGIN CONTENT -->
-	<div class="page-content-wrapper">
-		<!-- BEGIN CONTENT BODY -->
-		<div class="page-content">
-
-			<div class="row">
-				<div class="col-md-12">
-					<!-- BEGIN BORDERED TABLE PORTLET-->
-					<div class="portlet light portlet-fit">
-						<div class="portlet-title">
-							<div class="caption">
-								<i class="icon-settings font-green"></i>
-								<span class="caption-subject font-green sbold uppercase">Debtors</span>
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+	<!-- BEGIN: Header -->
+	<div th:replace="layout/header"/>
+	<!-- END: Header -->
+	<!-- begin::Body -->
+	<div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+		<!-- BEGIN: Left Aside -->
+		<div th:replace="layout/sidebar"/>
+		<!-- END: Left Aside -->
+		<div class="m-grid__item m-grid__item--fluid m-wrapper">
+			<div class="m-content">
+				<!--begin::Portlet-->
+				<div class="m-portlet">
+					<div class="m-portlet__head">
+						<div class="m-portlet__head-caption">
+							<div class="m-portlet__head-title">
+								<h3 class="m-portlet__head-text" th:text="#{label.debtor.debtors}"></h3>
 							</div>
 						</div>
-						<div class="portlet-body">
-
-							<div class="table-toolbar">
-								<div class="pull-left">
-									<div class="btn-group">
-										<a th:href="@{/manage/debtor/0/save}" class="btn green" th:text="#{label.debtor.button.addDebtor}">Add New Debtor <i class="fa fa-plus"></i></a>
-									</div>
-								</div>
-								<div class="page-search col-md-2 pull-right">
-									<div class="row">
-										<form th:action="@{/manage/debtor/search}" method="get">
-											<input type="hidden" name="pageSize" th:value="${selectedPageSize}">
-											<input type="hidden" name="page" th:value="${current}">
-											<div class="input-group">
-												<input type="text" class="form-control" name="q">
-												<span class="input-group-btn">
-													<button type="submit" class="btn btn-default">Поиск</button>
-										  		</span>
-											</div><!-- /input-group -->
-										</form>
-									</div>
-								</div>
-								<div class="page-size-group pull-right">
-									<span>Показать</span>
-									<select class="form-control page-size-select" id="pageSizeSelect">
-										<option th:each="pageSize : ${pageSizes}" th:text="${pageSize}" th:value="${pageSize}"
-												th:selected="${pageSize} == ${selectedPageSize}"></option>
-									</select>
-									<span>записей</span>
-								</div>
-							</div>
-
-							<div class="table-scrollable table-scrollable-borderless">
-
-								<table class="table compact" id="orderTable">
-									<thead>
+						<div class="m-portlet__head-tools">
+							<ul class="m-portlet__nav">
+								<li class="m-portlet__nav-item">
+									<a th:href="@{/manage/debtor/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.debtor.addDebtor}"></a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="m-portlet__body">
+						<!--begin::Section-->
+						<div class="m-section">
+							<div class="m-section__content">
+								<table class="table">
+									<thead class="thead-default">
 									<tr>
-										<th class="table-id" th:text="#{label.debtor.table.id}">Id</th>
+										<th class="table-id">Id</th>
 										<th th:text="#{label.debtor.table.name}">Name</th>
 										<th th:text="#{label.debtor.table.debtorType}">Type</th>
 										<th th:text="#{label.debtor.table.orgForm}">Organization form</th>
 										<th th:text="#{label.debtor.table.workSector}">Work sector</th>
-										<th th:text="#{label.debtor.table.view}">View Details</th>
-										<th th:text="#{label.debtor.table.edit}">Edit</th>
-										<th th:text="#{label.debtor.table.delete}">Delete</th>
+										<th>&nbsp;</th>
 									</tr>
 									</thead>
 									<tbody>
@@ -94,112 +60,64 @@
 										<td th:text="${debtor.debtorType.name}">Type</td>
 										<td th:text="${debtor.orgForm.name}">Org form</td>
 										<td th:text="${debtor.workSector.name}">Work sector</td>
-										<td><a th:href="@{/manage/debtor/__${debtor.id}__/view}"
-											   role="button"
-											   class="btn btn-outline btn-circle btn-sm blue"
-											   th:text="#{label.debtor.button.view}">View</a>
-										</td>
-										<td>
-											<a class="btn btn-outline btn-circle btn-sm green"
-											   th:href="@{/manage/debtor/__${debtor.id}__/save}"
-											   th:text="#{label.debtor.button.edit}">Edit</a>
-										</td>
-										<td>
-											<form th:action="@{/manage/debtor/delete}" method="post">
-												<button type="submit"
-														class="btn btn-outline btn-circle dark btn-sm red"
-														th:text="#{label.debtor.button.delete}">Delete</button>
-											</form>
+										<td class="table-actions text-right">
+											<span>
+												<div class="dropdown">
+													<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+														<i class="la la-ellipsis-h"></i>
+													</a>
+													<div class="dropdown-menu dropdown-menu-right">
+														<a class="dropdown-item" th:href="@{/manage/debtor/__${debtor.id}__/view}">
+															<span th:text="#{label.table.view}"></span>
+														</a>
+														<a class="dropdown-item" th:href="@{/manage/debtor/__${debtor.id}__/save}">
+															<span th:text="#{label.table.edit}"></span>
+														</a>
+														<a class="dropdown-item" href="#">
+															<span>
+																<form th:action="@{/manage/debtor/delete}" method="post">
+																	<input hidden="true" type="text" id="id" name="id" th:value="${debtor.id}" />
+																	<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																</form>
+															</span>
+														</a>
+													</div>
+												</div>
+											</span>
 										</td>
 									</tr>
 									</tbody>
 								</table>
-
 							</div>
-							<div class="table-toolbar row">
-								<div th:if="${count != 1}" class="col-md-8 pagination-centered pull-right">
-									<ul class="pagination">
-										<li th:class="${current == 0} ? disabled">
-											<a class="pageLink" th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=1)}">&laquo;</a>
-										</li>
-										<li th:class="${current == 0} ? disabled">
-											<a class="pageLink" th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${current})}">&larr;</a>
-										</li>
-										<li th:class="${current == (page - 1)} ? 'active pointer-disabled'"
-											th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
-											<a class="pageLink" th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${page})}"
-											   th:text="${page}"></a>
-										</li>
-										<li th:class="${current + 1 == count} ? disabled">
-											<a class="pageLink"
-											   th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${current + 2})}">&rarr;</a>
-										</li>
-										<li th:class="${current + 1 == count} ? disabled">
-											<a class="pageLink"
-											   th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${count})}">&raquo;</a>
-										</li>
-									</ul>
-								</div>
+						</div>
+						<!--end::Section-->
+					</div>
+					<div class="m-portlet__foot">
+						<div class="row align-items-center">
+							<div class="col-lg-12">
+								<button type="submit" class="btn btn-success">
+									Submit
+								</button>
+								<button type="submit" class="btn btn-secondary">
+									Cancel
+								</button>
 							</div>
-
 						</div>
 					</div>
-					<!-- END BORDERED TABLE PORTLET-->
 				</div>
+				<!--end::Portlet-->
 			</div>
-
 		</div>
-		<!-- END CONTENT BODY -->
 	</div>
-	<!-- END CONTENT -->
-	<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
+	<!-- end:: Body -->
+	<!-- begin::Footer -->
+	<div th:replace="layout/footer"/>
+	<!-- end::Footer -->
 </div>
-<!-- END CONTAINER -->
-<div th:replace="layout :: footer" />
-<div th:replace="fragments/footer :: footer-js" />
+<!-- end:: Page -->
 
-<script th:src="@{/js/app.js}" type="text/javascript"></script>
-<script type="text/javascript">
-    $("#saveModal").on("show.bs.modal", function(e) {
+<div th:replace="fragments/footer :: footer-js"/>
 
-        var link = $(e.relatedTarget);
-
-
-        var regionID = $("#form_sample_2").val();
-
-        if(link.attr("href").indexOf('manage/debtor/0/save')>0)
-        {
-            //$(this).find(".modal-title").html(link.attr("href").replace("/district/add","/region/"+regionID+"/district/add"));
-            $(this).find(".modal-body").load(link.attr("href"));
-        }
-        else
-        {
-            //$(this).find(".modal-title").html(link.attr("href"));
-            $(this).find(".modal-body").load(link.attr("href"));
-        }
-    });
-
-    // $('.page-search button').click(function(e){
-    //     e.preventDefault();
-    //
-    //     var url = '/manage/debtor/search',
-    //         key = $('.page-search input').val();
-    //
-    //     $.ajax
-    //     ({
-    //         type: "POST",
-    //         url: url,
-    //         data: {
-    //             key: key,
-    //         },
-    //         cache: false,
-    //         success: function (data) {
-    //             console.log(data);
-    //         }
-    //     });
-    //
-    // });
-
-</script>
 </body>
+<!-- end::Body -->
 </html>

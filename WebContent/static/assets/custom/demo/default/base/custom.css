@@ -1,0 +1,116 @@
+/*General*/
+body{
+	font-family: 'Montserrat', sans-serif;
+}
+
+/*Buttons*/
+.btn,
+.form-control,
+.btn.m-btn--custom{
+	font-family: 'Montserrat', sans-serif;
+}
+.btn-reset{
+	background: none;
+	border: none;
+	padding: 0;
+	color: #333;
+}
+.m-btn--icon.m-btn--icon-only{
+	width: 23px;
+	height: 23px;
+}
+
+/*Dropdown*/
+.dropdown-menu > li > a,
+.dropdown-menu > .dropdown-item{
+	color: #333;
+}
+
+/*Header*/
+#m_header_menu{
+	float: right;
+	margin-right: 20px;
+	margin-left: 0;
+	font-weight: 600;
+}
+.m-header-menu .m-menu__nav > .m-menu__item .m-menu__link .lang-img{
+	display: table-cell;
+	vertical-align: middle;
+	padding-right: 8px;
+	width: 24px;
+}
+.lang-img img{
+	display: block;
+}
+.m-topbar .m-topbar__nav.m-nav{
+	margin-right: 0;
+}
+
+/*Login*/
+.m-login.m-login--2.m-login-2--skin-1 .m-login__container .m-login__form .m-login__form-sub .m-link{
+	font-weight: 500;
+}
+
+/*Nav*/
+.m-aside-menu .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item > .m-menu__heading,
+.m-aside-menu .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item > .m-menu__link{
+	/*height: 48px;*/
+}
+.m-aside-menu .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item:last-child{
+	padding-bottom: 8px;
+}
+.m-aside-menu .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item > .m-menu__heading .m-menu__link-text,
+.m-aside-menu .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item > .m-menu__link .m-menu__link-text{
+	font-size: 12px;
+	line-height: 1.25;
+}
+
+/*Portlet*/
+.m-portlet .m-portlet__head{
+	padding: 0 24px;
+}
+.m-portlet .m-portlet__body{
+	padding: 24px;
+}
+.m-portlet .m-portlet__foot{
+	padding: 12px 24px;
+}
+
+/*Section*/
+.m-section{
+	margin-bottom: 0;
+}
+.m-section .m-section__content{
+	margin-bottom: 0;
+}
+
+/*Tables*/
+.table{
+	margin-bottom: 0;
+}
+.table td,
+.table th{
+	vertical-align: middle;
+	padding: 8px;
+}
+.table th{
+	font-size: 10px;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+.table .thead-default th{
+	border: none;
+}
+.table td{
+	color: #333;
+	font-size: 12px;
+	font-weight: 500;
+}
+.table-id{
+	max-width: 48px;
+}
+.table-actions .dropdown-item,
+.table-actions .btn-reset{
+	font-size: 12px;
+	font-weight: 500;
+}

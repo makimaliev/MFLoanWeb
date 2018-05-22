@@ -1,33 +1,26 @@
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
-<!--[if !IE]><!-->
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<!--<![endif]-->
-    <!-- BEGIN HEAD -->
-    <head>
-    	<div th:fragment="header-css">
-	        <!-- BEGIN GLOBAL MANDATORY STYLES -->
-			<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&amp;subset=all" rel="stylesheet" type="text/css" />
-	        <link th:href="@{/assets/global/plugins/font-awesome/css/font-awesome.min.css}" rel="stylesheet" type="text/css" />
-	        <link th:href="@{/assets/global/plugins/simple-line-icons/simple-line-icons.min.css}" rel="stylesheet" type="text/css" />
-	        <link th:href="@{/assets/global/plugins/bootstrap/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
-	        <link th:href="@{/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css}" rel="stylesheet" type="text/css" />
-	        <!-- END GLOBAL MANDATORY STYLES -->
+<!-- begin::Head -->
+<head th:fragment="header-css">
+	<meta charset="utf-8" />
 
-	        <!-- BEGIN THEME GLOBAL STYLES -->
-	        <link th:href="@{/assets/global/css/components.min.css}" rel="stylesheet" id="style_components" type="text/css" />
-	        <link th:href="@{/assets/global/css/plugins.min.css}" rel="stylesheet" type="text/css" />
-	        <!-- END THEME GLOBAL STYLES -->
-	        <!-- BEGIN THEME LAYOUT STYLES -->
-	        <link th:href="@{/assets/layouts/layout2/css/layout.min.css}" rel="stylesheet" type="text/css" />
-	        <link th:href="@{/assets/layouts/layout2/css/themes/grey.min.css}" rel="stylesheet" type="text/css" id="style_color" />
-	        <link th:href="@{/assets/layouts/layout2/css/custom.min.css}" rel="stylesheet" type="text/css" />
-	        <link th:href="@{/assets/layouts/layout2/css/style.css}" rel="stylesheet" type="text/css" />
-	        <!-- END THEME LAYOUT STYLES -->
-	        <link rel="shortcut icon" href="favicon.ico" />
-        </div>
-    </head>
-    <!-- END HEAD -->
-<body>
-</body>
-</html>
+	<meta name="description" content="Latest updates and statistic charts">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!--begin::Web font -->
+	<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+	<script>
+        WebFont.load({
+            google: {"families":["Montserrat:300,400,500,600,700","Roboto:300,400,500,600,700"]},
+            active: function() {
+                sessionStorage.fonts = true;
+            }
+        });
+	</script>
+	<!--end::Web font -->
+	<!--begin::Base Styles -->
+	<link th:href="@{/assets/custom/vendors/base/vendors.bundle.css}" rel="stylesheet" type="text/css" />
+	<link th:href="@{/assets/custom/demo/default/base/style.bundle.css}" rel="stylesheet" type="text/css" />
+	<link th:href="@{/assets/custom/demo/default/base/custom.css}" rel="stylesheet" type="text/css" />
+	<!--end::Base Styles -->
+	<link rel="shortcut icon" href="assets/demo/default/media/img/logo/favicon.ico" />
+</head>
+<!-- end::Head -->
