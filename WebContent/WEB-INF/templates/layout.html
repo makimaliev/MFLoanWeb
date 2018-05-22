@@ -608,6 +608,22 @@
 
 							</ul>
 						</li>
+
+						<li class="nav-item  "><a href="javascript:;"
+												  class="nav-link nav-toggle"> <i class="icon-settings"></i> <span
+								class="title">Распечатка</span> <span class="arrow"></span>
+						</a>
+
+							<ul class="sub-menu">
+								<li class="nav-item "><a th:href="@{/printout/list/}"
+														 class="nav-link "> <span class="title"> Распечатки </span>
+								</a></li>
+								<li sec:authorize="hasRole('ADMIN')" class="nav-item "><a th:href="@{/printoutTemplate/list/}"
+																						  class="nav-link "> <span class="title"> Шаблоны
+									</span>
+								</a></li>
+							</ul>
+						</li>
 						
 						
 <li sec:authorize="hasRole('ADMIN')" class="nav-item  "><a href="javascript:;"
