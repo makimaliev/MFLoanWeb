@@ -3,4 +3,17 @@
     <script th:src="@{/assets/custom/vendors/base/vendors.bundle.js}" type="text/javascript"></script>
     <script th:src="@{/assets/custom/demo/default/base/scripts.bundle.js}" type="text/javascript"></script>
     <!--end::Base Scripts -->
+
+    <script>
+        $(document).ready(function() {
+            changePageAndSize();
+        });
+
+        function changePageAndSize() {
+            $('#pageSizeSelect').change(function(evt) {
+                var currentLocation = window.location.pathname;
+                window.location.replace(currentLocation + "?pageSize=" + this.value + "&page=1");
+            });
+        }
+    </script>
 </div>

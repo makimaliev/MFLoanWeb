@@ -83,7 +83,7 @@ public class CreditOrderController {
 
 	private static final int BUTTONS_TO_SHOW = 5;
 	private static final int INITIAL_PAGE = 0;
-	private static final int INITIAL_PAGE_SIZE = 5;
+	private static final int INITIAL_PAGE_SIZE = 10;
 	private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
 	
 	@InitBinder

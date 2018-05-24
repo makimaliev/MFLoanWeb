@@ -33,6 +33,20 @@
 						<div class="m-portlet__head-tools">
 							<ul class="m-portlet__nav">
 								<li class="m-portlet__nav-item">
+									<form th:action="@{/manage/debtor/search}" method="get">
+										<input type="hidden" name="pageSize" th:value="${selectedPageSize}">
+										<input type="hidden" name="page" th:value="${current}">
+										<div class="m-input-icon m-input-icon--left">
+											<input type="text" class="form-control m-input" th:placeholder="#{label.search}" name="q">
+											<span class="m-input-icon__icon m-input-icon__icon--left">
+												<span>
+													<i class="la la-search"></i>
+												</span>
+											</span>
+										</div>
+									</form>
+								</li>
+								<li class="m-portlet__nav-item">
 									<a th:href="@{/manage/debtor/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.debtor.addDebtor}"></a>
 								</li>
 							</ul>
@@ -42,65 +56,100 @@
 						<!--begin::Section-->
 						<div class="m-section">
 							<div class="m-section__content">
-								<table class="table">
-									<thead class="thead-default">
-									<tr>
-										<th class="table-id">Id</th>
-										<th th:text="#{label.debtor.table.name}">Name</th>
-										<th th:text="#{label.debtor.table.debtorType}">Type</th>
-										<th th:text="#{label.debtor.table.workSector}">Work sector</th>
-										<th th:text="#{label.debtor.table.district}">District</th>
-										<th>&nbsp;</th>
-									</tr>
-									</thead>
-									<tbody>
-									<tr th:each="debtor : ${debtors}">
-										<td class="table-id" th:text="${debtor.id}">Id</td>
-										<td th:text="${debtor.name}">Name</td>
-										<td th:text="${debtor.debtorType.name}">Type</td>
-										<td th:text="${debtor.workSector.name}">Work sector</td>
-										<td th:text="${debtor.owner.address.district.name}">District</td>
-										<td class="table-actions text-right">
-											<span>
-												<div class="dropdown">
-													<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
-														<i class="la la-ellipsis-h"></i>
-													</a>
-													<div class="dropdown-menu dropdown-menu-right">
-														<a class="dropdown-item" th:href="@{/manage/debtor/__${debtor.id}__/view}">
-															<span th:text="#{label.table.view}"></span>
-														</a>
-														<a class="dropdown-item" th:href="@{/manage/debtor/__${debtor.id}__/save}">
-															<span th:text="#{label.table.edit}"></span>
-														</a>
-														<a class="dropdown-item" href="#">
-															<span>
-																<form th:action="@{/manage/debtor/delete}" method="post">
-																	<input hidden="true" type="text" id="id" name="id" th:value="${debtor.id}" />
-																	<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
-																</form>
-															</span>
-														</a>
-													</div>
-												</div>
-											</span>
-										</td>
-									</tr>
-									</tbody>
-								</table>
+								<div class="m-scrollable m-scrollable-no-margin" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+									<div>
+										<table class="table">
+											<thead class="thead-default">
+											<tr>
+												<th class="table-id">Id</th>
+												<th th:text="#{label.debtor.table.name}">Name</th>
+												<th th:text="#{label.debtor.table.debtorType}">Type</th>
+												<th th:text="#{label.debtor.table.workSector}">Work sector</th>
+												<th th:text="#{label.debtor.table.district}">District</th>
+												<th>&nbsp;</th>
+											</tr>
+											</thead>
+											<tbody>
+											<tr th:each="debtor : ${debtors}">
+												<td class="table-id" th:text="${debtor.id}">Id</td>
+												<td th:text="${debtor.name}">Name</td>
+												<td th:text="${debtor.debtorType.name}">Type</td>
+												<td th:text="${debtor.workSector.name}">Work sector</td>
+												<td>District</td> <!-- th:text="${debtor.owner.address.district.name}" -->
+												<td class="table-actions text-right">
+													<span>
+														<div class="dropdown">
+															<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																<i class="la la-ellipsis-h"></i>
+															</a>
+															<div class="dropdown-menu dropdown-menu-right">
+																<a class="dropdown-item" th:href="@{/manage/debtor/__${debtor.id}__/view}">
+																	<span th:text="#{label.table.view}"></span>
+																</a>
+																<a class="dropdown-item" th:href="@{/manage/debtor/__${debtor.id}__/save}">
+																	<span th:text="#{label.table.edit}"></span>
+																</a>
+																<a class="dropdown-item" href="#">
+																	<span>
+																		<form th:action="@{/manage/debtor/delete}" method="post">
+																			<input hidden="true" type="text" id="id" name="id" th:value="${debtor.id}" />
+																			<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																		</form>
+																	</span>
+																</a>
+															</div>
+														</div>
+													</span>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
 							</div>
 						</div>
 						<!--end::Section-->
 					</div>
 					<div class="m-portlet__foot">
-						<div class="row align-items-center">
-							<div class="col-lg-12">
-								<button type="submit" class="btn btn-success">
-									Submit
-								</button>
-								<button type="submit" class="btn btn-secondary">
-									Cancel
-								</button>
+						<div class="m-datatable m-datatable--default">
+							<div class="m-datatable__pager m-datatable--paging-loaded clearfix">
+								<ul class="m-datatable__pager-nav">
+									<li th:class="${current == 0} ? disabled">
+										<a th:title="#{label.pagination.first}" class="m-datatable__pager-link m-datatable__pager-link--first" th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=1)}">
+											<i class="la la-angle-double-left"></i>
+										</a>
+									</li>
+									<li th:class="${current == 0} ? disabled">
+										<a th:title="#{label.pagination.prev}" class="m-datatable__pager-link m-datatable__pager-link--prev" th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${current})}">
+											<i class="la la-angle-left"></i>
+										</a>
+									</li>
+
+									<li th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+										<a th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${page})}" class="m-datatable__pager-link m-datatable__pager-link-number" th:text="${page}" th:classappend="${current == (page - 1)} ? 'm-datatable__pager-link--active'"></a>
+
+									</li>
+
+									<li th:class="${current + 1 == count} ? disabled">
+										<a th:title="#{label.pagination.next}" class="m-datatable__pager-link m-datatable__pager-link--next" th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${current + 2})}">
+											<i class="la la-angle-right"></i>
+										</a>
+									</li>
+									<li th:class="${current + 1 == count} ? disabled">
+										<a th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${count})}" th:title="#{label.pagination.last}" class="m-datatable__pager-link m-datatable__pager-link--last">
+											<i class="la la-angle-double-right"></i>
+										</a>
+									</li>
+								</ul>
+								<div class="m-datatable__pager-info">
+									<span class="m-datatable__pager-detail" th:text="#{label.pageSize}"></span>
+									<div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 70px;">
+										<select id="pageSizeSelect" class="selectpicker m-datatable__pager_size" title="Select page size" data-width="70px">
+											<option th:each="pageSize : ${pageSizes}" th:text="${pageSize}" th:value="${pageSize}"
+													th:selected="${pageSize} == ${selectedPageSize}"></option>
+										</select>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -117,6 +166,12 @@
 <!-- end:: Page -->
 
 <div th:replace="fragments/footer :: footer-js"/>
+
+<script>
+	$('.m-portlet__head-tools .m-input-icon__icon').click(function(e){
+	    $('.m-portlet__head-tools form').submit();
+	});
+</script>
 
 </body>
 <!-- end::Body -->

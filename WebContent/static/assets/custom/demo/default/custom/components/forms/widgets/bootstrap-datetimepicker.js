@@ -85,7 +85,17 @@ var BootstrapDatetimepicker = function () {
         });
 
         $('#m_datetimepicker_6').datetimepicker({
-            format: "yyyy/mm/dd",
+            format: "yyyy-mm-dd",
+            todayHighlight: true,
+            autoclose: true,
+            startView: 2,
+            minView: 2,
+            forceParse: 0,
+            pickerPosition: 'bottom-left'
+        });
+
+        $('.m_datetimepicker_6').datetimepicker({
+            format: "yyyy-mm-dd",
             todayHighlight: true,
             autoclose: true,
             startView: 2,

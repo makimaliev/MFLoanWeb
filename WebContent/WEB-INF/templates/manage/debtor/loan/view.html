@@ -1,1265 +1,1165 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+<html lang="en" >
+<!-- begin::Head -->
 <head>
-<title>MFLoan | Order Document Package Details</title>
-<div th:replace="fragments/header :: header-css" />
-<link th:href="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css}" rel="stylesheet" type="text/css" />
-<link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
-<link th:href="@{/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}" rel="stylesheet" type="text/css" />
+	<title th:text="#{label.loan.details.title}"></title>
+
+	<div th:replace="fragments/header :: header-css"/>
 </head>
-<body
-	class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
-	<!-- BEGIN HEADER -->
-	<div th:replace="layout :: header-top" />
-	<!-- END HEADER -->
-	<!-- BEGIN CONTAINER -->
-	<div class="page-container">
-		<!-- BEGIN SIDEBAR -->
-		<div th:replace="layout :: page-container-sidebar" />
-		<!-- END SIDEBAR -->
-		<!-- BEGIN CONTENT -->
-		<div class="page-content-wrapper">
-			<!-- BEGIN CONTENT BODY -->
-			<div class="page-content">
+<!-- end::Head -->
 
-				<div class="row">
-					<div class="col-md-12">
-						<!-- BEGIN BORDERED TABLE PORTLET-->
-						<div class="portlet light portlet-fit ">
-							<div class="portlet-title">
-								<div class="caption">
-									<i class="icon-settings font-green"></i> 
-									<span class="caption-subject font-green sbold uppercase" th:text="'Loan : '+${loan.regNumber}">Loan reg number 123</span>
-								</div>
-							</div>
-							<div class="portlet-body form">
-								<form class="form-horizontal" role="form">
-									<div class="form-body" style="padding: 20px">
-										<div class="row">
-											<div class="col-md-3">
-												<div class="form-group">
-													<label class="control-label col-md-6">Id:</label>
-													<div class="col-md-6">
-														<p class="form-control-static" th:text="${loan.id}">1</p>
-													</div>
-												</div>
-											</div>
-											<!--/span-->
-											<div class="col-md-3">
-												<div class="form-group">
-													<label class="control-label col-md-6">Registration number:</label>
-													<div class="col-md-6">
-														<p class="form-control-static" th:text="${loan.regNumber}">REG123</p>
-													</div>
-												</div>
-											</div>
-											<!--/span-->
-											<div class="col-md-3">
-												<div class="form-group">
-													<label class="control-label col-md-6">Registration date:</label>
-													<div class="col-md-6">
-														<p class="form-control-static" th:text="${loan.regDate}">01.01.1970</p>
-													</div>
-												</div>
-											</div>
-											<!--/span-->
-											<div class="col-md-3">
-												<div class="form-group">
-													<label class="control-label col-md-6">Amount:</label>
-													<div class="col-md-6">
-														<p class="form-control-static" th:text="${loan.amount}">1000.0</p>
-													</div>
-												</div>
-											</div>
-											<!--/span-->
-										</div>
-										<!--/row-->
-										<div class="row">
-											<div class="col-md-3">
-												<div class="form-group">
-													<label class="control-label col-md-6">Currency:</label>
-													<div class="col-md-6">
-														<p class="form-control-static" th:text="${loan.currency.name}">RUB</p>
-													</div>
-												</div>
-											</div>
-											<!--/span-->
-											<div class="col-md-3">
-												<div class="form-group">
-													<label class="control-label col-md-6">Type:</label>
-													<div class="col-md-6">
-														<p class="form-control-static" th:text="${loan.loanType.name}">Type 1</p>
-													</div>
-												</div>
-											</div>
-											<!--/span-->
-											<div class="col-md-3">
-												<div class="form-group">
-													<label class="control-label col-md-6">State:</label>
-													<div class="col-md-6">
-														<p class="form-control-static" th:text="${loan.loanState.name}">RUB</p>
-													</div>
-												</div>
-											</div>
-											<!--/span-->
-											<div class="col-md-3">
-												<div class="form-group">
-													<label class="control-label col-md-6">Supervisor id:</label>
-													<div class="col-md-6">
-														<p class="form-control-static" th:text="${loan.supervisorId}">Type 1</p>
-													</div>
-												</div>
-											</div>
-											<!--/span-->
-										</div>
-										<!--/row-->
-										<div class="row">
-											<div class="col-md-3">
-												<div class="form-group">
-													<label class="control-label col-md-6">Has sub loan:</label>
-													<div class="col-md-6">
-														<p class="form-control-static" th:text="${loan.hasSubLoan}">true</p>
-													</div>
-												</div>
-											</div>
-											<!--/span-->
-											<div class="col-md-3">
-												<div class="form-group">
-													<label class="control-label col-md-6">Parent loan id:</label>
-													<div class="col-md-6">
-														<p class="form-control-static" th:text="${loan.parentLoan!=null} ? ${loan.parentLoan.id} : 'null'">1</p>
-													</div>
-												</div>
-											</div>
-											<!--/span-->
-											<div class="col-md-3">
-												<div class="form-group">
-													<label class="control-label col-md-6">Credit order id::</label>
-													<div class="col-md-6">
-														<p class="form-control-static" th:text="${loan.creditOrder.Id}">1</p>
-													</div>
-												</div>
-											</div>
-											<!--/span-->
-										</div>
-										<!--/row-->
-									</div>
-								</form>
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+	<!-- BEGIN: Header -->
+	<div th:replace="layout/header"/>
+	<!-- END: Header -->
+	<!-- begin::Body -->
+	<div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+		<!-- BEGIN: Left Aside -->
+		<div th:replace="layout/sidebar"/>
+		<!-- END: Left Aside -->
+		<div class="m-grid__item m-grid__item--fluid m-wrapper">
+			<div class="m-content">
+				<!--begin::Portlet-->
+				<div class="m-portlet m-portlet--full-height">
+					<div class="m-portlet__head">
+						<div class="m-portlet__head-caption">
+							<div class="m-portlet__head-title">
+								<h3 class="m-portlet__head-text" th:text="'Loan : '+${loan.regNumber}"></h3>
 							</div>
 						</div>
-						<!-- END BORDERED TABLE PORTLET-->
 					</div>
-				</div>
-
-				<div class="row">
-					<div class="col-md-12">
-						<div class="tabbable-line boxless tabbable-reversed">
-							<ul class="nav nav-tabs">
-								<li class="active"><a href="#tab_0" data-toggle="tab"> Credit Terms </a></li>
-								<li><a href="#tab_1" data-toggle="tab"> Write Offs </a></li>
-								<li><a href="#tab_2" data-toggle="tab"> Payment Schedules </a></li>
-								<li><a href="#tab_3" data-toggle="tab"> Payments </a></li>
-								<li><a href="#tab_4" data-toggle="tab"> Supervisor Plans </a></li>
-								<li><a href="#tab_5" data-toggle="tab">Loan Goods </a></li>
-								<li><a href="#tab_6" data-toggle="tab"> Debt Transfers </a></li>
-								<li><a href="#tab_7" data-toggle="tab"> Targeted Uses </a></li>
-								<li><a href="#tab_8" data-toggle="tab"> Reconstructed Lists </a></li>
-								<li><a href="#tab_9" data-toggle="tab"> Bankrupts </a></li>
-								<li><a href="#tab_10" data-toggle="tab"> Collaterals </a></li>
-								<li><a href="#tab_11" data-toggle="tab"> Collection Phases </a></li>
-								<li><a href="#tab_12" data-toggle="tab"> Loan Detailed Summary </a></li>
-								<li><a href="#tab_13" data-toggle="tab"> Loan Summary </a></li>
-								<li><a href="#tab_14" data-toggle="tab"> Accrue </a></li>
-							</ul>
-							<div class="tab-content">
-								<div class="tab-pane active" id="tab_0">
-									<div class="row">
-										<div class="col-md-12">
-											<!-- BEGIN BORDERED TABLE PORTLET-->
-											<div class="portlet light portlet-fit ">
-												<div class="portlet-body">
-													<div class="table-toolbar">
-														<div class="row">
-															<div class="col-md-6">
-																<div class="btn-group">
-																	<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/term/0/save}" class="btn green">Add New Credit Term <i class="fa fa-plus"></i></a>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light" id="orders">
-															<thead>
-																<tr>
-																	<th>Id</th>
-																	<th>Start date</th>
-																	<th>interest rate value</th>
-																	<th>Rate period</th>
-																	<th>Floating rate type</th>
-																	<th>Penalty On Principle Overdue Rate Value</th>
-																	<th>Penalty On Principle Overdue Rate Type</th>
-																	<th>Penalty On Interest Overdue Rate Value</th>
-																	<th>Penalty On Interest Overdue Rate Type</th>
-																	<th>Penalty Limit Percent</th>
-																	<th>Penalty Limit End Date</th>
-																	<th>Transaction Order</th>
-																	<th>Days In Month Method</th>
-																	<th>Days In Year Method</th>
-																	<th>Edit</th>
-																	<th>Delete</th>
-																</tr>
-															</thead>
-															<tbody>
-																<ordercheck th:if="${#lists.isEmpty(terms)}">
-																	<tr class="no-records-found" style="text-align: center;">
-																		<td colspan="17">No matching records found</td>
-																	</tr>
-																</ordercheck>
-																<order th:each="term : ${terms}">
-																	<tr class="clickable-row">
-																		<td th:text="${term.id}">Id</td>
-																		<td th:text="${term.startDate}">01.01.1970</td>
-																		<td th:text="${term.interestRateValue}"></td>
-																		<td th:text="${term.ratePeriod.name}"></td>
-																		<td th:text="${term.floatingRateType.name}"></td>
-																		<td th:text="${term.penaltyOnPrincipleOverdueRateValue}"></td>
-																		<td th:text="${term.penaltyOnPrincipleOverdueRateType.name}"></td>
-																		<td th:text="${term.penaltyOnInterestOverdueRateValue}"></td>
-																		<td th:text="${term.penaltyOnInterestOverdueRateType.name}"></td>
-																		<td th:text="${term.penaltyLimitPercent}"></td>
-																		<td th:text="${term.penaltyLimitEndDate}"></td>
-																		<td th:text="${term.transactionOrder.name}"></td>
-																		<td th:text="${term.daysInMonthMethod.name}"></td>
-																		<td th:text="${term.daysInYearMethod.name}"></td>
-																		<!-- 
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/term/__${term.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
-																		</td>
-																		 -->
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/term/__${term.id}__/save}" class="btn btn-outline btn-circle btn-sm green">Edit</a>
-																		</td>
-																		<td>
-																			<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/term/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-																				<input hidden="true" type="text" id="id" name="id" th:value="${term.id}" />
-																				<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
-																			</form>
-																		</td>
-																	</tr>
-																</order>
-															</tbody>
-														</table>
-													</div>
-												</div>
+					<div class="m-portlet__body m-portlet__body--no-padding">
+						<div class="row m-row--no-padding m-row--col-separator-xl">
+							<div class="col-md-12 col-lg-12 col-xl-4">
+								<!--begin:: Widgets/Stats2-1 -->
+								<div class="m-widget1">
+									<div class="m-widget1__item">
+										<div class="row m-row--no-padding align-items-center">
+											<div class="col">
+												<h3 class="m-widget1__title">ID</h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${loan.id}"></span>
 											</div>
-											<!-- END BORDERED TABLE PORTLET-->
+										</div>
+									</div>
+									<div class="m-widget1__item">
+										<div class="row m-row--no-padding align-items-center">
+											<div class="col">
+												<h3 class="m-widget1__title" th:text="#{label.loan.table.regNumber}"></h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${loan.regNumber}"></span>
+											</div>
+										</div>
+									</div>
+									<div class="m-widget1__item">
+										<div class="row m-row--no-padding align-items-center">
+											<div class="col">
+												<h3 class="m-widget1__title" th:text="#{label.loan.table.state}"></h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${loan.loanState.name}"></span>
+											</div>
+										</div>
+									</div>
+									<div class="m-widget1__item">
+										<div class="row m-row--no-padding align-items-center">
+											<div class="col">
+												<h3 class="m-widget1__title" th:text="#{label.loan.table.parentId}"></h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${loan.parentLoan!=null} ? ${loan.parentLoan.id} : 'null'"></span>
+											</div>
 										</div>
 									</div>
 								</div>
-								
-								<div class="tab-pane" id="tab_1">
-									<div class="row">
-										<div class="col-md-12">
-											<!-- BEGIN BORDERED TABLE PORTLET-->
-											<div class="portlet light portlet-fit ">
-												<div class="portlet-body">
-													<div class="table-toolbar">
-														<div class="row">
-															<div class="col-md-6">
-																<div class="btn-group">
-																	<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/wo/0/save}" class="btn green">Add New Write Off <i class="fa fa-plus"></i></a>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light" id="orders">
-															<thead>
-																<tr>
-																	<th>Id</th>
-																	<th>Date</th>
-																	<th>Total Amount</th>
-																	<th>Principal</th>
-																	<th>Interest</th>
-																	<th>Penalty</th>
-																	<th>Fee</th>
-																	<th>Description</th>
-																	<th>Edit</th>
-																	<th>Delete</th>
-																</tr>
-															</thead>
-															<tbody>
-																<ordercheck th:if="${#lists.isEmpty(WOs)}">
-																	<tr class="no-records-found" style="text-align: center;">
-																		<td colspan="11">No matching records found</td>
-																	</tr>
-																</ordercheck>
-																<order th:each="wo : ${WOs}">
-																	<tr class="clickable-row">
-																		<td th:text="${wo.id}">Id</td>
-																		<td th:text="${wo.date}">01.01.1970</td>
-																		<td th:text="${wo.totalAmount}"></td>
-																		<td th:text="${wo.principal}"></td>
-																		<td th:text="${wo.interest}"></td>
-																		<td th:text="${wo.penalty}"></td>
-																		<td th:text="${wo.fee}"></td>
-																		<td th:text="${wo.description}"></td>
-																		<!-- 
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/wo/__${wo.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
-																		</td>
-																		 -->
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/wo/__${wo.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
-																		</td>
-																		<td>
-																			<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/wo/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-																				<input hidden="true" type="text" id="id" name="id" th:value="${wo.id}" />
-																				<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
-																			</form>
-																		</td>
-																	</tr>
-																</order>
-															</tbody>
-														</table>
-													</div>
-												</div>
+								<!--end:: Widgets/Stats2-1 -->
+							</div>
+							<div class="col-md-12 col-lg-12 col-xl-4">
+								<!--begin:: Widgets/Stats2-2 -->
+								<div class="m-widget1">
+									<div class="m-widget1__item">
+										<div class="row m-row--no-padding align-items-center">
+											<div class="col">
+												<h3 class="m-widget1__title" th:text="#{label.loan.table.regDate}"></h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${loan.regDate}"></span>
 											</div>
-											<!-- END BORDERED TABLE PORTLET-->
+										</div>
+									</div>
+									<div class="m-widget1__item">
+										<div class="row m-row--no-padding align-items-center">
+											<div class="col">
+												<h3 class="m-widget1__title" th:text="#{label.loan.table.amount}"></h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${loan.amount}"></span>
+											</div>
+										</div>
+									</div>
+									<div class="m-widget1__item">
+										<div class="row m-row--no-padding align-items-center">
+											<div class="col">
+												<h3 class="m-widget1__title" th:text="#{label.loan.table.superId}"></h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${loan.supervisorId}"></span>
+											</div>
+										</div>
+									</div>
+									<div class="m-widget1__item">
+										<div class="row m-row--no-padding align-items-center">
+											<div class="col">
+												<h3 class="m-widget1__title" th:text="#{label.loan.table.creditOrderId}"></h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${loan.creditOrder.Id}"></span>
+											</div>
 										</div>
 									</div>
 								</div>
-								<div class="tab-pane" id="tab_2">
-									
-									<div class="row">
-										<div class="col-md-12">
-											<!-- BEGIN BORDERED TABLE PORTLET-->
-											<div class="portlet light portlet-fit ">
-												<div class="portlet-body">
-													<div class="table-toolbar">
-														<div class="row">
-															<div class="col-md-6">
-																<div class="btn-group">
-																	<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/paymentschedule/0/save}" class="btn green">Add New Payment Schedule <i class="fa fa-plus"></i></a>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light" id="orders">
-															<thead>
-																<tr>
-																	<th>Id</th>
-																	<th>Expected Date</th>
-																	<th>Disbursement</th>
-																	<th>Principal payment</th>
-																	<th>Interest payment</th>
-																	<th>Collected Interest Payment</th>
-																	<th>Collected Penalty Payment</th>
-																	<th>Installment State</th>
-																	<th>Edit</th>
-																	<th>Delete</th>
-																</tr>
-															</thead>
-															<tbody>
-																<ordercheck th:if="${#lists.isEmpty(PaymentSchedules)}">
-																	<tr class="no-records-found" style="text-align: center;">
-																		<td colspan="11">No matching records found</td>
-																	</tr>
-																</ordercheck>
-																<order th:each="paymentS : ${PaymentSchedules}">
-																	<tr class="clickable-row">
-																		<td th:text="${paymentS.id}">Id</td>
-																		<td th:text="${paymentS.expectedDate}">01.01.1970</td>
-																		<td th:text="${paymentS.disbursement}"></td>
-																		<td th:text="${paymentS.principalPayment}"></td>
-																		<td th:text="${paymentS.interestPayment}"></td>
-																		<td th:text="${paymentS.collectedInterestPayment}"></td>
-																		<td th:text="${paymentS.collectedPenaltyPayment}"></td>
-																		<td th:text="${paymentS.installmentState.name}"></td>
-																		<!-- 
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/paymentschedule/__${paymentS.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
-																		</td>
-																		 -->
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/paymentschedule/__${paymentS.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
-																		</td>
-																		<td>
-																			<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/paymentschedule/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-																				<input hidden="true" type="text" id="id" name="id" th:value="${paymentS.id}" />
-																				<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
-																			</form>
-																		</td>
-																	</tr>
-																</order>
-															</tbody>
-														</table>
-													</div>
-												</div>
+								<!--begin:: Widgets/Stats2-2 -->
+							</div>
+							<div class="col-md-12 col-lg-12 col-xl-4">
+								<!--begin:: Widgets/Stats2-3 -->
+								<div class="m-widget1">
+									<div class="m-widget1__item">
+										<div class="row m-row--no-padding align-items-center">
+											<div class="col">
+												<h3 class="m-widget1__title" th:text="#{label.loan.table.currency}"></h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${loan.currency.name}"></span>
 											</div>
-											<!-- END BORDERED TABLE PORTLET-->
+										</div>
+									</div>
+									<div class="m-widget1__item">
+										<div class="row m-row--no-padding align-items-center">
+											<div class="col">
+												<h3 class="m-widget1__title" th:text="#{label.loan.table.type}"></h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${loan.loanType.name}"></span>
+											</div>
+										</div>
+									</div>
+									<div class="m-widget1__item">
+										<div class="row m-row--no-padding align-items-center">
+											<div class="col">
+												<h3 class="m-widget1__title" th:text="#{label.loan.table.hasSubLoan}"></h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${loan.hasSubLoan}"></span>
+											</div>
 										</div>
 									</div>
 								</div>
-								<div class="tab-pane" id="tab_3">
-									<div class="row">
-										<div class="col-md-12">
-											<!-- BEGIN BORDERED TABLE PORTLET-->
-											<div class="portlet light portlet-fit ">
-												<div class="portlet-body">
-													<div class="table-toolbar">
-														<div class="row">
-															<div class="col-md-6">
-																<div class="btn-group">
-																	<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/payment/0/save}" class="btn green">Add New Payment <i class="fa fa-plus"></i></a>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light" id="orders">
-															<thead>
-																<tr>
-																	<th>Id</th>
-																	<th>Payment Date</th>
-																	<th>Total Amount</th>
-																	<th>Principal</th>
-																	<th>Interest</th>
-																	<th>Penalty</th>
-																	<th>Fee</th>
-																	<th>Number</th>
-																	<th>Payment type</th>
-																	<th>Edit</th>
-																	<th>Delete</th>
-																</tr>
-															</thead>
-															<tbody>
-																<ordercheck th:if="${#lists.isEmpty(Payments)}">
-																	<tr class="no-records-found" style="text-align: center;">
-																		<td colspan="12">No matching records found</td>
-																	</tr>
-																</ordercheck>
-																<order th:each="payment : ${Payments}">
-																	<tr class="clickable-row">
-																		<td th:text="${payment.id}">Id</td>
-																		<td th:text="${payment.paymentDate}">01.01.1970</td>
-																		<td th:text="${payment.totalAmount}"></td>
-																		<td th:text="${payment.principal}"></td>
-																		<td th:text="${payment.interest}"></td>
-																		<td th:text="${payment.penalty}"></td>
-																		<td th:text="${payment.fee}"></td>
-																		<td th:text="${payment.number}"></td>
-																		<td th:text="${payment.paymentType.name}"></td>
-																		<!-- 
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/payment/__${payment.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
-																		</td>
-																		 -->
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/payment/__${payment.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
-																		</td>
-																		<td>
-																			<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/payment/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-																				<input hidden="true" type="text" id="id" name="id" th:value="${payment.id}" />
-																				<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
-																			</form>
-																		</td>
-																	</tr>
-																</order>
-															</tbody>
-														</table>
-													</div>
-												</div>
-											</div>
-											<!-- END BORDERED TABLE PORTLET-->
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane" id="tab_4">
-									<div class="row">
-										<div class="col-md-12">
-											<!-- BEGIN BORDERED TABLE PORTLET-->
-											<div class="portlet light portlet-fit ">
-												<div class="portlet-body">
-													<div class="table-toolbar">
-														<div class="row">
-															<div class="col-md-6">
-																<div class="btn-group">
-																	<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/0/save}" class="btn green">Add New Supervisor Plan <i class="fa fa-plus"></i></a>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light" id="orders">
-															<thead>
-																<tr>
-																	<th>Id</th>
-																	<th>Date</th>
-																	<th>Amount</th>
-																	<th>Principal</th>
-																	<th>Interest</th>
-																	<th>Penalty</th>
-																	<th>Fee</th>
-																	<th>Description</th>
-																	<th>Edit</th>
-																	<th>Delete</th>
-																</tr>
-															</thead>
-															<tbody>
-																<ordercheck th:if="${#lists.isEmpty(SPs)}">
-																	<tr class="no-records-found" style="text-align: center;">
-																		<td colspan="11">No matching records found</td>
-																	</tr>
-																</ordercheck>
-																<order th:each="sp : ${SPs}">
-																	<tr class="clickable-row">
-																		<td th:text="${sp.id}">Id</td>
-																		<td th:text="${sp.date}">01.01.1970</td>
-																		<td th:text="${sp.amount}"></td>
-																		<td th:text="${sp.principal}"></td>
-																		<td th:text="${sp.interest}"></td>
-																		<td th:text="${sp.penalty}"></td>
-																		<td th:text="${sp.fee}"></td>
-																		<td th:text="${sp.description}"></td>
-																		<!-- 
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/__${sp.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
-																		</td>
-																		 -->
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/__${sp.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
-																		</td>
-																		<td>
-																			<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-																				<input hidden="true" type="text" id="id" name="id" th:value="${sp.id}" />
-																				<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
-																			</form>
-																		</td>
-																	</tr>
-																</order>
-															</tbody>
-														</table>
-													</div>
-												</div>
-											</div>
-											<!-- END BORDERED TABLE PORTLET-->
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane" id="tab_5">
-									<div class="row">
-										<div class="col-md-12">
-											<!-- BEGIN BORDERED TABLE PORTLET-->
-											<div class="portlet light portlet-fit ">
-												<div class="portlet-body">
-													<div class="table-toolbar">
-														<div class="row">
-															<div class="col-md-6">
-																<div class="btn-group">
-																	<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/loangoods/0/save}" class="btn green">Add New Loan Good <i class="fa fa-plus"></i></a>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light" id="orders">
-															<thead>
-																<tr>
-																	<th>Id</th>
-																	<th>Quantity</th>
-																	<th>Unit Type Id</th>
-																	<th>Good Typ eId</th>
-																	<th>Edit</th>
-																	<th>Delete</th>
-																</tr>
-															</thead>
-															<tbody>
-																<ordercheck th:if="${#lists.isEmpty(LGs)}">
-																	<tr class="no-records-found" style="text-align: center;">
-																		<td colspan="7">No matching records found</td>
-																	</tr>
-																</ordercheck>
-																<order th:each="lg : ${LGs}">
-																	<tr class="clickable-row">
-																		<td th:text="${lg.id}">Id</td>
-																		<td th:text="${lg.quantity}">01.01.1970</td>
-																		<td th:text="${lg.unitTypeId}"></td>
-																		<td th:text="${lg.goodsTypeId}"></td>
-																		<!-- 
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/loangoods/__${lg.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
-																		</td>
-																		 -->
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/loangoods/__${lg.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
-																		</td>
-																		<td>
-																			<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/loangoods/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-																				<input hidden="true" type="text" id="id" name="id" th:value="${lg.id}" />
-																				<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
-																			</form>
-																		</td>
-																	</tr>
-																</order>
-															</tbody>
-														</table>
-													</div>
-												</div>
-											</div>
-											<!-- END BORDERED TABLE PORTLET-->
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane" id="tab_6">
-									<div class="row">
-										<div class="col-md-12">
-											<!-- BEGIN BORDERED TABLE PORTLET-->
-											<div class="portlet light portlet-fit ">
-												<div class="portlet-body">
-													<div class="table-toolbar">
-														<div class="row">
-															<div class="col-md-6">
-																<div class="btn-group">
-																	<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/debttransfer/0/save}" class="btn green">Add New Debt Transfer <i class="fa fa-plus"></i></a>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light" id="orders">
-															<thead>
-																<tr>
-																	<th>Id</th>
-																	<th>Number</th>
-																	<th>Date</th>
-																	<th>Quantity</th>
-																	<th>Price per unit</th>
-																	<th>Unit Type Id</th>
-																	<th>Total cost</th>
-																	<th>Transfer payment id</th>
-																	<th>Transfer credit id</th>
-																	<th>Transfer person id</th>
-																	<th>Goods type id</th>
-																	<th>Edit</th>
-																	<th>Delete</th>
-																</tr>
-															</thead>
-															<tbody>
-																<ordercheck th:if="${#lists.isEmpty(DTs)}">
-																	<tr class="no-records-found" style="text-align: center;">
-																		<td colspan="14">No matching records found</td>
-																	</tr>
-																</ordercheck>
-																<order th:each="dt : ${DTs}">
-																	<tr class="clickable-row">
-																		<td th:text="${dt.id}"></td>
-																		<td th:text="${dt.number}"></td>
-																		<td th:text="${dt.date}"></td>
-																		<td th:text="${dt.quantity}"></td>
-																		<td th:text="${dt.pricePerUnit}"></td>
-																		<td th:text="${dt.unitTypeId}"></td>
-																		<td th:text="${dt.totalCost}"></td>
-																		<td th:text="${dt.transferPaymentId}"></td>
-																		<td th:text="${dt.transferCreditId}"></td>
-																		<td th:text="${dt.transferPersonId}"></td>
-																		<td th:text="${dt.goodsTypeId}"></td>
-																		<!-- 
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/debttransfer/__${dt.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
-																		</td>
-																		 -->
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/debttransfer/__${dt.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
-																		</td>
-																		<td>
-																			<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/debttransfer/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-																				<input hidden="true" type="text" id="id" name="id" th:value="${dt.id}" />
-																				<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
-																			</form>
-																		</td>
-																	</tr>
-																</order>
-															</tbody>
-														</table>
-													</div>
-												</div>
-											</div>
-											<!-- END BORDERED TABLE PORTLET-->
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane" id="tab_7">
-									<div class="row">
-										<div class="col-md-12">
-											<!-- BEGIN BORDERED TABLE PORTLET-->
-											<div class="portlet light portlet-fit ">
-												<div class="portlet-body">
-													<div class="table-toolbar">
-														<div class="row">
-															<div class="col-md-6">
-																<div class="btn-group">
-																	<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/targeteduse/0/save}" class="btn green">Add New Targeted Use <i class="fa fa-plus"></i></a>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light" id="orders">
-															<thead>
-																<tr>
-																	<th>Id</th>
-																	<th>Targeted Use Result Id</th>
-																	<th>Created by</th>
-																	<th>Created date</th>
-																	<th>Approved by</th>
-																	<th>Approved date</th>
-																	<th>Checked by</th>
-																	<th>Checked date</th>
-																	<th>Attachment id</th>
-																	<th>Edit</th>
-																	<th>Delete</th>
-																</tr>
-															</thead>
-															<tbody>
-																<ordercheck th:if="${#lists.isEmpty(TUs)}">
-																	<tr class="no-records-found" style="text-align: center;">
-																		<td colspan="11">No matching records found</td>
-																	</tr>
-																</ordercheck>
-																<order th:each="tu : ${TUs}">
-																	<tr class="clickable-row">
-																		<td th:text="${tu.id}"></td>
-																		<td th:text="${tu.targetedUseResultId}"></td>
-																		<td th:text="${tu.createdById}"></td>
-																		<td th:text="${tu.createdDate}"></td>
-																		<td th:text="${tu.approvedById}"></td>
-																		<td th:text="${tu.approvedDate}"></td>
-																		<td th:text="${tu.checkedById}"></td>
-																		<td th:text="${tu.checkedDate}"></td>
-																		<td th:text="${tu.attachmentId}"></td>
-																		<!-- 
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/targeteduse/__${tu.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
-																		</td>
-																		 -->
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/targeteduse/__${tu.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
-																		</td>
-																		<td>
-																			<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/targeteduse/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-																				<input hidden="true" type="text" id="id" name="id" th:value="${tu.id}" />
-																				<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
-																			</form>
-																		</td>
-																	</tr>
-																</order>
-															</tbody>
-														</table>
-													</div>
-												</div>
-											</div>
-											<!-- END BORDERED TABLE PORTLET-->
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane" id="tab_8">
-									<div class="row">
-										<div class="col-md-12">
-											<!-- BEGIN BORDERED TABLE PORTLET-->
-											<div class="portlet light portlet-fit ">
-												<div class="portlet-body">
-													<div class="table-toolbar">
-														<div class="row">
-															<div class="col-md-6">
-																<div class="btn-group">
-																	<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/reconstructedlist/0/save}" class="btn green">Add New Reconstructed List <i class="fa fa-plus"></i></a>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light" id="orders">
-															<thead>
-																<tr>
-																	<th>Id</th>
-																	<th>On Date</th>
-																	<th>Old loan id</th>
-																	<th>Edit</th>
-																	<th>Delete</th>
-																</tr>
-															</thead>
-															<tbody>
-																<ordercheck th:if="${#lists.isEmpty(RLs)}">
-																	<tr class="no-records-found" style="text-align: center;">
-																		<td colspan="6">No matching records found</td>
-																	</tr>
-																</ordercheck>
-																<order th:each="rl : ${RLs}">
-																	<tr class="clickable-row">
-																		<td th:text="${rl.id}"></td>
-																		<td th:text="${rl.onDate}"></td>
-																		<td th:text="${rl.oldLoanId}"></td>
-																		<!-- 
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/reconstructedlist/__${rl.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
-																		</td>
-																		 -->
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/reconstructedlist/__${rl.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
-																		</td>
-																		<td>
-																			<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/reconstructedlist/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-																				<input hidden="true" type="text" id="id" name="id" th:value="${rl.id}" />
-																				<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
-																			</form>
-																		</td>
-																	</tr>
-																</order>
-															</tbody>
-														</table>
-													</div>
-												</div>
-											</div>
-											<!-- END BORDERED TABLE PORTLET-->
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane" id="tab_9">
-									<div class="row">
-										<div class="col-md-12">
-											<!-- BEGIN BORDERED TABLE PORTLET-->
-											<div class="portlet light portlet-fit ">
-												<div class="portlet-body">
-													<div class="table-toolbar">
-														<div class="row">
-															<div class="col-md-6">
-																<div class="btn-group">
-																	<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/bankrupt/0/save}" class="btn green">Add New Bankrupt <i class="fa fa-plus"></i></a>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light" id="orders">
-															<thead>
-																<tr>
-																	<th>Id</th>
-																	<th>Started on date</th>
-																	<th>Finished on date</th>
-																	<th>Edit</th>
-																	<th>Delete</th>
-																</tr>
-															</thead>
-															<tbody>
-																<ordercheck th:if="${#lists.isEmpty(Bankrupts)}">
-																	<tr class="no-records-found" style="text-align: center;">
-																		<td colspan="6">No matching records found</td>
-																	</tr>
-																</ordercheck>
-																<order th:each="bankrupt : ${Bankrupts}">
-																	<tr class="clickable-row">
-																		<td th:text="${bankrupt.id}"></td>
-																		<td th:text="${bankrupt.startedOnDate}"></td>
-																		<td th:text="${bankrupt.finishedOnDate}"></td>
-																		<!-- 
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/bankrupt/__${bankrupt.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
-																		</td>
-																		 -->
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/bankrupt/__${bankrupt.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
-																		</td>
-																		<td>
-																			<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/bankrupt/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-																				<input hidden="true" type="text" id="id" name="id" th:value="${bankrupt.id}" />
-																				<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
-																			</form>
-																		</td>
-																	</tr>
-																</order>
-															</tbody>
-														</table>
-													</div>
-												</div>
-											</div>
-											<!-- END BORDERED TABLE PORTLET-->
-										</div>
-									</div>
-								</div>
-								
-								<div class="tab-pane" id="tab_10">
-									<div class="row">
-										<div class="col-md-12">
-											<!-- BEGIN BORDERED TABLE PORTLET-->
-											<div class="portlet light portlet-fit ">
-												<div class="portlet-body">
-													<div class="table-toolbar">
-														<div class="row">
-															<div class="col-md-6">
-																<div class="btn-group">
-																	<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collateral/0/save}" class="btn green">Add New Collateral <i class="fa fa-plus"></i></a>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light" id="orders">
-															<thead>
-																<tr>
-																	<th>Id</th>
-																	<th>Name</th>
-																	<th>Edit</th>
-																	<th>Delete</th>
-																</tr>
-															</thead>
-															<tbody>
-																<ordercheck th:if="${#lists.isEmpty(Collaterals)}">
-																	<tr class="no-records-found" style="text-align: center;">
-																		<td colspan="6">No matching records found</td>
-																	</tr>
-																</ordercheck>
-																<order th:each="coll : ${Collaterals}">
-																	<tr class="clickable-row">
-																		<td th:text="${coll.id}"></td>
-																		<td th:text="${coll.name}"></td>
-																		<!-- 
-																		<td>
-																			<a th:href="@{/manage/collateral/__${coll.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
-																		</td>
-																		 -->
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collateral/__${coll.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
-																		</td>
-																		<td>
-																			<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collateral/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-																				<input hidden="true" type="text" id="id" name="id" th:value="${coll.id}" />
-																				<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
-																			</form>
-																		</td>
-																	</tr>
-																</order>
-															</tbody>
-														</table>
-													</div>
-												</div>
-											</div>
-											<!-- END BORDERED TABLE PORTLET-->
-										</div>
-									</div>
-								</div>
-								
-								<div class="tab-pane" id="tab_11">
-									<div class="row">
-										<div class="col-md-12">
-											<!-- BEGIN BORDERED TABLE PORTLET-->
-											<div class="portlet light portlet-fit ">
-												<div class="portlet-body">
-													<div class="table-toolbar">
-														<div class="row">
-															<div class="col-md-6">
-																<div class="btn-group">
-																	<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collectionphase/0/save}" class="btn green">Add New Collection Phase <i class="fa fa-plus"></i></a>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light" id="orders">
-															<thead>
-																<tr>
-																	<th>Id</th>
-																	<th>Start Date</th>
-																	<th>Close Date</th>
-																	<th>Last Event</th>
-																	<th>Last Status Id</th>
-																	<th>Phase Status</th>
-																	<th>Phase Type</th>
-																	<th>View Details</th>
-																	<th>Edit</th>
-																	<th>Delete</th>
-																</tr>
-															</thead>
-															<tbody>
-																<ordercheck th:if="${#lists.isEmpty(phases)}">
-																	<tr class="no-records-found" style="text-align: center;">
-																		<td colspan="10">No matching records found</td>
-																	</tr>
-																</ordercheck>
-																<order th:each="phase : ${phases}">
-																	<tr class="clickable-row">
-																		<td th:text="${phase.id}"></td>
-																		<td th:text="${phase.startDate}"></td>
-																		<td th:text="${phase.closeDate}"></td>
-																		<td th:text="${phase.lastEvent}"></td>
-																		<td th:text="${phase.lastStatusId}"></td>
-																		<td th:text="${phase.phaseStatus}"></td>
-																		<td th:text="${phase.phaseType}"></td>
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collectionphase/__${phase.id}__/view}" class="btn btn-outline btn-circle btn-sm blue">View Details</a>
-																		</td>
-																		<td>
-																			<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collectionphase/__${phase.id}__/save}" class="btn btn-outline btn-circle btn-sm blue">Edit</a>
-																		</td>
-																		<td>
-																			<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collectionphase/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-																				<input hidden="true" type="text" id="id" name="id" th:value="${phase.id}" />
-																				<button type="submit" class="btn btn-outline btn-circle dark btn-sm red">Delete</button>
-																			</form>
-																		</td>
-																	</tr>
-																</order>
-															</tbody>
-														</table>
-													</div>
-												</div>
-											</div>
-											<!-- END BORDERED TABLE PORTLET-->
-										</div>
-									</div>
-								</div>
-
-								<div class="tab-pane" id="tab_12">
-									<div class="row">
-										<div class="col-md-12">
-											<!-- BEGIN BORDERED TABLE PORTLET-->
-											<div class="portlet light portlet-fit ">
-												<div class="portlet-body">
-													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light" id="orders">
-															<thead>
-															<tr>
-																<th>Id</th>
-																<th>onDate</th>
-																<th>disbursement</th>
-																<th>totalDisbursement</th>
-																<th>principalPayment</th>
-																<th>totalPrincipalPayment</th>
-																<th>principalPaid</th>
-																<th>totalPrincipalPaid</th>
-																<th>principalWriteOff</th>
-																<th>totalPrincipalWriteOff</th>
-																<th>principalOutstanding</th>
-																<th>principalOverdue</th>
-																<th>daysInPeriod</th>
-																<th>interestAccrued</th>
-																<th>totalInterestAccrued</th>
-																<th>totalInterestAccruedOnInterestPayment</th>
-																<th>interestPayment</th>
-																<th>totalInterestPayment</th>
-																<th>collectedInterestPayment</th>
-																<th>totalCollectedInterestPayment</th>
-																<th>collectedInterestDisbursed</th>
-																<th>interestPaid</th>
-																<th>totalInterestPaid</th>
-																<th>interestOutstanding</th>
-																<th>interestOverdue</th>
-																<th>penaltyAccrued</th>
-																<th>totalPenaltyAccrued</th>
-																<th>collectedPenaltyPayment</th>
-																<th>totalCollectedPenaltyPayment</th>
-																<th>collectedPenaltyDisbursed</th>
-																<th>penaltyPaid</th>
-																<th>totalPenaltyPaid</th>
-																<th>penaltyOutstanding</th>
-																<th>penaltyOverdue</th>
-															</tr>
-															</thead>
-															<tbody>
-															<ordercheck th:if="${#lists.isEmpty(detailedSummaries)}">
-																<tr class="no-records-found" style="text-align: center;">
-																	<td colspan="10">No matching records found</td>
-																</tr>
-															</ordercheck>
-															<order th:each="dSummary : ${detailedSummaries}">
-																<tr class="clickable-row">
-																	<td th:text="${dSummary.id}"></td>
-																	<td th:text="${dSummary.onDate}"></td>
-																	<td th:text="${dSummary.disbursement}"></td>
-																	<td th:text="${dSummary.totalDisbursement}"></td>
-																	<td th:text="${dSummary.principalPayment}"></td>
-																	<td th:text="${dSummary.totalPrincipalPayment}"></td>
-																	<td th:text="${dSummary.principalPaid}"></td>
-																	<td th:text="${dSummary.totalPrincipalPaid}"></td>
-																	<td th:text="${dSummary.principalWriteOff}"></td>
-																	<td th:text="${dSummary.totalPrincipalWriteOff}"></td>
-																	<td th:text="${dSummary.principalOutstanding}"></td>
-																	<td th:text="${dSummary.principalOverdue}"></td>
-																	<td th:text="${dSummary.daysInPeriod}"></td>
-																	<td th:text="${dSummary.interestAccrued}"></td>
-																	<td th:text="${dSummary.totalInterestAccrued}"></td>
-																	<td th:text="${dSummary.totalInterestAccruedOnInterestPayment}"></td>
-																	<td th:text="${dSummary.interestPayment}"></td>
-																	<td th:text="${dSummary.totalInterestPayment}"></td>
-																	<td th:text="${dSummary.collectedInterestPayment}"></td>
-																	<td th:text="${dSummary.totalCollectedInterestPayment}"></td>
-																	<td th:text="${dSummary.collectedInterestDisbursed}"></td>
-																	<td th:text="${dSummary.interestPaid}"></td>
-																	<td th:text="${dSummary.totalInterestPaid}"></td>
-																	<td th:text="${dSummary.interestOutstanding}"></td>
-																	<td th:text="${dSummary.interestOverdue}"></td>
-																	<td th:text="${dSummary.penaltyAccrued}"></td>
-																	<td th:text="${dSummary.totalPenaltyAccrued}"></td>
-																	<td th:text="${dSummary.collectedPenaltyPayment}"></td>
-																	<td th:text="${dSummary.totalCollectedPenaltyPayment}"></td>
-																	<td th:text="${dSummary.collectedPenaltyDisbursed}"></td>
-																	<td th:text="${dSummary.penaltyPaid}"></td>
-																	<td th:text="${dSummary.totalPenaltyPaid}"></td>
-																	<td th:text="${dSummary.penaltyOutstanding}"></td>
-																	<td th:text="${dSummary.penaltyOverdue}"></td>
-																</tr>
-															</order>
-															</tbody>
-														</table>
-													</div>
-												</div>
-											</div>
-											<!-- END BORDERED TABLE PORTLET-->
-										</div>
-									</div>
-								</div>
-
-								<div class="tab-pane" id="tab_13">
-									<div class="row">
-										<div class="col-md-12">
-											<!-- BEGIN BORDERED TABLE PORTLET-->
-											<div class="portlet light portlet-fit ">
-												<div class="portlet-body">
-													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light" id="orders">
-															<thead>
-															<tr>
-																<th>Id</th>
-																<th>onDate</th>
-																<th>loanAmount</th>
-																<th>totalDisbursed</th>
-																<th>totalPaid</th>
-																<th>paidPrincipal</th>
-																<th>paidInterest</th>
-																<th>paidPenalty</th>
-																<th>paidFee</th>
-																<th>totalOutstanding</th>
-																<th>outstadingPrincipal</th>
-																<th>outstadingInterest</th>
-																<th>outstadingPenalty</th>
-																<th>outstadingFee</th>
-																<th>totalOverdue</th>
-																<th>overduePrincipal</th>
-																<th>overdueInterest</th>
-																<th>overduePenalty</th>
-																<th>overdueFee</th>
-															</tr>
-															</thead>
-															<tbody>
-															<ordercheck th:if="${#lists.isEmpty(summaries)}">
-																<tr class="no-records-found" style="text-align: center;">
-																	<td colspan="10">No matching records found</td>
-																</tr>
-															</ordercheck>
-															<order th:each="summary : ${summaries}">
-																<tr class="clickable-row">
-																	<td th:text="${summary.id}"></td>
-																	<td th:text="${summary.onDate}"></td>
-																	<td th:text="${summary.loanAmount}"></td>
-																	<td th:text="${summary.totalDisbursed}"></td>
-																	<td th:text="${summary.totalPaid}"></td>
-																	<td th:text="${summary.paidPrincipal}"></td>
-																	<td th:text="${summary.paidInterest}"></td>
-																	<td th:text="${summary.paidPenalty}"></td>
-																	<td th:text="${summary.paidFee}"></td>
-																	<td th:text="${summary.totalOutstanding}"></td>
-																	<td th:text="${summary.outstadingPrincipal}"></td>
-																	<td th:text="${summary.outstadingInterest}"></td>
-																	<td th:text="${summary.outstadingPenalty}"></td>
-																	<td th:text="${summary.outstadingFee}"></td>
-																	<td th:text="${summary.totalOverdue}"></td>
-																	<td th:text="${summary.overduePrincipal}"></td>
-																	<td th:text="${summary.overdueInterest}"></td>
-																	<td th:text="${summary.overduePenalty}"></td>
-																	<td th:text="${summary.overdueFee}"></td>
-																</tr>
-															</order>
-															</tbody>
-														</table>
-													</div>
-												</div>
-											</div>
-											<!-- END BORDERED TABLE PORTLET-->
-										</div>
-									</div>
-								</div>
-
-								<div class="tab-pane" id="tab_14">
-									<div class="row">
-										<div class="col-md-12">
-											<!-- BEGIN BORDERED TABLE PORTLET-->
-											<div class="portlet light portlet-fit ">
-												<div class="portlet-body">
-													<div class="table-scrollable table-scrollable-borderless">
-														<table class="table table-hover table-light" id="orders">
-															<thead>
-															<tr>
-																<th>Id</th>
-																<th>fromDate</th>
-																<th>toDate</th>
-																<th>daysInPeriod</th>
-																<th>interestAccrued</th>
-																<th>penaltyAccrued</th>
-																<th>penaltyOnPrincipalOverdue</th>
-																<th>penaltyOnInterestOverdue</th>
-																<th>lastInstPassed</th>
-															</tr>
-															</thead>
-															<tbody>
-															<ordercheck th:if="${#lists.isEmpty(accrues)}">
-																<tr class="no-records-found" style="text-align: center;">
-																	<td colspan="10">No matching records found</td>
-																</tr>
-															</ordercheck>
-															<order th:each="accrue : ${accrues}">
-																<tr class="clickable-row">
-																	<td th:text="${accrue.id}"></td>
-																	<td th:text="${accrue.fromDate}"></td>
-																	<td th:text="${accrue.toDate}"></td>
-																	<td th:text="${accrue.daysInPeriod}"></td>
-																	<td th:text="${accrue.interestAccrued}"></td>
-																	<td th:text="${accrue.penaltyAccrued}"></td>
-																	<td th:text="${accrue.penaltyOnPrincipalOverdue}"></td>
-																	<td th:text="${accrue.penaltyOnInterestOverdue}"></td>
-																	<td th:text="${accrue.lastInstPassed}"></td>
-																</tr>
-															</order>
-															</tbody>
-														</table>
-													</div>
-												</div>
-											</div>
-											<!-- END BORDERED TABLE PORTLET-->
-										</div>
-									</div>
-								</div>
-
+								<!--begin:: Widgets/Stats2-3 -->
 							</div>
 						</div>
 					</div>
 				</div>
-				
+				<!--end::Portlet-->
+
+				<!--begin::Portlet-->
+				<div class="m-portlet m-portlet--mobile">
+					<div class="m-portlet__body">
+						<ul class="nav nav-tabs" role="tablist">
+							<li class="nav-item">
+								<a class="nav-link m--font-primary active" data-toggle="tab" href="#creditTerms" th:text="#{label.creditTerms}"></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#writeOffs" th:text="#{label.writeOffs}"></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#paymentSchedules" th:text="#{label.paymentSchedules}"></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#payments" th:text="#{label.payments}"></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#supervisorPlans" th:text="#{label.supervisorPlans}"></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanGoods" th:text="#{label.loanGoods}"></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#debtTransfers" th:text="#{label.debtTransfers}"></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#targetedUses" th:text="#{label.targetedUses}"></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#reconstructedLists" th:text="#{label.reconstructedLists}"></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#bankrupts" th:text="#{label.bankrupts}"></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#collaterals" th:text="#{label.collaterals}"></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#collectionPhases" th:text="#{label.collectionPhases}"></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanDetailedSummary" th:text="#{label.loanDetailedSummary}"></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanSummary" th:text="#{label.loanSummary}"></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#accrue" th:text="#{label.accrue}"></a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane active" id="creditTerms" role="tabpanel">
+								<div class="m-section">
+									<div class="m-section__content">
+										<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/term/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.button.addNewCreditTerm}"></a>
+									</div>
+								</div>
+								<!--begin::Section-->
+								<div class="m-section">
+									<div class="m-section__content">
+										<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+											<div>
+												<table class="table">
+													<thead class="thead-default">
+													<tr>
+														<th class="table-id">Id</th>
+														<th th:text="#{label.creditTerm.startDate}"></th>
+														<th th:text="#{label.creditTerm.interestRateValue}"></th>
+														<th th:text="#{label.creditTerm.ratePeriod}"></th>
+														<th th:text="#{label.creditTerm.floatingRateType}"></th>
+														<th th:text="#{label.creditTerm.enaltyOnPrincipleOverdueRateValue}"></th>
+														<th th:text="#{label.creditTerm.penaltyOnPrincipleOverdueRateType}"></th>
+														<th th:text="#{label.creditTerm.penaltyOnInterestOverdueRateValue}"></th>
+														<th th:text="#{label.creditTerm.penaltyOnInterestOverdueRateType}"></th>
+														<th th:text="#{label.creditTerm.penaltyLimitPercent}"></th>
+														<th th:text="#{label.creditTerm.penaltyLimitEndDate}"></th>
+														<th th:text="#{label.creditTerm.transactionOrder}"></th>
+														<th th:text="#{label.creditTerm.daysInMonthMethod}"></th>
+														<th th:text="#{label.creditTerm.daysInYearMethod}"></th>
+														<th>&nbsp;</th>
+													</tr>
+													</thead>
+													<tbody>
+													<tr th:each="term : ${terms}">
+														<td th:text="${term.id}"></td>
+														<td th:text="${term.startDate}"></td>
+														<td th:text="${term.interestRateValue}"></td>
+														<td th:text="${term.ratePeriod.name}"></td>
+														<td th:text="${term.floatingRateType.name}"></td>
+														<td th:text="${term.penaltyOnPrincipleOverdueRateValue}"></td>
+														<td th:text="${term.penaltyOnPrincipleOverdueRateType.name}"></td>
+														<td th:text="${term.penaltyOnInterestOverdueRateValue}"></td>
+														<td th:text="${term.penaltyOnInterestOverdueRateType.name}"></td>
+														<td th:text="${term.penaltyLimitPercent}"></td>
+														<td th:text="${term.penaltyLimitEndDate}"></td>
+														<td th:text="${term.transactionOrder.name}"></td>
+														<td th:text="${term.daysInMonthMethod.name}"></td>
+														<td th:text="${term.daysInYearMethod.name}"></td>
+														<td class="table-actions text-right">
+															<span>
+																<div class="dropdown">
+																	<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																		<i class="la la-ellipsis-h"></i>
+																	</a>
+																	<div class="dropdown-menu dropdown-menu-right">
+																		<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/term/__${term.id}__/save}">
+																			<span th:text="#{label.table.edit}"></span>
+																		</a>
+																		<a class="dropdown-item" href="#">
+																			<span>
+																				<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/term/delete}" method="post">
+																					<input hidden="true" type="text" id="id" name="id" th:value="${term.id}" />
+																					<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																				</form>
+																			</span>
+																		</a>
+																	</div>
+																</div>
+															</span>
+														</td>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--end::Section-->
+							</div>
+							<div class="tab-pane" id="writeOffs" role="tabpanel">
+								<div class="m-section">
+									<div class="m-section__content">
+										<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/wo/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.button.addNewWriteOff}"></a>
+									</div>
+								</div>
+								<!--begin::Section-->
+								<div class="m-section">
+									<div class="m-section__content">
+										<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+											<div>
+												<table class="table">
+													<thead class="thead-default">
+													<tr>
+														<th class="table-id">Id</th>
+														<th th:text="#{label.writeOff.date}"></th>
+														<th th:text="#{label.writeOff.totalAmount}"></th>
+														<th th:text="#{label.writeOff.principal}"></th>
+														<th th:text="#{label.writeOff.interest}"></th>
+														<th th:text="#{label.writeOff.penalty}"></th>
+														<th th:text="#{label.writeOff.fee}"></th>
+														<th th:text="#{label.writeOff.description}"></th>
+														<th>&nbsp;</th>
+													</tr>
+													</thead>
+													<tbody>
+													<tr th:each="wo : ${WOs}">
+														<td class="table-id" th:text="${wo.id}"></td>
+														<td th:text="${wo.date}"></td>
+														<td th:text="${wo.totalAmount}"></td>
+														<td th:text="${wo.principal}"></td>
+														<td th:text="${wo.interest}"></td>
+														<td th:text="${wo.penalty}"></td>
+														<td th:text="${wo.fee}"></td>
+														<td th:text="${wo.description}"></td>
+														<td class="table-actions text-right">
+															<span>
+																<div class="dropdown">
+																	<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																		<i class="la la-ellipsis-h"></i>
+																	</a>
+																	<div class="dropdown-menu dropdown-menu-right">
+																		<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/wo/__${wo.id}__/save}">
+																			<span th:text="#{label.table.edit}"></span>
+																		</a>
+																		<a class="dropdown-item" href="#">
+																			<span>
+																				<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/wo/delete}" method="post">
+																					<input hidden="true" type="text" id="id" name="id" th:value="${wo.id}" />
+																					<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																				</form>
+																			</span>
+																		</a>
+																	</div>
+																</div>
+															</span>
+														</td>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--end::Section-->
+							</div>
+							<div class="tab-pane" id="paymentSchedules" role="tabpanel">
+								<div class="m-section">
+									<div class="m-section__content">
+										<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/paymentschedule/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.button.addNewPaymentSchedule}"></a>
+									</div>
+								</div>
+								<!--begin::Section-->
+								<div class="m-section">
+									<div class="m-section__content">
+										<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+											<div>
+												<table class="table">
+													<thead class="thead-default">
+													<tr>
+														<th class="table-id">ID</th>
+														<th th:text="#{label.paymentSchedule.expectedDate}"></th>
+														<th th:text="#{label.paymentSchedule.disbursement}"></th>
+														<th th:text="#{label.paymentSchedule.principalPayment}"></th>
+														<th th:text="#{label.paymentSchedule.interestPayment}"></th>
+														<th th:text="#{label.paymentSchedule.collectedInterestPayment}"></th>
+														<th th:text="#{label.paymentSchedule.collectedPenaltyPayment}"></th>
+														<th th:text="#{label.paymentSchedule.installmentState}"></th>
+														<th>&nbsp;</th>
+													</tr>
+													</thead>
+													<tbody>
+													<tr th:each="paymentS : ${PaymentSchedules}">
+														<td class="table-id" th:text="${paymentS.id}"></td>
+														<td th:text="${paymentS.expectedDate}"></td>
+														<td th:text="${paymentS.disbursement}"></td>
+														<td th:text="${paymentS.principalPayment}"></td>
+														<td th:text="${paymentS.interestPayment}"></td>
+														<td th:text="${paymentS.collectedInterestPayment}"></td>
+														<td th:text="${paymentS.collectedPenaltyPayment}"></td>
+														<td th:text="${paymentS.installmentState.name}"></td>
+														<td class="table-actions text-right">
+															<span>
+																<div class="dropdown">
+																	<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																		<i class="la la-ellipsis-h"></i>
+																	</a>
+																	<div class="dropdown-menu dropdown-menu-right">
+																		<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/paymentschedule/__${paymentS.id}__/save}">
+																			<span th:text="#{label.table.edit}"></span>
+																		</a>
+																		<a class="dropdown-item" href="#">
+																			<span>
+																				<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/paymentschedule/delete}" method="post">
+																					<input hidden="true" type="text" id="id" name="id" th:value="${paymentS.id}" />
+																					<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																				</form>
+																			</span>
+																		</a>
+																	</div>
+																</div>
+															</span>
+														</td>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--end::Section-->
+							</div>
+							<div class="tab-pane" id="payments" role="tabpanel">
+								<div class="m-section">
+									<div class="m-section__content">
+										<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/payment/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.button.addNewPayment}"></a>
+									</div>
+								</div>
+								<!--begin::Section-->
+								<div class="m-section">
+									<div class="m-section__content">
+										<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+											<div>
+												<table class="table">
+													<thead class="thead-default">
+													<tr>
+														<th class="table-id">ID</th>
+														<th th:text="#{label.payment.paymentDate}"></th>
+														<th th:text="#{label.payment.totalAmount}"></th>
+														<th th:text="#{label.payment.principal}"></th>
+														<th th:text="#{label.payment.interest}"></th>
+														<th th:text="#{label.payment.penalty}"></th>
+														<th th:text="#{label.payment.fee}"></th>
+														<th th:text="#{label.payment.number}"></th>
+														<th th:text="#{label.payment.paymentType}"></th>
+														<th>&nbsp;</th>
+													</tr>
+													</thead>
+													<tbody>
+													<tr th:each="payment : ${Payments}">
+														<td class="table-id" th:text="${payment.id}"></td>
+														<td th:text="${payment.paymentDate}"></td>
+														<td th:text="${payment.totalAmount}"></td>
+														<td th:text="${payment.principal}"></td>
+														<td th:text="${payment.interest}"></td>
+														<td th:text="${payment.penalty}"></td>
+														<td th:text="${payment.fee}"></td>
+														<td th:text="${payment.number}"></td>
+														<td th:text="${payment.paymentType.name}"></td>
+														<td class="table-actions text-right">
+															<span>
+																<div class="dropdown">
+																	<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																		<i class="la la-ellipsis-h"></i>
+																	</a>
+																	<div class="dropdown-menu dropdown-menu-right">
+																		<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/payment/__${payment.id}__/save}">
+																			<span th:text="#{label.table.edit}"></span>
+																		</a>
+																		<a class="dropdown-item" href="#">
+																			<span>
+																				<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/payment/delete}" method="post">
+																					<input hidden="true" type="text" id="id" name="id" th:value="${payment.id}" />
+																					<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																				</form>
+																			</span>
+																		</a>
+																	</div>
+																</div>
+															</span>
+														</td>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--end::Section-->
+							</div>
+							<div class="tab-pane" id="supervisorPlans" role="tabpanel">
+								<div class="m-section">
+									<div class="m-section__content">
+										<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.button.addNewSupervisorPlan}"></a>
+									</div>
+								</div>
+								<!--begin::Section-->
+								<div class="m-section">
+									<div class="m-section__content">
+										<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+											<div>
+												<table class="table">
+													<thead class="thead-default">
+													<tr>
+														<th class="table-id">ID</th>
+														<th th:text="#{label.supervisorPlan.date}"></th>
+														<th th:text="#{label.supervisorPlan.amount}">Amount</th>
+														<th th:text="#{label.supervisorPlan.principal}"></th>
+														<th th:text="#{label.supervisorPlan.interest}"></th>
+														<th th:text="#{label.supervisorPlan.penalty}"></th>
+														<th th:text="#{label.supervisorPlan.fee}"></th>
+														<th th:text="#{label.supervisorPlan.description}"></th>
+														<th>&nbsp;</th>
+													</tr>
+													</thead>
+													<tbody>
+													<tr th:each="sp : ${SPs}">
+														<td class="table-id" th:text="${sp.id}"></td>
+														<td th:text="${sp.date}"></td>
+														<td th:text="${sp.amount}"></td>
+														<td th:text="${sp.principal}"></td>
+														<td th:text="${sp.interest}"></td>
+														<td th:text="${sp.penalty}"></td>
+														<td th:text="${sp.fee}"></td>
+														<td th:text="${sp.description}"></td>
+														<td class="table-actions text-right">
+															<span>
+																<div class="dropdown">
+																	<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																		<i class="la la-ellipsis-h"></i>
+																	</a>
+																	<div class="dropdown-menu dropdown-menu-right">
+																		<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/__${sp.id}__/save}">
+																			<span th:text="#{label.table.edit}"></span>
+																		</a>
+																		<a class="dropdown-item" href="#">
+																			<span>
+																				<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/delete}" method="post">
+																					<input hidden="true" type="text" id="id" name="id" th:value="${sp.id}" />
+																					<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																				</form>
+																			</span>
+																		</a>
+																	</div>
+																</div>
+															</span>
+														</td>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--end::Section-->
+							</div>
+							<div class="tab-pane" id="loanGoods" role="tabpanel">
+								<div class="m-section">
+									<div class="m-section__content">
+										<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/loangoods/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.button.addNewLoanGood}"></a>
+									</div>
+								</div>
+								<!--begin::Section-->
+								<div class="m-section">
+									<div class="m-section__content">
+										<table class="table">
+											<thead class="thead-default">
+											<tr>
+												<th class="table-id">ID</th>
+												<th>Quantity</th>
+												<th>Unit Type Id</th>
+												<th>Good Typ eId</th>
+												<th>&nbsp;</th>
+											</tr>
+											</thead>
+											<tbody>
+											<tr th:each="lg : ${LGs}">
+												<td class="table-id" th:text="${lg.id}"></td>
+												<td th:text="${lg.quantity}"></td>
+												<td th:text="${lg.unitTypeId}"></td>
+												<td th:text="${lg.goodsTypeId}"></td>
+												<td class="table-actions text-right">
+													<span>
+														<div class="dropdown">
+															<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																<i class="la la-ellipsis-h"></i>
+															</a>
+															<div class="dropdown-menu dropdown-menu-right">
+																<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/loangoods/__${lg.id}__/save}">
+																	<span th:text="#{label.table.edit}"></span>
+																</a>
+																<a class="dropdown-item" href="#">
+																	<span>
+																		<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/loangoods/delete}" method="post">
+																			<input hidden="true" type="text" id="id" name="id" th:value="${lg.id}" />
+																			<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																		</form>
+																	</span>
+																</a>
+															</div>
+														</div>
+													</span>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!--end::Section-->
+							</div>
+							<div class="tab-pane" id="debtTransfers" role="tabpanel">
+								<div class="m-section">
+									<div class="m-section__content">
+										<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/debttransfer/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.button.addNewDebtTransfer}"></a>
+									</div>
+								</div>
+								<!--begin::Section-->
+								<div class="m-section">
+									<div class="m-section__content">
+										<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+											<div>
+												<table class="table">
+													<thead class="thead-default">
+													<tr>
+														<th class="table-id">ID</th>
+														<th>Number</th>
+														<th>Date</th>
+														<th>Quantity</th>
+														<th>Price per unit</th>
+														<th>Unit Type Id</th>
+														<th>Total cost</th>
+														<th>Transfer payment id</th>
+														<th>Transfer credit id</th>
+														<th>Transfer person id</th>
+														<th>Goods type id</th>
+														<th>&nbsp;</th>
+													</tr>
+													</thead>
+													<tbody>
+													<tr th:each="dt : ${DTs}">
+														<td class="table-id" th:text="${dt.id}"></td>
+														<td th:text="${dt.number}"></td>
+														<td th:text="${dt.date}"></td>
+														<td th:text="${dt.quantity}"></td>
+														<td th:text="${dt.pricePerUnit}"></td>
+														<td th:text="${dt.unitTypeId}"></td>
+														<td th:text="${dt.totalCost}"></td>
+														<td th:text="${dt.transferPaymentId}"></td>
+														<td th:text="${dt.transferCreditId}"></td>
+														<td th:text="${dt.transferPersonId}"></td>
+														<td th:text="${dt.goodsTypeId}"></td>
+														<td class="table-actions text-right">
+															<span>
+																<div class="dropdown">
+																	<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																		<i class="la la-ellipsis-h"></i>
+																	</a>
+																	<div class="dropdown-menu dropdown-menu-right">
+																		<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/debttransfer/__${dt.id}__/save}">
+																			<span th:text="#{label.table.edit}"></span>
+																		</a>
+																		<a class="dropdown-item" href="#">
+																			<span>
+																				<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/debttransfer/delete}" method="post">
+																					<input hidden="true" type="text" id="id" name="id" th:value="${dt.id}" />
+																					<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																				</form>
+																			</span>
+																		</a>
+																	</div>
+																</div>
+															</span>
+														</td>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--end::Section-->
+							</div>
+							<div class="tab-pane" id="targetedUses" role="tabpanel">
+								<div class="m-section">
+									<div class="m-section__content">
+										<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/targeteduse/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.button.addNewTargetedUse}"></a>
+									</div>
+								</div>
+								<!--begin::Section-->
+								<div class="m-section">
+									<div class="m-section__content">
+										<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+											<div>
+												<table class="table">
+													<thead class="thead-default">
+													<tr>
+														<th class="table-id">ID</th>
+														<th>Targeted Use Result Id</th>
+														<th>Created by</th>
+														<th>Created date</th>
+														<th>Approved by</th>
+														<th>Approved date</th>
+														<th>Checked by</th>
+														<th>Checked date</th>
+														<th>Attachment id</th>
+														<th>&nbsp;</th>
+													</tr>
+													</thead>
+													<tbody>
+													<tr th:each="tu : ${TUs}">
+														<td class="table-id" th:text="${tu.id}"></td>
+														<td th:text="${tu.targetedUseResultId}"></td>
+														<td th:text="${tu.createdById}"></td>
+														<td th:text="${tu.createdDate}"></td>
+														<td th:text="${tu.approvedById}"></td>
+														<td th:text="${tu.approvedDate}"></td>
+														<td th:text="${tu.checkedById}"></td>
+														<td th:text="${tu.checkedDate}"></td>
+														<td th:text="${tu.attachmentId}"></td>
+														<td class="table-actions text-right">
+															<span>
+																<div class="dropdown">
+																	<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																		<i class="la la-ellipsis-h"></i>
+																	</a>
+																	<div class="dropdown-menu dropdown-menu-right">
+																		<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/targeteduse/__${tu.id}__/save}">
+																			<span th:text="#{label.table.edit}"></span>
+																		</a>
+																		<a class="dropdown-item" href="#">
+																			<span>
+																				<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/targeteduse/delete}" method="post">
+																					<input hidden="true" type="text" id="id" name="id" th:value="${tu.id}" />
+																					<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																				</form>
+																			</span>
+																		</a>
+																	</div>
+																</div>
+															</span>
+														</td>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--end::Section-->
+							</div>
+							<div class="tab-pane" id="reconstructedLists" role="tabpanel">
+								<div class="m-section">
+									<div class="m-section__content">
+										<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/reconstructedlist/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.button.addNewReconstructedList}"></a>
+									</div>
+								</div>
+								<!--begin::Section-->
+								<div class="m-section">
+									<div class="m-section__content">
+										<table class="table">
+											<thead class="thead-default">
+											<tr>
+												<th class="table-id">ID</th>
+												<th>On Date</th>
+												<th>Old loan id</th>
+												<th>&nbsp;</th>
+											</tr>
+											</thead>
+											<tbody>
+											<tr th:each="rl : ${RLs}">
+												<td class="table-id" th:text="${rl.id}"></td>
+												<td th:text="${rl.onDate}"></td>
+												<td th:text="${rl.oldLoanId}"></td>
+												<td class="table-actions text-right">
+													<span>
+														<div class="dropdown">
+															<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																<i class="la la-ellipsis-h"></i>
+															</a>
+															<div class="dropdown-menu dropdown-menu-right">
+																<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/reconstructedlist/__${rl.id}__/save}">
+																	<span th:text="#{label.table.edit}"></span>
+																</a>
+																<a class="dropdown-item" href="#">
+																	<span>
+																		<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/reconstructedlist/delete}" method="post">
+																			<input hidden="true" type="text" id="id" name="id" th:value="${rl.id}" />
+																			<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																		</form>
+																	</span>
+																</a>
+															</div>
+														</div>
+													</span>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!--end::Section-->
+							</div>
+							<div class="tab-pane" id="bankrupts" role="tabpanel">
+								<div class="m-section">
+									<div class="m-section__content">
+										<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/bankrupt/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.button.addNewBankrupt}"></a>
+									</div>
+								</div>
+								<!--begin::Section-->
+								<div class="m-section">
+									<div class="m-section__content">
+										<table class="table">
+											<thead class="thead-default">
+											<tr>
+												<th class="table-id">ID</th>
+												<th>Started on date</th>
+												<th>Finished on date</th>
+												<th>&nbsp;</th>
+											</tr>
+											</thead>
+											<tbody>
+											<tr th:each="bankrupt : ${Bankrupts}">
+												<td class="table-id" th:text="${bankrupt.id}"></td>
+												<td th:text="${bankrupt.startedOnDate}"></td>
+												<td th:text="${bankrupt.finishedOnDate}"></td>
+												<td class="table-actions text-right">
+													<span>
+														<div class="dropdown">
+															<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																<i class="la la-ellipsis-h"></i>
+															</a>
+															<div class="dropdown-menu dropdown-menu-right">
+																<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/bankrupt/__${bankrupt.id}__/save}">
+																	<span th:text="#{label.table.edit}"></span>
+																</a>
+																<a class="dropdown-item" href="#">
+																	<span>
+																		<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/bankrupt/delete}" method="post">
+																			<input hidden="true" type="text" id="id" name="id" th:value="${bankrupt.id}" />
+																			<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																		</form>
+																	</span>
+																</a>
+															</div>
+														</div>
+													</span>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!--end::Section-->
+							</div>
+							<div class="tab-pane" id="collaterals" role="tabpanel">
+								<div class="m-section">
+									<div class="m-section__content">
+										<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collateral/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.button.addNewCollateral}"></a>
+									</div>
+								</div>
+								<!--begin::Section-->
+								<div class="m-section">
+									<div class="m-section__content">
+										<table class="table">
+											<thead class="thead-default">
+											<tr>
+												<th class="table-id">ID</th>
+												<th>Name</th>
+												<th>&nbsp;</th>
+											</tr>
+											</thead>
+											<tbody>
+											<tr th:each="coll : ${Collaterals}">
+												<td class="table-id" th:text="${coll.id}"></td>
+												<td th:text="${coll.name}"></td>
+												<td class="table-actions text-right">
+													<span>
+														<div class="dropdown">
+															<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																<i class="la la-ellipsis-h"></i>
+															</a>
+															<div class="dropdown-menu dropdown-menu-right">
+																<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collateral/__${coll.id}__/save}">
+																	<span th:text="#{label.table.edit}"></span>
+																</a>
+																<a class="dropdown-item" href="#">
+																	<span>
+																		<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collateral/delete}" method="post">
+																			<input hidden="true" type="text" id="id" name="id" th:value="${coll.id}" />
+																			<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																		</form>
+																	</span>
+																</a>
+															</div>
+														</div>
+													</span>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!--end::Section-->
+							</div>
+							<div class="tab-pane" id="collectionPhases" role="tabpanel">
+								<div class="m-section">
+									<div class="m-section__content">
+										<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collectionphase/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.button.addNewCollectionPhase}"></a>
+									</div>
+								</div>
+								<!--begin::Section-->
+								<div class="m-section">
+									<div class="m-section__content">
+										<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+											<div>
+												<table class="table">
+													<thead class="thead-default">
+													<tr>
+														<th class="table-id">ID</th>
+														<th>Start Date</th>
+														<th>Close Date</th>
+														<th>Last Event</th>
+														<th>Last Status Id</th>
+														<th>Phase Status</th>
+														<th>Phase Type</th>
+														<th>&nbsp;</th>
+													</tr>
+													</thead>
+													<tbody>
+													<tr th:each="phase : ${phases}">
+														<td class="table-id" th:text="${phase.id}"></td>
+														<td th:text="${phase.startDate}"></td>
+														<td th:text="${phase.closeDate}"></td>
+														<td th:text="${phase.lastEvent}"></td>
+														<td th:text="${phase.lastStatusId}"></td>
+														<td th:text="${phase.phaseStatus}"></td>
+														<td th:text="${phase.phaseType}"></td>
+														<td class="table-actions text-right">
+															<span>
+																<div class="dropdown">
+																	<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																		<i class="la la-ellipsis-h"></i>
+																	</a>
+																	<div class="dropdown-menu dropdown-menu-right">
+																		<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collectionphase/__${phase.id}__/view}">
+																			<span th:text="#{label.table.view}"></span>
+																		</a>
+																		<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collectionphase/__${phase.id}__/save}">
+																			<span th:text="#{label.table.edit}"></span>
+																		</a>
+																		<a class="dropdown-item" href="#">
+																			<span>
+																				<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collectionphase/delete}" method="post">
+																					<input hidden="true" type="text" id="id" name="id" th:value="${phase.id}" />
+																					<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																				</form>
+																			</span>
+																		</a>
+																	</div>
+																</div>
+															</span>
+														</td>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--end::Section-->
+							</div>
+							<div class="tab-pane" id="loanDetailedSummary" role="tabpanel">
+								<!--begin::Section-->
+								<div class="m-section">
+									<div class="m-section__content">
+										<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+											<div>
+												<table class="table">
+													<thead class="thead-default">
+													<tr>
+														<th class="table-id">ID</th>
+														<th>onDate</th>
+														<th>disbursement</th>
+														<th>totalDisbursement</th>
+														<th>principalPayment</th>
+														<th>totalPrincipalPayment</th>
+														<th>principalPaid</th>
+														<th>totalPrincipalPaid</th>
+														<th>principalWriteOff</th>
+														<th>totalPrincipalWriteOff</th>
+														<th>principalOutstanding</th>
+														<th>principalOverdue</th>
+														<th>daysInPeriod</th>
+														<th>interestAccrued</th>
+														<th>totalInterestAccrued</th>
+														<th>totalInterestAccruedOnInterestPayment</th>
+														<th>interestPayment</th>
+														<th>totalInterestPayment</th>
+														<th>collectedInterestPayment</th>
+														<th>totalCollectedInterestPayment</th>
+														<th>collectedInterestDisbursed</th>
+														<th>interestPaid</th>
+														<th>totalInterestPaid</th>
+														<th>interestOutstanding</th>
+														<th>interestOverdue</th>
+														<th>penaltyAccrued</th>
+														<th>totalPenaltyAccrued</th>
+														<th>collectedPenaltyPayment</th>
+														<th>totalCollectedPenaltyPayment</th>
+														<th>collectedPenaltyDisbursed</th>
+														<th>penaltyPaid</th>
+														<th>totalPenaltyPaid</th>
+														<th>penaltyOutstanding</th>
+														<th>penaltyOverdue</th>
+													</tr>
+													</thead>
+													<tbody>
+													<tr th:each="dSummary : ${detailedSummaries}">
+														<td class="table-id" th:text="${dSummary.id}"></td>
+														<td th:text="${dSummary.onDate}"></td>
+														<td th:text="${dSummary.disbursement}"></td>
+														<td th:text="${dSummary.totalDisbursement}"></td>
+														<td th:text="${dSummary.principalPayment}"></td>
+														<td th:text="${dSummary.totalPrincipalPayment}"></td>
+														<td th:text="${dSummary.principalPaid}"></td>
+														<td th:text="${dSummary.totalPrincipalPaid}"></td>
+														<td th:text="${dSummary.principalWriteOff}"></td>
+														<td th:text="${dSummary.totalPrincipalWriteOff}"></td>
+														<td th:text="${dSummary.principalOutstanding}"></td>
+														<td th:text="${dSummary.principalOverdue}"></td>
+														<td th:text="${dSummary.daysInPeriod}"></td>
+														<td th:text="${dSummary.interestAccrued}"></td>
+														<td th:text="${dSummary.totalInterestAccrued}"></td>
+														<td th:text="${dSummary.totalInterestAccruedOnInterestPayment}"></td>
+														<td th:text="${dSummary.interestPayment}"></td>
+														<td th:text="${dSummary.totalInterestPayment}"></td>
+														<td th:text="${dSummary.collectedInterestPayment}"></td>
+														<td th:text="${dSummary.totalCollectedInterestPayment}"></td>
+														<td th:text="${dSummary.collectedInterestDisbursed}"></td>
+														<td th:text="${dSummary.interestPaid}"></td>
+														<td th:text="${dSummary.totalInterestPaid}"></td>
+														<td th:text="${dSummary.interestOutstanding}"></td>
+														<td th:text="${dSummary.interestOverdue}"></td>
+														<td th:text="${dSummary.penaltyAccrued}"></td>
+														<td th:text="${dSummary.totalPenaltyAccrued}"></td>
+														<td th:text="${dSummary.collectedPenaltyPayment}"></td>
+														<td th:text="${dSummary.totalCollectedPenaltyPayment}"></td>
+														<td th:text="${dSummary.collectedPenaltyDisbursed}"></td>
+														<td th:text="${dSummary.penaltyPaid}"></td>
+														<td th:text="${dSummary.totalPenaltyPaid}"></td>
+														<td th:text="${dSummary.penaltyOutstanding}"></td>
+														<td th:text="${dSummary.penaltyOverdue}"></td>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--end::Section-->
+							</div>
+							<div class="tab-pane" id="loanSummary" role="tabpanel">
+								<!--begin::Section-->
+								<div class="m-section">
+									<div class="m-section__content">
+										<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+											<div>
+												<table class="table">
+													<thead class="thead-default">
+													<tr>
+														<th class="table-id">ID</th>
+														<th>onDate</th>
+														<th>loanAmount</th>
+														<th>totalDisbursed</th>
+														<th>totalPaid</th>
+														<th>paidPrincipal</th>
+														<th>paidInterest</th>
+														<th>paidPenalty</th>
+														<th>paidFee</th>
+														<th>totalOutstanding</th>
+														<th>outstadingPrincipal</th>
+														<th>outstadingInterest</th>
+														<th>outstadingPenalty</th>
+														<th>outstadingFee</th>
+														<th>totalOverdue</th>
+														<th>overduePrincipal</th>
+														<th>overdueInterest</th>
+														<th>overduePenalty</th>
+														<th>overdueFee</th>
+													</tr>
+													</thead>
+													<tbody>
+													<tr th:each="summary : ${summaries}">
+														<td class="table-id" th:text="${summary.id}"></td>
+														<td th:text="${summary.onDate}"></td>
+														<td th:text="${summary.loanAmount}"></td>
+														<td th:text="${summary.totalDisbursed}"></td>
+														<td th:text="${summary.totalPaid}"></td>
+														<td th:text="${summary.paidPrincipal}"></td>
+														<td th:text="${summary.paidInterest}"></td>
+														<td th:text="${summary.paidPenalty}"></td>
+														<td th:text="${summary.paidFee}"></td>
+														<td th:text="${summary.totalOutstanding}"></td>
+														<td th:text="${summary.outstadingPrincipal}"></td>
+														<td th:text="${summary.outstadingInterest}"></td>
+														<td th:text="${summary.outstadingPenalty}"></td>
+														<td th:text="${summary.outstadingFee}"></td>
+														<td th:text="${summary.totalOverdue}"></td>
+														<td th:text="${summary.overduePrincipal}"></td>
+														<td th:text="${summary.overdueInterest}"></td>
+														<td th:text="${summary.overduePenalty}"></td>
+														<td th:text="${summary.overdueFee}"></td>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--end::Section-->
+							</div>
+							<div class="tab-pane" id="accrue" role="tabpanel">
+								<!--begin::Section-->
+								<div class="m-section">
+									<div class="m-section__content">
+										<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+											<div>
+												<table class="table">
+													<thead class="thead-default">
+													<tr>
+														<th class="table-id">ID</th>
+														<th>fromDate</th>
+														<th>toDate</th>
+														<th>daysInPeriod</th>
+														<th>interestAccrued</th>
+														<th>penaltyAccrued</th>
+														<th>penaltyOnPrincipalOverdue</th>
+														<th>penaltyOnInterestOverdue</th>
+														<th>lastInstPassed</th>
+													</tr>
+													</thead>
+													<tbody>
+													<tr th:each="accrue : ${accrues}">
+														<td class="table-id" th:text="${accrue.id}"></td>
+														<td th:text="${accrue.fromDate}"></td>
+														<td th:text="${accrue.toDate}"></td>
+														<td th:text="${accrue.daysInPeriod}"></td>
+														<td th:text="${accrue.interestAccrued}"></td>
+														<td th:text="${accrue.penaltyAccrued}"></td>
+														<td th:text="${accrue.penaltyOnPrincipalOverdue}"></td>
+														<td th:text="${accrue.penaltyOnInterestOverdue}"></td>
+														<td th:text="${accrue.lastInstPassed}"></td>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--end::Section-->
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--end::Portlet-->
 			</div>
-			<!-- END CONTENT BODY -->
 		</div>
-		<!-- END CONTENT -->
-		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
 	</div>
-	<!-- END CONTAINER -->
-	<div th:replace="layout :: footer" />
-	<div th:replace="fragments/footer :: footer-js" />
-	<script th:src="@{/assets/pages/scripts/ui-modals.min.js}" type="text/javascript"></script>
-	<script th:src="@{/assets/pages/scripts/form-validation.min.js}" type="text/javascript"></script>
-	<script th:src="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js}" type="text/javascript"></script>
-	<script th:src="@{/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"></script>
-	<script th:src="@{/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}" type="text/javascript"></script>
-	<script th:src="@{/assets/pages/scripts/components-date-time-pickers.min.js}" type="text/javascript"></script>
+	<!-- end:: Body -->
+	<!-- begin::Footer -->
+	<div th:replace="layout/footer"/>
+	<!-- end::Footer -->
+</div>
+<!-- end:: Page -->
+
+<div th:replace="fragments/footer :: footer-js"/>
+
 </body>
+<!-- end::Body -->
 </html>
