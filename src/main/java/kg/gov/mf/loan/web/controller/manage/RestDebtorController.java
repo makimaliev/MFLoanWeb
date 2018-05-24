@@ -10,6 +10,7 @@ import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.web.exception.ResourceNotFoundExcption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -92,7 +93,7 @@ public class RestDebtorController {
 	}
 
 	@PostMapping("/debtors")
-		public DataResponse getAllDebtors(Pageable pageable) {
+		public DataResponse getAllDebtors(@RequestParam("draw") int draw, @RequestParam("start") int start, @RequestParam("length") int length) {
 
 		/*
 		Calendar cal = Calendar.getInstance();
@@ -119,6 +120,8 @@ public class RestDebtorController {
 
         return dr;
         */
+		long count = debtorRepository.count();
+		Pageable pageable = new PageRequest(start/length, length);
 		DataResponse<Object> dr = new DataResponse<>();
 		List<List<Object>> data = new ArrayList<>();
 		List<Debtor> debtors = debtorRepository.findAll(pageable).getContent();
@@ -134,9 +137,9 @@ public class RestDebtorController {
 		}
 
 		dr.setData(data);
-		dr.setRecordsFiltered(pageable.getPageSize());
-		dr.setRecordsTotal(pageable.getPageSize());
-		dr.setDraw(pageable.getPageNumber());
+		dr.setRecordsFiltered(count);
+		dr.setRecordsTotal(count);
+		dr.setDraw(draw);
 
 		return dr;
 	}

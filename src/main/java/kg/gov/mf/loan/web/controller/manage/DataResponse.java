@@ -6,9 +6,9 @@ public class DataResponse<E> {
 
     private int draw;
 
-    private int recordsTotal;
+    private long recordsTotal;
 
-    private int recordsFiltered;
+    private long recordsFiltered;
 
     List<List<E>> data;
 
@@ -20,19 +20,19 @@ public class DataResponse<E> {
         this.draw = draw;
     }
 
-    public int getRecordsTotal() {
+    public long getRecordsTotal() {
         return recordsTotal;
     }
 
-    public void setRecordsTotal(int recordsTotal) {
+    public void setRecordsTotal(long recordsTotal) {
         this.recordsTotal = recordsTotal;
     }
 
-    public int getRecordsFiltered() {
+    public long getRecordsFiltered() {
         return recordsFiltered;
     }
 
-    public void setRecordsFiltered(int recordsFiltered) {
+    public void setRecordsFiltered(long recordsFiltered) {
         this.recordsFiltered = recordsFiltered;
     }
 
