@@ -23,6 +23,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
+@RequestMapping("/api")
 public class RestDebtorController {
 
 	@Autowired

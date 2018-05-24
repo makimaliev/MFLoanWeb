@@ -40,7 +40,7 @@ public class SupervisorPlanController {
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 
-	@RequestMapping(value = { "/manage/debtor/loan/term/list"})
+	@RequestMapping(value = { "/manage/debtor/loan/sp/list"})
 	public String listCreditTerms(@RequestParam("pageSize") Optional<Integer> pageSize,
 								  @RequestParam("page") Optional<Integer> page, ModelMap model) {
 
@@ -61,7 +61,7 @@ public class SupervisorPlanController {
 
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
 
-		return "/manage/debtor/loan/term/list";
+		return "/manage/debtor/loan/sp/list";
 
 	}
 	
