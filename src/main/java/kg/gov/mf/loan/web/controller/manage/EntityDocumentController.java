@@ -3,16 +3,15 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
+import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackage;
 import kg.gov.mf.loan.manage.model.entitydocument.EntityDocument;
@@ -38,12 +37,40 @@ public class EntityDocumentController {
 	
 	@Autowired
 	EntityDocumentService edService;
+
+	private static final int BUTTONS_TO_SHOW = 5;
+	private static final int INITIAL_PAGE = 0;
+	private static final int INITIAL_PAGE_SIZE = 10;
+	private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
 		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
 	    binder.registerCustomEditor(Date.class, editor);
+	}
+
+	@RequestMapping(value = {"/manage/order/entitylist/entity/documentpackage/entitydocument/list" }, method = RequestMethod.GET)
+	public String listEntityDocuments(@RequestParam("pageSize") Optional<Integer> pageSize,
+									   @RequestParam("page") Optional<Integer> page, ModelMap model) {
+
+		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
+		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
+
+		List<EntityDocument> documents = edService.listByParam("id", evalPage*evalPageSize, evalPageSize);
+		int count = edService.count();
+
+		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
+
+		model.addAttribute("count", count/evalPageSize+1);
+		model.addAttribute("documents", documents);
+		model.addAttribute("selectedPageSize", evalPageSize);
+		model.addAttribute("pageSizes", PAGE_SIZES);
+		model.addAttribute("pager", pager);
+		model.addAttribute("current", evalPage);
+
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
+		return "/manage/order/entitylist/entity/documentpackage/entitydocument/list";
 	}
 	
 	@RequestMapping(value = { "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/{dpId}/entitydocument/{edId}/view"})

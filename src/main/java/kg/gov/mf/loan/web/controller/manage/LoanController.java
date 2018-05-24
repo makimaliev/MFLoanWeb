@@ -3,8 +3,10 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
+import kg.gov.mf.loan.web.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +14,7 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.loan.Loan;
@@ -84,6 +83,11 @@ public class LoanController {
 	CollateralAgreementService agreementService;
 
 	static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
+
+	private static final int BUTTONS_TO_SHOW = 5;
+	private static final int INITIAL_PAGE = 0;
+	private static final int INITIAL_PAGE_SIZE = 10;
+	private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -92,13 +96,28 @@ public class LoanController {
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 	
-	@RequestMapping(value = { "/manage/loan/list"})
-    public String listLoans(ModelMap model) {
-		
-		List<Loan> loans = loanService.list(); 
+	@RequestMapping(value = { "/manage/debtor/loan/list"})
+    public String listLoans(@RequestParam("pageSize") Optional<Integer> pageSize,
+							@RequestParam("page") Optional<Integer> page, ModelMap model) {
+
+		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
+		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
+
+		List<Loan> loans = loanService.listByParam("id", evalPage*evalPageSize, evalPageSize);
+		int count = loanService.count();
+
+		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
+
+		model.addAttribute("count", count/evalPageSize+1);
 		model.addAttribute("loans", loans);
+		model.addAttribute("selectedPageSize", evalPageSize);
+		model.addAttribute("pageSizes", PAGE_SIZES);
+		model.addAttribute("pager", pager);
+		model.addAttribute("current", evalPage);
+
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
 		
-		return "/manage/loan/list";
+		return "/manage/debtor/loan/list";
 		
 	}
 	

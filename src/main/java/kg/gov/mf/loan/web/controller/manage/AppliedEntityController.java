@@ -2,8 +2,10 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
+import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -33,6 +35,7 @@ import kg.gov.mf.loan.manage.service.entitydocument.EntityDocumentStateService;
 import kg.gov.mf.loan.manage.service.entitylist.AppliedEntityListService;
 import kg.gov.mf.loan.manage.service.order.CreditOrderService;
 import kg.gov.mf.loan.web.util.Utils;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class AppliedEntityController {
@@ -66,6 +69,34 @@ public class AppliedEntityController {
 	
 	@Autowired
 	EntityDocumentService edService;
+
+	private static final int BUTTONS_TO_SHOW = 5;
+	private static final int INITIAL_PAGE = 0;
+	private static final int INITIAL_PAGE_SIZE = 10;
+	private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
+
+	@RequestMapping(value = {"/manage/order/entitylist/entity/list" }, method = RequestMethod.GET)
+	public String listEntities(@RequestParam("pageSize") Optional<Integer> pageSize,
+								  @RequestParam("page") Optional<Integer> page, ModelMap model) {
+
+		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
+		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
+
+		List<AppliedEntity> entities = entityService.listByParam("id", evalPage*evalPageSize, evalPageSize);
+		int count = entityService.count();
+
+		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
+
+		model.addAttribute("count", count/evalPageSize+1);
+		model.addAttribute("entities", entities);
+		model.addAttribute("selectedPageSize", evalPageSize);
+		model.addAttribute("pageSizes", PAGE_SIZES);
+		model.addAttribute("pager", pager);
+		model.addAttribute("current", evalPage);
+
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
+		return "/manage/order/entitylist/entity/list";
+	}
 	
 	@RequestMapping(value = { "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/view"})
     public String viewEntity(ModelMap model, @PathVariable("orderId")Long orderId, @PathVariable("listId")Long listId, @PathVariable("entityId")Long entityId) {
