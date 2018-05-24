@@ -21,9 +21,7 @@
 		<div th:replace="layout/sidebar"/>
 		<!-- END: Left Aside -->
 		<div class="m-grid__item m-grid__item--fluid m-wrapper">
-
 			<div class="m-content">
-
 				<div class="m-portlet m-portlet--mobile">
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
@@ -37,10 +35,10 @@
 									<div class="m-input-icon m-input-icon--left">
 										<input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
 										<span class="m-input-icon__icon m-input-icon__icon--left">
-														<span>
-															<i class="la la-search"></i>
-														</span>
-													</span>
+											<span>
+												<i class="la la-search"></i>
+											</span>
+										</span>
 									</div>
 								</li>
 								<li class="m-portlet__nav-item">
@@ -50,7 +48,6 @@
 						</div>
 					</div>
 					<div class="m-portlet__body">
-
 						<table class="table" id="orgFormTable">
 							<thead class="thead-default">
 							<tr>
@@ -138,8 +135,8 @@
             sDom: 'rtlip',
             language: {
                 paginate: {
-                    previous: '<i class="la la-angle-left"></i>',
-                    next: '<i class="la la-angle-right"></i>'
+                    previous: '<i class="la la-angle-left"></i>', // or '→'
+                    next: '<i class="la la-angle-right"></i>' // or '←'
                 },
                 lengthMenu: "Показать _MENU_",
             }

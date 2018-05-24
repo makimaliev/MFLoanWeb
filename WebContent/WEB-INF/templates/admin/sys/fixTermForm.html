@@ -1,73 +1,38 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
-<head>
-<link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">
+<form th:action="@{/fixTerm/save}" id="myform" class="form-horizontal" method="post" th:object="${fixTerm}">
+	<div class="modal-header">
+		<h5 class="modal-title" th:text="#{label.fixTerm.modal.title}"></h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">
+				&times;
+			</span>
+		</button>
+	</div>
 
-</head>
+	<div class="modal-body">
 
-
-
-<body>
-
-	<form th:action="@{/fixTerm/save}" id="myform"
-		class="form-horizontal" method="post">
-		<div class="form-body">
-			<div class="alert alert-danger display-hide">
-				<button class="close" data-close="alert"></button>
-				You have some form errors. Please check below.
-			</div>
-			<!-- 
-                     <div class="alert alert-success display-hide">
-                     	<button class="close" data-close="alert"></button> Your form validation is successful! 
-                     </div>
-                     -->
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Name <span
-					class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-					<input hidden="true" type="text" id="id" name="id"
-						th:value="${fixTerm.id}" />
-					<input hidden="true" type="text" id="objectTypeId" name="objectType.id"
-						th:field="${fixTerm.objectType.id}" />
-												
-					<div class="input-icon right">
-						<i class="fa"></i> <input type="text" id="name" class="form-control"
-							name="name" th:value="${fixTerm.name}" />
-					</div>
-				</div>
-			</div>
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Description <span
-					class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-					<div class="input-icon right">
-						<i class="fa"></i> <input type="text" id="description" class="form-control"
-							name="description" th:value="${fixTerm.description}" />
-					</div>
-				</div>
-			</div>
-			
-			
-
+		<div class="alert alert-danger alert-dismissible alert-hidden" role="alert">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+			<span th:text="#{label.fixTerm.modal.error.name}"></span>
 		</div>
-		
-		<div class="form-actions">
-			<div class="row">
-				<div class="col-md-offset-3 col-md-9">
-					<button type="submit" class="btn green">Submit</button>
-					<button type="button" class="btn default"
-						onclick="window.location.href='/fixTerm/list'">Cancel</button>
-				</div>
-			</div>
+
+		<div class="form-group">
+			<label for="name" class="form-control-label">Name<span class="required"> * </span></label>
+			<input hidden="true" type="text" id="id" name="id" th:field="${objectField.id}" />
+			<input hidden="true" type="text" id="objectTypeId" name="objectType.id"
+				   th:field="${fixTerm.objectType.id}" />
+			<input type="text" class="form-control" id="name" name="name" th:value="${fixTerm.name}">
 		</div>
-	</form>
 
+		<div class="form-group ">
+			<label for="name" class="form-control-label">Description<span class="required"> * </span></label>
+			<input type="text" class="form-control" id="description" name="description" th:value="${fixTerm.description}">
+		</div>
 
+	</div>
 
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.fixTerm.button.cancel}"></button>
+		<button type="submit" class="btn btn-primary" th:text="#{label.fixTerm.button.submit}"></button>
+	</div>
 
-
-</body>
-</html>
+</form>

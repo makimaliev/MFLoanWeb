@@ -106,7 +106,9 @@ body{
 .modal{
 	font-size: 12px;
 }
-.modal .modal-content .modal-header{
+.modal .modal-content .modal-header,
+.modal .modal-content .modal-body,
+.modal .modal-content .modal-footer{
 	padding: 16px;
 }
 .modal .modal-content .modal-header .modal-title{
@@ -115,9 +117,6 @@ body{
 }
 .modal .modal-content .modal-header .close:before{
 	font-size: 12px;
-}
-.modal .modal-content .modal-body{
-	padding: 16px;
 }
 .modal .alert{
 	margin-bottom: 16px;
@@ -311,7 +310,6 @@ body{
 	margin-bottom: 16px;
 }
 .table.dataTable tr:last-child td{
-	padding-bottom: 16px;
 	border-bottom: 1px solid #ebedf2;
 }
 .dataTables_wrapper .dataTables_paginate{
@@ -392,6 +390,15 @@ body{
 }
 .dataTables_length .bootstrap-select.btn-group .dropdown-menu.inner > li.selected > a span.check-mark{
 	margin-top: -0.6rem;
+}
+.dataTables_wrapper .dataTable .selected td,
+.dataTables_wrapper .dataTable .selected th{
+	background-color: #eff2f9;
+	color: #3f4047;
+}
+table.dataTable th.focus, table.dataTable td.focus{
+	outline: 2px solid #0275d8;
+	outline-offset: -1px;
 }
 
 /*Widget*/

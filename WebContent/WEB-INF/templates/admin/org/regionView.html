@@ -1,64 +1,69 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
-<head>
-</head>
-
-<body>
-
-	<div class="tabbable-custom ">
-		<ul class="nav nav-tabs " id="region_tabs">
-			<li class="active">
-				<a href="#districtListOfRegion" data-toggle="tab">Район</a>
-			</li>
-		</ul>
-		
-		<div class="tab-content">
-			<div class="tab-pane active" id="districtListOfRegion">
-
-
-				<table
-					class="table table-hover table-condensed table-striped table-bordered compact condensed"
-					id="districtTable">
-					<thead>
+<div class="m-content">
+	<div class="m-portlet">
+		<div class="m-portlet__body">
+			<ul class="nav nav-tabs" role="tablist">
+				<li class="nav-item">
+					<a class="nav-link active" data-toggle="tab" href="#districtListOfRegion">
+						Район
+					</a>
+				</li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane active" id="districtListOfRegion" role="tabpanel">
+					<table class="table" id="districtTable">
+						<thead class="thead-default">
 						<tr>
 							<th>Id</th>
 							<th>Name</th>
 							<th>Code</th>
 							<th>Region</th>
-							<th>View</th>
-							<th>Edit</th>
-							<th>Delete</th>
+							<th>&nbsp;</th>
 						</tr>
-					</thead>
+						</thead>
 
-					<tbody>
+						<tbody>
 
 						<tr th:each="districtInList : ${region.district}">
 							<td th:text="${districtInList.id}">Id</td>
 							<td th:text="${districtInList.name}">Name</td>
 							<td th:text="${districtInList.code}">Code</td>
 							<td th:text="${districtInList.region.name}">Region</td>
-							<td><a th:href="@{/district/__${districtInList.id}__/details}"
-								role="button" class="btn btn-xs green-stripe"> View </a></td>
-							<td><a data-remote="false" data-toggle="modal"
-								data-target="#regionFormModal"
-								th:href="@{/district/__${districtInList.id}__/edit}"
-								role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
-
-							<td>
-								<form th:action="@{/district/__${districtInList.id}__/remove}"
-									method="post">
-									<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-								</form>
+							<td class="table-actions text-right">
+								<span>
+									<div class="dropdown">
+										<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+											<i class="la la-ellipsis-h"></i>
+										</a>
+										<div class="dropdown-menu dropdown-menu-right">
+											<a class="dropdown-item"
+											   th:href="@{/district/__${districtInList.id}__/details}"
+											   role="button">
+												<span th:text="#{label.table.view}"></span>
+											</a>
+											<a class="dropdown-item"
+											   th:href="@{/district/__${districtInList.id}__/edit}"
+											   data-toggle="modal"
+											   data-target="#regionFormModal">
+												<span th:text="#{label.table.edit}"></span>
+											</a>
+											<a class="dropdown-item" href="#">
+												<span>
+													<form th:action="@{/district/__${districtInList.id}__/remove}" method="post">
+														<input hidden="true" type="text" id="id" name="id" th:value="${districtInList.id}" />
+														<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+													</form>
+												</span>
+											</a>
+										</div>
+									</div>
+								</span>
 							</td>
 						</tr>
-					</tbody>
+						</tbody>
 
-				</table>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
-
-</body>
-</html>
+</div>

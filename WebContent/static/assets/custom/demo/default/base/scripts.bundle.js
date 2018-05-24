@@ -6082,6 +6082,9 @@ var mLayout = function() {
         }).on('toggle', function() {
             horMenu.pauseDropdownHover(800);
             asideMenu.pauseDropdownHover(800);
+            if (Cookies) {
+                Cookies.set('sidebar_closed', '0');
+            }
         });
 
         $('#m_aside_left_hide_toggle').mToggle({
@@ -6091,6 +6094,9 @@ var mLayout = function() {
         }).on('toggle', function() {
             horMenu.pauseDropdownHover(800);
             asideMenu.pauseDropdownHover(800);
+            if (Cookies) {
+                Cookies.set('sidebar_closed', '0');
+            }
         })
     }
 

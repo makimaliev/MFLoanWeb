@@ -1,85 +1,70 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
-<head>
-</head>
-
-<body>
-
-	<div class="tabbable-custom ">
-		<ul class="nav nav-tabs " id="printout_tabs">
-			<li class="active">
-				<a href="#districtListOfRegion" data-toggle="tab">Общая информация</a>
-			</li>
-			<li>
-				<a href="#aokmotuListOfRegion" data-toggle="tab">1</a>
-			</li>
-			<li>
-				<a href="#seloListOfRegion" data-toggle="tab">2</a>
-			</li>
-			<li>
-				<a href="#debtorListOfRegion" data-toggle="tab">3</a>
-			</li>
-			<li>
-				<a href="#loanListOfRegion" data-toggle="tab">4</a>
+<div class="m-portlet m-portlet--full-height">
+	<div class="m-portlet__body">
+		<ul class="nav nav-tabs" role="tablist">
+			<li class="nav-item">
+				<a class="nav-link m--font-primary active" data-toggle="tab" href="#templateOfReport" th:text="#{label.printout.templates}"></a>
 			</li>
 		</ul>
-		
+
 		<div class="tab-content">
 			<div class="tab-pane active" id="templateOfReport">
-				
-				
-				<table
-					class="table table-hover table-condensed table-striped table-bordered compact condensed"
-					id="districtTable">
-					<thead>
-						<tr>
-							<th>Id</th>
-							<th>Name</th>
-							<th>Report</th>
-							<th>View</th>
-							<th>Edit</th>
-							<th>Generate</th>
-						</tr>
-					</thead>
+				<div class="m-section">
+					<div class="m-section__content">
+						<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+							<div>
+								<table class="table">
+									<thead  class="thead-default">
+									<tr>
+										<th>Id</th>
+										<th th:text="#{label.template.name}"></th>
+										<th th:text="#{label.template.report}"></th>
+										<th>&nbsp;</th>
+									</tr>
+									</thead>
 
-					<tbody>
+									<tbody>
+									<tr th:each="printoutTemplateInList : ${printout.printoutTemplates}">
+										<td th:text="${printoutTemplateInList.id}"></td>
+										<td th:text="${printoutTemplateInList.name}"></td>
+										<td th:text="${printoutTemplateInList.printout.name}"></td>
+										<td class="table-actions text-right">
+											<span>
+												<div class="dropdown">
+													<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+														<i class="la la-ellipsis-h"></i>
+													</a>
+													<div class="dropdown-menu dropdown-menu-right">
+														<a class="dropdown-item"
+														   th:href="@{/printoutTemplate/__${printoutTemplateInList.id}__/details}" role="button">
+															<span th:text="#{label.table.view}"></span>
+														</a>
+														<a class="dropdown-item"
+														   data-remote="false" data-toggle="modal"
+														   data-target="#printoutFormModal"
+														   th:href="@{/printoutTemplate/__${printoutTemplateInList.id}__/edit}" role="button">
+															<span th:text="#{label.table.edit}"></span>
+														</a>
+														<a class="dropdown-item" href="#">
+															<span>
+																<form th:action="@{/printoutTemplate/__${printoutTemplateInList.id}__/objectId/25/generate}" method="post">
+																	<input hidden="true" type="text" id="id" name="id" th:value="${printoutTemplateInList.id}" />
+																	<button type="submit" class="btn btn-reset" th:text="#{label.table.generate}"></button>
+																</form>
+															</span>
+														</a>
+													</div>
+												</div>
+											</span>
+										</td>
+									</tr>
+									</tbody>
 
-						<tr th:each="printoutTemplateInList : ${printout.printoutTemplates}">
-							<td th:text="${printoutTemplateInList.id}">Id</td>
-							<td th:text="${printoutTemplateInList.name}">Name</td>
-							<td th:text="${printoutTemplateInList.printout.name}">Report</td>
-							<td><a th:href="@{/printoutTemplate/__${printoutTemplateInList.id}__/details}"
-								role="button" class="btn btn-xs green-stripe"> View </a></td>
-							<td><a data-remote="false" data-toggle="modal"
-								data-target="#printoutFormModal"
-								th:href="@{/printoutTemplate/__${printoutTemplateInList.id}__/edit}"
-								role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
-
-							<td>
-								<form th:action="@{/printoutTemplate/__${printoutTemplateInList.id}__/objectId/25/generate}"
-									method="post">
-									<button type="submit" class="btn btn-xs red-stripe">Generate</button>
-								</form>
-							</td>
-						</tr>
-					</tbody>
-
-				</table>
-				
-				
-			</div>
-			<div class="tab-pane" id="aokmotuListOfRegion">
-			
-			</div>
-			<div class="tab-pane" id="seloListOfRegion">
-			</div>
-			<div class="tab-pane" id="debtorListOfRegion">
-			</div>
-			<div class="tab-pane" id="loanListOfRegion">
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
-
-</body>
-</html>
+</div>

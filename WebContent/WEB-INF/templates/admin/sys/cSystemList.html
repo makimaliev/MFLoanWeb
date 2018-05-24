@@ -1,13 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" >
-<!-- begin::Head -->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title th:text="#{label.systems.page.title}"></title>
+
+	<title>	MFLoan | Systems</title>
 
 	<div th:replace="fragments/header :: header-css"/>
+	<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
+
+	<style type="text/css">
+		table.KeyTable tr.focus {
+			outline: 3px solid #3366FF;
+			outline-offset: -3px;
+		}
+	</style>
 </head>
 <!-- end::Head -->
-
 <!-- end::Body -->
 <body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
 <!-- begin:: Page -->
@@ -22,9 +29,7 @@
 		<div th:replace="layout/sidebar"/>
 		<!-- END: Left Aside -->
 		<div class="m-grid__item m-grid__item--fluid m-wrapper">
-
 			<div class="m-content">
-
 				<div class="m-portlet m-portlet--mobile">
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
@@ -38,35 +43,46 @@
 									<div class="m-input-icon m-input-icon--left">
 										<input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
 										<span class="m-input-icon__icon m-input-icon__icon--left">
-														<span>
-															<i class="la la-search"></i>
-														</span>
-													</span>
+											<span>
+												<i class="la la-search"></i>
+											</span>
+										</span>
 									</div>
 								</li>
 								<li class="m-portlet__nav-item">
-									<a th:href="@{/orgForm/add}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.orgForm.button.add}"></a>
+
+									<a data-remote="false" data-toggle="modal"
+									   data-target="#cSystemFormModal" th:href="@{/cSystem/add}"
+									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
+										System</a>
+									<a data-remote="false" data-toggle="modal"
+									   data-target="#cSystemFormModal" th:href="@{/information/add}"
+									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
+										System Information</a>
+
+									<a class="m-portlet__nav-link btn btn-success m-btn m-btn--air" data-toggle="modal" href="#cSystemFormModal">
+										Add New Applied Entity List <i class="la la-plus"></i>
+									</a>
 								</li>
 							</ul>
 						</div>
 					</div>
 					<div class="m-portlet__body">
-
-						<table class="table" id="orgFormTable">
+						<table class="table" id="cSystemTable">
 							<thead class="thead-default">
-							<tr>
-								<th>ID</th>
-								<th th:text="#{label.orgForm.table.name}">Name</th>
-								<th th:text="#{label.orgForm.table.enabled}">Enabled</th>
-								<th>&nbsp;</th>
-							</tr>
+								<tr>
+									<th>Id</th>
+									<th>Name</th>
+									<th>&nbsp;</th>
+								</tr>
 							</thead>
+
 							<tbody>
-							<tr th:each="s : ${orgFormList}">
-								<td th:text="${s.id}">Id</td>
-								<td th:text="${s.name}">Name</td>
-								<td th:text="${s.enabled} ? #{label.enabled} : #{label.disabled} ">Enabled</td>
-								<td class="table-actions text-right">
+
+								<tr th:each="s : ${cSystemList}">
+									<td th:text="${s.id}">Id</td>
+									<td th:text="${s.name}">Name</td>
+									<td class="table-actions text-right">
 										<span>
 											<div class="dropdown">
 												<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
@@ -74,14 +90,19 @@
 												</a>
 												<div class="dropdown-menu dropdown-menu-right">
 													<a class="dropdown-item"
-													   th:href="@{/orgForm/__${s.id}__/edit}"
+													   th:href="@{/cSystem/__${s.id}__/details}"
+													   role="button">
+														<span th:text="#{label.table.view}"></span>
+													</a>
+													<a class="dropdown-item"
+													   th:href="@{/cSystem/__${s.id}__/edit}"
 													   data-toggle="modal"
-													   data-target="#orgFormFormModal">
+													   data-target="#cSystemFormModal">
 														<span th:text="#{label.table.edit}"></span>
 													</a>
 													<a class="dropdown-item" href="#">
 														<span>
-															<form th:action="@{/orgForm/__${s.id}__/remove}" method="post">
+															<form th:action="@{/cSystem/__${s.id}__/remove}" method="post">
 																<input hidden="true" type="text" id="id" name="id" th:value="${s.id}" />
 																<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
 															</form>
@@ -90,27 +111,66 @@
 												</div>
 											</div>
 										</span>
-								</td>
-							</tr>
+									</td>
+								</tr>
 							</tbody>
+
 						</table>
 					</div>
 				</div>
 
 				<!--begin::Modal-->
-				<div class="modal fade" id="orgFormFormModal" tabindex="-1" role="dialog" aria-labelledby="orgFormFormModalTitle" aria-hidden="true">
+				<div class="modal fade" id="cSystemFormModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" th:object="${cSystem}">
 					<div class="modal-dialog" role="document">
 						<div class="modal-content">
+
+							<form th:action="@{/cSystem/save}" id="cSystemForm" class="form-horizontal" method="post" th:object="${cSystem}">
+								<div class="modal-header">
+									<h5 class="modal-title"  th:text="#{label.cSystem.modal.title}"></h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">
+											&times;
+										</span>
+									</button>
+								</div>
+
+								<div class="modal-body">
+
+									<div class="alert alert-danger alert-dismissible alert-hidden" role="alert">
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+										<span th:text="#{label.cSystem.modal.error.name}"></span>
+									</div>
+
+									<div class="form-group">
+										<label for="name" class="form-control-label" th:text="#{label.cSystem.modal.name}">Name<span class="required"> * </span></label>
+										<input hidden="true" type="text" id="id" name="id" th:value="${cSystem.id}" />
+										<input hidden="true" type="text" id="openModal" name="openModal" th:value="${openModal}"/>
+										<input type="text" class="form-control" id="name" name="name" th:value="${cSystem.name}">
+											<p th:errors="*{name}">Incorrect name</p>
+
+											<script th:inline="javascript">
+												/*<![CDATA[*/
+												/*]]>*/
+											</script>
+									</div>
+
+								</div>
+
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.cSystem.button.cancel}"></button>
+									<button type="submit" class="btn btn-primary" th:text="#{label.cSystem.button.submit}"></button>
+								</div>
+							</form>
+
 						</div>
 					</div>
 				</div>
 				<!--end::Modal-->
-
 			</div>
 
 			<div class="row">
 				<div class="col-md-12">
-					<input hidden="true" type="text" id="orgForm_id" name="orgForm_id" />
+					<input hidden="true" type="text" id="cSystem_id" name="cSystem_id" />
 					<div id="content"></div>
 				</div>
 			</div>
@@ -129,22 +189,28 @@
 <div th:replace="fragments/footer :: footer-js"/>
 
 <script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
+<script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>
 
 <script type="text/javascript">
-    $(document).ready(function()
-    {
-        var table = $('#orgFormTable').DataTable({
-            stateSave: 	true,
-            info: false,
-            sDom: 'rtlip',
+	$(document).ready(function() {
+
+		var openModal = $("#openModal").val();
+		if(openModal == "1") $('#cSystemFormModal').modal('show');
+		var table = $('#cSystemTable').DataTable({
+			stateSave: true,
             language: {
                 paginate: {
-                    previous: '<i class="la la-angle-left"></i>',
-                    next: '<i class="la la-angle-right"></i>'
+                    previous: '<i class="la la-angle-left"></i>', // or '→'
+                    next: '<i class="la la-angle-right"></i>' // or '←'
                 },
                 lengthMenu: "Показать _MENU_",
-            }
-        });
+            },
+			"info":     false,
+			keys: {
+				focus: ':eq(0)'
+			},
+            sDom: 'rtlip',
+		} );
 
         $('#generalSearch').keyup(function(){
             table.search($(this).val()).draw() ;
@@ -153,316 +219,18 @@
         $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
         $('.selectpicker').selectpicker('refresh');
 
-        $("#orgFormFormModal").on("show.bs.modal", function(e)
-        {
-            var link = $(e.relatedTarget);
-            var orgFormID = $("#orgForm_id").val();
-            $(this).find(".modal-content").load(link.attr("href"));
-        });
+		table.on('key-focus', function(e, datatable, cell) {
+			var rowData = datatable.row(cell.index().row).data();
+			$("#cSystem_id").val(rowData[0]);
+			var sUrl ="/MFCredit/cSystem/" + rowData[0]+"/view";
+			$.get(sUrl, function(data) {
+				$('#content').html(data);
+			});
 
-    });
+		});
+
+	});
 </script>
 
-</body>
-<!-- end::Body -->
-</html>
-
-<body id="bodyPart" class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
-	
-	<!-- BEGIN HEADER -->
-	<div th:replace="layout :: header-top"></div>
-	<!-- END HEADER -->
-
-	<!-- BEGIN CONTAINER -->
-	<div class="page-container">
-
-		<!-- BEGIN SIDEBAR -->
-		<div th:replace="layout :: page-container-sidebar"> </div>
-		<!-- END SIDEBAR -->
-		
-		<!-- BEGIN CONTENT -->
-		<div class="page-content-wrapper">
-
-			<!-- BEGIN CONTENT BODY -->
-			<div class="page-content" id="cSystemListBodyPage">
-
-				<div class="row">
-					<div class="col-md-12">
-						<!-- BEGIN BORDERED TABLE PORTLET-->
-						<div class="portlet portlet-fit ">
-							<div class="portlet-body">
-
-								<div>
-									<table class="table table-hover table-condensed table-striped table-bordered compact condensed" id="cSystemTable">
-										<thead>
-											<tr>
-												<th>Id</th>
-												<th>Name</th>
-												<th>View</th>
-												<th>Edit</th>
-												<th>Delete</th>
-											</tr>
-										</thead>
-
-										<tbody>
-											
-											<tr th:each="s : ${cSystemList}">
-												<td th:text="${s.id}">Id</td>
-												<td th:text="${s.name}">Name</td>
-												<td>
-													<a  th:href="@{/cSystem/__${s.id}__/details}"
-													role="button" class="btn btn-xs green-stripe"> View
-													</a>
-												</td>												
-												<td>
-													<a data-remote="false" data-toggle="modal"
-													data-target="#cSystemFormModal" th:href="@{/cSystem/__${s.id}__/edit}"
-													role="button" class="btn btn-xs blue-stripe"> Edit
-													</a>
-												</td>
-												<td>
-													<form th:action="@{/cSystem/__${s.id}__/remove}" method="post">
-														<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-													</form>
-												</td>
-											</tr>
-										</tbody>
-
-									</table>
-								</div>
-
-
-
-
-								<div class="col-md-12">
-
-									<!-- Default bootstrap modal example -->
-									<div class="modal fade" id="cSystemFormModal" tabindex="-1"
-										role="dialog" aria-labelledby="myModalLabel"
-										aria-hidden="true">
-										<div class="modal-dialog">
-											<div class="modal-content">
-												<div class="modal-header">
-													<button type="button" class="close" data-dismiss="modal"
-														aria-label="Close">
-														<span aria-hidden="true">&times;</span>
-													</button>
-													<h4 class="modal-title" id="myModalLabel">Modal title</h4>
-												</div>
-												<div class="modal-body">
-												
-												
-												
-												
-												
-												
-												
-
-	<form th:action="@{/cSystem/save}" id="cSystemForm"
-		class="form-horizontal" method="post" th:object="${cSystem}">
-		<div class="form-body">
-			<div class="alert alert-danger display-hide">
-				<button class="close" data-close="alert"></button>
-				You have some form errors. Please check below.
-			</div>
-			<!-- 
-                     <div class="alert alert-success display-hide">
-                     	<button class="close" data-close="alert"></button> Your form validation is successful! 
-                     </div>
-                     -->
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Name <span
-					class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-					<input hidden="true" type="text" id="id" name="id"
-						th:field="${cSystem.id}" />
-						
-					<input hidden="true" type="text" id="openModal" name="openModal" th:value="${openModal}"/>
-
-
-						
-					<div class="input-icon right">
-						<i class="fa"></i> <input type="text" class="form-control"
-							name="name" th:field="${cSystem.name}" />
-							<p th:errors="*{name}">Incorrect name</p>
-							
-           
-            <script th:inline="javascript">
-            /*<![CDATA[*/
-
-            	
-
-            /*]]>*/
-            </script> 							
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="form-actions">
-			<div class="row">
-				<div class="col-md-offset-3 col-md-9">
-					<button id="cSystemSubmitButton" type="submit" class="btn green">Submit</button>
-					<button type="button" class="btn default"
-						onclick="window.location.href='/cSystem/list'">Cancel</button>
-				</div>
-			</div>
-		</div>
-	</form>
-	
-												
-												
-												
-												
-												
-												
-												
-												
-												
-												
-												</div>
-												<div class="modal-footer">
-													
-												</div>
-											</div>
-										</div>
-									</div>
-
-
-								</div>
-
-
-
-								<div class="row">
-									<div class="col-md-12">
-										<a data-remote="false" data-toggle="modal"
-											data-target="#cSystemFormModal" th:href="@{/cSystem/add}"
-											role="button" class="btn btn-large btn-primary"> Add
-											System</a>
-										<a data-remote="false" data-toggle="modal"
-											data-target="#cSystemFormModal" th:href="@{/information/add}"
-											role="button" class="btn btn-large btn-primary"> Add
-											System Information</a>	
-											
-										<a class="btn green" data-toggle="modal" href="#cSystemFormModal">
-												Add New Applied Entity List <i class="fa fa-plus"></i>
-										</a>																					
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- END BORDERED TABLE PORTLET-->
-					</div>
-				</div>
-		
-			<div class="row">
-				<div class="col-md-12">
-
-					<input hidden="true" type="text" id="cSystem_id" name="cSystem_id" />
-					
-					<div id="content"></div>
-
-				</div>
-			</div>				
-				
-				
-			</div>
-			<!-- END CONTENT BODY -->
-		</div>
-		<!-- END CONTENT -->
-		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
-	</div>
-	<!-- END CONTAINER -->
-	<div th:replace="layout :: footer"></div>
-	<div th:replace="fragments/footer :: footer-js"></div>
-	
-	
-	<script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
-	<script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>	
-	
-	<!-- BEGIN PAGE LEVEL PLUGINS -->
-
-	<!-- END PAGE LEVEL PLUGINS -->
-	<!-- BEGIN PAGE LEVEL SCRIPTS -->
-
-	
-		<script type="text/javascript">
-		$(document).ready(function() {
-
-			
-			var openModal = $("#openModal").val();
-			
-			if(openModal == "1") $('#cSystemFormModal').modal('show');
-			
-			var table = $('#cSystemTable').DataTable({
-		    	stateSave: true,
-		    	"language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
-	    		"info":     false,
-	    		keys: {
-	    	        focus: ':eq(0)'
-	    	    }
-		    } );
-			
-			table.on('key-focus', function(e, datatable, cell) {
-			
-				var rowData = datatable.row(cell.index().row).data();
-
-
-				
-				$("#cSystem_id").val(rowData[0]);
-				
-				var sUrl ="/MFCredit/cSystem/" + rowData[0]+"/view";
-				
-				$.get(sUrl, function(data) {
-
-					$('#content').html(data);
-				});
-
-				});
-
-			});
-		</script>
-           
-          
-           
-           
-<!-- END PAGE LEVEL PLUGINS            
-            
-	<script type="text/javascript">
-	$("#cSystemFormModal").on("show.bs.modal", function(e) {
-		
-	    var link = $(e.relatedTarget);
-	    
-	    
-	    var cSystemID = $("#cSystem_id").val();
-
-	    if(link.attr("href").indexOf('district/add')>0)
-	    {
-	    	$(this).find(".modal-title").html(link.attr("href").replace("/district/add","/cSystem/"+cSystemID+"/district/add"));
-		    $(this).find(".modal-body").load(link.attr("href").replace("/district/add","/cSystem/"+cSystemID+"/district/add"));
-	    }
-	    else
-    	{
-	    	$(this).find(".modal-title").html(link.attr("href"));
-		    $(this).find(".modal-body").load(link.attr("href"));
-    	}
-	});
-	
-
-	
-</script> 
-	-->
-
-           
-            
-            
-
-            
-            
-            
-            
-            
-            
-	<!-- END PAGE LEVEL SCRIPTS -->
 </body>
 </html>

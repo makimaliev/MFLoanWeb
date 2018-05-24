@@ -22,7 +22,7 @@
                      </div>
                      -->
 			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Name <span
+				<label class="control-label col-md-3">Name11 <span
 					class="required"> * </span>
 				</label>
 				<div class="col-md-4">
@@ -52,21 +52,7 @@
 			</div>
 			
 		
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Person<span
-					class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-					<select th:field="*{person}" >
-					  <option th:each="personInList : ${personList}" 
-					          th:value="${personInList.id}"
-					          th:text="${personInList.name}"
-					          
-					          >Person</option>
-					</select>
-				
-				</div>
-			</div>	
+
 			
 						<div class="form-group  margin-top-20">
 							<label class="control-label col-md-3">Employment History number<span
@@ -83,21 +69,7 @@
 						</div>			
 
 
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Organization<span
-					class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-					<select th:field="*{organization}" >
-					  <option th:each="organizationInList : ${organizationList}" 
-					          th:value="${organizationInList.id}"
-					          th:text="${organizationInList.name}"
-					          
-					          >Organization</option>
-					</select>
-				
-				</div>
-			</div>	
+
 			
 			<div class="form-group  margin-top-20">
 				<label class="control-label col-md-3">Department<span

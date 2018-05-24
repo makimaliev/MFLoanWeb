@@ -151,7 +151,7 @@
 
 			<div class="row">
 				<div class="col-md-12">
-					<input hidden="true" type="text" id="orgForm_id" name="orgForm_id" />
+					<input type="hidden" id="organization_id" name="organization_id"/>
 					<div id="content"></div>
 				</div>
 			</div>
@@ -167,70 +167,12 @@
 
 <!--begin::Page Resources -->
 <script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
+<script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
 <!--end::Page Resources -->
 
 <script type="text/javascript">
-    $(document).ready(function()
-    {
-        var table = $('#orgFormTable').DataTable({
-            stateSave: 	true,
-            info: false,
-            sDom: 'rtlip',
-            language: {
-                paginate: {
-                    previous: '<i class="la la-angle-left"></i>',
-                    next: '<i class="la la-angle-right"></i>'
-                },
-                lengthMenu: "Показать _MENU_",
-            }
-        });
-
-        $('#generalSearch').keyup(function(){
-            table.search($(this).val()).draw() ;
-        });
-
-        $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
-        $('.selectpicker').selectpicker('refresh');
-
-        $("#organizationFormModal").on("show.bs.modal", function(e) {
-
-            var link = $(e.relatedTarget);
-
-            var organizationID = $("#organization_id").val();
-
-            if(link.attr("href").indexOf('bankData/add')>0) {
-
-                $(this).find(".modal-title").html(link.attr("href").replace("/bankData/add","/organization/"+organizationID+"/bankData/add"));
-                $(this).find(".modal-content").load(link.attr("href").replace("/bankData/add","/organization/"+organizationID+"/bankData/add"));
-
-            } else if(link.attr("href").indexOf('information/add')>0) {
-
-                var url = link.attr("href");
-
-                $(this).find(".modal-title").html(link.attr("href").replace("/information/add","/2/"+organizationID+"/information/add"));
-                $(this).find(".modal-content").load(link.attr("href").replace("/information/add","/2/"+organizationID+"/information/add"));
-
-
-            } else if(link.attr("href").indexOf('department/add')>0) {
-
-                $(this).find(".modal-title").html(link.attr("href").replace("/department/add","/organization/"+organizationID+"/department/add"));
-                $(this).find(".modal-content").load(link.attr("href").replace("/department/add","/organization/"+organizationID+"/department/add"));
-            } else if(link.attr("href").indexOf('staff/add')>0) {
-
-                $(this).find(".modal-title").html(link.attr("href").replace("/staff/add","/organization/"+organizationID+"/staff/add"));
-                $(this).find(".modal-content").load(link.attr("href").replace("/staff/add","/organization/"+organizationID+"/staff/add"));
-
-            } else {
-
-                $(this).find(".modal-title").html(link.attr("href"));
-                $(this).find(".modal-content").load(link.attr("href"));
-
-            }
-        });
-
-    });
 
     function updateOrgFormId(sel)
     {
@@ -271,6 +213,80 @@
     {
         $("#identityDocGivenById").val(sel.value);
     }
+
+    $(document).ready(function()
+    {
+        var table = $('#orgFormTable').DataTable({
+            stateSave: 	true,
+            info: false,
+            sDom: 'rtlip',
+            language: {
+                paginate: {
+                    previous: '<i class="la la-angle-left"></i>',
+                    next: '<i class="la la-angle-right"></i>'
+                },
+                lengthMenu: "Показать _MENU_",
+            },
+            keys: {
+                focus: ':eq(0)'
+            }
+        });
+
+        table.on('key-focus', function(e, datatable, cell) {
+
+            var rowData = datatable.row(cell.index().row).data();
+
+            $("#organization_id").val(rowData[0]);
+
+            var sUrl ="/organization/" + rowData[0]+"/view";
+
+            $.get(sUrl, function(data) {
+
+                // $('#content').html(data);
+            });
+
+        });
+
+        $('#generalSearch').keyup(function(){
+            table.search($(this).val()).draw() ;
+        });
+
+        $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
+        $('.selectpicker').selectpicker('refresh');
+
+        $("#organizationFormModal").on("show.bs.modal", function(e) {
+
+            var link = $(e.relatedTarget);
+
+            var organizationID = $("#organization_id").val();
+
+            console.log(organizationID);
+
+            if(link.attr("href").indexOf('bankData/add')>0) {
+
+                $(this).find(".modal-content").load(link.attr("href"));
+
+            } else if(link.attr("href").indexOf('information/add')>0) {
+
+                $(this).find(".modal-content").load(link.attr("href"));
+
+            } else if(link.attr("href").indexOf('department/add')>0) {
+
+                $(this).find(".modal-content").load(link.attr("href"));
+
+            } else if(link.attr("href").indexOf('staff/add')>0) {
+
+                $(this).find(".modal-content").load(link.attr("href"));
+
+            } else {
+
+                $(this).find(".modal-content").load(link.attr("href"));
+
+            }
+
+        });
+
+    });
 </script>
 
 </body>

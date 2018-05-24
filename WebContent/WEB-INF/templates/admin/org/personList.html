@@ -1,297 +1,268 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+<html lang="en" >
+
+<!-- begin::Head -->
 <head>
+	<title th:text="#{label.persons}"></title>
 
-	<title>
-		MFLoan | Persons
-	</title>
-	
-	<div  th:replace="fragments/header :: header-css">
-	</div>
-
-	
-	<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />	
-	
-	<link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
-	<link th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}" rel="stylesheet" type="text/css" />
-
-
-
+	<div th:replace="fragments/header :: header-css"/>
 </head>
+<!-- end::Head -->
 
-<body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
-	
-	<!-- BEGIN HEADER -->
-	<div th:replace="layout :: header-top"></div>
-	<!-- END HEADER -->
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+	<!-- BEGIN: Header -->
+	<div th:replace="layout/header"/>
+	<!-- END: Header -->
 
-	<!-- BEGIN CONTAINER -->
-	<div class="page-container">
+	<!-- begin::Body -->
+	<div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+		<!-- BEGIN: Left Aside -->
+		<div th:replace="layout/sidebar"/>
+		<!-- END: Left Aside -->
+		<div class="m-grid__item m-grid__item--fluid m-wrapper">
 
-		<!-- BEGIN SIDEBAR -->
-		<div th:replace="layout :: page-container-sidebar"> </div>
-		<!-- END SIDEBAR -->
-		
-		<!-- BEGIN CONTENT -->
-		<div class="page-content-wrapper">
+			<div class="m-content">
 
-			<!-- BEGIN CONTENT BODY -->
-			<div class="page-content">
-
-				<div class="row">
-					<div class="col-md-12">
-						<!-- BEGIN BORDERED TABLE PORTLET-->
-						<div class="portlet portlet-fit ">
-							<div class="portlet-body">
-
-								<div>
-									<table class="table table-hover table-condensed table-striped table-bordered compact condensed" id="personTable">
-										<thead>
-											<tr>
-												<th>Id</th>
-												<th>Name</th>
-												<th>Description</th>
-												<th>Edit</th>
-												<th>Delete</th>
-											</tr>
-										</thead>
-
-										<tbody>
-											
-											<tr th:each="s : ${personList}">
-												<td th:text="${s.id}">Id</td>
-												<td th:text="${s.name}">Name</td>     
-												<td th:text="${s.description}">Description</td>
-												<td>
-													<a data-remote="false" data-toggle="modal"
-													data-target="#personFormModal" th:href="@{/person/__${s.id}__/edit}"
-													role="button" class="btn btn-xs blue-stripe"> Edit
-													</a>
-												</td>
-												<td>
-													<form th:action="@{/person/__${s.id}__/remove}" method="post">
-														<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-													</form>
-												</td>
-											</tr>
-										</tbody>
-
-									</table>
-								</div>
-
-
-								<div class="col-md-12">
-
-									<!-- Default bootstrap modal example -->
-									<div class="modal fade" id="personFormModal" tabindex="-1"
-										role="dialog" aria-labelledby="myModalLabel"
-										aria-hidden="true">
-										<div class="modal-dialog">
-											<div class="modal-content">
-												<div class="modal-header">
-													<button type="button" class="close" data-dismiss="modal"
-														aria-label="Close">
-														<span aria-hidden="true">&times;</span>
-													</button>
-													<h4 class="modal-title" id="myModalLabel">Modal title</h4>
-												</div>
-												<div class="modal-body">...</div>
-												<div class="modal-footer">
-													<button type="button" class="btn btn-default"
-														data-dismiss="modal">Close</button>
-													<button type="button" class="btn btn-primary">Save
-														changes</button>
-												</div>
-											</div>
-										</div>
-									</div>
-
-
-								</div>
-
-
-
-								<div class="row">
-									<div class="col-md-12">
-										<a data-remote="false" data-toggle="modal"
-											data-target="#personFormModal" th:href="@{/person/add}"
-											role="button" class="btn btn-large btn-primary"> Add
-											Person</a>
-										<a data-remote="false" data-toggle="modal"
-											data-target="#personFormModal" th:href="@{/information/add}"
-											role="button" class="btn btn-large btn-primary"> Add
-											Information</a>											
-																																
-									</div>
-								</div>
+				<div class="m-portlet m-portlet--mobile">
+					<div class="m-portlet__head">
+						<div class="m-portlet__head-caption">
+							<div class="m-portlet__head-title">
+								<h3 class="m-portlet__head-text" th:text="#{label.persons}"></h3>
 							</div>
 						</div>
-						<!-- END BORDERED TABLE PORTLET-->
+						<div class="m-portlet__head-tools">
+							<ul class="m-portlet__nav">
+								<li class="m-portlet__nav-item">
+									<div class="m-input-icon m-input-icon--left">
+										<input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
+										<span class="m-input-icon__icon m-input-icon__icon--left">
+											<span>
+												<i class="la la-search"></i>
+											</span>
+										</span>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="m-portlet__body">
+
+						<div class="m-section">
+							<div class="m-section__content">
+								<a data-remote="false"
+								   data-toggle="modal"
+								   data-target="#personFormModal"
+								   th:href="@{/person/add}"
+								   role="button"
+								   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+								   th:text="#{label.add.person}"></a>
+								<a data-remote="false"
+								   data-toggle="modal"
+								   data-target="#personFormModal"
+								   th:href="@{/information/add}"
+								   role="button"
+								   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+								   th:text="#{label.add.information}"></a>
+							</div>
+						</div>
+
+						<div class="m-section">
+							<table class="table" id="orgFormTable">
+								<thead class="thead-default">
+								<tr>
+									<th>ID</th>
+									<th th:text="#{label.person.name}"></th>
+									<th th:text="#{label.person.description}"></th>
+									<th>&nbsp;</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr th:each="s : ${personList}">
+									<td th:text="${s.id}"></td>
+									<td th:text="${s.name}"></td>
+									<td th:text="${s.description}"></td>
+									<td class="table-actions text-right">
+										<span>
+											<div class="dropdown">
+												<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+													<i class="la la-ellipsis-h"></i>
+												</a>
+												<div class="dropdown-menu dropdown-menu-right">
+													<a class="dropdown-item"
+													   data-remote="false" data-toggle="modal"
+													   data-target="#personFormModal"
+													   th:href="@{/person/__${s.id}__/edit}" role="button">
+														<span th:text="#{label.table.edit}"></span>
+													</a>
+													<a class="dropdown-item" href="#">
+														<span>
+															<form th:action="@{/person/__${s.id}__/remove}" method="post">
+																<input hidden="true" type="text" id="id" name="id" th:value="${s.id}" />
+																<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+															</form>
+														</span>
+													</a>
+												</div>
+											</div>
+										</span>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
-				
-				
+
+				<!--begin::Modal-->
+				<div class="modal fade" id="personFormModal" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+						</div>
+					</div>
+				</div>
+				<!--end::Modal-->
+
+			</div>
+
 			<div class="row">
 				<div class="col-md-12">
-
 					<input hidden="true" type="text" id="person_id" name="person_id" />
-					
 					<div id="content"></div>
-
 				</div>
-			</div>				
-				
-				
 			</div>
-			<!-- END CONTENT BODY -->
 		</div>
-		<!-- END CONTENT -->
-		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
 	</div>
-	<!-- END CONTAINER -->
-	<div th:replace="layout :: footer"></div>
-	<div th:replace="fragments/footer :: footer-js"></div>
-	
-	
-	<script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
-	<script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>	
-	
-	<!-- BEGIN PAGE LEVEL PLUGINS -->
+	<!-- end:: Body -->
+	<!-- begin::Footer -->
+	<div th:replace="layout/footer"/>
+	<!-- end::Footer -->
+</div>
 
-	<!-- END PAGE LEVEL PLUGINS -->
-	<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<div th:replace="fragments/footer :: footer-js"/>
 
-	
-		<script type="text/javascript">
-		$(document).ready(function() {
+<!--begin::Page Resources -->
+<script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
+<!--end::Page Resources -->
 
-			var table = $('#personTable').DataTable({
-		    	stateSave: true,
-		    	"language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
-	    		"info":     false,
-	    		keys: {
-	    	        focus: ':eq(0)'
-	    	    }
-		    } );
-			
-			table.on('key-focus', function(e, datatable, cell) {
-			
-				var rowData = datatable.row(cell.index().row).data();
+<script>
+    function updateOrgFormId(sel)
+    {
+        $("#orgFormId").val(sel.value);
+    }
 
-				$("#person_id").val(rowData[0]);
-				
-				var sUrl ="/MFCredit/person/" + rowData[0]+"/view";
-				
-				$.get(sUrl, function(data) {
+    function updateAddressId(sel)
+    {
+        $("#addressId").val(sel.value);
+    }
 
-					$('#content').html(data);
-				});
+    function updateRegionId(sel)
+    {
+        $("#regionId").val(sel.value);
+    }
 
-				});
+    function updateDistrictId(sel)
+    {
+        $("#districtId").val(sel.value);
+    }
 
-			});
-		</script>
-		
-			<script>
+    function updateAokmotuId(sel)
+    {
+        $("#aokmotuId").val(sel.value);
+    }
 
-		
-function updateOrgFormId(sel)
-{
-    $("#orgFormId").val(sel.value);
-}
+    function updateVillageId(sel)
+    {
+        $("#villageId").val(sel.value);
+    }
 
-function updateAddressId(sel)
-{
-    $("#addressId").val(sel.value);
-}
+    function updateIdentityDocTypeId(sel)
+    {
+        $("#identityDocTypeId").val(sel.value);
+    }
 
-function updateRegionId(sel)
-{
-    $("#regionId").val(sel.value);
-}
+    function updateIdentityDocGivenById(sel)
+    {
+        $("#identityDocGivenById").val(sel.value);
+    }
+</script>
 
-function updateDistrictId(sel)
-{
-    $("#districtId").val(sel.value);
-}
+<script type="text/javascript">
 
-function updateAokmotuId(sel)
-{
-    $("#aokmotuId").val(sel.value);
-}
+    $(document).ready(function()
+    {
+        var table = $('#orgFormTable').DataTable({
+            stateSave: 	true,
+            info: false,
+            sDom: 'rtlip',
+            language: {
+                paginate: {
+                    previous: '<i class="la la-angle-left"></i>',
+                    next: '<i class="la la-angle-right"></i>'
+                },
+                lengthMenu: "Показать _MENU_",
+            },
+            keys: {
+                focus: ':eq(0)'
+            }
+        });
 
-function updateVillageId(sel)
-{
-    $("#villageId").val(sel.value);
-}
+        table.on('key-focus', function(e, datatable, cell) {
 
-function updateIdentityDocTypeId(sel)
-{
-    $("#identityDocTypeId").val(sel.value);
-}
+            var rowData = datatable.row(cell.index().row).data();
 
-function updateIdentityDocGivenById(sel)
-{
-    $("#identityDocGivenById").val(sel.value);
-}
+            $("#person_id").val(rowData[0]);
 
+            var sUrl ="/MFCredit/person/" + rowData[0]+"/view";
 
-	</script>
-           
-	<script type="text/javascript">
-	$("#personFormModal").on("show.bs.modal", function(e) {
-		
-	    var link = $(e.relatedTarget);
-	    
+            $.get(sUrl, function(data) {
 
-	    var personID = $("#person_id").val();
+                $('#content').html(data);
+            });
 
-   
-	    if(link.attr("href").indexOf('bankData/add')>0)
-	    {
-	    	$(this).find(".modal-title").html(link.attr("href").replace("/bankData/add","/person/"+personID+"/bankData/add"));
-		    $(this).find(".modal-body").load(link.attr("href").replace("/bankData/add","/person/"+personID+"/bankData/add"));
-	    }
-	    else
-	    if(link.attr("href").indexOf('information/add')>0)
-	    {
-	    	var url = link.attr("href");
+        });
 
-	    	$(this).find(".modal-title").html(link.attr("href").replace("/information/add","/3/"+personID+"/information/add"));
-		    $(this).find(".modal-body").load(link.attr("href").replace("/information/add","/3/"+personID+"/information/add"));	    	
-	    	
-	    	
-	    } else
-	    if(link.attr("href").indexOf('department/add')>0)
-		    
-	    {
-	    	$(this).find(".modal-title").html(link.attr("href").replace("/department/add","/person/"+personID+"/department/add"));
-		    $(this).find(".modal-body").load(link.attr("href").replace("/department/add","/person/"+personID+"/department/add"));
-	    }
-		    
-	    else
-    	{
-	    	$(this).find(".modal-title").html(link.attr("href"));
-		    $(this).find(".modal-body").load(link.attr("href"));
-    	}
-	});
-	
-	
+        $('#generalSearch').keyup(function(){
+            table.search($(this).val()).draw() ;
+        });
 
-	
-</script>           
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-	<!-- END PAGE LEVEL SCRIPTS -->
+        $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
+        $('.selectpicker').selectpicker('refresh');
+
+    });
+
+    $("#personFormModal").on("show.bs.modal", function(e) {
+
+        var link = $(e.relatedTarget);
+
+        var personID = $("#person_id").val();
+
+        $(this).find(".modal-content").load(link.attr("href"));
+
+        // if(link.attr("href").indexOf('bankData/add')>0) {
+        //
+        //     $(this).find(".modal-content").load(link.attr("href").replace("/bankData/add","/person/"+personID+"/bankData/add"));
+        //
+        // } else if(link.attr("href").indexOf('information/add')>0) {
+        //
+        //     $(this).find(".modal-content").load(link.attr("href").replace("/information/add","/3/"+personID+"/information/add"));
+        //
+        // } else if(link.attr("href").indexOf('department/add')>0) {
+        //
+        //     $(this).find(".modal-content").load(link.attr("href").replace("/department/add","/person/"+personID+"/department/add"));
+        //
+        // } else {
+        //
+        //     $(this).find(".modal-content").load(link.attr("href"));
+        //
+        // }
+    });
+</script>
+
 </body>
+<!-- end::Body -->
 </html>

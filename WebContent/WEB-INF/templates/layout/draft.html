@@ -2,25 +2,24 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
     <head>
+        <title></title>
 
-        <title>
-            MFLoan | Organizations
-        </title>
+        <div th:replace="fragments/header :: header-css"></div>
 
-        <div  th:replace="fragments/header :: header-css">
-        </div>
-
-
-        <link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
-
-        <link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
-        <link th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}" rel="stylesheet" type="text/css" />
-
-
+        <link
+                th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}"
+                rel="stylesheet" type="text/css" />
+        <link
+                th:href="@{/assets/global/plugins/datatables/datatables.min.css}"
+                rel="stylesheet" type="text/css" />
+        <link
+                th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}"
+                rel="stylesheet" type="text/css" />
 
     </head>
 
-    <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
+    <body
+            class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
 
         <!-- BEGIN HEADER -->
         <div th:replace="layout :: header-top"></div>
@@ -30,7 +29,7 @@
         <div class="page-container">
 
             <!-- BEGIN SIDEBAR -->
-            <div th:replace="layout :: page-container-sidebar"> </div>
+            <div th:replace="layout :: page-container-sidebar"></div>
             <!-- END SIDEBAR -->
 
             <!-- BEGIN CONTENT -->
@@ -39,57 +38,61 @@
                 <!-- BEGIN CONTENT BODY -->
                 <div class="page-content">
 
+
+
+
+
                     <div class="row">
                         <div class="col-md-12">
                             <!-- BEGIN BORDERED TABLE PORTLET-->
                             <div class="portlet portlet-fit ">
                                 <div class="portlet-body">
-
-                                    <div>
-                                        <table class="table table-hover table-condensed table-striped table-bordered compact condensed" id="organizationTable">
-                                            <thead>
-                                                <tr>
-                                                    <th>Id</th>
-                                                    <th>Name</th>
-                                                    <th>Description</th>
-
-                                                    <th>View</th>
-                                                    <th>Edit</th>
-                                                    <th>Delete</th>
-                                                </tr>
-                                            </thead>
-
-                                            <tbody>
-
-                                                <tr th:each="s : ${organizationList}">
-                                                    <td th:text="${s.id}">Id</td>
-                                                    <td th:text="${s.name}">Name</td>
-                                                    <td th:text="${s.description}">Description</td>
-
-                                                    <td><a th:href="@{/organization/__${s.id}__/details}"
-                                                           role="button" class="btn btn-xs green-stripe"> View </a></td>
-                                                    <td>
-                                                        <a data-remote="false" data-toggle="modal"
-                                                           data-target="#organizationFormModal" th:href="@{/organization/__${s.id}__/edit}"
-                                                           role="button" class="btn btn-xs blue-stripe"> Edit
-                                                        </a>
-                                                    </td>
-                                                    <td>
-                                                        <form th:action="@{/organization/__${s.id}__/remove}" method="post">
-                                                            <button type="submit" class="btn btn-xs red-stripe">Delete</button>
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-
-                                        </table>
-                                    </div>
-
-
+                                    <table
+                                            class="table table-hover table-condensed table-striped table-bordered compact condensed"
+                                            id="printoutTemplateTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Name</th>
+                                                <th>View</th>
+                                                <th>Edit</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr >
+                                                <td th:text="${printoutTemplate.id}">Id</td>
+                                                <td th:text="${printoutTemplate.name}">Name</td>
+                                                <td><a th:href="@{/printoutTemplate/__${printoutTemplate.id}__/details}"
+                                                       role="button" class="btn btn-xs green-stripe"> View </a></td>
+                                                <td><a data-remote="false" data-toggle="modal"
+                                                       data-target="#printoutTemplateFormModal"
+                                                       th:href="@{/printoutTemplate/__${printoutTemplate.id}__/edit}" role="button"
+                                                       class="btn btn-xs blue-stripe"> Edit </a></td>
+                                                <td>
+                                                    <form th:action="@{/printoutTemplate/__${printoutTemplate.id}__/remove}"
+                                                          method="post">
+                                                        <button type="submit" class="btn btn-xs red-stripe">
+                                                            Delete</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                     <div class="col-md-12">
 
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <a data-remote="false" data-toggle="modal"
+                                                   data-target="#printoutTemplateFormModal" th:href="@{/printoutTemplate/__${printoutTemplate.id}__/generationParameter/add}"
+                                                   role="button" class="btn btn-large btn-primary"> Add
+                                                    Generation Parameter</a>
+                                            </div>
+                                        </div>
+
                                         <!-- Default bootstrap modal example -->
-                                        <div class="modal fade" id="organizationFormModal" tabindex="-1"
+                                        <div class="modal fade" id="printoutTemplateFormModal" tabindex="-1"
                                              role="dialog" aria-labelledby="myModalLabel"
                                              aria-hidden="true">
                                             <div class="modal-dialog">
@@ -111,50 +114,32 @@
                                                 </div>
                                             </div>
                                         </div>
-
-
                                     </div>
 
-
-
                                     <div class="row">
-                                        <div class="col-md-12">
-                                            <a data-remote="false" data-toggle="modal"
-                                               data-target="#organizationFormModal" th:href="@{/organization/add}"
-                                               role="button" class="btn btn-large btn-primary"> Add
-                                                Organization</a>
-                                            <a data-remote="false" data-toggle="modal"
-                                               data-target="#organizationFormModal" th:href="@{/bankData/add}"
-                                               role="button" class="btn btn-large btn-primary"> Add
-                                                Bank Data</a>
-                                            <a data-remote="false" data-toggle="modal"
-                                               data-target="#organizationFormModal" th:href="@{/department/add}"
-                                               role="button" class="btn btn-large btn-primary"> Add
-                                                Department</a>
-                                            <a data-remote="false" data-toggle="modal"
-                                               data-target="#organizationFormModal" th:href="@{/information/add}"
-                                               role="button" class="btn btn-large btn-primary"> Add
-                                                Information</a>
-                                            <a data-remote="false" data-toggle="modal"
-                                               data-target="#organizationFormModal" th:href="@{/staff/add}"
-                                               role="button" class="btn btn-large btn-primary"> Add
-                                                Staff</a>
 
-
-
-                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <!-- END BORDERED TABLE PORTLET-->
                         </div>
+
+
+
                     </div>
+
+
+
+
 
 
                     <div class="row">
                         <div class="col-md-12">
 
-                            <input hidden="true" type="text" id="organization_id" name="organization_id" />
+
+
+
+                            <input hidden="true" type="text" id="printoutTemplate_id" name="printoutTemplate_id" th:value="${printoutTemplate.id}" />
 
                             <div id="content"></div>
 
@@ -172,9 +157,11 @@
         <div th:replace="layout :: footer"></div>
         <div th:replace="fragments/footer :: footer-js"></div>
 
-
-        <script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
-        <script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>
+        <script th:src="@{/assets/global/plugins/datatables/datatables.js}"
+                type="text/javascript"></script>
+        <script
+                th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}"
+                type="text/javascript"></script>
 
         <!-- BEGIN PAGE LEVEL PLUGINS -->
 
@@ -185,7 +172,7 @@
         <script type="text/javascript">
             $(document).ready(function() {
 
-                var table = $('#organizationTable').DataTable({
+                var table = $('#printoutTemplateTable').DataTable({
                     stateSave: true,
                     "language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
                     "info":     false,
@@ -196,15 +183,16 @@
 
                 table.on('key-focus', function(e, datatable, cell) {
 
+
                     var rowData = datatable.row(cell.index().row).data();
 
-                    $("#organization_id").val(rowData[0]);
+                    $("#printoutTemplate_id").val(rowData[0]);
 
-                    var sUrl ="/organization/" + rowData[0]+"/view";
+                    var sUrl ="/printoutTemplate/" + rowData[0]+"/view";
 
                     $.get(sUrl, function(data) {
 
-                        // $('#content').html(data);
+                        $('#content').html(data);
                     });
 
                 });
@@ -212,87 +200,18 @@
             });
         </script>
 
-        <script>
-
-
-            function updateOrgFormId(sel)
-            {
-                $("#orgFormId").val(sel.value);
-            }
-
-            function updateAddressId(sel)
-            {
-                $("#addressId").val(sel.value);
-            }
-
-            function updateRegionId(sel)
-            {
-                $("#regionId").val(sel.value);
-            }
-
-            function updateDistrictId(sel)
-            {
-                $("#districtId").val(sel.value);
-            }
-
-            function updateAokmotuId(sel)
-            {
-                $("#aokmotuId").val(sel.value);
-            }
-
-            function updateVillageId(sel)
-            {
-                $("#villageId").val(sel.value);
-            }
-
-            function updateIdentityDocTypeId(sel)
-            {
-                $("#identityDocTypeId").val(sel.value);
-            }
-
-            function updateIdentityDocGivenById(sel)
-            {
-                $("#identityDocGivenById").val(sel.value);
-            }
-
-
-        </script>
-
         <script type="text/javascript">
-            $("#organizationFormModal").on("show.bs.modal", function(e) {
+            $("#printoutTemplateFormModal").on("show.bs.modal", function(e) {
 
                 var link = $(e.relatedTarget);
 
 
-                var organizationID = $("#organization_id").val();
+                var printoutTemplateID = $("#printoutTemplate_id").val();
 
-
-                if(link.attr("href").indexOf('bankData/add')>0)
+                if(link.attr("href").indexOf('generationParameter/add')>0)
                 {
-                    $(this).find(".modal-title").html(link.attr("href").replace("/bankData/add","/organization/"+organizationID+"/bankData/add"));
-                    $(this).find(".modal-body").load(link.attr("href").replace("/bankData/add","/organization/"+organizationID+"/bankData/add"));
-                }
-                else
-                if(link.attr("href").indexOf('information/add')>0)
-                {
-                    var url = link.attr("href");
-
-                    $(this).find(".modal-title").html(link.attr("href").replace("/information/add","/2/"+organizationID+"/information/add"));
-                    $(this).find(".modal-body").load(link.attr("href").replace("/information/add","/2/"+organizationID+"/information/add"));
-
-
-                } else
-                if(link.attr("href").indexOf('department/add')>0)
-
-                {
-                    $(this).find(".modal-title").html(link.attr("href").replace("/department/add","/organization/"+organizationID+"/department/add"));
-                    $(this).find(".modal-body").load(link.attr("href").replace("/department/add","/organization/"+organizationID+"/department/add"));
-                }
-                if(link.attr("href").indexOf('staff/add')>0)
-
-                {
-                    $(this).find(".modal-title").html(link.attr("href").replace("/staff/add","/organization/"+organizationID+"/staff/add"));
-                    $(this).find(".modal-body").load(link.attr("href").replace("/staff/add","/organization/"+organizationID+"/staff/add"));
+                    $(this).find(".modal-title").html(link.attr("href"));
+                    $(this).find(".modal-body").load(link.attr("href"));
                 }
                 else
                 {
@@ -317,395 +236,5 @@
 
 
         <!-- END PAGE LEVEL SCRIPTS -->
-    </body>
-</html>
-
-
-
-
-
-
-
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
-    <head></head>
-    <body>
-
-        <form 	th:action="@{/organization/save}"
-                 id="form_sample_2"
-                 class="form-horizontal"
-                 method="post"
-                 th:object="${organization}">
-
-            <div class="form-body">
-                <div class="alert alert-danger display-hide">
-                    <button class="close"
-                            data-close="alert">
-                    </button>
-                    You have some form errors. Please check below.
-                </div>
-                <!--
-                         <div class="alert alert-success display-hide">
-                             <button class="close" data-close="alert"></button> Your form validation is successful!
-                         </div>
-                         -->
-                <div class="form-group  margin-top-20">
-                    <label class="control-label col-md-3">Name111 <span
-                            class="required"> * </span>
-                    </label>
-                    <div class="col-md-4">
-                        <input hidden="true" type="text" id="id" name="id"
-                               th:field="*{id}" />
-                        <input hidden="true" type="text" id="orgFormId" name="orgForm.id"
-                               th:field="*{orgForm.id}" />
-                        <input hidden="true" type="text" id="addressId" name="address.id"
-                               th:field="*{address.id}" />
-                        <input hidden="true" type="text" id="regionId" name="address.region.id"
-                               th:field="*{address.region.id}" />
-                        <input hidden="true" type="text" id="districtId" name="address.district.id"
-                               th:field="*{address.district.id}" />
-                        <input hidden="true" type="text" id="aokmotuId" name="address.aokmotu.id"
-                               th:field="*{address.aokmotu.id}" />
-                        <input hidden="true" type="text" id="villageId" name="address.village.id"
-                               th:field="*{address.village.id}" />
-                        <input hidden="true" type="text" id="identityDocTypeId" name="identityDoc.identityDocType.id"
-                               th:field="*{identityDoc.identityDocType.id}" />
-                        <input hidden="true" type="text" id="identityDocGivenById" name="identityDoc.identityDocGivenBy.id"
-                               th:field="*{identityDoc.identityDocGivenBy.id}" />
-
-                        <div class="input-icon right">
-                            <i class="fa"></i>
-                            <input type="text" class="form-control"
-                                   name="name" th:field="*{name}" />
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group  margin-top-20">
-                    <label class="control-label col-md-3">Description <span
-                            class="required"> * </span>
-                    </label>
-                    <div class="col-md-4">
-
-                        <div class="input-icon right">
-                            <i class="fa"></i> <input type="text" class="form-control"
-                                                      name="description" th:field="*{description}" />
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group  margin-top-20">
-                    <label class="control-label col-md-3">OrgForm<span
-                            class="required"> * </span>
-                    </label>
-                    <div class="col-md-4">
-                        <select th:value="${organization.orgForm}" id="orgFormSelect" onchange="updateOrgFormId(this);">
-                            <option th:each="orgFormInList : ${orgFormList}"
-                                    th:value="${orgFormInList.id}"
-                                    th:selected="(${orgFormInList.id} == *{orgForm.id})"
-                                    th:text="${orgFormInList.name}">OrgForm</option>
-                        </select>
-                    </div>
-                </div>
-
-
-
-
-
-
-
-                <div class="tabbable-custom ">
-                    <ul class="nav nav-tabs ">
-                        <li class="active"><a href="#tab_15_11" data-toggle="tab">
-                            Address Data </a></li>
-                        <li><a href="#tab_15_21" data-toggle="tab"> Identity Doc
-                            Data </a></li>
-                        <li><a href="#tab_15_31" data-toggle="tab"> Contacts </a></li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="tab_15_11">
-                            <div class="form-group  margin-top-20">
-                                <label class="control-label col-md-3">Address Line <span
-                                        class="required"> * </span>
-                                </label>
-                                <div class="col-md-4">
-
-                                    <div class="input-icon right">
-
-                                        <i class="fa"></i> <input type="text" class="form-control"
-                                                                  name="address.line" th:field="*{address.line}" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group  margin-top-20">
-                                <label class="control-label col-md-3">Region<span
-                                        class="required"> * </span>
-                                </label>
-                                <div class="col-md-4">
-
-                                    <select th:value="${organization.address.region}" onchange="updateRegionId(this);">
-                                        <option th:each="regionInList : ${regionList}"
-                                                th:value="${regionInList.id}"
-                                                th:selected="(${regionInList.id} == *{address.region.id})"
-                                                th:text="${regionInList.name}"
-
-                                        >Region</option>
-                                    </select>
-
-                                </div>
-                            </div>
-                            <div class="form-group  margin-top-20">
-                                <label class="control-label col-md-3">District<span
-                                        class="required"> * </span>
-                                </label>
-                                <div class="col-md-4">
-
-                                    <select th:value="${organization.address.district}" onchange="updateDistrictId(this);">
-                                        <option th:each="districtInList : ${districtList}"
-
-                                                th:value="${districtInList.id}"
-                                                th:selected="(${districtInList.id} == *{address.district.id})"
-                                                th:text="${districtInList.name}">District</option>
-                                    </select>
-
-                                </div>
-                            </div>
-                            <div class="form-group  margin-top-20">
-                                <label class="control-label col-md-3">Aokmotu<span
-                                        class="required"> * </span>
-                                </label>
-                                <div class="col-md-4">
-
-                                    <select th:value="${organization.address.aokmotu}" onchange="updateAokmotuId(this);">
-                                        <option th:each="aokmotuInList : ${aokmotuList}"
-                                                th:value="${aokmotuInList.id}"
-                                                th:selected="(${aokmotuInList.id} == *{address.aokmotu.id})"
-                                                th:text="${aokmotuInList.name}">Aokmotu</option>
-                                    </select>
-
-                                </div>
-                            </div>
-                            <div class="form-group  margin-top-20">
-                                <label class="control-label col-md-3">Village<span
-                                        class="required"> * </span>
-                                </label>
-                                <div class="col-md-4">
-
-                                    <select th:value="${organization.address.village}" onchange="updateVillageId(this);">
-                                        <option th:each="villageInList : ${villageList}"
-                                                th:value="${villageInList.id}"
-                                                th:selected="(${villageInList.id} == *{address.village.id})"
-                                                th:text="${villageInList.name}">Village</option>
-                                    </select>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="tab_15_21">
-                            <div class="form-group  margin-top-20">
-                                <label class="control-label col-md-3">Name <span
-                                        class="required"> * </span>
-                                </label>
-                                <div class="col-md-4">
-                                    <div class="input-icon right">
-                                        <i class="fa"></i> <input type="text" class="form-control"
-                                                                  name="identityDoc.name"
-                                                                  th:field="${organization.identityDoc.name}" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group  margin-top-20">
-                                <label class="control-label col-md-3">enabled <span
-                                        class="required"> * </span>
-                                </label>
-                                <div class="col-md-4">
-
-                                    <div class="input-icon right">
-                                        <i class="fa"></i> <input type="text" class="form-control"
-                                                                  name="enabled" th:field="${organization.identityDoc.enabled}" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group  margin-top-20">
-                                <label class="control-label col-md-3">number <span
-                                        class="required"> * </span>
-                                </label>
-                                <div class="col-md-4">
-
-                                    <div class="input-icon right">
-                                        <i class="fa"></i> <input type="text" class="form-control"
-                                                                  name="number" th:field="${organization.identityDoc.number}" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group  margin-top-20">
-                                <label class="control-label col-md-3">pin <span
-                                        class="required"> * </span>
-                                </label>
-                                <div class="col-md-4">
-
-                                    <div class="input-icon right">
-                                        <i class="fa"></i> <input type="text" class="form-control"
-                                                                  name="pin" th:field="${organization.identityDoc.pin}" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group  margin-top-20">
-                                <label class="control-label col-md-3">Type<span
-                                        class="required"> * </span>
-                                </label>
-                                <div class="col-md-4">
-
-                                    <select th:value="${organization.identityDoc.identityDocType}"  onchange="updateIdentityDocTypeId(this);">
-                                        <option
-                                                th:each="identityDocTypeInList : ${identityDocTypeList}"
-                                                th:value="${identityDocTypeInList.id}"
-                                                th:selected="(${identityDocTypeInList.id} == *{identityDoc.identityDocType.id})"
-                                                th:text="${identityDocTypeInList.name}">identityDocType</option>
-                                    </select>
-
-                                </div>
-                            </div>
-
-
-                            <div class="form-group  margin-top-20">
-                                <label class="control-label col-md-3">Given by<span
-                                        class="required"> * </span>
-                                </label>
-                                <div class="col-md-4">
-
-                                    <select th:value="${organization.identityDoc.identityDocGivenBy}" onchange="updateIdentityDocGivenById(this);">
-                                        <option
-                                                th:each="identityDocGivenByInList : ${identityDocGivenByList}"
-                                                th:value="${identityDocGivenByInList.id}"
-                                                th:selected="(${identityDocGivenByInList.id} == *{identityDoc.identityDocGivenBy.id})"
-                                                th:text="${identityDocGivenByInList.name}">identityDocGivenBy</option>
-                                    </select>
-
-                                </div>
-                            </div>
-                            <div class="form-group  margin-top-20">
-                                <label class="control-label col-md-3">date</label>
-                                <div class="col-md-4">
-                                    <div class="input-group date date-picker"
-                                         data-date-format="dd.mm.yyyy" id="identityDocDate">
-                                        <input type="text" class="form-control" name="date"
-                                               th:value="${organization.identityDoc.date}" /> <span
-                                            class="input-group-btn">
-                                        <button class="btn default" type="button">
-                                            <i class="fa fa-calendar"></i>
-                                        </button>
-                                    </span>
-                                    </div>
-                                    <!-- /input-group -->
-                                    <span class="help-block"> select a date </span>
-                                </div>
-                                <script>
-                                    $('#identityDocDate').datepicker();
-                                </script>
-                            </div>
-
-                            <div class="form-group  margin-top-20">
-                                <label class="control-label col-md-3">Firstname <span
-                                        class="required"> * </span>
-                                </label>
-                                <div class="col-md-4">
-
-                                    <div class="input-icon right">
-                                        <i class="fa"></i> <input type="text" class="form-control"
-                                                                  name="identityDocDetails.firstname"
-                                                                  th:field="${organization.identityDoc.identityDocDetails.firstname}" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group  margin-top-20">
-                                <label class="control-label col-md-3">Lastname <span
-                                        class="required"> * </span>
-                                </label>
-                                <div class="col-md-4">
-                                    <div class="input-icon right">
-                                        <i class="fa"></i> <input type="text" class="form-control"
-                                                                  name="identityDocDetails.lastname"
-                                                                  th:field="${organization.identityDoc.identityDocDetails.lastname}" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group  margin-top-20">
-                                <label class="control-label col-md-3">Midname <span
-                                        class="required"> * </span>
-                                </label>
-                                <div class="col-md-4">
-
-                                    <div class="input-icon right">
-                                        <i class="fa"></i> <input type="text" class="form-control"
-                                                                  name="identityDocDetails.midname"
-                                                                  th:field="${organization.identityDoc.identityDocDetails.midname}" />
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="form-group  margin-top-20">
-                                <label class="control-label col-md-3">Fullname <span
-                                        class="required"> * </span>
-                                </label>
-                                <div class="col-md-4">
-
-                                    <div class="input-icon right">
-                                        <i class="fa"></i> <input type="text" class="form-control"
-                                                                  name="identityDocDetails.fullname"
-                                                                  th:field="${organization.identityDoc.identityDocDetails.fullname}" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="tab-pane" id="tab_15_31">
-                            <div class="form-group  margin-top-20">
-                                <label class="control-label col-md-3">Name <span
-                                        class="required"> * </span>
-                                </label>
-                                <div class="col-md-4">
-                                    <input hidden="true" type="text" id="contactID"
-                                           name="contact.id" th:field="${organization.contact.id}" />
-                                    <div class="input-icon right">
-                                        <i class="fa"></i> <input type="text" class="form-control"
-                                                                  name="contact.name" th:field="${organization.contact.name}" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            </div>
-            <div class="form-actions">
-                <div class="row">
-                    <div class="col-md-offset-3 col-md-9">
-                        <button type="submit" class="btn green">Submit</button>
-                        <button type="button" class="btn default"
-                                onclick="window.location.href='/organization/list'">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-
-
     </body>
 </html>

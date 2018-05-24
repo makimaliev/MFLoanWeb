@@ -38,10 +38,10 @@
 			<!-- BEGIN CONTENT BODY -->
 			<div class="page-content">
 
-			
-			
-			
-			
+
+
+
+
 			<div class="row">
 					<div class="col-md-12">
 						<!-- BEGIN BORDERED TABLE PORTLET-->
@@ -116,17 +116,17 @@
 						</div>
 						<!-- END BORDERED TABLE PORTLET-->
 					</div>
-				
 
-				
+
+
 				</div>
-			
-			
-			
-			
-			
-			
-			
+
+
+
+
+
+
+
 				<div class="row">
 					<div class="col-md-12">
 
@@ -178,9 +178,9 @@
 				var rowData = datatable.row(cell.index().row).data();
 
 				$("#messageResource_id").val(rowData[0]);
-				
+
 				var sUrl ="/MFCredit/messageResource/" + rowData[0]+"/view";
-				
+
 				$.get(sUrl, function(data) {
 
 					$('#content').html(data);
@@ -193,10 +193,10 @@
 
 	<script type="text/javascript">
 	$("#messageResourceFormModal").on("show.bs.modal", function(e) {
-		
+
 	    var link = $(e.relatedTarget);
-	    
-	    
+
+
 	    var messageResourceID = $("#messageResource_id").val();
 
 	    if(link.attr("href").indexOf('district/add')>0)
@@ -210,10 +210,10 @@
 		    $(this).find(".modal-body").load(link.attr("href"));
     	}
 	});
-	
-	
 
-	
+
+
+
 </script>
 
 

@@ -13,7 +13,7 @@
 <link th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}"	rel="stylesheet" type="text/css" />
 
 <style type="text/css">
-	table.KeyTable tr.focus 
+	table.KeyTable tr.focus
 	{
 		outline: 3px solid #3366FF;
 		outline-offset: -3px;
@@ -123,9 +123,9 @@
 						</div>
 						<!-- END BORDERED TABLE PORTLET-->
 					</div>
-				
 
-				
+
+
 				</div>
 
 				<div class="row">
@@ -180,18 +180,18 @@
 				var rowData = datatable.row(cell.index().row).data();
 
 				$("#currencyRate_id").val(rowData[0]);
-				
+
 				var sUrl ="/currencyRate/" + rowData[0]+"/view";
-				
+
 				$.get(sUrl, function(data) {
 
 					$('#content').html(data);
 				});
-				
-				
-				
-				
-				
+
+
+
+
+
 				var row = datatable.row( cell.index().row );
 
 
@@ -199,10 +199,10 @@
 				$( row.node() ).addClass( "info" );
 
 				var rowData = row.data();
-				
+
 
 				var colData = datatable.cell( { focused: true } ).data();
-				
+
 
 				});
 
@@ -211,10 +211,10 @@
 
 	<script type="text/javascript">
 	$("#currencyRateFormModal").on("show.bs.modal", function(e) {
-		
+
 	    var link = $(e.relatedTarget);
-	    
-	    
+
+
 	    var currencyRateID = $("#currencyRate_id").val();
 
 	    if(link.attr("href").indexOf('district/add')>0)
@@ -228,10 +228,10 @@
 		    $(this).find(".modal-body").load(link.attr("href"));
     	}
 	});
-	
-	
 
-	
+
+
+
 </script>
 
 

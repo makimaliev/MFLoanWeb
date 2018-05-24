@@ -1,64 +1,47 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
-<head>
+<div class="m-content">
+	<div class="row">
+		<div class="col-6">
+			<div class="m-portlet">
+				<div class="m-portlet__head">
+					<div class="m-portlet__head-caption">
+						<div class="m-portlet__head-title">
+							<h3 class="m-portlet__head-text">
+								Message information
+							</h3>
+						</div>
+					</div>
+				</div>
+				<div class="m-portlet__body">
+					<div class="m-widget13">
+						<div class="m-widget13__item">
+					<span class="m-widget13__desc m--align-right m-widget13__text m-widget13__text-bolder">
+						MessageKey
+					</span>
+							<span class="m-widget13__text" th:text="${messageResource.messageKey}">${Village.name}</span>
+						</div>
+						<div class="m-widget13__item">
+					<span class="m-widget13__desc m--align-right m-widget13__text m-widget13__text-bolder">
+						ENG
+					</span>
+							<span class="m-widget13__text" th:text="${messageResource.eng}">${Village.name}</span>
+						</div>
+						<div class="m-widget13__item">
+					<span class="m-widget13__desc m--align-right m-widget13__text m-widget13__text-bolder">
+						RUS
+					</span>
+							<span class="m-widget13__text" th:text="${messageResource.rus}">${Village.name}</span>
+						</div>
+						<div class="m-widget13__item">
+					<span class="m-widget13__desc m--align-right m-widget13__text m-widget13__text-bolder">
+						KGZ
+					</span>
+							<span class="m-widget13__text" th:text="${messageResource.kgz}">${Village.name}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-</head>
+</div>
 
-
-
-<body>
-
-
-
-
-
-
-								<div class="row">
-									<div class="col-md-4">
-										<div class="panel panel-primary">
-											<div class="panel-heading">
-												<h3 class="panel-title">Message information</h3>
-											</div>
-											<div class="panel-body">
-												<dl class="dl-horizontal">
-
-												</dl>
-
-
-												<dl class="dl-horizontal">
-													<dt>MessageKey</dt>
-													<dd th:text="${messageResource.messageKey}">${Village.name}</dd>
-												</dl>
-												<dl class="dl-horizontal">
-													<dt>ENG</dt>
-													<dd th:text="${messageResource.eng}">${Village.name}</dd>
-												</dl>
-												<dl class="dl-horizontal">
-													<dt>RUS</dt>
-													<dd th:text="${messageResource.rus}">${Village.name}</dd>
-												</dl>
-												<dl class="dl-horizontal">
-													<dt>KGZ</dt>
-													<dd th:text="${messageResource.kgz}">${Village.name}</dd>
-												</dl>																								
-											</div>
-										</div>
-
-									</div>
-
-
-								</div>
-
-
-
-
-
-
-
-
-
-
-
-</body>
-</html>

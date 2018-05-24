@@ -1,177 +1,84 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+<html lang="en" >
+
+<!-- begin::Head -->
 <head>
+	<title th:text="#{label.currencyRate}"></title>
 
-	<title>
-		MFLoan | Informations
-	</title>
-	
-	<div  th:replace="fragments/header :: header-css">
-	</div>
-
-	
-	<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />	
-	
-	<link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
-	<link th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}" rel="stylesheet" type="text/css" />
-
-
-
+	<div th:replace="fragments/header :: header-css"/>
 </head>
+<!-- end::Head -->
 
-<body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
-	
-	<!-- BEGIN HEADER -->
-	<div th:replace="layout :: header-top"></div>
-	<!-- END HEADER -->
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+	<!-- BEGIN: Header -->
+	<div th:replace="layout/header"/>
+	<!-- END: Header -->
 
-	<!-- BEGIN CONTAINER -->
-	<div class="page-container">
+	<!-- begin::Body -->
+	<div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+		<!-- BEGIN: Left Aside -->
+		<div th:replace="layout/sidebar"/>
+		<!-- END: Left Aside -->
+		<div class="m-grid__item m-grid__item--fluid m-wrapper">
 
-		<!-- BEGIN SIDEBAR -->
-		<div th:replace="layout :: page-container-sidebar"> </div>
-		<!-- END SIDEBAR -->
-		
-		<!-- BEGIN CONTENT -->
-		<div class="page-content-wrapper">
+			<div class="m-content">
 
-			<!-- BEGIN CONTENT BODY -->
-			<div class="page-content">
-
-				<div class="row">
-					<div class="col-md-12">
-						<!-- BEGIN BORDERED TABLE PORTLET-->
-						<div class="portlet portlet-fit ">
-							<div class="portlet-body">
-
-	<div class="row">
-		<div class="col-md-12">
-
-<table class="table table-hover table-condensed table-striped table-bordered compact condensed" id="fixTermTable">
-										<thead>
-											<tr>
-												<th>Name</th>
-											</tr>
-										</thead>
-
-										<tbody>
-											
-											<tr th:each="s : ${currencyRateList}">
-												<td th:text="${s}">name</td>
-											</tr>
-										</tbody>
-
-									</table>
-
-		</div>
-
-
-	</div>
-
-								
-						<div class="row">
-							<form th:action="@{/currencyRate/getData/}" method="get">
-														<button type="submit" class="btn btn-large btn-primary">GetData</button>
-													</form>
-						</div>
-								</div>
+				<div class="m-portlet m-portlet--mobile">
+					<div class="m-portlet__head">
+						<div class="m-portlet__head-caption">
+							<div class="m-portlet__head-title">
+								<h3 class="m-portlet__head-text" th:text="#{label.currencyRate}"></h3>
 							</div>
-						
-						<!-- END BORDERED TABLE PORTLET-->
+						</div>
+						<div class="m-portlet__head-tools">
+							<ul class="m-portlet__nav">
+								<li class="m-portlet__nav-item">
+									<form th:action="@{/currencyRate/getData/}" method="get">
+										<button type="submit" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">GetData</button>
+									</form>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="m-portlet__body">
+
+						<div class="m-section">
+							<table class="table" id="fixTermTable">
+								<thead class="thead-default">
+								<tr>
+									<th>Name</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr th:each="s : ${currencyRateList}">
+									<td th:text="${s}">name</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
-				
-				
+
 			</div>
-			<!-- END CONTENT BODY -->
+
 		</div>
-		<!-- END CONTENT -->
-		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
 	</div>
-	<!-- END CONTAINER -->
-	<div th:replace="layout :: footer"></div>
-	<div th:replace="fragments/footer :: footer-js"></div>
-	
-	
-	<script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
-	<script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>	
-	
-	<!-- BEGIN PAGE LEVEL PLUGINS -->
+	<!-- end:: Body -->
+	<!-- begin::Footer -->
+	<div th:replace="layout/footer"/>
+	<!-- end::Footer -->
+</div>
 
-	<!-- END PAGE LEVEL PLUGINS -->
-	<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<div th:replace="fragments/footer :: footer-js"/>
 
-	
-		<script type="text/javascript">
-		$(document).ready(function() {
+<!--begin::Page Resources -->
+<script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
+<script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>
+<!--end::Page Resources -->
 
-			var table = $('#informationTable').DataTable({
-		    	stateSave: true,
-		    	"language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
-	    		"info":     false,
-	    		keys: {
-	    	        focus: ':eq(0)'
-	    	    }
-		    } );
-			
-			table.on('key-focus', function(e, datatable, cell) {
-			
-				var rowData = datatable.row(cell.index().row).data();
-
-
-				
-				$("#information_id").val(rowData[0]);
-				
-				var sUrl ="/MFCredit/information/" + rowData[0]+"/view";
-				
-				$.get(sUrl, function(data) {
-
-					$('#content').html(data);
-				});
-
-				});
-
-			});
-		</script>
-           
-	<script type="text/javascript">
-	$("#informationFormModal").on("show.bs.modal", function(e) {
-		
-	    var link = $(e.relatedTarget);
-	    
-
-	    var informationID = $("#information_id").val();
-
-   
-	    if(link.attr("href").indexOf('child')>0)
-	    
-	    {
-	    	$(this).find(".modal-title").html(link.attr("href").replace("/childinformation/add","/information/"+informationID+"/information/add"));
-		    $(this).find(".modal-body").load(link.attr("href").replace("/childinformation/add","/information/"+informationID+"/information/add"));
-	    }
-	    else
-    	{
-	    	$(this).find(".modal-title").html(link.attr("href"));
-		    $(this).find(".modal-body").load(link.attr("href"));
-    	}
-	});
-	
-	
-
-	
-</script>           
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-	<!-- END PAGE LEVEL SCRIPTS -->
 </body>
+<!-- end::Body -->
 </html>
