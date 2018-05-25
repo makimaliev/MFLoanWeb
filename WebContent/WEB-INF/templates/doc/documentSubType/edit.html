@@ -1,75 +1,112 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" >
+<!-- begin::Head -->
 <head>
-    <title>MFLoan | Document types</title>
+    <title th:text="#{label.add.documentSubType}"></title>
 
-    <div th:replace="fragments/header :: header-css"></div>
-
+    <div th:replace="fragments/header :: header-css"/>
 </head>
-<body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
+<!-- end::Head -->
 
-<div th:replace="layout :: header-top"></div>
-<div class="page-container">
-    <div th:replace="layout :: page-container-sidebar" />
-    <div class="page-content-wrapper">
-        <div class="page-content">
-            <div class="row">
-                <div class="col-md-12">
-
-                    <div class="portlet light portlet-fit ">
-                        <div class="portlet-title">
-                            <div class="caption">
-                                <i class="icon-settings font-green"></i>
-                                <span class="caption-subject font-green bold uppercase"> Детали документа </span>
-                            </div>
-                        </div>
-                        <div class="portlet-body">
-                            <div class="form">
-                                <form th:action="@{/doc/documentSubType/save}" id="document_form" class="form-horizontal" th:object="${documentSubType}" method="POST">
-
-                                    <input type="hidden" method="post" th:field="*{id}" name="id"/>
-                                    <div class="form-group">
-                                        <label class="control-label col-md-4"> Тип документа </label>
-                                        <div class="col-md-6">
-                                            <select class="form-control" th:field="*{documentType}">
-                                                <option th:each="dt : ${documentTypes}"
-                                                        th:value="${dt.id}"
-                                                        th:text="${dt.name}">Responsible</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-md-4"> Internal Name </label>
-                                        <div class="col-md-6">
-                                            <input class="form-control" th:field="*{internalName}" type="text"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-md-4"> Название </label>
-                                        <div class="col-md-6">
-                                            <input class="form-control" th:field="*{name}" type="text"/>
-                                        </div>
-                                    </div>
-
-                                    <button type="submit" class="btn green"> Сохранить </button>
-                                    <button type="button" class="btn green" onclick="window.history.back()"> Отмена </button>
-
-                                </form>
-
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <div class="m-content">
+                <!--begin::Portlet-->
+                <div class="m-portlet m-portlet--full-height">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text" th:text="#{label.doc.details}"></h3>
                             </div>
                         </div>
                     </div>
+                    <!--begin::Form-->
+                    <form th:action="@{/doc/documentSubType/save}" method="post" class="m-form m-form--fit m-form--label-align-right" th:object="${documentSubType}">
+                        <input type="hidden" method="post" th:field="*{id}" name="id"/>
+                        <div class="m-portlet__body">
+                            <div class="m-form__section">
 
+                                <div class="form-group m-form__group row">
+                                    <label class="col-form-label col-lg-4 col-sm-12">
+                                        <span th:text="#{label.doc.type}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-4 col-md-9 col-sm-12">
+                                        <select class="form-control m-bootstrap-select m_selectpicker" th:field="*{documentType}" title="Select...">
+                                            <option th:each="dt : ${documentTypes}"
+                                                    th:value="${dt.id}"
+                                                    th:text="${dt.name}">Responsible</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group m-form__group row">
+                                    <label class="col-form-label col-lg-4 col-sm-12">
+                                        <span th:text="#{label.doc.internalName}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-4 col-md-9 col-sm-12">
+                                        <input type="text" class="form-control m-input" th:field="*{internalName}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group m-form__group row">
+                                    <label class="col-form-label col-lg-4 col-sm-12">
+                                        <span th:text="#{label.doc.name}">
+                                        </span> <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-4 col-md-9 col-sm-12">
+                                        <input type="text" class="form-control m-input" th:field="*{name}">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="m-portlet__foot m-portlet__foot--fit">
+                            <div class="m-form__actions m-form__actions">
+                                <div class="row">
+                                    <div class="col-lg-4"></div>
+                                    <div class="col-lg-6">
+                                        <button type="submit" class="btn btn-primary" th:text="#{label.form.save}">
+                                        </button>
+                                        <button onclick="window.history.back()" type="button" class="btn btn-secondary" th:text="#{label.form.cancel}">
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!--end::Form-->
                 </div>
+                <!--end::Portlet-->
             </div>
-
         </div>
     </div>
-
+    <!-- end:: Body -->
+    <!-- begin::Footer -->
+    <div th:replace="layout/footer"/>
+    <!-- end::Footer -->
 </div>
+<!-- end:: Page -->
 
-<div th:replace="layout :: footer"></div>
-<div th:replace="fragments/footer :: footer-js"></div>
+<div th:replace="fragments/footer :: footer-js"/>
+
+<!--begin::Page Resources -->
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
+<!--end::Page Resources -->
 
 </body>
+<!-- end::Body -->
 </html>

@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" >
+<!-- begin::Head -->
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title th:text="#{label.printouts}">Region List</title>
-	<div th:replace="fragments/header :: header-css" />
+	<title th:text="#{label.printouts}"></title>
 
+	<div th:replace="fragments/header :: header-css"/>
 </head>
 <!-- end::Head -->
+
 <!-- end::Body -->
 <body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
 <!-- begin:: Page -->
@@ -123,7 +124,7 @@
 <div th:replace="fragments/footer :: footer-js"/>
 <script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
 <script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>
-
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
 
 <script type="text/javascript">
     $(document).ready(function() {

@@ -97,3 +97,17 @@
 		<button type="submit" class="btn btn-primary" th:text="#{label.button.save}"></button>
 	</div>
 </form>
+
+<script>
+    $('.m_selectpicker').selectpicker('refresh');
+
+    $('.m_datetimepicker_6').datetimepicker({
+        format: "yyyy-mm-dd",
+        todayHighlight: true,
+        autoclose: true,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        pickerPosition: 'bottom-left'
+    });
+</script>

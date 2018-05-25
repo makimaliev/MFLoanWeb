@@ -72,7 +72,7 @@ public class DocumentPackageController {
 		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
 
 		model.addAttribute("count", count/evalPageSize+1);
-		model.addAttribute("DPs", dps);
+		model.addAttribute("PackageType", dps);
 		model.addAttribute("selectedPageSize", evalPageSize);
 		model.addAttribute("pageSizes", PAGE_SIZES);
 		model.addAttribute("pager", pager);

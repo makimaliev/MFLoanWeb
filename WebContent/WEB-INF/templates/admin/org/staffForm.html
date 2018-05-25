@@ -1,121 +1,110 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
-<head>
+<form th:action="@{/staff/save}" class="form-horizontal" method="post" th:object="${staff}">
+	<div class="modal-header">
+		<h5 class="modal-title" th:text="#{label.add.staff}"></h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
 
-</head>
+		<div class="alert alert-danger alert-dismissible alert-hidden" role="alert">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+			<span th:text="#{label.modal.error.name}"></span>
+		</div>
 
+		<!--hidden-->
+		<input hidden="true" type="text" id="id" name="id" th:field="*{id}" />
+		<input hidden="true" type="text" id="employmentHistory.id" name="employmentHistory.id" th:field="*{employmentHistory.id}" />
 
-
-<body>
-
-	<form th:action="@{/staff/save}" id="form_sample_2"
-		class="form-horizontal" method="post" th:object="${staff}">
-		<div class="form-body">
-			<div class="alert alert-danger display-hide">
-				<button class="close" data-close="alert"></button>
-				You have some form errors. Please check below.
-			</div>
-			<!-- 
-                     <div class="alert alert-success display-hide">
-                     	<button class="close" data-close="alert"></button> Your form validation is successful! 
-                     </div>
-                     -->
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Name11 <span
-					class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-					<input hidden="true" type="text" id="id" name="id"
-						th:field="*{id}" />
-					<input hidden="true" type="text" id="employmentHistory.id" name="employmentHistory.id"
-						th:field="*{employmentHistory.id}" />						
-					<div class="input-icon right">
-						<i class="fa"></i> <input type="text" class="form-control"
-							name="name" th:field="*{name}" />
-					</div>
-				</div>
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg-4 col-sm-12">
+				<span th:text="#{label.staff.name}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<input type="text" class="form-control" name="name" th:field="*{name}"/>
 			</div>
 		</div>
-		
-					<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Enabled <span
-					class="required"> * </span>
-				</label>
-				<div class="col-md-4">
 
-					<div class="input-icon right">
-						<i class="fa"></i> <input type="text" class="form-control"
-							name="enabled" th:field="*{enabled}" />
-					</div>
-				</div>
-			</div>
-			
-		
-
-			
-						<div class="form-group  margin-top-20">
-							<label class="control-label col-md-3">Employment History number<span
-								class="required"> * </span>
-							</label>
-							<div class="col-md-4">
-
-								<div class="input-icon right">
-													
-									<i class="fa"></i> <input type="text" class="form-control"
-										name="employmentHistory.number" th:field="*{employmentHistory.number}" />
-								</div>
-							</div>
-						</div>			
-
-
-
-			
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Department<span
-					class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-					<select th:field="*{department}" >
-					  <option th:each="departmentInList : ${departmentList}" 
-					          th:value="${departmentInList.id}"
-					          th:text="${departmentInList.name}"
-					          
-					          >Department</option>
-					</select>
-				
-				</div>
-			</div>
-			
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Position<span
-					class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-					<select th:field="*{position}" >
-					  <option th:each="positionInList : ${positionList}" 
-					          th:value="${positionInList.id}"
-					          th:text="${positionInList.name}"
-					          
-					          >Position</option>
-					</select>
-				
-				</div>
-			</div>		
-			
-										
-		
-		
-		<div class="form-actions">
-			<div class="row">
-				<div class="col-md-offset-3 col-md-9">
-					<button type="submit" class="btn green">Submit</button>
-					<button type="button" class="btn default"
-						onclick="window.location.href='/staff/list'">Cancel</button>
-				</div>
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg-4 col-sm-12">
+				<span th:text="#{label.staff.enabled}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<input type="text" class="form-control" name="enabled" th:field="*{enabled}"/>
 			</div>
 		</div>
-	</form>
 
-</body>
-</html>
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg-4 col-sm-12">
+				<span th:text="#{label.staff.person}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{person}" title="Select...">
+					<option th:each="personInList : ${personList}"
+							th:value="${personInList.id}"
+							th:text="${personInList.name}"></option>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg-4 col-sm-12">
+				<span th:text="#{label.staff.employmentHistoryNumber}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<input type="text" class="form-control" name="employmentHistory.number" th:field="*{employmentHistory.number}"/>
+			</div>
+		</div>
+
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg-4 col-sm-12">
+				<span th:text="#{label.staff.organization}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{organization}" title="Select...">
+					<option th:each="organizationInList : ${organizationList}"
+							th:value="${organizationInList.id}"
+							th:text="${organizationInList.name}"></option>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg-4 col-sm-12">
+				<span th:text="#{label.staff.department}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{department}" title="Select...">
+					<option th:each="departmentInList : ${departmentList}"
+							th:value="${departmentInList.id}"
+							th:text="${departmentInList.name}"></option>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg-4 col-sm-12">
+				<span th:text="#{label.staff.position}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{position}" title="Select...">
+					<option th:each="positionInList : ${positionList}"
+							th:value="${positionInList.id}"
+							th:text="${positionInList.name}"></option>
+				</select>
+			</div>
+		</div>
+
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.orgForm.button.cancel}"></button>
+		<button type="submit" class="btn btn-primary" th:text="#{label.button.save}"></button>
+	</div>
+</form>

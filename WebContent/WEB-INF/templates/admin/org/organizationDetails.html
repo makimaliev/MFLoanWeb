@@ -1,212 +1,162 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+	  xmlns:th="http://www.thymeleaf.org">
 <head>
-<title></title>
+	<title></title>
 
-<div th:replace="fragments/header :: header-css"></div>
+	<div th:replace="fragments/header :: header-css"></div>
 
-<link
-	th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}"
-	rel="stylesheet" type="text/css" />
-<link
-	th:href="@{/assets/global/plugins/datatables/datatables.min.css}"
-	rel="stylesheet" type="text/css" />
-<link
-	th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}"
-	rel="stylesheet" type="text/css" />
+	<link
+			th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}"
+			rel="stylesheet" type="text/css" />
+	<link
+			th:href="@{/assets/global/plugins/datatables/datatables.min.css}"
+			rel="stylesheet" type="text/css" />
+	<link
+			th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}"
+			rel="stylesheet" type="text/css" />
 
 </head>
 
 <body
-	class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
+		class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
 
-	<!-- BEGIN HEADER -->
-	<div th:replace="layout :: header-top"></div>
-	<!-- END HEADER -->
+<!-- BEGIN HEADER -->
+<div th:replace="layout :: header-top"></div>
+<!-- END HEADER -->
 
-	<!-- BEGIN CONTAINER -->
-	<div class="page-container">
+<!-- BEGIN CONTAINER -->
+<div class="page-container">
 
-		<!-- BEGIN SIDEBAR -->
-		<div th:replace="layout :: page-container-sidebar"></div>
-		<!-- END SIDEBAR -->
+	<!-- BEGIN SIDEBAR -->
+	<div th:replace="layout :: page-container-sidebar"></div>
+	<!-- END SIDEBAR -->
 
-		<!-- BEGIN CONTENT -->
-		<div class="page-content-wrapper">
+	<!-- BEGIN CONTENT -->
+	<div class="page-content-wrapper">
 
-			<!-- BEGIN CONTENT BODY -->
-			<div class="page-content">
+		<!-- BEGIN CONTENT BODY -->
+		<div class="page-content">
 
-
-
-
-				<div class="row">
-					<div class="col-md-12">
-						<!-- BEGIN BORDERED TABLE PORTLET-->
-						<div class="portlet portlet-fit ">
-							<div class="portlet-body">
-
-
-<div class="row">
+			<div class="row">
 				<div class="col-md-12">
+					<!-- BEGIN BORDERED TABLE PORTLET-->
+					<div class="portlet portlet-fit ">
+						<div class="portlet-body">
 
-					<input hidden="true" type="text" id="organization_id" name="organization_id" th:value="${organization.id}" />
-					
-					
-					<div id="content"></div>
+							<div class="col-md-12">
 
-				</div>
-			</div>		
-
-								<div class="col-md-12">
-
-									<!-- Default bootstrap modal example -->
-									<div class="modal fade" id="organizationFormModal" tabindex="-1"
-										role="dialog" aria-labelledby="myModalLabel"
-										aria-hidden="true">
-										<div class="modal-dialog">
-											<div class="modal-content">
-												<div class="modal-header">
-													<button type="button" class="close" data-dismiss="modal"
+								<!-- Default bootstrap modal example -->
+								<div class="modal fade" id="organizationFormModal" tabindex="-1"
+									 role="dialog" aria-labelledby="myModalLabel"
+									 aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal"
 														aria-label="Close">
-														<span aria-hidden="true">&times;</span>
-													</button>
-													<h4 class="modal-title" id="myModalLabel">Modal title</h4>
-												</div>
-												<div class="modal-body">...</div>
-												<div class="modal-footer">
-													<button type="button" class="btn btn-default"
+													<span aria-hidden="true">&times;</span>
+												</button>
+												<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+											</div>
+											<div class="modal-body">...</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-default"
 														data-dismiss="modal">Close</button>
-													<button type="button" class="btn btn-primary">Save
-														changes</button>
-												</div>
+												<button type="button" class="btn btn-primary">Save
+													changes</button>
 											</div>
 										</div>
 									</div>
-
-
 								</div>
 
+							</div>
 
+							<div class="row">
+								<div class="col-md-12">
 
-								<div class="row">
-									<div class="col-md-12">
-
-										<a data-remote="false" data-toggle="modal"
-											data-target="#organizationFormModal" th:href="@{/bankData/add}"
-											role="button" class="btn btn-large btn-primary"> Add
-											Bank Data</a>
-										<a data-remote="false" data-toggle="modal"
-											data-target="#organizationFormModal" th:href="@{/department/add}"
-											role="button" class="btn btn-large btn-primary"> Add
-											Department</a>	
-										<a data-remote="false" data-toggle="modal"
-											data-target="#organizationFormModal" th:href="@{/information/add}"
-											role="button" class="btn btn-large btn-primary"> Add
-											Information</a>											
-																																
-									</div>
+									<a data-remote="false" data-toggle="modal"
+									   data-target="#organizationFormModal" th:href="@{/bankData/add}"
+									   role="button" class="btn btn-large btn-primary"> Add
+										Bank Data</a>
+									<a data-remote="false" data-toggle="modal"
+									   data-target="#organizationFormModal" th:href="@{/department/add}"
+									   role="button" class="btn btn-large btn-primary"> Add
+										Department</a>
+									<a data-remote="false" data-toggle="modal"
+									   data-target="#organizationFormModal" th:href="@{/information/add}"
+									   role="button" class="btn btn-large btn-primary"> Add
+										Information</a>
 								</div>
 							</div>
 						</div>
-						<!-- END BORDERED TABLE PORTLET-->
 					</div>
+					<!-- END BORDERED TABLE PORTLET-->
 				</div>
-				
-				
-
-
-
-
-
-	<div class="row">
-		<div class="col-md-12">
-
-
-
-
-
-
-
-
-
-
-
-			<div class="tabbable-custom ">
-				<ul class="nav nav-tabs " id="organization_tabs">
-					<li class="active"><a href="#tab_15_1" data-toggle="tab">
-							Адрес </a></li>
-					<li><a href="#tab_15_2" data-toggle="tab"> Идентификационные данные </a></li>
-					<li><a href="#tab_15_3" data-toggle="tab"> Контактные данные </a></li>
-					<li><a href="#tab_15_4" data-toggle="tab"> Банковские реквизиты </a></li>
-					<li><a href="#tab_15_5" data-toggle="tab"> Организационная структура </a></li>
-					<li><a href="#tab_15_6" data-toggle="tab"> Информация </a></li>					
-				</ul>
-				<div class="tab-content">
-					<div class="tab-pane active" id="tab_15_1">
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="tabbable-custom ">
+						<ul class="nav nav-tabs " id="organization_tabs">
+							<li class="active"><a href="#tab_15_1" data-toggle="tab">
+								Адрес </a></li>
+							<li><a href="#tab_15_2" data-toggle="tab"> Идентификационные данные </a></li>
+							<li><a href="#tab_15_3" data-toggle="tab"> Контактные данные </a></li>
+							<li><a href="#tab_15_4" data-toggle="tab"> Банковские реквизиты </a></li>
+							<li><a href="#tab_15_5" data-toggle="tab"> Организационная структура </a></li>
+							<li><a href="#tab_15_6" data-toggle="tab"> Информация </a></li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane active" id="tab_15_1">
 
 
 								<div class="row">
 									<div class="col-md-12">
-										
-										
-																			
-							<table
-								class="table table-hover table-condensed table-striped table-bordered compact condensed">
 
-								<tbody>
-									<tr>
-										<td>Address line</td>
-										<td th:text="${organization.address.line}">Address
-											line</td>
-									</tr>
+										<table
+												class="table table-hover table-condensed table-striped table-bordered compact condensed">
 
-									<tr>
-										<td>Region</td>
-										<td th:text="${organization.address.region.name}">Address
-											line</td>
-									</tr>
+											<tbody>
+											<tr>
+												<td>Address line</td>
+												<td th:text="${organization.address.line}">Address
+													line</td>
+											</tr>
 
-									<tr>
-										<td>District</td>
-										<td th:text="${organization.address.district.name}">Address
-											line</td>
-									</tr>
-									<tr>
-										<td>Aokmotu</td>
-										<td th:text="${organization.address.aokmotu.name}">Address
-											line</td>
-									</tr>
-									<tr>
-										<td>Village</td>
-										<td th:text="${organization.address.village.name}">Address
-											line</td>
-									</tr>
-									
+											<tr>
+												<td>Region</td>
+												<td th:text="${organization.address.region.name}">Address
+													line</td>
+											</tr>
 
-												
-												
-												
-												
-								</tbody>
-							</table>
+											<tr>
+												<td>District</td>
+												<td th:text="${organization.address.district.name}">Address
+													line</td>
+											</tr>
+											<tr>
+												<td>Aokmotu</td>
+												<td th:text="${organization.address.aokmotu.name}">Address
+													line</td>
+											</tr>
+											<tr>
+												<td>Village</td>
+												<td th:text="${organization.address.village.name}">Address
+													line</td>
+											</tr>
 
-																			
-																																
+											</tbody>
+										</table>
+
 									</div>
 								</div>
 
+							</div>
+							<div class="tab-pane" id="tab_15_2">
+								<table
+										class="table table-hover table-condensed table-striped table-bordered compact condensed">
 
-					</div>
-					<div class="tab-pane" id="tab_15_2">
-
-
-
-							<table
-								class="table table-hover table-condensed table-striped table-bordered compact condensed">
-
-								<tbody>
+									<tbody>
 									<tr>
 										<td>Name</td>
 										<td th:text="${organization.identityDoc.name}">Name</td>
@@ -214,401 +164,351 @@
 									<tr>
 										<td>Enabled</td>
 										<td th:text="${organization.identityDoc.enabled}">Enabled</td>
-									</tr>									
+									</tr>
 									<tr>
 										<td>number</td>
 										<td th:text="${organization.identityDoc.number}">number</td>
-									</tr>									
+									</tr>
 
 									<tr>
 										<td>pin</td>
 										<td th:text="${organization.identityDoc.pin}">pin</td>
-									</tr>									
+									</tr>
 
 									<tr>
 										<td>identityDocType</td>
 										<td th:text="${organization.identityDoc.identityDocType.name}">identityDocType</td>
-									</tr>									
+									</tr>
 
 									<tr>
 										<td>IdentityDocGivenBy</td>
 										<td th:text="${organization.identityDoc.identityDocGivenBy.name}">identityDocGivenBy</td>
-									</tr>									
+									</tr>
 
 									<tr>
 										<td>Date</td>
 										<td th:text="${organization.identityDoc.date}">date</td>
-									</tr>									
-
+									</tr>
 
 									<tr>
 										<td>Firstname</td>
 										<td th:text="${organization.identityDoc.identityDocDetails.firstname}">Firstnamename</td>
-									</tr>									
+									</tr>
 
 									<tr>
 										<td>Lastname</td>
 										<td th:text="${organization.identityDoc.identityDocDetails.Lastname}">Lastname</td>
-									</tr>									
+									</tr>
 
 									<tr>
 										<td>Midname</td>
 										<td th:text="${organization.identityDoc.identityDocDetails.midname}">Midname</td>
-									</tr>									
+									</tr>
 
 									<tr>
 										<td>Fullname</td>
 										<td th:text="${organization.identityDoc.identityDocDetails.fullname}">Fullname</td>
-									</tr>									
+									</tr>
 
-
-								</tbody>
-							</table>
-
-
-					</div>
-					<div class="tab-pane" id="tab_15_3">
-					
-						<div class="row">
-							<div class="col-md-3">
-								<table
-									class="table table-hover table-condensed table-striped table-bordered compact condensed">
-
-									<tbody>
-										<tr th:each="contactInList : ${organization.contact}">
-											<td th:text="${contactInList.name}">Thymus Thymi</td>
-										</tr>
 									</tbody>
 								</table>
+							</div>
+							<div class="tab-pane" id="tab_15_3">
+
+								<div class="row">
+									<div class="col-md-3">
+										<table
+												class="table table-hover table-condensed table-striped table-bordered compact condensed">
+
+											<tbody>
+											<tr th:each="contactInList : ${organization.contact}">
+												<td th:text="${contactInList.name}">Thymus Thymi</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane" id="tab_15_4">
+
+								<div class="row">
+
+									<div class="col-md-3">
+										<table
+												class="table table-hover table-condensed table-striped table-bordered compact condensed">
+
+											<tbody>
+											<tr th:each="bankDataInList : ${organization.bankData}">
+												<td th:text="${bankDataInList.name}">Thymus Thymi</td>
+												<td th:text="${bankDataInList.description}">Thymus Thymi</td>
+												<td th:text="${bankDataInList.account_number}">Thymus
+													Thymi</td>
+												<td th:text="${bankDataInList.bik}">Thymus Thymi</td>
+												<td><a data-remote="false" data-toggle="modal"
+													   data-target="#organizationFormModal"
+													   th:href="@{/bankData/__${bankDataInList.id}__/edit}" role="button"
+													   class="btn btn-xs blue-stripe"> Edit </a></td>
+												<td>
+													<form th:action="@{/bankData/__${bankDataInList.id}__/remove}"
+														  method="post">
+														<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+													</form>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane" id="tab_15_5">
+								<div class="row">
+									<div class="col-md-6">
+										<table
+												class="table table-hover table-condensed table-striped table-bordered compact condensed">
+
+											<tbody>
+											<tr th:each="departmentInList : ${organization.department}">
+												<td th:text="${departmentInList.name}">Thymus Thymi</td>
+												<td th:text="${departmentInList.description}">Thymus Thymi</td>
+												<td th:text="${departmentInList.enabled}">Thymus
+													Thymi
+												</td>
+												<td><a data-remote="false" data-toggle="modal"
+													   data-target="#organizationFormModal"
+													   th:href="@{/department/__${departmentInList.id}__/edit}" role="button"
+													   class="btn btn-xs blue-stripe"> Edit </a></td>
+												<td>
+													<form th:action="@{/department/__${departmentInList.id}__/remove}"
+														  method="post">
+														<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+													</form>
+												</td>
+												<td>
+													<a data-remote="false" data-toggle="modal"
+													   data-target="#organizationFormModal"
+													   th:href="@{/department/__${departmentInList.id}__/position/add}" role="button"
+													   class="btn btn-xs blue-stripe"> Add position </a>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="col-md-6">
+										<table
+												class="table table-hover table-condensed table-striped table-bordered compact condensed">
+
+											<tbody>
+											<tr th:each="positionInList : ${positionList}">
+												<td th:text="${positionInList.name}">Thymus Thymi</td>
+
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane " id="tab_15_6">
+								<table
+										class="table table-hover table-condensed table-striped table-bordered compact condensed"
+										id="informationTable">
+									<thead>
+									<tr>
+										<th>Id</th>
+										<th>Name</th>
+										<th>Description</th>
+										<th>isTitle</th>
+										<th>Number</th>
+										<th>Date</th>
+										<th>ObjectTypeId</th>
+										<th>ObjectId</th>
+										<th>View</th>
+										<th>Edit</th>
+										<th>Delete</th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr th:each="s : ${informationList}">
+										<td th:text="${s.id}">Id</td>
+										<td th:text="${s.name}">Name</td>
+										<td th:text="${s.description}">Description</td>
+										<td th:text="${s.isTitle}">isTitle</td>
+										<td th:text="${s.number}">number</td>
+										<td th:text="${s.date}">Date</td>
+										<td th:text="${s.systemObjectTypeId}">ObjectTypeId</td>
+										<td th:text="${s.systemObjectId}">ObjectId</td>
+										<td><a th:href="@{/information/__${s.id}__/details}"
+											   role="button" class="btn btn-xs blue-stripe"> View </a></td>
+										<td><a data-remote="false" data-toggle="modal"
+											   data-target="#cSystemFormModal"
+											   th:href="@{/information/__${s.id}__/edit}" role="button"
+											   class="btn btn-xs blue-stripe"> Edit </a></td>
+										<td>
+											<form th:action="@{/information/__${s.id}__/remove}"
+												  method="post">
+												<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+											</form>
+										</td>
+									</tr>
+									</tbody>
+
+								</table>
+
 							</div>
 
 
 						</div>
-					
 					</div>
-					<div class="tab-pane" id="tab_15_4">
-
-						<div class="row">
-						
-							<div class="col-md-3">
-								<table
-									class="table table-hover table-condensed table-striped table-bordered compact condensed">
-
-									<tbody>
-										<tr th:each="bankDataInList : ${organization.bankData}">
-											<td th:text="${bankDataInList.name}">Thymus Thymi</td>
-											<td th:text="${bankDataInList.description}">Thymus Thymi</td>
-											<td th:text="${bankDataInList.account_number}">Thymus
-												Thymi</td>
-											<td th:text="${bankDataInList.bik}">Thymus Thymi</td>
-											<td><a data-remote="false" data-toggle="modal"
-												data-target="#organizationFormModal"
-												th:href="@{/bankData/__${bankDataInList.id}__/edit}" role="button"
-												class="btn btn-xs blue-stripe"> Edit </a></td>
-											<td>
-												<form th:action="@{/bankData/__${bankDataInList.id}__/remove}"
-													method="post">
-													<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-												</form>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-
-
-						</div>
-
-					</div>
-					<div class="tab-pane" id="tab_15_5">
-						<div class="row">
-							<div class="col-md-6">
-								<table
-									class="table table-hover table-condensed table-striped table-bordered compact condensed">
-
-									<tbody>
-										<tr th:each="departmentInList : ${organization.department}">
-											<td th:text="${departmentInList.name}">Thymus Thymi</td>
-											<td th:text="${departmentInList.description}">Thymus Thymi</td>
-											<td th:text="${departmentInList.enabled}">Thymus
-												Thymi
-											</td>
-											<td><a data-remote="false" data-toggle="modal"
-												data-target="#organizationFormModal"
-												th:href="@{/department/__${departmentInList.id}__/edit}" role="button"
-												class="btn btn-xs blue-stripe"> Edit </a></td>
-											<td>
-												<form th:action="@{/department/__${departmentInList.id}__/remove}"
-													method="post">
-													<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-												</form>
-											</td>
-											<td>
-												<a data-remote="false" data-toggle="modal"
-													data-target="#organizationFormModal"
-													th:href="@{/department/__${departmentInList.id}__/position/add}" role="button"
-													class="btn btn-xs blue-stripe"> Add position </a>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-							<div class="col-md-6">
-								<table
-									class="table table-hover table-condensed table-striped table-bordered compact condensed">
-
-									<tbody>
-										<tr th:each="positionInList : ${positionList}">
-											<td th:text="${positionInList.name}">Thymus Thymi</td>
-
-										</tr>
-									</tbody>
-								</table>
-							</div>
-
-						</div>
-
-					</div>	
-					
-					
-
-					<div class="tab-pane " id="tab_15_6">
-						<table
-							class="table table-hover table-condensed table-striped table-bordered compact condensed"
-							id="informationTable">
-							<thead>
-								<tr>
-									<th>Id</th>
-									<th>Name</th>
-									<th>Description</th>
-									<th>isTitle</th>
-									<th>Number</th>
-									<th>Date</th>
-									<th>ObjectTypeId</th>
-									<th>ObjectId</th>
-									<th>View</th>
-									<th>Edit</th>
-									<th>Delete</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="s : ${informationList}">
-									<td th:text="${s.id}">Id</td>
-									<td th:text="${s.name}">Name</td>
-									<td th:text="${s.description}">Description</td>
-									<td th:text="${s.isTitle}">isTitle</td>
-									<td th:text="${s.number}">number</td>
-									<td th:text="${s.date}">Date</td>
-									<td th:text="${s.systemObjectTypeId}">ObjectTypeId</td>
-									<td th:text="${s.systemObjectId}">ObjectId</td>
-									<td><a th:href="@{/information/__${s.id}__/details}"
-										role="button" class="btn btn-xs blue-stripe"> View </a></td>
-									<td><a data-remote="false" data-toggle="modal"
-										data-target="#cSystemFormModal"
-										th:href="@{/information/__${s.id}__/edit}" role="button"
-										class="btn btn-xs blue-stripe"> Edit </a></td>
-									<td>
-										<form th:action="@{/information/__${s.id}__/remove}"
-											method="post">
-											<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-										</form>
-									</td>
-								</tr>
-							</tbody>
-
-						</table>
-
-					</div>
-										
-									
 				</div>
 			</div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-		</div>
-
-
-	</div>
-
-
-			
-			
 			<div class="row">
 				<div class="col-md-12">
 
 					<input hidden="true" type="text" id="organization_id" name="organization_id" />
-					
+
 					<div id="content"></div>
 
 				</div>
 			</div>
 
 
-			</div>
-			<!-- END CONTENT BODY -->
 		</div>
-		<!-- END CONTENT -->
-		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
+		<!-- END CONTENT BODY -->
 	</div>
-	<!-- END CONTAINER -->
-	<div th:replace="layout :: footer"></div>
-	<div th:replace="fragments/footer :: footer-js"></div>
+	<!-- END CONTENT -->
+	<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
+</div>
+<!-- END CONTAINER -->
+<div th:replace="layout :: footer"></div>
+<div th:replace="fragments/footer :: footer-js"></div>
 
-	<script th:src="@{/assets/global/plugins/datatables/datatables.js}"
+<script th:src="@{/assets/global/plugins/datatables/datatables.js}"
 		type="text/javascript"></script>
-	<script
+<script
 		th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}"
 		type="text/javascript"></script>
 
-	<!-- BEGIN PAGE LEVEL PLUGINS -->
+<!-- BEGIN PAGE LEVEL PLUGINS -->
 
-	<!-- END PAGE LEVEL PLUGINS -->
-	<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<!-- END PAGE LEVEL PLUGINS -->
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
 
+<script type="text/javascript">
+    $(document).ready(function() {
 
+        var table = $('#organizationTable').DataTable({
+            stateSave: true,
+            "language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
+            "info":     false,
+            keys: {
+                focus: ':eq(0)'
+            }
+        } );
 
+        table.on('key-focus', function(e, datatable, cell) {
 
-		
-		<script type="text/javascript">
-		$(document).ready(function() {
+            var rowData = datatable.row(cell.index().row).data();
 
-			var table = $('#organizationTable').DataTable({
-		    	stateSave: true,
-		    	"language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
-	    		"info":     false,
-	    		keys: {
-	    	        focus: ':eq(0)'
-	    	    }
-		    } );
-			
-			table.on('key-focus', function(e, datatable, cell) {
-			
-				var rowData = datatable.row(cell.index().row).data();
+            $("#organization_id").val(rowData[0]);
 
-				$("#organization_id").val(rowData[0]);
-				
-				var sUrl ="/MFCredit/organization/" + rowData[0]+"/view";
-				
-				$.get(sUrl, function(data) {
+            var sUrl ="/MFCredit/organization/" + rowData[0]+"/view";
 
-					$('#content').html(data);
-				});
+            $.get(sUrl, function(data) {
 
-				});
+                $('#content').html(data);
+            });
 
-			});
-		</script>
-		
-			<script>
+        });
 
-		
-function updateOrgFormId(sel)
-{
-    $("#orgFormId").val(sel.value);
-}
+    });
+</script>
 
-function updateAddressId(sel)
-{
-    $("#addressId").val(sel.value);
-}
-
-function updateRegionId(sel)
-{
-    $("#regionId").val(sel.value);
-}
-
-function updateDistrictId(sel)
-{
-    $("#districtId").val(sel.value);
-}
-
-function updateAokmotuId(sel)
-{
-    $("#aokmotuId").val(sel.value);
-}
-
-function updateVillageId(sel)
-{
-    $("#villageId").val(sel.value);
-}
-
-function updateIdentityDocTypeId(sel)
-{
-    $("#identityDocTypeId").val(sel.value);
-}
-
-function updateIdentityDocGivenById(sel)
-{
-    $("#identityDocGivenById").val(sel.value);
-}
+<script>
 
 
-	</script>
-           
-	<script type="text/javascript">
-	$("#organizationFormModal").on("show.bs.modal", function(e) {
-		
-	    var link = $(e.relatedTarget);
-	    
+    function updateOrgFormId(sel)
+    {
+        $("#orgFormId").val(sel.value);
+    }
 
-	    var organizationID = $("#organization_id").val();
+    function updateAddressId(sel)
+    {
+        $("#addressId").val(sel.value);
+    }
 
-   
-	    if(link.attr("href").indexOf('bankData/add')>0)
-	    {
-	    	$(this).find(".modal-title").html(link.attr("href").replace("/bankData/add","/organization/"+organizationID+"/bankData/add"));
-		    $(this).find(".modal-body").load(link.attr("href").replace("/bankData/add","/organization/"+organizationID+"/bankData/add"));
-	    }
-	    else
-	    if(link.attr("href").indexOf('information/add')>0)
-	    {
-	    	var url = link.attr("href");
+    function updateRegionId(sel)
+    {
+        $("#regionId").val(sel.value);
+    }
 
-	    	$(this).find(".modal-title").html(link.attr("href").replace("/information/add","/2/"+organizationID+"/information/add"));
-		    $(this).find(".modal-body").load(link.attr("href").replace("/information/add","/2/"+organizationID+"/information/add"));	    	
-	    	
-	    	
-	    } else
-	    if(link.attr("href").indexOf('department/add')>0)
-		    
-	    {
-	    	$(this).find(".modal-title").html(link.attr("href").replace("/department/add","/organization/"+organizationID+"/department/add"));
-		    $(this).find(".modal-body").load(link.attr("href").replace("/department/add","/organization/"+organizationID+"/department/add"));
-	    }
-		    
-	    else
-    	{
-	    	$(this).find(".modal-title").html(link.attr("href"));
-		    $(this).find(".modal-body").load(link.attr("href"));
-    	}
-	});
-	
-	
+    function updateDistrictId(sel)
+    {
+        $("#districtId").val(sel.value);
+    }
 
-	
-</script>           
-          
+    function updateAokmotuId(sel)
+    {
+        $("#aokmotuId").val(sel.value);
+    }
+
+    function updateVillageId(sel)
+    {
+        $("#villageId").val(sel.value);
+    }
+
+    function updateIdentityDocTypeId(sel)
+    {
+        $("#identityDocTypeId").val(sel.value);
+    }
+
+    function updateIdentityDocGivenById(sel)
+    {
+        $("#identityDocGivenById").val(sel.value);
+    }
 
 
+</script>
+
+<script type="text/javascript">
+    $("#organizationFormModal").on("show.bs.modal", function(e) {
+
+        var link = $(e.relatedTarget);
 
 
+        var organizationID = $("#organization_id").val();
 
 
+        if(link.attr("href").indexOf('bankData/add')>0)
+        {
+            $(this).find(".modal-title").html(link.attr("href").replace("/bankData/add","/organization/"+organizationID+"/bankData/add"));
+            $(this).find(".modal-body").load(link.attr("href").replace("/bankData/add","/organization/"+organizationID+"/bankData/add"));
+        }
+        else
+        if(link.attr("href").indexOf('information/add')>0)
+        {
+            var url = link.attr("href");
+
+            $(this).find(".modal-title").html(link.attr("href").replace("/information/add","/2/"+organizationID+"/information/add"));
+            $(this).find(".modal-body").load(link.attr("href").replace("/information/add","/2/"+organizationID+"/information/add"));
 
 
+        } else
+        if(link.attr("href").indexOf('department/add')>0)
 
+        {
+            $(this).find(".modal-title").html(link.attr("href").replace("/department/add","/organization/"+organizationID+"/department/add"));
+            $(this).find(".modal-body").load(link.attr("href").replace("/department/add","/organization/"+organizationID+"/department/add"));
+        }
 
-	<!-- END PAGE LEVEL SCRIPTS -->
+        else
+        {
+            $(this).find(".modal-title").html(link.attr("href"));
+            $(this).find(".modal-body").load(link.attr("href"));
+        }
+    });
+
+</script>
+
+<!-- END PAGE LEVEL SCRIPTS -->
 </body>
 </html>

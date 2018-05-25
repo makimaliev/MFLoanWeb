@@ -75,7 +75,8 @@
 												<td th:text="${debtor.name}">Name</td>
 												<td th:text="${debtor.debtorType.name}">Type</td>
 												<td th:text="${debtor.workSector.name}">Work sector</td>
-												<td>District</td> <!-- th:text="${debtor.owner.address.district.name}" -->
+												<!--<td th:text="${debtor.owner.address.district.name}">District</td> -->
+												<td>District</td>
 												<td class="table-actions text-right">
 													<span>
 														<div class="dropdown">
@@ -115,28 +116,28 @@
 							<div class="m-datatable__pager m-datatable--paging-loaded clearfix">
 								<ul class="m-datatable__pager-nav">
 									<li th:class="${current == 0} ? disabled">
-										<a th:title="#{label.pagination.first}" class="m-datatable__pager-link m-datatable__pager-link--first" th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=1)}">
+										<a th:title="#{label.pagination.first}" class="m-datatable__pager-link m-datatable__pager-link--first" th:href="${q} ? @{/manage/debtor/search(pageSize=${selectedPageSize}, page=1, q=${q})} : @{/manage/debtor/list(pageSize=${selectedPageSize}, page=1)}">
 											<i class="la la-angle-double-left"></i>
 										</a>
 									</li>
 									<li th:class="${current == 0} ? disabled">
-										<a th:title="#{label.pagination.prev}" class="m-datatable__pager-link m-datatable__pager-link--prev" th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${current})}">
+										<a th:title="#{label.pagination.prev}" class="m-datatable__pager-link m-datatable__pager-link--prev" th:href="${q} ? @{/manage/debtor/search(pageSize=${selectedPageSize}, page=${current}, q=${q})} : @{/manage/debtor/list(pageSize=${selectedPageSize}, page=${current})}">
 											<i class="la la-angle-left"></i>
 										</a>
 									</li>
 
 									<li th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
-										<a th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${page})}" class="m-datatable__pager-link m-datatable__pager-link-number" th:text="${page}" th:classappend="${current == (page - 1)} ? 'm-datatable__pager-link--active'"></a>
+										<a th:href="${q} ? @{/manage/debtor/search(pageSize=${selectedPageSize}, page=${page}, q=${q})} : @{/manage/debtor/list(pageSize=${selectedPageSize}, page=${page})}" class="m-datatable__pager-link m-datatable__pager-link-number" th:text="${page}" th:classappend="${current == (page - 1)} ? 'm-datatable__pager-link--active'"></a>
 
 									</li>
 
-									<li th:class="${current + 1 == count} ? disabled">
-										<a th:title="#{label.pagination.next}" class="m-datatable__pager-link m-datatable__pager-link--next" th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${current + 2})}">
+									<li th:class="${current == count-2} ? disabled">
+										<a th:title="#{label.pagination.next}" class="m-datatable__pager-link m-datatable__pager-link--next" th:href="${q} ? @{/manage/debtor/search(pageSize=${selectedPageSize}, page=${current + 2}, q=${q})} : @{/manage/debtor/list(pageSize=${selectedPageSize}, page=${current + 2})}">
 											<i class="la la-angle-right"></i>
 										</a>
 									</li>
-									<li th:class="${current + 1 == count} ? disabled">
-										<a th:href="@{/manage/debtor/list(pageSize=${selectedPageSize}, page=${count})}" th:title="#{label.pagination.last}" class="m-datatable__pager-link m-datatable__pager-link--last">
+									<li th:class="${current == count-1} ? disabled">
+										<a th:href="${q} ? @{/manage/debtor/search(pageSize=${selectedPageSize}, page=${count}, q=${q})} : @{/manage/debtor/list(pageSize=${selectedPageSize}, page=${count})}" th:title="#{label.pagination.last}" class="m-datatable__pager-link m-datatable__pager-link--last">
 											<i class="la la-angle-double-right"></i>
 										</a>
 									</li>
@@ -154,6 +155,7 @@
 						</div>
 					</div>
 				</div>
+
 				<!--end::Portlet-->
 			</div>
 		</div>

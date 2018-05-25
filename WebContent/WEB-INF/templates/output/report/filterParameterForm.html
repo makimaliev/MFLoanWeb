@@ -1,131 +1,95 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<head>
+<form th:action="@{/filterParameter/save}" id="form_sample_2"  th:object="${filterParameter}"
+	class="form-horizontal" method="post">
 
-</head>
+	<div class="modal-header">
+		<h5 class="modal-title" th:text="#{label.filterParameter.modal.name}"></h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">
+				&times;
+			</span>
+		</button>
+	</div>
 
+	<div class="modal-body">
 
+		<div class="alert alert-danger alert-dismissible alert-hidden" role="alert">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+			<span th:text="#{label.filterParameter.modal.error.name}"></span>
+		</div>
 
-<body>
+		<div class="form-group">
+			<label for="name" class="form-control-label">Name<span class="required"> * </span></label>
+			<input hidden="true" type="text" id="id" name="id" th:field="*{id}" />
+			<input type="text" class="form-control" id="name" name="name" th:value="*{name}">
+		</div>
 
-	<form th:action="@{/filterParameter/save}" id="form_sample_2"  th:object="${filterParameter}"
-		class="form-horizontal" method="post">
-		<div class="form-body">
-			<div class="alert alert-danger display-hide">
-				<button class="close" data-close="alert"></button>
-				You have some form errors. Please check below.
-			</div>
-			<!-- 
-                     <div class="alert alert-success display-hide">
-                     	<button class="close" data-close="alert"></button> Your form validation is successful! 
-                     </div>
-                     -->
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Name <span
-					class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-					<input hidden="true" type="text" id="id" name="id"
-						th:value="*{id}" />
-
-						
-						
-					<div class="input-icon right">
-						<i class="fa"></i> <input type="text" class="form-control"
-							name="name" th:value="*{name}" />
-					</div>
-					
-					
-				</div>
-			</div>
-						<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">FilterParameterType<span
-						class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-
-					<select th:field="*{filterParameterType}">
+		<div class="form-group ">
+			<label class="form-control-label">FilterParameterType<span class="required"> * </span></label>
+			<div class="row">
+				<div class="col-12">
+					<select th:field="*{filterParameterType}" class="selectpicker">
 						<option th:each="filterParameterTypeInList : ${T(kg.gov.mf.loan.output.report.model.FilterParameterType).values()}"
 								th:value="${filterParameterTypeInList}"
 								th:text="${filterParameterTypeInList}">Region</option>
-					</select> 
+					</select>
 				</div>
 			</div>
-						<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Object List<span
-						class="required"> * </span>
-				</label>
-				<div class="col-md-4">
+		</div>
 
-					<select th:field="*{objectList}">
+		<div class="form-group ">
+			<label class="form-control-label">Object List<span class="required"> * </span></label>
+			<div class="row">
+				<div class="col-12">
+					<select th:field="*{objectList}" class="selectpicker">
 						<option th:each="objectListInList : ${objectListList}"
 								th:value="${{objectListInList}}"
 								th:text="${objectListInList.name}">Region</option>
 					</select>
-
 				</div>
 			</div>
-			
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Content Params<span
-						class="required"> * </span>
-				</label>
-				<div class="col-md-4">
+		</div>
 
-					<select th:field="*{contentParameter}">
+		<div class="form-group ">
+			<label class="form-control-label">Content Params<span class="required"> * </span></label>
+			<div class="row">
+				<div class="col-12">
+					<select th:field="*{contentParameter}"  class="selectpicker">
 						<option th:each="contentParameterInList : ${contentParameterList}"
 								th:value="${{contentParameterInList}}"
 								th:text="${contentParameterInList.name}">Region</option>
 					</select>
-
 				</div>
 			</div>
-			
-			
-			
-						<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Comparator<span
-						class="required"> * </span>
-				</label>
-				<div class="col-md-4">
+		</div>
 
-					<select th:field="*{comparator}">
+		<div class="form-group ">
+			<label class="form-control-label">Comparator<span class="required"> * </span></label>
+			<div class="row">
+				<div class="col-12">
+					<select th:field="*{comparator}"  class="selectpicker">
 						<option th:each="comparatorInList : ${T(kg.gov.mf.loan.output.report.model.Comparator).values()}"
 								th:value="${comparatorInList}"
 								th:text="${comparatorInList}">Region</option>
-					</select> 
-				</div>
-			</div>		
-			
-			
-
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Compared Value<span
-					class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-					<div class="input-icon right">
-						<i class="fa"></i> <input type="text" class="form-control"
-							name="comparedValue" th:field="*{comparedValue}" />
-					</div>
-					
-					
-				</div>
-			</div>
-						
-		</div>
-		<div class="form-actions">
-			<div class="row">
-				<div class="col-md-offset-3 col-md-9">
-					<button type="submit" class="btn green">Submit</button>
-					<button type="button" class="btn default"
-						onclick="window.location.href='/filterParameter/list'">Cancel</button>
+					</select>
 				</div>
 			</div>
 		</div>
-	</form>
 
-</body>
-</html>
+		<div class="form-group">
+			<label for="fieldName" class="form-control-label">Compared Value<span class="required"> * </span></label>
+			<input type="text" class="form-control" id="fieldName" name="comparedValue" th:field="*{comparedValue}">
+		</div>
+
+	</div>
+
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+		<button type="submit" class="btn btn-primary">Submit</button>
+	</div>
+
+</form>
+
+<script>
+    $('.selectpicker').selectpicker('refresh');
+
+</script>

@@ -164,7 +164,7 @@ public class DebtorController {
 		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
 
 		Sort sort = new Sort(new Sort.Order(Sort.Direction.ASC, "id"));
-		Pageable pageable = new PageRequest(0, 20, sort);
+		Pageable pageable = new PageRequest(0, 10, sort);
 
 		QDebtor debtor = QDebtor.debtor;
 		BooleanExpression hasNameLike = debtor.name.like("%" + q + "%");
@@ -182,6 +182,7 @@ public class DebtorController {
 		model.addAttribute("pageSizes", PAGE_SIZES);
 		model.addAttribute("pager", pager);
 		model.addAttribute("current", evalPage);
+		model.addAttribute("q", q);
 
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
 

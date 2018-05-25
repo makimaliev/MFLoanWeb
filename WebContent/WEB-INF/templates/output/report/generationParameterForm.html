@@ -1,121 +1,85 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<head>
+<form th:action="@{/generationParameter/save}" id="form_sample_2"  th:object="${generationParameter}"
+	class="form-horizontal" method="post">
 
-</head>
+	<div class="modal-header">
+		<h5 class="modal-title" th:text="#{label.generationParameter.modal.name}"></h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">
+				&times;
+			</span>
+		</button>
+	</div>
 
+	<div class="modal-body">
 
+		<div class="alert alert-danger alert-dismissible alert-hidden" role="alert">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+			<span th:text="#{label.generationParameter.modal.error.name}"></span>
+		</div>
 
-<body>
+		<div class="form-group">
+			<label for="name" class="form-control-label">Name<span class="required"> * </span></label>
+			<input hidden="true" type="text" id="id" name="id" th:field="*{id}" />
+			<input type="text" class="form-control" id="name" name="name" th:value="*{name}">
+		</div>
 
-	<form th:action="@{/generationParameter/save}" id="form_sample_2"  th:object="${generationParameter}"
-		class="form-horizontal" method="post">
-		<div class="form-body">
-			<div class="alert alert-danger display-hide">
-				<button class="close" data-close="alert"></button>
-				You have some form errors. Please check below.
-			</div>
-			<!-- 
-                     <div class="alert alert-success display-hide">
-                     	<button class="close" data-close="alert"></button> Your form validation is successful! 
-                     </div>
-                     -->
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Name <span
-					class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-					<input hidden="true" type="text" id="id" name="id"
-						th:field="*{id}" />
+		<div class="form-group">
+			<label for="name" class="form-control-label">Position<span class="required"> * </span></label>
+			<input type="text" class="form-control" id="name" name="name" th:field="*{postion}">
+		</div>
 
-						
-						
-					<div class="input-icon right">
-						<i class="fa"></i> <input type="text" class="form-control"
-							name="name" th:field="*{name}" />
-					</div>
-					
-					
+		<div class="form-group">
+			<label for="name" class="form-control-label">Position In List<span class="required"> * </span></label>
+			<input type="text" class="form-control" id="name" name="name" th:field="*{postionInList}">
+		</div>
+
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg-4 col-sm-12">
+				<span th:text="#{label.information.date}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<div class="input-group date m_datetimepicker_6">
+					<input type="text" class="form-control m-input" placeholder="Select date" name="date" th:value="*{date}"/>
+					<span class="input-group-addon">
+						<i class="la la-calendar glyphicon-th"></i>
+					</span>
 				</div>
 			</div>
+		</div>
 
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Position <span
-						class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-					<div class="input-icon right">
-						<i class="fa"></i> <input type="text" class="form-control"
-												  name="name" th:field="*{postion}" />
-					</div>
-
-
-				</div>
-			</div>
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Position In List <span
-						class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-					<div class="input-icon right">
-						<i class="fa"></i> <input type="text" class="form-control"
-												  name="name" th:field="*{postionInList}" />
-					</div>
-
-
-				</div>
-			</div>
-
-
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Date <span
-						class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-					<div class="input-group date date-picker" data-date-format="dd.mm.yyyy">
-						<input type="text" class="form-control" name="date" th:field="*{date}"/>
-						<span class="input-group-btn">
-	                                                         <button class="btn default" type="button">
-	                                                             <i class="fa fa-calendar"></i>
-	                                                         </button>
-	                                                     </span>
-					</div>
-
-
-				</div>
-			</div>
-
-
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Generation Parameter Type<span
-						class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-
-					<select th:field="*{generationParameterType}">
+		<div class="form-group ">
+			<label class="form-control-label">Generation Parameter Type<span class="required"> * </span></label>
+			<div class="row">
+				<div class="col-12">
+					<select th:field="*{generationParameterType}" class="selectpicker">
 						<option th:each="generationParameterTypeInList : ${generationParameterTypeList}"
 								th:value="${{generationParameterTypeInList}}"
 								th:text="${generationParameterTypeInList.name}">Region</option>
 					</select>
-
-				</div>
-			</div>
-
-
-
-		</div>
-		<div class="form-actions">
-			<div class="row">
-				<div class="col-md-offset-3 col-md-9">
-					<button type="submit" class="btn green">Submit</button>
-					<button type="button" class="btn default"
-						onclick="window.location.href='/generationParameter/list'">Cancel</button>
 				</div>
 			</div>
 		</div>
-	</form>
 
-</body>
-</html>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+		<button type="submit" class="btn btn-primary">Submit</button>
+	</div>
+
+</form>
+
+
+<script>
+    $('.selectpicker').selectpicker('refresh');
+
+    $('.m_datetimepicker_6').datetimepicker({
+        format: "yyyy-mm-dd",
+        todayHighlight: true,
+        autoclose: true,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        pickerPosition: 'bottom-left'
+    });
+</script>

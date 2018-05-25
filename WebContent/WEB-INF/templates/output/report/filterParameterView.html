@@ -1,82 +1,72 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
-<head>
-</head>
-
-<body>
-
-	<div class="tabbable-custom ">
-		<ul class="nav nav-tabs " id="region_tabs">
-			<li class="active">
-				<a href="#districtListOfRegion" data-toggle="tab">Общая информация</a>
+<div class="m-portlet">
+	<div class="m-portlet__body">
+		<ul class="nav nav-tabs" role="tablist" id="region_tabs">
+			<li class="nav-item">
+				<a class="nav-link active" data-toggle="tab" href="#districtListOfRegion">
+					Общая информация
+				</a>
 			</li>
-			<li>
-				<a href="#aokmotuListOfRegion" data-toggle="tab">1</a>
+			<li class="nav-item">
+				<a class="nav-link" data-toggle="tab" href="#aokmotuListOfRegion">
+					1
+				</a>
 			</li>
-			<li>
-				<a href="#seloListOfRegion" data-toggle="tab">2</a>
+			<li class="nav-item">
+				<a class="nav-link" data-toggle="tab" href="#seloListOfRegion">
+					2
+				</a>
 			</li>
-			<li>
-				<a href="#debtorListOfRegion" data-toggle="tab">3</a>
+			<li class="nav-item">
+				<a class="nav-link" data-toggle="tab" href="#debtorListOfRegion">
+					3
+				</a>
 			</li>
-			<li>
-				<a href="#loanListOfRegion" data-toggle="tab">4</a>
+			<li class="nav-item">
+				<a class="nav-link" data-toggle="tab" href="#loanListOfRegion">
+					4
+				</a>
 			</li>
 		</ul>
-		
 		<div class="tab-content">
-			<div class="tab-pane active" id="templateOfReport">
-				
-				
+			<div class="tab-pane active" id="templateOfReport" role="tabpanel">
 				<div class="row">
-									<div class="col-md-6">
-										<div class="panel panel-primary">
-											<div class="panel-body">
-												<dl class="dl-horizontal">
-													<dt>Filter Parameter Name</dt>
-													<dd th:text="${filterParameter?.name}">name</dd>
-												</dl>
-												<dl class="dl-horizontal">
-													<dt>Object List Name</dt>
-													<dd th:text="${filterParameter?.objectList?.name}">name</dd>
-												</dl>
-												<dl class="dl-horizontal">
-													<dt>Content Parameter Name</dt>
-													<dd th:text="${filterParameter?.contentParameter?.name}">name</dd>
-												</dl>												
-												<dl class="dl-horizontal">
-													<dt>Comparator</dt>
-													<dd th:text="${filterParameter?.comparator}">name</dd>
-												</dl>												
-												
-												<dl class="dl-horizontal">
-													<dt>Compared value</dt>
-													<dd th:text="${filterParameter?.comparedValue}">name</dd>
-												</dl>	
-												
-																								
-											</div>
-										</div>
+					<div class="col-md-6">
+						<div class="panel panel-primary">
+							<div class="panel-body">
+								<dl class="dl-horizontal">
+									<dt>Filter Parameter Name</dt>
+									<dd th:text="${filterParameter?.name}">name</dd>
+								</dl>
+								<dl class="dl-horizontal">
+									<dt>Object List Name</dt>
+									<dd th:text="${filterParameter?.objectList?.name}">name</dd>
+								</dl>
+								<dl class="dl-horizontal">
+									<dt>Content Parameter Name</dt>
+									<dd th:text="${filterParameter?.contentParameter?.name}">name</dd>
+								</dl>
+								<dl class="dl-horizontal">
+									<dt>Comparator</dt>
+									<dd th:text="${filterParameter?.comparator}">name</dd>
+								</dl>
 
-									</div>
-
-
-								</div>
-				
-				
+								<dl class="dl-horizontal">
+									<dt>Compared value</dt>
+									<dd th:text="${filterParameter?.comparedValue}">name</dd>
+								</dl>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-			<div class="tab-pane" id="aokmotuListOfRegion">
-			
+			<div class="tab-pane" id="aokmotuListOfRegion" role="tabpanel">
 			</div>
-			<div class="tab-pane" id="seloListOfRegion">
+			<div class="tab-pane" id="seloListOfRegion" role="tabpanel">
 			</div>
-			<div class="tab-pane" id="debtorListOfRegion">
+			<div class="tab-pane" id="debtorListOfRegion" role="tabpanel">
 			</div>
 			<div class="tab-pane" id="loanListOfRegion">
 			</div>
 		</div>
 	</div>
-
-</body>
-</html>
+</div>

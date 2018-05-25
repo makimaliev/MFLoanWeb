@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" >
+<!-- begin::Head -->
+<head>
+    <title th:text="#{label.loans}"></title>
+
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<!-- end::Head -->
+
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <div class="m-content">
+                <!--begin::Portlet-->
+                <div class="m-portlet">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text" th:text="#{label.loans}"></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-portlet__body">
+                        <!--begin::Section-->
+                        <div class="m-section">
+                            <div class="m-section__content">
+                                <div class="m-scrollable m-scrollable-no-margin" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+                                    <div>
+                                        <table class="table">
+                                            <thead class="thead-default">
+                                            <tr>
+                                                <th class="table-id">Id</th>
+                                                <th th:text="#{label.loan.table.regNumber}"></th>
+                                                <th th:text="#{label.loan.table.regDate}"></th>
+                                                <th th:text="#{label.loan.table.amount}"></th>
+                                                <th th:text="#{label.loan.table.currency}"></th>
+                                                <th th:text="#{label.loan.table.type}"></th>
+                                                <th th:text="#{label.loan.table.state}"></th>
+                                                <th th:text="#{label.loan.table.superId}"></th>
+                                                <th th:text="#{label.loan.table.hasSubLoan}"></th>
+                                                <th th:text="#{label.loan.table.parentId}"></th>
+                                                <th th:text="#{label.loan.table.creditOrderId}"></th>
+                                                <th>&nbsp;</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="loan : ${loans}">
+                                                <td class="table-id" th:text="${loan.id}"></td>
+                                                <td th:text="${loan.regNumber}"></td>
+                                                <td th:text="${loan.regDate}"></td>
+                                                <td th:text="${loan.amount}"></td>
+                                                <td th:text="${loan.currency.name}"></td>
+                                                <td th:text="${loan.loanType.name}"></td>
+                                                <td th:text="${loan.loanState.name}"></td>
+                                                <td th:text="${loan.supervisorId}"></td>
+                                                <td th:text="${loan.hasSubLoan}"></td>
+                                                <td th:text="${loan.parentLoan!=null} ? ${loan.parentLoan.id} : 'null'"></td>
+                                                <td th:text="${loan.creditOrder.id}"></td>
+                                                <!--<td class="table-actions text-right">-->
+															<!--<span>-->
+																<!--<div class="dropdown">-->
+																	<!--<a href="#" class="btn m-btn m-btn&#45;&#45;hover-metal m-btn&#45;&#45;icon m-btn&#45;&#45;icon-only m-btn&#45;&#45;pill btn-dropdown" data-toggle="dropdown">-->
+																		<!--<i class="la la-ellipsis-h"></i>-->
+																	<!--</a>-->
+																	<!--<div class="dropdown-menu dropdown-menu-right">-->
+																		<!--<a class="dropdown-item" th:href="@{/manage/debtor/__${loan.debtor.id}__/loan/__${loan.id}__/view}">-->
+																			<!--<span th:text="#{label.table.view}"></span>-->
+																		<!--</a>-->
+																		<!--<a class="dropdown-item" th:href="@{/manage/debtor/__${loan.debtor.id}__/loan/__${loan.id}__/save}">-->
+																			<!--<span th:text="#{label.table.edit}"></span>-->
+																		<!--</a>-->
+																		<!--<a class="dropdown-item" href="#">-->
+																			<!--<span>-->
+																				<!--<form th:action="@{/manage/debtor/__${loan.debtor.id}__/loan/delete}" method="post">-->
+																					<!--<input hidden="true" type="text" id="id" name="id" th:value="${loan.id}" />-->
+																					<!--<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>-->
+																				<!--</form>-->
+																			<!--</span>-->
+																		<!--</a>-->
+																	<!--</div>-->
+																<!--</div>-->
+															<!--</span>-->
+                                                <!--</td>-->
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end::Section-->
+                    </div>
+                    <div class="m-portlet__foot">
+                        <div class="m-datatable m-datatable--default">
+                            <div class="m-datatable__pager m-datatable--paging-loaded clearfix">
+                                <ul class="m-datatable__pager-nav">
+                                    <li th:class="${current == 0} ? disabled">
+                                        <a th:title="#{label.pagination.first}" class="m-datatable__pager-link m-datatable__pager-link--first" th:href="@{/manage/debtor/loan/list(pageSize=${selectedPageSize}, page=1)}">
+                                            <i class="la la-angle-double-left"></i>
+                                        </a>
+                                    </li>
+                                    <li th:class="${current == 0} ? disabled">
+                                        <a th:title="#{label.pagination.prev}" class="m-datatable__pager-link m-datatable__pager-link--prev" th:href="@{/manage/debtor/loan/list(pageSize=${selectedPageSize}, page=${current})}">
+                                            <i class="la la-angle-left"></i>
+                                        </a>
+                                    </li>
+
+                                    <li th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+                                        <a th:href="@{/manage/debtor/loan/list(pageSize=${selectedPageSize}, page=${page})}" class="m-datatable__pager-link m-datatable__pager-link-number" th:text="${page}" th:classappend="${current == (page - 1)} ? 'm-datatable__pager-link--active'"></a>
+
+                                    </li>
+
+                                    <li th:class="${current + 1 == count} ? disabled">
+                                        <a th:title="#{label.pagination.next}" class="m-datatable__pager-link m-datatable__pager-link--next" th:href="@{/manage/debtor/loan/list(pageSize=${selectedPageSize}, page=${current + 2})}">
+                                            <i class="la la-angle-right"></i>
+                                        </a>
+                                    </li>
+                                    <li th:class="${current + 1 == count} ? disabled">
+                                        <a th:href="@{/manage/debtor/loan/list(pageSize=${selectedPageSize}, page=${count})}" th:title="#{label.pagination.last}" class="m-datatable__pager-link m-datatable__pager-link--last">
+                                            <i class="la la-angle-double-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="m-datatable__pager-info">
+                                    <span class="m-datatable__pager-detail" th:text="#{label.pageSize}"></span>
+                                    <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 70px;">
+                                        <select id="pageSizeSelect" class="selectpicker m-datatable__pager_size" title="Select page size" data-width="70px">
+                                            <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}" th:value="${pageSize}"
+                                                    th:selected="${pageSize} == ${selectedPageSize}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Portlet-->
+            </div>
+        </div>
+    </div>
+    <!-- end:: Body -->
+    <!-- begin::Footer -->
+    <div th:replace="layout/footer"/>
+    <!-- end::Footer -->
+</div>
+<!-- end:: Page -->
+
+<div th:replace="fragments/footer :: footer-js"/>
+
+</body>
+<!-- end::Body -->
+</html>

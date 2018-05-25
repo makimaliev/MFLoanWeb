@@ -1,156 +1,186 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
-<head>
-</head>
-
-<body>
-
-	<div class="tabbable-custom ">
-		<ul class="nav nav-tabs " id="region_tabs">
-			<li class="active">
-				<a href="#generationParameters" data-toggle="tab">Параметры формирования</a>
+<div class="m-portlet m-portlet--full-height">
+	<div class="m-portlet__body">
+		<ul class="nav nav-tabs" role="tablist">
+			<li class="nav-item">
+				<a class="nav-link m--font-primary active" data-toggle="tab" href="#generationParameters" th:text="#{label.reportTemplate.generationParameters}"></a>
 			</li>
-			<li>
-				<a href="#aokmotuListOfRegion" data-toggle="tab">Параметры фильтрации</a>
+			<li class="nav-item">
+				<a class="nav-link m--font-primary" data-toggle="tab" href="#filterParameters" th:text="#{label.reportTemplate.filterParameters}"></a>
 			</li>
-			<li>
-				<a href="#seloListOfRegion" data-toggle="tab">Параметры содержания</a>
-			</li>
-			<li>
-				<a href="#debtorListOfRegion" data-toggle="tab">3</a>
-			</li>
-			<li>
-				<a href="#loanListOfRegion" data-toggle="tab">4</a>
+			<li class="nav-item">
+				<a class="nav-link m--font-primary" data-toggle="tab" href="#contentParameters" th:text="#{label.reportTemplate.contentParameters}"></a>
 			</li>
 		</ul>
-		
+
 		<div class="tab-content">
 			<div class="tab-pane active" id="generationParameters">
-				
-				
-				<table
-					class="table table-hover table-condensed table-striped table-bordered compact condensed"
-					id="districtTable">
-					<thead>
-						<tr>
-							<th>Id</th>
-							<th>Name</th>
-							<th>View</th>
-							<th>Edit</th>
-							<th>Delete</th>
-						</tr>
-					</thead>
+				<div class="m-section">
+					<div class="m-section__content">
+						<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+							<div>
+								<table class="table">
+									<thead  class="thead-default">
+									<tr>
+										<th>Id</th>
+										<th th:text="#{label.generationParameter.name}"></th>
+										<th>&nbsp;</th>
+									</tr>
+									</thead>
 
-					<tbody>
+									<tbody>
+									<tr th:each="generationParameterInList : ${reportTemplate.generationParameters}">
+										<td th:text="${generationParameterInList.id}"></td>
+										<td th:text="${generationParameterInList.name}"></td>
+										<td class="table-actions text-right">
+											<span>
+												<div class="dropdown">
+													<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+														<i class="la la-ellipsis-h"></i>
+													</a>
+													<div class="dropdown-menu dropdown-menu-right">
+														<a class="dropdown-item"
+														   th:href="@{/generationParameter/__${generationParameterInList.id}__/details}" role="button">
+															<span th:text="#{label.table.view}"></span>
+														</a>
+														<a class="dropdown-item"
+														   data-remote="false" data-toggle="modal"
+														   data-target="#reportTemplateFormModal"
+														   th:href="@{/generationParameter/__${generationParameterInList.id}__/edit}" role="button">
+															<span th:text="#{label.table.edit}"></span>
+														</a>
+														<a class="dropdown-item" href="#">
+															<span>
+																<form th:action="@{/generationParameter/__${generationParameterInList.id}__/remove}" method="post">
+																	<input hidden="true" type="text" id="id" name="id" th:value="${generationParameterInList.id}" />
+																	<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																</form>
+															</span>
+														</a>
+													</div>
+												</div>
+											</span>
+										</td>
+									</tr>
+									</tbody>
 
-						<tr th:each="generationParameterInList : ${reportTemplate.generationParameters}">
-							<td th:text="${generationParameterInList.id}">Id</td>
-							<td th:text="${generationParameterInList.name}">Name</td>
-							<td><a th:href="@{/generationParameter/__${generationParameterInList.id}__/details}"
-								role="button" class="btn btn-xs green-stripe"> View </a></td>
-							<td><a data-remote="false" data-toggle="modal"
-								data-target="#ReportFormModal"
-								th:href="@{/generationParameter/__${generationParameterInList.id}__/edit}"
-								role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
-
-							<td>
-								<form th:action="@{/generationParameter/__${generationParameterInList.id}__/remove}"
-									method="post">
-									<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-								</form>
-							</td>
-						</tr>
-					</tbody>
-
-				</table>
-				
-				
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-			<div class="tab-pane" id="aokmotuListOfRegion">
+			<div class="tab-pane" id="filterParameters">
+				<div class="m-section">
+					<div class="m-section__content">
+						<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+							<div>
+								<table class="table">
+									<thead  class="thead-default">
+									<tr>
+										<th>Id</th>
+										<th th:text="#{label.filterParameter.name}"></th>
+										<th>&nbsp;</th>
+									</tr>
+									</thead>
 
-				<table
-						class="table table-hover table-condensed table-striped table-bordered compact condensed"
-						id="filterParameterTable">
-					<thead>
-					<tr>
-						<th>Id</th>
-						<th>Name</th>
-						<th>View</th>
-						<th>Edit</th>
-						<th>Delete</th>
-					</tr>
-					</thead>
+									<tbody>
+									<tr th:each="filterParameterInList : ${reportTemplate.filterParameters}">
+										<td th:text="${filterParameterInList.id}"></td>
+										<td th:text="${filterParameterInList.name}"></td>
+										<td class="table-actions text-right">
+											<span>
+												<div class="dropdown">
+													<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+														<i class="la la-ellipsis-h"></i>
+													</a>
+													<div class="dropdown-menu dropdown-menu-right">
+														<a class="dropdown-item"
+														   th:href="@{/filterParameter/__${filterParameterInList.id}__/details}" role="button">
+															<span th:text="#{label.table.view}"></span>
+														</a>
+														<a class="dropdown-item"
+														   data-remote="false" data-toggle="modal"
+														   data-target="#reportTemplateFormModal"
+														   th:href="@{/filterParameter/__${filterParameterInList.id}__/edit}" role="button">
+															<span th:text="#{label.table.edit}"></span>
+														</a>
+														<a class="dropdown-item" href="#">
+															<span>
+																<form th:action="@{/filterParameter/__${filterParameterInList.id}__/remove}" method="post">
+																	<input hidden="true" type="text" id="id" name="id" th:value="${filterParameterInList.id}" />
+																	<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																</form>
+															</span>
+														</a>
+													</div>
+												</div>
+											</span>
+										</td>
+									</tr>
+									</tbody>
 
-					<tbody>
-
-					<tr th:each="filterParameterInList : ${reportTemplate.filterParameters}">
-						<td th:text="${filterParameterInList.id}">Id</td>
-						<td th:text="${filterParameterInList.name}">Name</td>
-						<td><a th:href="@{/filterParameter/__${filterParameterInList.id}__/details}"
-							   role="button" class="btn btn-xs green-stripe"> View </a></td>
-						<td><a data-remote="false" data-toggle="modal"
-							   data-target="#ReportFormModal"
-							   th:href="@{/filterParameter/__${filterParameterInList.id}__/edit}"
-							   role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
-
-						<td>
-							<form th:action="@{/filterParameter/__${filterParameterInList.id}__/remove}"
-								  method="post">
-								<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-							</form>
-						</td>
-					</tr>
-					</tbody>
-
-				</table>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-			<div class="tab-pane" id="seloListOfRegion">
+			<div class="tab-pane" id="contentParameters">
+				<div class="m-section">
+					<div class="m-section__content">
+						<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+							<div>
+								<table class="table">
+									<thead  class="thead-default">
+									<tr>
+										<th>Id</th>
+										<th th:text="#{label.contentParameter.name}"></th>
+										<th>&nbsp;</th>
+									</tr>
+									</thead>
 
-				<table
-						class="table table-hover table-condensed table-striped table-bordered compact condensed"
-						id="contentParameterTable">
-					<thead>
-					<tr>
-						<th>Id</th>
-						<th>Name</th>
-						<th>View</th>
-						<th>Edit</th>
-						<th>Delete</th>
-					</tr>
-					</thead>
+									<tbody>
+									<tr th:each="contentParameterInList : ${reportTemplate.contentParameters}">
+										<td th:text="${contentParameterInList.id}"></td>
+										<td th:text="${contentParameterInList.name}"></td>
+										<td class="table-actions text-right">
+											<span>
+												<div class="dropdown">
+													<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+														<i class="la la-ellipsis-h"></i>
+													</a>
+													<div class="dropdown-menu dropdown-menu-right">
+														<a class="dropdown-item"
+														   th:href="@{/contentParameter/__${contentParameterInList.id}__/edit}" role="button">
+															<span th:text="#{label.table.view}"></span>
+														</a>
+														<a class="dropdown-item"
+														   data-remote="false" data-toggle="modal"
+														   data-target="#reportTemplateFormModal"
+														   th:href="@{/filterParameter/__${filterParameterInList.id}__/edit}" role="button">
+															<span th:text="#{label.table.edit}"></span>
+														</a>
+														<a class="dropdown-item" href="#">
+															<span>
+																<form th:action="@{/contentParameter/__${contentParameterInList.id}__/remove}"method="post">
+																	<input hidden="true" type="text" id="id" name="id" th:value="${contentParameterInList.id}" />
+																	<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																</form>
+															</span>
+														</a>
+													</div>
+												</div>
+											</span>
+										</td>
+									</tr>
+									</tbody>
 
-					<tbody>
-
-					<tr th:each="contentParameterInList : ${reportTemplate.contentParameters}">
-						<td th:text="${contentParameterInList.id}">Id</td>
-						<td th:text="${contentParameterInList.name}">Name</td>
-						<td><a th:href="@{/filterParameter/__${contentParameterInList.id}__/details}"
-							   role="button" class="btn btn-xs green-stripe"> View </a></td>
-						<td><a data-remote="false" data-toggle="modal"
-							   data-target="#ReportFormModal"
-							   th:href="@{/contentParameter/__${contentParameterInList.id}__/edit}"
-							   role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
-
-						<td>
-							<form th:action="@{/contentParameter/__${contentParameterInList.id}__/remove}"
-								  method="post">
-								<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-							</form>
-						</td>
-					</tr>
-					</tbody>
-
-				</table>
-
-
-			</div>
-			<div class="tab-pane" id="debtorListOfRegion">
-			</div>
-			<div class="tab-pane" id="loanListOfRegion">
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
-
-</body>
-</html>
+</div>
