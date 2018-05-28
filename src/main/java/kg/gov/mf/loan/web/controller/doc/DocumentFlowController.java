@@ -90,6 +90,7 @@ public class DocumentFlowController extends BaseController {
                 }
             };
     //endregion
+
     final static Map<Integer, String> responsible = new HashMap<Integer, String>() {
         {
             put(1, "Сотрудник");
@@ -194,7 +195,8 @@ public class DocumentFlowController extends BaseController {
                                @RequestParam("receiverFile") MultipartFile receiverFile) throws IOException {
 
         //region Attachment
-        String path = request.getServletContext().getRealPath("/");
+        //String path = request.getServletContext().getRealPath("/");
+        String path = "/opt/uploads/";
         //region Sender File
         if (!senderFile.isEmpty())
         {
@@ -299,6 +301,7 @@ public class DocumentFlowController extends BaseController {
 
         Attachment attachment = attachmentService.findById(attachmentId);
         String path = request.getServletContext().getRealPath("/");
+        //String path = "/opt/uploads/";
 
         File file = new File(path + attachment.getInternalName());
         String mimeType= URLConnection.guessContentTypeFromName(file.getName());

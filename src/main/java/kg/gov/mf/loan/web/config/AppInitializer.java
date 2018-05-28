@@ -32,7 +32,8 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 		return multipartConfigElement;
 	}
 
-	private static final String LOCATION = "C:/temp/"; // Temporary location where files will be stored
+	private static final String LOCATION = "/opt/temp/"; // Temporary location where files will be stored
+	//private static final String LOCATION = "C:/temp"; // Temporary location where files will be stored
 
 	private static final long MAX_FILE_SIZE = 5242880; // 5MB : Max file size.
 														// Beyond that size spring will throw exception.

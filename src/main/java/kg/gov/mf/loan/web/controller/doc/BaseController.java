@@ -11,62 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class BaseController {
 
-    class Prop {
-
-        public boolean title;
-        public boolean description;
-        public boolean documentType;
-        public boolean documentSubType;
-        public boolean generalStatus;
-
-        public boolean senderRegisteredDate;
-        public boolean senderRegisteredNumber;
-        public boolean senderDueDate;
-        public boolean senderExecutorType;
-        public boolean senderExecutor;
-        public boolean senderResponsibleType;
-        public boolean senderResponsible;
-        public boolean senderStatus;
-        public boolean senderInformation;
-
-        public boolean receiverRegisteredDate;
-        public boolean receiverRegisteredNumber;
-        public boolean receiverDueDate;
-        public boolean receiverExecutorType;
-        public boolean receiverExecutor;
-        public boolean receiverResponsibleType;
-        public boolean receiverResponsible;
-        public boolean receiverStatus;
-        public boolean receiverInformation;
-
-        public Prop(boolean state) {
-            title = state;
-            description = state;
-            documentType = state;
-            documentSubType = state;
-            generalStatus = state;
-            senderRegisteredDate = state;
-            senderRegisteredNumber = state;
-            senderDueDate = state;
-            senderExecutorType = state;
-            senderExecutor = state;
-            senderResponsibleType = state;
-            senderResponsible = state;
-            senderStatus = state;
-            senderInformation = state;
-
-            receiverRegisteredDate = state;
-            receiverRegisteredNumber = state;
-            receiverDueDate = state;
-            receiverExecutorType = state;
-            receiverExecutor = state;
-            receiverResponsibleType = state;
-            receiverResponsible = state;
-            receiverStatus = state;
-            receiverInformation = state;
-        }
-    }
-
     protected UserService userService;
 
     @Autowired
