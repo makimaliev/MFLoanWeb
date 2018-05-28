@@ -24,6 +24,7 @@
                             <div class="form">
                                 <form th:action="@{/doc/save}" id="document_form" class="form-horizontal" th:object="${document}" method="POST" enctype="multipart/form-data">
                                     <input type="hidden" th:field="*{id}"/>
+                                    <input type="hidden" th:field="*{owner}"/>
                                     <input type="hidden" th:field="*{documentType.id}"/>
                                     <input type="hidden" th:field="*{documentSubType.id}"/>
                                     <!-- TITLE -->
@@ -101,16 +102,18 @@
                                             </div>
                                         </div>
                                         <!-- Sender Attachment -->
-                                        <div class="form-group" th:hidden="*{senderStatus?.internalName} == 'approve' AND *{senderFileName.isEmpty()}">
-                                            <input class="form-control" type="hidden" th:field="*{senderFileName}"/>
+
+                                        <div class="form-group" th:hidden="*{senderStatus?.internalName} == 'approve' AND *{senderAttachment}">
+                                            <input class="form-control" type="hidden" th:field="*{senderAttachment.id}"/>
                                             <label class="control-label col-md-4"> Прикрепление </label>
                                             <div class="col-md-6">
-                                                <div th:hidden="*{senderStatus?.internalName} == 'approve'">
+                                                <div th:hidden="*{senderStatus?.internalName} == 'request'">
                                                     <input class="form-control" type="file" id="senderFile" name="senderFile"/>
                                                 </div>
-                                                <a th:href="@{/doc/download/__${document.senderFileName}__}" class="form-control" th:text="*{senderFileName}" th:if="*{not #strings.isEmpty(senderFileName)}"></a>
+                                                <a th:href="@{/doc/download/__${document?.senderAttachment.id}__}" class="form-control" th:text="*{senderAttachment.name}" th:if="*{senderAttachment.id}"></a>
                                             </div>
                                         </div>
+
                                     </div>
                                     <!-- Receiver -->
                                     <H3> Получатель </H3>
@@ -277,33 +280,22 @@
                                             </div>
                                         </div>
                                         <!-- Receiver Attachment -->
+
                                         <div class="form-group" th:hidden="*{senderStatus?.internalName} != 'approve' OR *{receiverStatus?.internalName} == 'accept'">
-                                            <input class="form-control" type="hidden" th:field="*{receiverFileName}"/>
+                                            <input class="form-control" type="hidden" th:field="*{receiverAttachment.id}"/>
                                             <label class="control-label col-md-4"> Прикрепление </label>
                                             <div class="col-md-6">
                                                 <div th:hidden="*{receiverStatus?.internalName} == 'start' OR *{receiverStatus?.internalName} == 'done'">
                                                     <input class="form-control" type="file" id="receiverFile" name="receiverFile"/>
                                                 </div>
-                                                <a th:href="@{/doc/download/__${document.receiverFileName}__}" class="form-control" th:text="*{receiverFileName}" th:if="*{not #strings.isEmpty(receiverFileName)}"></a>
+                                                <a th:href="@{/doc/download/__${document?.receiverAttachment.id}__}" class="form-control" th:text="*{receiverAttachment.name}" th:if="*{not #strings.isEmpty(receiverAttachment?.name)}"></a>
                                             </div>
                                         </div>
+
                                     </div>
-
                                     <HR>
-
                                     <button type="button" class="btn dark btn-outline" onclick="window.history.back()"> Назад </button>
-
-                                    <button type="submit" class="btn green" name="action" value="create" th:if="${documentState} == 'DRAFT'"> Сохранить </button>
-
-                                    <button type="submit" class="btn green" name="action" value="request" th:if="${documentState} == 'DRAFT'"> На утверждение </button>
-                                    <button type="submit" class="btn green" name="action" value="reject" th:if="${documentState} == 'WAITING_FOR_APPROVAL'"> Отклонить </button>
-                                    <button type="submit" class="btn green" name="action" value="approve" th:if="${documentState} == 'WAITING_FOR_APPROVAL'"> Утвердить </button>
-                                    <button type="submit" class="btn green" name="action" value="accept" th:if="${documentState} == 'APPROVED'"> Принять </button>
-                                    <button type="submit" class="btn green" name="action" value="start" th:if="${documentState} == 'ACCEPTED'"> Начать </button>
-                                    <button type="submit" class="btn green" name="action" value="done" th:if="${documentState} == 'STARTED'"> Завершить </button>
-
-                                    <button type="submit" class="btn green" name="action" value="archive" th:if="${documentState} == 'DONE'"> Архивировать </button>
-
+                                    <button type="submit" style="margin: 3px" class="btn green" name="action" th:each="action : ${actions}" th:value="${action.internalName}" th:text="${action.name}" ></button>
                                 </form>
                             </div>
                         </div>

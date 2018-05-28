@@ -122,12 +122,14 @@
                                             </div>
 
                                         </div>
-                                        <div class="form-group" th:if="*{not senderFileName.isEmpty()}">
+
+                                        <div class="form-group" th:if="*{senderAttachment}">
                                             <label class="control-label col-md-4"> Прикрепление </label>
                                             <div class="col-md-6">
-                                                <a th:href="@{/doc/download/__${document.senderFileName}__}" class="form-control" th:text="*{senderFileName}"></a>
+                                                <a th:href="@{/doc/download/__${document.senderAttachment.id}__}" class="form-control" th:text="*{senderAttachment.name}"></a>
                                             </div>
                                         </div>
+
                                         <H3> Получатель </H3>
                                         <HR>
                                         <div class="form-group" th:if="*{receiverDispatchData?.size()}">
@@ -200,12 +202,14 @@
 
                                         </div>
                                     </div>
-                                    <div class="form-group" th:if="*{not receiverFileName.isEmpty()}">
+
+                                    <div class="form-group" th:if="*{receiverAttachment}">
                                         <label class="control-label col-md-4"> Прикрепление </label>
                                         <div class="col-md-6">
-                                            <a th:href="@{/doc/download/__${document.receiverFileName}__}" class="form-control" th:text="*{receiverFileName}"></a>
+                                            <a th:href="@{/doc/download/__${document?.receiverAttachment.id}__}" class="form-control" th:text="*{senderAttachment.name}"></a>
                                         </div>
                                     </div>
+
                                     <HR>
                                     <button type="button" class="btn dark btn-outline" onclick="window.history.back()">Back</button>
 

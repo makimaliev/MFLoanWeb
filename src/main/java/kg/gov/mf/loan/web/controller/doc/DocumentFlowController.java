@@ -16,6 +16,8 @@ import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLConnection;
@@ -32,35 +34,62 @@ public class DocumentFlowController extends BaseController {
     private DocumentStatusService documentStatusService;
     private AccountService accountService;
     private TaskService taskService;
+    private AttachmentService attachmentService;
+    private HttpServletRequest request;
 
     @Autowired
-    public void setDocumentService(DocumentService documentService) {
+    public DocumentFlowController(DocumentService documentService,
+                                  DocumentTypeService documentTypeService,
+                                  DocumentSubTypeService documentSubTypeService,
+                                  DocumentStatusService documentStatusService,
+                                  AccountService accountService,
+                                  TaskService taskService,
+                                  AttachmentService attachmentService,
+                                  HttpServletRequest request)
+    {
         this.documentService = documentService;
-    }
-    @Autowired
-    public void setDocumentTypeService(DocumentTypeService documentTypeService) {
         this.documentTypeService = documentTypeService;
-    }
-    @Autowired
-    public void setDocumentSubTypeService(DocumentSubTypeService documentSubTypeService) {
         this.documentSubTypeService = documentSubTypeService;
-    }
-    @Autowired
-    public void setDocumentStatusService(DocumentStatusService documentStatusService) {
         this.documentStatusService = documentStatusService;
-    }
-    @Autowired
-    public void setAccountService(AccountService accountService) {
         this.accountService = accountService;
-    }
-    @Autowired
-    public void setTaskService(TaskService taskService) {
         this.taskService = taskService;
+        this.attachmentService = attachmentService;
+        this.request = request;
     }
     //endregion
-
-    public DocumentFlowController(){}
-
+    //region TYPE
+    enum TYPE { internal, incoming, outgoing}
+    String[][][] actionString =
+            {
+                {
+                    {"create", "request"},
+                    {"approve", "reject"},
+                    {"accept"},
+                    {},
+                    {},
+                    {"start"},
+                    {"done"},
+                    {"archive"}
+                },
+                {
+                    {"create", "register"},
+                    {},
+                    {},
+                    {},
+                    {"accept"},
+                    {"start"},
+                    {"done"},
+                    {"archive"}
+                },
+                {
+                    {"create", "request"},
+                    {"approve", "reject"},
+                    {"register"},
+                    {},
+                    {"archive"}
+                }
+            };
+    //endregion
     final static Map<Integer, String> responsible = new HashMap<Integer, String>() {
         {
             put(1, "Сотрудник");
@@ -94,10 +123,13 @@ public class DocumentFlowController extends BaseController {
     public String newDocument(@RequestParam("type") String type, @RequestParam("subtype") String subtype, Model model) {
 
         Document document = new Document();
+        document.setOwner(getUser().getId());
         document.setDocumentType(documentTypeService.getByInternalName(type));
         document.setDocumentSubType(documentSubTypeService.getByInternalName(subtype));
 
-        if(type.equals("internal"))
+        List<DocumentStatus> actions = new ArrayList<>();
+
+        if(type.equals("internal") | type.equals("outgoing"))
         {
             Responsible resp = new Responsible();
             resp.setResponsibleType(1);
@@ -106,13 +138,20 @@ public class DocumentFlowController extends BaseController {
             Executor exec = new Executor();
             exec.setExecutorType(1);
             document.setSenderExecutor(exec);
+
+            actions.add(documentStatusService.getByInternalName("create"));
+            actions.add(documentStatusService.getByInternalName("request"));
+        }
+        else
+        {
+            actions.add(documentStatusService.getByInternalName("create"));
+            actions.add(documentStatusService.getByInternalName("register"));
         }
 
+        model.addAttribute("actions", actions);
         model.addAttribute("document", document);
         model.addAttribute("responsible", responsible);
-
         model.addAttribute("documentState",  document.getDocumentState().toString());
-
         model.addAttribute("staff", accountService.getStaff());
         model.addAttribute("department", accountService.getDepartments());
         model.addAttribute("organization", accountService.getOrganizations());
@@ -125,18 +164,27 @@ public class DocumentFlowController extends BaseController {
     public String editDocument(@PathVariable("id") Long id, Model model) {
 
         Document document = documentService.findById(id);
+        String documentType = document.getDocumentType().getInternalName();
 
+        int row = TYPE.valueOf(documentType).ordinal();
+        int col = document.getDocumentState().ordinal();
+
+        List<DocumentStatus> actions = new ArrayList<>();
+        for(String action : actionString[row][col])
+        {
+            actions.add(documentStatusService.getByInternalName(action));
+        }
+
+        model.addAttribute("actions", actions);
         model.addAttribute("document", document);
         model.addAttribute("responsible", responsible);
-
         model.addAttribute("staff", accountService.getStaff());
         model.addAttribute("department", accountService.getDepartments());
         model.addAttribute("organization", accountService.getOrganizations());
         model.addAttribute("person", accountService.getPerson());
-
         model.addAttribute("documentState", document.getDocumentState().toString());
 
-        return "/doc/document/" + document.getDocumentType().getInternalName();
+        return "/doc/document/" + documentType;
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
@@ -146,45 +194,53 @@ public class DocumentFlowController extends BaseController {
                                @RequestParam("receiverFile") MultipartFile receiverFile) throws IOException {
 
         //region Attachment
-        String path = "D:\\cp\\";
-
+        String path = request.getServletContext().getRealPath("/");
+        //region Sender File
         if (!senderFile.isEmpty())
         {
             try {
-                String fileName = null;
-                fileName = senderFile.getOriginalFilename();
+                String fileName = senderFile.getOriginalFilename();
+                String fsName = UUID.randomUUID().toString();
 
-                File file = new File(path + fileName);
-                if(file.exists() && !file.isDirectory()) {
-                    byte[] bytes = senderFile.getBytes();
-                    BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(file));
-                    buffStream.write(bytes);
-                    buffStream.close();
-                }
+                File file = new File(path + fsName);
+                byte[] bytes = senderFile.getBytes();
+                BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(file));
+                buffStream.write(bytes);
+                buffStream.close();
 
+                Attachment attachment = new Attachment();
+                attachment.setName(fileName);
+                attachment.setInternalName(fsName);
+
+                document.setSenderAttachment(attachment);
                 document.setSenderFileName(fileName);
             } catch (Exception e) {
             }
         }
-
+        //endregion
+        //region Receiver File
         if (!receiverFile.isEmpty())
         {
             try {
-                String fileName = null;
-                fileName = receiverFile.getOriginalFilename();
+                String fileName = receiverFile.getOriginalFilename();
+                String fsName = UUID.randomUUID().toString();
 
-                File file = new File(path + fileName);
-                if(file.exists() && !file.isDirectory()) {
-                    byte[] bytes = receiverFile.getBytes();
-                    BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(file));
-                    buffStream.write(bytes);
-                    buffStream.close();
-                }
+                File file = new File(path + fsName);
+                byte[] bytes = receiverFile.getBytes();
+                BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(file));
+                buffStream.write(bytes);
+                buffStream.close();
 
+                Attachment attachment = new Attachment();
+                attachment.setName(fileName);
+                attachment.setInternalName(fsName);
+
+                document.setReceiverAttachment(attachment);
                 document.setReceiverFileName(fileName);
             } catch (Exception e) {
             }
         }
+        //endregion
         //endregion
 
         String docType = documentTypeService.findById(document.getDocumentType().getId()).getInternalName();
@@ -219,6 +275,13 @@ public class DocumentFlowController extends BaseController {
         Document document = documentService.findById(id);
         String docType = documentTypeService.findById(document.getDocumentType().getId()).getInternalName();
 
+        for(Task task : taskService.getTasksByObjectId(document.getId(), getUser().getId()))
+        {
+            taskService.remove(task);
+        }
+        documentService.deleteById(document);
+
+        /*
         if(document.getDocumentState().toString() == "DRAFT")
         {
             for(Task task : taskService.getTasksByObjectId(document.getId(), getUser().getId()))
@@ -227,13 +290,17 @@ public class DocumentFlowController extends BaseController {
             }
             documentService.deleteById(document);
         }
+        */
         return "redirect:/doc?type=" + docType;
     }
 
-    @RequestMapping(value = "/download/{attachment}", method = RequestMethod.GET)
-    public void downloadFile(HttpServletResponse response, @PathVariable("attachment") String attachment) throws IOException {
+    @RequestMapping(value = "/download/{attachmentId}", method = RequestMethod.GET)
+    public void downloadFile(HttpServletResponse response, @PathVariable("attachmentId") Long attachmentId) throws IOException {
 
-        File file = new File("D:/cp/" + attachment);
+        Attachment attachment = attachmentService.findById(attachmentId);
+        String path = request.getServletContext().getRealPath("/");
+
+        File file = new File(path + attachment.getInternalName());
         String mimeType= URLConnection.guessContentTypeFromName(file.getName());
 
         if(mimeType==null){
@@ -241,7 +308,7 @@ public class DocumentFlowController extends BaseController {
         }
 
         response.setContentType(mimeType);
-        response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + file.getName() +"\""));
+        response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + attachment.getName() +"\""));
         response.setContentLength((int)file.length());
 
         InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
@@ -432,6 +499,7 @@ public class DocumentFlowController extends BaseController {
 
         DispatchData dispatchData = setDispatchData(action);
         DocumentStatus documentStatus = documentStatusService.getByInternalName(action);
+        document.setDocumentState(document.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
 
         document = setER(document);
         document.setGeneralStatus(documentStatus);
@@ -441,7 +509,6 @@ public class DocumentFlowController extends BaseController {
         {
             document.getSenderDispatchData().add(dispatchData);
             document.setSenderStatus(documentStatus);
-            document.setDocumentState(document.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
 
             if(action.equals("request"))
             {
@@ -459,7 +526,9 @@ public class DocumentFlowController extends BaseController {
 
             document.setSenderDispatchData(doc.getSenderDispatchData());            // add existing Sender DispatchData
             document.setSenderStatus(doc.getSenderStatus());                        // add existing Sender DocumentStatus
-            document.setDocumentState(doc.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
+
+            document.setSenderAttachment(doc.getSenderAttachment());
+            document.setReceiverAttachment(doc.getReceiverAttachment());
 
             if(doc.getSenderStatus().getInternalName().equals("approve"))
             {   // Receiver Data
