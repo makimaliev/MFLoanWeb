@@ -148,15 +148,15 @@
 																		<i class="la la-ellipsis-h"></i>
 																	</a>
 																	<div class="dropdown-menu dropdown-menu-right">
-																		<a class="dropdown-item" th:href="@{/manage/order/__${order.id}__/appliedEntityList/__${l.id}__/view}">
+																		<a class="dropdown-item" th:href="@{/manage/order/__${order.id}__/entitylist/__${l.id}__/view}">
 																			<span th:text="#{label.table.view}"></span>
 																		</a>
-																		<a class="dropdown-item" th:href="@{/manage/order/__${order.id}__/appliedEntityList/__${l.id}__/save}">
+																		<a class="dropdown-item" th:href="@{/manage/order/__${order.id}__/entitylist/__${l.id}__/save}">
 																			<span th:text="#{label.table.edit}"></span>
 																		</a>
 																		<a class="dropdown-item" href="#">
 																			<span>
-																				<form th:action="@{/manage/order/__${order.id}__/appliedEntityList/delete}" method="post">
+																				<form th:action="@{/manage/order/__${order.id}__/entitylist/delete}" method="post">
 																					<input hidden="true" type="text" id="id" name="id" th:value="${l.id}" />
 																					<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
 																				</form>
@@ -205,15 +205,15 @@
 																		<i class="la la-ellipsis-h"></i>
 																	</a>
 																	<div class="dropdown-menu dropdown-menu-right">
-																		<a class="dropdown-item" th:href="@{/manage/order/__${orderId}__/oDP/__${oDP.id}__/view}">
+																		<a class="dropdown-item" th:href="@{/manage/order/__${orderId}__/orderdocumentpackage/__${oDP.id}__/view}">
 																			<span th:text="#{label.table.view}"></span>
 																		</a>
-																		<a class="dropdown-item" th:href="@{/manage/order/__${orderId}__/oDP/__${oDP.id}__/save}">
+																		<a class="dropdown-item" th:href="@{/manage/order/__${orderId}__/orderdocumentpackage/__${oDP.id}__/save}">
 																			<span th:text="#{label.table.edit}"></span>
 																		</a>
 																		<a class="dropdown-item" href="#">
 																			<span>
-																				<form th:action="@{/manage/order/__${orderId}__/oDP/delete}" method="post">
+																				<form th:action="@{/manage/order/__${orderId}__/orderdocumentpackage/delete}" method="post">
 																					<input hidden="true" type="text" id="id" name="id" th:value="${oDP.id}" />
 																					<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
 																				</form>
@@ -324,15 +324,15 @@
 																		<i class="la la-ellipsis-h"></i>
 																	</a>
 																	<div class="dropdown-menu dropdown-menu-right">
-																		<a class="dropdown-item" th:href="@{/manage/order/__${order.id}__/term/__${term.id}__/view}">
+																		<a class="dropdown-item" th:href="@{/manage/order/__${order.id}__/orderterm/__${term.id}__/view}">
 																			<span th:text="#{label.table.view}"></span>
 																		</a>
-																		<a class="dropdown-item" th:href="@{/manage/order/__${order.id}__/term/__${term.id}__/save}">
+																		<a class="dropdown-item" th:href="@{/manage/order/__${order.id}__/orderterm/__${term.id}__/save}">
 																			<span th:text="#{label.table.edit}"></span>
 																		</a>
 																		<a class="dropdown-item" href="#">
 																			<span>
-																				<form th:action="@{/manage/order/__${order.id}__/term/delete}" method="post">
+																				<form th:action="@{/manage/order/__${order.id}__/orderterm/delete}" method="post">
 																					<input hidden="true" type="text" id="id" name="id" th:value="${term.id}" />
 																					<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
 																				</form>

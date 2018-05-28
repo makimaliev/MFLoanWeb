@@ -129,7 +129,7 @@ public class OrderDocumentPackageController {
 			oDPService.update(oDP);
 			//updateInEntities(creditOrder, oDP);
 			
-		return "redirect:" + "/manage/order/{orderId}/view#tab_1";
+		return "redirect:" + "/manage/order/{orderId}/view#documentPackages";
 	}
 	
 	@RequestMapping(value="/manage/order/{orderId}/orderdocumentpackage/delete", method=RequestMethod.POST)
@@ -139,7 +139,7 @@ public class OrderDocumentPackageController {
 			//deleteInEntities(id);
 		}
 			
-		return "redirect:" + "/manage/order/{orderId}/view#tab_1";
+		return "redirect:" + "/manage/order/{orderId}/view#documentPackages";
     }
 	
 	/*

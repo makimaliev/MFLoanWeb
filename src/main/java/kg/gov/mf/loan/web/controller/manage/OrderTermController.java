@@ -176,14 +176,14 @@ public class OrderTermController {
 		else
 			orderTermService.update(term);
 			
-		return "redirect:" + "/manage/order/{orderId}/view#tab_2";
+		return "redirect:" + "/manage/order/{orderId}/view#orderTerms";
 	}
 	
 	@RequestMapping(value="/manage/order/{orderId}/orderterm/delete", method=RequestMethod.POST)
     public String deleteOrderTerm(long id, @PathVariable("orderId")Long orderId) {
 		if(id > 0)
 			orderTermService.remove(orderTermService.getById(id));
-		return "redirect:" + "/manage/order/{orderId}/view#tab_2";
+		return "redirect:" + "/manage/order/{orderId}/view#orderTerms";
     }
 	
 	//BEGIN - ORDER TERM FUND
