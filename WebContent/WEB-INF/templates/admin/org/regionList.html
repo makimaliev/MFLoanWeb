@@ -204,8 +204,23 @@
         {
             var link = $(e.relatedTarget);
             var regionFormID = $("#region_id").val();
+
             $(this).find(".modal-content").load(link.attr("href"));
+
+
+
+            if(link.attr("href").indexOf('district/add')>0)
+            {
+                $(this).find(".modal-content").load(link.attr("href").replace("/district/add","/region/"+regionFormID+"/district/add"));
+            }
+            else
+            {
+                $(this).find(".modal-content").load(link.attr("href"));
+            }
         });
+
+
+
 
 	</script>
 

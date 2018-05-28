@@ -3,7 +3,7 @@
 
 <head>
 
-	<title>	MFLoan | Villages	</title>
+	<title th:text="#{label.village.page.title}">	MFLoan | Villages	</title>
 	<div th:replace="fragments/header :: header-css"></div>
 
 	<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
@@ -28,7 +28,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.region.page.title}"></h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.village.page.title}"></h3>
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
@@ -48,10 +48,10 @@
 						<table class="table" id="villageTable">
 							<thead class="thead-default">
 								<tr>
-									<th>Id</th>
-									<th>Name</th>
-									<th>Code</th>
-									<th>Aokmotu</th>
+									<th th:text="#{label.village.table.id}">Id</th>
+									<th th:text="#{label.village.table.name}">Name</th>
+									<th th:text="#{label.village.table.code}">Code</th>
+									<th th:text="#{label.village.table.aokmotu}">Aokmotu</th>
 									<th>&nbsp;</th>
 								</tr>
 							</thead>
