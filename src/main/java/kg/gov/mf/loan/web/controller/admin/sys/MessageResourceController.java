@@ -133,7 +133,7 @@ public class MessageResourceController {
 		
 		this.reloadDatabaseMessages();
 
-		return "redirect:/objectType/list";
+		return "redirect:/messageResource/list";
 
 	}
 
@@ -142,7 +142,7 @@ public class MessageResourceController {
 
 		this.messageResourceService.deleteById(id);
 
-		return "redirect:/objectType/list";
+		return "redirect:/messageResource/list";
 	}
 
      

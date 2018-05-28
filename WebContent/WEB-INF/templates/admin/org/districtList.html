@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
 
-	<title>	MFLoan | Districts	</title>
+	<title th:text="#{label.district.page.title}">	MFLoan | Districts	</title>
 	
 	<div  th:replace="fragments/header :: header-css"/>
 	<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
@@ -32,7 +32,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.region.page.title}"></h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.district.page.title}"></h3>
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
@@ -58,10 +58,10 @@
 						<table class="table" id="districtTable">
 							<thead class="thead-default">
 								<tr>
-									<th>Id</th>
-									<th>Name</th>
-									<th>Code</th>
-									<th>Region</th>
+									<th th:text="#{label.district.table.id}">Id</th>
+									<th th:text="#{label.district.table.name}">Name</th>
+									<th th:text="#{label.district.table.code}">Code</th>
+									<th th:text="#{label.district.table.region}">Region</th>
 									<th>&nbsp;</th>
 								</tr>
 							</thead>

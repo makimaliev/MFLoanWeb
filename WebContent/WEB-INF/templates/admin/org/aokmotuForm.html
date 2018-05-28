@@ -16,19 +16,19 @@
 		</div>
 
 		<div class="form-group">
-			<label for="name" class="form-control-label" th:text="#{label.district.modal.name}">Name<span class="required"> * </span></label>
+			<label for="name" class="form-control-label" th:text="#{label.aokmotu.modal.name}">Name<span class="required"> * </span></label>
 			<input hidden="true" type="text" id="id" name="id" th:field="*{id}" />
 			<input hidden="true" type="text" id="district.id" name="district.id" th:field="*{district.id}" />
 			<input type="text" class="form-control" id="name" name="name" th:value="*{name}">
 		</div>
 
 		<div class="form-group ">
-			<label for="name" class="form-control-label" th:text="#{label.district.modal.code}">Code<span class="required"> * </span></label>
+			<label for="name" class="form-control-label" th:text="#{label.aokmotu.modal.code}">Code<span class="required"> * </span></label>
 			<input type="text" class="form-control" id="code" name="code" th:value="*{code}">
 		</div>
 
 		<div class="form-group ">
-			<label for="name" class="form-control-label" th:text="#{label.district.modal.code}">District<span class="required"> * </span></label>
+			<label for="name" class="form-control-label" th:text="#{label.aokmotu.modal.district}">District<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
 					<select th:value="${aokmotu.district}" class="selectpicker">
@@ -43,8 +43,8 @@
 	</div>
 
 	<div class="modal-footer">
-		<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.district.button.cancel}"></button>
-		<button type="submit" class="btn btn-primary" th:text="#{label.district.button.submit}"></button>
+		<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.aokmotu.button.cancel}"></button>
+		<button type="submit" class="btn btn-primary" th:text="#{label.aokmotu.button.submit}"></button>
 	</div>
 
 
