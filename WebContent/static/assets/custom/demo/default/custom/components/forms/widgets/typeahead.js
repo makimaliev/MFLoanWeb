@@ -52,7 +52,11 @@ var Typeahead = function() {
             datumTokenizer: Bloodhound.tokenizers.whitespace,
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             // `states` is an array of state names defined in "The Basics"
-            local: states
+            //local: states
+            remote:{
+                url: '/api/loans/search?q=%QUERY',
+                wildcard: '%QUERY'
+            }
         });
 
         $('#m_typeahead_2, #m_typeahead_2_modal').typeahead({
@@ -61,7 +65,7 @@ var Typeahead = function() {
             minLength: 1
         },
         {
-            name: 'states',
+            name: 'loans',
             source: bloodhound
         }); 
     }

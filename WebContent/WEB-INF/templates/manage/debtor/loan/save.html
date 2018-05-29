@@ -118,10 +118,15 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
+										<div class="m-typeahead">
+										<input class="form-control m-input" id="m_typeahead_2" type="text" placeholder="Loans">
+										</div>
+										<!--
 										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.parentLoan.id}"  id="parentLoan" title="Select...">
 											<option value="0">Select...</option>
 											<option th:each="tLoan : ${tLoans}" th:value="${tLoan.id}" th:text="${tLoan.regNumber}"></option>
 										</select>
+										-->
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -173,6 +178,7 @@
 <!--begin::Page Resources -->
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/typeahead.js}" type="text/javascript"></script>
 <!--end::Page Resources -->
 
 </body>
