@@ -221,7 +221,7 @@
                                     <div class="form-group" th:if="*{receiverAttachment}">
                                         <label class="control-label col-md-4"> Прикрепление </label>
                                         <div class="col-md-6">
-                                            <a th:href="@{/doc/download/__${document?.receiverAttachment.id}__}" class="form-control" th:text="*{senderAttachment.name}"></a>
+                                            <a th:href="@{/doc/download/__${document?.receiverAttachment.id}__}" class="form-control" th:text="*{receiverAttachment.name}"></a>
                                         </div>
                                     </div>
 
