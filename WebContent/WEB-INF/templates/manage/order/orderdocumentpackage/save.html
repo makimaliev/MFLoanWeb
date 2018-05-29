@@ -2,7 +2,7 @@
 <html lang="en" >
 <!-- begin::Head -->
 <head>
-	<title th:text="#{label.add.documentPackage.title}"></title>
+	<title th:text="#{label.add.orderDocumentPackage.title}"></title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -38,7 +38,8 @@
 							<div class="m-form__section">
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-3 col-sm-12">
-										Name <span class="m--font-danger">*</span>
+										<span th:text="#{label.orderDocumentPackage.name}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="name" th:value="${documentPackage.name}">
@@ -51,12 +52,8 @@
 								<div class="row">
 									<div class="col-lg-3"></div>
 									<div class="col-lg-6">
-										<button type="submit" class="btn btn-primary">
-											Save
-										</button>
-										<button onclick="window.history.back()" type="button" class="btn btn-secondary">
-											Cancel
-										</button>
+										<button type="submit" class="btn btn-primary" th:text="#{label.form.save}"></button>
+										<button onclick="window.history.back()" type="button" class="btn btn-secondary" th:text="#{label.form.cancel}"></button>
 									</div>
 								</div>
 							</div>

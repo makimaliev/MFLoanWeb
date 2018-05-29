@@ -38,7 +38,8 @@
 							<div class="m-form__section">
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Registration Number <span class="m--font-danger">*</span>
+										<span th:text="#{label.order.registrationNumber}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="regNumber" th:value="${creditOrder.regNumber}">
@@ -46,7 +47,7 @@
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Registration Date
+										<span th:text="#{label.order.registrationDate}"></span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
@@ -59,7 +60,8 @@
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12" for="description">
-										Description <span class="m--font-danger">*</span>
+										<span th:text="#{label.order.description}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<textarea class="form-control m-input" id="description" rows="3" name="description" th:value="${creditOrder.description}"></textarea>

@@ -59,6 +59,9 @@ body{
 .m-form .m-form__group label.col-form-label{
 	padding-top: 4px;
 }
+.m-form .m-form__group label.col-form-label > span:first-child{
+	word-break: break-word;
+}
 .m-form .m-form__actions{
 	padding: 16px;
 }
@@ -429,6 +432,10 @@ table.dataTable th.focus, table.dataTable td.focus{
 	font-size: 10px;
 	font-weight: 600;
 	color: #868e96;
+}
+.m-widget1 .m-widget1__item .m-widget1__title,
+.m-widget1 .m-widget1__item .m-widget1__desc{
+	word-break: break-word;
 }
 .m-widget1 .m-widget1__item .m-widget1__desc{
 	margin-top: 4px;
