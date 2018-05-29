@@ -23,102 +23,63 @@
                 <div class="page-content">
 
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <!-- BEGIN BORDERED TABLE PORTLET-->
                             <div class="portlet light portlet-fit ">
                                 <div class="portlet-title">
                                     <div class="caption">
                                         <i class="icon-settings font-green"></i>
-                                        <span class="caption-subject font-green sbold uppercase">Save Collection Procedure</span>
+                                        <span class="caption-subject font-green sbold uppercase">Save Collateral Item Inspection Result</span>
                                     </div>
                                 </div>
-
-                                <form th:action="@{/manage/debtor/__${debtorId}__/collectionprocedure/save}" th:object="${proc}" id="form_sample_2" class="form-horizontal" method="post">
+                                <form th:action="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${itemId}__/insresult/save}" id="form_sample_2" class="form-horizontal" method="post">
                                     <div class="portlet-body">
                                         <div class="form-body">
                                             <div class="alert alert-danger display-hide">
-                                                <button class="close" data-close="alert"></button> You have some form errors. Please check below.
+                                                <button class="close" data-close="alert"></button>
+                                                You have some form errors. Please check below.
                                             </div>
 
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">Start Date</label>
+                                            <div class="form-group margin-top-20">
+                                                <label class="control-label col-md-3">On Date</label>
                                                 <div class="col-md-4">
-                                                    <input type="hidden" th:field="*{id}"/>
+                                                    <input hidden="true" type="text" id="id" name="id" th:value="${ins.id}"/>
                                                     <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
-                                                        <input type="text" class="form-control" th:field="*{startDate}"/>
+                                                        <input type="text" class="form-control" name="onDate" th:value="${ins.onDate}"/>
                                                         <span class="input-group-btn">
                                                             <button class="btn default" type="button">
                                                                 <i class="fa fa-calendar"></i>
                                                             </button>
                                                         </span>
                                                     </div>
+                                                    <!-- /input-group -->
                                                     <span class="help-block"> select a date </span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="control-label col-md-3">Close Date</label>
-                                                <div class="col-md-4">
-                                                    <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
-                                                        <input type="text" class="form-control" th:field="*{closeDate}"/>
-                                                        <span class="input-group-btn">
-                                                            <button class="btn default" type="button">
-                                                                <i class="fa fa-calendar"></i>
-                                                            </button>
-                                                        </span>
-                                                    </div>
-                                                    <span class="help-block"> select a date </span>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">Last Phase
+                                                <label class="control-label col-md-3">Details
                                                     <span class="required"> * </span>
                                                 </label>
                                                 <div class="col-md-4">
                                                     <div class="input-icon right">
                                                         <i class="fa"></i>
-                                                        <input type="text" class="form-control" th:field="*{lastPhase}"/>
+                                                        <input type="text" class="form-control" name="description" th:value="${ins.details}"/>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="control-label col-md-3">Last Status Id
+                                                <label class="control-label col-md-3">inspectionResultType
                                                     <span class="required"> * </span>
                                                 </label>
                                                 <div class="col-md-4">
-                                                    <div class="input-icon right">
-                                                        <i class="fa"></i>
-                                                        <input type="text" class="form-control" th:field="*{lastStatusId}"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">Procedure Status
-                                                    <span class="required"> * </span>
-                                                </label>
-                                                <div class="col-md-4">
-                                                    <select class="form-control" th:field="*{procedureStatus.id}">
-                                                        <option value="0">Select...</option>
-                                                        <option th:each="status : ${statuses}" th:value="${status.id}" th:text="${status.name}"></option>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">Procedure Type
-                                                    <span class="required"> * </span>
-                                                </label>
-                                                <div class="col-md-4">
-                                                    <select class="form-control" th:field="*{procedureType.id}">
+                                                    <select class="form-control" th:field="${ins.inspectionResultType.id}"  id="inspectionResultType">
                                                         <option value="0">Select...</option>
                                                         <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
                                                     </select>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                     <div class="modal-footer">

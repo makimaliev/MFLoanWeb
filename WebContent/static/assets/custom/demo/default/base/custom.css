@@ -71,6 +71,16 @@ body{
 .m-form__group.row .m-radio-inline{
 	margin-top: -10px;
 }
+.m-form__section + .m-form__section{
+	margin-top: 16px;
+}
+.m-form .m-form__heading{
+	margin-bottom: 16px;
+}
+.m-form .m-form__heading .m-form__heading-title{
+	font-size: 16px;
+	font-weight: 700;
+}
 
 /*Header*/
 #m_header_menu{
