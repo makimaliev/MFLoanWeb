@@ -16,13 +16,13 @@
 		</div>
 
 		<div class="form-group">
-			<label for="name" class="form-control-label">Name<span class="required"> * </span></label>
+			<label for="name" class="form-control-label" th:text="#{label.role.modal.name}">Name<span class="required"> * </span></label>
 			<input hidden="true" type="text" id="id" name="id" th:field="*{id}" />
 			<input type="text" class="form-control" id="name" name="name" th:value="*{name}">
 		</div>
 
 		<div class="form-group ">
-			<label class="form-control-label">Permissions<span class="required"> * </span></label>
+			<label class="form-control-label" th:text="#{label.role.modal.permissions}">Permissions<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
 					<select th:field="*{permissions}" multiple="multiple" class="selectpicker">

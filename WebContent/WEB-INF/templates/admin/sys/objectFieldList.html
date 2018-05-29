@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
 
-	<title>	MFLoan | ObjectFields</title>
+	<title th:text="#{label.objectField.page.title}">	MFLoan | ObjectFields</title>
 
 	<div  th:replace="fragments/header :: header-css" />
 	<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
@@ -33,7 +33,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.region.page.title}"></h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.objectField.page.title}"></h3>
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
@@ -59,10 +59,10 @@
 						<table class="table" id="objectFieldTable">
 							<thead class="thead-default">
 								<tr>
-									<th>Id</th>
-									<th>Name</th>
-									<th>Description</th>
-									<th>MEthodName</th>
+									<th th:text="#{label.objectField.table.id}">Id</th>
+									<th th:text="#{label.objectField.table.name}">Name</th>
+									<th th:text="#{label.objectField.table.description}">Description</th>
+									<th th:text="#{label.objectField.table.methodName}">MEthodName</th>
 									<th>&nbsp;</th>
 								</tr>
 							</thead>

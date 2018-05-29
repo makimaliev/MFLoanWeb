@@ -8,6 +8,9 @@ import kg.gov.mf.loan.manage.repository.debtor.DebtorRepository;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.web.exception.ResourceNotFoundExcption;
+import kg.gov.mf.loan.web.util.Datatable;
+import kg.gov.mf.loan.web.util.DebtorV;
+import kg.gov.mf.loan.web.util.Meta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,8 +20,10 @@ import org.springframework.web.bind.annotation.*;
 
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -94,33 +99,10 @@ public class RestDebtorController {
 	}
 
 	@PostMapping("/debtors")
-		public DataResponse getAllDebtors(@RequestParam("draw") int draw, @RequestParam("start") int start, @RequestParam("length") int length) {
+	public DataResponse getAllDebtors(@RequestParam("draw") int draw,
+									  @RequestParam("start") int start,
+									  @RequestParam("length") int length) {
 
-		/*
-		Calendar cal = Calendar.getInstance();
-		Date today = cal.getTime();
-
-		List<Object> vals = new ArrayList<>();
-		vals.add("Text 1");
-		vals.add(1);
-		vals.add(DateUtils.format(today, DateUtils.FORMAT_POSTGRES_DATE));
-		vals.add("John Doe");
-		vals.add("John Doe");
-		vals.add(100.1);
-		vals.add(10);
-		//vals.add(1);
-		vals.add("Text 2");
-
-        DataResponse<Object> dr = new DataResponse<>();
-        List<List<Object>> data = new ArrayList<>();
-        data.add(vals);
-        dr.setData(data);
-        dr.setRecordsFiltered(10);
-        dr.setRecordsTotal(10);
-        dr.setDraw(1);
-
-        return dr;
-        */
 		long count = debtorRepository.count();
 		Pageable pageable = new PageRequest(start/length, length);
 		DataResponse<Object> dr = new DataResponse<>();
@@ -133,7 +115,7 @@ public class RestDebtorController {
 			vals.add(debtor.getName());
 			vals.add(debtor.getWorkSector().getName());
 			vals.add(debtor.getOwner().getAddress().getDistrict().getName());
-			vals.add("<a href=\"javascript:;\" class=\"btn btn-sm btn-outline grey-salsa\"><i class=\"fa fa-search\"></i> View</a>'");
+			vals.add("<a href=\"/manage/debtor/"+ debtor.getId() + "/view\" class=\"btn btn-sm btn-outline grey-salsa\"><i class=\"fa fa-search\"></i> View</a>'");
 			data.add(vals);
 		}
 
@@ -145,14 +127,36 @@ public class RestDebtorController {
 		return dr;
 	}
 
+	/*
+	@PostMapping("/debtors")
+	public Datatable getAllDebtors(HttpServletRequest request)
+	{
+		long count = debtorRepository.count();
+		System.out.println(request.getParameter("datatable[pagination][field]"));
+		Pageable pageable = new PageRequest(0, 10);
+
+		Datatable<DebtorV> result = new Datatable<>();
+		List<Debtor> debtors = debtorRepository.findAll(pageable).getContent();
+		List<DebtorV> debtorVS = new ArrayList<>();
+		for (Debtor debtor: debtors
+			 ) {
+			debtorVS.add(new DebtorV(debtor.getId(), debtor.getName(), debtor.getDebtorType().getName(), debtor.getWorkSector().getName(), debtor.getOwner().getAddress().getDistrict().getName()));
+		}
+		result.setMeta(new Meta(1,1, 10, 100, "asc", "id"));
+		result.setData(debtorVS);
+
+		return result;
+
+	}
+	*/
+
 	@GetMapping("/debtors/{debtorId}")
 	public Debtor getDebtorById(@PathVariable (value = "debtorId") Long debtorId) {
 		return debtorRepository.findOne(debtorId);
 	}
 
 	@GetMapping("/debtors/{debtorId}/loans")
-	public Page<Loan> getAllLoansByDebtorId(@PathVariable (value = "debtorId") Long debtorId,
-											Pageable pageable) {
+	public Page<Loan> getAllLoansByDebtorId(@PathVariable (value = "debtorId") Long debtorId, Pageable pageable) {
 		return loanRepository.findByDebtorId(debtorId, pageable);
 	}
 

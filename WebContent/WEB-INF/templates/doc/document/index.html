@@ -74,7 +74,7 @@
                                         <td th:text="${responsible[__${document.receiverResponsible?.responsibleType}__ ?: 0]}">None</td>
                                         <td><a th:href="@{/doc/view/__${document.id}__}" role='button' class='btn btn-success'> Просмотр </a></td>
                                         <td th:if="${type != 'archived'}"><a th:href="@{/doc/edit/__${document.id}__}" role="button" class="btn btn-primary"> Правка </a></td>
-                                        <td th:if="${type != 'archived'}"><a th:href="@{/doc/delete/__${document.id}__}" role="button" class="btn danger" th:if="${document.documentState.toString() == 'DRAFT'}"> Удалить </a></td>
+                                        <td th:if="${type != 'archived'}"><a th:href="@{/doc/delete/__${document.id}__}" role="button" class="btn btn-danger" th:if="${document.documentState.toString() == 'NEW' or document.documentState.toString() == 'DRAFT'}"> Удалить </a></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -86,8 +86,8 @@
                     <div class="col-md-12" th:if="${type != 'archived'}">
                         <button class="btn btn-primary"> Filter </button>
                         <span th:each="dst : ${documentSubTypes}">
-                                                <a th:href="@{/doc/new(type=${type}, subtype=${dst.internalName})}" class="btn btn-success" th:text="${dst.name}"> New Document </a>
-                                            </span>
+                            <a th:href="@{/doc/new(type=${type}, subtype=${dst.internalName})}" class="btn btn-success" th:text="${dst.name}"> New Document </a>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -102,7 +102,6 @@
     <i class="la la-arrow-up"></i>
 </div>
 <div th:replace="fragments/footer :: footer-js"/>
-
 
 <script type="text/javascript">
     $(document).ready(function() {

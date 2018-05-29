@@ -2,7 +2,7 @@ package kg.gov.mf.loan.web.config;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletRegistration;
-
+import org.apache.commons.lang3.SystemUtils;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -32,13 +32,8 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 		return multipartConfigElement;
 	}
 
-	private static final String LOCATION = "/opt/temp/"; // Temporary location where files will be stored
-	//private static final String LOCATION = "C:/temp"; // Temporary location where files will be stored
-
-	private static final long MAX_FILE_SIZE = 5242880; // 5MB : Max file size.
-														// Beyond that size spring will throw exception.
+	private static final String LOCATION = SystemUtils.IS_OS_LINUX ? "/opt/temp/" : "C:/temp"; // Temporary location where files will be stored
+	private static final long MAX_FILE_SIZE = 5242880; // 5MB : Max file size. Beyond that size spring will throw exception.
 	private static final long MAX_REQUEST_SIZE = 20971520; // 20MB : Total request size containing Multi part.
-	
 	private static final int FILE_SIZE_THRESHOLD = 0; // Size threshold after which files will be written to disk
- 
 }

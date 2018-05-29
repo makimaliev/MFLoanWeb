@@ -176,7 +176,7 @@ public class LoanController {
 			tLoans.remove(loanService.getById(loanId));
         model.addAttribute("tLoans", tLoans);
         
-        model.addAttribute("agreements", agreementService.list());
+        //model.addAttribute("agreements", agreementService.list());
         model.addAttribute("orders", orderService.list());
 		
 		if(loanId == 0)

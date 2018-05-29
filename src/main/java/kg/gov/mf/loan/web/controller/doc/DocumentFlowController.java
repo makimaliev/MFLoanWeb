@@ -10,6 +10,7 @@ import kg.gov.mf.loan.doc.service.*;
 import kg.gov.mf.loan.doc.model.Transition;
 import kg.gov.mf.loan.task.model.Task;
 import kg.gov.mf.loan.task.service.TaskService;
+import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,11 +59,12 @@ public class DocumentFlowController extends BaseController {
     }
     //endregion
     //region TYPE
-    enum TYPE { internal, incoming, outgoing}
-    String[][][] actionString =
+    private enum TYPE { internal, incoming, outgoing}
+    private String[][][] actionString =
             {
                 {
                     {"create", "request"},
+                    {"request"},
                     {"approve", "reject"},
                     {"accept"},
                     {},
@@ -73,6 +75,7 @@ public class DocumentFlowController extends BaseController {
                 },
                 {
                     {"create", "register"},
+                    {"register"},
                     {},
                     {},
                     {},
@@ -83,6 +86,7 @@ public class DocumentFlowController extends BaseController {
                 },
                 {
                     {"create", "request"},
+                    {"request"},
                     {"approve", "reject"},
                     {"register"},
                     {},
@@ -90,6 +94,8 @@ public class DocumentFlowController extends BaseController {
                 }
             };
     //endregion
+
+    private String path =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp";
 
     final static Map<Integer, String> responsible = new HashMap<Integer, String>() {
         {
@@ -124,13 +130,22 @@ public class DocumentFlowController extends BaseController {
     public String newDocument(@RequestParam("type") String type, @RequestParam("subtype") String subtype, Model model) {
 
         Document document = new Document();
+        DocumentType documentType = documentTypeService.getByInternalName(type);
+
+        int row = TYPE.valueOf(documentType.getInternalName()).ordinal();
+        int col = document.getDocumentState().ordinal();
+
         document.setOwner(getUser().getId());
-        document.setDocumentType(documentTypeService.getByInternalName(type));
+        document.setDocumentType(documentType);
         document.setDocumentSubType(documentSubTypeService.getByInternalName(subtype));
 
         List<DocumentStatus> actions = new ArrayList<>();
+        for(String action : actionString[row][col])
+        {
+            actions.add(documentStatusService.getByInternalName(action));
+        }
 
-        if(type.equals("internal") | type.equals("outgoing"))
+        if(type.equals("internal") || type.equals("outgoing"))
         {
             Responsible resp = new Responsible();
             resp.setResponsibleType(1);
@@ -139,14 +154,6 @@ public class DocumentFlowController extends BaseController {
             Executor exec = new Executor();
             exec.setExecutorType(1);
             document.setSenderExecutor(exec);
-
-            actions.add(documentStatusService.getByInternalName("create"));
-            actions.add(documentStatusService.getByInternalName("request"));
-        }
-        else
-        {
-            actions.add(documentStatusService.getByInternalName("create"));
-            actions.add(documentStatusService.getByInternalName("register"));
         }
 
         model.addAttribute("actions", actions);
@@ -195,28 +202,26 @@ public class DocumentFlowController extends BaseController {
                                @RequestParam("receiverFile") MultipartFile receiverFile) throws IOException {
 
         //region Attachment
-        //String path = request.getServletContext().getRealPath("/");
-        String path = "/opt/uploads/";
         //region Sender File
         if (!senderFile.isEmpty())
         {
             try {
-                String fileName = senderFile.getOriginalFilename();
-                String fsName = UUID.randomUUID().toString();
+                    String fileName = senderFile.getOriginalFilename();
+                    String fsName = UUID.randomUUID().toString();
 
-                File file = new File(path + fsName);
-                byte[] bytes = senderFile.getBytes();
-                BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(file));
-                buffStream.write(bytes);
-                buffStream.close();
+                    File file = new File(path + fsName);
+                    byte[] bytes = senderFile.getBytes();
+                    BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(file));
+                    buffStream.write(bytes);
+                    buffStream.close();
 
-                Attachment attachment = new Attachment();
-                attachment.setName(fileName);
-                attachment.setInternalName(fsName);
+                    Attachment attachment = new Attachment();
+                    attachment.setName(fileName);
+                    attachment.setInternalName(fsName);
 
-                document.setSenderAttachment(attachment);
-                document.setSenderFileName(fileName);
-            } catch (Exception e) {
+                    document.setSenderAttachment(attachment);
+                    document.setSenderFileName(fileName);
+                } catch (Exception e) {
             }
         }
         //endregion
@@ -224,22 +229,22 @@ public class DocumentFlowController extends BaseController {
         if (!receiverFile.isEmpty())
         {
             try {
-                String fileName = receiverFile.getOriginalFilename();
-                String fsName = UUID.randomUUID().toString();
+                    String fileName = receiverFile.getOriginalFilename();
+                    String fsName = UUID.randomUUID().toString();
 
-                File file = new File(path + fsName);
-                byte[] bytes = receiverFile.getBytes();
-                BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(file));
-                buffStream.write(bytes);
-                buffStream.close();
+                    File file = new File(path + fsName);
+                    byte[] bytes = receiverFile.getBytes();
+                    BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(file));
+                    buffStream.write(bytes);
+                    buffStream.close();
 
-                Attachment attachment = new Attachment();
-                attachment.setName(fileName);
-                attachment.setInternalName(fsName);
+                    Attachment attachment = new Attachment();
+                    attachment.setName(fileName);
+                    attachment.setInternalName(fsName);
 
-                document.setReceiverAttachment(attachment);
-                document.setReceiverFileName(fileName);
-            } catch (Exception e) {
+                    document.setReceiverAttachment(attachment);
+                    document.setReceiverFileName(fileName);
+                } catch (Exception e) {
             }
         }
         //endregion
@@ -259,6 +264,7 @@ public class DocumentFlowController extends BaseController {
         {
             saveOutgoingDocument(document, action);
         }
+
         return "redirect:/doc?type=" + docType;
     }
 
@@ -277,7 +283,7 @@ public class DocumentFlowController extends BaseController {
         Document document = documentService.findById(id);
         String docType = documentTypeService.findById(document.getDocumentType().getId()).getInternalName();
 
-        for(Task task : taskService.getTasksByObjectId(document.getId(), getUser().getId()))
+        for(Task task : taskService.getTasksByObjectId(document.getId()))
         {
             taskService.remove(task);
         }
@@ -286,7 +292,7 @@ public class DocumentFlowController extends BaseController {
         /*
         if(document.getDocumentState().toString() == "DRAFT")
         {
-            for(Task task : taskService.getTasksByObjectId(document.getId(), getUser().getId()))
+            for(Task task : taskService.getTasksByObjectId(document.getId()))
             {
                 taskService.remove(task);
             }
@@ -300,8 +306,6 @@ public class DocumentFlowController extends BaseController {
     public void downloadFile(HttpServletResponse response, @PathVariable("attachmentId") Long attachmentId) throws IOException {
 
         Attachment attachment = attachmentService.findById(attachmentId);
-        String path = request.getServletContext().getRealPath("/");
-        //String path = "/opt/uploads/";
 
         File file = new File(path + attachment.getInternalName());
         String mimeType= URLConnection.guessContentTypeFromName(file.getName());
@@ -502,7 +506,6 @@ public class DocumentFlowController extends BaseController {
 
         DispatchData dispatchData = setDispatchData(action);
         DocumentStatus documentStatus = documentStatusService.getByInternalName(action);
-        document.setDocumentState(document.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
 
         document = setER(document);
         document.setGeneralStatus(documentStatus);
@@ -512,6 +515,7 @@ public class DocumentFlowController extends BaseController {
         {
             document.getSenderDispatchData().add(dispatchData);
             document.setSenderStatus(documentStatus);
+            document.setDocumentState(document.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
 
             if(action.equals("request"))
             {
@@ -526,6 +530,7 @@ public class DocumentFlowController extends BaseController {
         else
         {
             Document doc = documentService.findById(document.getId());
+            document.setDocumentState(doc.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
 
             document.setSenderDispatchData(doc.getSenderDispatchData());            // add existing Sender DispatchData
             document.setSenderStatus(doc.getSenderStatus());                        // add existing Sender DocumentStatus

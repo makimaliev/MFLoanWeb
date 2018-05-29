@@ -132,7 +132,7 @@
                                             <input class="form-control" type="hidden" th:field="*{senderAttachment.id}"/>
                                             <label class="control-label col-md-4"> Прикрепление </label>
                                             <div class="col-md-6">
-                                                <div th:hidden="*{senderStatus?.internalName} == 'request'">
+                                                <div th:hidden="*{senderStatus?.internalName} == 'request' AND *{senderAttachment} == null">
                                                     <input class="form-control" type="file" id="senderFile" name="senderFile"/>
                                                 </div>
                                                 <a th:href="@{/doc/download/__${document?.senderAttachment.id}__}" class="form-control" th:text="*{senderAttachment.name}" th:if="*{senderAttachment.id}"></a>
@@ -320,7 +320,7 @@
                                     </div>
                                     <HR>
                                     <button type="button" class="btn btn-primary" onclick="window.history.back()"> Назад </button>
-                                    <button type="submit" style="margin: 3px" class="btn btn-success" name="action" th:each="action : ${actions}" th:value="${action.internalName}" th:text="${action.name}" ></button>
+                                    <button type="submit" style="margin: 3px" class="btn btn-success" name="action" th:each="action : ${actions}" th:value="${action.internalName}" th:text="${action.actionName}" ></button>
                                 </form>
                                 <!--end::Form-->
                             </div>

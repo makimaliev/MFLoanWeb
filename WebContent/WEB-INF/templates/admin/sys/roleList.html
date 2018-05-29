@@ -3,7 +3,7 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title></title>
+	<title th:text="#{label.role.page.title}"></title>
 	<div  th:replace="fragments/header :: header-css" />
 	<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
 
@@ -33,7 +33,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.region.page.title}"></h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.role.page.title}"></h3>
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
@@ -59,8 +59,8 @@
 						<table class="table" id="roleTable">
 							<thead class="thead-default">
 								<tr>
-									<th>Id</th>
-									<th>Name</th>
+									<th th:text="#{label.role.table.id}">Id</th>
+									<th th:text="#{label.role.table.name}">Name</th>
 									<th>&nbsp;</th>
 								</tr>
 							</thead>
