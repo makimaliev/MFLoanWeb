@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
 
-	<title>	MFLoan | EmploymentHistoryEventTypes</title>
+	<title th:text="#{label.employmentHistoryEventType.page.title}">	MFLoan | EmploymentHistoryEventTypes</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 	<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
@@ -35,7 +35,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.orgForm.page.title}"></h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.employmentHistoryEventType.page.title}"></h3>
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
@@ -51,10 +51,7 @@
 									</div>
 								</li>
 								<li class="m-portlet__nav-item">
-									<a data-remote="false" data-toggle="modal"
-									   data-target="#employmentHistoryEventTypeFormModal" th:href="@{/employmentHistoryEventType/add}"
-									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
-										EmploymentHistoryEventType</a>
+
 								</li>
 							</ul>
 						</div>
@@ -63,8 +60,8 @@
 						<table class="table" id="employmentHistoryEventTypeTable">
 							<thead class="thead-default">
 								<tr>
-									<th>Id</th>
-									<th>Name</th>
+									<th th:text="#{label.employmentHistoryEventType.table.id}">Id</th>
+									<th th:text="#{label.employmentHistoryEventType.table.name}">Name</th>
 									<th>&nbsp;</th>
 								</tr>
 							</thead>
@@ -112,6 +109,25 @@
 					</div>
 				</div>
 				<!--end::Modal-->
+
+			</div>
+
+			<div class="row">
+				<div class="col-xl-12">
+					<a data-remote="false"
+					   data-toggle="modal"
+					   data-target="#employmentHistoryEventTypeFormModal"
+					   th:href="@{/employmentHistoryEventType/add}"
+					   role="button"
+					   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
+					   th:text="#{label.employmentHistoryEventType.button.addEmploymentHistoryEventType}">
+						<span><i class="la la-plus"></i><span>Add EmploymentHistoryEventType</span></span>
+					</a>
+
+
+
+
+				</div>
 
 			</div>
 				

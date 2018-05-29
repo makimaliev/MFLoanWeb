@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
 
-	<title>	MFLoan | MessageResources</title>
+	<title th:text="#{label.messageResource.page.title}">	MFLoan | MessageResources</title>
 
 	<div  th:replace="fragments/header :: header-css"/>
 	<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
@@ -27,7 +27,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.region.page.title}"></h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.messageResource.page.title}"></h3>
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
@@ -41,10 +41,7 @@
 									</div>
 								</li>
 								<li class="m-portlet__nav-item">
-									<a data-remote="false" data-toggle="modal"
-									   data-target="#messageResourceFormModal" th:href="@{/messageResource/add}"
-									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
-										MessageResource</a>
+
 								</li>
 							</ul>
 						</div>
@@ -53,12 +50,12 @@
 						<table class="table" id="messageResourceTable">
 							<thead class="thead-default">
 								<tr>
-									<th>Id</th>
-									<th>MessageKey</th>
-									<th>ENG</th>
-									<th>RUS</th>
-									<th>KGZ</th>
-									<th>&nbsp;</th>
+									<th th:text="#{label.messageResource.table.id}" >Id</th>
+									<th th:text="#{label.messageResource.table.messageKey}">MessageKey</th>
+									<th th:text="#{label.messageResource.table.eng}">ENG</th>
+									<th th:text="#{label.messageResource.table.rus}">RUS</th>
+									<th th:text="#{label.messageResource.table.kgz}">KGZ</th>
+									<th >&nbsp;</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -114,6 +111,22 @@
 					</div>
 				</div>
 				<!--end::Modal-->
+
+			</div>
+
+			<div class="row">
+				<div class="col-xl-12">
+					<a data-remote="false"
+					   data-toggle="modal"
+					   data-target="#messageResourceFormModal"
+					   th:href="@{/messageResource/add}"
+					   role="button"
+					   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
+					   th:text="#{label.messageResource.button.addMessageResource}">
+						<span><i class="la la-plus"></i><span>Add messageResource</span></span>
+					</a>
+
+				</div>
 
 			</div>
 			<div class="row">

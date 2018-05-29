@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
 
-	<title>	MFLoan | Systems</title>
+	<title th:text="#{label.cSystem.page.title}">	MFLoan | Systems</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 	<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
@@ -33,7 +33,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.orgForm.page.title}"></h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.cSystem.page.title}"></h3>
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
@@ -50,18 +50,6 @@
 								</li>
 								<li class="m-portlet__nav-item">
 
-									<a data-remote="false" data-toggle="modal"
-									   data-target="#cSystemFormModal" th:href="@{/cSystem/add}"
-									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
-										System</a>
-									<a data-remote="false" data-toggle="modal"
-									   data-target="#cSystemFormModal" th:href="@{/information/add}"
-									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
-										System Information</a>
-
-									<a class="m-portlet__nav-link btn btn-success m-btn m-btn--air" data-toggle="modal" href="#cSystemFormModal">
-										Add New Applied Entity List <i class="la la-plus"></i>
-									</a>
 								</li>
 							</ul>
 						</div>
@@ -70,8 +58,8 @@
 						<table class="table" id="cSystemTable">
 							<thead class="thead-default">
 								<tr>
-									<th>Id</th>
-									<th>Name</th>
+									<th th:text="#{label.cSystem.table.id}">Id</th>
+									<th th:text="#{label.cSystem.table.name}">Name</th>
 									<th>&nbsp;</th>
 								</tr>
 							</thead>
@@ -109,6 +97,8 @@
 													</a>
 												</div>
 											</div>
+
+
 										</span>
 									</td>
 								</tr>
@@ -144,7 +134,7 @@
 										<label for="name" class="form-control-label" th:text="#{label.cSystem.modal.name}">Name<span class="required"> * </span></label>
 										<input hidden="true" type="text" id="id" name="id" th:value="${cSystem.id}" />
 										<input hidden="true" type="text" id="openModal" name="openModal" th:value="${openModal}"/>
-										<input type="text" class="form-control" id="name" name="name" th:value="${cSystem.name}">
+										<input type="text" class="form-control" id="name" name="name" th:value="*{name}">
 											<p th:errors="*{name}">Incorrect name</p>
 
 											<script th:inline="javascript">
@@ -166,6 +156,40 @@
 				</div>
 				<!--end::Modal-->
 			</div>
+
+
+			<div class="row">
+				<div class="col-xl-12">
+					<a data-remote="false"
+					   data-toggle="modal"
+					   data-target="#cSystemFormModal"
+					   th:href="@{/cSystem/add}"
+					   role="button"
+					   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
+					   th:text="#{label.cSystem.button.addcSystem}">
+						<span><i class="la la-plus"></i><span>Add cSystem</span></span>
+					</a>
+
+					<a data-remote="false"
+					   data-toggle="modal"
+					   data-target="#cSystemFormModal"
+					   th:href="@{/information/add}"
+					   role="button"
+					   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
+					   th:text="#{label.cSystem.button.addInformation}">
+						<span><i class="la la-plus"></i><span>Add Information</span></span>
+					</a>
+
+
+
+
+
+				</div>
+
+			</div>
+
+
+
 
 			<div class="row">
 				<div class="col-md-12">
@@ -221,7 +245,7 @@
 		table.on('key-focus', function(e, datatable, cell) {
 			var rowData = datatable.row(cell.index().row).data();
 			$("#cSystem_id").val(rowData[0]);
-			var sUrl ="/MFCredit/cSystem/" + rowData[0]+"/view";
+			var sUrl ="/cSystem/" + rowData[0]+"/view";
 			$.get(sUrl, function(data) {
 				$('#content').html(data);
 			});

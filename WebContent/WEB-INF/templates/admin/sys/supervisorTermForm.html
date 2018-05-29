@@ -1,7 +1,7 @@
 <form th:action="@{/supervisorTerm/save}" id="form_sample_2" class="form-horizontal" method="post" th:object="${supervisorTerm}">
 
 	<div class="modal-header">
-		<h5 class="modal-title"></h5>
+		<h5 class="modal-title" th:text="#{label.supervisorTerm.modal.title}"></h5>
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">
 				&times;
@@ -12,23 +12,23 @@
 	<div class="modal-body">
 
 		<div class="form-group">
-			<label for="name" class="form-control-label">Name<span class="required"> * </span></label>
+			<label for="name" class="form-control-label" th:text="#{label.supervisorTerm.modal.name}">Name<span class="required"> * </span></label>
 			<input hidden="true" type="text" id="id" name="id" th:value="${supervisorTerm.id}" />
 			<input type="text" class="form-control" id="name" name="name" th:value="*{name}">
 		</div>
 
 		<div class="form-group ">
-			<label for="debtor_type_id" class="form-control-label">Debtor Type<span class="required"> * </span></label>
+			<label for="debtor_type_id" class="form-control-label" th:text="#{label.supervisorTerm.modal.debtorType}">Debtor Type<span class="required"> * </span></label>
 			<input type="text" class="form-control" id="debtor_type_id" name="debtor_type_id" th:value="*{debtor_type_id}">
 		</div>
 
 		<div class="form-group ">
-			<label for="work_sector_id" class="form-control-label">Work Sector <span class="required"> * </span></label>
+			<label for="work_sector_id" class="form-control-label" th:text="#{label.supervisorTerm.modal.workSector}">Work Sector <span class="required"> * </span></label>
 			<input type="text" class="form-control" id="work_sector_id" name="work_sector_id" th:value="*{work_sector_id}">
 		</div>
 
 		<div class="form-group">
-			<label class="form-control-label">Region<span class="required"> * </span></label>
+			<label class="form-control-label" th:text="#{label.supervisorTerm.modal.region}">Region<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
 					<select th:field="*{region}" class="selectpicker">
@@ -41,7 +41,7 @@
 		</div>
 
 		<div class="form-group">
-			<label class="form-control-label">District<span class="required"> * </span></label>
+			<label class="form-control-label" th:text="#{label.supervisorTerm.modal.district}">District<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
 					<select th:field="*{district}" class="selectpicker">
@@ -54,7 +54,7 @@
 		</div>
 
 		<div class="form-group">
-			<label class="form-control-label">Department<span class="required"> * </span></label>
+			<label class="form-control-label" th:text="#{label.supervisorTerm.modal.department}">Department<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
 					<select th:field="*{department}" class="selectpicker">
@@ -68,8 +68,8 @@
 	</div>
 
 	<div class="modal-footer">
-		<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-		<button type="submit" class="btn btn-primary">Submit</button>
+		<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.supervisorTerm.button.cancel}">Cancel</button>
+		<button type="submit" class="btn btn-primary" th:text="#{label.supervisorTerm.button.submit}">Submit</button>
 	</div>
 
 </form>

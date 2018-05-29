@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title></title>
+	<title th:text="#{label.objectType.page.title}"></title>
 	<div th:replace="fragments/header :: header-css" />
 
 	<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
@@ -33,7 +33,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.region.page.title}"></h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.objectType.page.title}"></h3>
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
@@ -47,22 +47,7 @@
 									</div>
 								</li>
 								<li class="m-portlet__nav-item">
-									<a data-remote="false" data-toggle="modal"
-									   data-target="#objectTypeFormModal" th:href="@{/objectType/add}"
-									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
-										ObjectType</a>
-									<a data-remote="false" data-toggle="modal"
-									   data-target="#objectTypeFormModal" th:href="@{/objectField/add}"
-									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
-										ObjectField</a>
-									<a data-remote="false" data-toggle="modal"
-									   data-target="#objectTypeFormModal" th:href="@{/objectEvent/add}"
-									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
-										ObjectEvent</a>
-									<a data-remote="false" data-toggle="modal"
-									   data-target="#objectTypeFormModal" th:href="@{/fixTerm/add}"
-									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
-										FixTerm</a>
+
 								</li>
 							</ul>
 						</div>
@@ -71,8 +56,8 @@
 						<table class="table" id="objectTypeTable">
 							<thead class="thead-default">
 								<tr>
-									<th>Id</th>
-									<th>Name</th>
+									<th th:text="#{label.objectType.table.id}">Id</th>
+									<th th:text="#{label.objectType.table.name}">Name</th>
 									<th>&nbsp;</th>
 								</tr>
 							</thead>
@@ -128,6 +113,53 @@
 			</div>
 
 			<div class="row">
+				<div class="col-xl-12">
+					<a data-remote="false"
+					   data-toggle="modal"
+					   data-target="#objectTypeFormModal"
+					   th:href="@{/objectType/add}"
+					   role="button"
+					   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
+					   th:text="#{label.objectType.button.addObjectType}">
+						<span><i class="la la-plus"></i><span>Add Object Type</span></span>
+					</a>
+
+
+					<a data-remote="false"
+					   data-toggle="modal"
+					   data-target="#objectTypeFormModal"
+					   th:href="@{/objectField/add}"
+					   role="button"
+					   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
+					   th:text="#{label.objectType.button.addObjectField}">
+						<span><i class="la la-plus"></i><span>Add Object Field</span></span>
+					</a>
+
+
+					<a data-remote="false"
+					   data-toggle="modal"
+					   data-target="#objectTypeFormModal"
+					   th:href="@{/objectEvent/add}"
+					   role="button"
+					   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
+					   th:text="#{label.objectType.button.addObjectEvent}">
+						<span><i class="la la-plus"></i><span>Add Object Event</span></span>
+					</a>
+
+					<a data-remote="false"
+					   data-toggle="modal"
+					   data-target="#objectTypeFormModal"
+					   th:href="@{/fixTerm/add}"
+					   role="button"
+					   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
+					   th:text="#{label.objectType.button.addFixTerm}">
+						<span><i class="la la-plus"></i><span>Add Object FixTerm</span></span>
+					</a>
+				</div>
+
+			</div>
+
+			<div class="row">
 				<div class="col-md-12">
 					<input hidden="true" type="text" id="objectType_id" name="objectType_id" />
 					<div id="content"></div>
@@ -169,9 +201,9 @@
 		table.on('key-focus', function(e, datatable, cell) {
 			var rowData = datatable.row(cell.index().row).data();
 			$("#objectType_id").val(rowData[0]);
-			var sUrl ="/MFCredit/objectType/" + rowData[0]+"/view";
+			var sUrl ="/objectType/" + rowData[0]+"/view";
 			$.get(sUrl, function(data) {
-				$('#content').html(data);
+				//$('#content').html(data);
 			});
 
 			var row = datatable.row( cell.index().row );

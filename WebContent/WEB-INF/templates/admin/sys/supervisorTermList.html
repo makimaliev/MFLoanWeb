@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 <head>
-	<title></title>
+	<title th:text="#{label.supervisorTerm.page.title}"></title>
 	<div th:replace="fragments/header :: header-css"/>
 </head>
 
@@ -25,7 +25,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text"></h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.supervisorTerm.page.title}"></h3>
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
@@ -51,8 +51,8 @@
 						<table class="table" id="supervisorTermTable">
 							<thead class="thead-default">
 								<tr>
-									<th>Id</th>
-									<th>Name</th>
+									<th th:text="#{label.supervisorTerm.table.id}">Id</th>
+									<th th:text="#{label.supervisorTerm.table.name}">Name</th>
 									<th>&nbsp;</th>
 								</tr>
 							</thead>
