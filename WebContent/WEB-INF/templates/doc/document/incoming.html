@@ -1,28 +1,53 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!-- begin::Head -->
 <head>
     <title>MFLoan | Docflow</title>
-    <div th:replace="fragments/header :: header-css"></div>
-</head>
-<body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
+    <div th:replace="fragments/header :: header-css"/>
 
-<div th:replace="layout :: header-top"></div>
-<div class="page-container">
-    <div th:replace="layout :: page-container-sidebar" />
-    <div class="page-content-wrapper">
-        <div class="page-content">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="portlet light portlet-fit ">
-                        <div class="portlet-title">
-                            <div class="caption">
-                                <i class="icon-settings font-green"></i>
-                                <span class="caption-subject font-green bold uppercase"> Детали документа </span>
+</head>
+<!-- end::Head -->
+
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <div class="m-content">
+                <div class="m-portlet m-portlet--mobile">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text">Детали документа</h3>
                             </div>
                         </div>
-                        <div class="portlet-body">
-                            <div class="form">
-                                <form th:action="@{/doc/save}" id="document_form" class="form-horizontal" th:object="${document}" method="POST" enctype="multipart/form-data">
+                        <div class="m-portlet__head-tools">
+                            <ul class="m-portlet__nav">
+                                <li class="m-portlet__nav-item">
+                                    <div class="m-input-icon m-input-icon--left">
+                                        <input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
+                                        <span class="m-input-icon__icon m-input-icon__icon--left">
+												<span><i class="la la-search"></i></span>
+											</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="m-portlet__body">
+                        <div class="m-scrollable m-scrollable-no-margin" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+                            <div>
+                                <!--begin::Form-->
+                                <form th:action="@{/doc/save}" id="document_form"  class="m-form m-form--fit m-form--label-align-right" th:object="${document}" method="POST" enctype="multipart/form-data">
                                     <input type="hidden" th:field="*{id}"/>
                                     <input type="hidden" th:field="*{owner}"/>
                                     <input type="hidden" th:field="*{documentType.id}"/>
@@ -31,7 +56,7 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-4"> Загаловок </label>
                                         <div class="col-md-6">
-                                            <input class="form-control" th:field="*{title}" th:type="*{senderStatus?.internalName =='register' ? 'hidden' : 'text'}"/>
+                                            <input class="form-control" th:field="*{title}" th:type="*{senderStatus?.internalName =='hidden' ? 'hidden' : 'text'}"/>
                                             <label class="form-control" th:text="*{title}" th:if="*{senderStatus?.internalName} == 'register'"> Title </label>
                                         </div>
                                     </div>
@@ -39,8 +64,8 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-4"> Описание </label>
                                         <div class="col-md-6">
-                                            <input class="form-control" th:field="*{description}" th:type="*{senderStatus?.internalName =='register' ? 'hidden' : 'text'}"/>
-                                            <label class="form-control" th:text="*{description}" th:if="*{senderStatus?.internalName} == 'register'"> Description </label>
+                                            <textarea class="form-control" rows="5" th:field="*{description}" th:hidden="*{senderStatus?.internalName =='register'}">Description</textarea>
+                                            <label class="form-control" style="white-space: pre-wrap" th:text="*{description}" th:if="*{senderStatus?.internalName} == 'register'"> Description </label>
                                         </div>
                                     </div>
                                     <!-- Sender -->
@@ -400,21 +425,29 @@
                                     </div>
 
                                     <HR>
-                                    <button type="button" class="btn dark btn-outline" onclick="window.history.back()"> Назад </button>
-                                    <button type="submit" style="margin: 3px" class="btn green" name="action" th:each="action : ${actions}" th:value="${action.internalName}" th:text="${action.name}" ></button>
+                                    <button type="button" class="btn btn-primary" onclick="window.history.back()"> Назад </button>
+                                    <button type="submit" style="margin: 3px" class="btn btn-success" name="action" th:each="action : ${actions}" th:value="${action.internalName}" th:text="${action.name}" ></button>
                                 </form>
+                                <!--end::Form-->
                             </div>
                         </div>
                     </div>
                 </div>
+                <!--end::Portlet-->
             </div>
         </div>
     </div>
+    <!-- END CONTENT BODY -->
+    <!-- begin::Footer -->
+    <div th:replace="layout/footer"/>
+    <!-- end::Footer -->
 </div>
-
-<div th:replace="layout :: footer"/>
+<div class="m-scroll-top m-scroll-top--skin-top" data-toggle="m-scroll-top" data-scroll-offset="500" data-scroll-speed="300">
+    <i class="la la-arrow-up"></i>
+</div>
 <div th:replace="fragments/footer :: footer-js"/>
 
+<!--begin::Page Resources -->
 <script type="text/javascript" th:inline="javascript">
 
     $(document).ready(function() {
@@ -459,4 +492,7 @@
 </script>
 
 </body>
+<!-- end::Body -->
 </html>
+
+

@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
 
-	<title>	MFLoan | IdentityDocTypes </title>
+	<title th:text="#{label.identityDocType.page.title}">	MFLoan | IdentityDocTypes </title>
 
 	<div th:replace="fragments/header :: header-css"/>
 	<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
@@ -34,7 +34,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.orgForm.page.title}"></h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.identityDocType.page.title}"></h3>
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
@@ -50,10 +50,7 @@
 									</div>
 								</li>
 								<li class="m-portlet__nav-item">
-									<a data-remote="false" data-toggle="modal"
-									   data-target="#identityDocTypeFormModal" th:href="@{/identityDocType/add}"
-									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
-										IdentityDocType</a>
+
 								</li>
 							</ul>
 						</div>
@@ -62,10 +59,10 @@
 						<table class="table" id="identityDocTypeTable">
 							<thead  class="thead-default">
 								<tr>
-									<th>Id</th>
-									<th>Name</th>
-									<th>Enabled</th>
-									<th>&nbsp;</th>
+									<th th:text="#{label.identityDocType.table.id}">Id</th>
+									<th th:text="#{label.identityDocType.table.name}">Name</th>
+									<th th:text="#{label.identityDocType.table.enabled}">Enabled</th>
+									<th >&nbsp;</th>
 								</tr>
 							</thead>
 
@@ -114,6 +111,24 @@
 						</div>
 					</div>
 					<!--end::Modal-->
+
+
+				</div>
+
+				<div class="row">
+					<div class="col-xl-12">
+						<a data-remote="false"
+						   data-toggle="modal"
+						   data-target="#identityDocTypeFormModal"
+						   th:href="@{/identityDocType/add}"
+						   role="button"
+						   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
+						   th:text="#{label.identityDocType.button.addIdentityDocType}">
+							<span><i class="la la-plus"></i><span>Add IdentityDocType</span></span>
+						</a>
+
+					</div>
+
 				</div>
 
 				<div class="row">
@@ -163,7 +178,7 @@
 		table.on('key-focus', function(e, datatable, cell) {
 			var rowData = datatable.row(cell.index().row).data();
 			$("#identityDocType_id").val(rowData[0]);
-			var sUrl ="/MFCredit/identityDocType/" + rowData[0]+"/view";
+			var sUrl ="/identityDocType/" + rowData[0]+"/view";
 			$.get(sUrl, function(data) {
 				$('#content').html(data);
 			});
