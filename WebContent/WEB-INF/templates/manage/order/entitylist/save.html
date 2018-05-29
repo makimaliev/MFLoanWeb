@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
 	<title th:text="#{label.add.entityList.title}"></title>
@@ -38,7 +38,8 @@
 							<div class="m-form__section">
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										List Number <span class="m--font-danger">*</span>
+										<span th:text="#{label.entityList.number}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="listNumber" th:value="${entityList.listNumber}">
@@ -46,7 +47,7 @@
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										List Date
+										<span th:text="#{label.entityList.date}"></span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
@@ -59,7 +60,8 @@
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Applied Entity List State <span class="m--font-danger">*</span>
+										<span th:text="#{label.entityList.state}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${entityList.appliedEntityListState.id}"  id="appliedEntityListState" title="Select...">
@@ -70,7 +72,8 @@
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Applied Entity List Type <span class="m--font-danger">*</span>
+										<span th:text="#{label.entityList.type}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${entityList.appliedEntityListType.id}"  id="appliedEntityListType" title="Select...">
@@ -87,10 +90,10 @@
 									<div class="col-lg-4"></div>
 									<div class="col-lg-6">
 										<button type="submit" class="btn btn-primary">
-											Save
+											<span th:text="#{label.form.save}"></span>
 										</button>
 										<button onclick="window.history.back()" type="button" class="btn btn-secondary">
-											Cancel
+											<span th:text="#{label.form.cancel}"></span>
 										</button>
 									</div>
 								</div>

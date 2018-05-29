@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
 	<title th:text="#{label.debtor.page.title}"></title>
@@ -75,8 +75,8 @@
 												<td th:text="${debtor.name}">Name</td>
 												<td th:text="${debtor.debtorType.name}">Type</td>
 												<td th:text="${debtor.workSector.name}">Work sector</td>
-												<!--<td>District</td>-->
-												<td th:text="${debtor.owner.address.district.name}">District</td>
+												<td>District</td>
+												<!--<td th:text="${debtor.owner.address.district.name}">District</td>-->
 												<td class="table-actions text-right">
 													<span>
 														<div class="dropdown">

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
 	<title th:text="#{label.collateralItem.details.title}"></title>
@@ -143,7 +143,6 @@
 							<div class="m-section">
 								<div class="m-section__content">
 									<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${itemId}__/arrestfree/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.arrestFreeInfo.add}"></a>
-									<a href="javascript:;" class="expand"> </a>
 								</div>
 							</div>
 						<!--</itemcheck>-->
