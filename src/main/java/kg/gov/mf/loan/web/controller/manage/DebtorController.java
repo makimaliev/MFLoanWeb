@@ -10,6 +10,7 @@ import kg.gov.mf.loan.manage.model.collection.CollectionProcedure;
 import kg.gov.mf.loan.manage.model.debtor.*;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.repository.debtor.DebtorRepository;
+import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -85,6 +86,9 @@ public class DebtorController {
 
 	@Autowired
 	DebtorRepository debtorRepository;
+
+	@Autowired
+	OwnerRepository ownerRepository;
 
 	private static final int BUTTONS_TO_SHOW = 5;
 	private static final int INITIAL_PAGE = 0;
@@ -192,6 +196,7 @@ public class DebtorController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/save", method=RequestMethod.GET)
 	public String formDebtor(Model model, @PathVariable("debtorId")Long debtorId)
 	{
+		/*
 		List<Owner> entities = new ArrayList<Owner>();
 		List<Person> persons = personService.findAll();
 		List<Organization> orgs = orgService.findAll();
@@ -204,6 +209,8 @@ public class DebtorController {
 		}
 
 		model.addAttribute("entities", entities);
+
+		*/
 
 		List<DebtorType> types = debtorTypeService.list();
 		model.addAttribute("types", types);
@@ -227,6 +234,7 @@ public class DebtorController {
 		{
 			Debtor debtor = debtorService.getById(debtorId);
 			Owner owner = debtor.getOwner();
+			/*
 			for (Owner entity : entities) {
 				if(owner.getEntityId() == entity.getEntityId() && owner.getOwnerType().equals(entity.getOwnerType())) {
 					entities.remove(entity);
@@ -234,6 +242,7 @@ public class DebtorController {
 					break;
 				}
 			}
+			*/
 			model.addAttribute("debtor", debtor);
 		}
 
@@ -243,8 +252,12 @@ public class DebtorController {
 	@RequestMapping(value="/manage/debtor/save", method=RequestMethod.POST)
 	public String saveDebtor(Debtor debtor)
 	{
-		if(debtor.getId() == 0)
+		if(debtor.getId() == 0){
+			Owner owner = ownerRepository.findByName(debtor.getOwner().getName()).get(0);
+			debtor.setOwner(owner);
 			debtorService.add(debtor);
+		}
+
 		else
 		{
 			Owner oldOwner = debtorService.getById(debtor.getId()).getOwner();

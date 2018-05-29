@@ -45,6 +45,19 @@ public class RestDebtorController {
 		return ownerRepository.findAll(pageable);
 	}
 
+	@GetMapping("/owners/search")
+	public String[] getOwnersByName(@RequestParam(value = "q") String q) {
+		List<Owner> owners = ownerRepository.findByNameContains(q);
+		String[] sOwners = new String[owners.size()];
+		int i = 0;
+		for (Owner owner:owners
+				) {
+			sOwners[i++] = owner.getName();
+		}
+
+		return sOwners;
+	}
+
 	@GetMapping("/owners/{ownerId}")
 	public Owner getOwnerById(@PathVariable (value = "ownerId") Long ownerId) {
 		return ownerRepository.findOne(ownerId);

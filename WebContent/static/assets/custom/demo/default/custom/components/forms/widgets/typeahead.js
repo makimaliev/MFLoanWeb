@@ -71,6 +71,30 @@ var Typeahead = function() {
     }
 
     var demo3 = function() {
+        // constructs the suggestion engine
+        var bloodhound = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            // `states` is an array of state names defined in "The Basics"
+            //local: states
+            remote:{
+                url: '/api/owners/search?q=%QUERY',
+                wildcard: '%QUERY'
+            }
+        });
+
+        $('#m_typeahead_3, #m_typeahead_3_modal').typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 1
+            },
+            {
+                name: 'owners',
+                source: bloodhound
+            });
+    }
+    /*
+    var demo3 = function() {
         var countries = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.whitespace,
             queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -86,6 +110,7 @@ var Typeahead = function() {
             source: countries
         });
     }
+    */
 
     var demo4 = function() {
         var bestPictures = new Bloodhound({

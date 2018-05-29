@@ -26,7 +26,7 @@ public class RestLoanController {
     }
 
     @GetMapping("/loans/search")
-    public String[] findAllBySpecification(@RequestParam(value = "q") String q) {
+    public String[] getLoansByRegNumber(@RequestParam(value = "q") String q) {
         List<Loan> loans = loanRepository.findByRegNumberContains(q);
         String[] sLoans = new String[loans.size()];
         int i = 0;
