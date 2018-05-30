@@ -6,6 +6,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import kg.gov.mf.loan.admin.org.model.Staff;
+import kg.gov.mf.loan.admin.sys.model.User;
+import kg.gov.mf.loan.admin.sys.service.UserService;
+import kg.gov.mf.loan.manage.model.order.CreditOrder;
+import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
+import kg.gov.mf.loan.manage.repository.order.CreditOrderRepository;
+import kg.gov.mf.loan.manage.repository.org.StaffRepository;
 import kg.gov.mf.loan.web.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,6 +88,18 @@ public class LoanController {
 	
 	@Autowired
 	CollateralAgreementService agreementService;
+
+	@Autowired
+	LoanRepository loanRepository;
+
+	@Autowired
+	CreditOrderRepository creditOrderRepository;
+
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	StaffRepository staffRepository;
 
 	static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
 
@@ -170,15 +189,6 @@ public class LoanController {
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtorId", debtorId);
 		
-		//Get all loans except this loan
-		Set<Loan> tLoans = null;
-		if(loanId > 0)
-			tLoans.remove(loanService.getById(loanId));
-        model.addAttribute("tLoans", tLoans);
-        
-        //model.addAttribute("agreements", agreementService.list());
-        model.addAttribute("orders", orderService.list());
-		
 		if(loanId == 0)
 		{
 			model.addAttribute("loan", new Loan());
@@ -213,11 +223,23 @@ public class LoanController {
 		
 		if(loan.getId() == 0)
 		{
+		    if(loan.getParentLoan().getRegNumber() != null)
+            {
+                Loan tLoan = loanRepository.findByRegNumber(loan.getParentLoan().getRegNumber());
+                loan.setParentLoan(tLoan);
+            }
+            else
+                loan.setParentLoan(null);
+
+            CreditOrder creditOrder = creditOrderRepository.findByRegNumber(loan.getCreditOrder().getRegNumber());
+            loan.setCreditOrder(creditOrder);
+
+            Staff staff = staffRepository.findById(loan.getSupervisorId());
+            User user = userService.findByStaff(staff);
+
+            loan.setSupervisorId(user.getId());
+
 			loggerLoan.info("createLoan : {}", loan);
-			if(loan.getParentLoan().getId() == 0)
-				loan.setParentLoan(null);
-			else
-				loan.setParentLoan(loanService.getById(loan.getParentLoan().getId()));
 			loanService.add(loan);
 		}
 		else

@@ -33,7 +33,7 @@
 					</div>
 					<!--begin::Form-->
 					<form th:action="@{/manage/debtor/save}" th:object="${debtor}" method="post" class="m-form m-form--fit m-form--label-align-right">
-
+						<input hidden="true" type="text" name="id" th:field="*{id}" />
 						<input hidden="true" type="text" id="ownerName" name="owner.name" th:field="*{owner.name}" />
 
 						<div class="m-portlet__body">
@@ -93,21 +93,9 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="m-typeahead">
-											<input class="form-control m-input" id="m_typeahead_3" type="text" placeholder="Owners">
+											<input class="form-control m-input" id="owner_typeahead" type="text" placeholder="Owners">
 										</div>
 									</div>
-									<!--
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{owner}" id="ownerSelect" onchange="updateTOwner(this);" title="Select...">
-											<option value="0" th:text="#{label.add.debtor.title}">Select...</option>
-											<option th:each="entity : ${entities}"
-													th:value="${{entity}}"
-													th:selected="(${entity.id} == *{owner.id})"
-													th:text="${entity.name} + ',' + ${entity.ownerType} + ',' + ${entity.entityId} "></option>
-											</option>
-										</select>
-									</div>
-									-->
 								</div>
 
 							</div>
@@ -152,7 +140,7 @@
 <script type="text/javascript">
     function updateTOwner(sel)
     {
-        $("#ownerName").val(document.getElementById("m_typeahead_3").value);
+        $("#ownerName").val(document.getElementById("owner_typeahead").value);
     }
 </script>
 

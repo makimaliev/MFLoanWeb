@@ -32,8 +32,12 @@
 						</div>
 					</div>
 					<!--begin::Form-->
-					<form th:action="@{/manage/debtor/__${debtorId}__/loan/save}" method="post" class="m-form m-form--fit m-form--label-align-right">
-						<input hidden="true" type="text" id="id" name="id" th:value="${loan.id}"/>
+					<form th:action="@{/manage/debtor/__${debtorId}__/loan/save}" th:object="${loan}" method="post" class="m-form m-form--fit m-form--label-align-right">
+						<input hidden="true" type="text" id="id" name="id" th:field="*{id}"/>
+						<input hidden="true" type="text" id="pLoanRegNumber" th:field="*{parentLoan.regNumber}" />
+						<input hidden="true" type="text" id="orderRegNumber" th:field="*{creditOrder.regNumber}" />
+						<input hidden="true" type="text" id="staffId" th:field="*{supervisorId}" />
+
 						<div class="m-portlet__body">
 							<div class="m-form__section">
 								<div class="form-group m-form__group row">
@@ -42,7 +46,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="regNumber" th:value="${loan.regNumber}">
+										<input type="text" class="form-control m-input" th:field="*{regNumber}">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -51,7 +55,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" placeholder="Select date" name="regDate" th:value="${loan.regDate}"/>
+											<input type="text" class="form-control m-input" placeholder="Select date" th:field="*{regDate}"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -64,7 +68,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="amount" th:value="${loan.amount}">
+										<input type="text" class="form-control m-input" th:field="*{amount}">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -73,7 +77,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.currency.id}"  id="currency" title="Select...">
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.currency.id}" id="currency">
 											<option value="0" th:text="#{label.add.loan.selectCurrency}">Select...</option>
 											<option th:each="currency : ${currencies}" th:value="${currency.id}" th:text="${currency.name}"></option>
 										</select>
@@ -85,7 +89,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.loanType.id}"  id="loanType" title="Select...">
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.loanType.id}" id="loanType">
 											<option value="0" th:text="#{label.add.loan.selectType}">Select...</option>
 											<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
@@ -97,7 +101,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.loanState.id}" id="loanState" title="Select...">
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.loanState.id}" id="loanState">
 											<option value="0" th:text="#{label.add.loan.selectState}">Select...</option>
 											<option th:each="state : ${states}" th:value="${state.id}" th:text="${state.name}"></option>
 										</select>
@@ -109,7 +113,9 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="supervisorId" th:value="${loan.supervisorId}">
+										<div class="m-typeahead">
+											<input class="form-control m-input" id="staff_typeahead" type="text" placeholder="Staffs">
+										</div>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -119,14 +125,8 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="m-typeahead">
-										<input class="form-control m-input" id="m_typeahead_2" type="text" placeholder="Loans">
+											<input class="form-control m-input" id="loan_typeahead" type="text" placeholder="Loans">
 										</div>
-										<!--
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.parentLoan.id}"  id="parentLoan" title="Select...">
-											<option value="0" th:text="#{label.add.loan.selectParent}">Select...</option>
-											<option th:each="tLoan : ${tLoans}" th:value="${tLoan.id}" th:text="${tLoan.regNumber}"></option>
-										</select>
-										-->
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -135,10 +135,9 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.creditOrder.id}" id="creditOrder" title="Select...">
-											<option value="0" th:text="#{label.add.loan.selectCreditOrder}">Select...</option>
-											<option th:each="order : ${orders}" th:value="${order.id}" th:text="${order.regNumber} + ' ' + ${order.regDate}"></option>
-										</select>
+										<div class="m-typeahead">
+											<input class="form-control m-input" id="order_typeahead" type="text" placeholder="Credit Orders">
+										</div>
 									</div>
 								</div>
 
@@ -149,7 +148,7 @@
 								<div class="row">
 									<div class="col-lg-4"></div>
 									<div class="col-lg-6">
-										<button type="submit" class="btn btn-primary" th:text="#{label.add.loan.save}">
+										<button type="submit" class="btn btn-primary" onclick="updateTLoan()" th:text="#{label.add.loan.save}">
 											Save
 										</button>
 										<button onclick="window.history.back()" type="button" class="btn btn-secondary" th:text="#{label.add.loan.cancel}">
@@ -180,6 +179,17 @@
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/typeahead.js}" type="text/javascript"></script>
 <!--end::Page Resources -->
+
+<script type="text/javascript">
+    function updateTLoan(sel)
+    {
+        $("#pLoanRegNumber").val(document.getElementById("loan_typeahead").value);
+        $("#orderRegNumber").val(document.getElementById("order_typeahead").value);
+        var staff_text = document.getElementById("staff_typeahead").value;
+        var staff_id = staff_text.match(/[^[\]]+(?=])/g);
+        $("#staffId").val(staff_id);
+    }
+</script>
 
 </body>
 <!-- end::Body -->
