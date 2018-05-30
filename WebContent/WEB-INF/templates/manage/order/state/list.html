@@ -1,13 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>MFLoan | Credit Orders</title>
-<div th:replace="fragments/header :: header-css" />
-<link th:href="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css}" rel="stylesheet" type="text/css" />
-<link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
-<link th:href="@{/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}" rel="stylesheet" type="text/css" />
-<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
 
+	<title th:text="#{label.order.states.title}"></title>
+	<div th:replace="fragments/header :: header-css" />
 
 </head>
 <!-- end::Head -->
@@ -29,43 +25,43 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text">Credit Order States</h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.order.states}"></h3>
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
 							<ul class="m-portlet__nav">
 								<li class="m-portlet__nav-item">
 									<div class="m-input-icon m-input-icon--left">
-										<input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
+										<input type="text" class="form-control m-input" th:placeholder="#{label.search}" id="generalSearch">
 										<span class="m-input-icon__icon m-input-icon__icon--left">
 											<span><i class="la la-search"></i></span>
 										</span>
 									</div>
 								</li>
 								<li class="m-portlet__nav-item">
-									<a th:href="@{/manage/order/state/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">Add New Credit Order State <i class="la la-plus"></i></a>
+									<a th:href="@{/manage/order/state/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.order.state.add}"></a>
 								</li>
 							</ul>
 						</div>
 					</div>
 					<div class="m-portlet__body">
 						<div class="table-scrollable table-scrollable-borderless">
-							<table class="table table-hover table-light" id="orderListTable">
-								<thead>
+							<table class="table" id="dataTable">
+								<thead class="thead-default">
 									<tr>
-										<th>Name</th>
+										<th th:text="#{label.order.state.name}">Name</th>
 										<th>&nbsp;</th>
 									</tr>
 								</thead>
 								<tbody>
 									<statecheck th:if="${#lists.isEmpty(states)}">
-										<tr class="no-records-found" style="text-align: center;">
-											<td colspan="8">No matching records found</td>
+										<tr class="no-records-found text-center">
+											<td colspan="8" th:text="#{label.table.empty}"></td>
 										</tr>
 									</statecheck>
 									<state th:each="s : ${states}">
 										<tr>
-											<td th:text="${s.name}">Name</td>
+											<td th:text="${s.name}"></td>
 											<td class="table-actions text-right">
 												<span>
 													<div class="dropdown">
@@ -98,23 +94,13 @@
 	</div>
 <div th:replace="layout/footer"/>
 </div>
-<div class="m-scroll-top m-scroll-top--skin-top" data-toggle="m-scroll-top" data-scroll-offset="500" data-scroll-speed="300">
-	<i class="la la-arrow-up"></i>
-</div>
 <div th:replace="fragments/footer :: footer-js"/>
 <script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
-
-<script th:src="@{/assets/pages/scripts/ui-modals.min.js}" type="text/javascript"></script>
-<script th:src="@{/assets/pages/scripts/form-validation.min.js}" type="text/javascript"></script>
-<script th:src="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js}" type="text/javascript"></script>
-<script th:src="@{/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"></script>
-<script th:src="@{/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}" type="text/javascript"></script>
-<script th:src="@{/assets/pages/scripts/components-date-time-pickers.min.js}" type="text/javascript"></script>
 
 <script type="text/javascript">
     $(document).ready(function() {
 
-        var table = $('#orderListTable').DataTable({
+        var table = $('#dataTable').DataTable({
             stateSave: true,
             language: {
                 paginate: {
@@ -124,9 +110,6 @@
                 lengthMenu: "Показать _MENU_",
             },
             "info":     false,
-            keys: {
-                focus: ':eq(0)'
-            },
             "sDom": 'rtlip'
         });
         $('#generalSearch').keyup(function(){
@@ -135,7 +118,6 @@
 
         $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
         $('.selectpicker').selectpicker('refresh');
-
 
     });
 </script>
