@@ -59,7 +59,7 @@ var Typeahead = function() {
             }
         });
 
-        $('#m_typeahead_2, #m_typeahead_2_modal').typeahead({
+        $('#loan_typeahead').typeahead({
             hint: true,
             highlight: true,
             minLength: 1
@@ -83,7 +83,7 @@ var Typeahead = function() {
             }
         });
 
-        $('#m_typeahead_3, #m_typeahead_3_modal').typeahead({
+        $('#owner_typeahead').typeahead({
                 hint: true,
                 highlight: true,
                 minLength: 1
@@ -93,78 +93,53 @@ var Typeahead = function() {
                 source: bloodhound
             });
     }
-    /*
-    var demo3 = function() {
-        var countries = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.whitespace,
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            // url points to a json file that contains an array of country names, see
-            // https://github.com/twitter/typeahead.js/blob/gh-pages/data/countries.json
-            prefetch: 'http://keenthemes.com/metronic/preview/inc/api/typeahead/countries.json'
-        });
-
-        // passing in `null` for the `options` arguments will result in the default
-        // options being used
-        $('#m_typeahead_3, #m_typeahead_3_modal').typeahead(null, {
-            name: 'countries',
-            source: countries
-        });
-    }
-    */
 
     var demo4 = function() {
-        var bestPictures = new Bloodhound({
-          datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-          queryTokenizer: Bloodhound.tokenizers.whitespace,
-          prefetch: 'http://keenthemes.com/metronic/preview/inc/api/typeahead/movies.json'
-        });
-
-        $('#m_typeahead_4').typeahead(null, {
-            name: 'best-pictures',
-            display: 'value',
-            source: bestPictures,
-            templates: {
-                empty: [
-                    '<div class="empty-message" style="padding: 10px 15px; text-align: center;">',
-                        'unable to find any Best Picture winners that match the current query',
-                    '</div>'
-                ].join('\n'),
-                suggestion: Handlebars.compile('<div><strong>{{value}}</strong> – {{year}}</div>')
+        // constructs the suggestion engine
+        var bloodhound = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            // `states` is an array of state names defined in "The Basics"
+            //local: states
+            remote:{
+                url: '/api/staffs/search?q=%QUERY',
+                wildcard: '%QUERY'
             }
         });
+
+        $('#staff_typeahead').typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 1
+            },
+            {
+                name: 'staffs',
+                source: bloodhound
+            });
     }
 
     var demo5 = function() {
-        var nbaTeams = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
+        // constructs the suggestion engine
+        var bloodhound = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
             queryTokenizer: Bloodhound.tokenizers.whitespace,
-            prefetch: 'http://keenthemes.com/metronic/preview/inc/api/typeahead/nba.json'
-        });
-
-        var nhlTeams = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            prefetch: 'http://keenthemes.com/metronic/preview/inc/api/typeahead/nhl.json'
-        });
-
-        $('#m_typeahead_5').typeahead({
-                highlight: true
-            },{
-                name: 'nba-teams',
-                display: 'team',
-                source: nbaTeams,
-                templates: {
-                    header: '<h3 class="league-name" style="padding: 5px 15px; font-size: 1.2rem; margin:0;">NBA Teams</h3>'
-                }
-            },{
-                name: 'nhl-teams',
-                display: 'team',
-                source: nhlTeams,
-                templates: {
-                    header: '<h3 class="league-name" style="padding: 5px 15px; font-size: 1.2rem; margin:0;">NHL Teams</h3>'
-                }
+            // `states` is an array of state names defined in "The Basics"
+            //local: states
+            remote:{
+                url: '/api/orders/search?q=%QUERY',
+                wildcard: '%QUERY'
             }
-        );
+        });
+
+        $('#order_typeahead').typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 1
+            },
+            {
+                name: 'orders',
+                source: bloodhound
+            });
     }
 
     return {
