@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -44,6 +45,9 @@ public class CollateralAgreementController {
 	
 	@Autowired
 	OwnerService ownerService;
+
+	@Autowired
+	OwnerRepository ownerRepository;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -117,8 +121,12 @@ public class CollateralAgreementController {
     		@PathVariable("debtorId")Long debtorId,
     		ModelMap model)
     {
-		if(agreement.getId() == 0)
+		if(agreement.getId() == 0){
+			Owner owner = ownerRepository.findByName(agreement.getOwner().getName()).get(0);
+			agreement.setOwner(owner);
 			agreementService.add(agreement);
+		}
+
 		else
 		{
 			Owner oldOwner = agreementService.getById(agreement.getId()).getOwner();
