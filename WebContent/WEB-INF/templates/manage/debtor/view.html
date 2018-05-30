@@ -2,7 +2,7 @@
 <html lang="en" >
 <!-- begin::Head -->
 <head>
-	<title th:text="#{label.debtor.details.title}"></title>
+	<title th:text="${debtor.name}"></title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -39,7 +39,7 @@
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
-												<h3 class="m-widget1__title">ID</h3>
+												<h3 class="m-widget1__title" th:text="#{label.debtor.table.id}">ID</h3>
 												<span class="m-widget1__desc m--font-brand" th:text="${debtor.id}"></span>
 											</div>
 										</div>
@@ -61,7 +61,7 @@
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.debtor.table.type}"></h3>
+												<h3 class="m-widget1__title" th:text="#{label.debtor.table.debtorType}"></h3>
 												<span class="m-widget1__desc m--font-brand" th:text="${debtor.debtorType.name}"></span>
 											</div>
 										</div>
@@ -101,13 +101,13 @@
 					<div class="m-portlet__body">
 						<ul class="nav nav-tabs" role="tablist">
 							<li class="nav-item">
-								<a class="nav-link m--font-primary active" data-toggle="tab" href="#loanListOfDebtor" th:text="#{label.loans}"></a>
+								<a class="nav-link m--font-primary active" data-toggle="tab" href="#loanListOfDebtor" th:text="#{label.debtor.tab.loans}"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#agreementListOfDebtor" th:text="#{label.agreements}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#agreementListOfDebtor" th:text="#{label.debtor.tab.agreements}"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#procedureListOfDebtor" th:text="#{label.procedures}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#procedureListOfDebtor" th:text="#{label.debtor.tab.procedures}"></a>
 							</li>
 						</ul>
 						<div class="tab-content">
@@ -133,8 +133,8 @@
 														<th th:text="#{label.loan.table.type}"></th>
 														<th th:text="#{label.loan.table.state}"></th>
 														<th th:text="#{label.loan.table.superId}"></th>
-														<th th:text="#{label.loan.table.hasSubLoan}"></th>
-														<th th:text="#{label.loan.table.parentId}"></th>
+														<!--<th th:text="#{label.loan.table.hasSubLoan}"></th>-->
+														<!--<th th:text="#{label.loan.table.parentId}"></th>-->
 														<th th:text="#{label.loan.table.creditOrderId}"></th>
 														<th>&nbsp;</th>
 													</tr>
@@ -149,8 +149,8 @@
 														<td th:text="${loan.loanType.name}"></td>
 														<td th:text="${loan.loanState.name}"></td>
 														<td th:text="${loan.supervisorId}"></td>
-														<td th:text="${loan.hasSubLoan}"></td>
-														<td th:text="${loan.parentLoan!=null} ? ${loan.parentLoan.id} : 'null'"></td>
+														<!--<td th:text="${loan.hasSubLoan}"></td>-->
+														<!--<td th:text="${loan.parentLoan!=null} ? ${loan.parentLoan.id} : 'null'"></td>-->
 														<td th:text="${loan.creditOrder.id}"></td>
 														<td class="table-actions text-right">
 															<span>
@@ -203,8 +203,8 @@
 														<th class="table-id">Id</th>
 														<th th:text="#{label.agreement.table.number}"></th>
 														<th th:text="#{label.agreement.table.date}"></th>
-														<th th:text="#{label.agreement.table.collRegNumber}"></th>
-														<th th:text="#{label.agreement.table.collRegDate}"></th>
+														<!--<th th:text="#{label.agreement.table.collRegNumber}"></th>-->
+														<!--<th th:text="#{label.agreement.table.collRegDate}"></th>-->
 														<th th:text="#{label.agreement.table.notaryRegNumber}"></th>
 														<th th:text="#{label.agreement.table.notaryRegDate}"></th>
 														<th th:text="#{label.agreement.table.arrestRegNumber}"></th>
@@ -217,8 +217,8 @@
 														<td class="table-id" th:text="${agreement.id}"></td>
 														<td th:text="${agreement.agreementNumber}"></td>
 														<td th:text="${agreement.agreementDate}"></td>
-														<td th:text="${agreement.collateralOfficeRegNumber}"></td>
-														<td th:text="${agreement.collateralOfficeRegDate}"></td>
+														<!--<td th:text="${agreement.collateralOfficeRegNumber}"></td>-->
+														<!--<td th:text="${agreement.collateralOfficeRegDate}"></td>-->
 														<td th:text="${agreement.notaryOfficeRegNumber}"></td>
 														<td th:text="${agreement.notaryOfficeRegDate}"></td>
 														<td th:text="${agreement.arrestRegNumber}"></td>
