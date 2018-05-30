@@ -27,7 +27,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.loan.add}"></h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.add.loan.title}"></h3>
 							</div>
 						</div>
 					</div>
@@ -38,7 +38,7 @@
 							<div class="m-form__section">
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="label.loan.regNumber"></span>
+										<span th:text="#{label.loan.regNumber}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -47,7 +47,7 @@
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="label.loan.regDate"></span>
+										<span th:text="#{label.loan.regDate}"></span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
@@ -60,7 +60,7 @@
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="label.loan.amount"></span>
+										<span th:text="#{label.loan.amount}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -69,43 +69,43 @@
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="label.loan.currency"></span>
+										<span th:text="#{label.loan.currency}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.currency.id}"  id="currency" title="Select...">
-											<option value="0">Select...</option>
+											<option value="0" th:text="#{label.add.loan.selectCurrency}">Select...</option>
 											<option th:each="currency : ${currencies}" th:value="${currency.id}" th:text="${currency.name}"></option>
 										</select>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="label.loan.type"></span>
+										<span th:text="#{label.loan.type}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.loanType.id}"  id="loanType" title="Select...">
-											<option value="0">Select...</option>
+											<option value="0" th:text="#{label.add.loan.selectType}">Select...</option>
 											<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="label.loan.state"></span>
+										<span th:text="#{label.loan.state}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.loanState.id}" id="loanState" title="Select...">
-											<option value="0">Select...</option>
+											<option value="0" th:text="#{label.add.loan.selectState}">Select...</option>
 											<option th:each="state : ${states}" th:value="${state.id}" th:text="${state.name}"></option>
 										</select>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="label.loan.supervisorId"></span>
+										<span th:text="#{label.loan.supervisorId}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -114,7 +114,7 @@
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="label.loan.parent"></span>
+										<span th:text="#{label.loan.parent}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -123,7 +123,7 @@
 										</div>
 										<!--
 										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.parentLoan.id}"  id="parentLoan" title="Select...">
-											<option value="0">Select...</option>
+											<option value="0" th:text="#{label.add.loan.selectParent}">Select...</option>
 											<option th:each="tLoan : ${tLoans}" th:value="${tLoan.id}" th:text="${tLoan.regNumber}"></option>
 										</select>
 										-->
@@ -131,12 +131,12 @@
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="label.loan.creditOrderId"></span>
+										<span th:text="#{label.loan.creditOrderId}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.creditOrder.id}" id="creditOrder" title="Select...">
-											<option value="0">Select...</option>
+											<option value="0" th:text="#{label.add.loan.selectCreditOrder}">Select...</option>
 											<option th:each="order : ${orders}" th:value="${order.id}" th:text="${order.regNumber} + ' ' + ${order.regDate}"></option>
 										</select>
 									</div>
@@ -149,10 +149,10 @@
 								<div class="row">
 									<div class="col-lg-4"></div>
 									<div class="col-lg-6">
-										<button type="submit" class="btn btn-primary">
+										<button type="submit" class="btn btn-primary" th:text="#{label.add.loan.save}">
 											Save
 										</button>
-										<button onclick="window.history.back()" type="button" class="btn btn-secondary">
+										<button onclick="window.history.back()" type="button" class="btn btn-secondary" th:text="#{label.add.loan.cancel}">
 											Cancel
 										</button>
 									</div>
