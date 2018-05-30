@@ -14,7 +14,7 @@ var Select2 = function() {
 
         // multi select
         $('#m_select2_3, #m_select2_3_validate').select2({
-            placeholder: "Select a state",
+            placeholder: "Select loans",
         });
 
         // basic

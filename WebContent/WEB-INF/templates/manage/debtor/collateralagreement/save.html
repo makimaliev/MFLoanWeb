@@ -34,9 +34,7 @@
 					<!--begin::Form-->
 					<form th:action="@{/manage/debtor/__${debtorId}__/collateralagreement/save}" th:object="${agreement}" method="post" class="m-form m-form--fit m-form--label-align-right">
 
-						<input hidden="true" type="text" id="ownerEntityId" name="owner.entityId" th:field="*{owner.entityId}" />
 						<input hidden="true" type="text" id="ownerName" name="owner.name" th:field="*{owner.name}" />
-						<input hidden="true" type="text" id="ownerType" name="owner.ownerType" th:field="*{owner.ownerType}" />
 						<input type="hidden" th:field="*{id}"/>
 
 						<div class="m-portlet__body">
@@ -139,7 +137,16 @@
 										Loans <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
+										<!--
 										<select class="form-control m-bootstrap-select m_selectpicker" multiple th:field="*{loans}">
+											<option th:each="loan : ${tLoans}"
+													th:value="${{loan}}"
+													th:text="${loan.regNumber}">
+											</option>
+										</select>
+										-->
+
+										<select class="form-control m-select2" id="m_select2_3" name="param" multiple="multiple" th:field="*{loans}">
 											<option th:each="loan : ${tLoans}"
 													th:value="${{loan}}"
 													th:text="${loan.regNumber}">
@@ -153,13 +160,9 @@
 										Owner <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{owner}" id="ownerSelect" onchange="updateTOwner(this);" title="Select...">
-											<option value="0">Select...</option>
-											<option th:each="entity : ${entities}"
-													th:value="${{entity}}"
-													th:selected="(${entity.id} == *{owner.id})"
-													th:text="${entity.name} + ',' + ${entity.ownerType} + ',' + ${entity.entityId} "></option>
-										</select>
+										<div class="m-typeahead">
+											<input class="form-control m-input" id="owner_typeahead" type="text" placeholder="Owners">
+										</div>
 									</div>
 								</div>
 
@@ -171,7 +174,7 @@
 								<div class="row">
 									<div class="col-lg-4"></div>
 									<div class="col-lg-6">
-										<button type="submit" class="btn btn-primary">
+										<button type="submit" class="btn btn-primary" onclick="updateTOwner()">
 											Save
 										</button>
 										<button onclick="window.history.back()" type="button" class="btn btn-secondary">
@@ -200,16 +203,14 @@
 <!--begin::Page Resources -->
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/typeahead.js}" type="text/javascript"></script>
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/select2.js}" type="text/javascript"></script>
 <!--end::Page Resources -->
 
 <script type="text/javascript">
     function updateTOwner(sel)
     {
-        var data =$('#ownerSelect option:selected').text();
-        var arr = data.split(',');
-        $("#ownerEntityId").val(arr[2]);
-        $("#ownerName").val(arr[0]);
-        $("#ownerType").val(arr[1]);
+        $("#ownerName").val(document.getElementById("owner_typeahead").value);
     }
 </script>
 

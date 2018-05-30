@@ -70,7 +70,7 @@ public class CollateralAgreementController {
 	{
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtorId", debtorId);
-		//model.addAttribute("tLoans", debtor.getLoans());
+		model.addAttribute("tLoans", debtor.getLoans());
 		
 		List<Owner> entities = new ArrayList<Owner>();
 		List<Person> persons = personService.findAll();
