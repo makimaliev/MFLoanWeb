@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" >
 <!-- begin::Head -->
 <head>
 	<title th:text="#{label.reports}"></title>
@@ -45,7 +46,7 @@
 									   th:href="@{/report/add}"
 									   role="button"
 									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
-									   th:text="#{label.add.report}"></a>
+									   th:text="#{label.add.report}" sec:authorize="hasRole('ADMIN')"></a>
 								</li>
 							</ul>
 						</div>
@@ -72,17 +73,17 @@
 													<div class="dropdown-menu dropdown-menu-right">
 														<a class="dropdown-item"
 														   th:href="@{/report/__${s.id}__/details}"
-														   role="button">
+														   role="button" sec:authorize="hasRole('ADMIN')">
 															<span th:text="#{label.table.view}"></span>
 														</a>
 														<a class="dropdown-item"
 														   data-remote="false" data-toggle="modal"
 														   data-target="#reportFormModal"
 														   th:href="@{/report/__${s.id}__/edit}"
-														   role="button">
-															<span th:text="#{label.table.edit}"></span>
+														   role="button" sec:authorize="hasRole('ADMIN')">
+															<span th:text="#{label.table.edit}" ></span>
 														</a>
-														<a class="dropdown-item" href="#">
+														<a class="dropdown-item" href="#" sec:authorize="hasRole('ADMIN')">
 															<span>
 																<form th:action="@{/report/__${s.id}__/remove}" method="post">
 																	<input hidden="true" type="text" id="id" name="id" th:value="${s.id}" />

@@ -316,35 +316,6 @@ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALU
 INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('lastInstPassed', 'Проср. график', 'label.accrue.lastInstPassed', 'Проср. график');
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # collateral
 
 INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Number', 'Номери', 'label.agreement.table.number', 'Номер');
@@ -367,3 +338,41 @@ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALU
 INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Last status', 'Акыркы статусы', 'label.procedure.table.lastStatusId', 'Последний статус');
 INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Status', 'Статусу', 'label.procedure.table.status', 'Статус');
 INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Type', 'Туру', 'label.procedure.table.type', 'Вид');
+
+
+# reports
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Name', 'Аталышы', 'label.report.name', 'Наименование');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Report Type', 'Туру', 'label.report.reportType', 'Вид');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Add Report', 'Жаны отчет', 'label.add.report', 'Добавить отчет');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Report Templates', 'Шаблондор', 'label.report.info', 'Шаблоны');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Report', 'Отчет', 'label.reports', 'Отчет');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Report type', 'Отчет туру', 'label.report.type', 'Вид отчета');
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Generate', 'Чыгаруу', 'label.table.generate', 'Сформировать');
+
+# printout
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Printout', 'Кагазга чыгаруу', 'label.printouts', 'Распечатка');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Name', 'Аталышы', 'label.printout.name', 'Наименование');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Type', 'Туру', 'label.printout.printoutType', 'Вид');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Add', 'Жаны', 'label.add.printout', 'Добавить');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Printout', 'Кагазга чыгаруу', 'label.printouts', 'Настройка распечатки');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Templates', 'Шаблон', 'label.printout.templates', 'Шаблоны распечатки');
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Name', 'Аталышы', 'label.template.name', 'Наименование');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Name', 'Аталышы', 'label.printoutTemplate.name', 'Наименование');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Report', 'Отчет', 'label.template.report', 'Отчет');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Save', 'Сактоо', 'label.button.save', 'Сохранить');
+
+
+
+
+
+
+
+
+
+
+
+
