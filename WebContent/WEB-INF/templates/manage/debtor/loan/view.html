@@ -179,9 +179,9 @@
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#bankrupts" th:text="#{label.bankrupts}"></a>
 							</li>
-							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#collaterals" th:text="#{label.collaterals}"></a>
-							</li>
+							<!--<li class="nav-item">-->
+								<!--<a class="nav-link m&#45;&#45;font-primary" data-toggle="tab" href="#collaterals" th:text="#{label.collaterals}"></a>-->
+							<!--</li>-->
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#collectionPhases" th:text="#{label.collectionPhases}"></a>
 							</li>
@@ -608,17 +608,17 @@
 												<table class="table">
 													<thead class="thead-default">
 													<tr>
-														<th class="table-id">ID</th>
-														<th>Number</th>
-														<th>Date</th>
-														<th>Quantity</th>
-														<th>Price per unit</th>
-														<th>Unit Type Id</th>
-														<th>Total cost</th>
-														<th>Transfer payment id</th>
-														<th>Transfer credit id</th>
-														<th>Transfer person id</th>
-														<th>Goods type id</th>
+														<th class="table-id" th:text="#{label.debtTransfer.id}">ID</th>
+														<th th:text="#{label.debtTransfer.number}">Number</th>
+														<th th:text="#{label.debtTransfer.date}">Date</th>
+														<th th:text="#{label.debtTransfer.quantity}">Quantity</th>
+														<th th:text="#{label.debtTransfer.pricePerUnit}">Price per unit</th>
+														<th th:text="#{label.debtTransfer.unitType}">Unit Type Id</th>
+														<th th:text="#{label.debtTransfer.totalCost}">Total cost</th>
+														<th th:text="#{label.debtTransfer.transferPayment}">Transfer payment id</th>
+														<th th:text="#{label.debtTransfer.transferCredit}">Transfer credit id</th>
+														<th th:text="#{label.debtTransfer.transferPerson}">Transfer person id</th>
+														<th th:text="#{label.debtTransfer.goodsType}">Goods type id</th>
 														<th>&nbsp;</th>
 													</tr>
 													</thead>
@@ -680,16 +680,16 @@
 												<table class="table">
 													<thead class="thead-default">
 													<tr>
-														<th class="table-id">ID</th>
-														<th>Targeted Use Result Id</th>
-														<th>Created by</th>
-														<th>Created date</th>
-														<th>Approved by</th>
-														<th>Approved date</th>
-														<th>Checked by</th>
-														<th>Checked date</th>
-														<th>Attachment id</th>
-														<th>&nbsp;</th>
+														<th class="table-id" th:text="#{label.targetedUse.id}">ID</th>
+														<th th:text="#{label.targetedUse.result}">Targeted Use Result Id</th>
+														<th th:text="#{label.targetedUse.createdBy}">Created by</th>
+														<th th:text="#{label.targetedUse.createdDate}">Created date</th>
+														<th th:text="#{label.targetedUse.approvedBy}">Approved by</th>
+														<th th:text="#{label.targetedUse.approvedDate}">Approved date</th>
+														<th th:text="#{label.targetedUse.checkedBy}">Checked by</th>
+														<th th:text="#{label.targetedUse.checkedDate}">Checked date</th>
+														<th th:text="#{label.targetedUse.attachment}">Attachment id</th>
+														<th >&nbsp;</th>
 													</tr>
 													</thead>
 													<tbody>
@@ -746,9 +746,9 @@
 										<table class="table">
 											<thead class="thead-default">
 											<tr>
-												<th class="table-id">ID</th>
-												<th>On Date</th>
-												<th>Old loan id</th>
+												<th class="table-id" th:text="#{label.reconstructedList.id}">ID</th>
+												<th th:text="#{label.reconstructedList.onDate}">On Date</th>
+												<th th:text="#{label.reconstructedList.oldLoan}">Old loan id</th>
 												<th>&nbsp;</th>
 											</tr>
 											</thead>
@@ -798,9 +798,9 @@
 										<table class="table">
 											<thead class="thead-default">
 											<tr>
-												<th class="table-id">ID</th>
-												<th>Started on date</th>
-												<th>Finished on date</th>
+												<th class="table-id" th:text="#{label.bankrupt.id}" >ID</th>
+												<th th:text="#{label.bankrupt.startedOnDate}">Started on date</th>
+												<th th:text="#{label.bankrupt.finishedOnDate}">Finished on date</th>
 												<th>&nbsp;</th>
 											</tr>
 											</thead>
@@ -838,56 +838,59 @@
 								</div>
 								<!--end::Section-->
 							</div>
-							<div class="tab-pane" id="collaterals" role="tabpanel">
-								<div class="m-section">
-									<div class="m-section__content">
-										<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collateral/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.button.addNewCollateral}"></a>
-									</div>
-								</div>
-								<!--begin::Section-->
-								<div class="m-section">
-									<div class="m-section__content">
-										<table class="table">
-											<thead class="thead-default">
-											<tr>
-												<th class="table-id">ID</th>
-												<th>Name</th>
-												<th>&nbsp;</th>
-											</tr>
-											</thead>
-											<tbody>
-											<tr th:each="coll : ${Collaterals}">
-												<td class="table-id" th:text="${coll.id}"></td>
-												<td th:text="${coll.name}"></td>
-												<td class="table-actions text-right">
-													<span>
-														<div class="dropdown">
-															<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
-																<i class="la la-ellipsis-h"></i>
-															</a>
-															<div class="dropdown-menu dropdown-menu-right">
-																<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collateral/__${coll.id}__/save}">
-																	<span th:text="#{label.table.edit}"></span>
-																</a>
-																<a class="dropdown-item" href="#">
-																	<span>
-																		<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collateral/delete}" method="post">
-																			<input hidden="true" type="text" id="id" name="id" th:value="${coll.id}" />
-																			<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
-																		</form>
-																	</span>
-																</a>
-															</div>
-														</div>
-													</span>
-												</td>
-											</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-								<!--end::Section-->
-							</div>
+							<!---->
+							<!--<div class="tab-pane" id="collaterals" role="tabpanel">-->
+								<!--<div class="m-section">-->
+									<!--<div class="m-section__content">-->
+										<!--<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collateral/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn&#45;&#45;air" th:text="#{label.button.addNewCollateral}"></a>-->
+									<!--</div>-->
+								<!--</div>-->
+								<!--&lt;!&ndash;begin::Section&ndash;&gt;-->
+								<!--<div class="m-section">-->
+									<!--<div class="m-section__content">-->
+										<!--<table class="table">-->
+											<!--<thead class="thead-default">-->
+											<!--<tr>-->
+												<!--<th class="table-id">ID</th>-->
+												<!--<th>Name</th>-->
+												<!--<th>&nbsp;</th>-->
+											<!--</tr>-->
+											<!--</thead>-->
+											<!--<tbody>-->
+											<!--<tr th:each="coll : ${Collaterals}">-->
+												<!--<td class="table-id" th:text="${coll.id}"></td>-->
+												<!--<td th:text="${coll.name}"></td>-->
+												<!--<td class="table-actions text-right">-->
+													<!--<span>-->
+														<!--<div class="dropdown">-->
+															<!--<a href="#" class="btn m-btn m-btn&#45;&#45;hover-metal m-btn&#45;&#45;icon m-btn&#45;&#45;icon-only m-btn&#45;&#45;pill btn-dropdown" data-toggle="dropdown">-->
+																<!--<i class="la la-ellipsis-h"></i>-->
+															<!--</a>-->
+															<!--<div class="dropdown-menu dropdown-menu-right">-->
+																<!--<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collateral/__${coll.id}__/save}">-->
+																	<!--<span th:text="#{label.table.edit}"></span>-->
+																<!--</a>-->
+																<!--<a class="dropdown-item" href="#">-->
+																	<!--<span>-->
+																		<!--<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collateral/delete}" method="post">-->
+																			<!--<input hidden="true" type="text" id="id" name="id" th:value="${coll.id}" />-->
+																			<!--<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>-->
+																		<!--</form>-->
+																	<!--</span>-->
+																<!--</a>-->
+															<!--</div>-->
+														<!--</div>-->
+													<!--</span>-->
+												<!--</td>-->
+											<!--</tr>-->
+											<!--</tbody>-->
+										<!--</table>-->
+									<!--</div>-->
+								<!--</div>-->
+								<!--&lt;!&ndash;end::Section&ndash;&gt;-->
+							<!--</div>-->
+							<!---->
+
 							<div class="tab-pane" id="collectionPhases" role="tabpanel">
 								<div class="m-section">
 									<div class="m-section__content">
@@ -902,13 +905,13 @@
 												<table class="table">
 													<thead class="thead-default">
 													<tr>
-														<th class="table-id">ID</th>
-														<th>Start Date</th>
-														<th>Close Date</th>
-														<th>Last Event</th>
-														<th>Last Status Id</th>
-														<th>Phase Status</th>
-														<th>Phase Type</th>
+														<th class="table-id" th:text="#{label.collectionPhase.id}">ID</th>
+														<th th:text="#{label.collectionPhase.startDate}">Start Date</th>
+														<th th:text="#{label.collectionPhase.closeDate}">Close Date</th>
+														<th th:text="#{label.collectionPhase.lastEvent}">Last Event</th>
+														<th th:text="#{label.collectionPhase.lastStatus}">Last Status Id</th>
+														<th th:text="#{label.collectionPhase.phaseStatus}">Phase Status</th>
+														<th th:text="#{label.collectionPhase.phaseType}">Phase Type</th>
 														<th>&nbsp;</th>
 													</tr>
 													</thead>
@@ -964,40 +967,40 @@
 												<table class="table">
 													<thead class="thead-default">
 													<tr>
-														<th class="table-id">ID</th>
-														<th>onDate</th>
-														<th>disbursement</th>
-														<th>totalDisbursement</th>
-														<th>principalPayment</th>
-														<th>totalPrincipalPayment</th>
-														<th>principalPaid</th>
-														<th>totalPrincipalPaid</th>
-														<th>principalWriteOff</th>
-														<th>totalPrincipalWriteOff</th>
-														<th>principalOutstanding</th>
-														<th>principalOverdue</th>
-														<th>daysInPeriod</th>
-														<th>interestAccrued</th>
-														<th>totalInterestAccrued</th>
-														<th>totalInterestAccruedOnInterestPayment</th>
-														<th>interestPayment</th>
-														<th>totalInterestPayment</th>
-														<th>collectedInterestPayment</th>
-														<th>totalCollectedInterestPayment</th>
-														<th>collectedInterestDisbursed</th>
-														<th>interestPaid</th>
-														<th>totalInterestPaid</th>
-														<th>interestOutstanding</th>
-														<th>interestOverdue</th>
-														<th>penaltyAccrued</th>
-														<th>totalPenaltyAccrued</th>
-														<th>collectedPenaltyPayment</th>
-														<th>totalCollectedPenaltyPayment</th>
-														<th>collectedPenaltyDisbursed</th>
-														<th>penaltyPaid</th>
-														<th>totalPenaltyPaid</th>
-														<th>penaltyOutstanding</th>
-														<th>penaltyOverdue</th>
+														<th class="table-id" th:text="#{label.loanDetailedSummary.id}">ID</th>
+														<th th:text="#{label.loanDetailedSummary.onDate}">onDate</th>
+														<th th:text="#{label.loanDetailedSummary.disbursement}">disbursement</th>
+														<th th:text="#{label.loanDetailedSummary.totalDisbursement}">totalDisbursement</th>
+														<th th:text="#{label.loanDetailedSummary.principalPayment}">principalPayment</th>
+														<th th:text="#{label.loanDetailedSummary.totalPrincipalPayment}">totalPrincipalPayment</th>
+														<th th:text="#{label.loanDetailedSummary.principalPaid}">principalPaid</th>
+														<th th:text="#{label.loanDetailedSummary.totalPrincipalPaid}">totalPrincipalPaid</th>
+														<th th:text="#{label.loanDetailedSummary.principalWriteOff}">principalWriteOff</th>
+														<th th:text="#{label.loanDetailedSummary.totalPrincipalWriteOff}">totalPrincipalWriteOff</th>
+														<th th:text="#{label.loanDetailedSummary.principalOutstanding}">principalOutstanding</th>
+														<th th:text="#{label.loanDetailedSummary.principalOutstanding}">principalOutstanding</th>
+														<th th:text="#{label.loanDetailedSummary.daysInPeriod}">daysInPeriod</th>
+														<th th:text="#{label.loanDetailedSummary.interestAccrued}">interestAccrued</th>
+														<th th:text="#{label.loanDetailedSummary.totalInterestAccrued}">totalInterestAccrued</th>
+														<th th:text="#{label.loanDetailedSummary.totalInterestAccruedOnInterestPayment}">totalInterestAccruedOnInterestPayment</th>
+														<th th:text="#{label.loanDetailedSummary.interestPayment}">interestPayment</th>
+														<th th:text="#{label.loanDetailedSummary.totalInterestPayment}">totalInterestPayment</th>
+														<th th:text="#{label.loanDetailedSummary.collectedInterestPayment}">collectedInterestPayment</th>
+														<th th:text="#{label.loanDetailedSummary.totalCollectedInterestPayment}">totalCollectedInterestPayment</th>
+														<th th:text="#{label.loanDetailedSummary.collectedInterestDisbursed}">collectedInterestDisbursed</th>
+														<th th:text="#{label.loanDetailedSummary.interestPaid}">interestPaid</th>
+														<th th:text="#{label.loanDetailedSummary.totalInterestPaid}">totalInterestPaid</th>
+														<th th:text="#{label.loanDetailedSummary.interestOutstanding}">interestOutstanding</th>
+														<th th:text="#{label.loanDetailedSummary.interestOverdue}">interestOverdue</th>
+														<th th:text="#{label.loanDetailedSummary.penaltyAccrued}">penaltyAccrued</th>
+														<th th:text="#{label.loanDetailedSummary.totalPenaltyAccrued}">totalPenaltyAccrued</th>
+														<th th:text="#{label.loanDetailedSummary.collectedPenaltyPayment}">collectedPenaltyPayment</th>
+														<th th:text="#{label.loanDetailedSummary.totalCollectedPenaltyPayment}">totalCollectedPenaltyPayment</th>
+														<th th:text="#{label.loanDetailedSummary.collectedPenaltyDisbursed}">collectedPenaltyDisbursed</th>
+														<th th:text="#{label.loanDetailedSummary.penaltyPaid}">penaltyPaid</th>
+														<th th:text="#{label.loanDetailedSummary.totalPenaltyPaid}">totalPenaltyPaid</th>
+														<th th:text="#{label.loanDetailedSummary.penaltyOutstanding}">penaltyOutstanding</th>
+														<th th:text="#{label.loanDetailedSummary.penaltyOverdue}">penaltyOverdue</th>
 													</tr>
 													</thead>
 													<tbody>
@@ -1054,25 +1057,25 @@
 												<table class="table">
 													<thead class="thead-default">
 													<tr>
-														<th class="table-id">ID</th>
-														<th>onDate</th>
-														<th>loanAmount</th>
-														<th>totalDisbursed</th>
-														<th>totalPaid</th>
-														<th>paidPrincipal</th>
-														<th>paidInterest</th>
-														<th>paidPenalty</th>
-														<th>paidFee</th>
-														<th>totalOutstanding</th>
-														<th>outstadingPrincipal</th>
-														<th>outstadingInterest</th>
-														<th>outstadingPenalty</th>
-														<th>outstadingFee</th>
-														<th>totalOverdue</th>
-														<th>overduePrincipal</th>
-														<th>overdueInterest</th>
-														<th>overduePenalty</th>
-														<th>overdueFee</th>
+														<th class="table-id" th:text="#{label.loanSummary.id}">ID</th>
+														<th th:text="#{label.loanSummary.onDate}">onDate</th>
+														<th th:text="#{label.loanSummary.loanAmount}">loanAmount</th>
+														<th th:text="#{label.loanSummary.totalDisbursed}">totalDisbursed</th>
+														<th th:text="#{label.loanSummary.totalPaid}">totalPaid</th>
+														<th th:text="#{label.loanSummary.paidPrincipal}">paidPrincipal</th>
+														<th th:text="#{label.loanSummary.paidInterest}">paidInterest</th>
+														<th th:text="#{label.loanSummary.paidPenalty}">paidPenalty</th>
+														<th th:text="#{label.loanSummary.paidFee}">paidFee</th>
+														<th th:text="#{label.loanSummary.totalOutstanding}">totalOutstanding</th>
+														<th th:text="#{label.loanSummary.outstadingPrincipal}">outstadingPrincipal</th>
+														<th th:text="#{label.loanSummary.outstadingInterest}">outstadingInterest</th>
+														<th th:text="#{label.loanSummary.outstadingPenalty}">outstadingPenalty</th>
+														<th th:text="#{label.loanSummary.outstadingFee}">outstadingFee</th>
+														<th th:text="#{label.loanSummary.totalOverdue}">totalOverdue</th>
+														<th th:text="#{label.loanSummary.overduePrincipal}">overduePrincipal</th>
+														<th th:text="#{label.loanSummary.overdueInterest}">overdueInterest</th>
+														<th th:text="#{label.loanSummary.overduePenalty}">overduePenalty</th>
+														<th th:text="#{label.loanSummary.overdueFee}">overdueFee</th>
 													</tr>
 													</thead>
 													<tbody>
@@ -1114,15 +1117,15 @@
 												<table class="table">
 													<thead class="thead-default">
 													<tr>
-														<th class="table-id">ID</th>
-														<th>fromDate</th>
-														<th>toDate</th>
-														<th>daysInPeriod</th>
-														<th>interestAccrued</th>
-														<th>penaltyAccrued</th>
-														<th>penaltyOnPrincipalOverdue</th>
-														<th>penaltyOnInterestOverdue</th>
-														<th>lastInstPassed</th>
+														<th class="table-id" th:text="#{label.accrue.id}">ID</th>
+														<th th:text="#{label.accrue.fromDate}">fromDate</th>
+														<th th:text="#{label.accrue.toDate}">toDate</th>
+														<th th:text="#{label.accrue.daysInPeriod}">daysInPeriod</th>
+														<th th:text="#{label.accrue.interestAccrued}">interestAccrued</th>
+														<th th:text="#{label.accrue.penaltyAccrued}">penaltyAccrued</th>
+														<th th:text="#{label.accrue.penaltyOnPrincipalOverdue}">penaltyOnPrincipalOverdue</th>
+														<th th:text="#{label.accrue.penaltyOnInterestOverdue}">penaltyOnInterestOverdue</th>
+														<th th:text="#{label.accrue.lastInstPassed}">lastInstPassed</th>
 													</tr>
 													</thead>
 													<tbody>
