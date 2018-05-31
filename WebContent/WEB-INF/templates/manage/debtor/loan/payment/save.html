@@ -41,7 +41,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Payment Date
+										<span th:text="#{label.payment.paymentDate}"></span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
@@ -55,7 +55,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Total amount <span class="m--font-danger">*</span>
+										<span th:text="#{label.payment.totalAmount}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="totalAmount" th:value="${payment.totalAmount}">
@@ -64,7 +65,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Principal <span class="m--font-danger">*</span>
+										<span th:text="#{label.payment.principal}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="principal" th:value="${payment.principal}">
@@ -73,7 +75,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Interest <span class="m--font-danger">*</span>
+										<span th:text="#{label.payment.interest}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="interest" th:value="${payment.interest}">
@@ -82,7 +85,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Penalty <span class="m--font-danger">*</span>
+										<span th:text="#{label.payment.penalty}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="penalty" th:value="${payment.penalty}">
@@ -91,7 +95,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Fee <span class="m--font-danger">*</span>
+										<span th:text="#{label.payment.fee}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="fee" th:value="${payment.fee}">
@@ -100,7 +105,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Number <span class="m--font-danger">*</span>
+										<span th:text="#{label.payment.number}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="number" th:value="${payment.number}">
@@ -109,7 +115,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Payment Type <span class="m--font-danger">*</span>
+										<span th:text="#{label.payment.paymentType}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${payment.paymentType.id}"  id="paymentType" th:title="#{label.select}">

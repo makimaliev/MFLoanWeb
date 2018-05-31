@@ -41,7 +41,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Quantity <span class="m--font-danger">*</span>
+										<span th:text="#{label.loanGoods.quantity}">Quantity</span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="quantity" th:value="${lg.quantity}">
@@ -50,7 +51,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Unit Type Id <span class="m--font-danger">*</span>
+										<span th:text="#{label.loanGoods.unitType}">Unit Type Id</span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="unitTypeId" th:value="${lg.unitTypeId}">
@@ -59,7 +61,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Goods Type Id <span class="m--font-danger">*</span>
+										<span th:text="#{label.loanGoods.goodType}">Good Typ eId</span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="goodsTypeId" th:value="${lg.goodsTypeId}">

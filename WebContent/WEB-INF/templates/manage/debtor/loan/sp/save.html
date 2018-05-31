@@ -41,7 +41,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Date
+										<span th:text="#{label.supervisorPlan.date}"></span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
@@ -55,7 +55,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Amount <span class="m--font-danger">*</span>
+										<span th:text="#{label.supervisorPlan.amount}">Amount</span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="amount" th:value="${sp.amount}">
@@ -64,7 +64,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Principal <span class="m--font-danger">*</span>
+										<span th:text="#{label.supervisorPlan.principal}"></span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="principal" th:value="${sp.principal}">
@@ -73,7 +73,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Interest <span class="m--font-danger">*</span>
+										<span th:text="#{label.supervisorPlan.interest}"></span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="interest" th:value="${sp.interest}">
@@ -82,7 +82,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Penalty <span class="m--font-danger">*</span>
+										<span th:text="#{label.supervisorPlan.penalty}"></span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="penalty" th:value="${sp.penalty}">
@@ -91,7 +91,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Fee <span class="m--font-danger">*</span>
+										<span th:text="#{label.supervisorPlan.fee}"></span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="fee" th:value="${sp.fee}">
@@ -100,7 +100,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12" for="description">
-										Description <span class="m--font-danger">*</span>
+										<span th:text="#{label.supervisorPlan.description}"></span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<textarea class="form-control m-input" id="description" rows="3" name="description" th:value="${sp.description}"></textarea>

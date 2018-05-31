@@ -41,7 +41,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Number <span class="m--font-danger">*</span>
+										<span th:text="#{label.debtTransfer.number}">Number</span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="number" th:value="${dt.number}">
@@ -50,7 +51,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Date
+										<span th:text="#{label.debtTransfer.date}">Date</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
@@ -64,7 +65,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Quantity <span class="m--font-danger">*</span>
+										<span th:text="#{label.debtTransfer.quantity}">Quantity</span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="quantity" th:value="${dt.quantity}">
@@ -73,7 +74,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Price Per Unit <span class="m--font-danger">*</span>
+										<span th:text="#{label.debtTransfer.pricePerUnit}">Price per unit</span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="pricePerUnit" th:value="${dt.pricePerUnit}">
@@ -82,7 +84,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Unit Type Id <span class="m--font-danger">*</span>
+										<span th:text="#{label.debtTransfer.unitType}">Unit Type Id</span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="unitTypeId" th:value="${dt.unitTypeId}">
@@ -91,7 +93,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Total cost <span class="m--font-danger">*</span>
+										<span th:text="#{label.debtTransfer.totalCost}">Total cost</span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="totalCost" th:value="${dt.totalCost}">
@@ -100,7 +103,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Transfer Payment Id <span class="m--font-danger">*</span>
+										<span th:text="#{label.debtTransfer.transferPayment}">Transfer payment id</span><span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="transferPaymentId" th:value="${dt.transferPaymentId}">
@@ -109,7 +112,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Transfer Credit Id <span class="m--font-danger">*</span>
+										<span th:text="#{label.debtTransfer.transferCredit}">Transfer credit id</span><span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="transferCreditId" th:value="${dt.transferCreditId}">
@@ -118,7 +121,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Transfer Person Id <span class="m--font-danger">*</span>
+										<span th:text="#{label.debtTransfer.transferPerson}">Transfer person id</span><span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="transferPersonId" th:value="${dt.transferPersonId}">
@@ -128,7 +131,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Goods Type Id <span class="m--font-danger">*</span>
+										<span th:text="#{label.debtTransfer.goodsType}">Goods type id</span><span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="goodsTypeId" th:value="${dt.goodsTypeId}">

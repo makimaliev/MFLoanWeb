@@ -41,7 +41,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Expected Date
+										<span th:text="#{label.paymentSchedule.expectedDate}"></span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
@@ -55,7 +55,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Disbursement <span class="m--font-danger">*</span>
+										<span th:text="#{label.paymentSchedule.disbursement}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="disbursement" th:value="${paymentSchedule.disbursement}">
@@ -64,7 +65,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Principal payment <span class="m--font-danger">*</span>
+										<span th:text="#{label.paymentSchedule.principalPayment}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="principalPayment" th:value="${paymentSchedule.principalPayment}">
@@ -73,7 +75,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Interest payment <span class="m--font-danger">*</span>
+										<span th:text="#{label.paymentSchedule.interestPayment}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="interestPayment" th:value="${paymentSchedule.interestPayment}">
@@ -82,7 +85,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Collected Interest Payment <span class="m--font-danger">*</span>
+										<span th:text="#{label.paymentSchedule.collectedInterestPayment}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="collectedInterestPayment" th:value="${paymentSchedule.collectedInterestPayment}">
@@ -91,7 +95,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Collected Penalty Payment <span class="m--font-danger">*</span>
+										<span th:text="#{label.paymentSchedule.collectedPenaltyPayment}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="collectedPenaltyPayment" th:value="${paymentSchedule.collectedPenaltyPayment}">
@@ -100,7 +105,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Installment State <span class="m--font-danger">*</span>
+										<span th:text="#{label.paymentSchedule.installmentState}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${paymentSchedule.installmentState.id}"  id="installmentState" th:title="#{label.select}">

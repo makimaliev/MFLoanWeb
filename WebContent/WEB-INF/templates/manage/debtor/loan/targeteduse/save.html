@@ -41,7 +41,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Targeted Use Result Id <span class="m--font-danger">*</span>
+										<span th:text="#{label.targetedUse.result}">Targeted Use Result Id</span><span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="targetedUseResultId" th:value="${tu.targetedUseResultId}">
@@ -50,7 +50,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Created by id <span class="m--font-danger">*</span>
+										<span th:text="#{label.targetedUse.createdBy}">Created by</span><span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="createdById" th:value="${tu.createdById}">
@@ -59,7 +59,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Created Date
+										<span th:text="#{label.targetedUse.createdDate}">Created date</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
@@ -73,7 +73,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Approved by id <span class="m--font-danger">*</span>
+										<span th:text="#{label.targetedUse.approvedBy}">Approved by</span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="approvedById" th:value="${tu.approvedById}">
@@ -82,7 +82,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Approved Date
+										<span th:text="#{label.targetedUse.approvedDate}">Approved date</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
@@ -96,7 +96,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Checked by id <span class="m--font-danger">*</span>
+										<span th:text="#{label.targetedUse.checkedBy}">Checked by</span><span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="checkedById" th:value="${tu.checkedById}">
@@ -105,7 +105,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Checked Date
+										<span th:text="#{label.targetedUse.checkedDate}">Checked date</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
@@ -119,7 +119,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Attachment id <span class="m--font-danger">*</span>
+										<span th:text="#{label.targetedUse.attachment}">Attachment id</span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="attachmentId" th:value="${tu.attachmentId}">
