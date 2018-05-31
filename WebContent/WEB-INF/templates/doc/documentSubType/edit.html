@@ -27,7 +27,7 @@
                     <div class="m-portlet__head">
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">
-                                <h3 class="m-portlet__head-text" th:text="#{label.doc.details}"></h3>
+                                <h3 class="m-portlet__head-text" th:text="#{label.documentSubType.details}"></h3>
                             </div>
                         </div>
                     </div>
@@ -39,11 +39,11 @@
 
                                 <div class="form-group m-form__group row">
                                     <label class="col-form-label col-lg-4 col-sm-12">
-                                        <span th:text="#{label.doc.type}"></span>
+                                        <span th:text="#{label.document.documentType}"></span>
                                         <span class="m--font-danger">*</span>
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
-                                        <select class="form-control m-bootstrap-select m_selectpicker" th:field="*{documentType}" th:title="#{label.select}">
+                                        <select class="form-control m-bootstrap-select m_selectpicker" th:field="*{documentType}" title="Select...">
                                             <option th:each="dt : ${documentTypes}"
                                                     th:value="${dt.id}"
                                                     th:text="${dt.name}">Responsible</option>
@@ -53,21 +53,22 @@
 
                                 <div class="form-group m-form__group row">
                                     <label class="col-form-label col-lg-4 col-sm-12">
-                                        <span th:text="#{label.doc.internalName}"></span>
-                                        <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.document.documentSubType}">
+                                        </span> <span class="m--font-danger">*</span>
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
-                                        <input type="text" class="form-control m-input" th:field="*{internalName}">
+                                        <input type="text" class="form-control m-input" th:field="*{name}" onkeyup="translit()" autocomplete="off">
                                     </div>
                                 </div>
 
                                 <div class="form-group m-form__group row">
                                     <label class="col-form-label col-lg-4 col-sm-12">
-                                        <span th:text="#{label.doc.name}">
-                                        </span> <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.documentSubType.internalName}"></span>
+                                        <span class="m--font-danger">*</span>
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
-                                        <input type="text" class="form-control m-input" th:field="*{name}">
+                                        <input type="hidden" class="form-control m-input" th:field="*{internalName}">
+                                        <label id="prev" th:text="*{internalName}"></label>
                                     </div>
                                 </div>
 
@@ -78,9 +79,9 @@
                                 <div class="row">
                                     <div class="col-lg-4"></div>
                                     <div class="col-lg-6">
-                                        <button type="submit" class="btn btn-primary" th:text="#{label.form.save}">
+                                        <button type="submit" class="btn btn-primary" th:text="#{label.save}">
                                         </button>
-                                        <button onclick="window.history.back()" type="button" class="btn btn-secondary" th:text="#{label.form.cancel}">
+                                        <button onclick="window.history.back()" type="button" class="btn btn-secondary" th:text="#{label.cancel}">
                                         </button>
                                     </div>
                                 </div>
@@ -106,6 +107,25 @@
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
 <!--end::Page Resources -->
+
+<script type='text/javascript'>
+
+    var arrru = new Array ('Я','я','Ю','ю','Ч','ч','Ш','ш','Щ','щ','Ж','ж','А','а','Б','б','В','в','Г','г','Д','д','Е','е','Ё','ё','З','з','И','и','Й','й','К','к','Л','л','М','м','Н','н', 'О','о','П','п','Р','р','С','с','Т','т','У','у','Ф','ф','Х','х','Ц','ц','Ы','ы','Ь','ь','Ъ','ъ','Э','э');
+    var arren = new Array ('Ya','ya','Yu','yu','Ch','ch','Sh','sh','Sh','sh','Zh','zh','A','a','B','b','V','v','G','g','D','d','E','e','E','e','Z','z','I','i','J','j','K','k','L','l','M','m','N','n', 'O','o','P','p','R','r','S','s','T','t','U','u','F','f','H','h','C','c','Y','y','`','`','\'','\'','E', 'e');
+
+    function cyrill_to_latin(text){
+        for(var i=0; i<arrru.length; i++){
+            var reg = new RegExp(arrru[i], "g");
+            text = text.replace(reg, arren[i]);
+        }
+        return text;
+    }
+
+    function translit(){
+        $("[name=internalName]").val(cyrill_to_latin($("[name=name]").val()));
+        $("#prev").text(cyrill_to_latin($("[name=name]").val()));
+    }
+</script>
 
 </body>
 <!-- end::Body -->

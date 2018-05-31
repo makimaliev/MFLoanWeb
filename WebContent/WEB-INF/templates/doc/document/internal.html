@@ -128,11 +128,11 @@
                                         </div>
                                         <!-- Sender Attachment -->
 
-                                        <div class="form-group" th:hidden="*{senderStatus?.internalName} == 'approve' AND *{senderAttachment}">
+                                        <div class="form-group">
                                             <input class="form-control" type="hidden" th:field="*{senderAttachment.id}"/>
                                             <label class="control-label col-md-4"> Прикрепление </label>
                                             <div class="col-md-6">
-                                                <div th:hidden="*{senderStatus?.internalName} == 'request' AND *{senderAttachment} == null">
+                                                <div th:hidden="*{senderStatus?.internalName} == 'approve'">
                                                     <input class="form-control" type="file" id="senderFile" name="senderFile"/>
                                                 </div>
                                                 <a th:href="@{/doc/download/__${document?.senderAttachment.id}__}" class="form-control" th:text="*{senderAttachment.name}" th:if="*{senderAttachment.id}"></a>
