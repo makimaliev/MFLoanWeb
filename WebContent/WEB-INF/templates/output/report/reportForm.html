@@ -31,7 +31,7 @@
 				<span class="m--font-danger">*</span>
 			</label>
 			<div class="col-lg-8 col-md-9 col-sm-12">
-				<select th:field="*{report.reportType}" class="form-control m-bootstrap-select m_selectpicker"  title="Select...">
+				<select th:field="*{report.reportType}" class="form-control m-bootstrap-select m_selectpicker"  th:title="#{label.select}">
 					<option th:each="reportTypeInList : ${T(kg.gov.mf.loan.output.report.model.ReportType).values()}"
 							th:value="${reportTypeInList}"
 							th:text="${reportTypeInList}"></option>

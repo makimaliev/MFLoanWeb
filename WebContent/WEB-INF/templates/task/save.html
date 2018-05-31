@@ -100,7 +100,7 @@
 											</label>
 											<div class="col-md-4">
 												<select class="form-control" th:field="*{identifiedByUserId}">
-													<option value="0">Select...</option>
+													<option value="0" th:text="#{label.select}"></option>
 													<option th:each="user : ${users}" th:value="${{user.id}}" th:text="${user.username}"></option>
 												</select>
 											</div>
@@ -127,7 +127,7 @@
 											</label>
 											<div class="col-md-4">
 												<select class="form-control" th:field="*{assignedToUserId}">
-													<option value="0">Select...</option>
+													<option value="0" th:text="#{label.select}"></option>
 													<option th:each="user : ${users}" th:value="${{user.id}}" th:text="${user.username}"></option>
 												</select>
 											</div>
@@ -139,7 +139,7 @@
 											</label>
 											<div class="col-md-4">
 												<select class="form-control" th:field="*{status}">
-													<option value="0">Select...</option>
+													<option value="0" th:text="#{label.select}"></option>
 													<option th:each="status : ${statuses}" th:value="${{status}}" th:text="${status}"></option>
 												</select>
 											</div>
@@ -151,7 +151,7 @@
 											</label>
 											<div class="col-md-4">
 												<select class="form-control" th:field="*{priority}">
-													<option value="0">Select...</option>
+													<option value="0" th:text="#{label.select}"></option>
 													<option th:each="priority : ${priorities}" th:value="${{priority}}" th:text="${priority}"></option>
 												</select>
 											</div>

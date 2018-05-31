@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
 	<title th:text="#{label.add.order.title}"></title>
@@ -51,7 +51,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" placeholder="Select date" th:value="${creditOrder.regDate}" name="regDate"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:value="${creditOrder.regDate}" name="regDate"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -69,22 +69,24 @@
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Credit Order State <span class="m--font-danger">*</span>
+										<span th:text="#{label.order.state}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${creditOrder.creditOrderState.id}" id="creditOrderState" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${creditOrder.creditOrderState.id}" id="creditOrderState" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="state : ${states}" th:value="${state.id}" th:text="${state.name}"></option>
 										</select>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Credit Order Type <span class="m--font-danger">*</span>
+										<span th:text="#{label.order.type}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${creditOrder.creditOrderType.id}" id="creditOrderType" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${creditOrder.creditOrderType.id}" id="creditOrderType" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
 									</div>
@@ -97,10 +99,10 @@
 									<div class="col-lg-4"></div>
 									<div class="col-lg-6">
 										<button type="submit" class="btn btn-primary">
-											Save
+											<span th:text="#{label.form.save}"></span>
 										</button>
 										<button onclick="window.history.back()" type="button" class="btn btn-secondary">
-											Cancel
+											<span th:text="#{label.form.cancel}"></span>
 										</button>
 									</div>
 								</div>

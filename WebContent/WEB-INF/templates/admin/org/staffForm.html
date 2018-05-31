@@ -42,7 +42,7 @@
 				<span class="m--font-danger">*</span>
 			</label>
 			<div class="col-lg-8 col-md-9 col-sm-12">
-				<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{person}" title="Select...">
+				<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{person}" th:title="#{label.select}">
 					<option th:each="personInList : ${personList}"
 							th:value="${personInList.id}"
 							th:text="${personInList.name}"></option>
@@ -66,7 +66,7 @@
 				<span class="m--font-danger">*</span>
 			</label>
 			<div class="col-lg-8 col-md-9 col-sm-12">
-				<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{organization}" title="Select...">
+				<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{organization}" th:title="#{label.select}">
 					<option th:each="organizationInList : ${organizationList}"
 							th:value="${organizationInList.id}"
 							th:text="${organizationInList.name}"></option>
@@ -80,7 +80,7 @@
 				<span class="m--font-danger">*</span>
 			</label>
 			<div class="col-lg-8 col-md-9 col-sm-12">
-				<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{department}" title="Select...">
+				<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{department}" th:title="#{label.select}">
 					<option th:each="departmentInList : ${departmentList}"
 							th:value="${departmentInList.id}"
 							th:text="${departmentInList.name}"></option>
@@ -94,7 +94,7 @@
 				<span class="m--font-danger">*</span>
 			</label>
 			<div class="col-lg-8 col-md-9 col-sm-12">
-				<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{position}" title="Select...">
+				<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{position}" th:title="#{label.select}">
 					<option th:each="positionInList : ${positionList}"
 							th:value="${positionInList.id}"
 							th:text="${positionInList.name}"></option>

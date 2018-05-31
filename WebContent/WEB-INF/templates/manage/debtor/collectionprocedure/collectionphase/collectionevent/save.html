@@ -77,7 +77,7 @@
 	                                             </label>
 	                                             <div class="col-md-4">
 	                                              		<select class="form-control" th:field="${event.eventStatus.id}" name="eventStatus">
-													    <option value="0">Select...</option>
+													    <option value="0" th:text="#{label.select}"></option>
 													    <option th:each="status : ${statuses}" th:value="${status.id}" th:text="${status.name}"></option>
 													</select>
 	                                              </div>
@@ -89,7 +89,7 @@
 	                                             </label>
 	                                             <div class="col-md-4">
 	                                              		<select class="form-control" th:field="${event.eventType.id}" name="eventType">
-													    <option value="0">Select...</option>
+													    <option value="0" th:text="#{label.select}"></option>
 													    <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
 													</select>
 	                                              </div>

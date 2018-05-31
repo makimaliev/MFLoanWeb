@@ -53,8 +53,8 @@
 										Type <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{debtorType}" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{debtorType}" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="type : ${types}" th:value="${{type}}" th:text="${type.name}"></option>
 											</option>
 										</select>
@@ -66,8 +66,8 @@
 										Organization form <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{orgForm}" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{orgForm}" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="form : ${forms}" th:value="${{form}}" th:text="${form.name}"></option>
 											</option>
 										</select>
@@ -79,8 +79,8 @@
 										Work sector <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{workSector}" title="Select...">
-											<option value="0" th:text="#{label.add.debtor.select}">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{workSector}" th:title="#{label.select}">
+											<option value="0" th:text="#{label.add.debtor.select}" th:text="#{label.select}"></option>
 											<option th:each="sector : ${sectors}" th:value="${{sector}}" th:text="${sector.name}"></option>
 											</option>
 										</select>

@@ -51,7 +51,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" placeholder="Select date" name="listDate" th:value="${entityList.listDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="listDate" th:value="${entityList.listDate}"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -64,8 +64,8 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${entityList.appliedEntityListState.id}"  id="appliedEntityListState" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${entityList.appliedEntityListState.id}"  id="appliedEntityListState" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="state : ${states}" th:value="${state.id}" th:text="${state.name}"></option>
 										</select>
 									</div>
@@ -76,8 +76,8 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${entityList.appliedEntityListType.id}"  id="appliedEntityListType" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${entityList.appliedEntityListType.id}"  id="appliedEntityListType" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
 									</div>

@@ -41,11 +41,11 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Started On Date
+										<span th:text="#{label.debtor.loan.term}"></span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" placeholder="Select date" name="startedOnDate" th:value="${bankrupt.startedOnDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="startedOnDate" th:value="${bankrupt.startedOnDate}"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -59,7 +59,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" placeholder="Select date" name="finishedOnDate" th:value="${bankrupt.finishedOnDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="finishedOnDate" th:value="${bankrupt.finishedOnDate}"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>

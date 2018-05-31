@@ -101,7 +101,7 @@
 	                                             </label>
 	                                             <div class="col-md-4">
 	                                              		<select class="form-control" th:field="${phase.phaseStatus.id}" name="phaseStatus">
-													    <option value="0">Select...</option>
+													    <option value="0" th:text="#{label.select}"></option>
 													    <option th:each="status : ${statuses}" th:value="${status.id}" th:text="${status.name}"></option>
 													</select>
 	                                              </div>
@@ -113,7 +113,7 @@
 	                                             </label>
 	                                             <div class="col-md-4">
 	                                              		<select class="form-control" th:field="${phase.phaseType.id}" name="phaseType">
-													    <option value="0">Select...</option>
+													    <option value="0" th:text="#{label.select}"></option>
 													    <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
 													</select>
 	                                              </div>

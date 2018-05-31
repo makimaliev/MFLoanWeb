@@ -39,7 +39,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12" for="description">
-										Description <span class="m--font-danger">*</span>
+										<span th:text="#{label.order.term.description}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<textarea class="form-control m-input" id="description" rows="3" name="description" th:value="${term.description}"></textarea>
@@ -48,11 +49,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Fund <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.fund}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.fund.id}"  id="fund" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.fund.id}"  id="fund" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="fund : ${funds}" th:value="${fund.id}" th:text="${fund.name}"></option>
 										</select>
 									</div>
@@ -60,7 +62,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Amount <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.amount}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="amount" th:value="${term.amount}">
@@ -69,11 +72,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Currency <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.currency}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.currency.id}" id="currency" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.currency.id}" id="currency" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="curr : ${currencies}" th:value="${curr.id}" th:text="${curr.name}"></option>
 										</select>
 									</div>
@@ -81,7 +85,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Frequency Quantity <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.freqQuantity}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="frequencyQuantity" th:value="${term.frequencyQuantity}">
@@ -90,11 +95,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Frequency type <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.freqType}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.frequencyType.id}" id="frequencyType" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.frequencyType.id}" id="frequencyType" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="freq : ${freqTypes}" th:value="${freq.id}" th:text="${freq.name}"></option>
 										</select>
 									</div>
@@ -102,7 +108,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Installment Quantity <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.installmentQuantity}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="installmentQuantity" th:value="${term.installmentQuantity}">
@@ -111,7 +118,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Installment First Day <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.insFirstDay}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="installmentFirstDay" th:value="${term.installmentFirstDay}">
@@ -120,11 +128,11 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										First Installment Date
+                                        <span th:text="#{label.order.term.firstInstallmentDate}"></span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" placeholder="Select date" name="firstInstallmentDate" th:value="${term.firstInstallmentDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="firstInstallmentDate" th:value="${term.firstInstallmentDate}"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -134,11 +142,11 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Last Installment Date
+                                        <span th:text="#{label.order.term.lastInstallmentDate}"></span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" placeholder="Select date" name="lastInstallmentDate" th:value="${term.lastInstallmentDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="lastInstallmentDate" th:value="${term.lastInstallmentDate}"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -148,7 +156,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Min Days Disb First Inst <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.minDaysDisbFirstInst}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="minDaysDisbFirstInst" th:value="${term.minDaysDisbFirstInst}">
@@ -157,7 +166,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Max Days Disb First Inst <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.maxDaysDisbFirstInst}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="maxDaysDisbFirstInst" th:value="${term.maxDaysDisbFirstInst}">
@@ -166,7 +176,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Grace On Principle Payment Inst <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.graceOnPrinciplePaymentInst}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="graceOnPrinciplePaymentInst" th:value="${term.graceOnPrinciplePaymentInst}">
@@ -175,7 +186,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Grace On Principle Payment Days <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.graceOnPrinciplePaymentDays}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="graceOnPrinciplePaymentDays" th:value="${term.graceOnPrinciplePaymentDays}">
@@ -184,7 +196,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Grace On Interest Payment Inst <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.graceOnInterestPaymentInst}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="graceOnInterestPaymentInst" th:value="${term.graceOnInterestPaymentInst}">
@@ -193,7 +206,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Grace On Interest Payment Days <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.graceOnInterestPaymentDays}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="graceOnInterestPaymentDays" th:value="${term.graceOnInterestPaymentDays}">
@@ -202,7 +216,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Grace On Interest Accr Inst <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.graceOnInterestAccrInst}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="graceOnInterestAccrInst" th:value="${term.graceOnInterestAccrInst}">
@@ -211,7 +226,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Grace On Interest Accr Days <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.graceOnInterestAccrDays}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="graceOnInterestAccrDays" th:value="${term.graceOnInterestAccrDays}">
@@ -220,7 +236,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Interest Rate Value <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.interestRateValue}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="interestRateValue" th:value="${term.interestRateValue}">
@@ -229,11 +246,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Interest Rate Value Per Period <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.interestRateValuePerPeriod}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.interestRateValuePerPeriod.id}"  id="interestRateValuePerPeriod" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.interestRateValuePerPeriod.id}"  id="interestRateValuePerPeriod" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="period : ${ratePeriods}" th:value="${period.id}" th:text="${period.name}"></option>
 										</select>
 									</div>
@@ -241,11 +259,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Interest Type <span class="m--font-danger">*</span>
+										<span th:text="#{label.order.term.interestType}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.interestType.id}"  id="interestType" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.interestType.id}"  id="interestType" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="type : ${rateTypes}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
 									</div>
@@ -253,7 +272,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Penalty On Principle Overdue Rate Value <span class="m--font-danger">*</span>
+										<span th:text="#{label.order.term.penaltyOnPrincipleOverdueRateValue}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="penaltyOnPrincipleOverdueRateValue" th:value="${term.penaltyOnPrincipleOverdueRateValue}">
@@ -262,11 +282,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Penalty On Principle Overdue Type <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.penaltyOnPrincipleOverdueType}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.penaltyOnPrincipleOverdueType.id}"  id="penaltyOnPrincipleOverdueType" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.penaltyOnPrincipleOverdueType.id}"  id="penaltyOnPrincipleOverdueType" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="type : ${rateTypes}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
 									</div>
@@ -274,7 +295,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Penalty On Interest Overdue Rate Value <span class="m--font-danger">*</span>
+										<span th:text="#{label.order.term.penaltyOnInterestOverdueRateValue}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="penaltyOnInterestOverdueRateValue" th:value="${term.penaltyOnInterestOverdueRateValue}">
@@ -283,11 +305,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Penalty On Interest Overdue Type <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.penaltyOnInterestOverdueType}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.penaltyOnInterestOverdueType.id}"  id="penaltyOnInterestOverdueType" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.penaltyOnInterestOverdueType.id}"  id="penaltyOnInterestOverdueType" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="type : ${rateTypes}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
 									</div>
@@ -295,11 +318,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Days In Year Method <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.daysInYearMethod}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.daysInYearMethod.id}"  id="daysInYearMethod" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.daysInYearMethod.id}"  id="daysInYearMethod" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="method : ${daysMethods}" th:value="${method.id}" th:text="${method.name}"></option>
 										</select>
 									</div>
@@ -307,11 +331,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Days In Month Method <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.daysInMonthMethod}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.daysInMonthMethod.id}"  id="daysInMonthMethod" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.daysInMonthMethod.id}"  id="daysInMonthMethod" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="method : ${daysMethods}" th:value="${method.id}" th:text="${method.name}"></option>
 										</select>
 									</div>
@@ -319,11 +344,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Transaction Order <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.transactionOrder}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.transactionOrder.id}"  id="transactionOrder" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.transactionOrder.id}"  id="transactionOrder" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="order : ${txOrders}" th:value="${order.id}" th:text="${order.name}"></option>
 										</select>
 									</div>
@@ -331,11 +357,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Interest Accr Method <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.interestAccrMethod}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.interestAccrMethod.id}"  id="interestAccrMethod" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.interestAccrMethod.id}"  id="interestAccrMethod" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="method : ${accrMethods}" th:value="${method.id}" th:text="${method.name}"></option>
 										</select>
 									</div>
@@ -343,7 +370,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Early Repayment Allowed <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.earlyRepaymentAllowed}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="m-checkbox-inline">
@@ -357,7 +385,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Penalty Limit Percent <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.penaltyLimitPercent}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="penaltyLimitPercent" th:value="${term.penaltyLimitPercent}">
@@ -366,7 +395,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Collateral Free <span class="m--font-danger">*</span>
+                                        <span th:text="#{label.order.term.collateralFree}"></span>
+                                        <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="m-checkbox-inline">
@@ -378,8 +408,6 @@
 									</div>
 								</div>
 
-
-
 							</div>
 						</div>
 						<div class="m-portlet__foot m-portlet__foot--fit">
@@ -388,10 +416,10 @@
 									<div class="col-lg-4"></div>
 									<div class="col-lg-6">
 										<button type="submit" class="btn btn-primary">
-											Save
+											<span th:text="#{label.form.save}"></span>
 										</button>
 										<button onclick="window.history.back()" type="button" class="btn btn-secondary">
-											Cancel
+											<span th:text="#{label.form.cancel}"></span>
 										</button>
 									</div>
 								</div>

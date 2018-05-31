@@ -45,7 +45,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" placeholder="Select date" name="paymentDate" th:value="${payment.paymentDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="paymentDate" th:value="${payment.paymentDate}"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -112,8 +112,8 @@
 										Payment Type <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${payment.paymentType.id}"  id="paymentType" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${payment.paymentType.id}"  id="paymentType" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="type : ${pTypes}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
 									</div>
@@ -127,10 +127,10 @@
 									<div class="col-lg-4"></div>
 									<div class="col-lg-6">
 										<button type="submit" class="btn btn-primary">
-											Save
+											<span th:text="#{label.form.save}"></span>
 										</button>
 										<button onclick="window.history.back()" type="button" class="btn btn-secondary">
-											Cancel
+											<span th:text="#{label.form.cancel}"></span>
 										</button>
 									</div>
 								</div>

@@ -65,8 +65,8 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${item.itemType.id}" name="itemType"  id="itemType" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${item.itemType.id}" name="itemType"  id="itemType" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="type : ${iTypes}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
 									</div>
@@ -88,8 +88,8 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${item.quantityType.id}" name="quantityType"  id="quantityType" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${item.quantityType.id}" name="quantityType"  id="quantityType" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="type : ${qTypes}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
 									</div>
@@ -121,8 +121,8 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${item.conditionType.id}" name="conditionType"  id="conditionType" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${item.conditionType.id}" name="conditionType"  id="conditionType" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="type : ${cTypes}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
 									</div>

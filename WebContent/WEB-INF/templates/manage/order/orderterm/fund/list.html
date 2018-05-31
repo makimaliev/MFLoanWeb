@@ -98,6 +98,7 @@
 <script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
 
 <script type="text/javascript">
+    /*<![CDATA[*/
     $(document).ready(function() {
 
         var table = $('#dataTable').DataTable({
@@ -107,7 +108,7 @@
                     previous: '<i class="la la-angle-left"></i>', // or '→'
                     next: '<i class="la la-angle-right"></i>' // or '←'
                 },
-                lengthMenu: "Показать _MENU_",
+                lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
             },
             "info":     false,
             "sDom": 'rtlip'
@@ -120,6 +121,7 @@
         $('.selectpicker').selectpicker('refresh');
 
     });
+    /*]]>*/
 </script>
 
 </body>

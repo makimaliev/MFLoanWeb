@@ -41,11 +41,11 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Start Date
+										<span th:text="#{label.creditTerm.startDate}"></span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" placeholder="Select date" name="startDate" th:value="${term.startDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="startDate" th:value="${term.startDate}"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -55,7 +55,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Interest rate value <span class="m--font-danger">*</span>
+										<span th:text="#{label.creditTerm.interestRateValue}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="interestRateValue" th:value="${term.interestRateValue}">
@@ -64,11 +65,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Rate period <span class="m--font-danger">*</span>
+										<span th:text="#{label.creditTerm.ratePeriod}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.ratePeriod.id}"  id="ratePeriod" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.ratePeriod.id}"  id="ratePeriod" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="rp : ${ratePeriods}" th:value="${rp.id}" th:text="${rp.name}"></option>
 										</select>
 									</div>
@@ -76,11 +78,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Floating rate type <span class="m--font-danger">*</span>
+										<span th:text="#{label.creditTerm.floatingRateType}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.floatingRateType.id}" id="floatingRateType" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.floatingRateType.id}" id="floatingRateType" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="rt : ${rateTypes}" th:value="${rt.id}" th:text="${rt.name}"></option>
 										</select>
 									</div>
@@ -88,7 +91,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Penalty On Principle Overdue Rate Value <span class="m--font-danger">*</span>
+										<span th:text="#{label.creditTerm.enaltyOnPrincipleOverdueRateValue}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="penaltyOnPrincipleOverdueRateValue" th:value="${term.penaltyOnPrincipleOverdueRateValue}">
@@ -97,11 +101,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Penalty On Principle Overdue RateType <span class="m--font-danger">*</span>
+										<span th:text="#{label.creditTerm.penaltyOnPrincipleOverdueRateType}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.penaltyOnPrincipleOverdueRateType.id}"  id="penaltyOnPrincipleOverdueRateType" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.penaltyOnPrincipleOverdueRateType.id}"  id="penaltyOnPrincipleOverdueRateType" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="popot : ${popots}" th:value="${popot.id}" th:text="${popot.name}"></option>
 										</select>
 									</div>
@@ -109,7 +114,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Penalty On Interest Overdue Rate Value <span class="m--font-danger">*</span>
+										<span th:text="#{label.creditTerm.penaltyOnInterestOverdueRateValue}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="penaltyOnInterestOverdueRateValue" th:value="${term.penaltyOnInterestOverdueRateValue}">
@@ -118,11 +124,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Penalty On Interest Overdue RateType <span class="m--font-danger">*</span>
+										<span th:text="#{label.creditTerm.penaltyOnInterestOverdueRateType}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.penaltyOnInterestOverdueRateType.id}"  id="penaltyOnInterestOverdueRateType" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.penaltyOnInterestOverdueRateType.id}"  id="penaltyOnInterestOverdueRateType" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="poiot : ${poiots}" th:value="${poiot.id}" th:text="${poiot.name}"></option>
 										</select>
 									</div>
@@ -130,7 +137,8 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Penalty Limit Percent <span class="m--font-danger">*</span>
+										<span th:text="#{label.creditTerm.penaltyLimitPercent}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="penaltyLimitPercent" th:value="${term.penaltyLimitPercent}">
@@ -139,11 +147,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Penalty Limit End Date
+										<span th:text="#{label.creditTerm.penaltyLimitEndDate}"></span>
+
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" placeholder="Select date" name="penaltyLimitEndDate" th:value="${term.penaltyLimitEndDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="penaltyLimitEndDate" th:value="${term.penaltyLimitEndDate}"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -153,11 +162,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Transaction order <span class="m--font-danger">*</span>
+										<span th:text="#{label.creditTerm.transactionOrder}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.transactionOrder.id}"  id="transactionOrder" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.transactionOrder.id}"  id="transactionOrder" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="tx : ${tXs}" th:value="${tx.id}" th:text="${tx.name}"></option>
 										</select>
 									</div>
@@ -165,11 +175,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Days in month method <span class="m--font-danger">*</span>
+										<span th:text="#{label.creditTerm.daysInMonthMethod}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.daysInMonthMethod.id}"  id="daysInMonthMethod" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.daysInMonthMethod.id}"  id="daysInMonthMethod" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="dimm : ${dimms}" th:value="${dimm.id}" th:text="${dimm.name}"></option>
 										</select>
 									</div>
@@ -177,11 +188,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										Days in year method <span class="m--font-danger">*</span>
+										<span th:text="#{label.creditTerm.daysInYearMethod}"></span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.daysInYearMethod.id}"  id="daysInYearMethod" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${term.daysInYearMethod.id}"  id="daysInYearMethod" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="diym : ${diyms}" th:value="${diym.id}" th:text="${diym.name}"></option>
 										</select>
 									</div>
@@ -195,10 +207,10 @@
 									<div class="col-lg-4"></div>
 									<div class="col-lg-6">
 										<button type="submit" class="btn btn-primary">
-											Save
+											<span th:text="#{label.form.save}"></span>
 										</button>
 										<button onclick="window.history.back()" type="button" class="btn btn-secondary">
-											Cancel
+											<span th:text="#{label.form.cancel}"></span>
 										</button>
 									</div>
 								</div>

@@ -31,7 +31,7 @@
 				<span class="m--font-danger">*</span>
 			</label>
 			<div class="col-lg-8 col-md-9 col-sm-12">
-				<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{printout.printoutType}" title="Select...">
+				<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{printout.printoutType}" th:title="#{label.select}">
 					<option th:each="printoutTypeInList : ${T(kg.gov.mf.loan.output.printout.model.PrintoutType).values()}"
 							th:value="${printoutTypeInList}"
 							th:text="${printoutTypeInList}"></option>

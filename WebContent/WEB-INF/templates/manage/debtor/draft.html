@@ -88,7 +88,7 @@
                                         </label>
                                         <div class="col-md-4">
                                             <select class="form-control" th:field="*{debtorType}">
-                                                <option value="0">Select...</option>
+                                                <option value="0" th:text="#{label.select}"></option>
                                                 <option th:each="type : ${types}" th:value="${{type}}" th:text="${type.name}"></option>
                                             </select>
                                         </div>
@@ -100,7 +100,7 @@
                                         </label>
                                         <div class="col-md-4">
                                             <select class="form-control" th:field="*{orgForm}">
-                                                <option value="0">Select...</option>
+                                                <option value="0" th:text="#{label.select}"></option>
                                                 <option th:each="form : ${forms}" th:value="${{form}}" th:text="${form.name}"></option>
                                             </select>
                                         </div>
@@ -112,7 +112,7 @@
                                         </label>
                                         <div class="col-md-4">
                                             <select class="form-control" th:field="*{workSector}">
-                                                <option value="0">Select...</option>
+                                                <option value="0" th:text="#{label.select}"></option>
                                                 <option th:each="sector : ${sectors}" th:value="${{sector}}" th:text="${sector.name}"></option>
                                             </select>
                                         </div>
@@ -124,7 +124,7 @@
                                         </label>
                                         <div class="col-md-4">
                                             <select class="form-control" th:field="*{owner}" id="ownerSelect" onchange="updateTOwner(this);">
-                                                <option value="0">Select...</option>
+                                                <option value="0" th:text="#{label.select}"></option>
                                                 <option th:each="entity : ${entities}"
                                                         th:value="${{entity}}"
                                                         th:selected="(${entity.id} == *{owner.id})"

@@ -49,7 +49,7 @@
 				<span class="m--font-danger">*</span>
 			</label>
 			<div class="col-lg-8 col-md-9 col-sm-12">
-				<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.orgForm}" id="orgFormSelect" onchange="updateOrgFormId(this);" title="Select...">
+				<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.orgForm}" id="orgFormSelect" onchange="updateOrgFormId(this);" th:title="#{label.select}">
 					<option th:each="orgFormInList : ${orgFormList}"
 							th:value="${orgFormInList.id}"
 							th:selected="(${orgFormInList.id} == *{orgForm.id})"
@@ -89,7 +89,7 @@
 								<span class="m--font-danger">*</span>
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
-								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.region}" onchange="updateRegionId(this);" title="Select...">
+								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.region}" onchange="updateRegionId(this);" th:title="#{label.select}">
 									<option th:each="regionInList : ${regionList}"
 											th:value="${regionInList.id}"
 											th:selected="(${regionInList.id} == *{address.region.id})"
@@ -105,7 +105,7 @@
 								<span class="m--font-danger">*</span>
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
-								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.district}" onchange="updateDistrictId(this);" title="Select...">
+								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.district}" onchange="updateDistrictId(this);" th:title="#{label.select}">
 									<option th:each="districtInList : ${districtList}"
 
 											th:value="${districtInList.id}"
@@ -120,7 +120,7 @@
 								<span class="m--font-danger">*</span>
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
-								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.aokmotu}" onchange="updateAokmotuId(this);" title="Select...">
+								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.aokmotu}" onchange="updateAokmotuId(this);" th:title="#{label.select}">
 									<option th:each="aokmotuInList : ${aokmotuList}"
 											th:value="${aokmotuInList.id}"
 											th:selected="(${aokmotuInList.id} == *{address.aokmotu.id})"
@@ -134,7 +134,7 @@
 								<span class="m--font-danger">*</span>
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
-								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.village}" onchange="updateVillageId(this);" title="Select...">
+								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.village}" onchange="updateVillageId(this);" th:title="#{label.select}">
 									<option th:each="villageInList : ${villageList}"
 											th:value="${villageInList.id}"
 											th:selected="(${villageInList.id} == *{address.village.id})"
@@ -188,7 +188,7 @@
 								<span class="m--font-danger">*</span>
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
-								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.identityDoc.identityDocType}"  onchange="updateIdentityDocTypeId(this);" title="Select...">
+								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.identityDoc.identityDocType}"  onchange="updateIdentityDocTypeId(this);" th:title="#{label.select}">
 									<option
 											th:each="identityDocTypeInList : ${identityDocTypeList}"
 											th:value="${identityDocTypeInList.id}"
@@ -203,7 +203,7 @@
 								<span class="m--font-danger">*</span>
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
-								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.identityDoc.identityDocGivenBy}" onchange="updateIdentityDocGivenById(this);" title="Select...">
+								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.identityDoc.identityDocGivenBy}" onchange="updateIdentityDocGivenById(this);" th:title="#{label.select}">
 									<option
 											th:each="identityDocGivenByInList : ${identityDocGivenByList}"
 											th:value="${identityDocGivenByInList.id}"
@@ -219,7 +219,7 @@
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
 								<div class="input-group date m_datetimepicker_6">
-									<input type="text" class="form-control m-input" placeholder="Select date" name="date" th:value="${organization.identityDoc.date}"/>
+									<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:value="${organization.identityDoc.date}"/>
 									<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>

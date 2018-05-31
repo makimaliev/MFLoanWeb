@@ -55,7 +55,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" placeholder="Select date" name="completedDate" th:value="${dp.completedDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="completedDate" th:value="${dp.completedDate}"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -69,7 +69,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" placeholder="Select date" name="approvedDate" th:value="${dp.approvedDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="approvedDate" th:value="${dp.approvedDate}"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -113,8 +113,8 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${dp.documentPackageState.id}"  id="documentPackageState" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${dp.documentPackageState.id}"  id="documentPackageState" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="state : ${states}" th:value="${state.id}" th:text="${state.name}"></option>
 										</select>
 									</div>
@@ -126,8 +126,8 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${dp.documentPackageType.id}"  id="documentPackageType" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${dp.documentPackageType.id}"  id="documentPackageType" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
 									</div>

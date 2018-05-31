@@ -65,7 +65,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" placeholder="Select date" name="completedDate" th:value="${ed.completedDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="completedDate" th:value="${ed.completedDate}"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -99,7 +99,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" placeholder="Select date" name="approvedDate" th:value="${ed.approvedDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="approvedDate" th:value="${ed.approvedDate}"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -133,7 +133,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" placeholder="Select date" name="registeredDate" th:value="${ed.registeredDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="registeredDate" th:value="${ed.registeredDate}"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -147,8 +147,8 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${ed.registeredBy.id}"  id="registeredBy" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${ed.registeredBy.id}"  id="registeredBy" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="rb : ${rBs}" th:value="${rb.id}" th:text="${rb.name}"></option>
 										</select>
 									</div>
@@ -170,8 +170,8 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${ed.entityDocumentState.id}"  id="entityDocumentState" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${ed.entityDocumentState.id}"  id="entityDocumentState" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="state : ${states}" th:value="${state.id}" th:text="${state.name}"></option>
 										</select>
 									</div>

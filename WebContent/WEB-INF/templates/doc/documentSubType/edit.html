@@ -43,7 +43,7 @@
                                         <span class="m--font-danger">*</span>
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
-                                        <select class="form-control m-bootstrap-select m_selectpicker" th:field="*{documentType}" title="Select...">
+                                        <select class="form-control m-bootstrap-select m_selectpicker" th:field="*{documentType}" th:title="#{label.select}">
                                             <option th:each="dt : ${documentTypes}"
                                                     th:value="${dt.id}"
                                                     th:text="${dt.name}">Responsible</option>

@@ -45,7 +45,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" placeholder="Select date" th:field="*{onDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{onDate}"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -61,10 +61,10 @@
 									<div class="col-lg-4"></div>
 									<div class="col-lg-6">
 										<button type="submit" class="btn btn-primary">
-											Save
+											<span th:text="#{label.form.save}"></span>
 										</button>
 										<button onclick="window.history.back()" type="button" class="btn btn-secondary">
-											Cancel
+											<span th:text="#{label.form.cancel}"></span>
 										</button>
 									</div>
 								</div>

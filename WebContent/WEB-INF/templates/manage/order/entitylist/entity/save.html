@@ -41,7 +41,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.entityList.number}"></span>
+										<span th:text="#{label.entity.number}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -51,12 +51,12 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.entityList.state}"></span>
+										<span th:text="#{label.entity.state}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${entity.appliedEntityState.id}" id="appliedEntityState" title="Select...">
-											<option value="0">Select...</option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${entity.appliedEntityState.id}" id="appliedEntityState" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="state : ${states}" th:value="${state.id}" th:text="${state.name}"></option>
 										</select>
 									</div>

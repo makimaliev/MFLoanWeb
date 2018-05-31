@@ -32,7 +32,7 @@
 				<span class="m--font-danger">*</span>
 			</label>
 			<div class="col-lg-8 col-md-9 col-sm-12">
-				<select id="reportTemplate.generationParameters" name="reportTemplateGenerationParametersIds" class="form-control m-bootstrap-select m_selectpicker" multiple title="Select...">
+				<select id="reportTemplate.generationParameters" name="reportTemplateGenerationParametersIds" class="form-control m-bootstrap-select m_selectpicker" multiple th:title="#{label.select}">
 					<option th:each="generationParameterInList : ${generationParameterList}"
 							th:value="${generationParameterInList.id}"
 							th:text="${generationParameterInList.name}"
@@ -47,7 +47,7 @@
 				<span class="m--font-danger">*</span>
 			</label>
 			<div class="col-lg-8 col-md-9 col-sm-12">
-				<select id="reportTemplate.filterParameters" name="reportTemplateFilterParametersIds" class="form-control m-bootstrap-select m_selectpicker" multiple title="Select...">
+				<select id="reportTemplate.filterParameters" name="reportTemplateFilterParametersIds" class="form-control m-bootstrap-select m_selectpicker" multiple th:title="#{label.select}">
 					<option th:each="filterParameterInList : ${filterParameterList}"
 							th:value="${filterParameterInList.id}"
 							th:text="${filterParameterInList.name}"
@@ -62,7 +62,7 @@
 				<span class="m--font-danger">*</span>
 			</label>
 			<div class="col-lg-8 col-md-9 col-sm-12">
-				<select id="reportTemplate.contentParameters" name="reportTemplateContentParametersIds" class="form-control m-bootstrap-select m_selectpicker" multiple title="Select...">
+				<select id="reportTemplate.contentParameters" name="reportTemplateContentParametersIds" class="form-control m-bootstrap-select m_selectpicker" multiple th:title="#{label.select}">
 					<option th:each="contentParameterInList : ${contentParameterList}"
 							th:value="${contentParameterInList.id}"
 							th:text="${contentParameterInList.name}"

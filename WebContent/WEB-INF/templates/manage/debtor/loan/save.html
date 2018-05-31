@@ -55,7 +55,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" placeholder="Select date" th:field="*{regDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{regDate}"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -78,7 +78,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.currency.id}" id="currency">
-											<option value="0" th:text="#{label.add.loan.selectCurrency}">Select...</option>
+											<option value="0" th:text="#{label.add.loan.selectCurrency}"></option>
 											<option th:each="currency : ${currencies}" th:value="${currency.id}" th:text="${currency.name}"></option>
 										</select>
 									</div>
@@ -90,7 +90,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.loanType.id}" id="loanType">
-											<option value="0" th:text="#{label.add.loan.selectType}">Select...</option>
+											<option value="0" th:text="#{label.add.loan.selectType}"></option>
 											<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
 									</div>
@@ -102,7 +102,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.loanState.id}" id="loanState">
-											<option value="0" th:text="#{label.add.loan.selectState}">Select...</option>
+											<option value="0" th:text="#{label.add.loan.selectState}"></option>
 											<option th:each="state : ${states}" th:value="${state.id}" th:text="${state.name}"></option>
 										</select>
 									</div>

@@ -40,7 +40,7 @@
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{Registration Number}"></h3>
+												<h3 class="m-widget1__title" th:text="#{label.order.registrationNumber}"></h3>
 												<span class="m-widget1__desc m--font-brand" th:text="${order.regNumber}"></span>
 											</div>
 										</div>
@@ -54,7 +54,7 @@
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{Registration Date}"></h3>
+												<h3 class="m-widget1__title" th:text="#{label.order.registrationDate}"></h3>
 												<span class="m-widget1__desc m--font-brand" th:text="${order.regDate}"></span>
 											</div>
 										</div>
@@ -62,7 +62,7 @@
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{Description}"></h3>
+												<h3 class="m-widget1__title" th:text="#{label.order.description}"></h3>
 												<span class="m-widget1__desc m--font-brand" th:text="${order.description}"></span>
 											</div>
 										</div>
@@ -76,7 +76,7 @@
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{Credit Order State}"></h3>
+												<h3 class="m-widget1__title" th:text="#{label.order.state}"></h3>
 												<span class="m-widget1__desc m--font-brand" th:text="${order.creditOrderState.name}"></span>
 											</div>
 										</div>
@@ -84,7 +84,7 @@
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{Credit Order State}"></h3>
+												<h3 class="m-widget1__title" th:text="#{label.order.type}"></h3>
 												<span class="m-widget1__desc m--font-brand" th:text="${order.creditOrderType.name}"></span>
 											</div>
 										</div>
@@ -102,13 +102,13 @@
 					<div class="m-portlet__body">
 						<ul class="nav nav-tabs" role="tablist">
 							<li class="nav-item">
-								<a class="nav-link m--font-primary active" data-toggle="tab" href="#appliedEntityLists" th:text="#{Applied Entity Lists}"></a>
+								<a class="nav-link m--font-primary active" data-toggle="tab" href="#appliedEntityLists" th:text="#{label.order.entityLists}"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#documentPackages" th:text="#{Document Packages}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#documentPackages" th:text="#{label.order.documentPackages}"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#orderTerms" th:text="#{Order Terms}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#orderTerms" th:text="#{label.order.terms}"></a>
 							</li>
 						</ul>
 						<div class="tab-content">
