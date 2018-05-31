@@ -198,6 +198,66 @@
 									</div>
 								</div>
 
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12">
+										<span th:text="label.collateralItem.document"></span>
+										<span class="m--font-danger">*</span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<input type="text" class="form-control m-input" name="document" th:value="${itemDetails.document}">
+									</div>
+								</div>
+
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12">
+										<span th:text="label.collateralItem.incomplete_reason"></span>
+										<span class="m--font-danger">*</span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<input type="text" class="form-control m-input" name="incomplete_reason" th:value="${itemDetails.incomplete_reason}">
+									</div>
+								</div>
+
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12">
+										<span th:text="label.collateralItem.goods_type"></span>
+										<span class="m--font-danger">*</span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<input type="text" class="form-control m-input" name="goods_type" th:value="${itemDetails.goods_type}">
+									</div>
+								</div>
+
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12">
+										<span th:text="label.collateralItem.goods_address"></span>
+										<span class="m--font-danger">*</span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<input type="text" class="form-control m-input" name="goods_address" th:value="${itemDetails.goods_address}">
+									</div>
+								</div>
+
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12">
+										<span th:text="label.collateralItem.goods_id"></span>
+										<span class="m--font-danger">*</span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<input type="text" class="form-control m-input" name="goods_id" th:value="${itemDetails.goods_id}">
+									</div>
+								</div>
+
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12">
+										<span th:text="label.collateralItem.arrest_by"></span>
+										<span class="m--font-danger">*</span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<input type="text" class="form-control m-input" name="arrest_by" th:value="${itemDetails.arrest_by}">
+									</div>
+								</div>
+
 							</div>
 						</div>
 						<div class="m-portlet__foot m-portlet__foot--fit">
