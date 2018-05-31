@@ -27,7 +27,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.collateralAgreement.add}"></h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.add.collateralAgreement.title}"></h3>
 							</div>
 						</div>
 					</div>
@@ -41,7 +41,7 @@
 							<div class="m-form__section">
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.number}">
 										Agreement number <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -50,7 +50,7 @@
 								</div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.date}">
 										Agreement Date
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -64,7 +64,7 @@
 								</div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.collRegNumber}">
 										Collateral office registration number <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -73,7 +73,7 @@
 								</div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.collRegDate}">
 										Collateral office registration date
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -87,7 +87,7 @@
 								</div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.notaryRegNumber}">
 										Notary office registration number <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -96,7 +96,7 @@
 								</div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.notaryRegDate}">
 										Notary office registration date
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -110,7 +110,7 @@
 								</div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.arrestRegNumber}">
 										Arrest registration number <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -119,7 +119,7 @@
 								</div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.arrestRegDate}">
 										Arrest registration date
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -133,7 +133,7 @@
 								</div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.loans}">
 										Loans <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -156,7 +156,7 @@
 								</div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.owner}">
 										Owner <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -174,10 +174,10 @@
 								<div class="row">
 									<div class="col-lg-4"></div>
 									<div class="col-lg-6">
-										<button type="submit" class="btn btn-primary" onclick="updateTOwner()">
+										<button type="submit" class="btn btn-primary" onclick="updateTOwner()" th:text="#{label.button.save}">
 											Save
 										</button>
-										<button onclick="window.history.back()" type="button" class="btn btn-secondary">
+										<button onclick="window.history.back()" type="button" class="btn btn-secondary" th:text="#{label.button.cancel}">
 											Cancel
 										</button>
 									</div>

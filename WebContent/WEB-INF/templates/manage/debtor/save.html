@@ -80,7 +80,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{workSector}" th:title="#{label.select}">
-											<option value="0" th:text="#{label.add.debtor.select}" th:text="#{label.select}"></option>
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="sector : ${sectors}" th:value="${{sector}}" th:text="${sector.name}"></option>
 											</option>
 										</select>

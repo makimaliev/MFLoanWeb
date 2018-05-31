@@ -327,6 +327,11 @@ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALU
 INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Arrest reg number', 'Арест каттоо номери', 'label.agreement.table.arrestRegNumber', 'Номер ареста');
 INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Arrest reg date', 'Арест каттоо датасы', 'label.agreement.table.arrestRegDate', 'Дата ареста');
 
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Loans', 'Кредиттер', 'label.agreement.table.loans', 'Кредиты');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Owner', 'Куроо ээси', 'label.agreement.table.owner', 'Залогодатель');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Cancel', 'Жокко чыгаруу', 'label.button.cancel', 'Отменить');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Collateral agreement', 'Куроо келишими', 'label.add.collateralAgreement.title', 'Договор залога');
+
 
 # collection
 
@@ -340,30 +345,22 @@ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALU
 INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Type', 'Туру', 'label.procedure.table.type', 'Вид');
 
 
-# reports
+# order
 
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Name', 'Аталышы', 'label.report.name', 'Наименование');
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Report Type', 'Туру', 'label.report.reportType', 'Вид');
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Add Report', 'Жаны отчет', 'label.add.report', 'Добавить отчет');
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Report Templates', 'Шаблондор', 'label.report.info', 'Шаблоны');
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Report', 'Отчет', 'label.reports', 'Отчет');
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Report type', 'Отчет туру', 'label.report.type', 'Вид отчета');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('orders', 'Насыя беруу чечими', 'label.debtor.orders', 'Решение на выдачу кредита');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('ID', 'ID', 'label.order.table.id', 'ID');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('regNum', 'Номери', 'label.order.table.regNum', 'Номер');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('regDate', 'Датасы', 'label.order.table.regDate', 'Дата');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('description', 'Тушундурмосу', 'label.order.table.description', 'Примечание');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('State', 'Статусу', 'label.order.table.creditOrderState', 'Статус');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Type', 'Туру', 'label.order.table.creditOrderType', 'Вид');
 
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Generate', 'Чыгаруу', 'label.table.generate', 'Сформировать');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Add new', 'Жаны чечим', 'label.order.button.addNewCreditOrder', 'Добавить Решение на выдачу кредита');
 
-# printout
 
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Printout', 'Кагазга чыгаруу', 'label.printouts', 'Распечатка');
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Name', 'Аталышы', 'label.printout.name', 'Наименование');
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Type', 'Туру', 'label.printout.printoutType', 'Вид');
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Add', 'Жаны', 'label.add.printout', 'Добавить');
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Printout', 'Кагазга чыгаруу', 'label.printouts', 'Настройка распечатки');
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Templates', 'Шаблон', 'label.printout.templates', 'Шаблоны распечатки');
 
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Name', 'Аталышы', 'label.template.name', 'Наименование');
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Name', 'Аталышы', 'label.printoutTemplate.name', 'Наименование');
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Report', 'Отчет', 'label.template.report', 'Отчет');
-INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Save', 'Сактоо', 'label.button.save', 'Сохранить');
+
+
 
 
 
