@@ -77,6 +77,115 @@ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALU
 INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Has SubLoan', 'Субкредити бар', 'label.loan.table.hasSubLoan', 'Наличие субкредитов');
 
 
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Credit Terms', 'Шарттары', 'label.creditTerms', 'Условия');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Write Offs', 'Списание', 'label.writeOffs', 'Списание');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Payment Schedules', 'Графиктери', 'label.paymentSchedules', 'Срочные обязательства');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Payments', 'Толомдору', 'label.payments', 'Погашения');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Supervisor Plans', 'План', 'label.supervisorPlans', 'План');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Loan goods', 'Товар', 'label.loanGoods', 'Товар');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Debt transfers', 'Перевод', 'label.debtTransfers', 'Перевод долга');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('targeted uses', 'бар', 'label.targetedUses', 'Целевое исп.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('reconstructed lists', 'Реструктуризвция', 'label.reconstructedLists', 'Реструктуризация');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('bankrupts', 'Банкрот', 'label.bankrupts', 'Банкротство');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('collaterals', 'Куроо', 'label.collaterals', 'Залог');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('collection phases', 'Фзалары', 'label.collectionPhases', 'Фазы');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Detailed summary', 'Эсептери', 'label.loanDetailedSummary', 'Детальный расчет');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Summary', 'Эсептери', 'label.loanSummary', 'Расчет');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Accrue', 'Процент, штрафтары', 'label.accrue', 'Начисление');
+
+
+# credit term
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('startDate', 'Башталган датасы', 'label.creditTerm.startDate', 'Дата');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('interestRateValue', 'Процентная ставка', 'label.creditTerm.interestRateValue', 'Процентная ставка');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('ratePeriod', 'Период', 'label.creditTerm.ratePeriod', 'Период начисления процентов');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('floatingRateType', 'Процентке ставка', 'label.creditTerm.floatingRateType', 'Плавающая ставка');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('enaltyOnPrincipleOverdueRateValue', 'Негизги Штраф', 'label.creditTerm.enaltyOnPrincipleOverdueRateValue', 'Штраф по осн.с.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('penaltyOnPrincipleOverdueRateType', 'Негизги Штрафка ставка', 'label.creditTerm.penaltyOnPrincipleOverdueRateType', 'Ставка на штраф по осн.с.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('penaltyOnInterestOverdueRateValue', 'Процент штраф', 'label.creditTerm.penaltyOnInterestOverdueRateValue', 'Штраф по процентам');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('penaltyOnInterestOverdueRateType', 'Процент штрафка ставка', 'label.creditTerm.penaltyOnInterestOverdueRateType', 'Ставка на штраф по проц.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('penaltyLimitPercent', 'Шраф лимити', 'label.creditTerm.penaltyLimitPercent', 'Лимит начисления штр.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('penaltyLimitEndDate', 'Штраф саналбай баштаган дата', 'label.creditTerm.penaltyLimitEndDate', 'Дата приост. нач.штр.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('transactionOrder', 'Толоо туру', 'label.creditTerm.transactionOrder', 'Очередь погашения');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('daysInMonthMethod', 'айдагы кун саноо методу', 'label.creditTerm.daysInMonthMethod', 'Метод кол-ва дней в мес.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('daysInYearMethod', 'жылдагы кун саноо методу', 'label.creditTerm.daysInYearMethod', 'Метод кол-ва дней в год');
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Add new Credit Term', 'Жаны шарт', 'label.button.addNewCreditTerm', 'Добавить условие кред-я');
+
+# write off
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('date', 'Датасы', 'label.writeOff.date', 'Дата');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('total amount', 'Сумма', 'label.writeOff.totalAmount', 'Всего');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('principal', 'Негизги карыз', 'label.writeOff.principal', 'Осн.с.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('interest', 'Процент', 'label.writeOff.interest', 'Проценты');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('penalty', 'Штраф', 'label.writeOff.penalty', 'Штрафы');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('fee', 'Комиссия', 'label.writeOff.fee', 'Комиссия');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('description', 'Тушундурмосу', 'label.writeOff.description', 'Примечание');
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('addNewWriteOff', 'Жаны списание', 'label.button.addNewWriteOff', 'Добавить списание');
+
+# payment schedule
+
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('expectedDate', 'Датасы', 'label.paymentSchedule.expectedDate', 'Дата');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('disbursement', 'Алынганы', 'label.paymentSchedule.disbursement', 'Освоение');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('principalPayment', 'Негизги карыз', 'label.paymentSchedule.principalPayment', 'Осн.сумма');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('interestPayment', 'Процент', 'label.paymentSchedule.interestPayment', 'Проценты');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('collectedIneterestPayment', 'Топт.процент', 'label.paymentSchedule.collectedInterestPayment', 'Нак.проценты');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('collectedPenaltyPayment', 'Топт.штраф', 'label.paymentSchedule.collectedPenaltyPayment', 'Нак.штр.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('installmentState', 'Статусу', 'label.paymentSchedule.installmentState', 'Статус');
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('addNewPaymentSchedule', 'Жаны график', 'label.button.addNewPaymentSchedule', 'Добавить ср.обязательство');
+
+
+# payments
+
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('paymentDate', 'Датасы', 'label.payment.paymentDate', 'Дата');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('totalAmount', 'Сумма', 'label.payment.totalAmount', 'Итого');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('principal', 'Негизги карыз', 'label.payment.principal', 'Осн.сумма');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('ineterest', 'Процент', 'label.payment.interest', 'Проценты');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('penalty', 'Штраф', 'label.payment.penalty', 'Штрафы');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('fee', 'Комиссия', 'label.payment.fee', 'Комиссия');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('number', 'Номер', 'label.payment.number', 'Номер');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('paymentType', 'Туру', 'label.payment.paymentType', 'Вид платежа');
+
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('addPayment', 'Толом кошуу', 'label.button.addNewPayment', 'Добавить погашение');
+
+
+
+# plan
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('paymentDate', 'Датасы', 'label.supervisorPlan.date', 'Дата');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('paymentDate', 'Суммасы', 'label.supervisorPlan.amount', 'Итого');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('paymentDate', 'Негизги карыз', 'label.supervisorPlan.principal', 'Осн.сумма');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('paymentDate', 'Процент', 'label.supervisorPlan.interest', 'Проценты');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('paymentDate', 'Штраф', 'label.supervisorPlan.penalty', 'Штрафы');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('paymentDate', 'Комиссия', 'label.supervisorPlan.fee', 'Комиссия');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('paymentDate', 'Тушундурмосу', 'label.supervisorPlan.description', 'Примечание');
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('addPlan', 'План кошуу', 'label.button.addNewSupervisorPlan', 'Добавить план');
+
+# goods
+
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('ID', 'ID', 'label.loanGoods.id', 'ID');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('quantity', 'Кол-во', 'label.loanGoods.quantity', 'Кол-во');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('unitType', 'Ед. измерения', 'label.loanGoods.unitType', 'Ед. измерения');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('goodType', 'Туру', 'label.loanGoods.goodType', 'Вид');
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('addLoanGood', 'Товар кошуу', 'label.button.addNewLoanGood', 'Добавить товар');
+
+
+
+
+
+
+
+
+
+
 
 
 # collateral

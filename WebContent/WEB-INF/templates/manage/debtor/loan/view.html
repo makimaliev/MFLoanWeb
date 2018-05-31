@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" >
 <!-- begin::Head -->
 <head>
-	<title th:text="#{label.loan.details.title}"></title>
+	<title th:text="${loan.regNumber}"></title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -27,7 +28,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="'Loan : '+${loan.regNumber}"></h3>
+								<h3 class="m-portlet__head-text" th:text="${loan.regNumber}"></h3>
 							</div>
 						</div>
 					</div>
@@ -551,10 +552,10 @@
 										<table class="table">
 											<thead class="thead-default">
 											<tr>
-												<th class="table-id">ID</th>
-												<th>Quantity</th>
-												<th>Unit Type Id</th>
-												<th>Good Typ eId</th>
+												<th class="table-id" th:text="#{label.loanGoods.id}">ID</th>
+												<th th:text="#{label.loanGoods.quantity}">Quantity</th>
+												<th th:text="#{label.loanGoods.unitType}">Unit Type Id</th>
+												<th th:text="#{label.loanGoods.goodType}">Good Typ eId</th>
 												<th>&nbsp;</th>
 											</tr>
 											</thead>

@@ -1,5 +1,8 @@
 package kg.gov.mf.loan.web.controller.admin.org;
 
+import kg.gov.mf.loan.manage.model.debtor.Owner;
+import kg.gov.mf.loan.manage.model.debtor.OwnerType;
+import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -119,6 +122,10 @@ public class OrganizationController {
     {
         this.positionService = rs;
     }
+
+
+    @Autowired
+	private OwnerService ownerService;
     
     
     
@@ -269,9 +276,21 @@ public class OrganizationController {
 			//organization.setOrgForm(this.orgFormService.findById(organization.getOrgForm().getId()));
 			
 			this.organizationService.create(organization);
+
+			Owner newOwner = new Owner();
+
+			newOwner.setName(organization.getName());
+			newOwner.setEntityId(organization.getId());
+			newOwner.setOwnerType(OwnerType.ORGANIZATION);
+			newOwner.setAddress(organization.getAddress());
+
+			this.ownerService.add(newOwner);
+
 		} else {
 			this.organizationService.edit(organization);
 		}
+
+
 
 		return "redirect:/organization/list";
 

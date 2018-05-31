@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <!-- begin::Head -->
 <head>
 	<title th:text="#{label.debtor.page.title}"></title>
@@ -26,7 +27,7 @@
 				<div class="m-portlet">
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
-							<div class="m-portlet__head-title">
+							<div class="m-portlet__head-title" >
 								<h3 class="m-portlet__head-text" th:text="#{label.debtor.page.title}"></h3>
 							</div>
 						</div>
@@ -47,7 +48,7 @@
 									</form>
 								</li>
 								<li class="m-portlet__nav-item">
-									<a th:href="@{/manage/debtor/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.debtor.addDebtor}"></a>
+									<a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.debtor.addDebtor}"></a>
 								</li>
 							</ul>
 						</div>
@@ -87,10 +88,10 @@
 																<a class="dropdown-item" th:href="@{/manage/debtor/__${debtor.id}__/view}">
 																	<span th:text="#{label.table.view}"></span>
 																</a>
-																<a class="dropdown-item" th:href="@{/manage/debtor/__${debtor.id}__/save}">
+																<a class="dropdown-item" th:href="@{/manage/debtor/__${debtor.id}__/save}" sec:authorize="hasRole('ADMIN')">
 																	<span th:text="#{label.table.edit}"></span>
 																</a>
-																<a class="dropdown-item" href="#">
+																<a class="dropdown-item" href="#" sec:authorize="hasRole('ADMIN')">
 																	<span>
 																		<form th:action="@{/manage/debtor/delete}" method="post">
 																			<input hidden="true" type="text" id="id" name="id" th:value="${debtor.id}" />

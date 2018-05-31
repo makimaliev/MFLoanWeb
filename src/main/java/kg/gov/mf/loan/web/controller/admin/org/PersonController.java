@@ -1,5 +1,8 @@
 package kg.gov.mf.loan.web.controller.admin.org;
 
+import kg.gov.mf.loan.manage.model.debtor.Owner;
+import kg.gov.mf.loan.manage.model.debtor.OwnerType;
+import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -124,6 +127,9 @@ public class PersonController {
     
 	@Autowired
     private InformationService informationService;
+
+    @Autowired
+	private OwnerService ownerService;
 	
     public void setInformationService(InformationService rs)
     {
@@ -251,6 +257,16 @@ public class PersonController {
 			//person.setOrgForm(this.orgFormService.findById(person.getOrgForm().getId()));
 			
 			this.personService.create(person);
+
+			Owner newOwner = new Owner();
+
+			newOwner.setName(person.getName());
+			newOwner.setEntityId(person.getId());
+			newOwner.setOwnerType(OwnerType.PERSON);
+			newOwner.setAddress(person.getAddress());
+
+			this.ownerService.add(newOwner);
+
 		} else {
 			this.personService.edit(person);
 		}
