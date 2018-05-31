@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
 <head>
     <title th:text="#{label.documentSubTypes}"></title>
     <div th:replace="fragments/header :: header-css" />
@@ -23,7 +23,7 @@
                     <div class="m-portlet__head">
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">
-                                <h3 class="m-portlet__head-text" th:text="#{label.documentSubTypes}"></h3>
+                                <h3 class="m-portlet__head-text" th:text="#{label.documentSubTypes.title}"></h3>
                             </div>
                         </div>
                         <div class="m-portlet__head-tools">
@@ -31,7 +31,7 @@
                                 <li class="m-portlet__nav-item">
                                     <a th:href="@{/doc/documentSubType/new}"
                                        class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
-                                       th:text="#{label.add.documentSubType}"></a>
+                                       th:text="#{label.documentSubType.add}"></a>
                                 </li>
                             </ul>
                         </div>
@@ -41,20 +41,18 @@
                             <thead class="thead-default">
                             <tr>
                                 <th>№</th>
-                                <th th:text="#{label.documentSubType.type}">Name</th>
-                                <th th:text="#{label.documentSubType.name}">Code</th>
+                                <th th:text="#{label.document.documentType}">Name</th>
+                                <th th:text="#{label.document.documentSubType}">Code</th>
                                 <th>&nbsp;</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr th:each="documentSubType : ${documentSubTypes}">
                                 <td th:text="${documentSubType.id}"></td>
-                                <!-- не выходят данные -->
-                                <!--<td th:text="${documentSubType.documentType.name}"></td>-->
-                                <td></td>
+                                <td th:text="${documentSubType.documentType.name}"></td>
                                 <td th:text="${documentSubType.name}"></td>
                                 <td class="table-actions text-right">
-                                    <a th:href="@{/doc/documentSubType/edit/__${documentSubType.id}__}" role="button" class="btn btn-primary"> Правка </a>
+                                    <a th:href="@{/doc/documentSubType/edit/__${documentSubType.id}__}" role="button" class="btn btn-primary" th:text="#{label.edit}"> Правка </a>
                                 </td>
                             </tr>
                             </tbody>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
     <title th:text="#{label.tasks}"></title>
@@ -26,14 +26,14 @@
                     <div class="m-portlet__head">
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">
-                                <h3 class="m-portlet__head-text" th:text="#{label.openTasks}"></h3>
+                                <h3 class="m-portlet__head-text" th:text="#{label.task.openTasks}"></h3>
                             </div>
                         </div>
                         <div class="m-portlet__head-tools">
                             <ul class="m-portlet__nav">
                                 <li class="m-portlet__nav-item">
                                     <div class="m-input-icon m-input-icon--left">
-                                        <input type="text" class="form-control m-input" placeholder="Search..." id="generalSearchOpenTasks">
+                                        <input type="text" class="form-control m-input" th:placeholder="#{label.search}" id="generalSearchOpenTasks">
                                         <span class="m-input-icon__icon m-input-icon__icon--left">
 												<span><i class="la la-search"></i></span>
 											</span>
@@ -49,13 +49,13 @@
                                     <thead class="thead-default">
                                     <tr>
                                         <th>№</th>
-                                        <th th:text="#{label.description}">Описание</th>
-                                        <th th:text="#{label.state}">Состояние</th>
-                                        <th th:text="#{label.priority}">Приоритет</th>
-                                        <th th:text="#{label.owner}">Владелец</th>
-                                        <th th:text="#{label.createdDate}">Дата создания</th>
-                                        <th th:text="#{label.term}">Срок</th>
-                                        <th th:text="#{label.completedDate}">Дата выполнения</th>
+                                        <th th:text="#{label.task.description}">Описание</th>
+                                        <th th:text="#{label.task.state}">Состояние</th>
+                                        <th th:text="#{label.task.priority}">Приоритет</th>
+                                        <th th:text="#{label.task.owner}">Владелец</th>
+                                        <th th:text="#{label.task.createdDate}">Дата создания</th>
+                                        <th th:text="#{label.task.dueDate}">Срок</th>
+                                        <th th:text="#{label.task.completedDate}">Дата выполнения</th>
                                         <th></th>
                                     </tr>
                                     </thead>
@@ -82,14 +82,14 @@
                     <div class="m-portlet__head">
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">
-                                <h3 class="m-portlet__head-text" th:text="#{label.completedTasks}"></h3>
+                                <h3 class="m-portlet__head-text" th:text="#{label.task.completedTasks}"></h3>
                             </div>
                         </div>
                         <div class="m-portlet__head-tools">
                             <ul class="m-portlet__nav">
                                 <li class="m-portlet__nav-item">
                                     <div class="m-input-icon m-input-icon--left">
-                                        <input type="text" class="form-control m-input" placeholder="Search..." id="generalSearchCompletedTasks">
+                                        <input type="text" class="form-control m-input" th:placeholder="#{label.search}" id="generalSearchCompletedTasks">
                                         <span class="m-input-icon__icon m-input-icon__icon--left">
 												<span><i class="la la-search"></i></span>
 											</span>
@@ -99,19 +99,19 @@
                         </div>
                     </div>
                     <div class="m-portlet__body">
-                        <div class="m-scrollable m-scrollable-no-margin" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+                        <div class="m-scrollable m-scrollable-no-margin" data-scrollbar-shown="true" data-axis="x" data-scrollable="true" data-height="200">
                             <div>
                                 <table class="table" id="closedTasksTable">
                                     <thead class="thead-default">
                                     <tr>
                                         <th>№</th>
-                                        <th th:text="#{label.description}">Описание</th>
-                                        <th th:text="#{label.state}">Состояние</th>
-                                        <th th:text="#{label.priority}">Приоритет</th>
-                                        <th th:text="#{label.owner}">Владелец</th>
-                                        <th th:text="#{label.createdDate}">Дата создания</th>
-                                        <th th:text="#{label.term}">Срок</th>
-                                        <th th:text="#{label.completedDate}">Дата выполнения</th>
+                                        <th th:text="#{label.task.description}">Описание</th>
+                                        <th th:text="#{label.task.state}">Состояние</th>
+                                        <th th:text="#{label.task.priority}">Приоритет</th>
+                                        <th th:text="#{label.task.owner}">Владелец</th>
+                                        <th th:text="#{label.task.createdDate}">Дата создания</th>
+                                        <th th:text="#{label.task.dueDate}">Срок</th>
+                                        <th th:text="#{label.task.completedDate}">Дата выполнения</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -157,7 +157,7 @@
                     previous: '<i class="la la-angle-left"></i>', // or '→'
                     next: '<i class="la la-angle-right"></i>' // or '←'
                 },
-                lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
+                lengthMenu: "Показать _MENU_",
             },
             "info": false,
             keys: {
@@ -176,7 +176,7 @@
                     previous: '<i class="la la-angle-left"></i>', // or '→'
                     next: '<i class="la la-angle-right"></i>' // or '←'
                 },
-                lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
+                lengthMenu: "Показать _MENU_",
             },
             "info": false,
             keys: {

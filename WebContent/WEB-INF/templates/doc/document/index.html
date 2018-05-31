@@ -26,17 +26,17 @@
                     <div class="m-portlet__head">
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">
-                                <h3 class="m-portlet__head-text" th:text="#{label.docflow}"></h3>
+                                <h3 class="m-portlet__head-text" th:text="#{label.document.documentType}"></h3>
                             </div>
                         </div>
                         <div class="m-portlet__head-tools">
                             <ul class="m-portlet__nav">
                                 <li class="m-portlet__nav-item">
                                     <div class="m-input-icon m-input-icon--left">
-                                        <input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
+                                        <input type="text" class="form-control m-input" th:placeholder="#{label.search}" id="generalSearch">
                                         <span class="m-input-icon__icon m-input-icon__icon--left">
-												<span><i class="la la-search"></i></span>
-											</span>
+                                            <span><i class="la la-search"></i></span>
+                                        </span>
                                     </div>
                                 </li>
                             </ul>
@@ -50,16 +50,16 @@
                                     <thead class="thead-default">
                                     <tr>
                                         <th>№</th>
-                                        <th>Заголовок</th>
-                                        <th>Описание</th>
-                                        <th th:if="${type == 'archived'}">Вид документа</th>
-                                        <th>Тип документа</th>
-                                        <th>Состояние</th>
-                                        <th>Отправитель</th>
-                                        <th>Получатель</th>
-                                        <th>Просмотр</th>
-                                        <th th:if="${type != 'archived'}">Правка</th>
-                                        <th th:if="${type != 'archived'}">Удалить</th>
+                                        <th th:text="#{label.document.title}">Заголовок</th>
+                                        <th th:text="#{label.document.description}">Описание</th>
+                                        <th th:text="#{label.document.documentType}" th:if="${type == 'archived'}">Вид документа</th>
+                                        <th th:text="#{label.document.documentSubType}">Тип документа</th>
+                                        <th th:text="#{label.document.generalStatus}">Состояние</th>
+                                        <th th:text="#{label.document.sender}">Отправитель</th>
+                                        <th th:text="#{label.document.receiver}">Получатель</th>
+                                        <th th:text="#{label.view}">Просмотр</th>
+                                        <th th:text="#{label.edit}" th:if="${type != 'archived'}">Правка</th>
+                                        <th th:text="#{label.delete}" th:if="${type != 'archived'}">Удалить</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -72,9 +72,9 @@
                                         <td th:text="${document.generalStatus?.name}"></td>
                                         <td th:text="${responsible[__${document.senderResponsible?.responsibleType}__ ?: 0]}">None</td>
                                         <td th:text="${responsible[__${document.receiverResponsible?.responsibleType}__ ?: 0]}">None</td>
-                                        <td><a th:href="@{/doc/view/__${document.id}__}" role='button' class='btn btn-success'> Просмотр </a></td>
-                                        <td th:if="${type != 'archived'}"><a th:href="@{/doc/edit/__${document.id}__}" role="button" class="btn btn-primary"> Правка </a></td>
-                                        <td th:if="${type != 'archived'}"><a th:href="@{/doc/delete/__${document.id}__}" role="button" class="btn btn-danger" th:if="${document.documentState.toString() == 'NEW' or document.documentState.toString() == 'DRAFT'}"> Удалить </a></td>
+                                        <td><a th:href="@{/doc/view/__${document.id}__}" role='button' class='btn btn-success' th:text="#{label.view}"> Просмотр </a></td>
+                                        <td th:if="${type != 'archived'}"><a th:href="@{/doc/edit/__${document.id}__}" role="button" class="btn btn-primary" th:if="${document.documentState.toString() == 'NEW' or document.documentState.toString() == 'DRAFT'}" th:text="#{label.edit}"> Правка </a></td>
+                                        <td th:if="${type != 'archived'}"><a th:href="@{/doc/delete/__${document.id}__}" role="button" class="btn btn-danger" th:if="${document.documentState.toString() == 'NEW' or document.documentState.toString() == 'DRAFT'}" th:text="#{label.delete}"> Удалить </a></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -112,7 +112,7 @@
                     previous: '<i class="la la-angle-left"></i>', // or '→'
                     next: '<i class="la la-angle-right"></i>' // or '←'
                 },
-                lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
+                lengthMenu: "Показать _MENU_",
             },
             "info": false,
             keys: {

@@ -95,7 +95,7 @@ public class DocumentFlowController extends BaseController {
             };
     //endregion
 
-    private String path =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp";
+    private String path =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
 
     final static Map<Integer, String> responsible = new HashMap<Integer, String>() {
         {
@@ -281,12 +281,12 @@ public class DocumentFlowController extends BaseController {
     public String deleteDocument(@PathVariable("id") Long id) {
 
         Document document = documentService.findById(id);
-        String docType = documentTypeService.findById(document.getDocumentType().getId()).getInternalName();
 
         for(Task task : taskService.getTasksByObjectId(document.getId()))
         {
             taskService.remove(task);
         }
+
         documentService.deleteById(document);
 
         /*
@@ -299,7 +299,7 @@ public class DocumentFlowController extends BaseController {
             documentService.deleteById(document);
         }
         */
-        return "redirect:/doc?type=" + docType;
+        return "redirect:/doc?type=" + documentTypeService.findById(document.getDocumentType().getId()).getInternalName();
     }
 
     @RequestMapping(value = "/download/{attachmentId}", method = RequestMethod.GET)
@@ -348,8 +348,8 @@ public class DocumentFlowController extends BaseController {
         Integer responsibleType = document.getReceiverResponsible().getResponsibleType();
 
         Task task = new Task();
-
-        task.setSummary("Document : " + document.getGeneralStatus().getInternalName().toUpperCase());
+        task.setSummary("Документ : " + document.getGeneralStatus().getActionName().toUpperCase());
+        //task.setSummary("Документ : " + document.getDocumentState().next(Transition.valueOf(document.getGeneralStatus().getInternalName().toUpperCase())));
         task.setDescription(document.getDescription());
         task.setResolutionSummary(document.getDescription());
         task.setProgress(document.getGeneralStatus().getInternalName().toUpperCase());
@@ -519,7 +519,7 @@ public class DocumentFlowController extends BaseController {
 
             if(action.equals("request"))
             {
-                documentService.save(document);
+                document = documentService.save(document);
                 for(final Staff s : document.getSenderResponsible().getStaff()) {
                     taskService.add(addTask(document, s));
                 }
@@ -544,11 +544,90 @@ public class DocumentFlowController extends BaseController {
                 document.getReceiverDispatchData().add(dispatchData);               // add new Receiver DispatchData
                 document.setReceiverStatus(documentStatus);                         // update Receiver DocumentStatus
 
+                taskService.completeTask(document.getId(), getUser());
+
                 if(action.equals("accept"))
                 {
                     document.setReceiverRegisteredNumber("DOCR-" + new Random().nextInt(100));
                     document.setReceiverRegisteredDate(new Date());
+                    //region Add task
+                    Integer responsibleType = document.getReceiverResponsible().getResponsibleType();
+                    if(responsibleType == 1)
+                    {
+                        for(Staff s : document.getReceiverExecutor().getStaff()) {
+                            taskService.add(addTask(document, s));
+                        }
+                    }
+                    else if(responsibleType == 2)
+                    {
+                        for(Department d : document.getReceiverExecutor().getDepartments()) {
+                            taskService.add(addTask(document, d));
+                        }
+                    }
+                    else if(responsibleType == 3)
+                    {
+                        for(Organization o : document.getReceiverExecutor().getOrganizations()) {
+                            taskService.add(addTask(document, o));
+                        }
+                    }
+                    else
+                    {
+                        for(Person p : document.getReceiverExecutor().getPerson()) {
+                            taskService.add(addTask(document, p));
+                        }
+                    }
+                    //endregion
+                }
 
+                if(action.equals("start"))
+                {
+                    //region Add task
+                    Integer responsibleType = document.getReceiverResponsible().getResponsibleType();
+                    if(responsibleType == 1)
+                    {
+                        for(Staff s : document.getReceiverExecutor().getStaff()) {
+                            taskService.add(addTask(document, s));
+                        }
+                    }
+                    else if(responsibleType == 2)
+                    {
+                        for(Department d : document.getReceiverExecutor().getDepartments()) {
+                            taskService.add(addTask(document, d));
+                        }
+                    }
+                    else if(responsibleType == 3)
+                    {
+                        for(Organization o : document.getReceiverExecutor().getOrganizations()) {
+                            taskService.add(addTask(document, o));
+                        }
+                    }
+                    else
+                    {
+                        for(Person p : document.getReceiverExecutor().getPerson()) {
+                            taskService.add(addTask(document, p));
+                        }
+                    }
+                    //endregion
+                }
+            }
+            else
+            {   // Sender Data
+                document.getSenderDispatchData().add(dispatchData);                 // add new Sender DispatchData
+                document.setSenderStatus(documentStatus);                           // update Sender DocumentStatus
+
+                if(action.equals("request"))
+                {
+                    for(final Staff s : doc.getSenderResponsible().getStaff()) {
+                        taskService.add(addTask(document, s));
+                    }
+                }
+
+                if(action.equals("approve"))
+                {
+                    document.setSenderRegisteredNumber("DOCS-" + new Random().nextInt(100));
+                    document.setSenderRegisteredDate(new Date());
+                    taskService.completeTask(document.getId(), getUser());
+                    //region Add task
                     Integer responsibleType = document.getReceiverResponsible().getResponsibleType();
                     if(responsibleType == 1)
                     {
@@ -574,30 +653,7 @@ public class DocumentFlowController extends BaseController {
                             taskService.add(addTask(document, p));
                         }
                     }
-                }
-
-                if(action.equals("start"))
-                {
-                    taskService.completeTask(document.getId(), getUser());
-                }
-            }
-            else
-            {   // Sender Data
-                document.getSenderDispatchData().add(dispatchData);                 // add new Sender DispatchData
-                document.setSenderStatus(documentStatus);                           // update Sender DocumentStatus
-
-                if(action.equals("request"))
-                {
-                    for(final Staff s : doc.getSenderResponsible().getStaff()) {
-                        taskService.add(addTask(document, s));
-                    }
-                }
-
-                if(action.equals("approve"))
-                {
-                    document.setSenderRegisteredNumber("DOCS-" + new Random().nextInt(100));
-                    document.setSenderRegisteredDate(new Date());
-                    taskService.completeTask(document.getId(), getUser());
+                    //endregion
                 }
             }
             documentService.update(document);
@@ -622,7 +678,7 @@ public class DocumentFlowController extends BaseController {
             {
                 document.setSenderRegisteredNumber("DOCS-" + new Random().nextInt(100));
                 document.setSenderRegisteredDate(new Date());
-                documentService.save(document);
+                document = documentService.save(document);
 
                 for(final Staff s : document.getSenderResponsible().getStaff()) {
                     taskService.add(addTask(document, s));
@@ -645,41 +701,70 @@ public class DocumentFlowController extends BaseController {
                 document.getReceiverDispatchData().add(dispatchData);               // add new Receiver DispatchData
                 document.setReceiverStatus(documentStatus);                         // update Receiver DocumentStatus
 
+                taskService.completeTask(document.getId(), getUser());
+
                 if(action.equals("accept"))
                 {
                     document.setReceiverRegisteredNumber("DOCR-" + new Random().nextInt(100));
                     document.setReceiverRegisteredDate(new Date());
-
+                    //region Add Task
                     Integer responsibleType = document.getReceiverResponsible().getResponsibleType();
                     if(responsibleType == 1)
                     {
-                        for(Staff s : document.getReceiverResponsible().getStaff()) {
+                        for(Staff s : document.getReceiverExecutor().getStaff()) {
                             taskService.add(addTask(document, s));
                         }
                     }
                     else if(responsibleType == 2)
                     {
-                        for(Department d : document.getReceiverResponsible().getDepartments()) {
+                        for(Department d : document.getReceiverExecutor().getDepartments()) {
                             taskService.add(addTask(document, d));
                         }
                     }
                     else if(responsibleType == 3)
                     {
-                        for(Organization o : document.getReceiverResponsible().getOrganizations()) {
+                        for(Organization o : document.getReceiverExecutor().getOrganizations()) {
                             taskService.add(addTask(document, o));
                         }
                     }
                     else
                     {
-                        for(Person p : document.getReceiverResponsible().getPerson()) {
+                        for(Person p : document.getReceiverExecutor().getPerson()) {
                             taskService.add(addTask(document, p));
                         }
                     }
+                    //endregion
                 }
 
                 if(action.equals("start"))
                 {
-                    taskService.completeTask(document.getId(), getUser());
+                    //region Add Task
+                    Integer responsibleType = document.getReceiverResponsible().getResponsibleType();
+                    if(responsibleType == 1)
+                    {
+                        for(Staff s : document.getReceiverExecutor().getStaff()) {
+                            taskService.add(addTask(document, s));
+                        }
+                    }
+                    else if(responsibleType == 2)
+                    {
+                        for(Department d : document.getReceiverExecutor().getDepartments()) {
+                            taskService.add(addTask(document, d));
+                        }
+                    }
+                    else if(responsibleType == 3)
+                    {
+                        for(Organization o : document.getReceiverExecutor().getOrganizations()) {
+                            taskService.add(addTask(document, o));
+                        }
+                    }
+                    else
+                    {
+                        for(Person p : document.getReceiverExecutor().getPerson()) {
+                            taskService.add(addTask(document, p));
+                        }
+                    }
+                    //endregion
                 }
             }
             else
@@ -691,7 +776,7 @@ public class DocumentFlowController extends BaseController {
                 {
                     document.setSenderRegisteredNumber("DOCS-" + new Random().nextInt(100));
                     document.setSenderRegisteredDate(new Date());
-
+                    //region ADD Task
                     Integer responsibleType = document.getReceiverResponsible().getResponsibleType();
                     if(responsibleType == 1)
                     {
@@ -717,6 +802,7 @@ public class DocumentFlowController extends BaseController {
                             taskService.add(addTask(document, p));
                         }
                     }
+                    //endregion
                 }
             }
             documentService.update(document);
@@ -724,8 +810,8 @@ public class DocumentFlowController extends BaseController {
     }
     private void saveOutgoingDocument(Document document, String action) {
 
-        DocumentStatus documentStatus = documentStatusService.getByInternalName(action);
         DispatchData dispatchData = setDispatchData(action);
+        DocumentStatus documentStatus = documentStatusService.getByInternalName(action);
 
         document = setER(document);
         document.setGeneralStatus(documentStatus);
@@ -735,13 +821,11 @@ public class DocumentFlowController extends BaseController {
         {
             document.getSenderDispatchData().add(dispatchData);
             document.setSenderStatus(documentStatus);
-
             document.setDocumentState(document.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
 
             if(action.equals("request"))
             {
                 document = documentService.save(document);
-
                 for(final Staff s : document.getSenderResponsible().getStaff()) {
                     taskService.add(addTask(document, s));
                 }
@@ -752,11 +836,13 @@ public class DocumentFlowController extends BaseController {
         else
         {
             Document doc = documentService.findById(document.getId());
+            document.setDocumentState(doc.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
 
             document.setSenderDispatchData(doc.getSenderDispatchData());            // add existing Sender DispatchData
             document.setSenderStatus(doc.getSenderStatus());                        // add existing Sender DocumentStatus
 
-            document.setDocumentState(doc.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
+            document.setSenderAttachment(doc.getSenderAttachment());
+            document.setReceiverAttachment(doc.getReceiverAttachment());
 
             if(doc.getSenderStatus().getInternalName().equals("approve"))
             {   // Receiver Data
@@ -764,15 +850,14 @@ public class DocumentFlowController extends BaseController {
                 document.getReceiverDispatchData().add(dispatchData);               // add new Receiver DispatchData
                 document.setReceiverStatus(documentStatus);                         // update Receiver DocumentStatus
 
+                taskService.completeTask(document.getId(), getUser());
+
                 if(action.equals("register"))
                 {
                     document.setReceiverRegisteredNumber("DOCR-" + new Random().nextInt(100));
                     document.setReceiverRegisteredDate(new Date());
-                }
-
-                if(action.equals("done"))
-                {
-                    taskService.completeTask(document.getId(), getUser());
+                    document.setDocumentState(State.DONE);
+                    document.setGeneralStatus(documentStatusService.getByInternalName("done"));
                 }
             }
             else
@@ -792,9 +877,37 @@ public class DocumentFlowController extends BaseController {
                     document.setSenderRegisteredNumber("DOCS-" + new Random().nextInt(100));
                     document.setSenderRegisteredDate(new Date());
                     taskService.completeTask(document.getId(), getUser());
+                    //region Add task
+                    Integer responsibleType = document.getReceiverResponsible().getResponsibleType();
+                    if(responsibleType == 1)
+                    {
+                        for(Staff s : document.getReceiverResponsible().getStaff()) {
+                            taskService.add(addTask(document, s));
+                        }
+                    }
+                    else if(responsibleType == 2)
+                    {
+                        for(Department d : document.getReceiverResponsible().getDepartments()) {
+                            taskService.add(addTask(document, d));
+                        }
+                    }
+                    else if(responsibleType == 3)
+                    {
+                        for(Organization o : document.getReceiverResponsible().getOrganizations()) {
+                            taskService.add(addTask(document, o));
+                        }
+                    }
+                    else
+                    {
+                        for(Person p : document.getReceiverResponsible().getPerson()) {
+                            taskService.add(addTask(document, p));
+                        }
+                    }
+                    //endregion
                 }
             }
             documentService.update(document);
         }
+
     }
 }
