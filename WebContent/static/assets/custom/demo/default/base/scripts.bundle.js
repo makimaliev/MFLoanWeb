@@ -6075,6 +6075,9 @@ var mLayout = function() {
 
     // handle sidebar toggle
     var initLeftAsideToggle = function() {
+        if($('body').hasClass('m-brand--minimize')){
+            console.log(123);
+        }
         $('#m_aside_left_minimize_toggle').mToggle({
             target: 'body',
             targetState: 'm-brand--minimize m-aside-left--minimize',
