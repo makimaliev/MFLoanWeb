@@ -476,3 +476,72 @@ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALU
 INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Name', 'Аталышы', 'label.printoutTemplate.name', 'Наименование');
 INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Report', 'Отчет', 'label.template.report', 'Отчет');
 INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Save', 'Сактоо', 'label.button.save', 'Сохранить');
+
+
+
+# organization
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('organizations', 'Мекемелер тизмеси', 'label.organizations', 'Список организаций');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('addressData', 'Адрес', 'label.addressData', 'Адресные данные');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('identityDocData', 'Кимдигин аныктаган маалымат', 'label.identityDocData', 'Идентификационные данные');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('contacts', 'Контакт', 'label.contacts', 'Контактные данные');
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('add organization', 'Жаны мекеме', 'label.add.organization', 'Добавить организацию');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('add bankData', 'Жаны банк маалыматы', 'label.add.bankData', 'Добавить банковские данные');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('add department', 'Жаны болум', 'label.add.department', 'Добавить подразделение');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('add information', 'Жаны маалымат', 'label.add.information', 'Добавить информацию');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('add staff', 'Жаны кызматкер', 'label.add.staff', 'Добавить сотрудника');
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('name', 'Аталышы', 'label.organization.name', 'Наименование');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('description', 'Тушундурмосу', 'label.organization.description', 'Примечание');
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('name', 'Аталышы', 'label.org.name', 'Наименование');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('description', 'Тушундурмосу', 'label.org.description', 'Примечание');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('orgForm', 'Мекеме формасы', 'label.org.orgForm', 'Орг. форма');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('address', 'Адрес', 'label.org.address', 'Адрес');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('region', 'Облусу', 'label.org.region', 'Область');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('district', 'Району', 'label.org.district', 'Район');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('aokmotu', 'А.окмоту', 'label.org.aokmotu', 'А.окомту');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('village', 'Айылы', 'label.org.village', 'Село');
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('name', 'Аталышы', 'label.identityDoc.name', 'Наименование');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('enabled', 'Статусу', 'label.identityDoc.enabled', 'Статус');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('number', 'Номери', 'label.identityDoc.number', 'Номер');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('pin', 'ИНН', 'label.identityDoc.pin', 'ИНН');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('type', 'Туру', 'label.identityDoc.type', 'Вид');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('givenBy', 'Берген мекеме', 'label.identityDoc.givenBy', 'Кем выдано');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('date', 'Датасы', 'label.identityDoc.date', 'Дата');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('firstname', 'Аты', 'label.identityDoc.firstname', 'Имя');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('lastname', 'Фамилиясы', 'label.identityDoc.lastname', 'Фамилия');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('midname', 'Атасынын аты', 'label.identityDoc.midname', 'Отчетство');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('fullname', 'Толук аты', 'label.identityDoc.fullname', 'Полное наименование');
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('name', 'Контактар', 'label.contact.name', 'Контакты');
+
+# person
+
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('persons', 'ФЛ тизмеси', 'label.persons', 'Список физ.лиц.');
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('add person', 'жаны ФЛ', 'label.add.person', 'Добавить физ.лицо');
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('name', 'Аталышы', 'label.person.name', 'Наименование');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('description', 'Тушундурмосу', 'label.person.description', 'Примечание');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('addressLine', 'Адрес', 'label.person.addressLine', 'Адрес');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('region', 'Облусу', 'label.person.region', 'Область');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('district', 'Району', 'label.person.district', 'Район');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('aokmotu', 'А.окмоту', 'label.person.aokmotu', 'А.окмоту');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('village', 'Айылы', 'label.person.village', 'Село');
+
+
+
+
+
+
+
+
+
+
+
+
+
