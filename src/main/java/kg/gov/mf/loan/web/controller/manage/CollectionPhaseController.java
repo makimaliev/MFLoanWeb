@@ -115,12 +115,6 @@ public class CollectionPhaseController {
 		procedure.setLastStatusId(phase.getLastStatusId());
 		procService.update(procedure);
 
-		for (Loan loan: selectedLoans
-			 ) {
-			loan.setCollectionPhase(phase);
-			loanService.update(loan);
-		}
-
 		return "redirect:" + "/manage/debtor/{debtorId}/view";
 	}
 	

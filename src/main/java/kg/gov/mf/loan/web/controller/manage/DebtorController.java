@@ -119,10 +119,10 @@ public class DebtorController {
 				allAgreements.add(agreement);
 			}
 
-			CollectionPhase phase = loan.getCollectionPhase();
-			if(phase != null){
-				if(phase.getCollectionProcedure() != null)
-					procs.add(phase.getCollectionProcedure());
+			Set<CollectionPhase> phases = loan.getCollectionPhases();
+			for (CollectionPhase phase: phases
+				 ) {
+				procs.add(phase.getCollectionProcedure());
 			}
 		}
 
