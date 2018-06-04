@@ -11,6 +11,7 @@ import kg.gov.mf.loan.manage.model.debtor.*;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.repository.debtor.DebtorRepository;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
+import kg.gov.mf.loan.process.service.JobItemService;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -89,6 +90,9 @@ public class DebtorController {
 
 	@Autowired
 	OwnerRepository ownerRepository;
+
+    @Autowired
+    JobItemService jobItemService;
 
 	private static final int BUTTONS_TO_SHOW = 5;
 	private static final int INITIAL_PAGE = 0;
@@ -274,6 +278,33 @@ public class DebtorController {
 			debtorService.remove(debtorService.getById(id));
 		return "redirect:" + "/manage/debtor/list";
 	}
+
+    @RequestMapping(value="/manage/debtor/{debtorId}/generatesummary", method=RequestMethod.GET)
+    public String formGenerateSummary(ModelMap model,
+                                          @PathVariable("debtorId")Long debtorId)
+    {
+        Debtor debtor = debtorService.getById(debtorId);
+        model.addAttribute("debtorId", debtorId);
+        model.addAttribute("tLoans", debtor.getLoans());
+        GenerateSummaryForm gsForm = new GenerateSummaryForm();
+        model.addAttribute("gsForm", gsForm);
+
+        return "/manage/debtor/generatesummary";
+    }
+
+    @RequestMapping(value="/manage/debtor/{debtorId}/generatesummary", method=RequestMethod.POST)
+    public String executeGenerateSummary(GenerateSummaryForm gsForm)
+    {
+        List<Loan> selectedLoans = gsForm.getLoans();
+        Date date = gsForm.getDate();
+
+        for (Loan loan: selectedLoans
+             ) {
+            this.jobItemService.runManualCalculateProcedure(loan.getId(), date);
+        }
+
+        return "redirect:" + "/manage/debtor/{debtorId}/view";
+    }
 
 	//BEGIN - TYPE
 	@RequestMapping(value = { "/manage/debtor/type/list" }, method = RequestMethod.GET)

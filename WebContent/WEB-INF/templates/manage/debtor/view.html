@@ -115,6 +115,10 @@
 									<div class="m-section__content">
 										<a th:href="@{/manage/debtor/__${debtorId}__/loan/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.debtor.addLoan}" sec:authorize="hasRole('ADMIN')"></a>
 									</div>
+									<br>
+									<div class="m-section__content">
+										<a th:href="@{/manage/debtor/__${debtorId}__/generatesummary}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.debtor.generateSummary}" sec:authorize="hasRole('ADMIN')"></a>
+									</div>
 								</div>
 								<!--begin::Section-->
 								<div class="m-section">
