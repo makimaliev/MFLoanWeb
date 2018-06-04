@@ -169,7 +169,7 @@
 												<td th:text="${item.collateralValue}"></td>
 												<td th:text="${item.estimatedValue}"></td>
 												<!--<td></td>-->
-												<td th:text="${item.conditionType.name}"></td>
+												<td th:text="${item?.conditionType?.name}"></td>
 												<td class="table-actions text-right">
 													<span>
 														<div class="dropdown">

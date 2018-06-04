@@ -76,20 +76,6 @@ public class CollateralAgreementController {
 		model.addAttribute("debtorId", debtorId);
 		model.addAttribute("tLoans", debtor.getLoans());
 		
-		List<Owner> entities = new ArrayList<Owner>();
-		List<Person> persons = personService.findAll();
-		List<Organization> orgs = orgService.findAll();
-		for (Person p : persons) {
-			entities.add(new Owner(OwnerType.PERSON, p));
-		}
-		
-		for (Organization org : orgs) {
-			entities.add(new Owner(OwnerType.ORGANIZATION, org));
-		}
-		
-		model.addAttribute("entities", entities);
-		
-		
 		if(agreementId == 0)
 		{
 			CollateralAgreement agreement = new CollateralAgreement();
@@ -98,21 +84,7 @@ public class CollateralAgreementController {
 			agreement.setOwner(owner);
 			model.addAttribute("agreement", agreement);
 		}
-			
-		if(agreementId > 0)
-		{
-			CollateralAgreement agreement = agreementService.getById(agreementId);
-			Owner owner = agreement.getOwner();
-			for (Owner entity : entities) {
-				if(owner.getEntityId() == entity.getEntityId() && owner.getOwnerType().equals(entity.getOwnerType())) {
-					entities.remove(entity);
-					entities.add(owner);
-					break;
-				}
-			}
-			model.addAttribute("agreement", agreement);
-		}
-		
+
 		return "/manage/debtor/collateralagreement/save";
 	}
 	
