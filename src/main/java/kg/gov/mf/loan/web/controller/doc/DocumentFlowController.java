@@ -8,8 +8,10 @@ import kg.gov.mf.loan.doc.model.*;
 import kg.gov.mf.loan.doc.service.DocumentStatusService;
 import kg.gov.mf.loan.doc.service.*;
 import kg.gov.mf.loan.doc.model.Transition;
+import kg.gov.mf.loan.manage.model.order.CreditOrder;
 import kg.gov.mf.loan.task.model.Task;
 import kg.gov.mf.loan.task.service.TaskService;
+import kg.gov.mf.loan.web.util.Pager;
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,6 +60,22 @@ public class DocumentFlowController extends BaseController {
         this.request = request;
     }
     //endregion
+
+    private static final int BUTTONS_TO_SHOW = 5;
+    private static final int INITIAL_PAGE = 0;
+    private static final int INITIAL_PAGE_SIZE = 10;
+    private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
+
+    private final static Map<Integer, String> responsible = new HashMap<Integer, String>() {
+        {
+            put(1, "Сотрудник");
+            put(2, "Отдел");
+            put(3, "Организация");
+            put(4, "ФИЗ Лицо");
+        }
+    };
+    private String path =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
+
     //region TYPE
     private enum TYPE { internal, incoming, outgoing}
     private String[][][] actionString =
@@ -88,36 +106,35 @@ public class DocumentFlowController extends BaseController {
                     {"create", "request"},
                     {"request"},
                     {"approve", "reject"},
-                    {"register"},
+                    {"register", "done"},
                     {},
                     {"archive"}
                 }
             };
     //endregion
 
-    private String path =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
+    @RequestMapping(method = RequestMethod.GET)
+    public String index(@RequestParam("type") String type, /* @RequestParam("pageSize") Optional<Integer> pageSize, @RequestParam("page") Optional<Integer> page, */ Model model) {
+        /*
+        int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
+        int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
 
-    final static Map<Integer, String> responsible = new HashMap<Integer, String>() {
-        {
-            put(1, "Сотрудник");
-            put(2, "Отдел");
-            put(3, "Организация");
-            put(4, "ФИЗ Лицо");
-        }
-    };
+        List<Document> documents = type.equals("archived") ? documentService.getArchivedDocuments(getUser().getId()) : documentService.getDocuments(type, getUser().getId());
+                //documentService.listByParam("id", evalPage*evalPageSize, evalPageSize);
+        int count = documentService.findAll().size();
 
-    @RequestMapping(params = "type", method = RequestMethod.GET)
-    public String index(@RequestParam("type") String type, Model model) {
+        Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
 
+        model.addAttribute("count", count/evalPageSize+1);
+        model.addAttribute("selectedPageSize", evalPageSize);
+        model.addAttribute("pageSizes", PAGE_SIZES);
+        model.addAttribute("pager", pager);
+        model.addAttribute("current", evalPage);
+        */
+        List<Document> documents = type.equals("incoming") ? documentService.getInvolvedDocuments(getUser().getId()) : documentService.getDocuments(type, getUser().getId());
+        model.addAttribute("documents", documents);
         String title = documentTypeService.getByInternalName(type).getName();
-
-        if(type.equals("archived"))
-        {
-            model.addAttribute("documents", documentService.getArchivedDocuments(getUser().getId()));
-        } else {
-            model.addAttribute("documents", documentService.getDocuments(type, getUser().getId()));
-        }
-
+        //model.addAttribute("documents", documentService.getDocuments(type, getUser().getId()));
         model.addAttribute("title", title);
         model.addAttribute("responsible", responsible);
         model.addAttribute("documentSubTypes", documentTypeService.getByInternalName(type).getDocumentSubTypes());
@@ -126,26 +143,24 @@ public class DocumentFlowController extends BaseController {
         return "/doc/document/index";
     }
 
-    @RequestMapping(value = "/new", params = {"type", "subtype"}, method = RequestMethod.GET)
-    public String newDocument(@RequestParam("type") String type, @RequestParam("subtype") String subtype, Model model) {
+    @RequestMapping(value = "/new/{subType}", method = RequestMethod.GET)
+    public String newDocument(@PathVariable("subType") String type, Model model) {
 
-        Document document = new Document();
-        DocumentType documentType = documentTypeService.getByInternalName(type);
-
+        DocumentType documentType = documentSubTypeService.getByInternalName(type).getDocumentType();
         int row = TYPE.valueOf(documentType.getInternalName()).ordinal();
-        int col = document.getDocumentState().ordinal();
-
-        document.setOwner(getUser().getId());
-        document.setDocumentType(documentType);
-        document.setDocumentSubType(documentSubTypeService.getByInternalName(subtype));
 
         List<DocumentStatus> actions = new ArrayList<>();
-        for(String action : actionString[row][col])
+        for(String action : actionString[row][0])
         {
             actions.add(documentStatusService.getByInternalName(action));
         }
 
-        if(type.equals("internal") || type.equals("outgoing"))
+        Document document = new Document();
+        document.setOwner(getUser().getId());
+        document.setDocumentType(documentType);
+        document.setDocumentSubType(documentSubTypeService.getByInternalName(type));
+
+        if(documentType.getInternalName().equals("internal") || documentType.getInternalName().equals("outgoing"))
         {
             Responsible resp = new Responsible();
             resp.setResponsibleType(1);
@@ -165,7 +180,7 @@ public class DocumentFlowController extends BaseController {
         model.addAttribute("organization", accountService.getOrganizations());
         model.addAttribute("person", accountService.getPerson());
 
-        return "/doc/document/" + document.getDocumentType().getInternalName();
+        return "/doc/document/" + documentType.getInternalName();
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
@@ -220,13 +235,12 @@ public class DocumentFlowController extends BaseController {
                     attachment.setInternalName(fsName);
 
                     document.setSenderAttachment(attachment);
-                    document.setSenderFileName(fileName);
                 } catch (Exception e) {
             }
         }
         //endregion
         //region Receiver File
-        if (!receiverFile.isEmpty())
+        if (receiverFile.isEmpty())
         {
             try {
                     String fileName = receiverFile.getOriginalFilename();
@@ -243,7 +257,6 @@ public class DocumentFlowController extends BaseController {
                     attachment.setInternalName(fsName);
 
                     document.setReceiverAttachment(attachment);
-                    document.setReceiverFileName(fileName);
                 } catch (Exception e) {
             }
         }
@@ -322,7 +335,7 @@ public class DocumentFlowController extends BaseController {
         FileCopyUtils.copy(inputStream, response.getOutputStream());
     }
 
-    private DispatchData setDispatchData(String internalName) {
+    private DispatchData setDispatchData(String internalName, Document document) {
 
         DocumentStatus documentStatus = documentStatusService.getByInternalName(internalName);
         DispatchData dispatchData = new DispatchData();
@@ -348,7 +361,7 @@ public class DocumentFlowController extends BaseController {
         Integer responsibleType = document.getReceiverResponsible().getResponsibleType();
 
         Task task = new Task();
-        task.setSummary("Документ : " + document.getGeneralStatus().getActionName().toUpperCase());
+        task.setSummary("Документ : ");
         //task.setSummary("Документ : " + document.getDocumentState().next(Transition.valueOf(document.getGeneralStatus().getInternalName().toUpperCase())));
         task.setDescription(document.getDescription());
         task.setResolutionSummary(document.getDescription());
@@ -504,7 +517,7 @@ public class DocumentFlowController extends BaseController {
     }
     private void saveInternalDocument(Document document, String action) {
 
-        DispatchData dispatchData = setDispatchData(action);
+        DispatchData dispatchData = setDispatchData(action, document);
         DocumentStatus documentStatus = documentStatusService.getByInternalName(action);
 
         document = setER(document);
@@ -519,7 +532,7 @@ public class DocumentFlowController extends BaseController {
 
             if(action.equals("request"))
             {
-                document = documentService.save(document);
+                documentService.save(document);
                 for(final Staff s : document.getSenderResponsible().getStaff()) {
                     taskService.add(addTask(document, s));
                 }
@@ -662,7 +675,7 @@ public class DocumentFlowController extends BaseController {
     private void saveIncomingDocument(Document document, String action) {
 
         DocumentStatus documentStatus = documentStatusService.getByInternalName(action);
-        DispatchData dispatchData = setDispatchData(action);
+        DispatchData dispatchData = setDispatchData(action, document);
 
         document = setER(document);
         document.setGeneralStatus(documentStatus);
@@ -676,8 +689,6 @@ public class DocumentFlowController extends BaseController {
 
             if(action.equals("register"))
             {
-                document.setSenderRegisteredNumber("DOCS-" + new Random().nextInt(100));
-                document.setSenderRegisteredDate(new Date());
                 document = documentService.save(document);
 
                 for(final Staff s : document.getSenderResponsible().getStaff()) {
@@ -810,7 +821,7 @@ public class DocumentFlowController extends BaseController {
     }
     private void saveOutgoingDocument(Document document, String action) {
 
-        DispatchData dispatchData = setDispatchData(action);
+        DispatchData dispatchData = setDispatchData(action, document);
         DocumentStatus documentStatus = documentStatusService.getByInternalName(action);
 
         document = setER(document);

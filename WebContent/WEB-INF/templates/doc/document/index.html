@@ -26,7 +26,7 @@
                     <div class="m-portlet__head">
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">
-                                <h3 class="m-portlet__head-text" th:text="#{label.document.documentType}"></h3>
+                                <h3 class="m-portlet__head-text" th:text="${'Список документов : ' + title}"></h3>
                             </div>
                         </div>
                         <div class="m-portlet__head-tools">
@@ -42,7 +42,6 @@
                             </ul>
                         </div>
                     </div>
-
                     <div class="m-portlet__body">
                         <div class="m-scrollable m-scrollable-no-margin" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
                             <div>
@@ -57,9 +56,7 @@
                                         <th th:text="#{label.document.generalStatus}">Состояние</th>
                                         <th th:text="#{label.document.sender}">Отправитель</th>
                                         <th th:text="#{label.document.receiver}">Получатель</th>
-                                        <th th:text="#{label.view}">Просмотр</th>
-                                        <th th:text="#{label.edit}" th:if="${type != 'archived'}">Правка</th>
-                                        <th th:text="#{label.delete}" th:if="${type != 'archived'}">Удалить</th>
+                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -70,23 +67,81 @@
                                         <td th:text="${document.documentType.name}" th:if="${type == 'archived'}"></td>
                                         <td th:text="${document.documentSubType.name}"></td>
                                         <td th:text="${document.generalStatus?.name}"></td>
-                                        <td th:text="${responsible[__${document.senderResponsible?.responsibleType}__ ?: 0]}">None</td>
-                                        <td th:text="${responsible[__${document.receiverResponsible?.responsibleType}__ ?: 0]}">None</td>
-                                        <td><a th:href="@{/doc/view/__${document.id}__}" role='button' class='btn btn-success' th:text="#{label.view}"> Просмотр </a></td>
-                                        <td th:if="${type != 'archived'}"><a th:href="@{/doc/edit/__${document.id}__}" role="button" class="btn btn-primary" th:if="${document.documentState.toString() == 'NEW' or document.documentState.toString() == 'DRAFT'}" th:text="#{label.edit}"> Правка </a></td>
-                                        <td th:if="${type != 'archived'}"><a th:href="@{/doc/delete/__${document.id}__}" role="button" class="btn btn-danger" th:if="${document.documentState.toString() == 'NEW' or document.documentState.toString() == 'DRAFT'}" th:text="#{label.delete}"> Удалить </a></td>
+                                        <td th:text="${responsible[__${document.getSenderResponsible()?.responsibleType}__ ?: 0]}">None</td>
+                                        <td th:text="${responsible[__${document.getReceiverResponsible()?.responsibleType}__ ?: 0]}">None</td>
+                                        <td class="table-actions text-right">
+                                            <span>
+                                                <div class="dropdown">
+                                                    <a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown"><i class="la la-ellipsis-h"></i></a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item"  th:href="@{/doc/view/__${document.id}__}">
+                                                            <span th:text="#{label.view}"></span>
+                                                        </a>
+                                                        <a class="dropdown-item"  th:href="@{/doc/edit/__${document.id}__}" th:if="${document.documentState.ordinal() < 2}">
+                                                            <span th:text="#{label.edit}"></span>
+                                                        </a>
+                                                        <a class="dropdown-item"  th:href="@{/doc/delete/__${document.id}__}" th:if="${document.documentState.ordinal() < 2}">
+                                                            <span th:text="#{label.delete}"></span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+
                     </div>
+                    <!--div class="m-portlet__foot">
+                        <div class="m-datatable m-datatable--default">
+                            <div class="m-datatable__pager m-datatable--paging-loaded clearfix">
+                                <ul class="m-datatable__pager-nav">
+                                    <li th:class="${current == 0} ? disabled">
+                                        <a th:title="#{label.pagination.first}" class="m-datatable__pager-link m-datatable__pager-link--first" th:href="@{/doc/order/list(pageSize=${selectedPageSize}, page=1)}">
+                                            <i class="la la-angle-double-left"></i>
+                                        </a>
+                                    </li>
+                                    <li th:class="${current == 0} ? disabled">
+                                        <a th:title="#{label.pagination.prev}" class="m-datatable__pager-link m-datatable__pager-link--prev" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${current})}">
+                                            <i class="la la-angle-left"></i>
+                                        </a>
+                                    </li>
+
+                                    <li th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+                                        <a th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${page})}" class="m-datatable__pager-link m-datatable__pager-link-number" th:text="${page}" th:classappend="${current == (page - 1)} ? 'm-datatable__pager-link--active'"></a>
+                                    </li>
+
+                                    <li th:class="${current + 1 == count} ? disabled">
+                                        <a th:title="#{label.pagination.next}" class="m-datatable__pager-link m-datatable__pager-link--next" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${current + 2})}">
+                                            <i class="la la-angle-right"></i>
+                                        </a>
+                                    </li>
+                                    <li th:class="${current + 1 == count} ? disabled">
+                                        <a th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${count})}" th:title="#{label.pagination.last}" class="m-datatable__pager-link m-datatable__pager-link--last">
+                                            <i class="la la-angle-double-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="m-datatable__pager-info">
+                                    <span class="m-datatable__pager-detail" th:text="#{label.pageSize}"></span>
+                                    <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 70px;">
+                                        <select id="pageSizeSelect" class="selectpicker m-datatable__pager_size" title="Select page size" data-width="70px">
+                                            <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}" th:value="${pageSize}"
+                                                    th:selected="${pageSize} == ${selectedPageSize}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div-->
                 </div>
                 <div class="row">
                     <div class="col-md-12" th:if="${type != 'archived'}">
                         <button class="btn btn-primary"> Filter </button>
                         <span th:each="dst : ${documentSubTypes}">
-                            <a th:href="@{/doc/new(type=${type}, subtype=${dst.internalName})}" class="btn btn-success" th:text="${dst.name}"> New Document </a>
+                            <a th:href="@{/doc/new/__${dst.internalName}__}" class="btn btn-success" th:text="${dst.name}"> New Document </a>
                         </span>
                     </div>
                 </div>
@@ -105,6 +160,7 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+
         var table = $('#documentTable').DataTable({
             stateSave: true,
             language: {
@@ -120,6 +176,7 @@
             },
             "sDom": 'rtlip'
         } );
+
         $('#generalSearch').keyup(function(){
             table.search($(this).val()).draw() ;
         });

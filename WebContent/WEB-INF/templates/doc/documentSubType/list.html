@@ -37,7 +37,7 @@
                         </div>
                     </div>
                     <div class="m-portlet__body">
-                        <table class="table">
+                        <table class="table" id="documentSubtypeTable">
                             <thead class="thead-default">
                             <tr>
                                 <th>№</th>
@@ -52,19 +52,24 @@
                                 <td th:text="${documentSubType.documentType.name}"></td>
                                 <td th:text="${documentSubType.name}"></td>
                                 <td class="table-actions text-right">
-                                    <a th:href="@{/doc/documentSubType/edit/__${documentSubType.id}__}" role="button" class="btn btn-primary" th:text="#{label.edit}"> Правка </a>
+                                    <span>
+                                        <div class="dropdown">
+                                            <a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown"><i class="la la-ellipsis-h"></i></a>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a class="dropdown-item"  th:href="@{/doc/documentSubType/edit/__${documentSubType.id}__}">
+                                                    <span th:text="#{label.edit}"></span>
+                                                </a>
+                                                <a class="dropdown-item"  th:href="@{/doc/documentSubType/delete/__${documentSubType.id}__}">
+                                                    <span th:text="#{label.delete}"></span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </span>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
-
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <input hidden="true" type="text" id="region_id" name="region_id" />
-                    <div id="content"></div>
                 </div>
             </div>
         </div>
@@ -74,6 +79,37 @@
     <div th:replace="layout/footer"/>
     <!-- end::Footer -->
 </div>
+<div class="m-scroll-top m-scroll-top--skin-top" data-toggle="m-scroll-top" data-scroll-offset="500" data-scroll-speed="300">
+    <i class="la la-arrow-up"></i>
+</div>
+<div th:replace="fragments/footer :: footer-js"/>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        var table = $('#documentSubtypeTable').DataTable({
+            stateSave: true,
+            language: {
+                paginate: {
+                    previous: '<i class="la la-angle-left"></i>', // or '→'
+                    next: '<i class="la la-angle-right"></i>' // or '←'
+                },
+                lengthMenu: "Показать _MENU_",
+            },
+            "info": false,
+            keys: {
+                focus: ':eq(0)'
+            },
+            "sDom": 'rtlip'
+        } );
+
+        $('#generalSearch').keyup(function(){
+            table.search($(this).val()).draw() ;
+        });
+        $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
+        $('.selectpicker').selectpicker('refresh');
+    });
+</script>
 
 </body>
 </html>
