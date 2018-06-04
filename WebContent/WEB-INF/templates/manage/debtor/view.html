@@ -8,8 +8,6 @@
 	<div th:replace="fragments/header :: header-css"/>
 </head>
 <!-- end::Head -->
-
-<!-- end::Body -->
 <body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
 <!-- begin:: Page -->
 <div class="m-grid m-grid--hor m-grid--root m-page">
@@ -259,9 +257,16 @@
 								<!--end::Section-->
 							</div>
 							<div class="tab-pane" id="procedureListOfDebtor" role="tabpanel">
+								<!--
 								<div class="m-section">
 									<div class="m-section__content">
 										<a th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.debtor.addProcedure}"></a>
+									</div>
+								</div>
+								-->
+								<div class="m-section">
+									<div class="m-section__content">
+										<a th:href="@{/manage/debtor/__${debtorId}__/initializephase}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.debtor.initializePhase}"></a>
 									</div>
 								</div>
 								<!--begin::Section-->

@@ -10,6 +10,7 @@ import kg.gov.mf.loan.admin.sys.converter.UserFormatter;
 import kg.gov.mf.loan.doc.formatter.DocumentFormatter;
 import kg.gov.mf.loan.doc.formatter.DocumentSubTypeFormatter;
 import kg.gov.mf.loan.doc.formatter.DocumentTypeFormatter;
+import kg.gov.mf.loan.manage.converter.*;
 import kg.gov.mf.loan.output.report.converter.ContentParameterFormatter;
 import kg.gov.mf.loan.output.report.converter.GenerationParameterFormatter;
 import kg.gov.mf.loan.output.report.converter.GenerationParameterTypeFormatter;
@@ -48,11 +49,6 @@ import kg.gov.mf.loan.admin.sys.converter.PermissionFormatter;
 import kg.gov.mf.loan.admin.sys.converter.RoleFormatter;
 import kg.gov.mf.loan.admin.sys.converter.SupervisorTermFormatter;
 import kg.gov.mf.loan.admin.sys.service.MessageResourceService;
-import kg.gov.mf.loan.manage.converter.DebtorTypeFormatter;
-import kg.gov.mf.loan.manage.converter.LoanFormatter;
-import kg.gov.mf.loan.manage.converter.OrganizationFormFormatter;
-import kg.gov.mf.loan.manage.converter.OwnerFormatter;
-import kg.gov.mf.loan.manage.converter.WorkSectorFormatter;
 
 
 @Configuration
@@ -103,6 +99,12 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 
     @Autowired
     WorkSectorFormatter workSectorFormatter;
+
+    @Autowired
+    PhaseStatusFormatter phaseStatusFormatter;
+
+    @Autowired
+    PhaseTypeFormatter phaseTypeFormatter;
 
     @Autowired
     IdentityDocGivenByConverter identityDocGivenByConverter;
@@ -300,6 +302,8 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         registry.addFormatter(orgFormFormatter);
         registry.addFormatter(workSectorFormatter);
         registry.addFormatter(ownerFormatter);
+        registry.addFormatter(phaseStatusFormatter);
+        registry.addFormatter(phaseTypeFormatter);
         registry.addFormatter(generationParameterFormatter);
         registry.addFormatter(generationParameterTypeFormatter);
         registry.addFormatter(objectListFormatter);

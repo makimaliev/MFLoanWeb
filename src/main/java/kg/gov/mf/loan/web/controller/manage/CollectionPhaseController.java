@@ -6,6 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import kg.gov.mf.loan.manage.model.collection.*;
+import kg.gov.mf.loan.manage.model.debtor.Debtor;
+import kg.gov.mf.loan.manage.service.collection.*;
+import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -16,16 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
-import kg.gov.mf.loan.manage.model.collection.CollectionProcedure;
-import kg.gov.mf.loan.manage.model.collection.PhaseDetails;
-import kg.gov.mf.loan.manage.model.collection.PhaseStatus;
-import kg.gov.mf.loan.manage.model.collection.PhaseType;
 import kg.gov.mf.loan.manage.model.loan.Loan;
-import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
-import kg.gov.mf.loan.manage.service.collection.CollectionProcedureService;
-import kg.gov.mf.loan.manage.service.collection.PhaseStatusService;
-import kg.gov.mf.loan.manage.service.collection.PhaseTypeService;
 import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.web.util.Utils;
 
@@ -37,7 +32,13 @@ public class CollectionPhaseController {
 	
 	@Autowired
 	CollectionProcedureService procService;
-	
+
+	@Autowired
+	ProcedureStatusService procedureStatusService;
+
+	@Autowired
+	ProcedureTypeService procedureTypeService;
+
 	@Autowired
 	PhaseStatusService statusService;
 	
@@ -46,6 +47,9 @@ public class CollectionPhaseController {
 	
 	@Autowired
 	LoanService loanService;
+
+	@Autowired
+	DebtorService debtorService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -72,6 +76,52 @@ public class CollectionPhaseController {
 		
 		return "/manage/debtor/collectionprocedure/collectionphase/view";
 		
+	}
+
+	@RequestMapping(value="/manage/debtor/{debtorId}/initializephase", method=RequestMethod.GET)
+	public String initializePhaseForm(ModelMap model, @PathVariable("debtorId")Long debtorId)
+	{
+		Debtor debtor = debtorService.getById(debtorId);
+		model.addAttribute("debtorId", debtorId);
+		model.addAttribute("tLoans", debtor.getLoans());
+
+		model.addAttribute("phaseForm", new CollectionPhaseForm());
+
+		model.addAttribute("statuses", statusService.list());
+		model.addAttribute("types", typeService.list());
+
+		return "/manage/debtor/initializephase/save";
+	}
+
+	@RequestMapping(value="/manage/debtor/{debtorId}/initializephase", method=RequestMethod.POST)
+	public String initializePhaseSave(ModelMap model,
+									  @PathVariable("debtorId")Long debtorId,
+									  CollectionPhaseForm phaseForm)
+	{
+		CollectionPhase phase = phaseForm.getCollectionPhase();
+		Set<Loan> selectedLoans = phaseForm.getLoans();
+		phase.setLoans(selectedLoans);
+
+		CollectionProcedure procedure = new CollectionProcedure();
+		procedure.setStartDate(phase.getStartDate());
+		procedure.setProcedureStatus(procedureStatusService.getById(1L));
+		procedure.setProcedureType(procedureTypeService.getById(1L));
+		procService.add(procedure);
+
+		phase.setCollectionProcedure(procedure);
+		phaseService.add(phase);
+
+		procedure.setLastPhase(phase.getId());
+		procedure.setLastStatusId(phase.getLastStatusId());
+		procService.update(procedure);
+
+		for (Loan loan: selectedLoans
+			 ) {
+			loan.setCollectionPhase(phase);
+			loanService.update(loan);
+		}
+
+		return "redirect:" + "/manage/debtor/{debtorId}/view";
 	}
 	
 	@RequestMapping(value="/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/save", method=RequestMethod.GET)
