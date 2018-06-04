@@ -102,6 +102,81 @@
 					</div>
 				</div>
 				<!--end::Portlet-->
+
+                <!--begin::Portlet-->
+                <div class="m-portlet m-portlet--mobile">
+                    <div class="m-portlet__body">
+
+                        <div class="m-section">
+                            <div class="m-section__content">
+                                <a th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.collectionprocedure.addPhase}"></a>
+                            </div>
+                        </div>
+
+                        <!--begin::Section-->
+                        <div class="m-section">
+                            <div class="m-section__content">
+                                <div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+                                    <div>
+                                        <table class="table">
+                                            <thead class="thead-default">
+                                            <tr>
+                                                <th class="table-id">Id</th>
+                                                <th th:text="#{label.collectionphase.startDate}"></th>
+                                                <th th:text="#{label.collectionphase.closeDate}"></th>
+                                                <th th:text="#{label.collectionphase.lastEvent}"></th>
+                                                <th th:text="#{label.collectionphase.lastStatusId}"></th>
+                                                <th th:text="#{label.collectionphase.phaseStatus}"></th>
+                                                <th th:text="#{label.collectionphase.phaseType}"></th>
+                                                <th>&nbsp;</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="phase : ${phases}">
+                                                <td class="table-id" th:text="${phase.id}"></td>
+                                                <td th:text="${phase.startDate}"></td>
+                                                <td th:text="${phase.closeDate}"></td>
+                                                <td th:text="${phase.lastEvent}"></td>
+                                                <td th:text="${phase.lastStatusId}"></td>
+                                                <td th:text="${phase.phaseStatus.name}"></td>
+                                                <td th:text="${phase.phaseType.name}"></td>
+                                                <td class="table-actions text-right">
+													<span>
+														<div class="dropdown">
+															<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																<i class="la la-ellipsis-h"></i>
+															</a>
+															<div class="dropdown-menu dropdown-menu-right">
+																<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phase.id}__/view}">
+																	<span th:text="#{label.table.view}"></span>
+																</a>
+																<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phase.id}__/save}">
+																	<span th:text="#{label.table.edit}"></span>
+																</a>
+																<a class="dropdown-item" href="#">
+																	<span>
+																		<form th:action="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/delete}" method="post">
+																			<input hidden="true" type="text" id="id" name="id" th:value="${phase.id}" />
+																			<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																		</form>
+																	</span>
+																</a>
+															</div>
+														</div>
+													</span>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end::Section-->
+
+                    </div>
+                </div>
+                <!--end::Portlet-->
 			</div>
 		</div>
 	</div>

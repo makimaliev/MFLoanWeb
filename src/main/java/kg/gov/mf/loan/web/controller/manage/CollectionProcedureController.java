@@ -51,6 +51,8 @@ public class CollectionProcedureController {
 		CollectionProcedure proc = procService.getById(procId);
 		model.addAttribute("proc", proc);
 		model.addAttribute("phases", proc.getCollectionPhases());
+		model.addAttribute("debtorId", debtorId);
+		model.addAttribute("procId", procId);
 		
 		return "/manage/debtor/collectionprocedure/view";
 		

@@ -1,378 +1,167 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" >
+<!-- begin::Head -->
 <head>
-<title>MFLoan | Credit Orders</title>
-<div th:replace="fragments/header :: header-css" />
-<link th:href="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css}" rel="stylesheet" type="text/css" />
-<link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
-<link th:href="@{/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}" rel="stylesheet" type="text/css" />
-</head>
-<body
-	class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
-	<!-- BEGIN HEADER -->
-	<div th:replace="layout :: header-top" />
-	<!-- END HEADER -->
-	<!-- BEGIN CONTAINER -->
-	<div class="page-container">
-		<!-- BEGIN SIDEBAR -->
-		<div th:replace="layout :: page-container-sidebar" />
-		<!-- END SIDEBAR -->
-		<!-- BEGIN CONTENT -->
-		<div class="page-content-wrapper">
-			<!-- BEGIN CONTENT BODY -->
-			<div class="page-content">
+	<title th:text="#{label.add.collectionphase.title}"></title>
 
-				<div class="row">
-					<div class="col-md-12">
-						<!-- BEGIN BORDERED TABLE PORTLET-->
-						<form th:action="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/save}" th:object="${phase}" id="form_sample_2" class="form-horizontal" method="post">
-							<div class="portlet light portlet-fit ">
-								<div class="portlet-title">
-									<div class="caption">
-										<i class="icon-settings font-green"></i> 
-										<span class="caption-subject font-green sbold uppercase">Save Collection Phase</span>
-									</div>
-								</div>
-								
-								<div class="portlet-body">
-	                                     <div class="form-body">
-	                                         <div class="alert alert-danger display-hide">
-	                                             <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">Start Date</label>
-	                                             <div class="col-md-4">
-	                                             	<input type="hidden" name="id" th:value="${phase.id}"/>
-	                                                 <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
-	                                                     <input type="text" class="form-control" name="startDate" th:value="${phase.startDate}"/>
-	                                                     <span class="input-group-btn">
-	                                                         <button class="btn default" type="button">
-	                                                             <i class="fa fa-calendar"></i>
-	                                                         </button>
-	                                                     </span>
-	                                                 </div>
-	                                                 <span class="help-block"> select a date </span>
-	                                             </div>
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">Close Date</label>
-	                                             <div class="col-md-4">
-	                                                 <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
-	                                                     <input type="text" class="form-control" name="closeDate" th:value="${phase.closeDate}"/>
-	                                                     <span class="input-group-btn">
-	                                                         <button class="btn default" type="button">
-	                                                             <i class="fa fa-calendar"></i>
-	                                                         </button>
-	                                                     </span>
-	                                                 </div>
-	                                                 <span class="help-block"> select a date </span>
-	                                             </div>
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">Last Event
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                                 <div class="input-icon right">
-	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="lastEvent" th:value="${phase.lastEvent}"/> 
-	                                                 </div>
-	                                             </div>
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">Last Status Id
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                                 <div class="input-icon right">
-	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="lastStatusId" th:value="${phase.lastStatusId}"/> 
-	                                                 </div>
-	                                             </div>
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">Phase Status
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                              		<select class="form-control" th:field="${phase.phaseStatus.id}" name="phaseStatus">
-													    <option value="0" th:text="#{label.select}"></option>
-													    <option th:each="status : ${statuses}" th:value="${status.id}" th:text="${status.name}"></option>
-													</select>
-	                                              </div>
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">Phase Type
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                              		<select class="form-control" th:field="${phase.phaseType.id}" name="phaseType">
-													    <option value="0" th:text="#{label.select}"></option>
-													    <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
-													</select>
-	                                              </div>
-	                                         </div>
-	                                         
-	                                         
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">Loans
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                             	<select class="form-control" id="loans" name="loans" multiple="multiple" >
-											            <option th:each="loan : ${tLoans}" 
-											                    th:selected="${phase.loans.contains(loan)}"
-											                    th:value="${loan.id}"
-											                    th:text="${loan.regNumber}"></option>
-											        </select>
-	                                             	<!-- 
-	                                             	<select class="form-control" th:field="${phase.loans}" name="loans" multiple="multiple">
-														<option th:each="loan : ${tLoans}"
-																th:value="${{loan}}"
-																th:text="${loan.regNumber}">
-														</option>
-													</select>
-													 -->
-	                                             </div>
-	                                         </div>
-	                                         
-	                                     </div>
-	                             	</div>
-								<!-- 
-								<div class="modal-footer">
-									<button type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
-									<button type="submit" class="btn green">Save</button>
-								</div>
-								 -->
-							</div>
-							<!-- END BORDERED TABLE PORTLET-->
-							
-							<div class="portlet light portlet-fit ">
-								<div class="portlet-title">
-									<div class="caption">
-										<i class="icon-settings font-green"></i> 
-										<span class="caption-subject font-green sbold uppercase">Phase Details</span>
-									</div>
-								</div>
-								
-								<div class="portlet-body">
-	                                     <div class="form-body">
-	                                         <div class="alert alert-danger display-hide">
-	                                             <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">startTotalAmount
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                             	<input type="hidden" name="id" th:value="${phaseDetails.id}"/>
-	                                                 <div class="input-icon right">
-	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="startTotalAmount" th:value="${phaseDetails.startTotalAmount}"/> 
-	                                                 </div>
-	                                             </div>
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">startPrincipal
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                                 <div class="input-icon right">
-	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="startPrincipal" th:value="${phaseDetails.startPrincipal}"/> 
-	                                                 </div>
-	                                             </div>
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">startInterest
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                                 <div class="input-icon right">
-	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="startInterest" th:value="${phaseDetails.startInterest}"/> 
-	                                                 </div>
-	                                             </div>
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">startPenalty
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                                 <div class="input-icon right">
-	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="startPenalty" th:value="${phaseDetails.startPenalty}"/> 
-	                                                 </div>
-	                                             </div>
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">startFee
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                                 <div class="input-icon right">
-	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="startFee" th:value="${phaseDetails.startFee}"/> 
-	                                                 </div>
-	                                             </div>
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">closeTotalAmount
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                                 <div class="input-icon right">
-	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="closeTotalAmount" th:value="${phaseDetails.closeTotalAmount}"/> 
-	                                                 </div>
-	                                             </div>
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">closePrincipal
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                                 <div class="input-icon right">
-	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="closePrincipal" th:value="${phaseDetails.closePrincipal}"/> 
-	                                                 </div>
-	                                             </div>
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">closeInterest
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                                 <div class="input-icon right">
-	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="closeInterest" th:value="${phaseDetails.closeInterest}"/> 
-	                                                 </div>
-	                                             </div>
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">closePenalty
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                                 <div class="input-icon right">
-	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="closePenalty" th:value="${phaseDetails.closePenalty}"/> 
-	                                                 </div>
-	                                             </div>
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">closeFee
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                                 <div class="input-icon right">
-	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="closeFee" th:value="${phaseDetails.closeFee}"/> 
-	                                                 </div>
-	                                             </div>
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">paidTotalAmount
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                                 <div class="input-icon right">
-	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="paidTotalAmount" th:value="${phaseDetails.paidTotalAmount}"/> 
-	                                                 </div>
-	                                             </div>
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">paidPrincipal
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                                 <div class="input-icon right">
-	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="paidPrincipal" th:value="${phaseDetails.paidPrincipal}"/> 
-	                                                 </div>
-	                                             </div>
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">paidInterest
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                                 <div class="input-icon right">
-	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="paidInterest" th:value="${phaseDetails.paidInterest}"/> 
-	                                                 </div>
-	                                             </div>
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">paidPenalty
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                                 <div class="input-icon right">
-	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="paidPenalty" th:value="${phaseDetails.paidPenalty}"/> 
-	                                                 </div>
-	                                             </div>
-	                                         </div>
-	                                         
-	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">paidFee
-	                                                 <span class="required"> * </span>
-	                                             </label>
-	                                             <div class="col-md-4">
-	                                                 <div class="input-icon right">
-	                                                     <i class="fa"></i>
-	                                                     <input type="text" class="form-control" name="paidFee" th:value="${phaseDetails.paidFee}"/> 
-	                                                 </div>
-	                                             </div>
-	                                         </div>
-	                                         
-	                                     </div>
-	                             	</div>
-								<div class="modal-footer">
-									<button type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
-									<button type="submit" class="btn green">Save</button>
+	<div th:replace="fragments/header :: header-css"/>
+</head>
+<!-- end::Head -->
+
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+	<!-- BEGIN: Header -->
+	<div th:replace="layout/header"/>
+	<!-- END: Header -->
+	<!-- begin::Body -->
+	<div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+		<!-- BEGIN: Left Aside -->
+		<div th:replace="layout/sidebar"/>
+		<!-- END: Left Aside -->
+		<div class="m-grid__item m-grid__item--fluid m-wrapper">
+			<div class="m-content">
+				<!--begin::Form-->
+				<form th:action="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/save}" th:object="${phaseForm}" method="post" class="m-form m-form--fit m-form--label-align-right">
+					<!--begin::Portlet-->
+					<div class="m-portlet m-portlet--full-height">
+						<div class="m-portlet__head">
+							<div class="m-portlet__head-caption">
+								<div class="m-portlet__head-title">
+									<h3 class="m-portlet__head-text" th:text="#{label.add.collectionphase.title}"></h3>
 								</div>
 							</div>
-						</form>
+						</div>
+						<div class="m-portlet__body">
+							<div class="m-form__section">
+
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12">
+										<span th:text="#{label.collectionphase.startDate}"></span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<div class="input-group date m_datetimepicker_6">
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{collectionPhase.startDate}"/>
+											<span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12">
+										<span th:text="#{label.collectionphase.closeDate}"></span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<div class="input-group date m_datetimepicker_6">
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{collectionPhase.closeDate}"/>
+											<span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12">
+										<span th:text="#{label.collectionphase.lastEvent}"></span>
+										<span class="m--font-danger">*</span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<input type="text" class="form-control m-input" th:field="*{collectionPhase.lastEvent}">
+									</div>
+								</div>
+
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12">
+										<span th:text="#{label.collectionphase.lastStatusId}"></span>
+										<span class="m--font-danger">*</span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<input type="text" class="form-control m-input" th:field="*{collectionPhase.lastStatusId}">
+									</div>
+								</div>
+
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12">
+										<span th:text="#{label.collectionPhase.phaseStatus}"></span>
+										<span class="m--font-danger">*</span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{collectionPhase.phaseStatus}">
+											<option value="0" th:text="#{label.select}"></option>
+											<option th:each="status : ${statuses}" th:value="${{status}}" th:text="${status.name}"></option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12">
+										<span th:text="#{label.collectionPhase.phaseType}"></span>
+										<span class="m--font-danger">*</span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{collectionPhase.phaseType}">
+											<option value="0" th:text="#{label.select}"></option>
+											<option th:each="type : ${types}" th:value="${{type}}" th:text="${type.name}"></option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.loans}">
+										Loans <span class="m--font-danger">*</span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<select class="form-control m-select2" id="m_select2_3" name="param" multiple="multiple" th:field="*{loans}">
+											<option th:each="loan : ${tLoans}"
+													th:value="${{loan}}"
+													th:text="${loan.regNumber}">
+											</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="m-portlet__foot m-portlet__foot--fit">
+							<div class="m-form__actions m-form__actions">
+								<div class="row">
+									<div class="col-lg-4"></div>
+									<div class="col-lg-6">
+										<button type="submit" class="btn btn-primary" th:text="#{label.initialize.collectionphase.save}">
+											Save
+										</button>
+										<button onclick="window.history.back()" type="button" class="btn btn-secondary" th:text="#{label.add.debtor.cancel}">
+											Cancel
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-				</div>
+					<!--end::Portlet-->
+				</form>
+				<!--end::Form-->
 			</div>
-			<!-- END CONTENT BODY -->
 		</div>
-		<!-- END CONTENT -->
-		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
 	</div>
-	<!-- END CONTAINER -->
-	<div th:replace="layout :: footer" />
-	<div th:replace="fragments/footer :: footer-js" />
-	<!--<script th:src="@{/assets/pages/scripts/form-validation.min.js}" type="text/javascript"></script>-->
-	<script th:src="@{/assets/global/plugins/moment.min.js}" type="text/javascript"></script>
-	<script th:src="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js}" type="text/javascript"></script>
-    <script th:src="@{/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"></script>
-    <script th:src="@{/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}" type="text/javascript"></script>
-    <script th:src="@{/assets/pages/scripts/components-date-time-pickers.min.js}" type="text/javascript"></script>
+	<!-- end:: Body -->
+	<!-- begin::Footer -->
+	<div th:replace="layout/footer"/>
+	<!-- end::Footer -->
+</div>
+<!-- end:: Page -->
+
+<div th:replace="fragments/footer :: footer-js"/>
+
+<!--begin::Page Resources -->
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/select2.js}" type="text/javascript"></script>
+<!--end::Page Resources -->
+
 </body>
+<!-- end::Body -->
 </html>
