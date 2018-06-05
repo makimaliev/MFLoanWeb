@@ -223,15 +223,15 @@ public class LoanController {
 		
 		if(loan.getId() == 0)
 		{
-		    if(loan.getParentLoan().getRegNumber() != null)
+		    if(loan.getParentLoan().getId() > 0)
             {
-                Loan tLoan = loanRepository.findByRegNumber(loan.getParentLoan().getRegNumber());
+                Loan tLoan = loanRepository.findOne(loan.getParentLoan().getId());
                 loan.setParentLoan(tLoan);
             }
             else
                 loan.setParentLoan(null);
 
-            CreditOrder creditOrder = creditOrderRepository.findByRegNumber(loan.getCreditOrder().getRegNumber());
+            CreditOrder creditOrder = creditOrderRepository.findOne(loan.getCreditOrder().getId());
             loan.setCreditOrder(creditOrder);
 
             Staff staff = staffRepository.findById(loan.getSupervisorId());

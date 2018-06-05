@@ -19,11 +19,6 @@ public class RestCreditOrderController {
     @Autowired
     CreditOrderRepository creditOrderRepository;
 
-    @GetMapping("/orders")
-    public Page<CreditOrder> getAllOrders(Pageable pageable) {
-        return creditOrderRepository.findAll(pageable);
-    }
-
     @GetMapping("/orders/search")
     public String[] getOrdersByRegNumber(@RequestParam(value = "q") String q) {
         List<CreditOrder> orders = creditOrderRepository.findByRegNumberContains(q);
@@ -31,7 +26,7 @@ public class RestCreditOrderController {
         int i = 0;
         for (CreditOrder order:orders
                 ) {
-            sOrders[i++] = order.getRegNumber();
+            sOrders[i++] = "[" + order.getId() + "] "+ order.getRegNumber();
         }
 
         return sOrders;

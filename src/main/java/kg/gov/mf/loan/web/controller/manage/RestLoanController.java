@@ -37,7 +37,7 @@ public class RestLoanController {
         int i = 0;
         for (Loan loan:loans
              ) {
-            sLoans[i++] = loan.getRegNumber();
+            sLoans[i++] = "[" + loan.getId() + "] " + loan.getRegNumber();
         }
 
         return sLoans;

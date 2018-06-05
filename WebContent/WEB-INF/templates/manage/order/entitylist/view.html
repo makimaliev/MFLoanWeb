@@ -123,16 +123,16 @@
 										<table class="table">
 											<thead class="thead-default">
 											<tr>
-												<th class="table-id">Id</th>
-												<th th:text="#{label.entity.name}"></th>
+												<th class="table-id">#</th>
+												<th th:text="#{label.entity.owner}"></th>
 												<th th:text="#{label.entity.state}"></th>
 												<th>&nbsp;</th>
 											</tr>
 											</thead>
 											<tbody>
-											<tr th:each="e : ${entities}">
-												<td class="table-id" th:text="${e.id}"></td>
-												<td th:text="${e.name}"></td>
+											<tr th:each="e, iterator : ${entities}">
+												<td class="table-id" th:text="${iterator.index+1}"></td>
+												<td th:text="${e.owner.name}"></td>
 												<td th:text="${e.appliedEntityState.name}"></td>
 												<td class="table-actions text-right">
 													<span>

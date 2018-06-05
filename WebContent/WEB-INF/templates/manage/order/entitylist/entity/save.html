@@ -32,20 +32,22 @@
 						</div>
 					</div>
 					<!--begin::Form-->
-					<form th:action="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/save}" method="post" class="m-form m-form--fit m-form--label-align-right">
+					<form th:action="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/save}" th:object="${entity}" method="post" class="m-form m-form--fit m-form--label-align-right">
 
-						<input hidden="true" type="text" id="id" name="id" th:value="${entity.id}"/>
+						<input hidden="true" type="text" id="id" name="id" th:field="*{id}"/>
+						<input hidden="true" type="text" id="ownerId" name="owner.id" th:field="*{owner.id}" />
 
 						<div class="m-portlet__body">
 							<div class="m-form__section">
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.entity.number}"></span>
-										<span class="m--font-danger">*</span>
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.add.entity.owner}">
+										Owner <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="name" th:value="${entity.name}">
+										<div class="m-typeahead">
+											<input class="form-control m-input" id="owner_typeahead" type="text" placeholder="Owners">
+										</div>
 									</div>
 								</div>
 
@@ -69,7 +71,7 @@
 								<div class="row">
 									<div class="col-lg-4"></div>
 									<div class="col-lg-6">
-										<button type="submit" class="btn btn-primary">
+										<button type="submit" onclick="updateTOwner()" class="btn btn-primary">
 											<span th:text="#{label.form.save}"></span>
 										</button>
 										<button onclick="window.history.back()" type="button" class="btn btn-secondary">
@@ -98,7 +100,17 @@
 <!--begin::Page Resources -->
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/typeahead.js}" type="text/javascript"></script>
 <!--end::Page Resources -->
+
+<script type="text/javascript">
+    function updateTOwner(sel)
+    {
+        var owner_text = document.getElementById("owner_typeahead").value;
+        var owner_id = owner_text.match(/[^[\]]+(?=])/g);
+        $("#ownerId").val(owner_id);
+    }
+</script>
 
 </body>
 <!-- end::Body -->

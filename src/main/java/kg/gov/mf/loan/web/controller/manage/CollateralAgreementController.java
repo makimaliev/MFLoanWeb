@@ -94,7 +94,7 @@ public class CollateralAgreementController {
     		ModelMap model)
     {
 		if(agreement.getId() == 0){
-			Owner owner = ownerRepository.findByName(agreement.getOwner().getName()).get(0);
+			Owner owner = ownerRepository.findOne(agreement.getOwner().getId());
 			agreement.setOwner(owner);
 			agreementService.add(agreement);
 		}

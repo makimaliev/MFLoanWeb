@@ -61,14 +61,6 @@
 											</div>
 										</div>
 									</div>
-									<div class="m-widget1__item">
-										<div class="row m-row--no-padding align-items-center">
-											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.loan.table.parentId}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${loan.parentLoan!=null} ? ${loan.parentLoan.id} : 'null'"></span>
-											</div>
-										</div>
-									</div>
 								</div>
 								<!--end:: Widgets/Stats2-1 -->
 							</div>
@@ -967,7 +959,7 @@
 												<table class="table">
 													<thead class="thead-default">
 													<tr>
-														<th class="table-id" th:text="#{label.loanDetailedSummary.id}">ID</th>
+														<th class="table-id">#</th>
 														<th th:text="#{label.loanDetailedSummary.onDate}">onDate</th>
 														<th th:text="#{label.loanDetailedSummary.disbursement}">disbursement</th>
 														<th th:text="#{label.loanDetailedSummary.totalDisbursement}">totalDisbursement</th>
@@ -1004,41 +996,41 @@
 													</tr>
 													</thead>
 													<tbody>
-													<tr th:each="dSummary : ${detailedSummaries}">
-														<td class="table-id" th:text="${dSummary.id}"></td>
+													<tr th:each="dSummary, iterator : ${detailedSummaries}">
+														<td class="table-id" th:text="${iterator.index+1}"></td>
 														<td th:text="${dSummary.onDate}"></td>
-														<td th:text="${dSummary.disbursement}"></td>
-														<td th:text="${dSummary.totalDisbursement}"></td>
-														<td th:text="${dSummary.principalPayment}"></td>
-														<td th:text="${dSummary.totalPrincipalPayment}"></td>
-														<td th:text="${dSummary.principalPaid}"></td>
-														<td th:text="${dSummary.totalPrincipalPaid}"></td>
-														<td th:text="${dSummary.principalWriteOff}"></td>
-														<td th:text="${dSummary.totalPrincipalWriteOff}"></td>
-														<td th:text="${dSummary.principalOutstanding}"></td>
-														<td th:text="${dSummary.principalOverdue}"></td>
-														<td th:text="${dSummary.daysInPeriod}"></td>
-														<td th:text="${dSummary.interestAccrued}"></td>
-														<td th:text="${dSummary.totalInterestAccrued}"></td>
-														<td th:text="${dSummary.totalInterestAccruedOnInterestPayment}"></td>
-														<td th:text="${dSummary.interestPayment}"></td>
-														<td th:text="${dSummary.totalInterestPayment}"></td>
-														<td th:text="${dSummary.collectedInterestPayment}"></td>
-														<td th:text="${dSummary.totalCollectedInterestPayment}"></td>
-														<td th:text="${dSummary.collectedInterestDisbursed}"></td>
-														<td th:text="${dSummary.interestPaid}"></td>
-														<td th:text="${dSummary.totalInterestPaid}"></td>
-														<td th:text="${dSummary.interestOutstanding}"></td>
-														<td th:text="${dSummary.interestOverdue}"></td>
-														<td th:text="${dSummary.penaltyAccrued}"></td>
-														<td th:text="${dSummary.totalPenaltyAccrued}"></td>
-														<td th:text="${dSummary.collectedPenaltyPayment}"></td>
-														<td th:text="${dSummary.totalCollectedPenaltyPayment}"></td>
-														<td th:text="${dSummary.collectedPenaltyDisbursed}"></td>
-														<td th:text="${dSummary.penaltyPaid}"></td>
-														<td th:text="${dSummary.totalPenaltyPaid}"></td>
-														<td th:text="${dSummary.penaltyOutstanding}"></td>
-														<td th:text="${dSummary.penaltyOverdue}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.disbursement, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.totalDisbursement, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.principalPayment, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.totalPrincipalPayment, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.principalPaid, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.totalPrincipalPaid, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.principalWriteOff, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.totalPrincipalWriteOff, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.principalOutstanding, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.principalOverdue, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.daysInPeriod, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.interestAccrued, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.totalInterestAccrued, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.totalInterestAccruedOnInterestPayment, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.interestPayment, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.totalInterestPayment, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.collectedInterestPayment, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.totalCollectedInterestPayment, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.collectedInterestDisbursed, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.interestPaid, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.totalInterestPaid, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.interestOutstanding, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.interestOverdue, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.penaltyAccrued, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.totalPenaltyAccrued, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.collectedPenaltyPayment, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.totalCollectedPenaltyPayment, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.collectedPenaltyDisbursed, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.penaltyPaid, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.totalPenaltyPaid, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.penaltyOutstanding, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(dSummary.penaltyOverdue, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
 													</tr>
 													</tbody>
 												</table>
@@ -1057,7 +1049,7 @@
 												<table class="table">
 													<thead class="thead-default">
 													<tr>
-														<th class="table-id" th:text="#{label.loanSummary.id}">ID</th>
+														<th class="table-id">#</th>
 														<th th:text="#{label.loanSummary.onDate}">onDate</th>
 														<th th:text="#{label.loanSummary.loanAmount}">loanAmount</th>
 														<th th:text="#{label.loanSummary.totalDisbursed}">totalDisbursed</th>
@@ -1079,26 +1071,26 @@
 													</tr>
 													</thead>
 													<tbody>
-													<tr th:each="summary : ${summaries}">
-														<td class="table-id" th:text="${summary.id}"></td>
+													<tr th:each="summary, iterator : ${summaries}">
+														<td class="table-id" th:text="${iterator.index+1}"></td>
 														<td th:text="${summary.onDate}"></td>
-														<td th:text="${summary.loanAmount}"></td>
-														<td th:text="${summary.totalDisbursed}"></td>
-														<td th:text="${summary.totalPaid}"></td>
-														<td th:text="${summary.paidPrincipal}"></td>
-														<td th:text="${summary.paidInterest}"></td>
-														<td th:text="${summary.paidPenalty}"></td>
-														<td th:text="${summary.paidFee}"></td>
-														<td th:text="${summary.totalOutstanding}"></td>
-														<td th:text="${summary.outstadingPrincipal}"></td>
-														<td th:text="${summary.outstadingInterest}"></td>
-														<td th:text="${summary.outstadingPenalty}"></td>
-														<td th:text="${summary.outstadingFee}"></td>
-														<td th:text="${summary.totalOverdue}"></td>
-														<td th:text="${summary.overduePrincipal}"></td>
-														<td th:text="${summary.overdueInterest}"></td>
-														<td th:text="${summary.overduePenalty}"></td>
-														<td th:text="${summary.overdueFee}"></td>
+														<td th:text="${#numbers.formatDecimal(summary.loanAmount, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(summary.totalDisbursed, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(summary.totalPaid, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(summary.paidPrincipal, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(summary.paidInterest, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(summary.paidPenalty, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(summary.paidFee, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(summary.totalOutstanding, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(summary.outstadingPrincipal, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(summary.outstadingInterest, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(summary.outstadingPenalty, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(summary.outstadingFee, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(summary.totalOverdue, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(summary.overduePrincipal, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(summary.overdueInterest, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(summary.overduePenalty, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td th:text="${#numbers.formatDecimal(summary.overdueFee, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
 													</tr>
 													</tbody>
 												</table>
@@ -1117,7 +1109,7 @@
 												<table class="table">
 													<thead class="thead-default">
 													<tr>
-														<th class="table-id" th:text="#{label.accrue.id}">ID</th>
+														<th class="table-id">#</th>
 														<th th:text="#{label.accrue.fromDate}">fromDate</th>
 														<th th:text="#{label.accrue.toDate}">toDate</th>
 														<th th:text="#{label.accrue.daysInPeriod}">daysInPeriod</th>
@@ -1129,8 +1121,8 @@
 													</tr>
 													</thead>
 													<tbody>
-													<tr th:each="accrue : ${accrues}">
-														<td class="table-id" th:text="${accrue.id}"></td>
+													<tr th:each="accrue, iterator : ${accrues}">
+														<td class="table-id" th:text="${iterator.index+1}"></td>
 														<td th:text="${accrue.fromDate}"></td>
 														<td th:text="${accrue.toDate}"></td>
 														<td th:text="${accrue.daysInPeriod}"></td>

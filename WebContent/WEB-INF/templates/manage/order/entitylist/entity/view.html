@@ -27,7 +27,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="${entity.name}"></h3>
+								<h3 class="m-portlet__head-text" th:text="${entity.owner.name}"></h3>
 							</div>
 						</div>
 					</div>
@@ -53,8 +53,8 @@
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.entity.name}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${entity.name}"></span>
+												<h3 class="m-widget1__title" th:text="#{label.entity.owner}"></h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${entity.owner.name}"></span>
 											</div>
 										</div>
 									</div>

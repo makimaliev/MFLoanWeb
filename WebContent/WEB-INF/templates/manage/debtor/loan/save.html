@@ -34,8 +34,8 @@
 					<!--begin::Form-->
 					<form th:action="@{/manage/debtor/__${debtorId}__/loan/save}" th:object="${loan}" method="post" class="m-form m-form--fit m-form--label-align-right">
 						<input hidden="true" type="text" id="id" name="id" th:field="*{id}"/>
-						<input hidden="true" type="text" id="pLoanRegNumber" th:field="*{parentLoan.regNumber}" />
-						<input hidden="true" type="text" id="orderRegNumber" th:field="*{creditOrder.regNumber}" />
+						<input hidden="true" type="text" id="parentLoanId" th:field="*{parentLoan.id}" />
+						<input hidden="true" type="text" id="creditOrderId" th:field="*{creditOrder.id}" />
 						<input hidden="true" type="text" id="staffId" th:field="*{supervisorId}" />
 
 						<div class="m-portlet__body">
@@ -183,8 +183,14 @@
 <script type="text/javascript">
     function updateTLoan(sel)
     {
-        $("#pLoanRegNumber").val(document.getElementById("loan_typeahead").value);
-        $("#orderRegNumber").val(document.getElementById("order_typeahead").value);
+        var loan_text = document.getElementById("loan_typeahead").value;
+        var loan_id = loan_text.match(/[^[\]]+(?=])/g);
+        $("#parentLoanId").val(loan_id);
+
+        var order_text = document.getElementById("order_typeahead").value;
+        var order_id = order_text.match(/[^[\]]+(?=])/g);
+        $("#creditOrderId").val(order_id);
+
         var staff_text = document.getElementById("staff_typeahead").value;
         var staff_id = staff_text.match(/[^[\]]+(?=])/g);
         $("#staffId").val(staff_id);

@@ -2,6 +2,7 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
+import kg.gov.mf.loan.manage.model.debtor.OwnerType;
 import kg.gov.mf.loan.manage.model.debtor.QDebtor;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.repository.debtor.DebtorRepository;
@@ -52,7 +53,9 @@ public class RestDebtorController {
 		int i = 0;
 		for (Owner owner:owners
 				) {
-			sOwners[i++] = owner.getName();
+			sOwners[i++] = "[" + owner.getId() + "] "
+					+ owner.getName()
+					+ " (" + (owner.getOwnerType().equals(OwnerType.ORGANIZATION)? "Организация":"Физ. лицо") +")";
 		}
 
 		return sOwners;

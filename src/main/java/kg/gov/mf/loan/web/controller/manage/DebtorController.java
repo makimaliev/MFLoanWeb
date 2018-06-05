@@ -257,7 +257,7 @@ public class DebtorController {
 	public String saveDebtor(Debtor debtor)
 	{
 		if(debtor.getId() == 0){
-			Owner owner = ownerRepository.findByName(debtor.getOwner().getName()).get(0);
+			Owner owner = ownerRepository.findOne(debtor.getOwner().getId());
 			debtor.setOwner(owner);
 			debtorService.add(debtor);
 		}
