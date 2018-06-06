@@ -88,7 +88,7 @@ public class CollateralAgreementController {
 		return "/manage/debtor/collateralagreement/save";
 	}
 	
-	@RequestMapping(value = { "/manage/debtor/{debtorId}/collateralagreement/save"})
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/collateralagreement/save"}, method=RequestMethod.POST)
     public String saveCollateralAgreement(CollateralAgreement agreement, 
     		@PathVariable("debtorId")Long debtorId,
     		ModelMap model)

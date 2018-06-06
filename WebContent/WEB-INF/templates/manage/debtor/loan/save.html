@@ -185,6 +185,9 @@
     {
         var loan_text = document.getElementById("loan_typeahead").value;
         var loan_id = loan_text.match(/[^[\]]+(?=])/g);
+        if(loan_id == null){
+            loan_id = 0;
+		}
         $("#parentLoanId").val(loan_id);
 
         var order_text = document.getElementById("order_typeahead").value;
