@@ -7,6 +7,7 @@ import java.util.Set;
 
 import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
+import kg.gov.mf.loan.manage.service.orderdocumentpackage.OrderDocumentPackageService;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -74,6 +75,9 @@ public class AppliedEntityController {
 
 	@Autowired
 	OwnerRepository ownerRepository;
+
+	@Autowired
+	OrderDocumentPackageService odpService;
 
 	private static final int BUTTONS_TO_SHOW = 5;
 	private static final int INITIAL_PAGE = 0;
@@ -215,42 +219,25 @@ public class AppliedEntityController {
 	private void addPackagesAndDocuments(Long orderId, AppliedEntity entity) {
 		Set<OrderDocumentPackage> oDPs = orderService.getById(orderId).getOrderDocumentPackages();
 		for (OrderDocumentPackage odp : oDPs) {
+			OrderDocumentPackage tOdp = odpService.getById(odp.getId());
 			DocumentPackage dp = new DocumentPackage();
 			dp.setName(odp.getName());
-			dp.setCompletedDate(new Date(0));
-			dp.setApprovedDate(new Date(0));
-			dp.setCompletedRatio(0.0);
-			dp.setApprovedRatio(0.0);
-			dp.setRegisteredRatio(0.0);
-			dp.setDocumentPackageState(getDummyPackageState());
-			dp.setDocumentPackageType(getDummyPackageType());
 			dp.setOrderDocumentPackageId(odp.getId());
 			dp.setAppliedEntity(entity);
 			dpService.add(dp);
-			
-			Set<OrderDocument> docs = odp.getOrderDocuments();
+
+			Set<OrderDocument> docs = tOdp.getOrderDocuments();
 			for (OrderDocument od : docs) {
 				EntityDocument newDoc = new EntityDocument();
 				newDoc.setName(od.getName());
-				newDoc.setCompletedBy(0L);
-				newDoc.setCompletedDate(new Date(0));
-				newDoc.setCompletedDescription("");
-				newDoc.setApprovedBy(0L);
-				newDoc.setApprovedDate(new Date(0));
-				newDoc.setApprovedDescription("");
-				newDoc.setRegisteredNumber("123");
-				newDoc.setRegisteredDate(new Date(0));
-				newDoc.setRegisteredDescription("");
-				newDoc.setRegisteredBy(getDummyDocumentRB());
-				newDoc.setEntityDocumentState(getDummyDocumentState());
 				newDoc.setDocumentPackage(dp);
 				edService.add(newDoc);
 			}
 		}
 	}
 	
-	private DocumentPackageState getDummyPackageState() {
-		DocumentPackageState result = dpStateService.getByName("Dummy State");
+	private DocumentPackageState getPackageState() {
+		DocumentPackageState result = dpStateService.getById(1L);
 		if(result == null) {
 			result = new DocumentPackageState();
 			result.setVersion(1);
@@ -261,8 +248,8 @@ public class AppliedEntityController {
 		return result;
 	}
 	
-	private DocumentPackageType getDummyPackageType() {
-		DocumentPackageType result = dpTypeService.getByName("Dummy Type");
+	private DocumentPackageType getPackageType() {
+		DocumentPackageType result = dpTypeService.getById(1L);
 		if(result == null) {
 			result = new DocumentPackageType();
 			result.setVersion(1);
@@ -274,8 +261,8 @@ public class AppliedEntityController {
 	}
 	
 	
-	private EntityDocumentState getDummyDocumentState() {
-		EntityDocumentState result = edStateService.getByName("Dummy State");
+	private EntityDocumentState getDocumentState() {
+		EntityDocumentState result = edStateService.getById(1L);
 		if(result == null) {
 			result = new EntityDocumentState();
 			result.setVersion(1);
@@ -286,8 +273,8 @@ public class AppliedEntityController {
 		return result;
 	}
 	
-	private EntityDocumentRegisteredBy getDummyDocumentRB() {
-		EntityDocumentRegisteredBy result = edRBService.getByName("Dummy RB");
+	private EntityDocumentRegisteredBy getDocumentRB() {
+		EntityDocumentRegisteredBy result = edRBService.getById(1L);
 		if(result == null) {
 			result = new EntityDocumentRegisteredBy();
 			result.setVersion(1);

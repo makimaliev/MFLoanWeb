@@ -132,7 +132,7 @@
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
 												<h3 class="m-widget1__title" th:text="#{label.entityDocument.registeredBy}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${ed.registeredBy.name}"></span>
+												<span class="m-widget1__desc m--font-brand" th:text="${ed.registeredBy?.name}"></span>
 											</div>
 										</div>
 									</div>
@@ -148,7 +148,7 @@
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
 												<h3 class="m-widget1__title" th:text="#{label.entityDocument.state}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${ed.entityDocumentState.name}"></span>
+												<span class="m-widget1__desc m--font-brand" th:text="${ed.entityDocumentState?.name}"></span>
 											</div>
 										</div>
 									</div>

@@ -126,8 +126,8 @@
 												<td th:text="${dp.completedRatio}"></td>
 												<td th:text="${dp.approvedRatio}"></td>
 												<td th:text="${dp.registeredRatio}"></td>
-												<td th:text="${dp.documentPackageState.name}"></td>
-												<td th:text="${dp.documentPackageType.name}"></td>
+												<td th:text="${dp.documentPackageState?.name}"></td>
+												<td th:text="${dp.documentPackageType?.name}"></td>
 												<td class="table-actions text-right">
 													<span>
 														<div class="dropdown">

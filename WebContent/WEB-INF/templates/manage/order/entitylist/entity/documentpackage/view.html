@@ -108,7 +108,7 @@
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
 												<h3 class="m-widget1__title" th:text="#{label.documentPackage.state}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${dp.documentPackageState.name}"></span>
+												<span class="m-widget1__desc m--font-brand" th:text="${dp.documentPackageState?.name}"></span>
 											</div>
 										</div>
 									</div>
@@ -116,7 +116,7 @@
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
 												<h3 class="m-widget1__title" th:text="#{label.documentPackage.type}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${dp.documentPackageType.name}"></span>
+												<span class="m-widget1__desc m--font-brand" th:text="${dp.documentPackageType?.name}"></span>
 											</div>
 										</div>
 									</div>
