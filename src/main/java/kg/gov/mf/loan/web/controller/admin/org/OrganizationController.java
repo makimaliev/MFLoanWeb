@@ -1,23 +1,24 @@
 package kg.gov.mf.loan.web.controller.admin.org;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
+import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.model.debtor.OwnerType;
+import kg.gov.mf.loan.manage.model.debtor.QDebtor;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
+import kg.gov.mf.loan.web.util.Pager;
+import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-
-
-
-
-
+import org.springframework.web.bind.annotation.*;
 
 
 import kg.gov.mf.loan.admin.org.model.*;
@@ -25,6 +26,9 @@ import kg.gov.mf.loan.admin.org.service.*;
 
 import kg.gov.mf.loan.admin.sys.model.*;
 import kg.gov.mf.loan.admin.sys.service.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class OrganizationController {
@@ -131,6 +135,13 @@ public class OrganizationController {
     
 	@Autowired
     private InformationService informationService;
+
+
+
+	private static final int BUTTONS_TO_SHOW = 5;
+	private static final int INITIAL_PAGE = 0;
+	private static final int INITIAL_PAGE_SIZE = 10;
+	private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
 	
     public void setInformationService(InformationService rs)
     {
@@ -274,7 +285,9 @@ public class OrganizationController {
 //			organization.setIdentityDoc(this.identityDocService.findById(organization.getIdentityDoc().getId()));
 			
 			//organization.setOrgForm(this.orgFormService.findById(organization.getOrgForm().getId()));
-			
+
+			organization.setName(organization.getIdentityDoc().getIdentityDocDetails().getFullname());
+
 			this.organizationService.create(organization);
 
 			Owner newOwner = new Owner();
@@ -303,9 +316,5 @@ public class OrganizationController {
 
 		return "redirect:/organization/list";
 	}
-
-     
-
-     
 
 }

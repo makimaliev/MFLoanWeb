@@ -23,13 +23,28 @@
 		<input hidden="true" type="text" id="identityDocTypeId" name="identityDoc.identityDocType.id" th:field="*{identityDoc.identityDocType.id}" />
 		<input hidden="true" type="text" id="identityDocGivenById" name="identityDoc.identityDocGivenBy.id" th:field="*{identityDoc.identityDocGivenBy.id}" />
 
+		<input hidden="true" type="text" class="form-control" name="name" th:field="*{name}"/>
+
+
+		<!--<div class="form-group m-form__group row">-->
+			<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+				<!--<span th:text="#{label.org.name}"></span>-->
+				<!--<span class="m&#45;&#45;font-danger">*</span>-->
+			<!--</label>-->
+			<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+				<!--<input type="text" class="form-control" name="name" th:field="*{name}"/>-->
+			<!--</div>-->
+		<!--</div>-->
+
+
 		<div class="form-group m-form__group row">
 			<label class="col-form-label col-lg-4 col-sm-12">
-				<span th:text="#{label.org.name}"></span>
+				<span th:text="#{label.identityDoc.fullname}"></span>
 				<span class="m--font-danger">*</span>
 			</label>
 			<div class="col-lg-8 col-md-9 col-sm-12">
-				<input type="text" class="form-control" name="name" th:field="*{name}"/>
+				<input type="text" class="form-control" name="identityDocDetails.fullname"
+					   th:field="${organization.identityDoc.identityDocDetails.fullname}"/>
 			</div>
 		</div>
 
@@ -60,19 +75,198 @@
 
 		<div class="m-portlet__body">
 			<ul class="nav nav-tabs nav-fill" role="tablist">
+
 				<li class="nav-item">
-					<a class="nav-link active" data-toggle="tab" href="#addressData" th:text="#{label.addressData}"></a>
+					<a class="nav-link active" data-toggle="tab" href="#identityDocData" th:text="#{label.identityDocData}"></a>
 				</li>
+
 				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab" href="#identityDocData" th:text="#{label.identityDocData}"></a>
+					<a class="nav-link " data-toggle="tab" href="#addressData" th:text="#{label.addressData}"></a>
 				</li>
+
+
+
 				<li class="nav-item">
 					<a class="nav-link" data-toggle="tab" href="#contacts" th:text="#{label.contacts}"></a>
 				</li>
+
 			</ul>
 
 			<div class="tab-content">
-				<div class="tab-pane active" id="addressData" role="tabpanel">
+
+
+				<div class="tab-pane active" id="identityDocData" role="tabpanel">
+					<div class="form-body">
+
+						<div class="form-group m-form__group row">
+							<label class="col-form-label col-lg-4 col-sm-12">
+								<span th:text="#{label.identityDoc.type}"></span>
+								<span class="m--font-danger">*</span>
+							</label>
+							<div class="col-lg-8 col-md-9 col-sm-12">
+								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.identityDoc.identityDocType}"  onchange="updateIdentityDocTypeId(this);" th:title="#{label.select}">
+									<option
+											th:each="identityDocTypeInList : ${identityDocTypeList}"
+											th:value="${identityDocTypeInList.id}"
+											th:selected="(${identityDocTypeInList.id} == *{identityDoc.identityDocType.id})"
+											th:text="${identityDocTypeInList.name}"></option>
+								</select>
+							</div>
+						</div>
+
+
+						<div class="form-group m-form__group row">
+							<label class="col-form-label col-lg-4 col-sm-12">
+								<span th:text="#{label.identityDoc.givenBy}"></span>
+								<span class="m--font-danger">*</span>
+							</label>
+							<div class="col-lg-8 col-md-9 col-sm-12">
+								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.identityDoc.identityDocGivenBy}" onchange="updateIdentityDocGivenById(this);" th:title="#{label.select}">
+									<option
+											th:each="identityDocGivenByInList : ${identityDocGivenByList}"
+											th:value="${identityDocGivenByInList.id}"
+											th:selected="(${identityDocGivenByInList.id} == *{identityDoc.identityDocGivenBy.id})"
+											th:text="${identityDocGivenByInList.name}"></option>
+								</select>
+							</div>
+						</div>
+
+
+						<div class="form-group m-form__group row">
+							<label class="col-form-label col-lg-4 col-sm-12">
+								<span th:text="#{label.identityDoc.number}"></span>
+								<span class="m--font-danger">*</span>
+							</label>
+							<div class="col-lg-8 col-md-9 col-sm-12">
+								<input type="text" class="form-control" name="number" th:field="${organization.identityDoc.number}"/>
+							</div>
+						</div>
+
+
+
+						<div class="form-group m-form__group row">
+							<label class="col-form-label col-lg-4 col-sm-12">
+								<span th:text="#{label.identityDoc.date}"></span>
+								<span class="m--font-danger">*</span>
+							</label>
+							<div class="col-lg-8 col-md-9 col-sm-12">
+								<div class="input-group date m_datetimepicker_6">
+									<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:value="${organization.identityDoc.date}"/>
+									<span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
+								</div>
+							</div>
+						</div>
+
+
+						<div class="form-group m-form__group row">
+							<label class="col-form-label col-lg-4 col-sm-12">
+								<span th:text="#{label.identityDoc.pin}"></span>
+								<span class="m--font-danger">*</span>
+							</label>
+							<div class="col-lg-8 col-md-9 col-sm-12">
+								<input type="text" class="form-control" name="pin" th:field="${organization.identityDoc.pin}"/>
+							</div>
+						</div>
+
+
+
+
+
+						<input hidden="true" type="text" class="form-control" name="identityDoc.name" th:field="${organization.identityDoc.name}"/>
+						<input hidden="true" type="text" class="form-control" name="enabled" th:field="${organization.identityDoc.enabled}"/>
+
+						<input hidden="true" type="text" class="form-control" name="identityDocDetails.firstname"
+						th:field="${organization.identityDoc.identityDocDetails.firstname}"/>
+
+						<input hidden="true" type="text" class="form-control" name="identityDocDetails.lastname"
+						th:field="${organization.identityDoc.identityDocDetails.lastname}"/>
+
+						<input hidden="true" type="text" class="form-control" name="identityDocDetails.midname"
+						th:field="${organization.identityDoc.identityDocDetails.midname}"/>
+
+
+
+						<!--<div class="form-group m-form__group row">-->
+							<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+								<!--<span th:text="#{label.identityDoc.name}"></span>-->
+								<!--<span class="m&#45;&#45;font-danger">*</span>-->
+							<!--</label>-->
+							<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+								<!--<input type="text" class="form-control" name="identityDoc.name" th:field="${organization.identityDoc.name}"/>-->
+							<!--</div>-->
+						<!--</div>-->
+
+
+						<!--<div class="form-group m-form__group row">-->
+							<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+								<!--<span th:text="#{label.identityDoc.enabled}"></span>-->
+								<!--<span class="m&#45;&#45;font-danger">*</span>-->
+							<!--</label>-->
+							<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+								<!--<input type="text" class="form-control" name="enabled" th:field="${organization.identityDoc.enabled}"/>-->
+							<!--</div>-->
+						<!--</div>-->
+
+
+
+
+
+
+
+						<!--<div class="form-group m-form__group row" >-->
+							<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+								<!--<span th:text="#{label.identityDoc.firstname}"></span>-->
+								<!--<span class="m&#45;&#45;font-danger">*</span>-->
+							<!--</label>-->
+							<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+								<!--<input type="text" class="form-control" name="identityDocDetails.firstname"-->
+									   <!--th:field="${organization.identityDoc.identityDocDetails.firstname}"/>-->
+							<!--</div>-->
+						<!--</div>-->
+
+
+						<!--<div class="form-group m-form__group row">-->
+							<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+								<!--<span th:text="#{label.identityDoc.lastname}"></span>-->
+								<!--<span class="m&#45;&#45;font-danger">*</span>-->
+							<!--</label>-->
+							<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+								<!--<input type="text" class="form-control" name="identityDocDetails.lastname"-->
+									   <!--th:field="${organization.identityDoc.identityDocDetails.lastname}"/>-->
+							<!--</div>-->
+						<!--</div>-->
+
+
+						<!--<div class="form-group m-form__group row">-->
+							<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+								<!--<span th:text="#{label.identityDoc.midname}"></span>-->
+								<!--<span class="m&#45;&#45;font-danger">*</span>-->
+							<!--</label>-->
+							<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+								<!--<input type="text" class="form-control" name="identityDocDetails.midname"-->
+									   <!--th:field="${organization.identityDoc.identityDocDetails.midname}"/>-->
+							<!--</div>-->
+						<!--</div>-->
+
+
+						<!--<div class="form-group m-form__group row">-->
+							<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+								<!--<span th:text="#{label.identityDoc.fullname}"></span>-->
+								<!--<span class="m&#45;&#45;font-danger">*</span>-->
+							<!--</label>-->
+							<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+								<!--<input type="text" class="form-control" name="identityDocDetails.fullname"-->
+									   <!--th:field="${organization.identityDoc.identityDocDetails.fullname}"/>-->
+							<!--</div>-->
+						<!--</div>-->
+
+
+					</div>
+				</div>
+
+				<div class="tab-pane " id="addressData" role="tabpanel">
 					<div class="form-body">
 						<div class="form-group m-form__group row">
 							<label class="col-form-label col-lg-4 col-sm-12">
@@ -117,7 +311,6 @@
 						<div class="form-group m-form__group row">
 							<label class="col-form-label col-lg-4 col-sm-12">
 								<span th:text="#{label.org.aokmotu}"></span>
-								<span class="m--font-danger">*</span>
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
 								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.aokmotu}" onchange="updateAokmotuId(this);" th:title="#{label.select}">
@@ -131,7 +324,6 @@
 						<div class="form-group m-form__group row">
 							<label class="col-form-label col-lg-4 col-sm-12">
 								<span th:text="#{label.org.village}"></span>
-								<span class="m--font-danger">*</span>
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
 								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.village}" onchange="updateVillageId(this);" th:title="#{label.select}">
@@ -144,130 +336,9 @@
 						</div>
 					</div>
 				</div>
-				<div class="tab-pane" id="identityDocData" role="tabpanel">
-					<div class="form-body">
-						<div class="form-group m-form__group row">
-							<label class="col-form-label col-lg-4 col-sm-12">
-								<span th:text="#{label.identityDoc.name}"></span>
-								<span class="m--font-danger">*</span>
-							</label>
-							<div class="col-lg-8 col-md-9 col-sm-12">
-								<input type="text" class="form-control" name="identityDoc.name" th:field="${organization.identityDoc.name}"/>
-							</div>
-						</div>
-						<div class="form-group m-form__group row">
-							<label class="col-form-label col-lg-4 col-sm-12">
-								<span th:text="#{label.identityDoc.enabled}"></span>
-								<span class="m--font-danger">*</span>
-							</label>
-							<div class="col-lg-8 col-md-9 col-sm-12">
-								<input type="text" class="form-control" name="enabled" th:field="${organization.identityDoc.enabled}"/>
-							</div>
-						</div>
-						<div class="form-group m-form__group row">
-							<label class="col-form-label col-lg-4 col-sm-12">
-								<span th:text="#{label.identityDoc.number}"></span>
-								<span class="m--font-danger">*</span>
-							</label>
-							<div class="col-lg-8 col-md-9 col-sm-12">
-								<input type="text" class="form-control" name="number" th:field="${organization.identityDoc.number}"/>
-							</div>
-						</div>
-						<div class="form-group m-form__group row">
-							<label class="col-form-label col-lg-4 col-sm-12">
-								<span th:text="#{label.identityDoc.pin}"></span>
-								<span class="m--font-danger">*</span>
-							</label>
-							<div class="col-lg-8 col-md-9 col-sm-12">
-								<input type="text" class="form-control" name="pin" th:field="${organization.identityDoc.pin}"/>
-							</div>
-						</div>
-						<div class="form-group m-form__group row">
-							<label class="col-form-label col-lg-4 col-sm-12">
-								<span th:text="#{label.identityDoc.type}"></span>
-								<span class="m--font-danger">*</span>
-							</label>
-							<div class="col-lg-8 col-md-9 col-sm-12">
-								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.identityDoc.identityDocType}"  onchange="updateIdentityDocTypeId(this);" th:title="#{label.select}">
-									<option
-											th:each="identityDocTypeInList : ${identityDocTypeList}"
-											th:value="${identityDocTypeInList.id}"
-											th:selected="(${identityDocTypeInList.id} == *{identityDoc.identityDocType.id})"
-											th:text="${identityDocTypeInList.name}"></option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group m-form__group row">
-							<label class="col-form-label col-lg-4 col-sm-12">
-								<span th:text="#{label.identityDoc.givenBy}"></span>
-								<span class="m--font-danger">*</span>
-							</label>
-							<div class="col-lg-8 col-md-9 col-sm-12">
-								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.identityDoc.identityDocGivenBy}" onchange="updateIdentityDocGivenById(this);" th:title="#{label.select}">
-									<option
-											th:each="identityDocGivenByInList : ${identityDocGivenByList}"
-											th:value="${identityDocGivenByInList.id}"
-											th:selected="(${identityDocGivenByInList.id} == *{identityDoc.identityDocGivenBy.id})"
-											th:text="${identityDocGivenByInList.name}"></option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group m-form__group row">
-							<label class="col-form-label col-lg-4 col-sm-12">
-								<span th:text="#{label.identityDoc.date}"></span>
-								<span class="m--font-danger">*</span>
-							</label>
-							<div class="col-lg-8 col-md-9 col-sm-12">
-								<div class="input-group date m_datetimepicker_6">
-									<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:value="${organization.identityDoc.date}"/>
-									<span class="input-group-addon">
-													<i class="la la-calendar glyphicon-th"></i>
-												</span>
-								</div>
-							</div>
-						</div>
-						<div class="form-group m-form__group row">
-							<label class="col-form-label col-lg-4 col-sm-12">
-								<span th:text="#{label.identityDoc.firstname}"></span>
-								<span class="m--font-danger">*</span>
-							</label>
-							<div class="col-lg-8 col-md-9 col-sm-12">
-								<input type="text" class="form-control" name="identityDocDetails.firstname"
-									   th:field="${organization.identityDoc.identityDocDetails.firstname}"/>
-							</div>
-						</div>
-						<div class="form-group m-form__group row">
-							<label class="col-form-label col-lg-4 col-sm-12">
-								<span th:text="#{label.identityDoc.lastname}"></span>
-								<span class="m--font-danger">*</span>
-							</label>
-							<div class="col-lg-8 col-md-9 col-sm-12">
-								<input type="text" class="form-control" name="identityDocDetails.lastname"
-									   th:field="${organization.identityDoc.identityDocDetails.lastname}"/>
-							</div>
-						</div>
-						<div class="form-group m-form__group row">
-							<label class="col-form-label col-lg-4 col-sm-12">
-								<span th:text="#{label.identityDoc.midname}"></span>
-								<span class="m--font-danger">*</span>
-							</label>
-							<div class="col-lg-8 col-md-9 col-sm-12">
-								<input type="text" class="form-control" name="identityDocDetails.midname"
-									   th:field="${organization.identityDoc.identityDocDetails.midname}"/>
-							</div>
-						</div>
-						<div class="form-group m-form__group row">
-							<label class="col-form-label col-lg-4 col-sm-12">
-								<span th:text="#{label.identityDoc.fullname}"></span>
-								<span class="m--font-danger">*</span>
-							</label>
-							<div class="col-lg-8 col-md-9 col-sm-12">
-								<input type="text" class="form-control" name="identityDocDetails.fullname"
-									   th:field="${organization.identityDoc.identityDocDetails.fullname}"/>
-							</div>
-						</div>
-					</div>
-				</div>
+
+
+
 				<div class="tab-pane" id="contacts" role="tabpanel">
 					<div class="form-body">
 						<input hidden="true" type="text" id="contactID" name="contact.id" th:field="${organization.contact.id}" />
@@ -304,4 +375,6 @@
         forceParse: 0,
         pickerPosition: 'bottom-left'
     });
+
+
 </script>

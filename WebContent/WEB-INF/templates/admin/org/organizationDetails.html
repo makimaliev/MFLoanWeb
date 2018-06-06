@@ -1,397 +1,413 @@
+
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	  xmlns:th="http://www.thymeleaf.org">
+<html lang="en" >
+<!-- begin::Head -->
 <head>
-	<title></title>
+	<title th:text="#{label.orgForm.page.title}"></title>
 
-	<div th:replace="fragments/header :: header-css"></div>
-
-	<link
-			th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}"
-			rel="stylesheet" type="text/css" />
-	<link
-			th:href="@{/assets/global/plugins/datatables/datatables.min.css}"
-			rel="stylesheet" type="text/css" />
-	<link
-			th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}"
-			rel="stylesheet" type="text/css" />
-
+	<div th:replace="fragments/header :: header-css"/>
 </head>
+<!-- end::Head -->
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+	<!-- BEGIN: Header -->
+	<div th:replace="layout/header"/>
+	<!-- END: Header -->
 
-<body
-		class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
+	<!-- begin::Body -->
+	<div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+		<!-- BEGIN: Left Aside -->
+		<div th:replace="layout/sidebar"/>
+		<!-- END: Left Aside -->
+		<div class="m-grid__item m-grid__item--fluid m-wrapper">
+			<div class="m-content">
 
-<!-- BEGIN HEADER -->
-<div th:replace="layout :: header-top"></div>
-<!-- END HEADER -->
 
-<!-- BEGIN CONTAINER -->
-<div class="page-container">
 
-	<!-- BEGIN SIDEBAR -->
-	<div th:replace="layout :: page-container-sidebar"></div>
-	<!-- END SIDEBAR -->
+				<div class="m-portlet m-portlet--full-height">
+					<div class="m-portlet__head">
+						<div class="m-portlet__head-caption">
+							<div class="m-portlet__head-title">
+								<h3 class="m-portlet__head-text" th:text="${organization.name}"></h3>
+							</div>
+						</div>
+					</div>
+				</div>
 
-	<!-- BEGIN CONTENT -->
-	<div class="page-content-wrapper">
+				<div class="m-portlet m-portlet--full-height">
+					<div class="m-portlet__head">
+						<div class="m-portlet__head-caption">
+							<div class="row">
+								<div class="col-md-12">
+									<!-- BEGIN BORDERED TABLE PORTLET-->
+									<div class="portlet portlet-fit ">
+										<div class="portlet-body">
 
-		<!-- BEGIN CONTENT BODY -->
-		<div class="page-content">
+											<div class="col-md-12">
 
-			<div class="row">
-				<div class="col-md-12">
-					<!-- BEGIN BORDERED TABLE PORTLET-->
-					<div class="portlet portlet-fit ">
-						<div class="portlet-body">
+												<!-- Default bootstrap modal example -->
+												<div class="modal fade" id="organizationFormModal" tabindex="-1"
+													 role="dialog" aria-labelledby="myModalLabel"
+													 aria-hidden="true">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<div class="modal-header">
+																<button type="button" class="close" data-dismiss="modal"
+																		aria-label="Close">
+																	<span aria-hidden="true">&times;</span>
+																</button>
+																<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+															</div>
+															<div class="modal-body">...</div>
+															<div class="modal-footer">
+																<button type="button" class="btn btn-default"
+																		data-dismiss="modal">Close</button>
+																<button type="button" class="btn btn-primary">Save
+																	changes</button>
+															</div>
+														</div>
+													</div>
+												</div>
 
-							<div class="col-md-12">
-
-								<!-- Default bootstrap modal example -->
-								<div class="modal fade" id="organizationFormModal" tabindex="-1"
-									 role="dialog" aria-labelledby="myModalLabel"
-									 aria-hidden="true">
-									<div class="modal-dialog">
-										<div class="modal-content">
-											<div class="modal-header">
-												<button type="button" class="close" data-dismiss="modal"
-														aria-label="Close">
-													<span aria-hidden="true">&times;</span>
-												</button>
-												<h4 class="modal-title" id="myModalLabel">Modal title</h4>
 											</div>
-											<div class="modal-body">...</div>
-											<div class="modal-footer">
-												<button type="button" class="btn btn-default"
-														data-dismiss="modal">Close</button>
-												<button type="button" class="btn btn-primary">Save
-													changes</button>
+
+											<div class="row">
+												<div class="col-md-12">
+
+													<a data-remote="false" data-toggle="modal"
+													   data-target="#organizationFormModal" th:href="@{/bankData/add}"
+													   role="button" class="btn btn-large btn-primary"> Add
+														Bank Data</a>
+													<a data-remote="false" data-toggle="modal"
+													   data-target="#organizationFormModal" th:href="@{/department/add}"
+													   role="button" class="btn btn-large btn-primary"> Add
+														Department</a>
+													<a data-remote="false" data-toggle="modal"
+													   data-target="#organizationFormModal" th:href="@{/information/add}"
+													   role="button" class="btn btn-large btn-primary"> Add
+														Information</a>
+												</div>
 											</div>
 										</div>
 									</div>
+									<!-- END BORDERED TABLE PORTLET-->
 								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 
+				<div class="m-portlet m-portlet--full-height">
+					<div class="m-portlet m-portlet--mobile">
+						<div class="m-portlet__body">
+
+							<div class="row">
+								<div class="col-md-12">
+									<div class="tabbable-custom ">
+
+
+										<ul class="nav nav-tabs " role="tablist" id="organization_tabs">
+											<li class="active nav-item" ><a class="nav-link m--font-primary active" href="#tab_15_1" data-toggle="tab">
+												Адрес </a></li>
+											<li class="nav-item"><a class="nav-link m--font-primary" href="#tab_15_2" data-toggle="tab"> Идентификационные данные </a></li>
+											<li class="nav-item"><a class="nav-link m--font-primary" href="#tab_15_3" data-toggle="tab"> Контактные данные </a></li>
+											<li class="nav-item"><a class="nav-link m--font-primary" href="#tab_15_4" data-toggle="tab"> Банковские реквизиты </a></li>
+											<li class="nav-item"><a class="nav-link m--font-primary" href="#tab_15_5" data-toggle="tab"> Организационная структура </a></li>
+											<li class="nav-item"><a class="nav-link m--font-primary" href="#tab_15_6" data-toggle="tab"> Информация </a></li>
+										</ul>
+										<div class="tab-content">
+											<div class="tab-pane active" id="tab_15_1">
+
+
+												<div class="row">
+													<div class="col-md-12">
+
+														<table
+																class="table table-hover table-condensed table-striped table-bordered compact condensed">
+
+															<tbody>
+															<tr>
+																<td>Address line</td>
+																<td th:text="${organization.address.line}">Address
+																	line</td>
+															</tr>
+
+															<tr>
+																<td>Region</td>
+																<td th:text="${organization.address.region.name}">Address
+																	line</td>
+															</tr>
+
+															<tr>
+																<td>District</td>
+																<td th:text="${organization.address.district.name}">Address
+																	line</td>
+															</tr>
+															<tr>
+																<td>Aokmotu</td>
+																<td th:text="${organization.address.aokmotu.name}">Address
+																	line</td>
+															</tr>
+															<tr>
+																<td>Village</td>
+																<td th:text="${organization.address.village.name}">Address
+																	line</td>
+															</tr>
+
+															</tbody>
+														</table>
+
+													</div>
+												</div>
+
+											</div>
+											<div class="tab-pane" id="tab_15_2">
+												<table
+														class="table table-hover table-condensed table-striped table-bordered compact condensed">
+
+													<tbody>
+													<tr>
+														<td>Name</td>
+														<td th:text="${organization.identityDoc.name}">Name</td>
+													</tr>
+													<tr>
+														<td>Enabled</td>
+														<td th:text="${organization.identityDoc.enabled}">Enabled</td>
+													</tr>
+													<tr>
+														<td>number</td>
+														<td th:text="${organization.identityDoc.number}">number</td>
+													</tr>
+
+													<tr>
+														<td>pin</td>
+														<td th:text="${organization.identityDoc.pin}">pin</td>
+													</tr>
+
+													<tr>
+														<td>identityDocType</td>
+														<td th:text="${organization.identityDoc.identityDocType.name}">identityDocType</td>
+													</tr>
+
+													<tr>
+														<td>IdentityDocGivenBy</td>
+														<td th:text="${organization.identityDoc.identityDocGivenBy.name}">identityDocGivenBy</td>
+													</tr>
+
+													<tr>
+														<td>Date</td>
+														<td th:text="${organization.identityDoc.date}">date</td>
+													</tr>
+
+													<tr>
+														<td>Firstname</td>
+														<td th:text="${organization.identityDoc.identityDocDetails.firstname}">Firstnamename</td>
+													</tr>
+
+													<tr>
+														<td>Lastname</td>
+														<td th:text="${organization.identityDoc.identityDocDetails.Lastname}">Lastname</td>
+													</tr>
+
+													<tr>
+														<td>Midname</td>
+														<td th:text="${organization.identityDoc.identityDocDetails.midname}">Midname</td>
+													</tr>
+
+													<tr>
+														<td>Fullname</td>
+														<td th:text="${organization.identityDoc.identityDocDetails.fullname}">Fullname</td>
+													</tr>
+
+													</tbody>
+												</table>
+											</div>
+											<div class="tab-pane" id="tab_15_3">
+
+												<div class="row">
+													<div class="col-md-3">
+														<table
+																class="table table-hover table-condensed table-striped table-bordered compact condensed">
+
+															<tbody>
+															<tr th:each="contactInList : ${organization.contact}">
+																<td th:text="${contactInList.name}">Thymus Thymi</td>
+															</tr>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+											<div class="tab-pane" id="tab_15_4">
+
+												<div class="row">
+
+													<div class="col-md-3">
+														<table
+																class="table table-hover table-condensed table-striped table-bordered compact condensed">
+
+															<tbody>
+															<tr th:each="bankDataInList : ${organization.bankData}">
+																<td th:text="${bankDataInList.name}">Thymus Thymi</td>
+																<td th:text="${bankDataInList.description}">Thymus Thymi</td>
+																<td th:text="${bankDataInList.account_number}">Thymus
+																	Thymi</td>
+																<td th:text="${bankDataInList.bik}">Thymus Thymi</td>
+																<td><a data-remote="false" data-toggle="modal"
+																	   data-target="#organizationFormModal"
+																	   th:href="@{/bankData/__${bankDataInList.id}__/edit}" role="button"
+																	   class="btn btn-xs blue-stripe"> Edit </a></td>
+																<td>
+																	<form th:action="@{/bankData/__${bankDataInList.id}__/remove}"
+																		  method="post">
+																		<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+																	</form>
+																</td>
+															</tr>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+											<div class="tab-pane" id="tab_15_5">
+												<div class="row">
+													<div class="col-md-6">
+														<table
+																class="table table-hover table-condensed table-striped table-bordered compact condensed">
+
+															<tbody>
+															<tr th:each="departmentInList : ${organization.department}">
+																<td th:text="${departmentInList.name}">Thymus Thymi</td>
+																<td th:text="${departmentInList.description}">Thymus Thymi</td>
+																<td th:text="${departmentInList.enabled}">Thymus
+																	Thymi
+																</td>
+																<td><a data-remote="false" data-toggle="modal"
+																	   data-target="#organizationFormModal"
+																	   th:href="@{/department/__${departmentInList.id}__/edit}" role="button"
+																	   class="btn btn-xs blue-stripe"> Edit </a></td>
+																<td>
+																	<form th:action="@{/department/__${departmentInList.id}__/remove}"
+																		  method="post">
+																		<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+																	</form>
+																</td>
+																<td>
+																	<a data-remote="false" data-toggle="modal"
+																	   data-target="#organizationFormModal"
+																	   th:href="@{/department/__${departmentInList.id}__/position/add}" role="button"
+																	   class="btn btn-xs blue-stripe"> Add position </a>
+																</td>
+															</tr>
+															</tbody>
+														</table>
+													</div>
+													<div class="col-md-6">
+														<table
+																class="table table-hover table-condensed table-striped table-bordered compact condensed">
+
+															<tbody>
+															<tr th:each="positionInList : ${positionList}">
+																<td th:text="${positionInList.name}">Thymus Thymi</td>
+
+															</tr>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+											<div class="tab-pane " id="tab_15_6">
+												<table
+														class="table table-hover table-condensed table-striped table-bordered compact condensed"
+														id="informationTable">
+													<thead>
+													<tr>
+														<th>Id</th>
+														<th>Name</th>
+														<th>Description</th>
+														<th>isTitle</th>
+														<th>Number</th>
+														<th>Date</th>
+														<th>ObjectTypeId</th>
+														<th>ObjectId</th>
+														<th>View</th>
+														<th>Edit</th>
+														<th>Delete</th>
+													</tr>
+													</thead>
+													<tbody>
+													<tr th:each="s : ${informationList}">
+														<td th:text="${s.id}">Id</td>
+														<td th:text="${s.name}">Name</td>
+														<td th:text="${s.description}">Description</td>
+														<td th:text="${s.isTitle}">isTitle</td>
+														<td th:text="${s.number}">number</td>
+														<td th:text="${s.date}">Date</td>
+														<td th:text="${s.systemObjectTypeId}">ObjectTypeId</td>
+														<td th:text="${s.systemObjectId}">ObjectId</td>
+														<td><a th:href="@{/information/__${s.id}__/details}"
+															   role="button" class="btn btn-xs blue-stripe"> View </a></td>
+														<td><a data-remote="false" data-toggle="modal"
+															   data-target="#cSystemFormModal"
+															   th:href="@{/information/__${s.id}__/edit}" role="button"
+															   class="btn btn-xs blue-stripe"> Edit </a></td>
+														<td>
+															<form th:action="@{/information/__${s.id}__/remove}"
+																  method="post">
+																<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+															</form>
+														</td>
+													</tr>
+													</tbody>
+
+												</table>
+
+											</div>
+
+
+										</div>
+									</div>
+								</div>
 							</div>
 
 							<div class="row">
 								<div class="col-md-12">
 
-									<a data-remote="false" data-toggle="modal"
-									   data-target="#organizationFormModal" th:href="@{/bankData/add}"
-									   role="button" class="btn btn-large btn-primary"> Add
-										Bank Data</a>
-									<a data-remote="false" data-toggle="modal"
-									   data-target="#organizationFormModal" th:href="@{/department/add}"
-									   role="button" class="btn btn-large btn-primary"> Add
-										Department</a>
-									<a data-remote="false" data-toggle="modal"
-									   data-target="#organizationFormModal" th:href="@{/information/add}"
-									   role="button" class="btn btn-large btn-primary"> Add
-										Information</a>
+									<input hidden="true" type="text" id="organization_id" name="organization_id" />
+
+									<div id="content"></div>
+
 								</div>
 							</div>
-						</div>
-					</div>
-					<!-- END BORDERED TABLE PORTLET-->
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">
-					<div class="tabbable-custom ">
-						<ul class="nav nav-tabs " id="organization_tabs">
-							<li class="active"><a href="#tab_15_1" data-toggle="tab">
-								Адрес </a></li>
-							<li><a href="#tab_15_2" data-toggle="tab"> Идентификационные данные </a></li>
-							<li><a href="#tab_15_3" data-toggle="tab"> Контактные данные </a></li>
-							<li><a href="#tab_15_4" data-toggle="tab"> Банковские реквизиты </a></li>
-							<li><a href="#tab_15_5" data-toggle="tab"> Организационная структура </a></li>
-							<li><a href="#tab_15_6" data-toggle="tab"> Информация </a></li>
-						</ul>
-						<div class="tab-content">
-							<div class="tab-pane active" id="tab_15_1">
-
-
-								<div class="row">
-									<div class="col-md-12">
-
-										<table
-												class="table table-hover table-condensed table-striped table-bordered compact condensed">
-
-											<tbody>
-											<tr>
-												<td>Address line</td>
-												<td th:text="${organization.address.line}">Address
-													line</td>
-											</tr>
-
-											<tr>
-												<td>Region</td>
-												<td th:text="${organization.address.region.name}">Address
-													line</td>
-											</tr>
-
-											<tr>
-												<td>District</td>
-												<td th:text="${organization.address.district.name}">Address
-													line</td>
-											</tr>
-											<tr>
-												<td>Aokmotu</td>
-												<td th:text="${organization.address.aokmotu.name}">Address
-													line</td>
-											</tr>
-											<tr>
-												<td>Village</td>
-												<td th:text="${organization.address.village.name}">Address
-													line</td>
-											</tr>
-
-											</tbody>
-										</table>
-
-									</div>
-								</div>
-
-							</div>
-							<div class="tab-pane" id="tab_15_2">
-								<table
-										class="table table-hover table-condensed table-striped table-bordered compact condensed">
-
-									<tbody>
-									<tr>
-										<td>Name</td>
-										<td th:text="${organization.identityDoc.name}">Name</td>
-									</tr>
-									<tr>
-										<td>Enabled</td>
-										<td th:text="${organization.identityDoc.enabled}">Enabled</td>
-									</tr>
-									<tr>
-										<td>number</td>
-										<td th:text="${organization.identityDoc.number}">number</td>
-									</tr>
-
-									<tr>
-										<td>pin</td>
-										<td th:text="${organization.identityDoc.pin}">pin</td>
-									</tr>
-
-									<tr>
-										<td>identityDocType</td>
-										<td th:text="${organization.identityDoc.identityDocType.name}">identityDocType</td>
-									</tr>
-
-									<tr>
-										<td>IdentityDocGivenBy</td>
-										<td th:text="${organization.identityDoc.identityDocGivenBy.name}">identityDocGivenBy</td>
-									</tr>
-
-									<tr>
-										<td>Date</td>
-										<td th:text="${organization.identityDoc.date}">date</td>
-									</tr>
-
-									<tr>
-										<td>Firstname</td>
-										<td th:text="${organization.identityDoc.identityDocDetails.firstname}">Firstnamename</td>
-									</tr>
-
-									<tr>
-										<td>Lastname</td>
-										<td th:text="${organization.identityDoc.identityDocDetails.Lastname}">Lastname</td>
-									</tr>
-
-									<tr>
-										<td>Midname</td>
-										<td th:text="${organization.identityDoc.identityDocDetails.midname}">Midname</td>
-									</tr>
-
-									<tr>
-										<td>Fullname</td>
-										<td th:text="${organization.identityDoc.identityDocDetails.fullname}">Fullname</td>
-									</tr>
-
-									</tbody>
-								</table>
-							</div>
-							<div class="tab-pane" id="tab_15_3">
-
-								<div class="row">
-									<div class="col-md-3">
-										<table
-												class="table table-hover table-condensed table-striped table-bordered compact condensed">
-
-											<tbody>
-											<tr th:each="contactInList : ${organization.contact}">
-												<td th:text="${contactInList.name}">Thymus Thymi</td>
-											</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-							<div class="tab-pane" id="tab_15_4">
-
-								<div class="row">
-
-									<div class="col-md-3">
-										<table
-												class="table table-hover table-condensed table-striped table-bordered compact condensed">
-
-											<tbody>
-											<tr th:each="bankDataInList : ${organization.bankData}">
-												<td th:text="${bankDataInList.name}">Thymus Thymi</td>
-												<td th:text="${bankDataInList.description}">Thymus Thymi</td>
-												<td th:text="${bankDataInList.account_number}">Thymus
-													Thymi</td>
-												<td th:text="${bankDataInList.bik}">Thymus Thymi</td>
-												<td><a data-remote="false" data-toggle="modal"
-													   data-target="#organizationFormModal"
-													   th:href="@{/bankData/__${bankDataInList.id}__/edit}" role="button"
-													   class="btn btn-xs blue-stripe"> Edit </a></td>
-												<td>
-													<form th:action="@{/bankData/__${bankDataInList.id}__/remove}"
-														  method="post">
-														<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-													</form>
-												</td>
-											</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-							<div class="tab-pane" id="tab_15_5">
-								<div class="row">
-									<div class="col-md-6">
-										<table
-												class="table table-hover table-condensed table-striped table-bordered compact condensed">
-
-											<tbody>
-											<tr th:each="departmentInList : ${organization.department}">
-												<td th:text="${departmentInList.name}">Thymus Thymi</td>
-												<td th:text="${departmentInList.description}">Thymus Thymi</td>
-												<td th:text="${departmentInList.enabled}">Thymus
-													Thymi
-												</td>
-												<td><a data-remote="false" data-toggle="modal"
-													   data-target="#organizationFormModal"
-													   th:href="@{/department/__${departmentInList.id}__/edit}" role="button"
-													   class="btn btn-xs blue-stripe"> Edit </a></td>
-												<td>
-													<form th:action="@{/department/__${departmentInList.id}__/remove}"
-														  method="post">
-														<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-													</form>
-												</td>
-												<td>
-													<a data-remote="false" data-toggle="modal"
-													   data-target="#organizationFormModal"
-													   th:href="@{/department/__${departmentInList.id}__/position/add}" role="button"
-													   class="btn btn-xs blue-stripe"> Add position </a>
-												</td>
-											</tr>
-											</tbody>
-										</table>
-									</div>
-									<div class="col-md-6">
-										<table
-												class="table table-hover table-condensed table-striped table-bordered compact condensed">
-
-											<tbody>
-											<tr th:each="positionInList : ${positionList}">
-												<td th:text="${positionInList.name}">Thymus Thymi</td>
-
-											</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-							<div class="tab-pane " id="tab_15_6">
-								<table
-										class="table table-hover table-condensed table-striped table-bordered compact condensed"
-										id="informationTable">
-									<thead>
-									<tr>
-										<th>Id</th>
-										<th>Name</th>
-										<th>Description</th>
-										<th>isTitle</th>
-										<th>Number</th>
-										<th>Date</th>
-										<th>ObjectTypeId</th>
-										<th>ObjectId</th>
-										<th>View</th>
-										<th>Edit</th>
-										<th>Delete</th>
-									</tr>
-									</thead>
-									<tbody>
-									<tr th:each="s : ${informationList}">
-										<td th:text="${s.id}">Id</td>
-										<td th:text="${s.name}">Name</td>
-										<td th:text="${s.description}">Description</td>
-										<td th:text="${s.isTitle}">isTitle</td>
-										<td th:text="${s.number}">number</td>
-										<td th:text="${s.date}">Date</td>
-										<td th:text="${s.systemObjectTypeId}">ObjectTypeId</td>
-										<td th:text="${s.systemObjectId}">ObjectId</td>
-										<td><a th:href="@{/information/__${s.id}__/details}"
-											   role="button" class="btn btn-xs blue-stripe"> View </a></td>
-										<td><a data-remote="false" data-toggle="modal"
-											   data-target="#cSystemFormModal"
-											   th:href="@{/information/__${s.id}__/edit}" role="button"
-											   class="btn btn-xs blue-stripe"> Edit </a></td>
-										<td>
-											<form th:action="@{/information/__${s.id}__/remove}"
-												  method="post">
-												<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-											</form>
-										</td>
-									</tr>
-									</tbody>
-
-								</table>
-
-							</div>
-
 
 						</div>
 					</div>
 				</div>
+
+
 			</div>
-
-			<div class="row">
-				<div class="col-md-12">
-
-					<input hidden="true" type="text" id="organization_id" name="organization_id" />
-
-					<div id="content"></div>
-
-				</div>
-			</div>
-
-
 		</div>
-		<!-- END CONTENT BODY -->
 	</div>
-	<!-- END CONTENT -->
-	<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
+	<!-- end:: Body -->
+	<!-- begin::Footer -->
+	<div th:replace="layout/footer"/>
+	<!-- end::Footer -->
 </div>
-<!-- END CONTAINER -->
-<div th:replace="layout :: footer"></div>
-<div th:replace="fragments/footer :: footer-js"></div>
 
-<script th:src="@{/assets/global/plugins/datatables/datatables.js}"
-		type="text/javascript"></script>
+<div class="m-scroll-top m-scroll-top--skin-top" data-toggle="m-scroll-top" data-scroll-offset="500" data-scroll-speed="300">
+	<i class="la la-arrow-up"></i>
+</div>
+
+<div th:replace="fragments/footer :: footer-js"/>
+
+<script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
+
 <script
 		th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}"
 		type="text/javascript"></script>
 
-<!-- BEGIN PAGE LEVEL PLUGINS -->
-
-<!-- END PAGE LEVEL PLUGINS -->
-<!-- BEGIN PAGE LEVEL SCRIPTS -->
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -509,6 +525,9 @@
 
 </script>
 
-<!-- END PAGE LEVEL SCRIPTS -->
+
 </body>
+<!-- end::Body -->
 </html>
+
+

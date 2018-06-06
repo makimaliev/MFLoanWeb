@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en"
+
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+>
 <!-- begin::Head -->
 <head>
 	<title th:text="#{label.organizations}"></title>
@@ -57,34 +61,34 @@
 								   role="button"
 								   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
 								   th:text="#{label.add.organization}"></a>
-								<a data-remote="false"
-								   data-toggle="modal"
-								   data-target="#organizationFormModal"
-								   th:href="@{/bankData/add}"
-								   role="button"
-								   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
-								   th:text="#{label.add.bankData}"></a>
-								<a data-remote="false"
-								   data-toggle="modal"
-								   data-target="#organizationFormModal"
-								   th:href="@{/department/add}"
-								   role="button"
-								   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
-								   th:text="#{label.add.department}"></a>
-								<a data-remote="false"
-								   data-toggle="modal"
-								   data-target="#organizationFormModal"
-								   th:href="@{/information/add}"
-								   role="button"
-								   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
-								   th:text="#{label.add.information}"></a>
-								<a data-remote="false"
-								   data-toggle="modal"
-								   data-target="#organizationFormModal"
-								   th:href="@{/staff/add}"
-								   role="button"
-								   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
-								   th:text="#{label.add.staff}"></a>
+								<!--<a data-remote="false"-->
+								   <!--data-toggle="modal"-->
+								   <!--data-target="#organizationFormModal"-->
+								   <!--th:href="@{/bankData/add}"-->
+								   <!--role="button"-->
+								   <!--class="m-portlet__nav-link btn btn-success m-btn m-btn&#45;&#45;air"-->
+								   <!--th:text="#{label.add.bankData}"></a>-->
+								<!--<a data-remote="false"-->
+								   <!--data-toggle="modal"-->
+								   <!--data-target="#organizationFormModal"-->
+								   <!--th:href="@{/department/add}"-->
+								   <!--role="button"-->
+								   <!--class="m-portlet__nav-link btn btn-success m-btn m-btn&#45;&#45;air"-->
+								   <!--th:text="#{label.add.department}"></a>-->
+								<!--<a data-remote="false"-->
+								   <!--data-toggle="modal"-->
+								   <!--data-target="#organizationFormModal"-->
+								   <!--th:href="@{/information/add}"-->
+								   <!--role="button"-->
+								   <!--class="m-portlet__nav-link btn btn-success m-btn m-btn&#45;&#45;air"-->
+								   <!--th:text="#{label.add.information}"></a>-->
+								<!--<a data-remote="false"-->
+								   <!--data-toggle="modal"-->
+								   <!--data-target="#organizationFormModal"-->
+								   <!--th:href="@{/staff/add}"-->
+								   <!--role="button"-->
+								   <!--class="m-portlet__nav-link btn btn-success m-btn m-btn&#45;&#45;air"-->
+								   <!--th:text="#{label.add.staff}"></a>-->
 							</div>
 						</div>
 
