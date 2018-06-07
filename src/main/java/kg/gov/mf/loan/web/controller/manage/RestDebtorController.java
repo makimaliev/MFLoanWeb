@@ -171,9 +171,17 @@ public class RestDebtorController {
 		return debtorRepository.findOne(debtorId);
 	}
 
-	@GetMapping("/debtors/{debtorId}/loans")
-	public Page<Loan> getAllLoansByDebtorId(@PathVariable (value = "debtorId") Long debtorId, Pageable pageable) {
-		return loanRepository.findByDebtorId(debtorId, pageable);
+	@GetMapping("/getLoansByDebtor")
+	public String[] getAllLoansByDebtorId(@RequestParam ("debtorId") Long debtorId) {
+		List<Loan> loans = loanRepository.findByDebtorId(debtorId);
+		String[] sLoans = new String[loans.size()];
+		int i = 0;
+		for (Loan loan:loans
+				) {
+			sLoans[i++] = "[" + loan.getId() + "] " + loan.getRegNumber();
+		}
+
+		return sLoans;
 	}
 
 	@GetMapping("/debtors/search")
