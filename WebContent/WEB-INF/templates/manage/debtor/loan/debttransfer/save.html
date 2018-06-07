@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
 	<title th:text="#{label.add.loan.debtTransfer.title}"></title>
@@ -32,9 +32,10 @@
 						</div>
 					</div>
 					<!--begin::Form-->
-					<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/debttransfer/save}" method="post" class="m-form m-form--fit m-form--label-align-right">
+					<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/debttransfer/save}" th:object="${dt}" method="post" class="m-form m-form--fit m-form--label-align-right">
 
-						<input hidden="true" type="text" id="id" name="id" th:value="${dt.id}"/>
+						<input hidden="true" type="text" id="id" th:field="*{id}"/>
+						<input hidden="true" type="text" id="tpId" th:field="*{transferPersonId}" />
 
 						<div class="m-portlet__body">
 							<div class="m-form__section">
@@ -45,7 +46,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="number" th:value="${dt.number}">
+										<input type="text" class="form-control m-input" th:field="*{number}">
 									</div>
 								</div>
 
@@ -55,7 +56,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:value="${dt.date}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{date}"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -68,7 +69,7 @@
 										<span th:text="#{label.debtTransfer.quantity}">Quantity</span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="quantity" th:value="${dt.quantity}">
+										<input type="text" class="form-control m-input" th:field="*{quantity}">
 									</div>
 								</div>
 
@@ -78,7 +79,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="pricePerUnit" th:value="${dt.pricePerUnit}">
+										<input type="text" class="form-control m-input" th:field="*{pricePerUnit}">
 									</div>
 								</div>
 
@@ -87,7 +88,7 @@
 										<span th:text="#{label.debtTransfer.unitType}">Unit Type Id</span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="unitTypeId" th:value="${dt.unitTypeId}">
+										<input type="text" class="form-control m-input" th:field="*{unitTypeId}">
 									</div>
 								</div>
 
@@ -97,7 +98,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="totalCost" th:value="${dt.totalCost}">
+										<input type="text" class="form-control m-input" th:field="*{totalCost}">
 									</div>
 								</div>
 
@@ -106,19 +107,44 @@
 										<span th:text="#{label.debtTransfer.transferPayment}">Transfer payment id</span><span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="transferPaymentId" th:value="${dt.transferPaymentId}">
+										<input type="text" class="form-control m-input" th:field="*{transferPaymentId}">
 									</div>
 								</div>
 
+								<!--
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
 										<span th:text="#{label.debtTransfer.transferCredit}">Transfer credit id</span><span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="transferCreditId" th:value="${dt.transferCreditId}">
+										<input type="text" class="form-control m-input" th:field="*{transferCreditId}">
+									</div>
+								</div>
+								-->
+
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.debtTransfer.transferPerson}">
+										Owner <span class="m--font-danger">*</span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<div class="m-typeahead">
+											<input class="form-control m-input" id="owner_typeahead" type="text" placeholder="Owners">
+										</div>
 									</div>
 								</div>
 
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.debtTransfer.transferCredit}">
+										Work sector <span class="m--font-danger">*</span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<select id="loanSelect" class="form-control m-bootstrap-select m_selectpicker" th:field="*{transferCreditId}" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
+										</select>
+									</div>
+								</div>
+
+								<!--
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
 										<span th:text="#{label.debtTransfer.transferPerson}">Transfer person id</span><span class="m--font-danger">*</span>
@@ -127,6 +153,7 @@
 										<input type="text" class="form-control m-input" name="transferPersonId" th:value="${dt.transferPersonId}">
 									</div>
 								</div>
+								-->
 
 
 								<div class="form-group m-form__group row">
@@ -145,7 +172,7 @@
 								<div class="row">
 									<div class="col-lg-4"></div>
 									<div class="col-lg-6">
-										<button type="submit" class="btn btn-primary">
+										<button type="submit" onclick="updateTOwner()" class="btn btn-primary">
 											<span th:text="#{label.form.save}"></span>
 										</button>
 										<button onclick="window.history.back()" type="button" class="btn btn-secondary">
@@ -174,7 +201,47 @@
 <!--begin::Page Resources -->
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/typeahead.js}" type="text/javascript"></script>
 <!--end::Page Resources -->
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        $('#owner_typeahead').change(function () {
+            var owner_text = $(this).val();
+            var owner_id = owner_text.match(/[^[\]]+(?=])/g);
+
+            $.ajax({
+                url: '/api/getLoansByDebtor',
+                type: 'get',
+                data: {debtorId:owner_id[0]},
+                dataType: 'json',
+                success:function(response){
+
+                    var len = response.length;
+
+                    $('#loanSelect').empty();
+                    for( var i = 0; i<len; i++){
+                        var result = response[i];
+                        var loan_id = result.match(/[^[\]]+(?=])/g);
+
+                        $('#loanSelect').append("<option value='"+loan_id+"'>"+result+"</option>");
+
+                    }
+                    $('#loanSelect').selectpicker('refresh');
+                }
+            });
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    function updateTOwner(sel)
+    {
+        var owner_text = document.getElementById("owner_typeahead").value;
+        var owner_id = owner_text.match(/[^[\]]+(?=])/g);
+        $("#tpId").val(owner_id);
+    }
+</script>
 
 </body>
 <!-- end::Body -->
