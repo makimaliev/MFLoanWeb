@@ -292,7 +292,8 @@ public class OrganizationController {
 	@RequestMapping(value = "/organization/save", method = RequestMethod.POST)
 	public String saveOrganizationAndRedirectToOrganizationList(@Validated @ModelAttribute("organization") Organization organization, BindingResult result) {
 
-		
+		organization.setName(organization.getIdentityDoc().getIdentityDocDetails().getFullname());
+
 		if (result.hasErrors()) {
 			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
 		} else if (organization.getId() == 0) {
@@ -321,7 +322,7 @@ public class OrganizationController {
 
 
 
-		return "redirect:/organization/list";
+		return "redirect:/organization/"+organization.getId()+"/details";
 
 	}
 

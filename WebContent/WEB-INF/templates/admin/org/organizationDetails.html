@@ -51,7 +51,7 @@
 											<div class="col-md-12">
 
 												<!-- Default bootstrap modal example -->
-												<div class="modal fade" id="organizationFormModal" tabindex="-1"
+												<div class="modal fade" id="bankDataFormModal" tabindex="-1"
 													 role="dialog" aria-labelledby="myModalLabel"
 													 aria-hidden="true">
 													<div class="modal-dialog">
@@ -67,38 +67,134 @@
 															<!--<div class="modal-footer">-->
 																<!--<button type="button" class="btn btn-default"-->
 																		<!--data-dismiss="modal">Close</button>-->
-																<!--<button type="button" class="btn btn-primary">Save-->
+																<!--<button type="button" class="btn btn-success">Save-->
 																	<!--changes</button>-->
 															<!--</div>-->
 														</div>
 													</div>
 												</div>
 
+												<div class="modal fade" id="departmentFormModal" tabindex="-1"
+													 role="dialog" aria-labelledby="myModalLabel"
+													 aria-hidden="true">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<!--<div class="modal-header">-->
+															<!--<button type="button" class="close" data-dismiss="modal"-->
+															<!--aria-label="Close">-->
+															<!--<span aria-hidden="true">&times;</span>-->
+															<!--</button>-->
+															<!--<h4 class="modal-title" id="myModalLabel" >Добавить</h4>-->
+															<!--</div>-->
+															<div class="modal-body">...</div>
+															<!--<div class="modal-footer">-->
+															<!--<button type="button" class="btn btn-default"-->
+															<!--data-dismiss="modal">Close</button>-->
+															<!--<button type="button" class="btn btn-success">Save-->
+															<!--changes</button>-->
+															<!--</div>-->
+														</div>
+													</div>
+												</div>
+
+												<div class="modal fade" id="informationFormModal" tabindex="-1"
+													 role="dialog" aria-labelledby="myModalLabel"
+													 aria-hidden="true">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<!--<div class="modal-header">-->
+															<!--<button type="button" class="close" data-dismiss="modal"-->
+															<!--aria-label="Close">-->
+															<!--<span aria-hidden="true">&times;</span>-->
+															<!--</button>-->
+															<!--<h4 class="modal-title" id="myModalLabel" >Добавить</h4>-->
+															<!--</div>-->
+															<div class="modal-body">...</div>
+															<!--<div class="modal-footer">-->
+															<!--<button type="button" class="btn btn-default"-->
+															<!--data-dismiss="modal">Close</button>-->
+															<!--<button type="button" class="btn btn-success">Save-->
+															<!--changes</button>-->
+															<!--</div>-->
+														</div>
+													</div>
+												</div>
+
+												<div class="modal fade" id="staffFormModal" tabindex="-1"
+													 role="dialog" aria-labelledby="myModalLabel"
+													 aria-hidden="true">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<!--<div class="modal-header">-->
+															<!--<button type="button" class="close" data-dismiss="modal"-->
+															<!--aria-label="Close">-->
+															<!--<span aria-hidden="true">&times;</span>-->
+															<!--</button>-->
+															<!--<h4 class="modal-title" id="myModalLabel" >Добавить</h4>-->
+															<!--</div>-->
+															<div class="modal-body">...</div>
+															<!--<div class="modal-footer">-->
+															<!--<button type="button" class="btn btn-default"-->
+															<!--data-dismiss="modal">Close</button>-->
+															<!--<button type="button" class="btn btn-success">Save-->
+															<!--changes</button>-->
+															<!--</div>-->
+														</div>
+													</div>
+												</div>
+
+												<div class="modal fade" id="organizationFormModal" tabindex="-1"
+													 role="dialog" aria-labelledby="myModalLabel"
+													 aria-hidden="true">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<!--<div class="modal-header">-->
+															<!--<button type="button" class="close" data-dismiss="modal"-->
+															<!--aria-label="Close">-->
+															<!--<span aria-hidden="true">&times;</span>-->
+															<!--</button>-->
+															<!--<h4 class="modal-title" id="myModalLabel" >Добавить</h4>-->
+															<!--</div>-->
+															<div class="modal-body">...</div>
+															<!--<div class="modal-footer">-->
+															<!--<button type="button" class="btn btn-default"-->
+															<!--data-dismiss="modal">Close</button>-->
+															<!--<button type="button" class="btn btn-success">Save-->
+															<!--changes</button>-->
+															<!--</div>-->
+														</div>
+													</div>
+												</div>
+
+
+
 											</div>
 
 											<div class="row" >
 												<div class="col-md-12">
 
-													<a data-remote="false" data-toggle="modal"
-													   data-target="#organizationFormModal" th:href="@{/bankData/add}"
-													   role="button" class="btn btn-large btn-primary" th:text="#{label.add.bankData}"> Add
+													<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
+													   data-target="#bankDataFormModal" th:href="@{/bankData/add}"
+													   role="button" class="btn btn-success" th:text="#{label.add.bankData}"> Add
 														Bank Data</a>
-													<a data-remote="false" data-toggle="modal"
-													   data-target="#organizationFormModal" th:href="@{/department/add}"
-													   role="button" class="btn btn-large btn-primary" th:text="#{label.add.department}"> Add
+													<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
+													   data-target="#departmentFormModal" th:href="@{/department/add}"
+													   role="button" class="btn btn-success" th:text="#{label.add.department}"> Add
 														Department</a>
-													<a data-remote="false" data-toggle="modal"
-													   data-target="#organizationFormModal" th:href="@{/information/add}"
-													   role="button" class="btn btn-large btn-primary" th:text="#{label.add.information}"> Add
+													<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
+													   data-target="#informationFormModal" th:href="@{/information/add}"
+													   role="button" class="btn btn-success" th:text="#{label.add.information}"> Add
 														Information</a>
+													<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
+													   data-target="#staffFormModal" th:href="@{/staff/add}"
+													   role="button" class="btn btn-success" th:text="#{label.add.staff}">Add
+														Staff </a>
 
-													<a data-remote="false"
-													data-toggle="modal"
-													data-target="#organizationFormModal"
-													th:href="@{/staff/add}"
-													role="button"
-													class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
-													th:text="#{label.add.staff}"></a>
+													<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
+													   data-target="#organizationFormModal" th:href="@{/organization/__${organization.id}__/edit}"
+													   role="button" class="btn btn-outline-danger" th:text="#{label.table.edit}">Edit organization </a>
+
+
 												</div>
 											</div>
 										</div>
@@ -134,120 +230,125 @@
 
 												<div class="row">
 													<div class="col-md-12">
-
-														<table
-																class="table table-hover table-condensed table-striped table-bordered compact condensed">
-
-															<tbody>
-															<tr>
-																<td>Адрес</td>
-																<td th:text="${organization?.address?.line}">Address
-																	line</td>
-															</tr>
-
-															<tr>
-																<td>Область</td>
-																<td th:text="${organization?.address?.region?.name}">Address
-																	line</td>
-															</tr>
-
-															<tr>
-																<td>Район</td>
-																<td th:text="${organization?.address?.district?.name}">Address
-																	line</td>
-															</tr>
-															<tr>
-																<td>А.окмоту</td>
-																<td th:text="${organization?.address?.aokmotu?.name}">Address
-																	line</td>
-															</tr>
-															<tr>
-																<td>Село</td>
-																<td th:text="${organization?.address?.village?.name}">Address
-																	line</td>
-															</tr>
-
-															</tbody>
-														</table>
+														<div class="m-widget1">
+															<div class="m-widget1__item">
+																<div class="row m-row--no-padding align-items-center">
+																	<div class="col">
+																		<h3 class="m-widget1__title">Область</h3>
+																		<span class="m-widget1__desc m--font-brand" th:text="${organization?.address?.region?.name}"></span>
+																	</div>
+																</div>
+															</div>
+															<div class="m-widget1__item">
+																<div class="row m-row--no-padding align-items-center">
+																	<div class="col">
+																		<h3 class="m-widget1__title" >Район</h3>
+																		<span class="m-widget1__desc m--font-brand" th:text="${organization?.address?.district?.name}"></span>
+																	</div>
+																</div>
+															</div>
+															<div class="m-widget1__item">
+																<div class="row m-row--no-padding align-items-center">
+																	<div class="col">
+																		<h3 class="m-widget1__title">А.окмоту</h3>
+																		<span class="m-widget1__desc m--font-brand" th:text="${organization?.address?.aokmotu?.name}"></span>
+																	</div>
+																</div>
+															</div>
+															<div class="m-widget1__item">
+																<div class="row m-row--no-padding align-items-center">
+																	<div class="col">
+																		<h3 class="m-widget1__title">Село</h3>
+																		<span class="m-widget1__desc m--font-brand" th:text="${organization?.address?.village?.name}"></span>
+																	</div>
+																</div>
+															</div>
+															<div class="m-widget1__item">
+																<div class="row m-row--no-padding align-items-center">
+																	<div class="col">
+																		<h3 class="m-widget1__title">Адрес</h3>
+																		<span class="m-widget1__desc m--font-brand" th:text="${organization?.address?.line}"></span>
+																	</div>
+																</div>
+															</div>
+														</div>
 
 													</div>
 												</div>
 
 											</div>
 											<div class="tab-pane" id="tab_15_2">
-												<table
-														class="table table-hover table-condensed table-striped table-bordered compact condensed">
-
-													<tbody>
-													<!--<tr>-->
-														<!--<td>Name</td>-->
-														<!--<td th:text="${organization.identityDoc.name}">Name</td>-->
-													<!--</tr>-->
-													<!--<tr>-->
-														<!--<td>Enabled</td>-->
-														<!--<td th:text="${organization.identityDoc.enabled}">Enabled</td>-->
-													<!--</tr>-->
-													<tr>
-														<td th:width="100">Полное наименование</td>
-														<td th:text="${organization?.identityDoc?.identityDocDetails?.fullname}">Fullname</td>
-													</tr>
-													<tr>
-														<td>Вид документа удостоверяющего личность</td>
-														<td th:text="${organization?.identityDoc?.identityDocType?.name}">identityDocType</td>
-													</tr>
-
-													<tr>
-														<td>Номер документа</td>
-														<td th:text="${organization?.identityDoc?.number}">number</td>
-													</tr>
-													<tr>
-														<td>Дата выдачи</td>
-														<td th:text="${organization?.identityDoc?.date}">date</td>
-													</tr>
-													<tr>
-														<td>Кем выдано</td>
-														<td th:text="${organization?.identityDoc?.identityDocGivenBy?.name}">identityDocGivenBy</td>
-													</tr>
-
-													<tr>
-														<td>ИНН</td>
-														<td th:text="${organization?.identityDoc?.pin}">pin</td>
-													</tr>
-
-
-													<!--<tr>-->
-														<!--<td>Firstname</td>-->
-														<!--<td th:text="${organization.identityDoc.identityDocDetails.firstname}">Firstnamename</td>-->
-													<!--</tr>-->
-
-													<!--<tr>-->
-														<!--<td>Lastname</td>-->
-														<!--<td th:text="${organization.identityDoc.identityDocDetails.Lastname}">Lastname</td>-->
-													<!--</tr>-->
-
-													<!--<tr>-->
-														<!--<td>Midname</td>-->
-														<!--<td th:text="${organization.identityDoc.identityDocDetails.midname}">Midname</td>-->
-													<!--</tr>-->
-
-
-
-													</tbody>
-												</table>
+												<div class="m-widget1">
+													<div class="m-widget1__item">
+														<div class="row m-row--no-padding align-items-center">
+															<div class="col">
+																<h3 class="m-widget1__title">Полное наименование</h3>
+																<span class="m-widget1__desc m--font-brand" th:text="${organization?.identityDoc?.identityDocDetails?.fullname}"></span>
+															</div>
+														</div>
+													</div>
+													<div class="m-widget1__item">
+														<div class="row m-row--no-padding align-items-center">
+															<div class="col">
+																<h3 class="m-widget1__title" >Вид документа</h3>
+																<span class="m-widget1__desc m--font-brand" th:text="${organization?.identityDoc?.identityDocType?.name}"></span>
+															</div>
+														</div>
+													</div>
+													<div class="m-widget1__item">
+														<div class="row m-row--no-padding align-items-center">
+															<div class="col">
+																<h3 class="m-widget1__title">Номер документа</h3>
+																<span class="m-widget1__desc m--font-brand" th:text="${organization?.identityDoc?.number}"></span>
+															</div>
+														</div>
+													</div>
+													<div class="m-widget1__item">
+														<div class="row m-row--no-padding align-items-center">
+															<div class="col">
+																<h3 class="m-widget1__title">Дата выдачи</h3>
+																<span class="m-widget1__desc m--font-brand" th:text="${organization?.identityDoc?.date}"></span>
+															</div>
+														</div>
+													</div>
+													<div class="m-widget1__item">
+														<div class="row m-row--no-padding align-items-center">
+															<div class="col">
+																<h3 class="m-widget1__title">Кем выдано</h3>
+																<span class="m-widget1__desc m--font-brand" th:text="${organization?.identityDoc?.identityDocGivenBy?.name}"></span>
+															</div>
+														</div>
+													</div>
+													<div class="m-widget1__item">
+														<div class="row m-row--no-padding align-items-center">
+															<div class="col">
+																<h3 class="m-widget1__title">ИНН</h3>
+																<span class="m-widget1__desc m--font-brand" th:text="${organization?.identityDoc?.pin}"></span>
+															</div>
+														</div>
+													</div>
+												</div>
 											</div>
 											<div class="tab-pane" id="tab_15_3">
 
 												<div class="row">
 													<div class="col-md-3">
-														<table
-																class="table table-hover table-condensed table-striped table-bordered compact condensed">
+														<div class="m-widget1">
+															<div class="m-widget1__item">
+																<div class="row m-row--no-padding align-items-center">
+																	<div class="col">
+																		<h3 class="m-widget1__title">Номер телефона</h3>
 
-															<tbody>
-															<tr th:each="contactInList : ${organization.contact}">
-																<td th:text="${contactInList?.name}">Thymus Thymi</td>
-															</tr>
-															</tbody>
-														</table>
+																		<loop th:each="contactInList : ${organization.contact}">
+																			<span class="m-widget1__desc m--font-brand" th:text="${contactInList?.name}"></span>
+																		</loop>
+
+
+
+																	</div>
+																</div>
+															</div>
+														</div>
 													</div>
 												</div>
 											</div>
@@ -255,30 +356,63 @@
 
 												<div class="row">
 
-													<div class="col-md-3">
-														<table
-																class="table table-hover table-condensed table-striped table-bordered compact condensed">
+													<div class="col-md-6">
+														<!--begin::Section-->
+														<div class="m-section">
+															<div class="m-section__content">
+																<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+																	<div>
+																		<table class="table">
+																			<thead class="thead-default">
+																				<tr>
+																					<th>Наименование банка</th>
+																					<th>Примечание</th>
+																					<th>БИК</th>
+																					<th>Расчетный счет</th>
+																					<th sec:authorize="hasRole('ADMIN')">&nbsp;</th>
+																				</tr>
+																			</thead>
+																			<tbody>
 
-															<tbody>
-															<tr th:each="bankDataInList : ${organization.bankData}">
-																<td th:text="${bankDataInList?.name}">Thymus Thymi</td>
-																<td th:text="${bankDataInList?.description}">Thymus Thymi</td>
-																<td th:text="${bankDataInList?.account_number}">Thymus
-																	Thymi</td>
-																<td th:text="${bankDataInList?.bik}">Thymus Thymi</td>
-																<td><a data-remote="false" data-toggle="modal"
-																	   data-target="#organizationFormModal"
-																	   th:href="@{/bankData/__${bankDataInList.id}__/edit}" role="button"
-																	   class="btn btn-xs blue-stripe"> Edit </a></td>
-																<td>
-																	<form th:action="@{/organization/__${bankDataInList.getOrganization().getId()}__/bankData/__${bankDataInList.id}__/remove}"
-																		  method="post">
-																		<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-																	</form>
-																</td>
-															</tr>
-															</tbody>
-														</table>
+																			<tr th:each="bankDataInList : ${organization.bankData}">
+																				<td th:text="${bankDataInList?.name}">Name</td>
+																				<td th:text="${bankDataInList?.description}">Description</td>
+																				<td th:text="${bankDataInList?.bik}">bik</td>
+																				<td th:text="${bankDataInList?.account_number}">account number</td>
+
+																				<td class="table-actions text-right" sec:authorize="hasRole('ADMIN')">
+																					<span>
+																						<div class="dropdown">
+																							<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																								<i class="la la-ellipsis-h"></i>
+																							</a>
+																							<div class="dropdown-menu dropdown-menu-right">
+
+																								<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
+																								   data-target="#organizationFormModal"
+																								   th:href="@{/bankData/__${bankDataInList.id}__/edit}" role="button"
+																								   class="dropdown-item"> Edit </a>
+																								<a sec:authorize="hasRole('ADMIN')" class="dropdown-item" href="#">
+																									<span>
+																										<form th:action="@{/organization/__${bankDataInList.getOrganization().getId()}__/bankData/__${bankDataInList.id}__/remove}"
+																											  method="post">
+																											<button type="submit" class="btn btn-xs red-stripe">Delete</button>
+																										</form>
+																									</span>
+																								</a>
+																							</div>
+																						</div>
+																					</span>
+																				</td>
+
+																			</tr>
+																			</tbody>
+																		</table>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<!--end::Section-->
 													</div>
 												</div>
 											</div>
@@ -499,47 +633,81 @@
 <script th:inline="javascript">
 
     /*<![CDATA[*/
-    $("#organizationFormModal").on("show.bs.modal", function(e) {
+    $("#bankDataFormModal").on("show.bs.modal", function(e) {
 
         var link = $(e.relatedTarget);
-
-
-        // var organizationID = $("#organization_id").val();
-
         var organizationID = /*[[${organization.id}]]*/ '1';
 
         if(link.attr("href").indexOf('bankData/add')>0)
         {
-            // $(this).find(".modal-title").html("Добавить банковские данные");
             $(this).find(".modal-body").load(link.attr("href").replace("/bankData/add","/organization/"+organizationID+"/bankData/add"));
         }
-        else
-        if(link.attr("href").indexOf('information/add')>0)
-        {
-            var url = link.attr("href");
-
-            // $(this).find(".modal-title").html("Добавить информацию");
-            $(this).find(".modal-body").load(link.attr("href").replace("/information/add","/2/"+organizationID+"/information/add"));
-
-
-        } else
-        if(link.attr("href").indexOf('department/add')>0)
-
-        {
-            // $(this).find(".modal-title").html("Добавить структурное подразделение");
-            $(this).find(".modal-body").load(link.attr("href").replace("/department/add","/organization/"+organizationID+"/department/add"));
-        }
-        else if(link.attr("href").indexOf('staff/add')>0) {
-            $(this).find(".modal-body").load(link.attr("href").replace("/staff/add","/organization/"+organizationID+"/staff/add"));
-
-        }
-
         else
         {
             $(this).find(".modal-title").html(link.attr("href"));
             $(this).find(".modal-body").load(link.attr("href"));
         }
     });
+
+    $("#departmentFormModal").on("show.bs.modal", function(e) {
+
+        var link = $(e.relatedTarget);
+        var organizationID = /*[[${organization.id}]]*/ '1';
+
+        if(link.attr("href").indexOf('department/add')>0)
+        {
+            $(this).find(".modal-body").load(link.attr("href").replace("/department/add","/organization/"+organizationID+"/department/add"));
+        }
+        else
+        {
+            $(this).find(".modal-title").html(link.attr("href"));
+            $(this).find(".modal-body").load(link.attr("href"));
+        }
+    });
+
+    $("#informationFormModal").on("show.bs.modal", function(e) {
+
+        var link = $(e.relatedTarget);
+        var organizationID = /*[[${organization.id}]]*/ '1';
+
+        if(link.attr("href").indexOf('information/add')>0)
+        {
+            var url = link.attr("href");
+            $(this).find(".modal-body").load(link.attr("href").replace("/information/add","/2/"+organizationID+"/information/add"));
+        }
+        else
+        {
+            $(this).find(".modal-title").html(link.attr("href"));
+            $(this).find(".modal-body").load(link.attr("href"));
+        }
+    });
+
+    $("#staffFormModal").on("show.bs.modal", function(e) {
+
+        var link = $(e.relatedTarget);
+        var organizationID = /*[[${organization.id}]]*/ '1';
+
+        if(link.attr("href").indexOf('staff/add')>0)
+        {
+            $(this).find(".modal-body").load(link.attr("href").replace("/staff/add","/organization/"+organizationID+"/staff/add"));
+
+        }
+        else
+        {
+            $(this).find(".modal-title").html(link.attr("href"));
+            $(this).find(".modal-body").load(link.attr("href"));
+        }
+    });
+
+    $("#organizationFormModal").on("show.bs.modal", function(e) {
+
+        var link = $(e.relatedTarget);
+        var organizationID = /*[[${organization.id}]]*/ '1';
+
+        $(this).find(".modal-body").load(link.attr("href"));
+
+    });
+
 
     /*]]>*/
 </script>

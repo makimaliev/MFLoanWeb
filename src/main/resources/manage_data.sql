@@ -359,16 +359,140 @@ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALU
 
 
 
+# order entity list
+# order doc package
 
 
 
+# order term
 
 
 
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('addOrderTerm', 'Жаны шарт кошуу', 'label.order.button.addOrderTerm', 'Добавить условия кредитования');
+
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('descrition', 'Тушундурмосу', 'label.orderTerm.table.descrition', 'Примечание');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('fund', 'Каржы булагы', 'label.orderTerm.table.fund', 'Источник финансирования');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('amount', 'Суммасы', 'label.orderTerm.table.amount', 'Сумма');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('currency', 'Валютасы', 'label.orderTerm.table.currency', 'Валюта');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('frequencyQuantity', 'Цикл саны', 'label.orderTerm.table.frequencyQuantity', 'Кол-во циклов');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('frequencyType', 'Цикл туру', 'label.orderTerm.table.frequencyType', 'Вид цикла');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('installmentQuantity', 'Период саны', 'label.orderTerm.table.installmentQuantity', 'Кол-во периодов');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('installmentFirstDay', 'Толомдун биринчи куну', 'label.orderTerm.table.installmentFirstDay', 'Первый день погашения');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('firstInstallmentDate', 'Толомдун биринчи датасы', 'label.orderTerm.table.firstInstallmentDate', 'Первая дата погашения');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('lastInstalmentdate', 'Толомдун акыркы датасы', 'label.orderTerm.table.lastInstalmentdate', 'Последняя дата погашения');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('minDaysDisbFirstInstallment', 'Биринчи толомго эн аз кун', 'label.orderTerm.table.minDaysDisbFirstInstallment', 'Мин. дней первого пог.');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('maxDaysDisbFirstInstallment', 'Биринчи толомго эн коп кун', 'label.orderTerm.table.maxDaysDisbFirstInstallment', 'Макс. дней первого пог.');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('graceOnPrinciplePaymentInstallment', 'Негизги карызды толоого женилдетуу периодтору', 'label.orderTerm.table.graceOnPrinciplePaymentInstallment', 'Кол-во льготных периодов (пог. осн.с.)');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('graceOnPrinciplePaymentDays', 'Негизиг карызды толоого женилдетуу кундору', 'label.orderTerm.table.graceOnPrinciplePaymentDays', 'Кол-во льготных дней (пог. осн.с.)');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('graceOnInterestPaymentInstallment', 'пайызды толоого женилдетуу периодтору', 'label.orderTerm.table.graceOnInterestPaymentInstallment', 'Кол-во льготных периодов (пог. проц.)');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('graceOnInterestPaymentDays', 'пайызды толоого женилдетуу кундору', 'label.orderTerm.table.graceOnInterestPaymentDays', 'Кол-во льготных дней (пог. проц.)');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('graceOnInterestAcrrInstallment', 'пайыз саноого женилдетуу периодтору', 'label.orderTerm.table.graceOnInterestAcrrInstallment', 'Кол-во льготных периодов (нач.проц.)');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('graceOnInterestAccrDays', 'пайыз саноого женилдетуу кундору', 'label.orderTerm.table.graceOnInterestAccrDays', 'Кол-во льготных дней (нач. проц.)');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('interestRateValue', 'Процент', 'label.orderTerm.table.interestRateValue', 'Процентная ставка');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('interestRateValuePerPeriod', 'Периодтогу процент', 'label.orderTerm.table.interestRateValuePerPeriod', 'Процентная ставка в период');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('interestType', 'Процент ставкасы', 'label.orderTerm.table.interestType', 'Ставка на нач. проц.');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('penaltyOnPrincipleOverdueRateValue', 'Негизги карызга штраф', 'label.orderTerm.table.penaltyOnPrincipleOverdueRateValue', 'Штраф за проср. по осн.с.');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('penaltyOnPrincipleOverdueType', 'Негизги карызга штраф ставкасы', 'label.orderTerm.table.penaltyOnPrincipleOverdueType', 'Ставка на штраф за проср. по осн.с.');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('penaltyOnInterestOverdueType', 'Процентке штраф ставкасы', 'label.orderTerm.table.penaltyOnInterestOverdueType', 'Ставка на штраф за проср. по проц.');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('penaltyOnInterestOverdueRateValue', 'Процентке штраф', 'label.orderTerm.table.penaltyOnInterestOverdueRateValue', 'Штраф за проср. по проц.');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('daysInYearMethod', 'Бир жылда кун саноо методу', 'label.orderTerm.table.daysInYearMethod', 'Метод рас. кол-ва дней в году');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('daysInMonthMethod', 'Бир айда кун саноо методу', 'label.orderTerm.table.daysInMonthMethod', 'Метод рас. кол-ва дней в мес.');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('transactionOrder', 'Толом ', 'label.orderTerm.table.transactionOrder', 'Очередность пог.');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('interestAccrMethod', 'Процент саноо методу', 'label.orderTerm.table.interestAccrMethod', 'Метод нач. проц.');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('earlyRepaymentAllowed', 'Алдын ала толоо', 'label.orderTerm.table.earlyRepaymentAllowed', 'Возм. досроч. пог.');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('penaltyLimitPercent', 'Штраф чеги', 'label.orderTerm.table.penaltyLimitPercent', 'Макс. лимит. нач. штр.');
+ INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('collateralFree', 'Куроодон бошотулган', 'label.orderTerm.table.collateralFree', 'Освоб. от зал.об.');
 
 
 
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('descrition', 'Тушундурмосу', 'label.order.term.description', 'Примечание');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('fund', 'Каржы булагы', 'label.order.term.fund', 'Источник финансирования');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('amount', 'Суммасы', 'label.order.term.amount', 'Сумма');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('currency', 'Валютасы', 'label.order.term.currency', 'Валюта');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('frequencyQuantity', 'Цикл саны', 'label.order.term.freqQuantity', 'Кол-во циклов');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('frequencyType', 'Цикл туру', 'label.order.term.freqType', 'Вид цикла');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('installmentQuantity', 'Период саны', 'label.order.term.installmentQuantity', 'Кол-во периодов');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('installmentFirstDay', 'Толомдун биринчи куну', 'label.order.term.insFirstDay', 'Первый день погашения');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('firstInstallmentDate', 'Толомдун биринчи датасы', 'label.order.term.firstInstallmentDate', 'Первая дата погашения');
 
+
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('lastInstalmentdate', 'Толомдун акыркы датасы', 'label.order.term.lastInstallmentDate', 'Последняя дата погашения');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('minDaysDisbFirstInstallment', 'Биринчи толомго эн аз кун', 'label.order.term.minDaysDisbFirstInst', 'Мин. дней первого пог.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('maxDaysDisbFirstInstallment', 'Биринчи толомго эн коп кун', 'label.order.term.maxDaysDisbFirstInst', 'Макс. дней первого пог.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('graceOnPrinciplePaymentInstallment', 'Негизги карызды толоого женилдетуу периодтору', 'label.order.term.graceOnPrinciplePaymentInst', 'Кол-во льготных периодов (пог. осн.с.)');
+
+
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('graceOnPrinciplePaymentDays', 'Негизиг карызды толоого женилдетуу кундору', 'label.order.term.graceOnPrinciplePaymentDays', 'Кол-во льготных дней (пог. осн.с.)');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('graceOnInterestPaymentInstallment', 'пайызды толоого женилдетуу периодтору', 'label.order.term.graceOnInterestPaymentInst', 'Кол-во льготных периодов (пог. проц.)');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('graceOnInterestPaymentDays', 'пайызды толоого женилдетуу кундору', 'label.order.term.graceOnInterestPaymentDays', 'Кол-во льготных дней (пог. проц.)');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('graceOnInterestAcrrInstallment', 'пайыз саноого женилдетуу периодтору', 'label.order.term.graceOnInterestAccrInst', 'Кол-во льготных периодов (нач.проц.)');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('graceOnInterestAccrDays', 'пайыз саноого женилдетуу кундору', 'label.order.term.graceOnInterestAccrDays', 'Кол-во льготных дней (нач. проц.)');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('interestRateValue', 'Процент', 'label.order.term.interestRateValue', 'Процентная ставка');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('interestRateValuePerPeriod', 'Периодтогу процент', 'label.order.term.interestRateValuePerPeriod', 'Процентная ставка в период');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('interestType', 'Процент ставкасы', 'label.order.term.interestType', 'Ставка на нач. проц.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('penaltyOnPrincipleOverdueRateValue', 'Негизги карызга штраф', 'label.order.term.penaltyOnPrincipleOverdueRateValue', 'Штраф за проср. по осн.с.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('penaltyOnPrincipleOverdueType', 'Негизги карызга штраф ставкасы', 'label.order.term.penaltyOnPrincipleOverdueType', 'Ставка на штраф за проср. по осн.с.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('penaltyOnInterestOverdueType', 'Процентке штраф ставкасы', 'label.order.term.penaltyOnInterestOverdueType', 'Ставка на штраф за проср. по проц.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('penaltyOnInterestOverdueRateValue', 'Процентке штраф', 'label.order.term.penaltyOnInterestOverdueRateValue', 'Штраф за проср. по проц.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('daysInYearMethod', 'Бир жылда кун саноо методу', 'label.order.term.daysInYearMethod', 'Метод рас. кол-ва дней в году');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('daysInMonthMethod', 'Бир айда кун саноо методу', 'label.order.term.daysInMonthMethod', 'Метод рас. кол-ва дней в мес.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('transactionOrder', 'Толом ', 'label.order.term.transactionOrder', 'Очередность пог.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('interestAccrMethod', 'Процент саноо методу', 'label.order.term.interestAccrMethod', 'Метод нач. проц.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('earlyRepaymentAllowed', 'Алдын ала толоо', 'label.order.term.earlyRepaymentAllowed', 'Возм. досроч. пог.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('penaltyLimitPercent', 'Штраф чеги', 'label.order.term.penaltyLimitPercent', 'Макс. лимит. нач. штр.');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('collateralFree', 'Куроодон бошотулган', 'label.order.term.collateralFree', 'Освоб. от зал.об.');
+
+
+
+# entity doc
+
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('ID', 'ID', 'label.entityDocument.id', 'ID');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('name', 'Аталышы', 'label.entityDocument.name', 'Наимнеование');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('completedBy', 'Толуктаган', 'label.entityDocument.completedBy', 'Укомплектовано');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('completedDate', 'Толукталган датасы', 'label.entityDocument.completedDate', 'Дата комплектации');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('completedDescription', 'Тушундурмосу', 'label.entityDocument.completedDescription', 'Примечание');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('approvedBy', 'ТАстыктаган', 'label.entityDocument.approvedBy', 'Подтверждено');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('approvedDate', 'ТАстыкталган датасы', 'label.entityDocument.approvedDate', 'Дата подтверждения');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('approvedDescription', 'Тушундурмосу', 'label.entityDocument.approvedDescription', 'Примечание');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('registeredNumber', 'Каттоо номери', 'label.entityDocument.registeredNumber', 'Регистрационный номер');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('registeredDate', 'Каттоо датасы', 'label.entityDocument.registeredDate', 'Дата регистрации');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('registeredBy', 'Каттаган', 'label.entityDocument.registeredBy', 'Зарегистрировано');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('registeredDescription', 'Тушунудурмосу', 'label.entityDocument.registeredDescription', 'Примечание');
+
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('ID', 'ID', 'label.document.id', 'ID');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('name', 'Аталышы', 'label.document.name', 'Наимнеование');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('completedBy', 'Толуктаган', 'label.document.completedBy', 'Укомплектовано');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('completedDate', 'Толукталган датасы', 'label.document.completedDate', 'Дата комплектации');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('completedDescription', 'Тушундурмосу', 'label.document.completedDescription', 'Примечание');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('approvedBy', 'ТАстыктаган', 'label.document.approvedBy', 'Подтверждено');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('approvedDate', 'ТАстыкталган датасы', 'label.document.approvedDate', 'Дата подтверждения');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('approvedDescription', 'Тушундурмосу', 'label.document.approvedDescription', 'Примечание');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('registeredNumber', 'Каттоо номери', 'label.document.registeredNumber', 'Регистрационный номер');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('registeredDate', 'Каттоо датасы', 'label.document.registeredDate', 'Дата регистрации');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('registeredBy', 'Каттаган', 'label.document.registeredBy', 'Зарегистрировано');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('registeredDescription', 'Тушунудурмосу', 'label.document.registeredDescription', 'Примечание');
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('Add document', 'Документ кошуу', 'label.document.add', 'Добавить документ');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('documents', 'Документтер', 'label.documents', 'Документы');
+
+
+# doc package
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('name', 'Аталышы', 'label.documentPackage.name', 'Наименование');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('completedDate', 'Толукталган датасы', 'label.documentPackage.completedDate', 'Дата комплектации');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('approvedDate', 'Тастыкталган датасы', 'label.documentPackage.approvedDate', 'Дата подтверждения');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('completedRatio', 'Толтукталганы', 'label.documentPackage.completedRatio', 'Доля комплектации');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('approvedRatio', 'Тастыкталганы', 'label.documentPackage.approvedRatio', 'Доля подтверждения');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('registeredRatio', 'Катталганы', 'label.documentPackage.registeredRatio', 'Доля регистрации');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('state', 'Статусу', 'label.documentPackage.state', 'Статус');
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('type', 'Туру', 'label.documentPackage.type', 'Вид');
+
+
+INSERT INTO `mfloan`.`message_resource` (`eng`, `kgz`, `messageKey`, `rus`) VALUES ('type', 'Туру', 'label.documentPackage.type', 'Вид');
 
 
 
