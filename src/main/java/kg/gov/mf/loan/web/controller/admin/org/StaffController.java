@@ -147,9 +147,10 @@ public class StaffController {
 		model.addAttribute("staff", modelStaff);
 
 		model.addAttribute("departmentList", this.departmentService.findAll());	
-		model.addAttribute("organizationList", this.organizationService.findAll());	
+//		model.addAttribute("organizationList", this.organizationService.findAll());
+		model.addAttribute("organizationList", this.positionService.findAll());
 		model.addAttribute("positionList", this.positionService.findAll());	
-		model.addAttribute("personList", this.personService.findAll());		
+		model.addAttribute("personList", this.personService.findLast100());
 		
 
 		return "admin/org/staffForm";

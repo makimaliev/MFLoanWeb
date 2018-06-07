@@ -283,13 +283,20 @@
 								<span class="m--font-danger">*</span>
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
-								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.region}" onchange="updateRegionId(this);" th:title="#{label.select}">
-									<option th:each="regionInList : ${regionList}"
-											th:value="${regionInList.id}"
-											th:selected="(${regionInList.id} == *{address.region.id})"
-											th:text="${regionInList.name}"
+								<!--<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.region}" onchange="updateRegionId(this);" th:title="#{label.select}">-->
+									<!--<option th:each="regionInList : ${regionList}"-->
+											<!--th:value="${regionInList.id}"-->
+											<!--th:selected="(${regionInList.id} == *{address.region.id})"-->
+											<!--th:text="${regionInList.name}"-->
 
-									></option>
+									<!--&gt;</option>-->
+								<!--</select>-->
+
+								<select id="regionSelect" class="form-control m-bootstrap-select m_selectpicker" th:field="*{address.region}" >
+									<option th:each="regionInList : ${regionList}"
+											th:value="${{regionInList}}"
+											th:text="${regionInList.name}">
+									</option>
 								</select>
 							</div>
 						</div>
@@ -298,13 +305,15 @@
 								<span th:text="#{label.org.district}"></span>
 								<span class="m--font-danger">*</span>
 							</label>
-							<div class="col-lg-8 col-md-9 col-sm-12">
+							<div class="col-lg-8 col-md-9 col-sm-12" >
 								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.district}" onchange="updateDistrictId(this);" th:title="#{label.select}">
+
 									<option th:each="districtInList : ${districtList}"
 
 											th:value="${districtInList.id}"
 											th:selected="(${districtInList.id} == *{address.district.id})"
 											th:text="${districtInList.name}"></option>
+
 								</select>
 							</div>
 						</div>
@@ -363,6 +372,37 @@
 	</div>
 </form>
 
+<script th:inline="javascript">
+
+    /*<![CDATA[*/
+
+    $('#regionSelect').change(
+        function() {
+
+            // updateRegionId(this);
+
+            $.getJSON("/districtByRegionId/list", {
+                regionId : $(this).val(),
+                ajax : 'true'
+            }, function(data) {
+                var html = '';
+                var len = data.length;
+                for ( var i = 0; i < len; i++) {
+                    html += '<option value="' + data[i].id + '">'
+                        + data[i].name + '</option>';
+                }
+
+                html+='';
+
+                alert(html);
+
+                $('#districtSelect').html(html);
+            });
+        });
+
+    /*]]>*/
+</script>
+
 <script>
     $('.m_selectpicker').selectpicker('refresh');
 
@@ -375,6 +415,8 @@
         forceParse: 0,
         pickerPosition: 'bottom-left'
     });
+
+
 
 
 </script>

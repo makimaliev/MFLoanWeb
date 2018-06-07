@@ -3,6 +3,7 @@ package kg.gov.mf.loan.web.controller.admin.org;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import kg.gov.mf.loan.admin.org.model.*;
 import kg.gov.mf.loan.admin.org.service.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class BankDataController {
@@ -96,7 +98,7 @@ public class BankDataController {
 	}
 
 	@RequestMapping(value = "/bankData/save", method = RequestMethod.POST)
-	public String saveBankDataAndRedirectToBankDataList(@Validated @ModelAttribute("bankData") BankData bankData, BindingResult result) {
+	public ModelAndView saveBankDataAndRedirectToBankDataList(@Validated @ModelAttribute("bankData") BankData bankData, BindingResult result, ModelMap model) {
 
 		if (result.hasErrors()) {
 			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
@@ -106,20 +108,21 @@ public class BankDataController {
 			this.bankDataService.edit(bankData);
 		}
 
-		return "redirect:/organization/list";
+
+
+		String url = "/organization/"+bankData.getOrganization().getId()+"/details";
+
+		return new ModelAndView("redirect:"+url, model);
 
 	}
 
-	@RequestMapping("/bankData/{id}/remove")
-	public String removeBankDataAndRedirectToBankDataList(@PathVariable("id") long id) {
+	@RequestMapping("/organization/{organizationId}/bankData/{id}/remove")
+	public String removeBankDataAndRedirectToBankDataList(@PathVariable("organizationId") long organizationId,@PathVariable("id") long id) {
 
 		this.bankDataService.deleteById(id);
 
-		return "redirect:/organization/list";
+		return "redirect:/organization/"+organizationId+"/details";
 	}
 
-     
-
-     
 
 }

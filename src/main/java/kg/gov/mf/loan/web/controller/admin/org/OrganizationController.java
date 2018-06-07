@@ -27,6 +27,7 @@ import kg.gov.mf.loan.admin.org.service.*;
 import kg.gov.mf.loan.admin.sys.model.*;
 import kg.gov.mf.loan.admin.sys.service.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -171,8 +172,16 @@ public class OrganizationController {
 
 		Organization organization = this.organizationService.findById(id);
 
+
+		List<Position> organizationPositionList = new ArrayList<Position>();
+
+		for (Department department:organization.getDepartment())
+		{
+			organizationPositionList.addAll(this.positionService.findByDepartment(department));
+		}
+
 		model.addAttribute("organization", organization);
-		model.addAttribute("positionList", this.positionService.findAll());
+		model.addAttribute("positionList", organizationPositionList);
 		model.addAttribute("informationList", this.informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2, organization.getId()));		
 		
 
@@ -185,8 +194,15 @@ public class OrganizationController {
 
 		Organization organization = this.organizationService.findById(id);
 
+		List<Position> organizationPositionList = new ArrayList<Position>();
+
+		for (Department department:organization.getDepartment())
+		{
+			organizationPositionList.addAll(this.positionService.findByDepartment(department));
+		}
+
 		model.addAttribute("organization", organization);
-		model.addAttribute("positionList", this.positionService.findAll());
+		model.addAttribute("positionList", organizationPositionList);
 		model.addAttribute("informationList", this.informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2, organization.getId()));		
 		
 

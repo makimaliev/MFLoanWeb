@@ -54,7 +54,7 @@
 
 						<div class="m-section">
 							<div class="m-section__content">
-								<a data-remote="false"
+								<a sec:authorize="hasRole('ADMIN')" data-remote="false"
 								   data-toggle="modal"
 								   data-target="#organizationFormModal"
 								   th:href="@{/organization/add}"
@@ -117,20 +117,20 @@
 													<a class="dropdown-item" th:href="@{/organization/__${s.id}__/details}">
 																	<span th:text="#{label.table.view}"></span>
 																</a>
-													<a class="dropdown-item"
+													<a sec:authorize="hasRole('ADMIN')" class="dropdown-item"
 													   th:href="@{/organization/__${s.id}__/edit}"
 													   data-toggle="modal"
 													   data-target="#organizationFormModal">
 														<span th:text="#{label.table.edit}"></span>
 													</a>
-													<a class="dropdown-item" href="#">
-														<span>
-															<form th:action="@{/organization/__${s.id}__/remove}" method="post">
-																<input hidden="true" type="text" id="id" name="id" th:value="${s.id}" />
-																<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
-															</form>
-														</span>
-													</a>
+													<!--<a  class="dropdown-item" href="#">-->
+														<!--<span>-->
+															<!--<form th:action="@{/organization/__${s.id}__/remove}" method="post">-->
+																<!--<input hidden="true" type="text" id="id" name="id" th:value="${s.id}" />-->
+																<!--<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>-->
+															<!--</form>-->
+														<!--</span>-->
+													<!--</a>-->
 												</div>
 											</div>
 										</span>

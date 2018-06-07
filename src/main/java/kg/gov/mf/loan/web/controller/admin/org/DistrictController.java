@@ -6,14 +6,13 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import kg.gov.mf.loan.admin.org.model.*;
 import kg.gov.mf.loan.admin.org.service.*;
+
+import java.util.List;
 
 @Controller
 public class DistrictController {
@@ -41,7 +40,8 @@ public class DistrictController {
 
 		return "admin/org/districtList";
 	}
-	
+
+
 	
 	@RequestMapping("/district/{id}/view")
 	public String viewDistrictById(@PathVariable("id") long id, Model model) {
@@ -75,7 +75,16 @@ public class DistrictController {
 		model.addAttribute("district",modelDistrict);
 
 		return "admin/org/districtForm";
-	}	
+	}
+
+	@RequestMapping(value = "/districtByRegionId/list", method = RequestMethod.GET)
+	public @ResponseBody
+	List<District> findDistrictsByRegionId(@RequestParam(value = "regionId", required = true) Long regionId) {
+
+    	Region regionById = this.regionService.findById(regionId);
+
+		return districtService.findByRegion(regionById);
+	}
 
 	
 	@RequestMapping("/district/{id}/edit")
