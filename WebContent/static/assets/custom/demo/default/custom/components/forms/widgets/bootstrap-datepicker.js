@@ -18,6 +18,7 @@ var BootstrapDatepicker = function () {
         $('#m_datepicker_1_modal').datepicker({
             todayHighlight: true,
             orientation: "bottom left",
+            format: 'yyyy-mm-dd',
             templates: {
                 leftArrow: '<i class="la la-angle-left"></i>',
                 rightArrow: '<i class="la la-angle-right"></i>'

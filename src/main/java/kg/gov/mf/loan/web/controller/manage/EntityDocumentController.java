@@ -1,13 +1,17 @@
 package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import kg.gov.mf.loan.admin.sys.model.User;
+import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
@@ -38,6 +42,9 @@ public class EntityDocumentController {
 	@Autowired
 	EntityDocumentService edService;
 
+	@Autowired
+	UserService userService;
+
 	private static final int BUTTONS_TO_SHOW = 5;
 	private static final int INITIAL_PAGE = 0;
 	private static final int INITIAL_PAGE_SIZE = 10;
@@ -50,7 +57,7 @@ public class EntityDocumentController {
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 
-	@RequestMapping(value = {"/manage/order/entitylist/entity/documentpackage/entitydocument/list" }, method = RequestMethod.GET)
+	@RequestMapping(value = {"/manage/order/entitydocument/list" }, method = RequestMethod.GET)
 	public String listEntityDocuments(@RequestParam("pageSize") Optional<Integer> pageSize,
 									   @RequestParam("page") Optional<Integer> page, ModelMap model) {
 
@@ -145,6 +152,58 @@ public class EntityDocumentController {
 		else
 			edService.update(doc);
 			
+		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/{dpId}/view";
+	}
+
+	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/{dpId}/entitydocument/{edId}/progress", method=RequestMethod.GET)
+	public String completeEntityDocument(
+			@RequestParam("type") String type,
+			@RequestParam("description") String description,
+			@RequestParam("registeredNumber") Optional<String> registeredNumber,
+			@RequestParam("registeredDate") @DateTimeFormat(pattern="yyyy-MM-dd") Date registeredDate,
+			@RequestParam("registeredById") Optional<Long> registeredById,
+			@PathVariable("orderId")Long orderId,
+			@PathVariable("listId")Long listId,
+			@PathVariable("entityId")Long entityId,
+			@PathVariable("dpId")Long dpId,
+			@PathVariable("edId")Long edId)
+	{
+
+		EntityDocument document = edService.getById(edId);
+		User user = userService.findByUsername(Utils.getPrincipal());
+		Calendar now = Calendar.getInstance();
+		Date today = now.getTime();
+
+		if(type.equals("completed"))
+		{
+			document.setCompletedBy(user.getId());
+			document.setCompletedDate(today);
+			document.setCompletedDescription(description);
+		}
+		else if(type.equals("approved"))
+		{
+			document.setApprovedBy(user.getId());
+			document.setApprovedDate(today);
+			document.setApprovedDescription(description);
+		}
+		else
+		{
+			String regNumber = registeredNumber.orElse(null);
+			long regId = registeredById.orElse(0L);
+			//Date regDate = registeredDate.orElse(null);
+
+			if(regNumber != null && regId > 0 && registeredDate != null)
+			{
+				document.setRegisteredNumber(regNumber);
+				document.setRegisteredBy(edRBService.getById(regId));
+				document.setRegisteredDate(registeredDate);
+				document.setRegisteredDescription(description);
+			}
+
+		}
+
+		edService.update(document);
+
 		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/{dpId}/view";
 	}
 	

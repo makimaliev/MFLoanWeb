@@ -1,10 +1,10 @@
 package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentRegisteredBy;
+import kg.gov.mf.loan.web.util.EntityDocumentProgress;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -46,6 +46,9 @@ public class DocumentPackageController {
 	
 	@Autowired
 	EntityDocumentRegisteredByService rbService;
+
+    @Autowired
+    EntityDocumentRegisteredByService edRBService;
 
 	private static final int BUTTONS_TO_SHOW = 5;
 	private static final int INITIAL_PAGE = 0;
@@ -94,12 +97,32 @@ public class DocumentPackageController {
         model.addAttribute("dp", dp);
         
 		model.addAttribute("emptyED", new EntityDocument());
-		model.addAttribute("entityDocuments", dp.getEntityDocuments());
+
+        Set<EntityDocument> entityDocuments =  dp.getEntityDocuments();
+        List<EntityDocumentProgress> progressList = new ArrayList<>();
+        for (EntityDocument doc: entityDocuments
+             ) {
+
+            EntityDocumentProgress progress = new EntityDocumentProgress();
+            progress.setDocument(doc);
+            if(doc.getApprovedBy() > 0)
+                progress.setApproved(true);
+            if(doc.getCompletedBy() > 0)
+                progress.setCompleted(true);
+            if(doc.getRegisteredBy() != null && doc.getRegisteredBy().getId() > 0)
+                progress.setRegistered(true);
+            progress.calculateProgress();
+            progressList.add(progress);
+        }
+
+        model.addAttribute("progressList", progressList);
         
         model.addAttribute("orderId", orderId);
         model.addAttribute("listId", listId);
         model.addAttribute("entityId", entityId);
         model.addAttribute("dpId", dpId);
+        List<EntityDocumentRegisteredBy> rBs = edRBService.list();
+        model.addAttribute("rBs", rBs);
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "/manage/order/entitylist/entity/documentpackage/view";

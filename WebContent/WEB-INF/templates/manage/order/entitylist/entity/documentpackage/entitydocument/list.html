@@ -51,6 +51,7 @@
                                                 <th th:text="#{label.entity.doc.registeredNumber}"></th>
                                                 <th th:text="#{label.entity.doc.registeredDate}"></th>
                                                 <th th:text="#{label.entity.doc.registeredBy}"></th>
+                                                <th th:text="#{label.entity.doc.registeredDescription}"></th>
                                                 <th th:text="#{label.entity.doc.documentState}"></th>
                                                 <th>&nbsp;</th>
                                             </tr>
@@ -61,16 +62,15 @@
                                                 <td th:text="${ed.name}"></td>
                                                 <td th:text="${ed.completedBy}"></td>
                                                 <td th:text="${ed.completedDate}"></td>
-                                                <td th:text="${ed.completcompletedDescriptionedDate}"></td>
+                                                <td th:text="${ed.completedDescription}"></td>
                                                 <td th:text="${ed.approvedBy}"></td>
                                                 <td th:text="${ed.approvedDate}"></td>
                                                 <td th:text="${ed.approvedDescription}"></td>
                                                 <td th:text="${ed.registeredNumber}"></td>
                                                 <td th:text="${ed.registeredDate}"></td>
-                                                <td th:text="${ed.registeredBy.name}"></td>
+                                                <td th:text="${ed.registeredBy}"></td>
                                                 <td th:text="${ed.registeredDescription}"></td>
-                                                <td th:text="${ed.entityDocumentState.name}"></td>
-                                                <td th:text="${ed.entityDocumentState.name}"></td>
+                                                <td th:text="${ed.entityDocumentState}"></td>
                                                 <td class="table-actions text-right">
                                                     <!--<span>-->
                                                     <!--<div class="dropdown">-->
