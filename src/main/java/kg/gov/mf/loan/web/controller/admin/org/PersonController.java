@@ -1,23 +1,26 @@
 package kg.gov.mf.loan.web.controller.admin.org;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
+import kg.gov.mf.loan.admin.org.repository.PersonRepository;
+import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.model.debtor.OwnerType;
+import kg.gov.mf.loan.manage.model.debtor.QDebtor;
+import kg.gov.mf.loan.manage.repository.debtor.DebtorRepository;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
+import kg.gov.mf.loan.web.util.Pager;
+import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-
-
-
-
-
+import org.springframework.web.bind.annotation.*;
 
 
 import kg.gov.mf.loan.admin.org.model.*;
@@ -25,6 +28,9 @@ import kg.gov.mf.loan.admin.org.service.*;
 
 import kg.gov.mf.loan.admin.sys.model.*;
 import kg.gov.mf.loan.admin.sys.service.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class PersonController {
@@ -134,25 +140,60 @@ public class PersonController {
     public void setInformationService(InformationService rs)
     {
         this.informationService = rs;
-    } 
-    
-    
-	@RequestMapping(value = "/person/list", method = RequestMethod.GET)
-	public String listPersons(Model model) {
-		
-		model.addAttribute("person", new Person());
-		model.addAttribute("personList", this.personService.findLast100());
-		return "admin/org/personList";
-	}
-	
-	
-	@RequestMapping(value = "/person/table", method = RequestMethod.GET)
-	public String showPersonTable(Model model) {
-		model.addAttribute("person", new Person());
-		model.addAttribute("personList", this.personService.findLast100());
+    }
 
-		return "admin/org/personTable";
-	}	
+
+	@Autowired
+	PersonRepository personRepository;
+
+	private static final int BUTTONS_TO_SHOW = 5;
+	private static final int INITIAL_PAGE = 0;
+	private static final int INITIAL_PAGE_SIZE = 10;
+	private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
+
+
+    
+//	@RequestMapping(value = "/person/list", method = RequestMethod.GET)
+//	public String listPersons(Model model) {
+//
+//		model.addAttribute("person", new Person());
+//		model.addAttribute("personList", this.personService.findLast100());
+//		return "admin/org/personList";
+//	}
+
+
+	@RequestMapping(value = { "/person/", "/person/list" }, method = RequestMethod.GET)
+	public String listDebtors(@RequestParam("pageSize") Optional<Integer> pageSize, @RequestParam("page") Optional<Integer> page, ModelMap model) {
+
+		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
+		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
+
+		List<Person> persons = personService.findByParam("id", evalPage*evalPageSize, evalPageSize);
+		int count = personService.count();
+
+		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
+
+		model.addAttribute("person", new Person());
+		model.addAttribute("count", count/evalPageSize+1);
+		model.addAttribute("personList", persons);
+		model.addAttribute("selectedPageSize", evalPageSize);
+		model.addAttribute("pageSizes", PAGE_SIZES);
+		model.addAttribute("pager", pager);
+		model.addAttribute("current", evalPage);
+
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
+		return "/admin/org/personList";
+	}
+
+
+	
+//	@RequestMapping(value = "/person/table", method = RequestMethod.GET)
+//	public String showPersonTable(Model model) {
+//		model.addAttribute("person", new Person());
+//		model.addAttribute("personList", this.personService.findLast100());
+//
+//		return "admin/org/personTable";
+//	}
 	
 	@RequestMapping("/person/{id}/view")
 	public String viewPersonById(@PathVariable("id") long id, Model model) {
@@ -278,11 +319,47 @@ public class PersonController {
 	@RequestMapping("/person/{id}/remove")
 	public String removePersonAndRedirectToPersonList(@PathVariable("id") long id) {
 
-		this.personService.deleteById(id);
+		this.personService.delete(this.personRepository.findOne(id));
 
 		return "redirect:/person/list";
 	}
 
+
+
+	@RequestMapping(method = RequestMethod.GET, value = "/person/search")
+	public String findAllBySpecification(@RequestParam(value = "q") String q,
+										 @RequestParam("pageSize") Optional<Integer> pageSize,
+										 @RequestParam("page") Optional<Integer> page, ModelMap model) {
+
+		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
+		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
+
+		Sort sort = new Sort(new Sort.Order(Sort.Direction.ASC, "id"));
+		Pageable pageable = new PageRequest(evalPage, evalPageSize, sort);
+
+		QPerson person = QPerson.person;
+
+		BooleanExpression hasNameLike = person.name.like("%" + q + "%");
+		Page<Person> page1 = personRepository.findAll(hasNameLike, pageable);
+		List<Person> persons = page1.getContent();
+
+		int count = personRepository.findAll(hasNameLike, pageable).getTotalPages();
+
+		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
+
+		model.addAttribute("person", new Person());
+		model.addAttribute("count", count);
+		model.addAttribute("personList", persons);
+		model.addAttribute("selectedPageSize", evalPageSize);
+		model.addAttribute("pageSizes", PAGE_SIZES);
+		model.addAttribute("pager", pager);
+		model.addAttribute("current", evalPage);
+		model.addAttribute("q", q);
+
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
+
+		return "/admin/org/personList";
+	}
      
 
      

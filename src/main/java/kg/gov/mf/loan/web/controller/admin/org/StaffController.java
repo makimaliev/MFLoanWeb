@@ -137,27 +137,40 @@ public class StaffController {
 		return "admin/org/staffForm";
 	}
 	
-	@RequestMapping(value = "/organization/{organizationId}/staff/add", method = RequestMethod.GET)
-	public String getStaffAddFormOrganization(Model model,@PathVariable("organizationId") long organization_id) {
+	@RequestMapping(value = "/organization/{organizationId}/department/{departmentId}/staff/add", method = RequestMethod.GET)
+	public String getStaffAddFormOrganization(Model model,@PathVariable("organizationId") long organization_id, @PathVariable("departmentId") long department_id) {
 
 		Staff modelStaff = new Staff();
-		
+
 		modelStaff.setOrganization(this.organizationService.findById(organization_id));
-		
+		modelStaff.setDepartment(this.departmentService.findById(department_id));
+
 		model.addAttribute("staff", modelStaff);
 
-		model.addAttribute("departmentList", this.departmentService.findAll());	
+//		model.addAttribute("departmentList", this.departmentService.findAll());
 //		model.addAttribute("organizationList", this.organizationService.findAll());
-		model.addAttribute("organizationList", this.positionService.findAll());
-		model.addAttribute("positionList", this.positionService.findAll());	
-		model.addAttribute("personList", this.personService.findLast100());
-		
+//		model.addAttribute("organizationList", this.positionService.findAll());
+		model.addAttribute("positionList", this.positionService.findByDepartment(this.departmentService.findById(department_id)));
+
+//		model.addAttribute("personList", this.personService.findLast100());
+
 
 		return "admin/org/staffForm";
 	}
-	
-	
-	
+
+
+	@RequestMapping(value = "/department/{departmentId}/staff/list", method = RequestMethod.GET)
+	public String getStaffListByDepartment(Model model,@PathVariable("departmentId") long department_id) {
+
+		model.addAttribute("staffList", this.staffService.findAllByDepartment(departmentService.findById(department_id)));
+		model.addAttribute("organizationList", this.organizationService.findAll());
+
+		return "admin/org/staffView";
+	}
+
+
+
+
 	@RequestMapping("/staff/{id}/edit")
 	public String getStaffEditForm(@PathVariable("id") long id, Model model) {
 		model.addAttribute("staff", this.staffService.findById(id));

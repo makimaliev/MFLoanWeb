@@ -166,6 +166,29 @@
 													</div>
 												</div>
 
+												<div class="modal fade" id="positionFormModal" tabindex="-1"
+													 role="dialog" aria-labelledby="myModalLabel"
+													 aria-hidden="true">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<!--<div class="modal-header">-->
+															<!--<button type="button" class="close" data-dismiss="modal"-->
+															<!--aria-label="Close">-->
+															<!--<span aria-hidden="true">&times;</span>-->
+															<!--</button>-->
+															<!--<h4 class="modal-title" id="myModalLabel" >Добавить</h4>-->
+															<!--</div>-->
+															<div class="modal-body">...</div>
+															<!--<div class="modal-footer">-->
+															<!--<button type="button" class="btn btn-default"-->
+															<!--data-dismiss="modal">Close</button>-->
+															<!--<button type="button" class="btn btn-success">Save-->
+															<!--changes</button>-->
+															<!--</div>-->
+														</div>
+													</div>
+												</div>
+
 
 
 											</div>
@@ -185,10 +208,10 @@
 													   data-target="#informationFormModal" th:href="@{/information/add}"
 													   role="button" class="btn btn-success" th:text="#{label.add.information}"> Add
 														Information</a>
-													<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
-													   data-target="#staffFormModal" th:href="@{/staff/add}"
-													   role="button" class="btn btn-success" th:text="#{label.add.staff}">Add
-														Staff </a>
+													<!--<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"-->
+													   <!--data-target="#staffFormModal" th:href="@{/staff/add}"-->
+													   <!--role="button" class="btn btn-success" th:text="#{label.add.staff}">Add-->
+														<!--Staff </a>-->
 
 													<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
 													   data-target="#organizationFormModal" th:href="@{/organization/__${organization.id}__/edit}"
@@ -225,6 +248,8 @@
 											<li class="nav-item"><a class="nav-link m--font-primary" href="#tab_15_6" data-toggle="tab"> Информация </a></li>
 										</ul>
 										<div class="tab-content">
+
+											<!--ADDRESS TAB-->
 											<div class="tab-pane active" id="tab_15_1">
 
 
@@ -277,6 +302,8 @@
 												</div>
 
 											</div>
+
+											<!--IDENTITY DOC TAB-->
 											<div class="tab-pane" id="tab_15_2">
 												<div class="m-widget1">
 													<div class="m-widget1__item">
@@ -329,6 +356,8 @@
 													</div>
 												</div>
 											</div>
+
+											<!--CONTACTS TAB-->
 											<div class="tab-pane" id="tab_15_3">
 
 												<div class="row">
@@ -352,11 +381,13 @@
 													</div>
 												</div>
 											</div>
+
+											<!--BANK DATA TAB-->
 											<div class="tab-pane" id="tab_15_4">
 
 												<div class="row">
 
-													<div class="col-md-6">
+													<div class="col-md-12">
 														<!--begin::Section-->
 														<div class="m-section">
 															<div class="m-section__content">
@@ -416,51 +447,121 @@
 													</div>
 												</div>
 											</div>
+
+											<!--DEPARTMENTS TAB-->
 											<div class="tab-pane" id="tab_15_5">
+												<!--<div class="row">-->
+													<!--<div class="col-md-12">-->
+														<!--<table id="positionTable" class="table table-hover table-condensed table-striped table-bordered compact condensed" >-->
+
+															<!--<tbody>-->
+															<!--<tr th:each="positionInList : ${positionList}">-->
+																<!--<td th:text="${positionInList?.name}">Thymus Thymi</td>-->
+
+															<!--</tr>-->
+															<!--</tbody>-->
+														<!--</table>-->
+													<!--</div>-->
+												<!--</div>-->
+
 												<div class="row">
 													<div class="col-md-6">
-														<table
-																class="table table-hover table-condensed table-striped table-bordered compact condensed">
+														<div class="m-portlet m-portlet--mobile">
+															<div class="m-portlet__head">
+																<div class="m-portlet__head-caption">
+																	<div class="m-portlet__head-title">
+																		<h3 class="m-portlet__head-text" th:text="#{label.organization.department}"></h3>
+																	</div>
+																</div>
+																<div class="m-portlet__head-tools">
+																	<ul class="m-portlet__nav">
+																		<li class="m-portlet__nav-item">
+																			<div class="m-input-icon m-input-icon--left">
+																				<input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
+																				<span class="m-input-icon__icon m-input-icon__icon--left">
+																					<span><i class="la la-search"></i></span>
+																				</span>
+																			</div>
+																		</li>
+																	</ul>
+																</div>
+															</div>
+															<div class="m-portlet__body">
+																<table class="table" id="departmentTable">
+																	<thead class="thead-default">
+																	<tr>
+																		<th>ID</th>
+																		<th th:text="#{label.department.name}">Id</th>
+																		<th th:text="#{label.department.description}">Name</th>
+																		<th>&nbsp;</th>
+																	</tr>
+																	</thead>
+																	<tbody>
+																	<tr th:each="departmentInList : ${organization.department}">
+																		<td th:text="${departmentInList?.id}">ID</td>
+																		<td th:text="${departmentInList?.name}">name</td>
+																		<td th:text="${departmentInList?.description}">Description</td>
 
-															<tbody>
-															<tr th:each="departmentInList : ${organization.department}">
-																<td th:text="${departmentInList?.name}">Thymus Thymi</td>
-																<td th:text="${departmentInList?.description}">Thymus Thymi</td>
-																<td th:text="${departmentInList?.enabled}">Thymus
-																	Thymi
-																</td>
-																<td><a data-remote="false" data-toggle="modal"
-																	   data-target="#organizationFormModal"
-																	   th:href="@{/department/__${departmentInList.id}__/edit}" role="button"
-																	   class="btn btn-xs blue-stripe"> Edit </a></td>
-																<td>
-																	<form th:action="@{/department/__${departmentInList.id}__/remove}"
-																		  method="post">
-																		<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-																	</form>
-																</td>
-																<td>
-																	<a data-remote="false" data-toggle="modal"
-																	   data-target="#organizationFormModal"
-																	   th:href="@{/department/__${departmentInList.id}__/position/add}" role="button"
-																	   class="btn btn-xs blue-stripe"> Add position </a>
-																</td>
-															</tr>
-															</tbody>
-														</table>
+																		<td class="table-actions text-right">
+																			<span>
+																				<div class="dropdown">
+																					<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																						<i class="la la-ellipsis-h"></i>
+																					</a>
+																					<div class="dropdown-menu dropdown-menu-right">
+
+																						<a class="dropdown-item"
+																						   th:href="@{/department/__${departmentInList.id}__/edit}"
+																						   data-toggle="modal"
+																						   data-target="#departmentFormModal">
+																							<span th:text="#{label.table.edit}"></span>
+																						</a>
+
+
+																						<a class="dropdown-item" href="#">
+																							<span>
+																								<form th:action="@{/department/__${departmentInList.id}__/remove}" method="post">
+																									<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																								</form>
+																							</span>
+																						</a>
+
+																						<a class="dropdown-item"
+																						   th:href="@{/department/__${departmentInList.id}__/position/add}"
+																						   data-toggle="modal"
+																						   data-target="#positionFormModal">
+																							<span th:text="#{label.department.addPosition}"></span>
+																						</a>
+																					</div>
+																				</div>
+																			</span>
+																		</td>
+
+
+
+
+
+
+
+																	</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
 													</div>
-													<div class="col-md-6">
-														<table
-																class="table table-hover table-condensed table-striped table-bordered compact condensed">
 
-															<tbody>
-															<tr th:each="positionInList : ${positionList}">
-																<td th:text="${positionInList?.name}">Thymus Thymi</td>
 
-															</tr>
-															</tbody>
-														</table>
-													</div>
+														<div class="col-md-6">
+
+															<input hidden="true" type="text" id="department_id" name="department_id" />
+
+															<div id="content"></div>
+
+														</div>
+
+
+
+
 												</div>
 											</div>
 											<div class="tab-pane " id="tab_15_6">
@@ -518,13 +619,7 @@
 							</div>
 
 							<div class="row">
-								<div class="col-md-12">
 
-									<input hidden="true" type="text" id="organization_id" name="organization_id" />
-
-									<div id="content"></div>
-
-								</div>
 							</div>
 
 						</div>
@@ -557,27 +652,48 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-        var table = $('#organizationTable').DataTable({
+        var table = $('#departmentTable').DataTable({
             stateSave: true,
-            "language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
-            "info":     false,
+            language: {
+                paginate: {
+                    previous: '<i class="la la-angle-left"></i>', // or '→'
+                    next: '<i class="la la-angle-right"></i>' // or '←'
+                },
+                lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
+            },
+            "info": false,
             keys: {
                 focus: ':eq(0)'
-            }
+            },
+            "sDom": 'rtlip'
         } );
+        $('#generalSearch').keyup(function(){
+            table.search($(this).val()).draw() ;
+        });
+
+        $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
+        $('.selectpicker').selectpicker('refresh');
 
         table.on('key-focus', function(e, datatable, cell) {
 
             var rowData = datatable.row(cell.index().row).data();
 
-            $("#organization_id").val(rowData[0]);
+            $("#department_id").val(rowData[0]);
 
-            var sUrl ="/MFCredit/organization/" + rowData[0]+"/view";
+            var sUrl ="/department/"+rowData[0]+"/staff/list";
 
             $.get(sUrl, function(data) {
-
                 $('#content').html(data);
             });
+
+            var row = datatable.row( cell.index().row );
+
+            table.$('tr.info').removeClass('info');
+            $( row.node() ).addClass( "info" );
+
+            var rowData = row.data();
+
+            var colData = datatable.cell( { focused: true } ).data();
 
         });
 
@@ -684,12 +800,21 @@
 
     $("#staffFormModal").on("show.bs.modal", function(e) {
 
+
         var link = $(e.relatedTarget);
         var organizationID = /*[[${organization.id}]]*/ '1';
+        var departmentID = $("#department_id").val();
+
+
 
         if(link.attr("href").indexOf('staff/add')>0)
         {
-            $(this).find(".modal-body").load(link.attr("href").replace("/staff/add","/organization/"+organizationID+"/staff/add"));
+
+            var url = link.attr("href").replace("/staff/add","/organization/"+organizationID+"/department/"+departmentID+"/staff/add");
+
+
+
+            $(this).find(".modal-body").load(url);
 
         }
         else
@@ -701,6 +826,17 @@
 
     $("#organizationFormModal").on("show.bs.modal", function(e) {
 
+
+
+        var link = $(e.relatedTarget);
+        var organizationID = /*[[${organization.id}]]*/ '1';
+
+        $(this).find(".modal-body").load(link.attr("href"));
+
+    });
+
+    $("#positionFormModal").on("show.bs.modal", function(e) {
+
         var link = $(e.relatedTarget);
         var organizationID = /*[[${organization.id}]]*/ '1';
 
@@ -711,6 +847,7 @@
 
     /*]]>*/
 </script>
+
 
 
 

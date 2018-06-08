@@ -105,7 +105,11 @@ public class PositionController {
 			this.positionService.edit(position);
 		}
 
-		return "redirect:/organization/list";
+		Department department = this.departmentService.findById(position.getDepartment().getId());
+
+
+
+		return "redirect:/organization/"+department.getOrganization().getId()+"/details";
 
 	}
 

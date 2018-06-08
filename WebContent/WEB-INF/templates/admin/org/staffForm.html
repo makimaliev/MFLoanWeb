@@ -16,25 +16,29 @@
 		<input hidden="true" type="text" id="id" name="id" th:field="*{id}" />
 		<input hidden="true" type="text" id="employmentHistory.id" name="employmentHistory.id" th:field="*{employmentHistory.id}" />
 
-		<div class="form-group m-form__group row">
-			<label class="col-form-label col-lg-4 col-sm-12">
-				<span th:text="#{label.staff.name}"></span>
-				<span class="m--font-danger">*</span>
-			</label>
-			<div class="col-lg-8 col-md-9 col-sm-12">
-				<input type="text" class="form-control" name="name" th:field="*{name}"/>
-			</div>
-		</div>
+		<input hidden="true" type="text" class="form-control" name="name" th:field="*{name}"/>
+		<input hidden="true" type="text" class="form-control" name="enabled" th:field="*{enabled}"/>
+		<input hidden="true" type="text" class="form-control" name="employmentHistory.number" th:field="*{employmentHistory.number}"/>
 
-		<div class="form-group m-form__group row">
-			<label class="col-form-label col-lg-4 col-sm-12">
-				<span th:text="#{label.staff.enabled}"></span>
-				<span class="m--font-danger">*</span>
-			</label>
-			<div class="col-lg-8 col-md-9 col-sm-12">
-				<input type="text" class="form-control" name="enabled" th:field="*{enabled}"/>
-			</div>
-		</div>
+		<!--<div class="form-group m-form__group row">-->
+			<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+				<!--<span th:text="#{label.staff.name}"></span>-->
+				<!--<span class="m&#45;&#45;font-danger">*</span>-->
+			<!--</label>-->
+			<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+				<!--<input type="text" class="form-control" name="name" th:field="*{name}"/>-->
+			<!--</div>-->
+		<!--</div>-->
+
+		<!--<div class="form-group m-form__group row">-->
+			<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+				<!--<span th:text="#{label.staff.enabled}"></span>-->
+				<!--<span class="m&#45;&#45;font-danger">*</span>-->
+			<!--</label>-->
+			<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+				<!--<input type="text" class="form-control" name="enabled" th:field="*{enabled}"/>-->
+			<!--</div>-->
+		<!--</div>-->
 
 		<div class="form-group m-form__group row">
 			<label class="col-form-label col-lg-4 col-sm-12">
@@ -50,43 +54,44 @@
 			</div>
 		</div>
 
-		<div class="form-group m-form__group row">
-			<label class="col-form-label col-lg-4 col-sm-12">
-				<span th:text="#{label.staff.employmentHistoryNumber}"></span>
-				<span class="m--font-danger">*</span>
-			</label>
-			<div class="col-lg-8 col-md-9 col-sm-12">
-				<input type="text" class="form-control" name="employmentHistory.number" th:field="*{employmentHistory.number}"/>
-			</div>
-		</div>
 
-		<div class="form-group m-form__group row">
-			<label class="col-form-label col-lg-4 col-sm-12">
-				<span th:text="#{label.staff.organization}"></span>
-				<span class="m--font-danger">*</span>
-			</label>
-			<div class="col-lg-8 col-md-9 col-sm-12">
-				<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{organization}" th:title="#{label.select}">
-					<option th:each="organizationInList : ${organizationList}"
-							th:value="${organizationInList.id}"
-							th:text="${organizationInList.name}"></option>
-				</select>
-			</div>
-		</div>
+		<!--<div class="form-group m-form__group row">-->
+			<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+				<!--<span th:text="#{label.staff.employmentHistoryNumber}"></span>-->
+				<!--<span class="m&#45;&#45;font-danger">*</span>-->
+			<!--</label>-->
+			<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+				<!--<input type="text" class="form-control" name="employmentHistory.number" th:field="*{employmentHistory.number}"/>-->
+			<!--</div>-->
+		<!--</div>-->
 
-		<div class="form-group m-form__group row">
-			<label class="col-form-label col-lg-4 col-sm-12">
-				<span th:text="#{label.staff.department}"></span>
-				<span class="m--font-danger">*</span>
-			</label>
-			<div class="col-lg-8 col-md-9 col-sm-12">
-				<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{department}" th:title="#{label.select}">
-					<option th:each="departmentInList : ${departmentList}"
-							th:value="${departmentInList.id}"
-							th:text="${departmentInList.name}"></option>
-				</select>
-			</div>
-		</div>
+		<!--<div class="form-group m-form__group row">-->
+			<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+				<!--<span th:text="#{label.staff.organization}"></span>-->
+				<!--<span class="m&#45;&#45;font-danger">*</span>-->
+			<!--</label>-->
+			<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+				<!--<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{organization}" th:title="#{label.select}">-->
+					<!--<option th:each="organizationInList : ${organizationList}"-->
+							<!--th:value="${organizationInList.id}"-->
+							<!--th:text="${organizationInList.name}"></option>-->
+				<!--</select>-->
+			<!--</div>-->
+		<!--</div>-->
+
+		<!--<div class="form-group m-form__group row">-->
+			<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+				<!--<span th:text="#{label.staff.department}"></span>-->
+				<!--<span class="m&#45;&#45;font-danger">*</span>-->
+			<!--</label>-->
+			<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+				<!--<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{department}" th:title="#{label.select}">-->
+					<!--<option th:each="departmentInList : ${departmentList}"-->
+							<!--th:value="${departmentInList.id}"-->
+							<!--th:text="${departmentInList.name}"></option>-->
+				<!--</select>-->
+			<!--</div>-->
+		<!--</div>-->
 
 		<div class="form-group m-form__group row">
 			<label class="col-form-label col-lg-4 col-sm-12">

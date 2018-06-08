@@ -18,153 +18,86 @@
 
 
 
-
-
-
-
-
-
-
-
-			<div class="tabbable-custom ">
-				<ul class="nav nav-tabs " id="staff_tabs">
-					<li class="active"><a href="#tab_15_1" data-toggle="tab">
-							Данные о сотруднике </a></li>
-					<li><a href="#tab_15_2" data-toggle="tab"> Персональные
-							данные </a></li>
-				</ul>
-				<div class="tab-content">
-					<div class="tab-pane active" id="tab_15_1">
-
-
-
-						<div class="row">
-							<div class="col-md-3">
-
-
-
-								<table
-									class="table table-hover table-condensed table-striped table-bordered compact condensed">
-
-									<tbody>
-										<tr>
-											<td>Organization</td>
-											<td th:text="${staff.organization.name}">Organization</td>
-											<td><a
-												th:href="@{/organization/__${staff.organization.id}__/details}"
-												role="button" class="btn btn-xs green-stripe"> View </a></td>
-											<td>
-										</tr>
-										<tr>
-											<td>Department</td>
-											<td th:text="${staff.department.name}">Department</td>
-											<td><a
-												th:href="@{/department/__${staff.department.id}__/details}"
-												role="button" class="btn btn-xs green-stripe"> View </a></td>
-											<td>											
-										</tr>
-										<tr>
-											<td>Position</td>
-											<td th:text="${staff.position.name}">Position</td>
-											<td><a
-												th:href="@{/position/__${staff.position.id}__/details}"
-												role="button" class="btn btn-xs green-stripe"> View </a></td>
-											<td>											
-										</tr>
-
-										<tr>
-											<td>Person</td>
-											<td th:text="${staff.person.name}">Person name</td>
-											<td><a
-												th:href="@{/person/__${staff.person.id}__/details}"
-												role="button" class="btn btn-xs green-stripe"> View </a></td>
-											<td>											
-										</tr>
-										<tr>
-											<td>EmploymentHistory</td>
-											<td th:text="${staff.employmentHistory.number}">employmentHistory.number</td>
-											<td><a
-												th:href="@{/employmentHistory/__${staff.employmentHistory.id}__/details}"
-												role="button" class="btn btn-xs green-stripe"> View </a></td>
-											<td>											
-										</tr>
-
-
-
-
-
-
-									</tbody>
-								</table>
-
-
-
-							</div>
+			<div class="m-portlet m-portlet--mobile">
+				<div class="m-portlet__head">
+					<div class="m-portlet__head-caption">
+						<div class="m-portlet__head-title">
+							<h3 class="m-portlet__head-text" th:text="#{label.staffs}"></h3>
 						</div>
-
-
-
-
 					</div>
-					<div class="tab-pane" id="tab_15_2">
-
-
-						<div class="row">
-							<div class="col-md-3">
-
-
-
-								<table
-									class="table table-hover table-condensed table-striped table-bordered compact condensed">
-
-									<tbody>
-										<tr>
-											<td>Person</td>
-											<td th:text="${staff.person.name}">Person name</td>
-										</tr>
-										<tr>
-											<td>EmploymentHistory</td>
-											<td th:text="${staff.employmentHistory.number}">employmentHistory.number</td>
-										</tr>
-
-
-
-
-
-
-
-									</tbody>
-								</table>
-
-
-
-							</div>
-						</div>
-
-
-
-						<div class="row">
-							<div class="col-md-12"></div>
-
-
-						</div>
-
-
-
+					<div class="m-portlet__head-tools">
+						<ul class="m-portlet__nav">
+							<li class="m-portlet__nav-item">
+								<div class="m-input-icon m-input-icon--left">
+									<input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
+									<span class="m-input-icon__icon m-input-icon__icon--left">
+											<span>
+												<i class="la la-search"></i>
+											</span>
+										</span>
+								</div>
+							</li>
+							<li class="m-portlet__nav-item">
+								<a data-remote="false" data-toggle="modal"
+								   data-target="#staffFormModal"
+								   th:href="@{/staff/add}"
+								   role="button"
+								   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+								   th:text="#{label.add.staff}"></a>
+							</li>
+						</ul>
 					</div>
+				</div>
+				<div class="m-portlet__body">
 
+					<div class="m-section">
+						<table class="table" id="orgFormTable">
+							<thead class="thead-default">
+							<tr>
+								<th>ID</th>
+								<th th:text="#{label.staff.name}"></th>
+								<!--<th th:text="#{label.person.username}"></th>-->
+								<!--<th th:text="#{label.person.enabled}"></th>-->
+								<th>&nbsp;</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr th:each="s : ${staffList}">
+								<td th:text="${s?.id}"></td>
+								<td th:text="${s?.name}"></td>
+								<!--<td th:text="${s?.user?.username}"></td>-->
+								<!--<td th:text="${s?.enabled}"></td>-->
+								<td class="table-actions text-right">
+										<span>
+											<div class="dropdown">
+												<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+													<i class="la la-ellipsis-h"></i>
+												</a>
+												<div class="dropdown-menu dropdown-menu-right">
+													<a class="dropdown-item"
+													   data-remote="false" data-toggle="modal"
+													   data-target="#staffFormModal"
+													   th:href="@{/staff/__${s.id}__/edit}" role="button">
+														<span th:text="#{label.table.edit}"></span>
+													</a>
+													<a class="dropdown-item" href="#">
+														<span>
+															<form th:action="@{/staff/__${s.id}__/remove}" method="post">
+																<input hidden="true" type="text" id="id" name="id" th:value="${s.id}" />
+																<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+															</form>
+														</span>
+													</a>
+												</div>
+											</div>
+										</span>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
-
-
-
-
-
-
-
-
-
-
 
 
 

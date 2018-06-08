@@ -105,16 +105,23 @@ public class DepartmentController {
 			this.departmentService.edit(department);
 		}
 
-		return "redirect:/organization/list";
+//		return "redirect:/organization/list";
+
+		return "redirect:/organization/"+department.getOrganization().getId()+"/details";
 
 	}
 
 	@RequestMapping("/department/{id}/remove")
 	public String removeDepartmentAndRedirectToDepartmentList(@PathVariable("id") long id) {
 
+    	Department department = this.departmentService.findById(id);
+    	long organizationId = department.getOrganization().getId();
+
 		this.departmentService.deleteById(id);
 
-		return "redirect:/organization/list";
+//		return "redirect:/organization/list";
+
+		return "redirect:/organization/"+organizationId+"/details";
 	}
 
      
