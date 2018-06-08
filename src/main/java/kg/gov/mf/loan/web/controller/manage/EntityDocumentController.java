@@ -203,10 +203,19 @@ public class EntityDocumentController {
 		}
 
 		edService.update(document);
+		updateDocumentPackageInfo(dpId);
 
 		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/{dpId}/view";
 	}
-	
+
+	private void updateDocumentPackageInfo(Long dpId) {
+
+		DocumentPackage dp = dpService.getById(dpId);
+		dp.calculateRatios();
+		dpService.update(dp);
+
+	}
+
 	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/{dpId}/entitydocument/delete", method=RequestMethod.POST)
     public String deleteDocumentPackage(long id, @PathVariable("orderId")Long orderId, @PathVariable("listId")Long listId, @PathVariable("entityId")Long entityId, @PathVariable("dpId")Long dpId) {
 		if(id > 0)
