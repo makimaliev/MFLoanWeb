@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
 	<title th:text="#{label.add.debtor.title}"></title>
@@ -39,14 +39,16 @@
 						<div class="m-portlet__body">
 							<div class="m-form__section">
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.add.debtor.name}">
-										Name <span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" th:field="*{name}">
-									</div>
-								</div>
+                                <div class="form-group m-form__group row">
+                                    <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.add.debtor.owner}">
+                                        Owner <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-4 col-md-9 col-sm-12">
+                                        <div class="m-typeahead">
+                                            <input class="form-control m-input" id="owner_typeahead" type="text" placeholder="Owners"th:value="${ownerText}">
+                                        </div>
+                                    </div>
+                                </div>
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.add.debtor.type}">
@@ -54,21 +56,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{debtorType}" th:title="#{label.select}">
-											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="type : ${types}" th:value="${{type}}" th:text="${type.name}"></option>
-											</option>
-										</select>
-									</div>
-								</div>
-
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.add.debtor.orgForm}">
-										Organization form <span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{orgForm}" th:title="#{label.select}">
-											<option value="0" th:text="#{label.select}"></option>
-											<option th:each="form : ${forms}" th:value="${{form}}" th:text="${form.name}"></option>
 											</option>
 										</select>
 									</div>
@@ -80,21 +68,9 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{workSector}" th:title="#{label.select}">
-											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="sector : ${sectors}" th:value="${{sector}}" th:text="${sector.name}"></option>
 											</option>
 										</select>
-									</div>
-								</div>
-
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.add.debtor.owner}">
-										Owner <span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<div class="m-typeahead">
-											<input class="form-control m-input" id="owner_typeahead" type="text" placeholder="Owners">
-										</div>
 									</div>
 								</div>
 

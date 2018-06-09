@@ -200,27 +200,8 @@ public class DebtorController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/save", method=RequestMethod.GET)
 	public String formDebtor(Model model, @PathVariable("debtorId")Long debtorId)
 	{
-		/*
-		List<Owner> entities = new ArrayList<Owner>();
-		List<Person> persons = personService.findAll();
-		List<Organization> orgs = orgService.findAll();
-		for (Person p : persons) {
-			entities.add(new Owner(OwnerType.PERSON, p));
-		}
-
-		for (Organization org : orgs) {
-			entities.add(new Owner(OwnerType.ORGANIZATION, org));
-		}
-
-		model.addAttribute("entities", entities);
-
-		*/
-
 		List<DebtorType> types = debtorTypeService.list();
 		model.addAttribute("types", types);
-
-		List<OrganizationForm> forms = formService.list();
-		model.addAttribute("forms", forms);
 
 		List<WorkSector> sectors = sectorService.list();
 		model.addAttribute("sectors", sectors);
@@ -228,26 +209,19 @@ public class DebtorController {
 		if(debtorId == 0)
 		{
 			Debtor debtor = new Debtor();
-			Owner owner = new Owner();
-			owner.setId(-1);
-			debtor.setOwner(owner);
 			model.addAttribute("debtor", debtor);
+			model.addAttribute("ownerText", "");
 		}
 
 		if(debtorId > 0)
 		{
 			Debtor debtor = debtorService.getById(debtorId);
 			Owner owner = debtor.getOwner();
-			/*
-			for (Owner entity : entities) {
-				if(owner.getEntityId() == entity.getEntityId() && owner.getOwnerType().equals(entity.getOwnerType())) {
-					entities.remove(entity);
-					entities.add(owner);
-					break;
-				}
-			}
-			*/
 			model.addAttribute("debtor", debtor);
+			String ownerText = "[" + owner.getId() + "] "
+					+ owner.getName()
+					+ " (" + (owner.getOwnerType().equals(OwnerType.ORGANIZATION)? "Организация":"Физ. лицо") +")";
+			model.addAttribute("ownerText", ownerText);
 		}
 
 		return "/manage/debtor/save";
@@ -259,14 +233,24 @@ public class DebtorController {
 		if(debtor.getId() == 0){
 			Owner owner = ownerRepository.findOne(debtor.getOwner().getId());
 			debtor.setOwner(owner);
+			debtor.setName(owner.getName());
+			if(owner.getOwnerType().equals(OwnerType.ORGANIZATION))
+				debtor.setOrgForm(formService.getById(1L));
+			else
+				debtor.setOrgForm(formService.getById(2L));
 			debtorService.add(debtor);
 		}
 
 		else
 		{
-			Owner oldOwner = debtorService.getById(debtor.getId()).getOwner();
+			Owner owner = ownerRepository.findOne(debtor.getOwner().getId());
+			debtor.setOwner(owner);
+			debtor.setName(owner.getName());
+			if(owner.getOwnerType().equals(OwnerType.ORGANIZATION))
+				debtor.setOrgForm(formService.getById(1L));
+			else
+				debtor.setOrgForm(formService.getById(2L));
 			debtorService.update(debtor);
-			ownerService.remove(oldOwner);
 		}
 
 		return "redirect:" + "/manage/debtor/list";
