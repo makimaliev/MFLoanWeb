@@ -207,6 +207,19 @@ public class PersonController {
 
 		return "admin/org/personView";
 	}
+
+	@RequestMapping("/person/{id}/details")
+	public String viewPersonDetailsById(@PathVariable("id") long id, Model model) {
+
+		Person person = this.personService.findById(id);
+
+		model.addAttribute("person", person);
+		model.addAttribute("positionList", this.positionService.findAll());
+		model.addAttribute("informationList", this.informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2, person.getId()));
+
+
+		return "admin/org/personDetails";
+	}
     
 	
 	@RequestMapping(value = "/person/add", method = RequestMethod.GET)
@@ -287,7 +300,11 @@ public class PersonController {
 	@RequestMapping(value = "/person/save", method = RequestMethod.POST)
 	public String savePersonAndRedirectToPersonList(@Validated @ModelAttribute("person") Person person, BindingResult result) {
 
-		
+
+		person.getIdentityDoc().getIdentityDocDetails().setFullname(person.getIdentityDoc().getIdentityDocDetails().getLastname() +" "+person.getIdentityDoc().getIdentityDocDetails().getFirstname()+" "+person.getIdentityDoc().getIdentityDocDetails().getMidname());
+		person.setName(person.getIdentityDoc().getIdentityDocDetails().getFullname());
+
+
 		if (result.hasErrors()) {
 			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
 		} else if (person.getId() == 0) {
@@ -296,7 +313,8 @@ public class PersonController {
 //			person.setIdentityDoc(this.identityDocService.findById(person.getIdentityDoc().getId()));
 			
 			//person.setOrgForm(this.orgFormService.findById(person.getOrgForm().getId()));
-			
+
+
 			this.personService.create(person);
 
 			Owner newOwner = new Owner();
@@ -312,7 +330,7 @@ public class PersonController {
 			this.personService.edit(person);
 		}
 
-		return "redirect:/person/list";
+		return "redirect:/person/"+person.getId()+"/details";
 
 	}
 

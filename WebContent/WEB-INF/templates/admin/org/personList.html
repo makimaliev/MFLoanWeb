@@ -57,30 +57,30 @@
 
 						<div class="m-section">
 							<div class="m-section__content">
-								<a data-remote="false"
+								<a sec:authorize="hasRole('ADMIN')" data-remote="false"
 								   data-toggle="modal"
 								   data-target="#personFormModal"
 								   th:href="@{/person/add}"
 								   role="button"
 								   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
 								   th:text="#{label.add.person}"></a>
-								<a data-remote="false"
-								   data-toggle="modal"
-								   data-target="#personFormModal"
-								   th:href="@{/information/add}"
-								   role="button"
-								   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
-								   th:text="#{label.add.information}"></a>
+								<!--<a data-remote="false"-->
+								   <!--data-toggle="modal"-->
+								   <!--data-target="#personFormModal"-->
+								   <!--th:href="@{/information/add}"-->
+								   <!--role="button"-->
+								   <!--class="m-portlet__nav-link btn btn-success m-btn m-btn&#45;&#45;air"-->
+								   <!--th:text="#{label.add.information}"></a>-->
 							</div>
 						</div>
 
 						<div class="m-section">
-							<table class="table" id="orgFormTable">
+							<table class="table" id="personTable">
 								<thead class="thead-default">
 								<tr>
 									<th>ID</th>
 									<th th:text="#{label.person.name}"></th>
-									<th th:text="#{label.person.description}"></th>
+									<th th:text="#{label.person.district}"></th>
 									<th>&nbsp;</th>
 								</tr>
 								</thead>
@@ -88,7 +88,7 @@
 								<tr th:each="s : ${personList}">
 									<td th:text="${s.id}"></td>
 									<td th:text="${s.name}"></td>
-									<td th:text="${s.description}"></td>
+									<td th:text="${s.address.district.name}"></td>
 									<td class="table-actions text-right">
 										<span>
 											<div class="dropdown">
@@ -96,13 +96,16 @@
 													<i class="la la-ellipsis-h"></i>
 												</a>
 												<div class="dropdown-menu dropdown-menu-right">
-													<a class="dropdown-item"
+													<a sec:authorize="hasRole('ADMIN')"  class="dropdown-item"
 													   data-remote="false" data-toggle="modal"
 													   data-target="#personFormModal"
 													   th:href="@{/person/__${s.id}__/edit}" role="button">
 														<span th:text="#{label.table.edit}"></span>
 													</a>
-													<a class="dropdown-item" href="#">
+													<a class="dropdown-item" th:href="@{/person/__${s.id}__/details}">
+																	<span th:text="#{label.table.view}"></span>
+																</a>
+													<a sec:authorize="hasRole('ADMIN')" class="dropdown-item" href="#">
 														<span>
 															<form th:action="@{/person/__${s.id}__/remove}" method="post">
 																<input hidden="true" type="text" id="id" name="id" th:value="${s.id}" />
@@ -248,7 +251,7 @@
 
     $(document).ready(function()
     {
-        var table = $('#orgFormTable').DataTable({
+        var table = $('#personTable').DataTable({
             stateSave: 	true,
             info: false,
             sDom: '',
