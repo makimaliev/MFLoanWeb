@@ -103,7 +103,8 @@
 								<span class="m--font-danger">*</span>
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
-								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${person.address.region}" onchange="updateRegionId(this);" th:title="#{label.select}">
+								<select id="regionSelect" class="form-control m-bootstrap-select m_selectpicker" th:value="${person.address.region}" onchange="updateRegionId(this);" th:title="#{label.select}">
+									<option value="0" th:text="#{label.select}"></option>
 									<option th:each="regionInList : ${regionList}"
 											th:value="${regionInList.id}"
 											th:selected="(${regionInList.id} == *{address.region.id})"
@@ -111,18 +112,27 @@
 								</select>
 							</div>
 						</div>
+
+
+
 						<div class="form-group m-form__group row">
 							<label class="col-form-label col-lg-4 col-sm-12">
 								<span th:text="#{label.person.district}"></span>
 								<span class="m--font-danger">*</span>
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
-								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${person.address.district}" onchange="updateDistrictId(this);" th:title="#{label.select}">
-									<option th:each="districtInList : ${districtList}"
 
-											th:value="${districtInList.id}"
-											th:selected="(${districtInList.id} == *{address.district.id})"
-											th:text="${districtInList.name}"></option>
+
+								<!--<select class="form-control m-bootstrap-select m_selectpicker" th:value="${person.address.district}" onchange="updateDistrictId(this);" th:title="#{label.select}">-->
+									<!--<option th:each="districtInList : ${districtList}"-->
+
+											<!--th:value="${districtInList.id}"-->
+											<!--th:selected="(${districtInList.id} == *{address.district.id})"-->
+											<!--th:text="${districtInList.name}"></option>-->
+								<!--</select>-->
+
+								<select id="districtSelect" class="form-control m-bootstrap-select m_selectpicker" th:value="${person.address.district}" onchange="updateDistrictId(this);" th:title="#{label.select}">
+									<option value="0" th:text="#{label.select}"></option>
 								</select>
 							</div>
 						</div>
@@ -132,11 +142,16 @@
 								<!--<span class="m&#45;&#45;font-danger">*</span>-->
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
-								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${person.address.aokmotu}" onchange="updateAokmotuId(this);" th:title="#{label.select}">
-									<option th:each="aokmotuInList : ${aokmotuList}"
-											th:value="${aokmotuInList.id}"
-											th:selected="(${aokmotuInList.id} == *{address.aokmotu.id})"
-											th:text="${aokmotuInList.name}"></option>
+								<!--<select class="form-control m-bootstrap-select m_selectpicker" th:value="${person.address.aokmotu}" onchange="updateAokmotuId(this);" th:title="#{label.select}">-->
+									<!--<option th:each="aokmotuInList : ${aokmotuList}"-->
+											<!--th:value="${aokmotuInList.id}"-->
+											<!--th:selected="(${aokmotuInList.id} == *{address.aokmotu.id})"-->
+											<!--th:text="${aokmotuInList.name}"></option>-->
+								<!--</select>-->
+
+
+								<select id="aokmotuSelect" class="form-control m-bootstrap-select m_selectpicker" th:value="${person.address.aokmotu}" onchange="updateAokmotuId(this);" th:title="#{label.select}">
+									<option value="0" th:text="#{label.select}"></option>
 								</select>
 							</div>
 						</div>
@@ -146,11 +161,13 @@
 								<span class="m--font-danger"></span>
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
-								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${person.address.village}" onchange="updateVillageId(this);" th:title="#{label.select}">
-									<option th:each="villageInList : ${villageList}"
-											th:value="${villageInList.id}"
-											th:selected="(${villageInList.id} == *{address.village.id})"
-											th:text="${villageInList.name}"></option>
+								<select id="villageSelect" class="form-control m-bootstrap-select m_selectpicker" th:value="${person.address.village}" onchange="updateVillageId(this);" th:title="#{label.select}">
+									<!--<option th:each="villageInList : ${villageList}"-->
+											<!--th:value="${villageInList.id}"-->
+											<!--th:selected="(${villageInList.id} == *{address.village.id})"-->
+											<!--th:text="${villageInList.name}"></option>-->
+
+									<option value="0" th:text="#{label.select}"></option>
 								</select>
 							</div>
 						</div>
@@ -328,3 +345,74 @@
 <script>
     $('.m_selectpicker').selectpicker('refresh');
 </script>
+
+<script th:inline="javascript">
+
+    /*<![CDATA[*/
+
+    $('#regionSelect').change(
+        function() {
+
+            updateRegionId(this);
+
+            $.getJSON("/districtByRegionId/list", {
+                regionId : $(this).val(),
+                ajax : 'true'
+            }, function(data) {
+
+                $('#districtSelect').empty();
+
+                var len = data.length;
+                for ( var i = 0; i < len; i++) {
+                    $('#districtSelect').append("<option value='"+data[i].id+"'>"+data[i].name+"</option>");
+                }
+
+                $('#districtSelect').selectpicker('refresh');
+            });
+        });
+
+    $('#districtSelect').change(
+        function() {
+
+            updateDistrictId(this);
+
+            $.getJSON("/aokmotuByDistrictId/list", {
+                districtId : $(this).val(),
+                ajax : 'true'
+            }, function(data) {
+
+                $('#aokmotuSelect').empty();
+
+                var len = data.length;
+                for ( var i = 0; i < len; i++) {
+                    $('#aokmotuSelect').append("<option value='"+data[i].id+"'>"+data[i].name+"</option>");
+                }
+
+                $('#aokmotuSelect').selectpicker('refresh');
+            });
+        });
+
+    $('#aokmotuSelect').change(
+        function() {
+
+            updateDistrictId(this);
+
+            $.getJSON("/villageByAokmotuId/list", {
+                aokmotuId : $(this).val(),
+                ajax : 'true'
+            }, function(data) {
+
+                $('#villageSelect').empty();
+
+                var len = data.length;
+                for ( var i = 0; i < len; i++) {
+                    $('#villageSelect').append("<option value='"+data[i].id+"'>"+data[i].name+"</option>");
+                }
+
+                $('#villageSelect').selectpicker('refresh');
+            });
+        })
+
+    /*]]>*/
+</script>
+

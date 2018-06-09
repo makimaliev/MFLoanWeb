@@ -6,14 +6,13 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import kg.gov.mf.loan.admin.org.model.*;
 import kg.gov.mf.loan.admin.org.service.*;
+
+import java.util.List;
 
 @Controller
 public class VillageController {
@@ -40,6 +39,15 @@ public class VillageController {
 		model.addAttribute("villageList", this.villageService.findAll());
 
 		return "admin/org/villageList";
+	}
+
+	@RequestMapping(value = "/villageByAokmotuId/list", method = RequestMethod.GET)
+	public @ResponseBody
+	List<Village> findVillageByAokmotuId(@RequestParam(value = "aokmotuId", required = true) Long aokmotuId) {
+
+		Aokmotu aokmotuById = this.aokmotuService.findById(aokmotuId);
+
+		return villageService.findByAokmotu(aokmotuById);
 	}
 	
 	
