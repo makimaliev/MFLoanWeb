@@ -8,6 +8,8 @@ import java.util.Optional;
 
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
+import kg.gov.mf.loan.manage.model.orderdocument.OrderDocumentType;
+import kg.gov.mf.loan.manage.service.orderdocument.OrderDocumentTypeService;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -44,6 +46,9 @@ public class EntityDocumentController {
 
 	@Autowired
 	UserService userService;
+
+	@Autowired
+	OrderDocumentTypeService oDTypeService;
 
 	private static final int BUTTONS_TO_SHOW = 5;
 	private static final int INITIAL_PAGE = 0;
@@ -125,12 +130,9 @@ public class EntityDocumentController {
 		model.addAttribute("listId", listId);
 		model.addAttribute("entityId", entityId);
 		model.addAttribute("dpId", dpId);
-		
-		List<EntityDocumentState> states = edStateService.list();
-        model.addAttribute("states", states);
-		
-		List<EntityDocumentRegisteredBy> rBs = edRBService.list();
-		model.addAttribute("rBs", rBs);
+
+		List<OrderDocumentType> types = oDTypeService.list();
+		model.addAttribute("types", types);
 		
 		return "/manage/order/entitylist/entity/documentpackage/entitydocument/save";
 	}
@@ -148,7 +150,12 @@ public class EntityDocumentController {
 		doc.setDocumentPackage(dPackage);
 		
 		if(doc.getId() == 0)
+		{
 			edService.add(doc);
+			dPackage.calculateRatios();
+			dpService.update(dPackage);
+		}
+
 		else
 			edService.update(doc);
 			
@@ -203,15 +210,21 @@ public class EntityDocumentController {
 		}
 
 		edService.update(document);
-		updateDocumentPackageInfo(dpId);
+		updateDocumentPackageInfo(dpId, type, today);
 
 		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/{dpId}/view";
 	}
 
-	private void updateDocumentPackageInfo(Long dpId) {
+	private void updateDocumentPackageInfo(Long dpId, String type, Date date) {
 
 		DocumentPackage dp = dpService.getById(dpId);
 		dp.calculateRatios();
+
+		if(type.equals("completed"))
+			dp.setCompletedDate(date);
+		else if(type.equals("approved"))
+			dp.setApprovedDate(date);
+
 		dpService.update(dp);
 
 	}

@@ -224,65 +224,21 @@ public class AppliedEntityController {
 			dp.setName(odp.getName());
 			dp.setOrderDocumentPackageId(odp.getId());
 			dp.setAppliedEntity(entity);
+			dp.setCompletedRatio(0.0);
+			dp.setApprovedRatio(0.0);
+			dp.setRegisteredRatio(0.0);
+			dp.setDocumentPackageType(odp.getDocumentPackageType());
+			dp.setDocumentPackageState(dpStateService.getById(1L)!=null? dpStateService.getById(1L): null);
 			dpService.add(dp);
 
 			Set<OrderDocument> docs = tOdp.getOrderDocuments();
 			for (OrderDocument od : docs) {
 				EntityDocument newDoc = new EntityDocument();
 				newDoc.setName(od.getName());
+				newDoc.setDocumentTypeId(od.getOrderDocumentType().getId());
 				newDoc.setDocumentPackage(dp);
 				edService.add(newDoc);
 			}
 		}
 	}
-	
-	private DocumentPackageState getPackageState() {
-		DocumentPackageState result = dpStateService.getById(1L);
-		if(result == null) {
-			result = new DocumentPackageState();
-			result.setVersion(1);
-			result.setName("Dummy State");
-			dpStateService.add(result);
-		}
-		
-		return result;
-	}
-	
-	private DocumentPackageType getPackageType() {
-		DocumentPackageType result = dpTypeService.getById(1L);
-		if(result == null) {
-			result = new DocumentPackageType();
-			result.setVersion(1);
-			result.setName("Dummy Type");
-			dpTypeService.add(result);
-		}
-		
-		return result;
-	}
-	
-	
-	private EntityDocumentState getDocumentState() {
-		EntityDocumentState result = edStateService.getById(1L);
-		if(result == null) {
-			result = new EntityDocumentState();
-			result.setVersion(1);
-			result.setName("Dummy State");
-			edStateService.add(result);
-		}
-		
-		return result;
-	}
-	
-	private EntityDocumentRegisteredBy getDocumentRB() {
-		EntityDocumentRegisteredBy result = edRBService.getById(1L);
-		if(result == null) {
-			result = new EntityDocumentRegisteredBy();
-			result.setVersion(1);
-			result.setName("Dummy RB");
-			edRBService.add(result);
-		}
-		
-		return result;
-	}
-
 }

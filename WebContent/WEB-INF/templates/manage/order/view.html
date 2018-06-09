@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
 	<title th:text="#{label.debtor.details.title}"></title>
@@ -191,6 +191,7 @@
 													<tr>
 														<th class="table-id">Id</th>
 														<th th:text="#{label.orderDocumentPackage.table.name}"></th>
+														<th th:text="#{label.orderDocumentPackage.table.documentType}"></th>
 														<th>&nbsp;</th>
 													</tr>
 													</thead>
@@ -198,6 +199,7 @@
 													<tr th:each="oDP : ${orderDocumentPackages}">
 														<td class="table-id" th:text="${oDP.id}"></td>
 														<td th:text="${oDP.name}"></td>
+														<td th:text="${oDP.documentPackageType.name}"></td>
 														<td class="table-actions text-right">
 															<span>
 																<div class="dropdown">

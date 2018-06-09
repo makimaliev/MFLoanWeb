@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackageType;
 import kg.gov.mf.loan.manage.model.entity.AppliedEntity;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,6 +109,9 @@ public class OrderDocumentPackageController {
 			model.addAttribute("documentPackage", oDPService.getById(dpId));
 		}
 		model.addAttribute("orderId", orderId);
+		List<DocumentPackageType> types = dpTypeService.list();
+		model.addAttribute("types", types);
+
 		return "/manage/order/orderdocumentpackage/save";
 	}
 	

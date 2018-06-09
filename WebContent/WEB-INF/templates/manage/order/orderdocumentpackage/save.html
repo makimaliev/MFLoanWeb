@@ -37,7 +37,7 @@
 						<div class="m-portlet__body">
 							<div class="m-form__section">
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-3 col-sm-12">
+									<label class="col-form-label col-lg-4 col-sm-12">
 										<span th:text="#{label.orderDocumentPackage.name}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
@@ -45,6 +45,20 @@
 										<input type="text" class="form-control m-input" name="name" th:value="${documentPackage.name}">
 									</div>
 								</div>
+
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12">
+										<span th:text="#{label.orderDocumentPackage.type}"></span>
+										<span class="m--font-danger">*</span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${documentPackage.documentPackageType.id}"  id="documentPackageType" th:title="#{label.select}">
+											<option value="0" th:text="#{label.select}"></option>
+											<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
+										</select>
+									</div>
+								</div>
+
 							</div>
 						</div>
 						<div class="m-portlet__foot m-portlet__foot--fit">
@@ -73,6 +87,11 @@
 <!-- end:: Page -->
 
 <div th:replace="fragments/footer :: footer-js"/>
+
+<!--begin::Page Resources -->
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
+<!--end::Page Resources -->
 
 </body>
 <!-- end::Body -->

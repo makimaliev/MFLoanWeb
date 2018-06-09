@@ -151,9 +151,6 @@ public class DocumentPackageController {
 		model.addAttribute("listId", listId);
 		model.addAttribute("entityId", entityId);
 		
-		List<DocumentPackageState> states = dpStateService.list();
-        model.addAttribute("states", states);
-		
 		List<DocumentPackageType> types = dpTypeService.list();
         model.addAttribute("types", types);
 		
@@ -172,7 +169,14 @@ public class DocumentPackageController {
 		dp.setAppliedEntity(entity);
 		
 		if(dp.getId() == 0)
+		{
+			dp.setCompletedRatio(0.0);
+			dp.setApprovedRatio(0.0);
+			dp.setRegisteredRatio(0.0);
+			dp.setDocumentPackageState(dpStateService.getById(1L)!=null? dpStateService.getById(1L): null);
 			dpService.add(dp);
+		}
+
 		else
 			dpService.update(dp);
 			
