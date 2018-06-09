@@ -104,7 +104,6 @@
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
 								<select id="regionSelect" class="form-control m-bootstrap-select m_selectpicker" th:value="${person.address.region}" onchange="updateRegionId(this);" th:title="#{label.select}">
-									<option value="0" th:text="#{label.select}"></option>
 									<option th:each="regionInList : ${regionList}"
 											th:value="${regionInList.id}"
 											th:selected="(${regionInList.id} == *{address.region.id})"
@@ -132,7 +131,12 @@
 								<!--</select>-->
 
 								<select id="districtSelect" class="form-control m-bootstrap-select m_selectpicker" th:value="${person.address.district}" onchange="updateDistrictId(this);" th:title="#{label.select}">
-									<option value="0" th:text="#{label.select}"></option>
+									<option th:each="districtInList : ${districtList}"
+
+											th:value="${districtInList.id}"
+											th:selected="(${districtInList.id} == *{address.district.id})"
+											th:text="${districtInList.name}"></option>
+
 								</select>
 							</div>
 						</div>
@@ -152,6 +156,11 @@
 
 								<select id="aokmotuSelect" class="form-control m-bootstrap-select m_selectpicker" th:value="${person.address.aokmotu}" onchange="updateAokmotuId(this);" th:title="#{label.select}">
 									<option value="0" th:text="#{label.select}"></option>
+									<option th:each="aokmotuInList : ${aokmotuList}"
+									th:value="${aokmotuInList.id}"
+									th:selected="(${aokmotuInList.id} == *{address.aokmotu.id})"
+									th:text="${aokmotuInList.name}"></option>
+
 								</select>
 							</div>
 						</div>
@@ -162,12 +171,13 @@
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
 								<select id="villageSelect" class="form-control m-bootstrap-select m_selectpicker" th:value="${person.address.village}" onchange="updateVillageId(this);" th:title="#{label.select}">
-									<!--<option th:each="villageInList : ${villageList}"-->
-											<!--th:value="${villageInList.id}"-->
-											<!--th:selected="(${villageInList.id} == *{address.village.id})"-->
-											<!--th:text="${villageInList.name}"></option>-->
-
 									<option value="0" th:text="#{label.select}"></option>
+									<option th:each="villageInList : ${villageList}"
+											th:value="${villageInList.id}"
+											th:selected="(${villageInList.id} == *{address.village.id})"
+											th:text="${villageInList.name}"></option>
+
+
 								</select>
 							</div>
 						</div>
@@ -252,13 +262,14 @@
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
 								<div class="input-group date m_datetimepicker_6">
-									<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:value="${person.identityDoc.date}"/>
+									<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:field="*{identityDoc.date}"/>
 									<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
 								</div>
 							</div>
 						</div>
+
 						<div class="form-group m-form__group row">
 							<label class="col-form-label col-lg-4 col-sm-12">
 								<span th:text="#{label.identityDoc.pin}"></span>
@@ -344,6 +355,16 @@
 
 <script>
     $('.m_selectpicker').selectpicker('refresh');
+
+    $('.m_datetimepicker_6').datetimepicker({
+        format: "dd.mm.yyyy",
+        todayHighlight: true,
+        autoclose: true,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        pickerPosition: 'bottom-left'
+    });
 </script>
 
 <script th:inline="javascript">
@@ -361,6 +382,11 @@
             }, function(data) {
 
                 $('#districtSelect').empty();
+                $('#aokmotuSelect').empty();
+                $('#aokmotuSelect').selectpicker('refresh');
+
+                $('#villageSelect').empty();
+                $('#villageSelect').selectpicker('refresh');
 
                 var len = data.length;
                 for ( var i = 0; i < len; i++) {
@@ -382,6 +408,8 @@
             }, function(data) {
 
                 $('#aokmotuSelect').empty();
+                $('#villageSelect').empty();
+                $('#villageSelect').selectpicker('refresh');
 
                 var len = data.length;
                 for ( var i = 0; i < len; i++) {
@@ -395,7 +423,7 @@
     $('#aokmotuSelect').change(
         function() {
 
-            updateDistrictId(this);
+            updateAokmotuId(this);
 
             $.getJSON("/villageByAokmotuId/list", {
                 aokmotuId : $(this).val(),

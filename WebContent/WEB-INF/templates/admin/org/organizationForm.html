@@ -268,15 +268,7 @@
 
 				<div class="tab-pane " id="addressData" role="tabpanel">
 					<div class="form-body">
-						<div class="form-group m-form__group row">
-							<label class="col-form-label col-lg-4 col-sm-12">
-								<span th:text="#{label.org.address}"></span>
-								<span class="m--font-danger">*</span>
-							</label>
-							<div class="col-lg-8 col-md-9 col-sm-12">
-								<input type="text" class="form-control" name="address.line" th:field="*{address.line}"/>
-							</div>
-						</div>
+
 						<div class="form-group m-form__group row">
 							<label class="col-form-label col-lg-4 col-sm-12">
 								<span th:text="#{label.org.region}"></span>
@@ -306,7 +298,7 @@
 								<span class="m--font-danger">*</span>
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12" >
-								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.district}" onchange="updateDistrictId(this);" th:title="#{label.select}">
+								<select id="districtSelect" class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.district}" onchange="updateDistrictId(this);" th:title="#{label.select}">
 
 									<option th:each="districtInList : ${districtList}"
 
@@ -322,7 +314,7 @@
 								<span th:text="#{label.org.aokmotu}"></span>
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
-								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.aokmotu}" onchange="updateAokmotuId(this);" th:title="#{label.select}">
+								<select id="aokmotuSelect" class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.aokmotu}" onchange="updateAokmotuId(this);" th:title="#{label.select}">
 									<option th:each="aokmotuInList : ${aokmotuList}"
 											th:value="${aokmotuInList.id}"
 											th:selected="(${aokmotuInList.id} == *{address.aokmotu.id})"
@@ -335,12 +327,21 @@
 								<span th:text="#{label.org.village}"></span>
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
-								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.village}" onchange="updateVillageId(this);" th:title="#{label.select}">
+								<select id="villageSelect" class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.village}" onchange="updateVillageId(this);" th:title="#{label.select}">
 									<option th:each="villageInList : ${villageList}"
 											th:value="${villageInList.id}"
 											th:selected="(${villageInList.id} == *{address.village.id})"
 											th:text="${villageInList.name}"></option>
 								</select>
+							</div>
+						</div>
+						<div class="form-group m-form__group row">
+							<label class="col-form-label col-lg-4 col-sm-12">
+								<span th:text="#{label.org.address}"></span>
+								<span class="m--font-danger">*</span>
+							</label>
+							<div class="col-lg-8 col-md-9 col-sm-12">
+								<input type="text" class="form-control" name="address.line" th:field="*{address.line}"/>
 							</div>
 						</div>
 					</div>
@@ -379,26 +380,72 @@
     $('#regionSelect').change(
         function() {
 
-            // updateRegionId(this);
+            updateRegionId(this);
 
             $.getJSON("/districtByRegionId/list", {
                 regionId : $(this).val(),
                 ajax : 'true'
             }, function(data) {
-                var html = '';
+
+                $('#districtSelect').empty();
+                $('#aokmotuSelect').empty();
+                $('#aokmotuSelect').selectpicker('refresh');
+
+                $('#villageSelect').empty();
+                $('#villageSelect').selectpicker('refresh');
+
                 var len = data.length;
                 for ( var i = 0; i < len; i++) {
-                    html += '<option value="' + data[i].id + '">'
-                        + data[i].name + '</option>';
+                    $('#districtSelect').append("<option value='"+data[i].id+"'>"+data[i].name+"</option>");
                 }
 
-                html+='';
-
-                alert(html);
-
-                $('#districtSelect').html(html);
+                $('#districtSelect').selectpicker('refresh');
             });
         });
+
+    $('#districtSelect').change(
+        function() {
+
+            updateDistrictId(this);
+
+            $.getJSON("/aokmotuByDistrictId/list", {
+                districtId : $(this).val(),
+                ajax : 'true'
+            }, function(data) {
+
+                $('#aokmotuSelect').empty();
+                $('#villageSelect').empty();
+                $('#villageSelect').selectpicker('refresh');
+
+                var len = data.length;
+                for ( var i = 0; i < len; i++) {
+                    $('#aokmotuSelect').append("<option value='"+data[i].id+"'>"+data[i].name+"</option>");
+                }
+
+                $('#aokmotuSelect').selectpicker('refresh');
+            });
+        });
+
+    $('#aokmotuSelect').change(
+        function() {
+
+            updateAokmotuId(this);
+
+            $.getJSON("/villageByAokmotuId/list", {
+                aokmotuId : $(this).val(),
+                ajax : 'true'
+            }, function(data) {
+
+                $('#villageSelect').empty();
+
+                var len = data.length;
+                for ( var i = 0; i < len; i++) {
+                    $('#villageSelect').append("<option value='"+data[i].id+"'>"+data[i].name+"</option>");
+                }
+
+                $('#villageSelect').selectpicker('refresh');
+            });
+        })
 
     /*]]>*/
 </script>
@@ -407,7 +454,7 @@
     $('.m_selectpicker').selectpicker('refresh');
 
     $('.m_datetimepicker_6').datetimepicker({
-        format: "yyyy-mm-dd",
+        format: "dd.mm.yyyy",
         todayHighlight: true,
         autoclose: true,
         startView: 2,

@@ -11,6 +11,7 @@ import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.web.util.Pager;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -29,6 +31,8 @@ import kg.gov.mf.loan.admin.org.service.*;
 import kg.gov.mf.loan.admin.sys.model.*;
 import kg.gov.mf.loan.admin.sys.service.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -146,6 +150,14 @@ public class PersonController {
 	@Autowired
 	PersonRepository personRepository;
 
+	@InitBinder
+	public void initBinder(WebDataBinder binder)
+	{
+		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
+		binder.registerCustomEditor(Date.class, editor);
+	}
+
+
 	private static final int BUTTONS_TO_SHOW = 5;
 	private static final int INITIAL_PAGE = 0;
 	private static final int INITIAL_PAGE_SIZE = 10;
@@ -231,17 +243,14 @@ public class PersonController {
 		Address modelAddress = new Address();
 		modelAddress.setId(0);
 		
-		Region modelRegion = new Region();
-		modelRegion.setId(1);
+		Region modelRegion = (Region) this.regionService.findById(1);
 
-		District modelDistrict = new District();
-		modelDistrict.setId(1);
+		District modelDistrict = (District) this.districtService.findByRegion(modelRegion).get(5);
 
-		Aokmotu modelAokmotu = new Aokmotu();
-		modelAokmotu.setId(1);
-		
-		Village modelVillage = new Village();
-		modelVillage.setId(1);
+		Aokmotu modelAokmotu = (Aokmotu) this.aokmotuService.findByDistrict(modelDistrict).get(0);
+
+		Village modelVillage = (Village) this.villageService.findByAokmotu(modelAokmotu).get(0);
+
 		
 		modelAddress.setRegion(modelRegion);
 		modelAddress.setDistrict(modelDistrict);
@@ -270,13 +279,12 @@ public class PersonController {
 		model.addAttribute("person", modelPerson);
 		
 		model.addAttribute("regionList", this.regionService.findAll());
-		model.addAttribute("districtList", this.districtService.findAll());			
-		model.addAttribute("aokmotuList", this.aokmotuService.findAll());			
-		model.addAttribute("villageList", this.villageService.findAll());	
+		model.addAttribute("districtList", this.districtService.findByRegion(modelRegion));
+		model.addAttribute("aokmotuList", this.aokmotuService.findByDistrict(modelDistrict));
+		model.addAttribute("villageList", this.villageService.findByAokmotu(modelAokmotu));
 		model.addAttribute("identityDocTypeList", this.identityDocTypeService.findAll());
 		model.addAttribute("identityDocGivenByList", this.identityDocGivenByService.findAll());		
-		model.addAttribute("orgFormList", this.orgFormService.findAll());
-		
+
 		return "admin/org/personForm";
 	}
 	
@@ -284,11 +292,26 @@ public class PersonController {
 
 	@RequestMapping("/person/{id}/edit")
 	public String getPersonEditForm(@PathVariable("id") long id, Model model) {
-		model.addAttribute("person", this.personService.findById(id));
+
+		Person person = this.personService.findById(id);
+
+		model.addAttribute("person", person);
+
 		model.addAttribute("regionList", this.regionService.findAll());
-		model.addAttribute("districtList", this.districtService.findAll());			
-		model.addAttribute("aokmotuList", this.aokmotuService.findAll());			
-		model.addAttribute("villageList", this.villageService.findAll());
+		model.addAttribute("districtList", this.districtService.findByRegion(person.getAddress().getRegion()));
+		model.addAttribute("aokmotuList", this.aokmotuService.findByDistrict(person.getAddress().getDistrict()));
+
+		if (person.getAddress().getAokmotu() != null)
+		{
+			model.addAttribute("villageList", this.villageService.findByAokmotu(person.getAddress().getAokmotu()));
+		}
+		else
+		{
+			model.addAttribute("villageList", this.villageService.findById(1));
+		}
+
+
+
 		model.addAttribute("identityDocTypeList", this.identityDocTypeService.findAll());
 		model.addAttribute("identityDocGivenByList", this.identityDocGivenByService.findAll());		
 		model.addAttribute("orgFormList", this.orgFormService.findAll());		

@@ -38,14 +38,18 @@
 						<div class="m-portlet__head-tools">
 							<ul class="m-portlet__nav">
 								<li class="m-portlet__nav-item">
-									<div class="m-input-icon m-input-icon--left">
-										<input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
-										<span class="m-input-icon__icon m-input-icon__icon--left">
-														<span>
-															<i class="la la-search"></i>
-														</span>
-													</span>
-									</div>
+									<form th:action="@{/organization/search}" method="get">
+										<input type="hidden" name="pageSize" th:value="${selectedPageSize}">
+										<input type="hidden" name="page" th:value="${current}">
+										<div class="m-input-icon m-input-icon--left">
+											<input type="text" class="form-control m-input" th:placeholder="#{label.search}" name="q">
+											<span class="m-input-icon__icon m-input-icon__icon--left">
+												<span>
+													<i class="la la-search"></i>
+												</span>
+											</span>
+										</div>
+									</form>
 								</li>
 							</ul>
 						</div>
@@ -93,7 +97,7 @@
 						</div>
 
 						<div class="m-section">
-							<table class="table" id="orgFormTable">
+							<table class="table" id="organizationTable">
 								<thead class="thead-default">
 								<tr>
 									<th>ID</th>
@@ -138,6 +142,50 @@
 								</tr>
 								</tbody>
 							</table>
+						</div>
+
+						<div class="m-portlet__foot">
+							<div class="m-datatable m-datatable--default">
+								<div class="m-datatable__pager m-datatable--paging-loaded clearfix">
+									<ul class="m-datatable__pager-nav">
+										<li th:class="${current == 0} ? disabled">
+											<a th:title="#{label.pagination.first}" class="m-datatable__pager-link m-datatable__pager-link--first" th:href="${q} ? @{/organization/search(pageSize=${selectedPageSize}, page=1, q=${q})} : @{/organization/list(pageSize=${selectedPageSize}, page=1)}">
+												<i class="la la-angle-double-left"></i>
+											</a>
+										</li>
+										<li th:class="${current == 0} ? disabled">
+											<a th:title="#{label.pagination.prev}" class="m-datatable__pager-link m-datatable__pager-link--prev" th:href="${q} ? @{/organization/search(pageSize=${selectedPageSize}, page=${current}, q=${q})} : @{/organization/list(pageSize=${selectedPageSize}, page=${current})}">
+												<i class="la la-angle-left"></i>
+											</a>
+										</li>
+
+										<li th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+											<a th:href="${q} ? @{/organization/search(pageSize=${selectedPageSize}, page=${page}, q=${q})} : @{/organization/list(pageSize=${selectedPageSize}, page=${page})}" class="m-datatable__pager-link m-datatable__pager-link-number" th:text="${page}" th:classappend="${current == (page - 1)} ? 'm-datatable__pager-link--active'"></a>
+
+										</li>
+
+										<li th:class="${current == count-2} ? disabled">
+											<a th:title="#{label.pagination.next}" class="m-datatable__pager-link m-datatable__pager-link--next" th:href="${q} ? @{/organization/search(pageSize=${selectedPageSize}, page=${current + 2}, q=${q})} : @{/organization/list(pageSize=${selectedPageSize}, page=${current + 2})}">
+												<i class="la la-angle-right"></i>
+											</a>
+										</li>
+										<li th:class="${current == count-1} ? disabled">
+											<a th:href="${q} ? @{/organization/search(pageSize=${selectedPageSize}, page=${count}, q=${q})} : @{/organization/list(pageSize=${selectedPageSize}, page=${count})}" th:title="#{label.pagination.last}" class="m-datatable__pager-link m-datatable__pager-link--last">
+												<i class="la la-angle-double-right"></i>
+											</a>
+										</li>
+									</ul>
+									<div class="m-datatable__pager-info">
+										<span class="m-datatable__pager-detail" th:text="#{label.pageSize}"></span>
+										<div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 70px;">
+											<select id="pageSizeSelect" class="selectpicker m-datatable__pager_size" title="Select page size" data-width="70px">
+												<option th:each="pageSize : ${pageSizes}" th:text="${pageSize}" th:value="${pageSize}"
+														th:selected="${pageSize} == ${selectedPageSize}"></option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -220,10 +268,10 @@
 
     $(document).ready(function()
     {
-        var table = $('#orgFormTable').DataTable({
+        var table = $('#organizationTable').DataTable({
             stateSave: 	true,
             info: false,
-            sDom: 'rtlip',
+            sDom: '',
             language: {
                 paginate: {
                     previous: '<i class="la la-angle-left"></i>',

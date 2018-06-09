@@ -1,6 +1,7 @@
 package kg.gov.mf.loan.web.controller.admin.org;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import kg.gov.mf.loan.admin.org.repository.OrganizationRepository;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.model.debtor.OwnerType;
@@ -9,6 +10,7 @@ import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.web.util.Pager;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -27,7 +30,9 @@ import kg.gov.mf.loan.admin.org.service.*;
 import kg.gov.mf.loan.admin.sys.model.*;
 import kg.gov.mf.loan.admin.sys.service.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -139,6 +144,16 @@ public class OrganizationController {
 
 
 
+	@Autowired
+	OrganizationRepository organizationRepository;
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder)
+	{
+		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
+		binder.registerCustomEditor(Date.class, editor);
+	}
+
 	private static final int BUTTONS_TO_SHOW = 5;
 	private static final int INITIAL_PAGE = 0;
 	private static final int INITIAL_PAGE_SIZE = 10;
@@ -150,22 +165,45 @@ public class OrganizationController {
     } 
     
     
-	@RequestMapping(value = "/organization/list", method = RequestMethod.GET)
-	public String listOrganizations(Model model) {
-		
+//	@RequestMapping(value = "/organization/list", method = RequestMethod.GET)
+//	public String listOrganizations(Model model) {
+//
+//		model.addAttribute("organization", new Organization());
+//		model.addAttribute("organizationList", this.organizationService.findLast100());
+//		return "admin/org/organizationList";
+//	}
+
+	@RequestMapping(value = { "/organization/", "/organization/list" }, method = RequestMethod.GET)
+	public String listDebtors(@RequestParam("pageSize") Optional<Integer> pageSize, @RequestParam("page") Optional<Integer> page, ModelMap model) {
+
+		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
+		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
+
+		List<Organization> organizations = organizationService.findByParam("id", evalPage*evalPageSize, evalPageSize);
+		int count = organizationService.count();
+
+		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
+
 		model.addAttribute("organization", new Organization());
-		model.addAttribute("organizationList", this.organizationService.findLast100());
-		return "admin/org/organizationList";
+		model.addAttribute("count", count/evalPageSize+1);
+		model.addAttribute("organizationList", organizations);
+		model.addAttribute("selectedPageSize", evalPageSize);
+		model.addAttribute("pageSizes", PAGE_SIZES);
+		model.addAttribute("pager", pager);
+		model.addAttribute("current", evalPage);
+
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
+		return "/admin/org/organizationList";
 	}
 	
 	
-	@RequestMapping(value = "/organization/table", method = RequestMethod.GET)
-	public String showOrganizationTable(Model model) {
-		model.addAttribute("organization", new Organization());
-		model.addAttribute("organizationList", this.organizationService.findLast100());
-
-		return "admin/org/organizationTable";
-	}	
+//	@RequestMapping(value = "/organization/table", method = RequestMethod.GET)
+//	public String showOrganizationTable(Model model) {
+//		model.addAttribute("organization", new Organization());
+//		model.addAttribute("organizationList", this.organizationService.findLast100());
+//
+//		return "admin/org/organizationTable";
+//	}
 	
 	@RequestMapping("/organization/{id}/view")
 	public String viewOrganizationById(@PathVariable("id") long id, Model model) {
@@ -213,35 +251,32 @@ public class OrganizationController {
 	@RequestMapping(value = "/organization/add", method = RequestMethod.GET)
 	public String getOrganizationAddForm(Model model) {
 
-		
 		Organization modelOrganization = new Organization();
-		
+
 		OrgForm modelOrgForm = new OrgForm();
 		modelOrgForm.setId(1);
 		modelOrganization.setOrgForm(modelOrgForm);
 
+
+
+
 		Address modelAddress = new Address();
 		modelAddress.setId(0);
-		
-		Region modelRegion = new Region();
-		modelRegion.setId(1);
 
-		District modelDistrict = new District();
-		modelDistrict.setId(1);
+		Region modelRegion = (Region) this.regionService.findById(1);
 
-		Aokmotu modelAokmotu = new Aokmotu();
-		modelAokmotu.setId(1);
-		
-		Village modelVillage = new Village();
-		modelVillage.setId(1);
-		
+		District modelDistrict = (District) this.districtService.findByRegion(modelRegion).get(5);
+
+		Aokmotu modelAokmotu = (Aokmotu) this.aokmotuService.findByDistrict(modelDistrict).get(0);
+
+		Village modelVillage = (Village) this.villageService.findByAokmotu(modelAokmotu).get(0);
+
+
 		modelAddress.setRegion(modelRegion);
 		modelAddress.setDistrict(modelDistrict);
 		modelAddress.setAokmotu(modelAokmotu);
 		modelAddress.setVillage(modelVillage);
 
-		
-		
 		modelOrganization.setAddress(modelAddress);
 
 		IdentityDoc modelIdentityDoc = new IdentityDoc();
@@ -262,9 +297,9 @@ public class OrganizationController {
 		model.addAttribute("organization", modelOrganization);
 		
 		model.addAttribute("regionList", this.regionService.findAll());
-		model.addAttribute("districtList", this.districtService.findAll());			
-		model.addAttribute("aokmotuList", this.aokmotuService.findAll());			
-		model.addAttribute("villageList", this.villageService.findAll());	
+		model.addAttribute("districtList", this.districtService.findByRegion(modelRegion));
+		model.addAttribute("aokmotuList", this.aokmotuService.findByDistrict(modelDistrict));
+		model.addAttribute("villageList", this.villageService.findByAokmotu(modelAokmotu));
 		model.addAttribute("identityDocTypeList", this.identityDocTypeService.findAll());
 		model.addAttribute("identityDocGivenByList", this.identityDocGivenByService.findAll());		
 		model.addAttribute("orgFormList", this.orgFormService.findAll());
@@ -276,11 +311,30 @@ public class OrganizationController {
 
 	@RequestMapping("/organization/{id}/edit")
 	public String getOrganizationEditForm(@PathVariable("id") long id, Model model) {
-		model.addAttribute("organization", this.organizationService.findById(id));
+
+    	Organization organization = this.organizationService.findById(id);
+
+		model.addAttribute("organization", organization);
 		model.addAttribute("regionList", this.regionService.findAll());
+
+
 		model.addAttribute("districtList", this.districtService.findAll());			
 		model.addAttribute("aokmotuList", this.aokmotuService.findAll());			
 		model.addAttribute("villageList", this.villageService.findAll());
+
+
+		model.addAttribute("districtList", this.districtService.findByRegion(organization.getAddress().getRegion()));
+		model.addAttribute("aokmotuList", this.aokmotuService.findByDistrict(organization.getAddress().getDistrict()));
+
+		if (organization.getAddress().getAokmotu() != null)
+		{
+			model.addAttribute("villageList", this.villageService.findByAokmotu(organization.getAddress().getAokmotu()));
+		}
+		else
+		{
+			model.addAttribute("villageList", this.villageService.findById(1));
+		}
+
 		model.addAttribute("identityDocTypeList", this.identityDocTypeService.findAll());
 		model.addAttribute("identityDocGivenByList", this.identityDocGivenByService.findAll());		
 		model.addAttribute("orgFormList", this.orgFormService.findAll());		
@@ -329,9 +383,46 @@ public class OrganizationController {
 	@RequestMapping("/organization/{id}/remove")
 	public String removeOrganizationAndRedirectToOrganizationList(@PathVariable("id") long id) {
 
-		this.organizationService.deleteById(id);
+    	Organization organization = this.organizationService.findById(id);
+		this.organizationService.delete(organization);
 
 		return "redirect:/organization/list";
+	}
+
+
+	@RequestMapping(method = RequestMethod.GET, value = "/organization/search")
+	public String findAllBySpecification(@RequestParam(value = "q") String q,
+										 @RequestParam("pageSize") Optional<Integer> pageSize,
+										 @RequestParam("page") Optional<Integer> page, ModelMap model) {
+
+		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
+		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
+
+		Sort sort = new Sort(new Sort.Order(Sort.Direction.ASC, "id"));
+		Pageable pageable = new PageRequest(evalPage, evalPageSize, sort);
+
+		QOrganization organization = QOrganization.organization;
+
+		BooleanExpression hasNameLike = organization.name.like("%" + q + "%");
+		Page<Organization> page1 = organizationRepository.findAll(hasNameLike, pageable);
+		List<Organization> organizations = page1.getContent();
+
+		int count = organizationRepository.findAll(hasNameLike, pageable).getTotalPages();
+
+		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
+
+		model.addAttribute("organization", new Organization());
+		model.addAttribute("count", count);
+		model.addAttribute("organizationList", organizations);
+		model.addAttribute("selectedPageSize", evalPageSize);
+		model.addAttribute("pageSizes", PAGE_SIZES);
+		model.addAttribute("pager", pager);
+		model.addAttribute("current", evalPage);
+		model.addAttribute("q", q);
+
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
+
+		return "/admin/org/organizationList";
 	}
 
 }
