@@ -4,6 +4,7 @@ import kg.gov.mf.loan.admin.org.model.Department;
 import kg.gov.mf.loan.admin.org.model.Organization;
 import kg.gov.mf.loan.admin.org.model.Person;
 import kg.gov.mf.loan.admin.org.model.Staff;
+import kg.gov.mf.loan.admin.org.service.StaffService;
 import kg.gov.mf.loan.doc.model.*;
 import kg.gov.mf.loan.doc.service.DocumentStatusService;
 import kg.gov.mf.loan.doc.service.*;
@@ -14,16 +15,26 @@ import kg.gov.mf.loan.task.service.TaskService;
 import kg.gov.mf.loan.web.util.Pager;
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -39,6 +50,8 @@ public class DocumentFlowController extends BaseController {
     private TaskService taskService;
     private AttachmentService attachmentService;
     private HttpServletRequest request;
+    private StaffService staffService;
+    private RegisterService registerService;
 
     @Autowired
     public DocumentFlowController(DocumentService documentService,
@@ -48,7 +61,9 @@ public class DocumentFlowController extends BaseController {
                                   AccountService accountService,
                                   TaskService taskService,
                                   AttachmentService attachmentService,
-                                  HttpServletRequest request)
+                                  HttpServletRequest request,
+                                  StaffService staffService,
+                                  RegisterService registerService)
     {
         this.documentService = documentService;
         this.documentTypeService = documentTypeService;
@@ -58,6 +73,8 @@ public class DocumentFlowController extends BaseController {
         this.taskService = taskService;
         this.attachmentService = attachmentService;
         this.request = request;
+        this.staffService = staffService;
+        this.registerService = registerService;
     }
     //endregion
 
@@ -84,12 +101,12 @@ public class DocumentFlowController extends BaseController {
                     {"create", "request"},
                     {"request"},
                     {"approve", "reject"},
-                    {"accept"},
+                    {"accept", "reject"},
                     {},
                     {},
-                    {"start"},
-                    {"done"},
-                    {"archive"}
+                    {"send"},
+                    {"start", "reject"},
+                    {"done"}
                 },
                 {
                     {"create", "register"},
@@ -97,10 +114,10 @@ public class DocumentFlowController extends BaseController {
                     {},
                     {},
                     {},
-                    {"accept"},
-                    {"start"},
-                    {"done"},
-                    {"archive"}
+                    {"accept", "reject"},
+                    {"send"},
+                    {"start", "reject"},
+                    {"done"}
                 },
                 {
                     {"create", "request"},
@@ -108,10 +125,17 @@ public class DocumentFlowController extends BaseController {
                     {"approve", "reject"},
                     {"register", "done"},
                     {},
-                    {"archive"}
+                    {"register", "done"}
                 }
             };
     //endregion
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder)
+    {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public String index(@RequestParam("type") String type, /* @RequestParam("pageSize") Optional<Integer> pageSize, @RequestParam("page") Optional<Integer> page, */ Model model) {
@@ -147,7 +171,9 @@ public class DocumentFlowController extends BaseController {
     public String newDocument(@PathVariable("subType") String type, Model model) {
 
         DocumentType documentType = documentSubTypeService.getByInternalName(type).getDocumentType();
-        int row = TYPE.valueOf(documentType.getInternalName()).ordinal();
+        String currentView = documentType.getInternalName();
+
+        int row = TYPE.valueOf(currentView).ordinal();
 
         List<DocumentStatus> actions = new ArrayList<>();
         for(String action : actionString[row][0])
@@ -160,15 +186,22 @@ public class DocumentFlowController extends BaseController {
         document.setDocumentType(documentType);
         document.setDocumentSubType(documentSubTypeService.getByInternalName(type));
 
-        if(documentType.getInternalName().equals("internal") || documentType.getInternalName().equals("outgoing"))
+        if(currentView.equals("internal"))
         {
             Responsible resp = new Responsible();
             resp.setResponsibleType(1);
             document.setSenderResponsible(resp);
 
+            Staff staff = staffService.findById(getUser().getId());
+
             Executor exec = new Executor();
             exec.setExecutorType(1);
+            exec.getStaff().add(staff);
             document.setSenderExecutor(exec);
+        }
+        else if(currentView.equals("outgoing"))
+        {
+
         }
 
         model.addAttribute("actions", actions);
@@ -180,16 +213,16 @@ public class DocumentFlowController extends BaseController {
         model.addAttribute("organization", accountService.getOrganizations());
         model.addAttribute("person", accountService.getPerson());
 
-        return "/doc/document/" + documentType.getInternalName();
+        return "/doc/document/" + currentView + "/" + currentView;
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String editDocument(@PathVariable("id") Long id, Model model) {
 
         Document document = documentService.findById(id);
-        String documentType = document.getDocumentType().getInternalName();
+        String currentView = document.getDocumentType().getInternalName();
 
-        int row = TYPE.valueOf(documentType).ordinal();
+        int row = TYPE.valueOf(currentView).ordinal();
         int col = document.getDocumentState().ordinal();
 
         List<DocumentStatus> actions = new ArrayList<>();
@@ -201,71 +234,111 @@ public class DocumentFlowController extends BaseController {
         model.addAttribute("actions", actions);
         model.addAttribute("document", document);
         model.addAttribute("responsible", responsible);
+
         model.addAttribute("staff", accountService.getStaff());
         model.addAttribute("department", accountService.getDepartments());
         model.addAttribute("organization", accountService.getOrganizations());
         model.addAttribute("person", accountService.getPerson());
+
         model.addAttribute("documentState", document.getDocumentState().toString());
 
-        return "/doc/document/" + documentType;
+        return "/doc/document/" + currentView + "/" + currentView;
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String saveDocument(@ModelAttribute("document") Document document,
                                @RequestParam("action") String action,
-                               @RequestParam("senderFile") MultipartFile senderFile,
-                               @RequestParam("receiverFile") MultipartFile receiverFile) throws IOException {
-
-        //region Attachment
-        //region Sender File
-        if (!senderFile.isEmpty())
-        {
-            try {
-                    String fileName = senderFile.getOriginalFilename();
-                    String fsName = UUID.randomUUID().toString();
-
-                    File file = new File(path + fsName);
-                    byte[] bytes = senderFile.getBytes();
-                    BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(file));
-                    buffStream.write(bytes);
-                    buffStream.close();
-
-                    Attachment attachment = new Attachment();
-                    attachment.setName(fileName);
-                    attachment.setInternalName(fsName);
-
-                    document.setSenderAttachment(attachment);
-                } catch (Exception e) {
-            }
-        }
-        //endregion
-        //region Receiver File
-        if (receiverFile.isEmpty())
-        {
-            try {
-                    String fileName = receiverFile.getOriginalFilename();
-                    String fsName = UUID.randomUUID().toString();
-
-                    File file = new File(path + fsName);
-                    byte[] bytes = receiverFile.getBytes();
-                    BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(file));
-                    buffStream.write(bytes);
-                    buffStream.close();
-
-                    Attachment attachment = new Attachment();
-                    attachment.setName(fileName);
-                    attachment.setInternalName(fsName);
-
-                    document.setReceiverAttachment(attachment);
-                } catch (Exception e) {
-            }
-        }
-        //endregion
-        //endregion
+                               @RequestParam("senderFiles") MultipartFile[] senderFiles,
+                               @RequestParam("receiverFiles") MultipartFile[] receiverFiles) {
 
         String docType = documentTypeService.findById(document.getDocumentType().getId()).getInternalName();
 
-        if(docType.equals("internal"))
+        //region ATA
+        /*
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
+        Iterator<String> itr = multipartRequest.getFileNames();
+
+        try {
+
+            while (itr.hasNext()) {
+
+                String uuid = UUID.randomUUID().toString();
+                String fsname = uuid + ".atach";
+
+                String uploadedFile = itr.next();
+                MultipartFile file = multipartRequest.getFile(uploadedFile);
+
+                byte[] bytes = file.getBytes();
+                Path p = Paths.get(path + fsname);
+                Files.write(p, bytes);
+
+                Attachment attachment = new Attachment();
+                attachment.setName(file.getOriginalFilename());
+                attachment.setInternalName(fsname);
+                attachment.setMimeType(file.getContentType());
+
+                document.getSenderAttachment().add(attachment);
+            }
+        } catch (Exception e)
+        {
+
+        }
+        */
+        //endregion
+
+        //region ATTACHMENTS
+        for(MultipartFile multipartFile : senderFiles)
+        {
+            if(multipartFile.getOriginalFilename().length() > 1) {
+
+                try {
+                    String uuid = UUID.randomUUID().toString();
+                    String fsname = uuid + ".atach";
+
+                    byte[] bytes = multipartFile.getBytes();
+                    Path p = Paths.get(path + fsname);
+                    Files.write(p, bytes);
+
+                    /*
+                    Attachment attachment = new Attachment();
+                    attachment.setName(multipartFile.getOriginalFilename());
+                    attachment.setInternalName(fsname);
+                    attachment.setMimeType(multipartFile.getContentType());
+                    */
+
+
+                    //document.getSenderAttachment().add(attachment);
+                } catch (Exception e) {
+                    String str = "You failed to upload " + multipartFile.getOriginalFilename() + ": " + e.getMessage();
+                }
+            }
+        }
+
+        /*
+        for(MultipartFile multipartFile : receiverFiles)
+        {
+            if(!multipartFile.getOriginalFilename().isEmpty()) {
+
+                String uuid = UUID.randomUUID().toString();
+                String fsname = uuid + ".atach";
+
+                Attachment attachment = new Attachment();
+                attachment.setName(multipartFile.getOriginalFilename());
+                attachment.setInternalName(fsname);
+                attachment.setMimeType(multipartFile.getContentType());
+
+                byte[] bytes = multipartFile.getBytes();
+                Path p = Paths.get(path + fsname);
+                Files.write(p, bytes);
+
+                document.getReceiverAttachment().add(attachment);
+            }
+        }
+        */
+        //endregion
+
+        /*
+         if(docType.equals("internal"))
         {
             saveInternalDocument(document, action);
         }
@@ -277,17 +350,20 @@ public class DocumentFlowController extends BaseController {
         {
             saveOutgoingDocument(document, action);
         }
-
+        */
         return "redirect:/doc?type=" + docType;
     }
 
     @RequestMapping(value = "/view/{id}", method = RequestMethod.GET)
     public String viewDocument(@PathVariable("id") Long id, Model model) {
 
-        model.addAttribute("document", documentService.findById(id));
+        Document document = documentService.findById(id);
+        String currentView = document.getDocumentType().getInternalName();
+
+        model.addAttribute("document", document);
         model.addAttribute("responsible", responsible);
 
-        return "/doc/document/view";
+        return "/doc/document/" + currentView + "/" + "view";
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
@@ -312,7 +388,7 @@ public class DocumentFlowController extends BaseController {
             documentService.deleteById(document);
         }
         */
-        return "redirect:/doc?type=" + documentTypeService.findById(document.getDocumentType().getId()).getInternalName();
+        return "redirect:/doc?type=" + document.getDocumentType().getInternalName();
     }
 
     @RequestMapping(value = "/download/{attachmentId}", method = RequestMethod.GET)
@@ -337,15 +413,14 @@ public class DocumentFlowController extends BaseController {
 
     private DispatchData setDispatchData(String internalName, Document document) {
 
-        DocumentStatus documentStatus = documentStatusService.getByInternalName(internalName);
         DispatchData dispatchData = new DispatchData();
-        dispatchData.setDescription(documentStatus.getName());
+        dispatchData.setDescription(document.getDocumentState().stringValue());
         dispatchData.setDispatchBy(getUser());
         dispatchData.setDispatchTo(userService.findById(2L));
         dispatchData.setDispatchInitTime(new Date());
-        dispatchData.setDispatchType(documentStatus);
+        dispatchData.setDispatchType(document.getDocumentState());
 
-        if(documentStatus.getInternalName() == "create")
+        if(document.getDocumentState() == State.NEW) //documentStatus.getInternalName() == "create"
         {
             dispatchData.setParent(true);
         }
@@ -548,8 +623,8 @@ public class DocumentFlowController extends BaseController {
             document.setSenderDispatchData(doc.getSenderDispatchData());            // add existing Sender DispatchData
             document.setSenderStatus(doc.getSenderStatus());                        // add existing Sender DocumentStatus
 
-            document.setSenderAttachment(doc.getSenderAttachment());
-            document.setReceiverAttachment(doc.getReceiverAttachment());
+            //document.setSenderAttachment(doc.getSenderAttachment());
+            //document.setReceiverAttachment(doc.getReceiverAttachment());
 
             if(doc.getSenderStatus().getInternalName().equals("approve"))
             {   // Receiver Data
@@ -561,66 +636,19 @@ public class DocumentFlowController extends BaseController {
 
                 if(action.equals("accept"))
                 {
-                    document.setReceiverRegisteredNumber("DOCR-" + new Random().nextInt(100));
+                    document.setReceiverRegisteredNumber(registerService.generateRegistrationNumber());
                     document.setReceiverRegisteredDate(new Date());
                     //region Add task
-                    Integer responsibleType = document.getReceiverResponsible().getResponsibleType();
-                    if(responsibleType == 1)
-                    {
-                        for(Staff s : document.getReceiverExecutor().getStaff()) {
-                            taskService.add(addTask(document, s));
-                        }
+                    for(Staff s : document.getReceiverExecutor().getStaff()) {
+                        taskService.add(addTask(document, s));
                     }
-                    else if(responsibleType == 2)
-                    {
-                        for(Department d : document.getReceiverExecutor().getDepartments()) {
-                            taskService.add(addTask(document, d));
-                        }
-                    }
-                    else if(responsibleType == 3)
-                    {
-                        for(Organization o : document.getReceiverExecutor().getOrganizations()) {
-                            taskService.add(addTask(document, o));
-                        }
-                    }
-                    else
-                    {
-                        for(Person p : document.getReceiverExecutor().getPerson()) {
-                            taskService.add(addTask(document, p));
-                        }
-                    }
-                    //endregion
                 }
 
                 if(action.equals("start"))
                 {
-                    //region Add task
-                    Integer responsibleType = document.getReceiverResponsible().getResponsibleType();
-                    if(responsibleType == 1)
-                    {
-                        for(Staff s : document.getReceiverExecutor().getStaff()) {
-                            taskService.add(addTask(document, s));
-                        }
+                    for(Staff s : document.getReceiverExecutor().getStaff()) {
+                        taskService.add(addTask(document, s));
                     }
-                    else if(responsibleType == 2)
-                    {
-                        for(Department d : document.getReceiverExecutor().getDepartments()) {
-                            taskService.add(addTask(document, d));
-                        }
-                    }
-                    else if(responsibleType == 3)
-                    {
-                        for(Organization o : document.getReceiverExecutor().getOrganizations()) {
-                            taskService.add(addTask(document, o));
-                        }
-                    }
-                    else
-                    {
-                        for(Person p : document.getReceiverExecutor().getPerson()) {
-                            taskService.add(addTask(document, p));
-                        }
-                    }
-                    //endregion
                 }
             }
             else
@@ -637,7 +665,8 @@ public class DocumentFlowController extends BaseController {
 
                 if(action.equals("approve"))
                 {
-                    document.setSenderRegisteredNumber("DOCS-" + new Random().nextInt(100));
+
+                    document.setSenderRegisteredNumber(registerService.generateRegistrationNumber());
                     document.setSenderRegisteredDate(new Date());
                     taskService.completeTask(document.getId(), getUser());
                     //region Add task
@@ -648,22 +677,10 @@ public class DocumentFlowController extends BaseController {
                             taskService.add(addTask(document, s));
                         }
                     }
-                    else if(responsibleType == 2)
+                    else
                     {
                         for(Department d : document.getReceiverResponsible().getDepartments()) {
                             taskService.add(addTask(document, d));
-                        }
-                    }
-                    else if(responsibleType == 3)
-                    {
-                        for(Organization o : document.getReceiverResponsible().getOrganizations()) {
-                            taskService.add(addTask(document, o));
-                        }
-                    }
-                    else
-                    {
-                        for(Person p : document.getReceiverResponsible().getPerson()) {
-                            taskService.add(addTask(document, p));
                         }
                     }
                     //endregion
@@ -852,8 +869,8 @@ public class DocumentFlowController extends BaseController {
             document.setSenderDispatchData(doc.getSenderDispatchData());            // add existing Sender DispatchData
             document.setSenderStatus(doc.getSenderStatus());                        // add existing Sender DocumentStatus
 
-            document.setSenderAttachment(doc.getSenderAttachment());
-            document.setReceiverAttachment(doc.getReceiverAttachment());
+            //document.setSenderAttachment(doc.getSenderAttachment());
+            //document.setReceiverAttachment(doc.getReceiverAttachment());
 
             if(doc.getSenderStatus().getInternalName().equals("approve"))
             {   // Receiver Data
