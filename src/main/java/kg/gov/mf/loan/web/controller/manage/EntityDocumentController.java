@@ -82,7 +82,7 @@ public class EntityDocumentController {
 		model.addAttribute("current", evalPage);
 
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
-		return "/manage/order/entitylist/entity/documentpackage/entitydocument/list";
+		return "/manage/order/entityDocumentList";
 	}
 	
 	@RequestMapping(value = { "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/{dpId}/entitydocument/{edId}/view"})

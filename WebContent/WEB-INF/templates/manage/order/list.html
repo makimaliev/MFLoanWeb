@@ -79,7 +79,7 @@
 																</a>
 																<a class="dropdown-item" href="#">
 																	<span>
-																		<form th:action="@{/manage/debtor/delete}" method="post">
+																		<form th:action="@{/manage/order/delete}" method="post">
 																			<input hidden="true" type="text" id="id" name="id" th:value="${o.id}" />
 																			<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
 																		</form>
