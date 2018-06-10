@@ -176,7 +176,9 @@ public class DebtorController {
 
 		QDebtor debtor = QDebtor.debtor;
 		BooleanExpression hasNameLike = debtor.name.like("%" + q + "%");
-		Page<Debtor> page1 = debtorRepository.findAll(hasNameLike, pageable);
+		BooleanExpression hasWorksectorLike = debtor.workSector.name.like("%" + q + "%");
+		//BooleanExpression hasDistrictLike = debtor.owner.address.district.name.like("%" + q + "%");
+		Page<Debtor> page1 = debtorRepository.findAll(hasNameLike.or(hasWorksectorLike), pageable);
 		List<Debtor> debtors = page1.getContent();
 
 		int count = debtorRepository.findAll(hasNameLike, pageable).getTotalPages();

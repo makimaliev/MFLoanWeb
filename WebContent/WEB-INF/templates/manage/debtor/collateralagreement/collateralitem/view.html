@@ -130,71 +130,6 @@
 
 				<!--begin::Portlet-->
 				<div class="m-portlet m-portlet--mobile">
-					<div class="m-portlet__head">
-						<div class="m-portlet__head-caption">
-							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.collateralItem.arrestFreeInfo}"></h3>
-							</div>
-						</div>
-					</div>
-					<div class="m-portlet__body">
-
-						<!--<itemcheck th:if="${#lists.isEmpty(aFs)}">-->
-							<div class="m-section">
-								<div class="m-section__content">
-									<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${itemId}__/arrestfree/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.arrestFreeInfo.add}"></a>
-								</div>
-							</div>
-						<!--</itemcheck>-->
-
-						<!--begin::Section-->
-						<div class="m-section">
-							<div class="m-section__content">
-								<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
-									<div>
-										<table class="table">
-											<thead class="thead-default">
-											<tr>
-												<th class="table-id">Id</th>
-												<th th:text="#{label.arrestFree.onDate}"></th>
-												<th th:text="#{label.arrestFree.arrestFreeBy}"></th>
-												<th>&nbsp;</th>
-											</tr>
-											</thead>
-											<tbody>
-											<tr th:each="af : ${aFs}">
-												<td class="table-id" th:text="${af.id}"></td>
-												<td th:text="${af.onDate}"></td>
-												<td th:text="${af.arrestFreeBy}"></td>
-												<td class="table-actions text-right">
-													<span>
-														<div class="dropdown">
-															<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
-																<i class="la la-ellipsis-h"></i>
-															</a>
-															<div class="dropdown-menu dropdown-menu-right">
-																<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${itemId}__/arrestfree/__${af.id}__/save}">
-																	<span th:text="#{label.table.edit}"></span>
-																</a>
-															</div>
-														</div>
-													</span>
-												</td>
-											</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!--end::Section-->
-
-					</div>
-				</div>
-				<!--end::Portlet-->
-
-				<!--begin::Portlet-->
-				<div class="m-portlet m-portlet--mobile">
 					<div class="m-portlet__body">
 
 						<div class="m-section">
@@ -239,6 +174,73 @@
 																			<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
 																		</form>
 																	</span>
+																</a>
+															</div>
+														</div>
+													</span>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--end::Section-->
+
+					</div>
+				</div>
+				<!--end::Portlet-->
+
+				<!--begin::Portlet-->
+				<div class="m-portlet m-portlet--mobile">
+					<div class="m-portlet__head">
+						<div class="m-portlet__head-caption">
+							<div class="m-portlet__head-title">
+								<h3 class="m-portlet__head-text" th:text="#{label.collateralItem.arrestFreeInfo}"></h3>
+							</div>
+						</div>
+					</div>
+					<div class="m-portlet__body">
+
+						<itemcheck th:if="${#lists.isEmpty(aFs)}">
+							<div class="m-section">
+								<div class="m-section__content">
+									<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${itemId}__/arrestfree/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.arrestFreeInfo.add}"></a>
+								</div>
+							</div>
+						</itemcheck>
+
+						<!--begin::Section-->
+						<div class="m-section">
+							<div class="m-section__content">
+								<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+									<div>
+										<table class="table">
+											<thead class="thead-default">
+											<tr>
+												<th class="table-id">Id</th>
+												<th th:text="#{label.arrestFree.onDate}"></th>
+												<th th:text="#{label.arrestFree.details}"></th>
+												<th th:text="#{label.arrestFree.arrestFreeBy}"></th>
+												<th>&nbsp;</th>
+											</tr>
+											</thead>
+											<tbody>
+											<tr th:each="af : ${aFs}">
+												<td class="table-id" th:text="${af.id}"></td>
+												<td th:text="${af.onDate}"></td>
+												<td th:text="${af.details}"></td>
+												<td th:text="${af.arrestFreeBy}"></td>
+												<td class="table-actions text-right">
+													<span>
+														<div class="dropdown">
+															<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																<i class="la la-ellipsis-h"></i>
+															</a>
+															<div class="dropdown-menu dropdown-menu-right">
+																<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${itemId}__/arrestfree/__${af.id}__/save}">
+																	<span th:text="#{label.table.edit}"></span>
 																</a>
 															</div>
 														</div>

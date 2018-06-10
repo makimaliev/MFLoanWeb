@@ -4,6 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import kg.gov.mf.loan.admin.sys.model.User;
+import kg.gov.mf.loan.admin.sys.service.UserService;
+import kg.gov.mf.loan.manage.repository.collateral.CollateralItemArrestFreeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -67,7 +70,14 @@ public class CollateralItemController {
 	
 	@Autowired
 	InspectionResultTypeService insTypeService;
-	
+
+	@Autowired
+	CollateralItemArrestFreeRepository collateralItemArrestFreeRepository;
+
+	@Autowired
+	UserService userService;
+
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
@@ -99,7 +109,7 @@ public class CollateralItemController {
 		model.addAttribute("item", tItem);
 		model.addAttribute("itemDetails", tDetails);
 		
-		model.addAttribute("aFs", tItem.getCollateralItemArrestFree());
+		model.addAttribute("aFs", collateralItemArrestFreeRepository.getByCollateralItem(tItem));
 		model.addAttribute("inpections", tItem.getCollateralItemInspectionResults());
 		
 		return "/manage/debtor/collateralagreement/collateralitem/view";
@@ -199,14 +209,22 @@ public class CollateralItemController {
 			@PathVariable("itemId")Long itemId) {
 		
 		CollateralItem item = itemService.getById(itemId);
-		item.setCollateralItemArrestFree(null);
-		item.setCollateralItemArrestFree(af);
-		af.setCollateralItem(item);
 		
 		if(af.getId() == 0)
+		{
+			User user = userService.findByUsername(Utils.getPrincipal());
+			af.setArrestFreeBy(user.getId());
+			af.setCollateralItem(item);
 			afService.add(af);
-		else
+		}
+
+		else{
+			User user = userService.findByUsername(Utils.getPrincipal());
+			af.setArrestFreeBy(user.getId());
+			af.setCollateralItem(item);
 			afService.update(af);
+		}
+
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/view";
@@ -216,8 +234,6 @@ public class CollateralItemController {
     public String deleteItemArrestFree(long id, @PathVariable("itemId")Long itemId) {
 		if(id > 0) {
 			afService.remove(afService.getById(id));
-			CollateralItem item = itemService.getById(itemId);
-			item.setCollateralItemArrestFree(null);
 		}
 			
         return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/view";
