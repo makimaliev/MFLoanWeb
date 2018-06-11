@@ -126,7 +126,14 @@ public class EmploymentHistoryEventController {
 			this.employmentHistoryEventService.edit(employmentHistoryEvent);
 		}
 
-		String url = "/employmentHistory/"+employmentHistoryEvent.getEmploymentHistory().getId()+"/details";
+//		String url = "/employmentHistory/"+employmentHistoryEvent.getEmploymentHistory().getId()+"/details";
+
+		EmploymentHistory employmentHistory = this.employmentHistoryService.findById(employmentHistoryEvent.getEmploymentHistory().getId());
+
+		Staff staff = employmentHistory.getStaff();
+
+
+		String url = "/staff/"+staff.getId()+"/details";
 
         return new ModelAndView("redirect:"+url, model);
 

@@ -1,97 +1,69 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<head>
+<form th:action="@{/employmentHistoryEvent/save}" class="form-horizontal" method="post" th:object="${employmentHistoryEvent}">
+	<div class="modal-header">
+		<h5 class="modal-title" th:text="#{label.add.employmentHistoryEvent}"></h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
 
-</head>
+		<!--hidden-->
+		<input hidden="true" type="text" th:field="*{id}" />
+		<input hidden="true" type="text" th:field="*{employmentHistory.id}" />
 
-
-
-<body>
-
-	<form th:action="@{/employmentHistoryEvent/save}" id="form_sample_2"
-		th:object="${employmentHistoryEvent}" class="form-horizontal"
-		method="post">
-		<div class="form-body">
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Name </label>
-				<div class="col-md-4">
-					<input hidden="true" type="text" id="id" name="id" th:value="*{id}" />
-
-					<div class="input-icon right">
-						<i class="fa"></i> <input type="text" class="form-control"
-							name="name" th:value="*{name}" />
-					</div>
-				</div>
-			</div>
-
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Employment History<span
-					class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-
-					<select th:field="*{employmentHistory}">
-						<option
-							th:each="employmentHistoryInList : ${employmentHistoryList}"
-							th:value="${{employmentHistoryInList}}"
-							th:text="${employmentHistoryInList.number}">EmpHistory
-							number</option>
-					</select>
-
-				</div>
-			</div>
-
-
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Employment History
-					Evenet Type<span class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-
-					<select th:field="*{employmentHistoryEventType}">
-						<option
-							th:each="employmentHistoryEventTypeInList : ${employmentHistoryEventTypeList}"
-							th:value="${{employmentHistoryEventTypeInList}}"
-							th:text="${employmentHistoryEventTypeInList.name}">employmentHistoryEventTypeInList.name</option>
-					</select>
-
-				</div>
-			</div>
-
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">date</label>
-				<div class="col-md-4">
-					<div class="input-group date date-picker"
-						data-date-format="dd.mm.yyyy" id="eventDate">
-						<input type="text"
-							class="form-control" name="date" th:field="*{date}" /> <span
-							class="input-group-btn">
-							<button class="btn default" type="button">
-								<i class="fa fa-calendar"></i>
-							</button>
-						</span>
-					</div>
-					<!-- /input-group -->
-					<span class="help-block"> select a date </span>
-				</div>
-				<script>
-	$('#eventDate').datepicker();
-	</script>
-			</div>
-
+		<div class="form-group ">
+			<label for="name" class="form-control-label" th:text="#{label.staff.empoymentHistoryEventNumber}">Code</label>
+			<input type="text" class="form-control" id="name"  th:field="*{name}"/>
 		</div>
-		<div class="form-actions">
-			<div class="row">
-				<div class="col-md-offset-3 col-md-9">
-					<button type="submit" class="btn green">Submit</button>
-					<button type="button" class="btn default"
-						onclick="window.location.href='/employmentHistoryEvent/list'">Cancel</button>
-				</div>
+
+
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg-4 col-sm-12">
+				<span th:text="#{label.employmentHistoryEvent.type}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+
+			<select class="form-control m_selectpicker" id="srs" th:field="*{employmentHistoryEventType}" style="width: 100%" th:title="#{label.select}">
+				<option
+						th:each="employmentHistoryEventTypeInList : ${employmentHistoryEventTypeList}"
+						th:value="${{employmentHistoryEventTypeInList}}"
+						th:text="${employmentHistoryEventTypeInList.name}">employmentHistoryEventTypeInList.name</option>
+			</select>
+		</div>
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg-4 col-sm-12">
+				<span th:text="#{label.empoymentHistoryEvent.date}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="input-group date m_datetimepicker_6">
+				<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{date}"/>
+				<span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
 			</div>
 		</div>
-	</form>
 
-</body>
-</html>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.orgForm.button.cancel}"></button>
+		<button type="submit" class="btn btn-primary" th:text="#{label.button.save}"></button>
+	</div>
+</form>
+
+<script>
+    $('.m_selectpicker').selectpicker('refresh');
+
+    $('.m_datetimepicker_6').datetimepicker({
+        format: "dd.mm.yyyy",
+        todayHighlight: true,
+        autoclose: true,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        pickerPosition: 'bottom-left'
+    });
+
+
+
+
+</script>

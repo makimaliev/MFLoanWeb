@@ -21,7 +21,14 @@
 
 		<input hidden="true" type="text" class="form-control" name="name" th:field="*{name}"/>
 		<input hidden="true" type="text" class="form-control" name="enabled" th:field="*{enabled}"/>
-		<input hidden="true" type="text" class="form-control" name="employmentHistory.number" th:field="*{employmentHistory.number}"/>
+
+
+
+		<div class="form-group ">
+			<label for="employmentHistory.number" class="form-control-label" th:text="#{label.staff.empoymentHistoryNumber}">Code</label>
+			<input type="text" class="form-control" id="employmentHistory.number" name="employmentHistory.number" th:field="*{employmentHistory.number}"/>
+		</div>
+
 
 		<div class="form-group m-form__group row">
 			<label class="col-form-label col-lg-4 col-sm-12">

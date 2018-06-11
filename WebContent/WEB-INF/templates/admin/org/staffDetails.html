@@ -52,7 +52,7 @@
 
 												<!-- Default bootstrap modal example -->
 
-												<div class="modal fade" id="informationFormModal" tabindex="-1"
+												<div class="modal fade" id="eventFormModal"
 													 role="dialog" aria-labelledby="myModalLabel"
 													 aria-hidden="true">
 													<div class="modal-dialog">
@@ -109,6 +109,11 @@
 														<!--Information</a>-->
 
 													<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
+													data-target="#eventFormModal" th:href="@{/employmentHistory/__${staff.employmentHistory.id}__/employmentHistoryEvent/add}"
+													role="button" class="btn btn-success" th:text="#{label.add.EmploymentHistoryEvent}"> Add
+													Information</a>
+
+													<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
 													   data-target="#staffFormModal" th:href="@{/staff/__${staff.id}__/edit}"
 													   role="button" class="btn btn-outline-danger" th:text="#{label.table.edit}">Edit staff </a>
 
@@ -138,6 +143,7 @@
 												Адрес </a></li>
 											<li class="nav-item"><a class="nav-link m--font-primary" href="#tab_15_2" data-toggle="tab"> Идентификационные данные </a></li>
 											<li class="nav-item"><a class="nav-link m--font-primary" href="#tab_15_3" data-toggle="tab"> Контактные данные </a></li>
+											<li class="nav-item"><a class="nav-link m--font-primary" href="#tab_15_4" data-toggle="tab"> Трудовая история </a></li>
 										</ul>
 										<div class="tab-content">
 
@@ -268,6 +274,81 @@
 												</div>
 											</div>
 
+											<!--EMPLOYMENT HISTORY TAB-->
+											<div class="tab-pane" id="tab_15_4">
+
+												<div class="tab-content">
+													<div th:text="${staff.employmentHistory.number}" ></div>
+														<table class="table" id="eventTable">
+															<thead class="thead-default">
+															<tr>
+																<th>Name</th>
+																<th>Event Type</th>
+																<th>&nbsp;</th>
+															</tr>
+															</thead>
+
+															<tbody>
+
+															<tr th:each="eventInList : ${staff.employmentHistory.employmentHistoryEvent}">
+
+																<td th:text="${eventInList?.name}">Name</td>
+																<td th:text="${eventInList?.employmentHistoryEventType?.name}">employmentHistory</td>
+																<td class="table-actions text-right">
+																				<span>
+																					<div class="dropdown">
+																						<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																							<i class="la la-ellipsis-h"></i>
+																						</a>
+																						<div class="dropdown-menu dropdown-menu-right">
+																							<a class="dropdown-item"
+																							   th:href="@{/employmentHistoryEvent/__${eventInList.id}__/details}"
+																							   role="button">
+																								<span th:text="#{label.table.view}"></span>
+																							</a>
+																							<a class="dropdown-item"
+																							   th:href="@{/employmentHistoryEvent/__${eventInList.id}__/edit}"
+																							   data-toggle="modal"
+																							   data-target="#eventFormModal">
+																								<span th:text="#{label.table.edit}"></span>
+																							</a>
+																							<a class="dropdown-item" href="#">
+																								<span>
+																									<form th:action="@{/employmentHistoryEvent/__${eventInList.id}__/remove}" method="post">
+																										<input hidden="true" type="text" id="id" name="id" th:value="${eventInList.id}" />
+																										<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																									</form>
+																								</span>
+																							</a>
+																						</div>
+																					</div>
+																				</span>
+																</td>
+															</tr>
+															</tbody>
+
+														</table>
+													</div>
+												</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+											</div>
+
 										</div>
 									</div>
 								</div>
@@ -334,6 +415,15 @@
             $(this).find(".modal-title").html(link.attr("href"));
             $(this).find(".modal-body").load(link.attr("href"));
         }
+    });
+
+    $("#eventFormModal").on("show.bs.modal", function(e) {
+
+
+        var link = $(e.relatedTarget);
+
+            $(this).find(".modal-title").html(link.attr("href"));
+            $(this).find(".modal-body").load(link.attr("href"));
     });
 
 
