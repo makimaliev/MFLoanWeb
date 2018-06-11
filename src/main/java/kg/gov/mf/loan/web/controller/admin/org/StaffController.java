@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import kg.gov.mf.loan.admin.org.model.*;
 import kg.gov.mf.loan.admin.org.service.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -123,19 +124,19 @@ public class StaffController {
 		return "admin/org/staffDetails";
 	}
 	
-	@RequestMapping(value = "/staff/add", method = RequestMethod.GET)
-	public String getStaffAddForm(Model model) {
-
-		model.addAttribute("staff", new Staff());
-
-		model.addAttribute("departmentList", this.departmentService.findAll());	
-		model.addAttribute("organizationList", this.organizationService.findAll());	
-		model.addAttribute("positionList", this.positionService.findAll());	
-		model.addAttribute("personList", this.personService.findAll());		
-		
-
-		return "admin/org/staffForm";
-	}
+//	@RequestMapping(value = "/staff/add", method = RequestMethod.GET)
+//	public String getStaffAddForm(Model model) {
+//
+//		model.addAttribute("staff", new Staff());
+//
+//		model.addAttribute("departmentList", this.departmentService.findAll());
+//		model.addAttribute("organizationList", this.organizationService.findAll());
+//		model.addAttribute("positionList", this.positionService.findAll());
+//		model.addAttribute("personList", this.personService.findAll());
+//
+//
+//		return "admin/org/staffForm";
+//	}
 	
 	@RequestMapping(value = "/organization/{organizationId}/department/{departmentId}/staff/add", method = RequestMethod.GET)
 	public String getStaffAddFormOrganization(Model model,@PathVariable("organizationId") long organization_id, @PathVariable("departmentId") long department_id) {
@@ -146,6 +147,10 @@ public class StaffController {
 		modelStaff.setDepartment(this.departmentService.findById(department_id));
 
 		model.addAttribute("staff", modelStaff);
+
+		model.addAttribute("organization", this.organizationService.findById(organization_id));
+		model.addAttribute("department", this.departmentService.findById(department_id ));
+
 
 //		model.addAttribute("departmentList", this.departmentService.findAll());
 //		model.addAttribute("organizationList", this.organizationService.findAll());
@@ -163,7 +168,7 @@ public class StaffController {
 	public String getStaffListByDepartment(Model model,@PathVariable("departmentId") long department_id) {
 
 		model.addAttribute("staffList", this.staffService.findAllByDepartment(departmentService.findById(department_id)));
-		model.addAttribute("organizationList", this.organizationService.findAll());
+//		model.addAttribute("organizationList", this.organizationService.findAll());
 
 		return "admin/org/staffView";
 	}
@@ -173,13 +178,21 @@ public class StaffController {
 
 	@RequestMapping("/staff/{id}/edit")
 	public String getStaffEditForm(@PathVariable("id") long id, Model model) {
-		model.addAttribute("staff", this.staffService.findById(id));
-		
-		model.addAttribute("departmentList", this.departmentService.findAll());
-		model.addAttribute("organizationList", this.organizationService.findAll());	
-		model.addAttribute("positionList", this.positionService.findAll());
-		model.addAttribute("personList", this.personService.findAll());		
-		
+
+    	Staff staff = this.staffService.findById(id);
+		model.addAttribute("staff", staff);
+
+		model.addAttribute("organization", staff.getOrganization());
+		model.addAttribute("department", staff.getDepartment());
+
+		model.addAttribute("positionList", this.positionService.findByDepartment(staff.getDepartment()));
+
+		List<Person> personList = new ArrayList<Person>();
+
+		personList.add(staff.getPerson());
+
+		model.addAttribute("personList", personList);
+
 		return "admin/org/staffForm";
 
 	}
@@ -187,24 +200,28 @@ public class StaffController {
 	@RequestMapping(value = "/staff/save", method = RequestMethod.POST)
 	public String saveStaffAndRedirectToStaffList(@Validated @ModelAttribute("staff") Staff staff, BindingResult result) {
 
+
+		EmploymentHistory employmentHistory = staff.getEmploymentHistory();
+		employmentHistory.setStaff(staff);
+
+		staff.setName(staff.getPerson().getIdentityDoc().getIdentityDocDetails().getFullname());
+		staff.setEnabled(true);
+
 		if (result.hasErrors()) {
 			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
 		} else if (staff.getId() == 0) {
 			
-			EmploymentHistory employmentHistory = staff.getEmploymentHistory();
-			employmentHistory.setStaff(staff);
-			
-			
+
+
 			this.staffService.create(staff);
 		} else {
-			
-			EmploymentHistory employmentHistory = staff.getEmploymentHistory();
-			employmentHistory.setStaff(staff);
 			
 			this.staffService.edit(staff);
 		}
 
-		return "redirect:/staff/list";
+//		return "redirect:/staff/list";
+
+		return "redirect:/organization/"+staff.getOrganization().getId()+"/details";
 
 	}
 

@@ -74,6 +74,9 @@
 													<i class="la la-ellipsis-h"></i>
 												</a>
 												<div class="dropdown-menu dropdown-menu-right">
+													<a class="dropdown-item" th:href="@{/staff/__${s.id}__/details}">
+																	<span th:text="#{label.table.view}"></span>
+																</a>
 													<a class="dropdown-item"
 													   data-remote="false" data-toggle="modal"
 													   data-target="#staffFormModal"

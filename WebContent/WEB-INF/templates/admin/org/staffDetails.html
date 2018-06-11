@@ -1,226 +1,352 @@
+
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+>
+<!-- begin::Head -->
 <head>
-<title></title>
+	<title th:text="#{label.staff.page.title}"></title>
 
-<div th:replace="fragments/header :: header-css"></div>
-
-<link
-	th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}"
-	rel="stylesheet" type="text/css" />
-<link
-	th:href="@{/assets/global/plugins/datatables/datatables.min.css}"
-	rel="stylesheet" type="text/css" />
-<link
-	th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}"
-	rel="stylesheet" type="text/css" />
-
+	<div th:replace="fragments/header :: header-css"/>
 </head>
+<!-- end::Head -->
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+	<!-- BEGIN: Header -->
+	<div th:replace="layout/header"/>
+	<!-- END: Header -->
 
-<body
-	class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed">
-
-	<!-- BEGIN HEADER -->
-	<div th:replace="layout :: header-top"></div>
-	<!-- END HEADER -->
-
-	<!-- BEGIN CONTAINER -->
-	<div class="page-container">
-
-		<!-- BEGIN SIDEBAR -->
-		<div th:replace="layout :: page-container-sidebar"></div>
-		<!-- END SIDEBAR -->
-
-		<!-- BEGIN CONTENT -->
-		<div class="page-content-wrapper">
-
-			<!-- BEGIN CONTENT BODY -->
-			<div class="page-content">
+	<!-- begin::Body -->
+	<div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+		<!-- BEGIN: Left Aside -->
+		<div th:replace="layout/sidebar"/>
+		<!-- END: Left Aside -->
+		<div class="m-grid__item m-grid__item--fluid m-wrapper">
+			<div class="m-content">
 
 
 
-				<div class="row">
-					<div class="col-md-6">
-						<!-- BEGIN BORDERED TABLE PORTLET-->
-						<div class="portlet portlet-fit ">
-							<div class="portlet-body">
+				<div class="m-portlet m-portlet--full-height">
+					<div class="m-portlet__head">
+						<div class="m-portlet__head-caption">
+							<div class="m-portlet__head-title">
+								<h3 class="m-portlet__head-text" th:text="${staff?.name}"></h3>
+							</div>
+						</div>
+					</div>
+				</div>
 
-								<div>
-									<table class="table table-hover table-condensed table-striped table-bordered compact condensed" id="staffTable">
-										<thead>
-											<tr>
-												<th>Id</th>
-												<th>Name</th>
-												<th>Edit</th>
-												<th>Delete</th>
-											</tr>
-										</thead>
-
-										<tbody>
-											
-											<tr>
-												<td th:text="${staff.id}">Id</td>
-												<td th:text="${staff.name}">Name</td>     
-												<td>
-													<a data-remote="false" data-toggle="modal"
-													data-target="#staffFormModal" th:href="@{/staff/__${staff.id}__/edit}"
-													role="button" class="btn btn-xs blue-stripe"> Edit
-													</a>
-												</td>
-												<td>
-													<form th:action="@{/staff/__${staff.id}__/remove}" method="post">
-														<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-													</form>
-												</td>
-											</tr>
-										</tbody>
-
-									</table>
-								</div>
-
-
+				<div sec:authorize="hasRole('ADMIN')" class="m-portlet m-portlet--full-height">
+					<div class="m-portlet__head">
+						<div class="m-portlet__head-caption">
+							<div class="row">
 								<div class="col-md-12">
+									<!-- BEGIN BORDERED TABLE PORTLET-->
+									<div class="portlet portlet-fit ">
+										<div class="portlet-body">
 
-									<!-- Default bootstrap modal example -->
-									<div class="modal fade" id="staffFormModal" tabindex="-1"
-										role="dialog" aria-labelledby="myModalLabel"
-										aria-hidden="true">
-										<div class="modal-dialog">
-											<div class="modal-content">
-												<div class="modal-header">
-													<button type="button" class="close" data-dismiss="modal"
-														aria-label="Close">
-														<span aria-hidden="true">&times;</span>
-													</button>
-													<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+											<div class="col-md-12">
+
+												<!-- Default bootstrap modal example -->
+
+												<div class="modal fade" id="informationFormModal" tabindex="-1"
+													 role="dialog" aria-labelledby="myModalLabel"
+													 aria-hidden="true">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<!--<div class="modal-header">-->
+															<!--<button type="button" class="close" data-dismiss="modal"-->
+															<!--aria-label="Close">-->
+															<!--<span aria-hidden="true">&times;</span>-->
+															<!--</button>-->
+															<!--<h4 class="modal-title" id="myModalLabel" >Добавить</h4>-->
+															<!--</div>-->
+															<div class="modal-body">...</div>
+															<!--<div class="modal-footer">-->
+															<!--<button type="button" class="btn btn-default"-->
+															<!--data-dismiss="modal">Close</button>-->
+															<!--<button type="button" class="btn btn-success">Save-->
+															<!--changes</button>-->
+															<!--</div>-->
+														</div>
+													</div>
 												</div>
-												<div class="modal-body">...</div>
-												<div class="modal-footer">
-													<button type="button" class="btn btn-default"
-														data-dismiss="modal">Close</button>
-													<button type="button" class="btn btn-primary">Save
-														changes</button>
+
+												<div class="modal fade" id="staffFormModal"
+													 role="dialog" aria-labelledby="myModalLabel"
+													 aria-hidden="true">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<!--<div class="modal-header">-->
+															<!--<button type="button" class="close" data-dismiss="modal"-->
+															<!--aria-label="Close">-->
+															<!--<span aria-hidden="true">&times;</span>-->
+															<!--</button>-->
+															<!--<h4 class="modal-title" id="myModalLabel" >Добавить</h4>-->
+															<!--</div>-->
+															<div class="modal-body">...</div>
+															<!--<div class="modal-footer">-->
+															<!--<button type="button" class="btn btn-default"-->
+															<!--data-dismiss="modal">Close</button>-->
+															<!--<button type="button" class="btn btn-success">Save-->
+															<!--changes</button>-->
+															<!--</div>-->
+														</div>
+													</div>
+												</div>
+
+											</div>
+
+											<div class="row" sec:authorize="hasRole('ADMIN')" >
+												<div class="col-md-12">
+
+													<!--<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"-->
+													   <!--data-target="#informationFormModal" th:href="@{/information/add}"-->
+													   <!--role="button" class="btn btn-success" th:text="#{label.add.information}"> Add-->
+														<!--Information</a>-->
+
+													<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
+													   data-target="#staffFormModal" th:href="@{/staff/__${staff.id}__/edit}"
+													   role="button" class="btn btn-outline-danger" th:text="#{label.table.edit}">Edit staff </a>
+
+
 												</div>
 											</div>
 										</div>
 									</div>
-
-
+									<!-- END BORDERED TABLE PORTLET-->
 								</div>
-
-
-
 							</div>
 						</div>
-						<!-- END BORDERED TABLE PORTLET-->
 					</div>
 				</div>
-				
-				
-			<div class="row">
-				<div class="col-md-12">
 
-					<input hidden="true" type="text" id="staff_id" name="staff_id" />
-					
-					<div id="content"></div>
+				<div class="m-portlet m-portlet--full-height">
+					<div class="m-portlet m-portlet--mobile">
+						<div class="m-portlet__body">
 
+							<div class="row">
+								<div class="col-md-12">
+									<div class="tabbable-custom ">
+
+
+										<ul class="nav nav-tabs " role="tablist" id="person_tabs">
+											<li class="active nav-item" ><a class="nav-link m--font-primary active" href="#tab_15_1" data-toggle="tab">
+												Адрес </a></li>
+											<li class="nav-item"><a class="nav-link m--font-primary" href="#tab_15_2" data-toggle="tab"> Идентификационные данные </a></li>
+											<li class="nav-item"><a class="nav-link m--font-primary" href="#tab_15_3" data-toggle="tab"> Контактные данные </a></li>
+										</ul>
+										<div class="tab-content">
+
+											<!--ADDRESS TAB-->
+											<div class="tab-pane active" id="tab_15_1">
+
+
+												<div class="row">
+													<div class="col-md-12">
+														<div class="m-widget1">
+															<div class="m-widget1__item">
+																<div class="row m-row--no-padding align-items-center">
+																	<div class="col">
+																		<h3 class="m-widget1__title">Область</h3>
+																		<span class="m-widget1__desc m--font-brand" th:text="${staff?.person?.address?.region?.name}"></span>
+																	</div>
+																</div>
+															</div>
+															<div class="m-widget1__item">
+																<div class="row m-row--no-padding align-items-center">
+																	<div class="col">
+																		<h3 class="m-widget1__title" >Район</h3>
+																		<span class="m-widget1__desc m--font-brand" th:text="${staff?.person?.address?.district?.name}"></span>
+																	</div>
+																</div>
+															</div>
+															<div class="m-widget1__item">
+																<div class="row m-row--no-padding align-items-center">
+																	<div class="col">
+																		<h3 class="m-widget1__title">А.окмоту</h3>
+																		<span class="m-widget1__desc m--font-brand" th:text="${staff?.person?.address?.aokmotu?.name}"></span>
+																	</div>
+																</div>
+															</div>
+															<div class="m-widget1__item">
+																<div class="row m-row--no-padding align-items-center">
+																	<div class="col">
+																		<h3 class="m-widget1__title">Село</h3>
+																		<span class="m-widget1__desc m--font-brand" th:text="${staff?.person?.address?.village?.name}"></span>
+																	</div>
+																</div>
+															</div>
+															<div class="m-widget1__item">
+																<div class="row m-row--no-padding align-items-center">
+																	<div class="col">
+																		<h3 class="m-widget1__title">Адрес</h3>
+																		<span class="m-widget1__desc m--font-brand" th:text="${staff?.person?.address?.line}"></span>
+																	</div>
+																</div>
+															</div>
+														</div>
+
+													</div>
+												</div>
+
+											</div>
+
+											<!--IDENTITY DOC TAB-->
+											<div class="tab-pane" id="tab_15_2">
+												<div class="m-widget1">
+													<div class="m-widget1__item">
+														<div class="row m-row--no-padding align-items-center">
+															<div class="col">
+																<h3 class="m-widget1__title">Полное наименование</h3>
+																<span class="m-widget1__desc m--font-brand" th:text="${staff?.person?.identityDoc?.identityDocDetails?.fullname}"></span>
+															</div>
+														</div>
+													</div>
+													<div class="m-widget1__item">
+														<div class="row m-row--no-padding align-items-center">
+															<div class="col">
+																<h3 class="m-widget1__title" >Вид документа</h3>
+																<span class="m-widget1__desc m--font-brand" th:text="${staff?.person?.identityDoc?.identityDocType?.name}"></span>
+															</div>
+														</div>
+													</div>
+													<div class="m-widget1__item">
+														<div class="row m-row--no-padding align-items-center">
+															<div class="col">
+																<h3 class="m-widget1__title">Номер документа</h3>
+																<span class="m-widget1__desc m--font-brand" th:text="${staff?.person?.identityDoc?.number}"></span>
+															</div>
+														</div>
+													</div>
+													<div class="m-widget1__item">
+														<div class="row m-row--no-padding align-items-center">
+															<div class="col">
+																<h3 class="m-widget1__title">Дата выдачи</h3>
+																<span class="m-widget1__desc m--font-brand" th:text="${staff?.person?.identityDoc?.date}"></span>
+															</div>
+														</div>
+													</div>
+													<div class="m-widget1__item">
+														<div class="row m-row--no-padding align-items-center">
+															<div class="col">
+																<h3 class="m-widget1__title">Кем выдано</h3>
+																<span class="m-widget1__desc m--font-brand" th:text="${staff?.person?.identityDoc?.identityDocGivenBy?.name}"></span>
+															</div>
+														</div>
+													</div>
+													<div class="m-widget1__item">
+														<div class="row m-row--no-padding align-items-center">
+															<div class="col">
+																<h3 class="m-widget1__title">ИНН</h3>
+																<span class="m-widget1__desc m--font-brand" th:text="${staff?.person?.identityDoc?.pin}"></span>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<!--CONTACTS TAB-->
+											<div class="tab-pane" id="tab_15_3">
+
+												<div class="row">
+													<div class="col-md-3">
+														<div class="m-widget1">
+															<div class="m-widget1__item">
+																<div class="row m-row--no-padding align-items-center">
+																	<div class="col">
+																		<h3 class="m-widget1__title">Номер телефона</h3>
+																			<span class="m-widget1__desc m--font-brand" th:text="${staff?.person?.contact?.name}"></span>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+
+							</div>
+
+						</div>
+					</div>
 				</div>
-			</div>				
-				
-				
-			</div>
-			<!-- END CONTENT BODY -->
-		</div>
-		<!-- END CONTENT -->
-		<!-- <div th:replace="layout :: page-container-quick-sidebar"/> -->
-	</div>
-	<!-- END CONTAINER -->
-	<div th:replace="layout :: footer"></div>
-	<div th:replace="fragments/footer :: footer-js"></div>
 
-	<script th:src="@{/assets/global/plugins/datatables/datatables.js}"
-		type="text/javascript"></script>
-	<script
+
+			</div>
+		</div>
+	</div>
+	<!-- end:: Body -->
+	<!-- begin::Footer -->
+	<div th:replace="layout/footer"/>
+	<!-- end::Footer -->
+</div>
+
+<div class="m-scroll-top m-scroll-top--skin-top" data-toggle="m-scroll-top" data-scroll-offset="500" data-scroll-speed="300">
+	<i class="la la-arrow-up"></i>
+</div>
+
+<div th:replace="fragments/footer :: footer-js"/>
+
+<script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
+
+<script
 		th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}"
 		type="text/javascript"></script>
 
-	<!-- BEGIN PAGE LEVEL PLUGINS -->
-
-	<!-- END PAGE LEVEL PLUGINS -->
-	<!-- BEGIN PAGE LEVEL SCRIPTS -->
 
 
+<script th:inline="javascript">
 
-	
-		<script type="text/javascript">
-		$(document).ready(function() {
+    /*<![CDATA[*/
 
-			
-			var table = $('#staffTable').DataTable({
-		    	stateSave: true,
-		    	"language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
-	    		"info":     false,
-	    		keys: {
-	    	        focus: ':eq(0)'
-	    	    }
-		    } );
 
-			
-			table.on('key-focus', function(e, datatable, cell) {
-			
-				var rowData = datatable.row(cell.index().row).data();
-				
-			
-				$("#staff_id").val(rowData[0]);
-				
-				var sUrl ="/MFCredit/staff/" + rowData[0]+"/view";
-				
-				$.get(sUrl, function(data) {
+    $("#staffFormModal").on("show.bs.modal", function(e) {
 
-					$('#content').html(data);
-				});
 
-				});
+        var link = $(e.relatedTarget);
+        var personID = /*[[${staff.person.id}]]*/ '1';
+        var departmentID = $("#department_id").val();
 
-			});
-		</script>
-           
-	<script type="text/javascript">
-	$("#staffFormModal").on("show.bs.modal", function(e) {
-		
-	    var link = $(e.relatedTarget);
-	    
-	    
-	    var staffID = $("#staff_id").val();
 
-	    if(link.attr("href").indexOf('district/add')>0)
-	    {
-	    	$(this).find(".modal-title").html(link.attr("href")+"/"+staffID);
-		    $(this).find(".modal-body").load(link.attr("href")+"/"+staffID);
-	    }
-	    else
-    	{
-	    	$(this).find(".modal-title").html(link.attr("href"));
-		    $(this).find(".modal-body").load(link.attr("href"));
-    	}
-	});
-	
-	
 
-	
-</script>           
-            
-            
-            
-            
-            
+        if(link.attr("href").indexOf('staff/add')>0)
+        {
+
+            var url = link.attr("href").replace("/staff/add","/person/"+personID+"/department/"+departmentID+"/staff/add");
+
+
+
+            $(this).find(".modal-body").load(url);
+
+        }
+        else
+        {
+            $(this).find(".modal-title").html(link.attr("href"));
+            $(this).find(".modal-body").load(link.attr("href"));
+        }
+    });
+
+
+
+    /*]]>*/
+</script>
 
 
 
 
 
-
-	<!-- END PAGE LEVEL SCRIPTS -->
 </body>
+<!-- end::Body -->
 </html>
+
+

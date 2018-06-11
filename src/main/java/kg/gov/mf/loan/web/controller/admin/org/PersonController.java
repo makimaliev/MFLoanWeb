@@ -32,6 +32,7 @@ import kg.gov.mf.loan.admin.sys.model.*;
 import kg.gov.mf.loan.admin.sys.service.*;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -400,6 +401,39 @@ public class PersonController {
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
 
 		return "/admin/org/personList";
+	}
+
+
+	class Result {
+
+		public Long id;
+		public String text;
+
+		public Result(Long id, String text) {
+			this.id = id;
+			this.text = text;
+		}
+	}
+
+
+
+	@RequestMapping(value = "/personByName/list", method = RequestMethod.GET)
+	public @ResponseBody
+
+	List<Result> findPersonByName(@RequestParam(value = "name", required = true) String name) {
+
+		List<Result> data = new ArrayList<>();
+		 int counter=0;
+		for(Person person : personRepository.findByNameContains(name))
+		{
+			counter++;
+			data.add(new Result(person.getId(), person.getName()));
+			if(counter>10) break;
+		}
+
+		return data;
+
+//		return personRepository.findByNameContains(name);
 	}
      
 

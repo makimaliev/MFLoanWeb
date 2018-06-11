@@ -73,7 +73,7 @@
 								<tr th:each="s : ${staffList}">
 									<td th:text="${s.id}"></td>
 									<td th:text="${s.name}"></td>
-									<td th:text="${s.user.username}"></td>
+									<td th:text="${s?.person?.identityDoc?.identityDocDetails?.fullname}"></td>
 									<td th:text="${s.enabled}"></td>
 									<td class="table-actions text-right">
 										<span>
