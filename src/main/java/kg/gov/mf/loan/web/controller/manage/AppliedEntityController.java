@@ -160,10 +160,13 @@ public class AppliedEntityController {
 			entityService.add(entity);
 			addPackagesAndDocuments(orderId, entity);
 		}
-		else
+		else{
+			Owner owner = ownerRepository.findOne(entity.getOwner().getId());
+			entity.setOwner(owner);
 			entityService.update(entity);
-			
-		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/view";
+		}
+
+		return "redirect:" + "/manage/order/" + orderId+"/entitylist/"+listId+"/entity/"+ entity.getId()+"/view";
 	}
 	
 	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/delete", method=RequestMethod.POST)

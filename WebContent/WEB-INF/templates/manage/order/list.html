@@ -71,6 +71,11 @@
 																<i class="la la-ellipsis-h"></i>
 															</a>
 															<div class="dropdown-menu dropdown-menu-right">
+																<th:block th:if="${o.creditOrderState.id==2}">
+																	<a class="dropdown-item" th:href="@{/manage/order/__${o.id}__/approve}">
+																		<span th:text="#{label.table.approve}"></span>
+																	</a>
+																</th:block>
 																<a class="dropdown-item" th:href="@{/manage/order/__${o.id}__/view}">
 																	<span th:text="#{label.table.view}"></span>
 																</a>

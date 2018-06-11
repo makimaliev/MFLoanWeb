@@ -36,6 +36,7 @@
 
 						<input hidden="true" type="text" id="id" name="id" th:field="*{id}"/>
 						<input hidden="true" type="text" id="ownerId" name="owner.id" th:field="*{owner.id}" />
+						<input hidden="true" type="text" id="entityState" name="owner.id" th:field="*{appliedEntityState.id}" />
 
 						<div class="m-portlet__body">
 							<div class="m-form__section">
@@ -57,9 +58,8 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${entity.appliedEntityState.id}" id="appliedEntityState" th:title="#{label.select}">
-											<option value="0" th:text="#{label.select}"></option>
-											<option th:each="state : ${states}" th:value="${state.id}" th:text="${state.name}"></option>
+										<select class="form-control m-bootstrap-select m_selectpicker" id="appliedEntityState" th:title="#{label.select}">
+											<option th:each="state : ${states}" th:value="${state.id}" th:text="${state.name}"th:selected="${state.id==1}"></option>
 										</select>
 									</div>
 								</div>
@@ -109,6 +109,10 @@
         var owner_text = document.getElementById("owner_typeahead").value;
         var owner_id = owner_text.match(/[^[\]]+(?=])/g);
         $("#ownerId").val(owner_id);
+
+
+        var state_id = document.getElementById("appliedEntityState").value;
+        $("#entityState").val(state_id);
     }
 </script>
 

@@ -123,9 +123,9 @@
 												<td th:text="${dp.name}"></td>
 												<td th:text="${dp.completedDate}"></td>
 												<td th:text="${dp.approvedDate}"></td>
-												<td th:text="${dp.completedRatio}"></td>
-												<td th:text="${dp.approvedRatio}"></td>
-												<td th:text="${dp.registeredRatio}"></td>
+												<td th:text="${#numbers.formatInteger(dp.completedRatio*100, 0)+'%'}"></td>
+												<td th:text="${#numbers.formatInteger(dp.approvedRatio*100, 0)+'%'}"></td>
+												<td th:text="${#numbers.formatInteger(dp.registeredRatio*100, 0)+'%'}"></td>
 												<td th:text="${dp.documentPackageState?.name}"></td>
 												<td th:text="${dp.documentPackageType?.name}"></td>
 												<td class="table-actions text-right">

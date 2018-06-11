@@ -65,7 +65,6 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${entityList.appliedEntityListState.id}"  id="appliedEntityListState" th:title="#{label.select}">
-											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="state : ${states}" th:value="${state.id}" th:text="${state.name}"></option>
 										</select>
 									</div>
@@ -77,7 +76,6 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${entityList.appliedEntityListType.id}"  id="appliedEntityListType" th:title="#{label.select}">
-											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
 									</div>

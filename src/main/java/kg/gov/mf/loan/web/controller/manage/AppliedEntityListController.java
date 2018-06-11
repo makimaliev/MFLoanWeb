@@ -134,7 +134,7 @@ public class AppliedEntityListController {
 			listService.update(list);
 		}
 		
-		return "redirect:" + "/manage/order/{orderId}/view";
+		return "redirect:" + "/manage/order/" + orderId +"/entitylist/" + list.getId()+ "/view";
 	}
 	
 	@RequestMapping(value="/manage/order/{orderId}/entitylist/delete", method=RequestMethod.POST)

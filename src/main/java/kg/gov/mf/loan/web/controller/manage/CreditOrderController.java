@@ -153,12 +153,23 @@ public class CreditOrderController {
 	public String saveCreditOrder(CreditOrder creditOrder)
 	{
 		loggerOrder.info("Order : {}", creditOrder);
-		if(creditOrder.getId() == 0)
+		if(creditOrder.getId() == 0){
+			creditOrder.setCreditOrderState(creditOrderStateService.getById(2L));
 			creditOrderService.add(creditOrder);
+		}
 		else
 			creditOrderService.update(creditOrder);
-			
-		return "redirect:" + "/manage/order/list";
+
+		return "redirect:" + "/manage/order/" + creditOrder.getId() + "/view";
+	}
+
+	@RequestMapping(value="/manage/order/{orderId}/approve", method=RequestMethod.GET)
+	public String approveCreditOrder(ModelMap model, @PathVariable("orderId")Long orderId)
+	{
+		CreditOrder order = creditOrderService.getById(orderId);
+		order.setCreditOrderState(creditOrderStateService.getById(1L));
+		creditOrderService.update(order);
+		return "redirect:" + "/manage/order/" + order.getId() + "/view";
 	}
 	
 	@RequestMapping(value="/manage/order/delete", method=RequestMethod.POST)

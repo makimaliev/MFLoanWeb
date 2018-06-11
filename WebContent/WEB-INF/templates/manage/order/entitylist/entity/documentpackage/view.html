@@ -78,7 +78,7 @@
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
 												<h3 class="m-widget1__title" th:text="#{label.documentPackage.completedRatio}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${dp.completedRatio}"></span>
+												<span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatInteger(dp.completedRatio*100, 0)+'%'}"></span>
 											</div>
 										</div>
 									</div>
@@ -86,7 +86,7 @@
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
 												<h3 class="m-widget1__title" th:text="#{label.documentPackage.approvedRatio}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${dp.approvedRatio}"></span>
+												<span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatInteger(dp.approvedRatio*100, 0)+'%'}"></span>
 											</div>
 										</div>
 									</div>
@@ -100,7 +100,7 @@
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
 												<h3 class="m-widget1__title" th:text="#{label.documentPackage.registeredRatio}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${dp.registeredRatio}"></span>
+												<span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatInteger(dp.registeredRatio*100, 0)+'%'}"></span>
 											</div>
 										</div>
 									</div>

@@ -133,7 +133,7 @@ public class OrderDocumentPackageController {
 			oDPService.update(oDP);
 			//updateInEntities(creditOrder, oDP);
 			
-		return "redirect:" + "/manage/order/{orderId}/view#documentPackages";
+		return "redirect:" + "/manage/order/"+ orderId + "/orderdocumentpackage/" + oDP.getId()+ "/view";
 	}
 	
 	@RequestMapping(value="/manage/order/{orderId}/orderdocumentpackage/delete", method=RequestMethod.POST)
