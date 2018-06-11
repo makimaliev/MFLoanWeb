@@ -192,11 +192,34 @@ public class LoanController {
 		if(loanId == 0)
 		{
 			model.addAttribute("loan", new Loan());
+			model.addAttribute("ownerText", "");
+			model.addAttribute("orderText", "");
+			model.addAttribute("pLoanText", "");
 		}
 			
 		if(loanId > 0)
 		{
-			model.addAttribute("loan", loanService.getById(loanId));
+			Loan loan = loanService.getById(loanId);
+			model.addAttribute("loan", loan);
+			User user = userService.findById(loan.getSupervisorId());
+			Staff staff = staffRepository.findById(user.getStaff().getId());
+
+			String supervisorText = "[" + staff.getId() + "] " + staff.getName();
+			model.addAttribute("supervisorText", supervisorText);
+
+			CreditOrder order = loan.getCreditOrder();
+			String orderText = "[" + order.getId() + "] "+ order.getRegNumber();
+			model.addAttribute("orderText", orderText);
+
+			Loan pLoan = loan.getParentLoan();
+			if(pLoan == null)
+				model.addAttribute("pLoanText", "");
+			else
+			{
+				String pLoanText = "[" + pLoan.getId() + "] " + pLoan.getRegNumber();
+				model.addAttribute("pLoanText", pLoanText);
+			}
+
 		}
 		
 		List<OrderTermCurrency> currs = currService.list();
@@ -244,6 +267,21 @@ public class LoanController {
 		}
 		else
 		{
+			if(loan.getParentLoan().getId() > 0)
+			{
+				Loan tLoan = loanRepository.findOne(loan.getParentLoan().getId());
+				loan.setParentLoan(tLoan);
+			}
+			else
+				loan.setParentLoan(null);
+
+			CreditOrder creditOrder = creditOrderRepository.findOne(loan.getCreditOrder().getId());
+			loan.setCreditOrder(creditOrder);
+
+			Staff staff = staffRepository.findById(loan.getSupervisorId());
+			User user = userService.findByStaff(staff);
+
+			loan.setSupervisorId(user.getId());
 			loggerLoan.info("updateLoan : {}", loan);
 			loanService.update(loan);
 		}

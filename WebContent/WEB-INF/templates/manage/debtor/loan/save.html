@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
 	<title th:text="#{label.add.loan.title}"></title>
@@ -77,8 +77,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.currency.id}" id="currency">
-											<option value="0" th:text="#{label.add.loan.selectCurrency}"></option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.currency.id}" id="currency" th:title="#{label.select}">
 											<option th:each="currency : ${currencies}" th:value="${currency.id}" th:text="${currency.name}"></option>
 										</select>
 									</div>
@@ -89,8 +88,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.loanType.id}" id="loanType">
-											<option value="0" th:text="#{label.add.loan.selectType}"></option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.loanType.id}" id="loanType" th:title="#{label.select}">
 											<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
 									</div>
@@ -101,8 +99,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.loanState.id}" id="loanState">
-											<option value="0" th:text="#{label.add.loan.selectState}"></option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${loan.loanState.id}" id="loanState" th:title="#{label.select}">
 											<option th:each="state : ${states}" th:value="${state.id}" th:text="${state.name}"></option>
 										</select>
 									</div>
@@ -114,7 +111,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="m-typeahead">
-											<input class="form-control m-input" id="staff_typeahead" type="text" placeholder="Staffs">
+											<input class="form-control m-input" id="staff_typeahead" type="text" placeholder="Staffs" th:value="${supervisorText}">
 										</div>
 									</div>
 								</div>
@@ -136,7 +133,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="m-typeahead">
-											<input class="form-control m-input" id="order_typeahead" type="text" placeholder="Credit Orders">
+											<input class="form-control m-input" id="order_typeahead" type="text" placeholder="Credit Orders" th:value="${orderText}">
 										</div>
 									</div>
 								</div>

@@ -34,7 +34,7 @@
 					<!--begin::Form-->
 					<form th:action="@{/manage/debtor/__${debtorId}__/collateralagreement/save}" th:object="${agreement}" method="post" class="m-form m-form--fit m-form--label-align-right">
 
-						<input hidden="true" type="text" id="ownerName" name="owner.name" th:field="*{owner.name}" />
+						<input hidden="true" type="text" id="ownerId" name="owner.id" th:field="*{owner.id}" />
 						<input type="hidden" th:field="*{id}"/>
 
 						<div class="m-portlet__body">
@@ -164,7 +164,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="m-typeahead">
-											<input class="form-control m-input" id="owner_typeahead" type="text" placeholder="Owners">
+											<input class="form-control m-input" id="owner_typeahead" type="text" placeholder="Owners" th:value="${ownerText}">
 										</div>
 									</div>
 								</div>
@@ -208,13 +208,14 @@
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/typeahead.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/select2.js}" type="text/javascript"></script>
-<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
 <!--end::Page Resources -->
 
 <script type="text/javascript">
     function updateTOwner(sel)
     {
-        $("#ownerName").val(document.getElementById("owner_typeahead").value);
+        var owner_text = document.getElementById("owner_typeahead").value;
+        var owner_id = owner_text.match(/[^[\]]+(?=])/g);
+        $("#ownerId").val(owner_id);
     }
 </script>
 

@@ -203,13 +203,13 @@
 					</div>
 					<div class="m-portlet__body">
 
-						<itemcheck th:if="${#lists.isEmpty(aFs)}">
-							<div class="m-section">
-								<div class="m-section__content">
+						<div class="m-section">
+							<div class="m-section__content">
+								<check th:if="${#lists.isEmpty(aFs)}">
 									<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${itemId}__/arrestfree/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.arrestFreeInfo.add}"></a>
-								</div>
+								</check>
 							</div>
-						</itemcheck>
+						</div>
 
 						<!--begin::Section-->
 						<div class="m-section">

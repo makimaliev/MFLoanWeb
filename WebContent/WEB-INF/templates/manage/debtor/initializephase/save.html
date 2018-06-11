@@ -115,7 +115,7 @@
 										Loans <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-select2" id="m_select2_3" name="param" multiple="multiple" th:field="*{loans}">
+										<select class="form-control m-bootstrap-select m_selectpicker" multiple th:field="*{loans}">
 											<option th:each="loan : ${tLoans}"
 													th:value="${{loan}}"
 													th:text="${loan.regNumber}">

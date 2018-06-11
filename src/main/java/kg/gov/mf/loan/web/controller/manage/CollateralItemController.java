@@ -72,9 +72,6 @@ public class CollateralItemController {
 	InspectionResultTypeService insTypeService;
 
 	@Autowired
-	CollateralItemArrestFreeRepository collateralItemArrestFreeRepository;
-
-	@Autowired
 	UserService userService;
 
 
@@ -109,7 +106,7 @@ public class CollateralItemController {
 		model.addAttribute("item", tItem);
 		model.addAttribute("itemDetails", tDetails);
 		
-		model.addAttribute("aFs", collateralItemArrestFreeRepository.getByCollateralItem(tItem));
+		model.addAttribute("aFs", tItem.getCollateralItemArrestFree());
 		model.addAttribute("inpections", tItem.getCollateralItemInspectionResults());
 		
 		return "/manage/debtor/collateralagreement/collateralitem/view";
@@ -214,15 +211,17 @@ public class CollateralItemController {
 		{
 			User user = userService.findByUsername(Utils.getPrincipal());
 			af.setArrestFreeBy(user.getId());
-			af.setCollateralItem(item);
+			item.setCollateralItemArrestFree(af);
 			afService.add(af);
+			itemService.update(item);
 		}
 
 		else{
 			User user = userService.findByUsername(Utils.getPrincipal());
 			af.setArrestFreeBy(user.getId());
-			af.setCollateralItem(item);
+			item.setCollateralItemArrestFree(af);
 			afService.update(af);
+			itemService.update(item);
 		}
 
 		

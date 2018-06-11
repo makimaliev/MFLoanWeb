@@ -79,10 +79,19 @@ public class CollateralAgreementController {
 		if(agreementId == 0)
 		{
 			CollateralAgreement agreement = new CollateralAgreement();
-			Owner owner = new Owner();
-			owner.setId(-1);
-			agreement.setOwner(owner);
 			model.addAttribute("agreement", agreement);
+			model.addAttribute("ownerText", "");
+		}
+
+		if(agreementId > 0)
+		{
+			CollateralAgreement agreement = agreementService.getById(agreementId);
+			model.addAttribute("agreement", agreement);
+			Owner owner = agreement.getOwner();
+			String ownerText = "[" + owner.getId() + "] "
+					+ owner.getName()
+					+ " (" + (owner.getOwnerType().equals(OwnerType.ORGANIZATION)? "Организация":"Физ. лицо") +")";
+			model.addAttribute("ownerText", ownerText);
 		}
 
 		return "/manage/debtor/collateralagreement/save";
@@ -101,9 +110,9 @@ public class CollateralAgreementController {
 
 		else
 		{
-			Owner oldOwner = agreementService.getById(agreement.getId()).getOwner();
+			Owner owner = ownerRepository.findOne(agreement.getOwner().getId());
+			agreement.setOwner(owner);
 			agreementService.update(agreement);
-			ownerService.remove(oldOwner);
 		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/view";
