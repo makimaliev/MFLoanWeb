@@ -165,7 +165,12 @@ public class InformationController {
 			this.informationService.edit(information);
 		}
 
-		return "redirect:/information/list";
+		switch(String.valueOf(information.getSystemObjectTypeId()))
+		{
+			case "1": return "redirect:/cSystem/list";
+			case "2": return "redirect:/organization/"+information.getSystemObjectId()+"/details";
+			default: return "redirect:/information/list";
+		}
 
 	}
 	
@@ -212,7 +217,14 @@ public class InformationController {
 			this.informationService.edit(information);
 		}
 
-		return "redirect:/information/list";
+//		switch(String.valueOf(information.getSystemObjectTypeId()))
+//		{
+//			case "1": return "redirect:/cSystem/list";
+//			case "2": return "redirect:/organization/"+information.getSystemObjectId()+"/details";
+//			default: return "redirect:/information/list";
+//		}
+
+		return "redirect:/information/"+information.getId()+"/details";
 
 	}
 

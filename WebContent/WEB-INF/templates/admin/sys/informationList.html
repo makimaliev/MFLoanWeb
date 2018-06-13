@@ -159,7 +159,7 @@
 			$("#information_id").val(rowData[0]);
 			var sUrl ="/information/" + rowData[0]+"/view";
 			$.get(sUrl, function(data) {
-				$('#content').html(data);
+				// $('#content').html(data);
 			});
 		});
 

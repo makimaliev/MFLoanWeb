@@ -7,14 +7,14 @@
 	</div>
 	<div class="modal-body">
 
-		<div class="alert alert-danger alert-dismissible alert-hidden" role="alert">
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
-			<span th:text="#{label.modal.error.name}"></span>
-		</div>
-
 		<!--hidden-->
 		<input hidden="true" type="text" id="id" name="id" th:field="${information.id}" />
 		<input hidden="true" type="text" id="parentInformation.id" name="parentInformation.id" th:field="${information.parentInformation.id}" />
+
+		<input hidden="true" type="text" class="form-control" name="isTitle" th:field="${information.isTitle}"/>
+		<input hidden="true" type="text" class="form-control" name="number" th:field="${information.number}"/>
+		<input hidden="true" type="text" class="form-control" name="systemObjectId" th:field="${information.systemObjectId}"/>
+		<input hidden="true" type="text" class="form-control" name="systemObjectTypeId" th:field="${information.systemObjectTypeId}"/>
 
 		<div class="form-group m-form__group row">
 			<label class="col-form-label col-lg-4 col-sm-12">
@@ -36,60 +36,62 @@
 			</div>
 		</div>
 
-		<div class="form-group m-form__group row">
-			<label class="col-form-label col-lg-4 col-sm-12">
-				<span th:text="#{label.information.isTitle}"></span>
-				<span class="m--font-danger">*</span>
-			</label>
-			<div class="col-lg-8 col-md-9 col-sm-12">
-				<input type="text" class="form-control" name="isTitle" th:field="${information.isTitle}"/>
-			</div>
-		</div>
 
-		<div class="form-group m-form__group row">
-			<label class="col-form-label col-lg-4 col-sm-12">
-				<span th:text="#{label.information.date}"></span>
-				<span class="m--font-danger">*</span>
-			</label>
-			<div class="col-lg-8 col-md-9 col-sm-12">
-				<div class="input-group date m_datetimepicker_6">
-					<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:value="${information.date}"/>
-					<span class="input-group-addon">
-						<i class="la la-calendar glyphicon-th"></i>
-					</span>
-				</div>
-			</div>
-		</div>
 
-		<div class="form-group m-form__group row">
-			<label class="col-form-label col-lg-4 col-sm-12">
-				<span th:text="#{label.information.number}"></span>
-				<span class="m--font-danger">*</span>
-			</label>
-			<div class="col-lg-8 col-md-9 col-sm-12">
-				<input type="text" class="form-control" name="number" th:field="${information.number}"/>
-			</div>
-		</div>
+		<!--<div class="form-group m-form__group row">-->
+			<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+				<!--<span th:text="#{label.information.isTitle}"></span>-->
+				<!--<span class="m&#45;&#45;font-danger">*</span>-->
+			<!--</label>-->
+			<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+				<!--<input type="text" class="form-control" name="isTitle" th:field="${information.isTitle}"/>-->
+			<!--</div>-->
+		<!--</div>-->
 
-		<div class="form-group m-form__group row">
-			<label class="col-form-label col-lg-4 col-sm-12">
-				<span th:text="#{label.information.objectId}"></span>
-				<span class="m--font-danger">*</span>
-			</label>
-			<div class="col-lg-8 col-md-9 col-sm-12">
-				<input type="text" class="form-control" name="systemObjectId" th:field="${information.systemObjectId}"/>
-			</div>
-		</div>
+		<!--<div class="form-group m-form__group row">-->
+			<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+				<!--<span th:text="#{label.information.date}"></span>-->
+				<!--<span class="m&#45;&#45;font-danger">*</span>-->
+			<!--</label>-->
+			<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+				<!--<div class="input-group date m_datetimepicker_6">-->
+					<!--<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:value="${information.date}"/>-->
+					<!--<span class="input-group-addon">-->
+						<!--<i class="la la-calendar glyphicon-th"></i>-->
+					<!--</span>-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
 
-		<div class="form-group m-form__group row">
-			<label class="col-form-label col-lg-4 col-sm-12">
-				<span th:text="#{label.information.objectTypeId}"></span>
-				<span class="m--font-danger">*</span>
-			</label>
-			<div class="col-lg-8 col-md-9 col-sm-12">
-				<input type="text" class="form-control" name="systemObjectTypeId" th:field="${information.systemObjectTypeId}"/>
-			</div>
-		</div>
+		<!--<div class="form-group m-form__group row">-->
+			<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+				<!--<span th:text="#{label.information.number}"></span>-->
+				<!--<span class="m&#45;&#45;font-danger">*</span>-->
+			<!--</label>-->
+			<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+				<!--<input type="text" class="form-control" name="number" th:field="${information.number}"/>-->
+			<!--</div>-->
+		<!--</div>-->
+
+		<!--<div class="form-group m-form__group row">-->
+			<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+				<!--<span th:text="#{label.information.objectId}"></span>-->
+				<!--<span class="m&#45;&#45;font-danger">*</span>-->
+			<!--</label>-->
+			<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+				<!--<input type="text" class="form-control" name="systemObjectId" th:field="${information.systemObjectId}"/>-->
+			<!--</div>-->
+		<!--</div>-->
+
+		<!--<div class="form-group m-form__group row">-->
+			<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+				<!--<span th:text="#{label.information.objectTypeId}"></span>-->
+				<!--<span class="m&#45;&#45;font-danger">*</span>-->
+			<!--</label>-->
+			<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+				<!--<input type="text" class="form-control" name="systemObjectTypeId" th:field="${information.systemObjectTypeId}"/>-->
+			<!--</div>-->
+		<!--</div>-->
 
 	</div>
 	<div class="modal-footer">

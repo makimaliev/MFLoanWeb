@@ -39,7 +39,7 @@
                                 </span>
                             </a>
                         </li>
-                        <li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
+                        <li sec:authorize="hasRole('ADMIN')" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
                             <a  href="#" class="m-menu__link m-menu__toggle">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>
@@ -136,7 +136,7 @@
                             </div>
                         </li>
 
-                        <li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
+                        <li sec:authorize="hasRole('ADMIN')" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
                             <a  href="#" class="m-menu__link m-menu__toggle">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>
@@ -213,7 +213,7 @@
                             </div>
                         </li>
 
-                        <li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
+                        <li  sec:authorize="hasRole('ADMIN')" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
                             <a  href="#" class="m-menu__link m-menu__toggle">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>
@@ -330,7 +330,7 @@
                             </div>
                         </li>
 
-                        <li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
+                        <li  sec:authorize="hasRole('ADMIN')" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
                             <a  href="#" class="m-menu__link m-menu__toggle">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>
@@ -427,7 +427,7 @@
                             </div>
                         </li>
 
-                        <li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
+                        <li  sec:authorize="hasRole('ADMIN')" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
                             <a  href="#" class="m-menu__link m-menu__toggle">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>
@@ -474,7 +474,7 @@
                             </div>
                         </li>
 
-                        <li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
+                        <li  sec:authorize="hasRole('ADMIN')" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
                             <a  href="#" class="m-menu__link m-menu__toggle">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>
@@ -531,7 +531,7 @@
                             </div>
                         </li>
 
-                        <li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
+                        <li  sec:authorize="hasRole('ADMIN')" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
                             <a  href="#" class="m-menu__link m-menu__toggle">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>
@@ -588,7 +588,7 @@
                             </div>
                         </li>
 
-                        <li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
+                        <li  sec:authorize="hasRole('ADMIN')" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
                             <a  href="#" class="m-menu__link m-menu__toggle">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>
@@ -687,7 +687,7 @@
                                 </span>
                             </a>
                         </li>
-                        <li class="m-menu__item " aria-haspopup="true" >
+                        <li sec:authorize="hasRole('ADMIN')" class="m-menu__item " aria-haspopup="true" >
                             <a th:href="@{/information/list/}" class="m-menu__link ">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>
@@ -697,7 +697,7 @@
                                 </span>
                             </a>
                         </li>
-                        <li class="m-menu__item " aria-haspopup="true" >
+                        <li sec:authorize="hasRole('ADMIN')" class="m-menu__item " aria-haspopup="true" >
                             <a th:href="@{/user/list/}" class="m-menu__link ">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>
@@ -707,7 +707,7 @@
                                 </span>
                             </a>
                         </li>
-                        <li class="m-menu__item " aria-haspopup="true" >
+                        <li sec:authorize="hasRole('ADMIN')" class="m-menu__item " aria-haspopup="true" >
                             <a th:href="@{/supervisorTerm/list/}" class="m-menu__link ">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>
@@ -813,7 +813,7 @@
                 </div>
             </li>
 
-            <li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
+            <li sec:authorize="hasRole('ADMIN')" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
                 <a  href="#" class="m-menu__link m-menu__toggle">
                     <i class="m-menu__link-icon la la-print"></i>
                     <span class="m-menu__link-text">
@@ -824,7 +824,7 @@
                 <div class="m-menu__submenu">
                     <span class="m-menu__arrow"></span>
                     <ul class="m-menu__subnav">
-                        <li class="m-menu__item  m-menu__item--parent" aria-haspopup="true" >
+                        <li sec:authorize="hasRole('ADMIN')" class="m-menu__item  m-menu__item--parent" aria-haspopup="true" >
                             <a  href="#" class="m-menu__link ">
                                 <span class="m-menu__link-text">
                                     Распечатка
@@ -832,7 +832,7 @@
                             </a>
                         </li>
 
-                        <li class="m-menu__item " aria-haspopup="true" >
+                        <li sec:authorize="hasRole('ADMIN')" class="m-menu__item " aria-haspopup="true" >
                             <a th:href="@{/printout/list/}" class="m-menu__link ">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>
@@ -874,7 +874,7 @@
                                 </span>
                             </a>
                         </li>
-                        <li class="m-menu__item " aria-haspopup="true" >
+                        <li sec:authorize="hasRole('ADMIN')" class="m-menu__item " aria-haspopup="true" >
                             <a th:href="@{/organization/list/}" class="m-menu__link ">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>
@@ -884,7 +884,7 @@
                                 </span>
                             </a>
                         </li>
-                        <li class="m-menu__item " aria-haspopup="true" >
+                        <li sec:authorize="hasRole('ADMIN')" class="m-menu__item " aria-haspopup="true" >
                             <a th:href="@{/person/list/}" class="m-menu__link ">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>
@@ -894,36 +894,36 @@
                                 </span>
                             </a>
                         </li>
-                        <li class="m-menu__item " aria-haspopup="true" >
-                            <a th:href="@{/staff/list/}" class="m-menu__link ">
-                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
-                                    <span></span>
-                                </i>
-                                <span class="m-menu__link-text">
-                                    Сотрудник
-                                </span>
-                            </a>
-                        </li>
-                        <li class="m-menu__item " aria-haspopup="true" >
-                            <a th:href="@{/db/manage/}" class="m-menu__link ">
-                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
-                                    <span></span>
-                                </i>
-                                <span class="m-menu__link-text">
-                                    Управление БД
-                                </span>
-                            </a>
-                        </li>
-                        <li class="m-menu__item " aria-haspopup="true" >
-                            <a th:href="@{/currencyRate/manage/}" class="m-menu__link ">
-                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
-                                    <span></span>
-                                </i>
-                                <span class="m-menu__link-text">
-                                    Управление курсами валют
-                                </span>
-                            </a>
-                        </li>
+                        <!--<li sec:authorize="hasRole('ADMIN')" class="m-menu__item " aria-haspopup="true" >-->
+                            <!--<a th:href="@{/staff/list/}" class="m-menu__link ">-->
+                                <!--<i class="m-menu__link-bullet m-menu__link-bullet&#45;&#45;dot">-->
+                                    <!--<span></span>-->
+                                <!--</i>-->
+                                <!--<span class="m-menu__link-text">-->
+                                    <!--Сотрудник-->
+                                <!--</span>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                        <!--<li class="m-menu__item " aria-haspopup="true" >-->
+                            <!--<a th:href="@{/db/manage/}" class="m-menu__link ">-->
+                                <!--<i class="m-menu__link-bullet m-menu__link-bullet&#45;&#45;dot">-->
+                                    <!--<span></span>-->
+                                <!--</i>-->
+                                <!--<span class="m-menu__link-text">-->
+                                    <!--Управление БД-->
+                                <!--</span>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                        <!--<li class="m-menu__item " aria-haspopup="true" >-->
+                            <!--<a th:href="@{/currencyRate/manage/}" class="m-menu__link ">-->
+                                <!--<i class="m-menu__link-bullet m-menu__link-bullet&#45;&#45;dot">-->
+                                    <!--<span></span>-->
+                                <!--</i>-->
+                                <!--<span class="m-menu__link-text">-->
+                                    <!--Управление курсами валют-->
+                                <!--</span>-->
+                            <!--</a>-->
+                        <!--</li>-->
                     </ul>
                 </div>
             </li>
@@ -986,7 +986,7 @@
                                 </span>
                             </a>
                         </li>
-                        <li class="m-menu__item " aria-haspopup="true" >
+                        <li sec:authorize="hasRole('ADMIN')" class="m-menu__item " aria-haspopup="true" >
                             <a th:href="@{/doc/documentSubType}" class="m-menu__link ">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>

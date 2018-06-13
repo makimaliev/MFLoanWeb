@@ -1,128 +1,67 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
-<head>
-</head>
+<div class="m-content">
+	<div class="m-portlet">
+		<div class="m-portlet__body">
+			<ul class="nav nav-tabs" role="tablist">
+				<li class="nav-item">
+					<a th:text="#{label.information.tab}" class="nav-link active" data-toggle="tab" href="#informationListOfSystem">
+						Информация
+					</a>
+				</li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane active" id="informationListOfSystem" role="tabpanel">
+					<table class="table" id="districtTable">
+						<thead class="thead-default">
+						<tr>
+							<th th:text="#{label.information.table.id}">Id</th>
+							<th th:text="#{label.information.table.name}">Name</th>
+							<!--<th th:text="#{label.information.table.description}">Descriontion</th>-->
+							<th>&nbsp;</th>
+						</tr>
+						</thead>
 
-<body>
+						<tbody>
 
-	<div class="row">
-		<div class="col-md-12">
+						<tr th:each="informationInList : ${informationList}">
+							<td th:text="${informationInList.id}">Id</td>
+							<td th:text="${informationInList.name}">Name</td>
+							<!--<td th:text="${informationInList.description">Code</td>-->
+							<td class="table-actions text-right">
+								<span>
+									<div class="dropdown">
+										<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+											<i class="la la-ellipsis-h"></i>
+										</a>
+										<div class="dropdown-menu dropdown-menu-right">
+											<a class="dropdown-item"
+											   th:href="@{/information/__${informationInList.id}__/details}"
+											   role="button">
+												<span th:text="#{label.table.view}"></span>
+											</a>
+											<a class="dropdown-item"
+											   th:href="@{/information/__${informationInList.id}__/edit}"
+											   data-toggle="modal"
+											   data-target="#informationFormModal">
+												<span th:text="#{label.table.edit}"></span>
+											</a>
+											<a class="dropdown-item" href="#">
+												<span>
+													<form th:action="@{/information/__${informationInList.id}__/remove}" method="post">
+														<input hidden="true" type="text" id="id" name="id" th:value="${informationInList.id}" />
+														<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+													</form>
+												</span>
+											</a>
+										</div>
+									</div>
+								</span>
+							</td>
+						</tr>
+						</tbody>
 
-			<div class="tabbable-custom ">
-				<ul class="nav nav-tabs " id="information_tabs">
-					<li class="active"><a href="#tab_15_1" data-toggle="tab">
-							Information </a></li>
-					<li><a href="#tab_15_2" data-toggle="tab"> === </a></li>
-				</ul>
-				<div class="tab-content">
-					<div class="tab-pane active" id="tab_15_1">
-						<table
-							class="table table-hover table-condensed table-striped table-bordered compact condensed"
-							id="informationTable">
-							<thead>
-								<tr>
-									<th>Id</th>
-									<th>Name</th>
-									<th>Description</th>
-									<th>isTitle</th>
-									<th>Number</th>
-									<th>Date</th>
-									<th>ObjectTypeId</th>
-									<th>ObjectId</th>
-									<th>Edit</th>
-									<th>Delete</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="s : ${informationList}">
-									<td th:text="${s.id}">Id</td>
-									<td th:text="${s.name}">Name</td>
-									<td th:text="${s.description}">Description</td>
-									<td th:text="${s.isTitle}">isTitle</td>
-									<td th:text="${s.number}">number</td>
-									<td th:text="${s.date}">Date</td>
-									<td th:text="${s.systemObjectTypeId}">ObjectTypeId</td>
-									<td th:text="${s.systemObjectId}">ObjectId</td>
-									<td><a th:href="@{/information/__${s.id}__/details}"
-										role="button" class="btn btn-xs blue-stripe"> View </a></td>
-									<td><a data-remote="false" data-toggle="modal"
-										data-target="#cSystemFormModal"
-										th:href="@{/information/__${s.id}__/edit}" role="button"
-										class="btn btn-xs blue-stripe"> Edit </a></td>
-									<td>
-										<form th:action="@{/information/__${s.id}__/remove}"
-											method="post">
-											<button type="submit" class="btn btn-xs red-stripe">Delete</button>
-										</form>
-									</td>
-								</tr>
-							</tbody>
-
-						</table>
-
-					</div>
-					<div class="tab-pane" id="tab_15_2">2</div>
+					</table>
 				</div>
 			</div>
 		</div>
-
-
 	</div>
-
-	<script type="text/javascript">
-		$(document).ready(function() {
-
-			var table3 = $('#informationTable').DataTable({
-		    	stateSave: true,
-		    	"language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
-	    		"info":     false,
-	    		keys: {
-	    	        focus: ':eq(0)'
-	    	    }
-		    } );
-			
-			
-			table3.on('key-focus', function(e, datatable, cell) {
-			
-				var rowData = datatable.row(cell.index().row).data();
-				
-
-				
-				$("#aokmotu_id").val(rowData[0]);
-				
-				var sUrl ="/aokmotu/view/" + rowData[0];
-				
-				$.get(sUrl, function(data) {
-
-					$('#content').html(data);
-				});
-
-				});
-
-			});
-		</script>
-	<script type="text/javascript">
-
-$(document).ready(function() {
-    if (location.hash) {
-        $("a[href='" + location.hash + "']").tab("show");
-    }
-    $(document.body).on("click", "a[data-toggle]", function(event) {
-        location.hash = this.getAttribute("href");
-    });
-});
-$(window).on("popstate", function() {
-    var anchor = location.hash || $("a[data-toggle='tab']").first().attr("href");
-    $("a[href='" + anchor + "']").tab("show");
-});
-</script>
-
-
-
-
-
-
-
-</body>
-</html>
+</div>

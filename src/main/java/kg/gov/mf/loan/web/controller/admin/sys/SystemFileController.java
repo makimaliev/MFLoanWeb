@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,9 +52,9 @@ public class SystemFileController {
     
     
   //Save the uploaded file to this folder
-    private static String UPLOADED_FOLDER = "c://temp//";
-    
-    
+//    private static String UPLOADED_FOLDER = "c://temp//";
+
+	private static String UPLOADED_FOLDER =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "c://temp//";
     
 	@RequestMapping(value = "/systemFile/list", method = RequestMethod.GET)
 	public String listSystemFiles(Model model) 

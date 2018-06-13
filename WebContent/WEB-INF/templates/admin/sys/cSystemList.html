@@ -108,6 +108,54 @@
 					</div>
 				</div>
 
+
+				<div sec:authorize="hasRole('ADMIN')" class="m-portlet m-portlet--full-height">
+					<div class="m-portlet__head">
+						<div class="m-portlet__head-caption">
+							<div class="row">
+								<div class="col-md-12">
+									<!-- BEGIN BORDERED TABLE PORTLET-->
+									<div class="portlet portlet-fit ">
+										<div class="portlet-body">
+
+
+
+											<div class="row" sec:authorize="hasRole('ADMIN')" >
+												<div class="col-md-12">
+
+
+														<a data-remote="false"
+														   data-toggle="modal"
+														   data-target="#cSystemFormModal"
+														   th:href="@{/cSystem/add}"
+														   role="button"
+														   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
+														   th:text="#{label.cSystem.button.addcSystem}">
+															<span><i class="la la-plus"></i><span>Add cSystem</span></span>
+														</a>
+
+														<a data-remote="false"
+														   data-toggle="modal"
+														   data-target="#informationFormModal"
+														   th:href="@{/information/add}"
+														   role="button"
+														   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
+														   th:text="#{label.cSystem.button.addInformation}">
+															<span><i class="la la-plus"></i><span>Add Information</span></span>
+														</a>
+
+
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- END BORDERED TABLE PORTLET-->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<!--begin::Modal-->
 				<div class="modal fade" id="cSystemFormModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" th:object="${cSystem}">
 					<div class="modal-dialog" role="document">
@@ -155,43 +203,65 @@
 					</div>
 				</div>
 				<!--end::Modal-->
-			</div>
 
 
-			<div class="row">
-				<div class="col-xl-12">
-					<a data-remote="false"
-					   data-toggle="modal"
-					   data-target="#cSystemFormModal"
-					   th:href="@{/cSystem/add}"
-					   role="button"
-					   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
-					   th:text="#{label.cSystem.button.addcSystem}">
-						<span><i class="la la-plus"></i><span>Add cSystem</span></span>
-					</a>
-
-					<a data-remote="false"
-					   data-toggle="modal"
-					   data-target="#cSystemFormModal"
-					   th:href="@{/information/add}"
-					   role="button"
-					   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
-					   th:text="#{label.cSystem.button.addInformation}">
-						<span><i class="la la-plus"></i><span>Add Information</span></span>
-					</a>
-
-
-
-
-
+				<div class="modal fade" id="informationFormModal"
+					 role="dialog" aria-labelledby="myModalLabel"
+					 aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<!--<div class="modal-header">-->
+							<!--<button type="button" class="close" data-dismiss="modal"-->
+							<!--aria-label="Close">-->
+							<!--<span aria-hidden="true">&times;</span>-->
+							<!--</button>-->
+							<!--<h4 class="modal-title" id="myModalLabel" >Добавить</h4>-->
+							<!--</div>-->
+							<div class="modal-body">...</div>
+							<!--<div class="modal-footer">-->
+							<!--<button type="button" class="btn btn-default"-->
+							<!--data-dismiss="modal">Close</button>-->
+							<!--<button type="button" class="btn btn-success">Save-->
+							<!--changes</button>-->
+							<!--</div>-->
+						</div>
+					</div>
 				</div>
-
 			</div>
 
 
 
 
-			<div class="row">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				<div class="row">
 				<div class="col-md-12">
 					<input hidden="true" type="text" id="cSystem_id" name="cSystem_id" />
 					<div id="content"></div>
@@ -252,7 +322,36 @@
 
 		});
 
+
+
+
 	});
+</script>
+
+
+<script th:inline="javascript">
+
+    /*<![CDATA[*/
+
+
+    $("#informationFormModal").on("show.bs.modal", function(e) {
+
+        var link = $(e.relatedTarget);
+        var cSystemID = $("#cSystem_id").val();
+
+        if(link.attr("href").indexOf('information/add')>0)
+        {
+            var url = link.attr("href");
+            $(this).find(".modal-body").load(link.attr("href").replace("/information/add","/1/"+cSystemID+"/information/add"));
+        }
+        else
+        {
+            $(this).find(".modal-title").html(link.attr("href"));
+            $(this).find(".modal-body").load(link.attr("href"));
+        }
+    });
+
+    /*]]>*/
 </script>
 
 </body>

@@ -282,8 +282,9 @@
 														<table class="table" id="eventTable">
 															<thead class="thead-default">
 															<tr>
-																<th>Name</th>
-																<th>Event Type</th>
+																<th>Событие</th>
+																<th>Дата</th>
+																<th>Примечание</th>
 																<th>&nbsp;</th>
 															</tr>
 															</thead>
@@ -292,8 +293,10 @@
 
 															<tr th:each="eventInList : ${staff.employmentHistory.employmentHistoryEvent}">
 
-																<td th:text="${eventInList?.name}">Name</td>
 																<td th:text="${eventInList?.employmentHistoryEventType?.name}">employmentHistory</td>
+																<td th:text="${eventInList?.date}">date</td>
+																<td th:text="${eventInList?.name}">Name</td>
+
 																<td class="table-actions text-right">
 																				<span>
 																					<div class="dropdown">
@@ -306,13 +309,13 @@
 																							   role="button">
 																								<span th:text="#{label.table.view}"></span>
 																							</a>
-																							<a class="dropdown-item"
+																							<a sec:authorize="hasRole('ADMIN')" class="dropdown-item"
 																							   th:href="@{/employmentHistoryEvent/__${eventInList.id}__/edit}"
 																							   data-toggle="modal"
 																							   data-target="#eventFormModal">
 																								<span th:text="#{label.table.edit}"></span>
 																							</a>
-																							<a class="dropdown-item" href="#">
+																							<a sec:authorize="hasRole('ADMIN')" class="dropdown-item" href="#">
 																								<span>
 																									<form th:action="@{/employmentHistoryEvent/__${eventInList.id}__/remove}" method="post">
 																										<input hidden="true" type="text" id="id" name="id" th:value="${eventInList.id}" />

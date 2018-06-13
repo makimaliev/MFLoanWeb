@@ -127,7 +127,7 @@ public class AttachmentController {
 			this.attachmentService.edit(attachment);
 		}
 		
-		String url = "/information/"+attachment.getInformation().getId()+"/details";
+		String url = "/attachment/"+attachment.getId()+"/details";
 
         return new ModelAndView("redirect:"+url, model);
 
