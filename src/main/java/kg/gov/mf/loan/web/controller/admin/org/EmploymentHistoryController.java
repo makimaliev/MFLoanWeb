@@ -70,7 +70,7 @@ public class EmploymentHistoryController {
 		EmploymentHistory modelEmploymentHistory = new EmploymentHistory();
 		
 		modelEmploymentHistory.setStaff(this.staffService.findById(staffId));
-		model.addAttribute("staffList", this.staffService.findAll());		
+//		model.addAttribute("staffList", this.staffService.findAll());
 		
 		model.addAttribute("employmentHistory",modelEmploymentHistory);
 
@@ -81,7 +81,7 @@ public class EmploymentHistoryController {
 	@RequestMapping("/employmentHistory/{id}/edit")
 	public String getEmploymentHistoryEditForm(@PathVariable("id") long id, Model model) {
 		model.addAttribute("employmentHistory", this.employmentHistoryService.findById(id));
-		model.addAttribute("staffList", this.staffService.findAll());
+//		model.addAttribute("staffList", this.staffService.findAll());
 		
 		return "admin/org/employmentHistoryForm";
 

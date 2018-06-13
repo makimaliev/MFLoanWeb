@@ -1,5 +1,9 @@
 package kg.gov.mf.loan.web.controller.admin.sys;
 
+import kg.gov.mf.loan.admin.org.model.Department;
+import kg.gov.mf.loan.admin.org.model.Organization;
+import kg.gov.mf.loan.admin.org.model.Staff;
+import kg.gov.mf.loan.admin.org.service.OrganizationService;
 import kg.gov.mf.loan.admin.org.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +21,9 @@ import kg.gov.mf.loan.admin.org.model.District;
 import kg.gov.mf.loan.admin.sys.model.*;
 import kg.gov.mf.loan.admin.sys.service.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 public class UserController {
 	
@@ -27,6 +34,11 @@ public class UserController {
     {
         this.userService = rs;
     }
+
+
+    @Autowired
+	private OrganizationService organizationService;
+
 
     
 	@Autowired
@@ -99,7 +111,17 @@ public class UserController {
 		model.addAttribute("userList", this.userService.findAll());
 		model.addAttribute("roleList", this.roleService.findAll());	
 		model.addAttribute("supervisorTermList", this.supervisorTermService.findAll());
-		model.addAttribute("staffList", this.staffService.findAll());
+
+		List<Staff> staffList = new ArrayList<>();
+
+		Organization gaubk = this.organizationService.findById((long)1);
+
+		for (Department department: gaubk.getDepartment())
+		{
+			staffList.addAll(this.staffService.findAllByDepartment(department));
+		}
+
+		model.addAttribute("staffList", staffList);
 
 		return "admin/sys/userForm";
 	}
@@ -111,7 +133,17 @@ public class UserController {
 		model.addAttribute("userList", this.userService.findAll());
 		model.addAttribute("roleList", this.roleService.findAll());		
 		model.addAttribute("supervisorTermList", this.supervisorTermService.findAll());
-		model.addAttribute("staffList", this.staffService.findAll());
+
+		List<Staff> staffList = new ArrayList<>();
+
+		Organization gaubk = this.organizationService.findById((long)1);
+
+		for (Department department: gaubk.getDepartment())
+		{
+			staffList.addAll(this.staffService.findAllByDepartment(department));
+		}
+
+		model.addAttribute("staffList", staffList);
 
 		return "admin/sys/userForm";
 
