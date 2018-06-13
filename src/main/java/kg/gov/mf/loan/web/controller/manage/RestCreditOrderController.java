@@ -2,14 +2,15 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
 import kg.gov.mf.loan.manage.repository.order.CreditOrderRepository;
+import kg.gov.mf.loan.web.fetchModels.CreditOrderModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.List;
 
 @RestController
@@ -18,6 +19,10 @@ public class RestCreditOrderController {
 
     @Autowired
     CreditOrderRepository creditOrderRepository;
+
+    /** The entity manager. */
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @GetMapping("/orders/search")
     public String[] getOrdersByRegNumber(@RequestParam(value = "q") String q) {
@@ -30,5 +35,17 @@ public class RestCreditOrderController {
         }
 
         return sOrders;
+    }
+
+    @PostMapping("/orders")
+    public List<CreditOrderModel> getOrders() {
+
+        String baseQuery = "select co.id as id, co.regNumber as regNumber, co.regDate as regDate, co.description as description, st.name as creditOrderState, tp.name as creditOrderType " +
+                "from creditOrder co, creditOrderState st, creditOrderType tp where co.creditOrderStateId = st.id and co.creditOrderTypeId = tp.id";
+
+        Query query = entityManager.createNativeQuery(baseQuery, CreditOrderModel.class);
+
+        List<CreditOrderModel> orders = query.getResultList();
+        return orders;
     }
 }

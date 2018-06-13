@@ -21,130 +21,67 @@
 		<div th:replace="layout/sidebar"/>
 		<!-- END: Left Aside -->
 		<div class="m-grid__item m-grid__item--fluid m-wrapper">
+			<!-- BEGIN: Subheader -->
+			<div class="m-subheader ">
+				<div class="d-flex align-items-center">
+					<div class="mr-auto">
+						<h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.debtor.page.title}">
+							Debtor page
+						</h3>
+						<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+							<li class="m-nav__item m-nav__item--home">
+								<a th:href="@{/}" class="m-nav__link m-nav__link--icon">
+									<i class="m-nav__link-icon la la-home"></i>
+								</a>
+							</li>
+							<li class="m-nav__separator">
+								-
+							</li>
+							<li class="m-nav__item">
+								<span class="m-nav__link-text" th:text="#{label.debtor.orders}">
+												Orders
+											</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- END: Subheader -->
 			<div class="m-content">
 				<!--begin::Portlet-->
 				<div class="m-portlet">
-					<div class="m-portlet__head">
-						<div class="m-portlet__head-caption">
-							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.debtor.orders}"></h3>
-							</div>
-						</div>
-						<div class="m-portlet__head-tools">
-							<ul class="m-portlet__nav">
-								<li class="m-portlet__nav-item">
-									<a th:href="@{/manage/order/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.order.button.addNewCreditOrder}"></a>
-								</li>
-							</ul>
-						</div>
-					</div>
 					<div class="m-portlet__body">
-						<!--begin::Section-->
-						<div class="m-section">
-							<div class="m-section__content">
-								<div class="m-scrollable m-scrollable-no-margin" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
-									<div>
-										<table class="table">
-											<thead class="thead-default">
-											<tr>
-												<th class="table-id">Id</th>
-												<th th:text="#{label.order.table.regNum}"></th>
-												<th th:text="#{label.order.table.regDate}"></th>
-												<th th:text="#{label.order.table.description}"></th>
-												<th th:text="#{label.order.table.creditOrderState}"></th>
-												<th th:text="#{label.order.table.creditOrderType}"></th>
-												<th>&nbsp;</th>
-											</tr>
-											</thead>
-											<tbody>
-											<tr th:each="o : ${orders}">
-												<td class="table-id" th:text="${o.id}">Id</td>
-												<td th:text="${o.regNumber}">Name</td>
-												<td th:text="${o.regDate}">Name</td>
-												<td th:text="${o.description}">Name</td>
-												<td th:text="${o.creditOrderState.name}">Name</td>
-												<td th:text="${o.creditOrderType.name}">Name</td>
-												<td class="table-actions text-right">
-													<span>
-														<div class="dropdown">
-															<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
-																<i class="la la-ellipsis-h"></i>
-															</a>
-															<div class="dropdown-menu dropdown-menu-right">
-																<th:block th:if="${o.creditOrderState.id==2}">
-																	<a class="dropdown-item" th:href="@{/manage/order/__${o.id}__/approve}">
-																		<span th:text="#{label.table.approve}"></span>
-																	</a>
-																</th:block>
-																<a class="dropdown-item" th:href="@{/manage/order/__${o.id}__/view}">
-																	<span th:text="#{label.table.view}"></span>
-																</a>
-																<a class="dropdown-item" th:href="@{/manage/order/__${o.id}__/save}">
-																	<span th:text="#{label.table.edit}"></span>
-																</a>
-																<a class="dropdown-item" href="#">
-																	<span>
-																		<form th:action="@{/manage/order/delete}" method="post">
-																			<input hidden="true" type="text" id="id" name="id" th:value="${o.id}" />
-																			<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
-																		</form>
-																	</span>
-																</a>
-															</div>
-														</div>
-													</span>
-												</td>
-											</tr>
-											</tbody>
-										</table>
+						<!--begin: Search Form -->
+						<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+							<div class="row align-items-center">
+								<div class="col-xl-8 order-2 order-xl-1">
+									<div class="form-group m-form__group row align-items-center">
+										<div class="col-md-4">
+											<div class="m-input-icon m-input-icon--left">
+												<input type="text" class="form-control m-input m-input--solid" placeholder="Search..." id="m_form_search">
+												<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+											</div>
+										</div>
 									</div>
+								</div>
+								<div class="col-xl-4 order-1 order-xl-2 m--align-right">
+									<a th:href="@{/manage/order/0/save}" class="btn btn-focus m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span th:text="#{label.order.button.addNewCreditOrder}">
+													New Order
+												</span>
+									</a>
+									<div class="m-separator m-separator--dashed d-xl-none"></div>
 								</div>
 							</div>
 						</div>
-						<!--end::Section-->
-					</div>
-					<div class="m-portlet__foot">
-						<div class="m-datatable m-datatable--default">
-							<div class="m-datatable__pager m-datatable--paging-loaded clearfix">
-								<ul class="m-datatable__pager-nav">
-									<li th:class="${current == 0} ? disabled">
-										<a th:title="#{label.pagination.first}" class="m-datatable__pager-link m-datatable__pager-link--first" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=1)}">
-											<i class="la la-angle-double-left"></i>
-										</a>
-									</li>
-									<li th:class="${current == 0} ? disabled">
-										<a th:title="#{label.pagination.prev}" class="m-datatable__pager-link m-datatable__pager-link--prev" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${current})}">
-											<i class="la la-angle-left"></i>
-										</a>
-									</li>
-
-									<li th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
-										<a th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${page})}" class="m-datatable__pager-link m-datatable__pager-link-number" th:text="${page}" th:classappend="${current == (page - 1)} ? 'm-datatable__pager-link--active'"></a>
-
-									</li>
-
-									<li th:class="${current + 1 == count} ? disabled">
-										<a th:title="#{label.pagination.next}" class="m-datatable__pager-link m-datatable__pager-link--next" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${current + 2})}">
-											<i class="la la-angle-right"></i>
-										</a>
-									</li>
-									<li th:class="${current + 1 == count} ? disabled">
-										<a th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${count})}" th:title="#{label.pagination.last}" class="m-datatable__pager-link m-datatable__pager-link--last">
-											<i class="la la-angle-double-right"></i>
-										</a>
-									</li>
-								</ul>
-								<div class="m-datatable__pager-info">
-									<span class="m-datatable__pager-detail" th:text="#{label.pageSize}"></span>
-									<div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 70px;">
-										<select id="pageSizeSelect" class="selectpicker m-datatable__pager_size" title="Select page size" data-width="70px">
-											<option th:each="pageSize : ${pageSizes}" th:text="${pageSize}" th:value="${pageSize}"
-													th:selected="${pageSize} == ${selectedPageSize}"></option>
-										</select>
-									</div>
-								</div>
-							</div>
-						</div>
+						<!--end: Search Form -->
+						<!--begin: Datatable -->
+						<div class="m_datatable" id="json_data"></div>
+						<!--end: Datatable -->
 					</div>
 				</div>
 				<!--end::Portlet-->
@@ -160,6 +97,140 @@
 <!-- end:: Page -->
 
 <div th:replace="fragments/footer :: footer-js"/>
+
+<!--begin::Page Resources -->
+<!--<script th:src="@{/assets/custom/demo/default/custom/components/datatables/base/data-json.js}" type="text/javascript"></script>-->
+<!--end::Page Resources -->
+
+<script type="text/javascript">
+    //== Class definition
+
+    var DatatableJsonRemoteDemo = function () {
+        //== Private functions
+
+        // basic demo
+        var demo = function () {
+
+            var datatable = $('.m_datatable').mDatatable({
+                // datasource definition
+                data: {
+                    type: 'remote',
+                    source: '/api/orders',
+                    pageSize: 10,
+                    saveState: {
+                        cookie: true,
+                        webstorage: true
+                    }
+                },
+
+                // layout definition
+                layout: {
+                    theme: 'default', // datatable theme
+                    class: '', // custom wrapper class
+                    scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+                    height: 550, // datatable's body's fixed height
+                    footer: false // display/hide footer
+                },
+
+                // column sorting
+                sortable: true,
+
+                // column based filtering
+                filterable: false,
+
+                pagination: true,
+
+                // columns definition
+                columns: [{
+                    field: "View",
+                    width: 100,
+                    textAlign: 'center',
+                    title: "Просмотр",
+                    sortable: false,
+                    selector: false,
+                    overflow: 'visible',
+                    template: function (row) {
+                        var dropup = (row.getDatatable().getPageSize() - row.getIndex()) <= 4 ? 'dropup' : '';
+
+                        return '\
+						<a href="/manage/order/'+ row.id +'/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-down"></i></a>\
+					';
+                    }
+                },  {
+                    field: "id",
+                    title: "#",
+                    sortable: 'asc',
+                    width: 50,
+                    textAlign: 'center'
+                }, {
+                    field: "regNumber",
+                    title: "Номер"
+                }, {
+                    field: "regDate",
+                    title: "Дата",
+                    responsive: {visible: 'lg'}
+                }, {
+                    field: "description",
+                    title: "Примечание",
+                    width: 110
+                }, {
+                    field: "creditOrderState",
+                    title: "Статус"
+                }, {
+                    field: "creditOrderType",
+                    title: "Вид"
+                }, {
+                    field: "",
+                    width: 110,
+                    title: "",
+                    sortable: false,
+                    selector: false,
+                    overflow: 'visible',
+                    template: function (row) {
+                        var dropup = (row.getDatatable().getPageSize() - row.getIndex()) <= 4 ? 'dropup' : '';
+
+                        return '\
+						<a href="/manage/order/'+ row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="label.table.edit">\
+							<i class="la la-edit"></i>\
+						</a>\
+						<a href="/manage/order/'+ row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="label.table.delete">\
+							<i class="la la-trash"></i>\
+						</a>\
+					';
+                    }
+                }]
+            });
+
+            var query = datatable.getDataSourceQuery();
+
+            $('#m_form_search').on('keyup', function (e) {
+                datatable.search($(this).val().toLowerCase());
+            }).val(query.generalSearch);
+
+            $('#m_form_status').on('change', function () {
+                datatable.search($(this).val(), 'Status');
+            }).val(typeof query.Status !== 'undefined' ? query.Status : '');
+
+            $('#m_form_type').on('change', function () {
+                datatable.search($(this).val(), 'Type');
+            }).val(typeof query.Type !== 'undefined' ? query.Type : '');
+
+            $('#m_form_status, #m_form_type').selectpicker();
+
+        };
+
+        return {
+            // public functions
+            init: function () {
+                demo();
+            }
+        };
+    }();
+
+    jQuery(document).ready(function () {
+        DatatableJsonRemoteDemo.init();
+    });
+</script>
 
 </body>
 <!-- end::Body -->
