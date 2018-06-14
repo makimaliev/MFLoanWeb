@@ -78,6 +78,11 @@
 													   data-target="#userFormModal" th:href="@{/user/__${s.id}__/edit}"
 													   role="button" class="dropdown-item"> <span th:text="#{label.table.edit}"></span>
 													</a>
+													<a data-remote="false" data-toggle="modal"
+													   data-target="#supervisorTermFormModal" th:href="@{/user/__${s.id}__/supervisorTerm/add}"
+													   role="button" class="dropdown-item"> <span th:text="#{label.user.button.addSupervisorTerm}"></span>
+													</a>
+
 													<a class="dropdown-item" href="#">
 														<span>
 															<form th:action="@{/user/__${s.id}__/remove}" method="post">
@@ -111,9 +116,47 @@
 </div>
 
 <!--begin::Modal-->
-<div class="modal fade" id="userFormModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
+<div class="modal fade" id="userFormModal"
+	 role="dialog" aria-labelledby="myModalLabel"
+	 aria-hidden="true">
+	<div class="modal-dialog">
 		<div class="modal-content">
+			<!--<div class="modal-header">-->
+			<!--<button type="button" class="close" data-dismiss="modal"-->
+			<!--aria-label="Close">-->
+			<!--<span aria-hidden="true">&times;</span>-->
+			<!--</button>-->
+			<!--<h4 class="modal-title" id="myModalLabel" >Добавить</h4>-->
+			<!--</div>-->
+			<div class="modal-body">...</div>
+			<!--<div class="modal-footer">-->
+			<!--<button type="button" class="btn btn-default"-->
+			<!--data-dismiss="modal">Close</button>-->
+			<!--<button type="button" class="btn btn-success">Save-->
+			<!--changes</button>-->
+			<!--</div>-->
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="supervisorTermFormModal"
+	 role="dialog" aria-labelledby="myModalLabel"
+	 aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<!--<div class="modal-header">-->
+			<!--<button type="button" class="close" data-dismiss="modal"-->
+			<!--aria-label="Close">-->
+			<!--<span aria-hidden="true">&times;</span>-->
+			<!--</button>-->
+			<!--<h4 class="modal-title" id="myModalLabel" >Добавить</h4>-->
+			<!--</div>-->
+			<div class="modal-body">...</div>
+			<!--<div class="modal-footer">-->
+			<!--<button type="button" class="btn btn-default"-->
+			<!--data-dismiss="modal">Close</button>-->
+			<!--<button type="button" class="btn btn-success">Save-->
+			<!--changes</button>-->
+			<!--</div>-->
 		</div>
 	</div>
 </div>
@@ -160,9 +203,21 @@
 
         $("#userFormModal").on("show.bs.modal", function(e)
         {
+
             var link = $(e.relatedTarget);
             var userID = $("#user_id").val();
-            $(this).find(".modal-content").load(link.attr("href"));
+
+            $(this).find(".modal-title").html(link.attr("href"));
+            $(this).find(".modal-body").load(link.attr("href"));
+        });
+
+        $("#supervisorTermFormModal").on("show.bs.modal", function(e)
+        {
+            var link = $(e.relatedTarget);
+            var userID = $("#user_id").val();
+
+            $(this).find(".modal-title").html(link.attr("href"));
+            $(this).find(".modal-body").load(link.attr("href"));
         });
     });
 </script>

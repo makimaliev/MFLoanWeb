@@ -14,24 +14,37 @@
 		<div class="form-group">
 			<label for="name" class="form-control-label" th:text="#{label.supervisorTerm.modal.name}">Name<span class="required"> * </span></label>
 			<input hidden="true" type="text" id="id" name="id" th:value="${supervisorTerm.id}" />
+			<input hidden="true" type="text" id="debtor_type_id" name="debtor_type_id" th:value="*{debtor_type_id}">
+			<!--<input hidden="true" type="text" id="regionId" name="address.region.id"-->
+				   <!--th:field="*{region.id}" />-->
+			<!--<input hidden="true" type="text" id="districtId" name="address.district.id"-->
+				   <!--th:field="*{district.id}" />-->
+
+
 			<input type="text" class="form-control" id="name" name="name" th:value="*{name}">
 		</div>
 
-		<div class="form-group ">
-			<label for="debtor_type_id" class="form-control-label" th:text="#{label.supervisorTerm.modal.debtorType}">Debtor Type<span class="required"> * </span></label>
-			<input type="text" class="form-control" id="debtor_type_id" name="debtor_type_id" th:value="*{debtor_type_id}">
+
+		<div class="form-group">
+			<label class="form-control-label" th:text="#{label.supervisorTerm.modal.workSector}">Region<span class="required"> * </span></label>
+			<div class="row">
+				<div class="col-12">
+					<select th:field="*{work_sector_id}" class="form-control m-bootstrap-select m_selectpicker">
+						<option th:each="workSectorInList : ${workSectorList}"
+								th:value="${{workSectorInList}}"
+								th:text="${workSectorInList.name}">workSector</option>
+					</select>
+				</div>
+			</div>
 		</div>
 
-		<div class="form-group ">
-			<label for="work_sector_id" class="form-control-label" th:text="#{label.supervisorTerm.modal.workSector}">Work Sector <span class="required"> * </span></label>
-			<input type="text" class="form-control" id="work_sector_id" name="work_sector_id" th:value="*{work_sector_id}">
-		</div>
+
 
 		<div class="form-group">
 			<label class="form-control-label" th:text="#{label.supervisorTerm.modal.region}">Region<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
-					<select th:field="*{region}" class="selectpicker">
+					<select id="regionSelect" class="form-control m-bootstrap-select m_selectpicker" th:field="*{region}" th:title="#{label.select}">
 						<option th:each="regionInList : ${regionList}"
 								th:value="${{regionInList}}"
 								th:text="${regionInList.name}">Region</option>
@@ -44,10 +57,11 @@
 			<label class="form-control-label" th:text="#{label.supervisorTerm.modal.district}">District<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
-					<select th:field="*{district}" class="selectpicker">
+					<select id="districtSelect" class="form-control m-bootstrap-select m_selectpicker" th:field="*{district}" th:title="#{label.select}">
 						<option th:each="districtInList : ${districtList}"
 								th:value="${{districtInList}}"
 								th:text="${districtInList.name}">District</option>
+
 					</select>
 				</div>
 			</div>
@@ -57,7 +71,7 @@
 			<label class="form-control-label" th:text="#{label.supervisorTerm.modal.department}">Department<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
-					<select th:field="*{department}" class="selectpicker">
+					<select th:field="*{department}" class="form-control m-bootstrap-select m_selectpicker">
 						<option th:each="departmentInList : ${departmentList}"
 								th:value="${{departmentInList}}"
 								th:text="${departmentInList.name}">department</option>
@@ -65,6 +79,13 @@
 				</div>
 			</div>
 		</div>
+
+		<!--<div class="form-group ">-->
+			<!--<label for="debtor_type_id" class="form-control-label" th:text="#{label.supervisorTerm.modal.debtorType}">Debtor Type<span class="required"> * </span></label>-->
+			<!--<input type="text" class="form-control" id="debtor_type_id" name="debtor_type_id" th:value="*{debtor_type_id}">-->
+		<!--</div>-->
+
+
 	</div>
 
 	<div class="modal-footer">
@@ -75,5 +96,31 @@
 </form>
 
 <script>
-    $('.selectpicker').selectpicker('refresh');
+    $('.m_selectpicker').selectpicker('refresh');
+</script>
+
+<script th:inline="javascript">
+
+    /*<![CDATA[*/
+
+    $('#regionSelect').change(
+        function() {
+
+            $.getJSON("/districtByRegionId/list", {
+                regionId : $(this).val(),
+                ajax : 'true'
+            }, function(data) {
+
+                $('#districtSelect').empty();
+
+                var len = data.length;
+                for ( var i = 0; i < len; i++) {
+                    $('#districtSelect').append("<option value='"+data[i].id+"'>"+data[i].name+"</option>");
+                }
+
+                $('#districtSelect').selectpicker('refresh');
+            });
+        });
+
+    /*]]>*/
 </script>

@@ -66,7 +66,26 @@
 								</table>
 							</div>
 							<div class="tab-pane" id="tab_15_2" role="tabpanel">
-								supervisor terms
+								<table class="table" id="supervisorTermsTable">
+									<thead class="thead-default">
+									<tr>
+										<th th:text="#{label.supervisorTerm.table.id}">Id</th>
+										<th th:text="#{label.supervisorTerm.table.name}">Name</th>
+										<th th:text="#{label.role.table.view}">View</th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr th:each="s : ${user.supervisorTerms}">
+										<td th:text="${s.id}">Id</td>
+										<td th:text="${s.name}">Name</td>
+										<td>
+											<a th:href="@{/supervisorTerm/__${s.id}__/details}"
+											   role="button" class="btn btn-xs blue-stripe" th:text="#{label.role.button.view}"> View
+											</a>
+										</td>
+									</tr>
+									</tbody>
+								</table>
 							</div>
 						</div>
 

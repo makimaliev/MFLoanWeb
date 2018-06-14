@@ -4,6 +4,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
+import kg.gov.mf.loan.admin.org.model.Region;
+import kg.gov.mf.loan.manage.service.debtor.DebtorTypeService;
+import kg.gov.mf.loan.manage.service.debtor.OrganizationFormService;
+import kg.gov.mf.loan.manage.service.debtor.WorkSectorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -79,9 +83,16 @@ public class SupervisorTermController {
     {
         this.departmentService = rs;
     }
-    
-    
-    
+
+	@Autowired
+	DebtorTypeService debtorTypeService;
+
+	@Autowired
+	WorkSectorService workSectorService;
+
+	@Autowired
+	OrganizationFormService organizationFormService;
+
 	@RequestMapping(value = "/supervisorTerm/list", method = RequestMethod.GET)
 	public String listSupervisorTerms(Model model) {
 		
@@ -117,10 +128,22 @@ public class SupervisorTermController {
 	public String getSupervisorTermAddForm(Model model) {
 
 		model.addAttribute("supervisorTerm", new SupervisorTerm());
-		model.addAttribute("supervisorTermList", this.supervisorTermService.findAll());	
+
+//		model.addAttribute("supervisorTermList", this.supervisorTermService.findAll());
+
+
+		Region modelRegion = (Region) this.regionService.findById(1);
+
+		District modelDistrict = (District) this.districtService.findByRegion(modelRegion).get(5);
+
+
 		model.addAttribute("regionList", this.regionService.findAll());
-		model.addAttribute("districtList", this.districtService.findAll());	
-		model.addAttribute("departmentList", this.departmentService.findAll());		
+		model.addAttribute("districtList", this.districtService.findByRegion(modelRegion));
+
+		model.addAttribute("departmentList", this.departmentService.findAll());
+		model.addAttribute("organizationFormList", this.organizationFormService.list());
+		model.addAttribute("workSectorList", this.workSectorService.list());
+
 		
 
 		return "admin/sys/supervisorTermForm";
@@ -141,10 +164,19 @@ public class SupervisorTermController {
 		
 		modelSupervisorTerm.setUsers(modelList);
 		model.addAttribute("supervisorTerm",modelSupervisorTerm);
-		
+
+		Region modelRegion = (Region) this.regionService.findById(1);
+
+		District modelDistrict = (District) this.districtService.findByRegion(modelRegion).get(5);
+
+
 		model.addAttribute("regionList", this.regionService.findAll());
-		model.addAttribute("districtList", this.districtService.findAll());
-		model.addAttribute("departmentList", this.departmentService.findAll());		
+		model.addAttribute("districtList", this.districtService.findByRegion(modelRegion));
+
+		model.addAttribute("departmentList", this.departmentService.findAll());
+		model.addAttribute("organizationFormList", this.organizationFormService.list());
+		model.addAttribute("workSectorList", this.workSectorService.list());
+
 
 		return "admin/sys/supervisorTermForm";
 	}
@@ -153,11 +185,22 @@ public class SupervisorTermController {
 	
 	@RequestMapping("/supervisorTerm/{id}/edit")
 	public String getSupervisorTermEditForm(@PathVariable("id") long id, Model model) {
-		model.addAttribute("supervisorTerm", this.supervisorTermService.findById(id));
-		model.addAttribute("supervisorTermList", this.supervisorTermService.findAll());	
+
+
+    	SupervisorTerm supervisorTerm = this.supervisorTermService.findById(id);
+		model.addAttribute("supervisorTerm", supervisorTerm);
+
+//		model.addAttribute("supervisorTermList", this.supervisorTermService.findAll());
+
+
+
 		model.addAttribute("regionList", this.regionService.findAll());
-		model.addAttribute("districtList", this.districtService.findAll());	
-		model.addAttribute("departmentList", this.departmentService.findAll());			
+
+
+		model.addAttribute("districtList", this.districtService.findByRegion(supervisorTerm.getRegion()));
+		model.addAttribute("departmentList", this.departmentService.findAll());
+		model.addAttribute("organizationFormList", this.organizationFormService.list());
+		model.addAttribute("workSectorList", this.workSectorService.list());
 				
 	
 		

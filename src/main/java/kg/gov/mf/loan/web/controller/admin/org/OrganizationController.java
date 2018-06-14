@@ -318,9 +318,9 @@ public class OrganizationController {
 		model.addAttribute("regionList", this.regionService.findAll());
 
 
-		model.addAttribute("districtList", this.districtService.findAll());			
-		model.addAttribute("aokmotuList", this.aokmotuService.findAll());			
-		model.addAttribute("villageList", this.villageService.findAll());
+//		model.addAttribute("districtList", this.districtService.findAll());
+//		model.addAttribute("aokmotuList", this.aokmotuService.findAll());
+//		model.addAttribute("villageList", this.villageService.findAll());
 
 
 		model.addAttribute("districtList", this.districtService.findByRegion(organization.getAddress().getRegion()));
