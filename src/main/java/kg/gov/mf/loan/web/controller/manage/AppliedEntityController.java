@@ -116,7 +116,9 @@ public class AppliedEntityController {
         model.addAttribute("dPackages", entity.getDocumentPackages());
         
         model.addAttribute("orderId", orderId);
+		model.addAttribute("order", orderService.getById(orderId));
         model.addAttribute("listId", listId);
+		model.addAttribute("list", listService.getById(listId));
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "/manage/order/entitylist/entity/view";
@@ -136,7 +138,9 @@ public class AppliedEntityController {
 			model.addAttribute("entity", entityService.getById(entityId));
 		}
 		model.addAttribute("orderId", orderId);
+		model.addAttribute("order", orderService.getById(orderId));
 		model.addAttribute("listId", listId);
+		model.addAttribute("list", listService.getById(listId));
 		List<AppliedEntityState> states = entityStateService.list();
         model.addAttribute("states", states);
 			
@@ -239,6 +243,7 @@ public class AppliedEntityController {
 				EntityDocument newDoc = new EntityDocument();
 				newDoc.setName(od.getName());
 				newDoc.setDocumentTypeId(od.getOrderDocumentType().getId());
+				newDoc.setEntityDocumentState(edStateService.getById(1L)!=null?edStateService.getById(1L):null);
 				newDoc.setDocumentPackage(dp);
 				edService.add(newDoc);
 			}

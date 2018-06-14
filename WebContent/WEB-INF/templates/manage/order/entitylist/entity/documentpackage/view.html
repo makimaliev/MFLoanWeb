@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
-	<title th:text="#{label.documentPackage.details.title}"></title>
+	<title th:text="${'Пакет документов: ' + dp.name}"></title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -21,6 +21,72 @@
 		<div th:replace="layout/sidebar"/>
 		<!-- END: Left Aside -->
 		<div class="m-grid__item m-grid__item--fluid m-wrapper">
+			<!-- BEGIN: Subheader -->
+			<div class="m-subheader ">
+				<div class="d-flex align-items-center">
+					<div class="mr-auto">
+						<h3 class="m-subheader__title m-subheader__title--separator">
+							Пакет документов
+						</h3>
+						<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+							<li class="m-nav__item m-nav__item--home">
+								<a th:href="@{/}" class="m-nav__link m-nav__link--icon">
+									<i class="m-nav__link-icon la la-home"></i>
+								</a>
+							</li>
+							<li class="m-nav__separator">
+								-
+							</li>
+							<li class="m-nav__item">
+								<a th:href="@{/manage/order/list}" class="m-nav__link">
+											<span class="m-nav__link-text">
+												Список решений
+											</span>
+								</a>
+							</li>
+							<li class="m-nav__separator">
+								-
+							</li>
+							<li class="m-nav__item">
+								<a th:href="@{/manage/order/__${orderId}__/view}" class="m-nav__link">
+											<span class="m-nav__link-text" th:text="${order.regNumber}">
+												Решение
+											</span>
+								</a>
+							</li>
+							<li class="m-nav__separator">
+								-
+							</li>
+							<li class="m-nav__item">
+								<a th:href="@{/manage/order/__${orderId}__/entitylist/__${listId}__/view}" class="m-nav__link">
+											<span class="m-nav__link-text" th:text="${list.listNumber}">
+												Список
+											</span>
+								</a>
+							</li>
+							<li class="m-nav__separator">
+								-
+							</li>
+							<li class="m-nav__item">
+								<a th:href="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${entityId}__/view}" class="m-nav__link">
+											<span class="m-nav__link-text" th:text="${entity.owner.name}">
+												Список
+											</span>
+								</a>
+							</li>
+							<li class="m-nav__separator">
+								-
+							</li>
+							<li class="m-nav__item">
+								<span class="m-nav__link-text">
+												Пакет документов
+											</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- END: Subheader -->
 			<div class="m-content">
 				<!--begin::Portlet-->
 				<div class="m-portlet m-portlet--full-height">
@@ -153,16 +219,18 @@
 										<table class="table">
 											<thead class="thead-default">
 											<tr>
-												<th class="table-id">#</th>
+												<th class="table-id">Id</th>
 												<th th:text="#{label.document.name}"></th>
+												<th th:text="#{label.document.state}"></th>
 												<th th:text="#{label.document.progress}"></th>
 												<th>Actions</th>
 											</tr>
 											</thead>
 											<tbody>
-											<tr th:each="progress, iterator : ${progressList}">
-												<td class="table-id" th:text="${iterator.index+1}"></td>
+											<tr th:each="progress : ${progressList}">
+												<td class="table-id" th:text="${progress.document.id}"></td>
 												<td th:text="${progress.document.name}"></td>
+												<td th:text="${progress.document.entityDocumentState.name}"></td>
 												<td th:text="${progress.progress + '%'}">
                                                     <!--
                                                     <div class="progress">
@@ -177,13 +245,13 @@
 																<i class="la la-ellipsis-h"></i>
 															</a>
 															<div class="dropdown-menu dropdown-menu-right">
-                                                                <check th:if="${!progress.completed}">
+                                                                <check th:if="${progress.document.entityDocumentState.id==1}">
                                                                     <a class="dropdown-item" href="#" th:data-link="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${entityId}__/documentpackage/__${dpId}__/entitydocument/__${progress.document.id}__/progress}" data-toggle="modal" data-target="#m_modal_5" data-whatever="completed"><i class="la la-check-square"></i> Complete</a>
                                                                 </check>
-																<check th:if="${!progress.approved}">
+																<check th:if="${progress.document.entityDocumentState.id==3}">
 						    									    <a class="dropdown-item" href="#" th:data-link="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${entityId}__/documentpackage/__${dpId}__/entitydocument/__${progress.document.id}__/progress}" data-toggle="modal" data-target="#m_modal_5" data-whatever="approved"><i class="la la-leaf"></i> Approve</a>
 						    									</check>
-                                                                <check th:if="${!progress.registered}">
+                                                                <check th:if="${progress.document.entityDocumentState.id==5}">
                                                                     <a class="dropdown-item" href="#" th:data-link="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${entityId}__/documentpackage/__${dpId}__/entitydocument/__${progress.document.id}__/progress}" data-toggle="modal" data-target="#m_modal_5" data-whatever="registered"><i class="la la-print"></i> Register</a>
                                                                 </check>
                                                                 <a class="dropdown-item" th:href="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${entityId}__/documentpackage/__${dpId}__/entitydocument/__${progress.document.id}__/save}"><i class="la la-edit"></i> Edit</a>

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import kg.gov.mf.loan.manage.service.order.CreditOrderService;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -38,7 +39,7 @@ public class OrderDocumentController {
 	OrderDocumentService odService;
 	
 	@Autowired
-	DocumentPackageService dpService;
+	OrderDocumentPackageService orderDocumentPackageService;
 	
 	@Autowired
 	EntityDocumentStateService edStateService;
@@ -48,6 +49,9 @@ public class OrderDocumentController {
 	
 	@Autowired
 	EntityDocumentService edService;
+
+	@Autowired
+	CreditOrderService orderService;
 
 	private static final int BUTTONS_TO_SHOW = 5;
 	private static final int INITIAL_PAGE = 0;
@@ -98,7 +102,9 @@ public class OrderDocumentController {
 			model.addAttribute("doc", odService.getById(docId));
 		}
 		model.addAttribute("orderId", orderId);
+		model.addAttribute("order", orderService.getById(orderId));
 		model.addAttribute("dpId", dpId);
+		model.addAttribute("dp", orderDocumentPackageService.getById(dpId));
 		List<OrderDocumentType> types = oDTypeService.list();
         model.addAttribute("types", types);
 			

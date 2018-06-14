@@ -89,6 +89,7 @@ public class AppliedEntityListController {
         model.addAttribute("entityList", list);
         model.addAttribute("entities", list.getAppliedEntities());
         model.addAttribute("orderId", orderId);
+		model.addAttribute("order", orderService.getById(orderId));
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "/manage/order/entitylist/view";
@@ -108,6 +109,7 @@ public class AppliedEntityListController {
 			model.addAttribute("entityList", listService.getById(listId));
 		}
 		model.addAttribute("orderId", orderId);
+		model.addAttribute("order", orderService.getById(orderId));
 		List<AppliedEntityListState> states = elStateService.list();
         model.addAttribute("states", states);
 		List<AppliedEntityListType> types = elTypeService.list();

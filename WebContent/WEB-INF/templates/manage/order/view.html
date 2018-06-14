@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
-	<title th:text="#{label.debtor.details.title}"></title>
+	<title th:text="${'Решение: ' + order.regNumber}"></title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -21,9 +21,52 @@
 		<div th:replace="layout/sidebar"/>
 		<!-- END: Left Aside -->
 		<div class="m-grid__item m-grid__item--fluid m-wrapper">
+			<!-- BEGIN: Subheader -->
+			<div class="m-subheader ">
+				<div class="d-flex align-items-center">
+					<div class="mr-auto">
+						<h3 class="m-subheader__title m-subheader__title--separator">
+							Решение
+						</h3>
+						<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+							<li class="m-nav__item m-nav__item--home">
+								<a th:href="@{/}" class="m-nav__link m-nav__link--icon">
+									<i class="m-nav__link-icon la la-home"></i>
+								</a>
+							</li>
+							<li class="m-nav__separator">
+								-
+							</li>
+							<li class="m-nav__item">
+								<a th:href="@{/manage/order/list}" class="m-nav__link">
+											<span class="m-nav__link-text">
+												Список решений
+											</span>
+								</a>
+							</li>
+							<li class="m-nav__separator">
+								-
+							</li>
+							<li class="m-nav__item">
+								<span class="m-nav__link-text">
+												Решение на выдачу кредита
+											</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- END: Subheader -->
 			<div class="m-content">
 				<!--begin::Portlet-->
 				<div class="m-portlet m-portlet--full-height">
+					<div class="m-portlet__head">
+						<div class="m-portlet__head-caption">
+							<div class="m-portlet__head-title">
+								<h3 class="m-portlet__head-text" th:text="${order.regNumber}"></h3>
+							</div>
+						</div>
+					</div>
 					<div class="m-portlet__body m-portlet__body--no-padding">
 						<div class="row m-row--no-padding m-row--col-separator-xl">
 							<div class="col-md-12 col-lg-12 col-xl-4">

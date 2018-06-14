@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentRegisteredBy;
+import kg.gov.mf.loan.manage.service.entitylist.AppliedEntityListService;
+import kg.gov.mf.loan.manage.service.order.CreditOrderService;
 import kg.gov.mf.loan.web.util.EntityDocumentProgress;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,12 @@ public class DocumentPackageController {
 
     @Autowired
     EntityDocumentRegisteredByService edRBService;
+
+    @Autowired
+    CreditOrderService orderService;
+
+    @Autowired
+    AppliedEntityListService listService;
 
 	private static final int BUTTONS_TO_SHOW = 5;
 	private static final int INITIAL_PAGE = 0;
@@ -105,11 +113,11 @@ public class DocumentPackageController {
 
             EntityDocumentProgress progress = new EntityDocumentProgress();
             progress.setDocument(doc);
-            if(doc.getApprovedBy() > 0)
-                progress.setApproved(true);
-            if(doc.getCompletedBy() > 0)
+            if(doc.getEntityDocumentState().getId() == 3)
                 progress.setCompleted(true);
-            if(doc.getRegisteredBy() != null && doc.getRegisteredBy().getId() > 0)
+            if(doc.getEntityDocumentState().getId() == 5)
+                progress.setApproved(true);
+            if(doc.getEntityDocumentState().getId() == 6)
                 progress.setRegistered(true);
             progress.calculateProgress();
             progressList.add(progress);
@@ -118,8 +126,11 @@ public class DocumentPackageController {
         model.addAttribute("progressList", progressList);
         
         model.addAttribute("orderId", orderId);
+		model.addAttribute("order", orderService.getById(orderId));
         model.addAttribute("listId", listId);
+		model.addAttribute("list", listService.getById(listId));
         model.addAttribute("entityId", entityId);
+		model.addAttribute("entity", entityService.getById(entityId));
         model.addAttribute("dpId", dpId);
         List<EntityDocumentRegisteredBy> rBs = edRBService.list();
         model.addAttribute("rBs", rBs);
@@ -148,8 +159,11 @@ public class DocumentPackageController {
 			model.addAttribute("dp", dpService.getById(dpId));
 		}
 		model.addAttribute("orderId", orderId);
+		model.addAttribute("order", orderService.getById(orderId));
 		model.addAttribute("listId", listId);
+		model.addAttribute("list", listService.getById(listId));
 		model.addAttribute("entityId", entityId);
+		model.addAttribute("entity", entityService.getById(entityId));
 		
 		List<DocumentPackageType> types = dpTypeService.list();
         model.addAttribute("types", types);

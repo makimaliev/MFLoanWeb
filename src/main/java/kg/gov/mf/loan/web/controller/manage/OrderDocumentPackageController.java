@@ -90,6 +90,7 @@ public class OrderDocumentPackageController {
         model.addAttribute("documents", oDP.getOrderDocuments());
         
         model.addAttribute("orderId", orderId);
+		model.addAttribute("order", orderService.getById(orderId));
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "/manage/order/orderdocumentpackage/view";
@@ -109,6 +110,7 @@ public class OrderDocumentPackageController {
 			model.addAttribute("documentPackage", oDPService.getById(dpId));
 		}
 		model.addAttribute("orderId", orderId);
+		model.addAttribute("order", orderService.getById(orderId));
 		List<DocumentPackageType> types = dpTypeService.list();
 		model.addAttribute("types", types);
 

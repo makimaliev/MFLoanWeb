@@ -55,12 +55,10 @@ public class EntityDocumentProgress {
     public void calculateProgress()
     {
         if(completed)
-            progress = progress + 33;
+            progress = 33;
         if(approved)
-            progress = progress + 33;
+            progress = 66;
         if(registered)
-            progress = progress + 33;
-        if(progress == 99)
             progress = 100;
     }
 }

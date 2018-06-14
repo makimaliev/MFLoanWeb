@@ -9,6 +9,10 @@ import java.util.Optional;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.orderdocument.OrderDocumentType;
+import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageStateService;
+import kg.gov.mf.loan.manage.service.entity.AppliedEntityService;
+import kg.gov.mf.loan.manage.service.entitylist.AppliedEntityListService;
+import kg.gov.mf.loan.manage.service.order.CreditOrderService;
 import kg.gov.mf.loan.manage.service.orderdocument.OrderDocumentTypeService;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +53,18 @@ public class EntityDocumentController {
 
 	@Autowired
 	OrderDocumentTypeService oDTypeService;
+
+	@Autowired
+	DocumentPackageStateService dpStateService;
+
+	@Autowired
+	CreditOrderService orderService;
+
+	@Autowired
+	AppliedEntityListService listService;
+
+	@Autowired
+	AppliedEntityService entityService;
 
 	private static final int BUTTONS_TO_SHOW = 5;
 	private static final int INITIAL_PAGE = 0;
@@ -127,9 +143,13 @@ public class EntityDocumentController {
 			model.addAttribute("ed", edService.getById(edId));
 		}
 		model.addAttribute("orderId", orderId);
+		model.addAttribute("order", orderService.getById(orderId));
 		model.addAttribute("listId", listId);
+		model.addAttribute("list", listService.getById(listId));
 		model.addAttribute("entityId", entityId);
+		model.addAttribute("entity", entityService.getById(entityId));
 		model.addAttribute("dpId", dpId);
+		model.addAttribute("dp", dpService.getById(dpId));
 
 		List<OrderDocumentType> types = oDTypeService.list();
 		model.addAttribute("types", types);
@@ -187,12 +207,14 @@ public class EntityDocumentController {
 			document.setCompletedBy(user.getId());
 			document.setCompletedDate(today);
 			document.setCompletedDescription(description);
+			document.setEntityDocumentState(edStateService.getById(3L));
 		}
 		else if(type.equals("approved"))
 		{
 			document.setApprovedBy(user.getId());
 			document.setApprovedDate(today);
 			document.setApprovedDescription(description);
+			document.setEntityDocumentState(edStateService.getById(5L));
 		}
 		else
 		{
@@ -206,6 +228,7 @@ public class EntityDocumentController {
 				document.setRegisteredBy(edRBService.getById(regId));
 				document.setRegisteredDate(registeredDate);
 				document.setRegisteredDescription(description);
+				document.setEntityDocumentState(edStateService.getById(6L));
 			}
 
 		}
@@ -225,6 +248,15 @@ public class EntityDocumentController {
 			dp.setCompletedDate(date);
 		else if(type.equals("approved"))
 			dp.setApprovedDate(date);
+
+		if(dp.getCompletedRatio() == 1.0)
+			dp.setDocumentPackageState(dpStateService.getById(3L));
+
+		if(dp.getApprovedRatio() == 1.0)
+			dp.setDocumentPackageState(dpStateService.getById(5L));
+
+		if(dp.getRegisteredRatio() == 1.0)
+			dp.setDocumentPackageState(dpStateService.getById(6L));
 
 		dpService.update(dp);
 
