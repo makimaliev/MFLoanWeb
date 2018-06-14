@@ -151,6 +151,7 @@ public class EntityDocumentController {
 		
 		if(doc.getId() == 0)
 		{
+			doc.setEntityDocumentState(edStateService.getById(1L) != null? edStateService.getById(1L): null);
 			edService.add(doc);
 			dPackage.calculateRatios();
 			dpService.update(dPackage);

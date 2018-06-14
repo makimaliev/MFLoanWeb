@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import kg.gov.mf.loan.manage.repository.order.CreditOrderRepository;
 import kg.gov.mf.loan.web.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +79,9 @@ public class CreditOrderController {
 	
 	@Autowired
 	OrderTermAccrMethodService accrMethodService;
+
+	@Autowired
+	CreditOrderRepository creditOrderRepository;
 	
 	static final Logger loggerEntityList = LoggerFactory.getLogger(AppliedEntityList.class);
 
@@ -108,23 +112,12 @@ public class CreditOrderController {
     }
 	
 	@RequestMapping(value = {"/manage/order/list" }, method = RequestMethod.GET)
-    public String listOrders(@RequestParam("pageSize") Optional<Integer> pageSize,
-							 @RequestParam("page") Optional<Integer> page, ModelMap model) {
+    public String listOrders(ModelMap model) {
 
-		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
-		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
-
-		List<CreditOrder> orders = creditOrderService.listByParam("id", evalPage*evalPageSize, evalPageSize);
-		int count = creditOrderService.count();
-
-		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
-
-		model.addAttribute("count", count/evalPageSize+1);
-        model.addAttribute("orders", orders);
-		model.addAttribute("selectedPageSize", evalPageSize);
-		model.addAttribute("pageSizes", PAGE_SIZES);
-		model.addAttribute("pager", pager);
-		model.addAttribute("current", evalPage);
+        List<CreditOrderState> states = creditOrderStateService.list();
+        List<CreditOrderType> types = creditOrderTypeService.list();
+        model.addAttribute("states", states);
+        model.addAttribute("types", types);
 
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "/manage/order/list";
@@ -164,18 +157,18 @@ public class CreditOrderController {
 	}
 
 	@RequestMapping(value="/manage/order/{orderId}/approve", method=RequestMethod.GET)
-	public String approveCreditOrder(ModelMap model, @PathVariable("orderId")Long orderId)
+	public String approveCreditOrder(@PathVariable("orderId")Long orderId)
 	{
 		CreditOrder order = creditOrderService.getById(orderId);
 		order.setCreditOrderState(creditOrderStateService.getById(1L));
 		creditOrderService.update(order);
-		return "redirect:" + "/manage/order/" + order.getId() + "/view";
+		return "redirect:" + "/manage/order/list";
 	}
 	
-	@RequestMapping(value="/manage/order/delete", method=RequestMethod.POST)
-    public String deleteCreditOrder(long id) {
-		if(id > 0)
-			creditOrderService.remove(creditOrderService.getById(id));
+	@RequestMapping(value="/manage/order/{orderId}/delete", method=RequestMethod.GET)
+    public String deleteCreditOrder(@PathVariable("orderId")Long orderId) {
+		if(orderId > 0)
+		    creditOrderRepository.delete(creditOrderRepository.findOne(orderId));
         return "redirect:" + "/manage/order/list";
     }
 	

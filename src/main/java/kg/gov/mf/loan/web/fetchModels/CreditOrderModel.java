@@ -19,8 +19,8 @@ public class CreditOrderModel {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date regDate;
-    private String creditOrderState;
-    private String creditOrderType;
+    private long status;
+    private long type;
 
     public Long getId() {
         return id;
@@ -54,19 +54,19 @@ public class CreditOrderModel {
         this.regDate = regDate;
     }
 
-    public String getCreditOrderState() {
-        return creditOrderState;
+    public long getStatus() {
+        return status;
     }
 
-    public void setCreditOrderState(String creditOrderState) {
-        this.creditOrderState = creditOrderState;
+    public void setStatus(long status) {
+        this.status = status;
     }
 
-    public String getCreditOrderType() {
-        return creditOrderType;
+    public long getType() {
+        return type;
     }
 
-    public void setCreditOrderType(String creditOrderType) {
-        this.creditOrderType = creditOrderType;
+    public void setType(long type) {
+        this.type = type;
     }
 }

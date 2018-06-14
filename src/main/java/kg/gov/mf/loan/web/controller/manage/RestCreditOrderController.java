@@ -40,8 +40,8 @@ public class RestCreditOrderController {
     @PostMapping("/orders")
     public List<CreditOrderModel> getOrders() {
 
-        String baseQuery = "select co.id as id, co.regNumber as regNumber, co.regDate as regDate, co.description as description, st.name as creditOrderState, tp.name as creditOrderType " +
-                "from creditOrder co, creditOrderState st, creditOrderType tp where co.creditOrderStateId = st.id and co.creditOrderTypeId = tp.id";
+        String baseQuery = "select co.id, co.regNumber, co.regDate, co.description, co.creditOrderStateId as status, co.creditOrderTypeId as type " +
+                "from creditOrder co";
 
         Query query = entityManager.createNativeQuery(baseQuery, CreditOrderModel.class);
 
