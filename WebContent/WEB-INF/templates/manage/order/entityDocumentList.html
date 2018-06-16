@@ -56,6 +56,7 @@
                                 <div class="col-xl-8 order-2 order-xl-1">
                                     <div class="form-group m-form__group row align-items-center">
 
+                                        <!--
                                         <div class="col-md-4">
                                             <div class="m-form__group m-form__group--inline">
                                                 <div class="m-form__label">
@@ -69,24 +70,17 @@
                                             </div>
                                             <div class="d-md-none m--margin-bottom-10"></div>
                                         </div>
+                                        -->
 
                                         <div class="col-md-4">
-                                            <div class="m-form__group m-form__group--inline">
-                                                <div class="m-form__label">
-                                                    <label>
-                                                        Район:
-                                                    </label>
-                                                </div>
-                                                <div class="m-form__control">
-                                                    <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_district">
-                                                        <option value="">
-                                                            Все
-                                                        </option>
-                                                        <option th:each="district : ${districts}" th:value="${district.id}" th:text="${district.name}"></option>
-                                                    </select>
-                                                </div>
+                                            <div class="m-input-icon m-input-icon--left">
+                                                <input type="text" class="form-control m-input m-input--solid" placeholder="Владелец..." id="m_form_search">
+                                                <span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
                                             </div>
-                                            <div class="d-md-none m--margin-bottom-10"></div>
                                         </div>
 
                                         <div class="col-md-4">
@@ -118,18 +112,26 @@
                                             </div>
                                             <div class="d-md-none m--margin-bottom-10"></div>
                                         </div>
-                                        <!--
+
                                         <div class="col-md-4">
-                                            <div class="m-input-icon m-input-icon--left">
-                                                <input type="text" class="form-control m-input m-input--solid" placeholder="Search..." id="m_form_search">
-                                                <span class="m-input-icon__icon m-input-icon__icon--left">
-															<span>
-																<i class="la la-search"></i>
-															</span>
-														</span>
+                                            <div class="m-form__group m-form__group--inline">
+                                                <div class="m-form__label">
+                                                    <label>
+                                                        Район:
+                                                    </label>
+                                                </div>
+                                                <div class="m-form__control">
+                                                    <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_district">
+                                                        <option value="">
+                                                            Все
+                                                        </option>
+                                                        <option th:each="district : ${districts}" th:value="${district.id}" th:text="${district.name}"></option>
+                                                    </select>
+                                                </div>
                                             </div>
+                                            <div class="d-md-none m--margin-bottom-10"></div>
                                         </div>
-                                        -->
+
                                     </div>
                                 </div>
                                 <!--
@@ -240,6 +242,9 @@
                 }, {
                     field: "districtName",
                     title: "districtName"
+                }, {
+                    field: "ownerId",
+                    title: "ownerId"
                 }, */{
                     field: "docName",
                     title: "Наименование"
@@ -265,11 +270,9 @@
 
             var query = datatable.getDataSourceQuery();
 
-            /*
             $('#m_form_search').on('keyup', function (e) {
                 datatable.search($(this).val().toLowerCase());
             }).val(query.generalSearch);
-            */
 
             $('#owner_typeahead').on('typeahead:selected', function () {
                 var owner_text = document.getElementById("owner_typeahead").value;
@@ -279,11 +282,12 @@
 
             $('#owner_typeahead').on('click', function () {
                 if (!$("#owner_typeahead").val().length == 0)
+                {
                     $('#owner_typeahead').val('');
-                    datatable.search(owner_id, 'ownerId');
-
-
-            });
+                    $('.typeahead').typeahead('setQuery', '');
+                    //datatable.search(owner_id, '');
+                }
+            }).val(typeof query.districtId !== 'undefined' ? query.districtId : '');
 
             $('#m_form_status').on('change', function () {
                 datatable.search($(this).val(), 'statusId');
