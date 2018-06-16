@@ -187,8 +187,6 @@
                     selector: false,
                     overflow: 'visible',
                     template: function (row) {
-                        var dropup = (row.getDatatable().getPageSize() - row.getIndex()) <= 4 ? 'dropup' : '';
-
                         return '\
 						<a href="/manage/order/'+ row.id +'/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
 					';
@@ -262,7 +260,29 @@
 
                         return result;
                     }
-                }]
+                }],
+                translate: {
+                    records: {
+                        processing: 'Подождите пожалуйста...',
+                        noRecords: 'Записей не найдено'
+                    },
+                    toolbar: {
+                        pagination: {
+                            items: {
+                                default: {
+                                    first: 'First',
+                                    prev: 'Previous',
+                                    next: 'Next',
+                                    last: 'Last',
+                                    more: 'More pages',
+                                    input: 'Page number',
+                                    select: 'Select page size'
+                                },
+                                info: 'Отображение {{start}} - {{end}} из {{total}} записей'
+                            }
+                        }
+                    }
+                }
             });
 
             var query = datatable.getDataSourceQuery();

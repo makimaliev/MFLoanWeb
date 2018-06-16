@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
 	<title th:text="#{label.debtor.page.title}"></title>
@@ -24,35 +24,106 @@
 		<div th:replace="layout/sidebar"/>
 		<!-- END: Left Aside -->
 		<div class="m-grid__item m-grid__item--fluid m-wrapper">
+			<!-- BEGIN: Subheader -->
+			<div class="m-subheader ">
+				<div class="d-flex align-items-center">
+					<div class="mr-auto">
+						<h3 class="m-subheader__title m-subheader__title--separator">
+							Заемщики
+						</h3>
+						<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+							<li class="m-nav__item m-nav__item--home">
+								<a th:href="@{/}" class="m-nav__link m-nav__link--icon">
+									<i class="m-nav__link-icon la la-home"></i>
+								</a>
+							</li>
+							<li class="m-nav__separator">
+								-
+							</li>
+							<li class="m-nav__item">
+								<span class="m-nav__link-text">Список заемщиков</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- END: Subheader -->
 			<div class="m-content">
 				<!--begin::Portlet-->
 				<div class="m-portlet">
-					<div class="m-portlet__head">
-						<div class="m-portlet__head-caption">
-							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.debtor.debtors}"></h3>
+					<div class="m-portlet__body">
+						<!--begin: Search Form -->
+						<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+							<div class="row align-items-center">
+								<div class="col-xl-8 order-2 order-xl-1">
+									<div class="form-group m-form__group row align-items-center">
+										<div class="col-md-4">
+											<div class="m-input-icon m-input-icon--left">
+												<input type="text" class="form-control m-input m-input--solid" placeholder="Владелец..." id="m_form_search">
+												<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+											</div>
+										</div>
+
+										<div class="col-md-4">
+											<div class="m-form__group m-form__group--inline">
+												<div class="m-form__label">
+													<label>
+														Work sector:
+													</label>
+												</div>
+												<div class="m-form__control">
+													<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_sector">
+														<option value="">
+															Все
+														</option>
+														<option th:each="sector : ${sectors}" th:value="${sector.id}" th:text="${sector.name}"></option>
+													</select>
+												</div>
+											</div>
+											<div class="d-md-none m--margin-bottom-10"></div>
+										</div>
+
+										<div class="col-md-4">
+											<div class="m-form__group m-form__group--inline">
+												<div class="m-form__label">
+													<label>
+														Район:
+													</label>
+												</div>
+												<div class="m-form__control">
+													<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_district">
+														<option value="">
+															Все
+														</option>
+														<option th:each="district : ${districts}" th:value="${district.id}" th:text="${district.name}"></option>
+													</select>
+												</div>
+											</div>
+											<div class="d-md-none m--margin-bottom-10"></div>
+										</div>
+									</div>
+								</div>
+								<div class="col-xl-4 order-1 order-xl-2 m--align-right">
+									<a th:href="@{/manage/debtor/0/save}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span>
+													<i class="la la-plus"></i>
+													<span>
+														Добавить нового заемщика
+													</span>
+												</span>
+									</a>
+									<div class="m-separator m-separator--dashed d-xl-none"></div>
+								</div>
 							</div>
 						</div>
-						<div class="m-portlet__head-tools">
-							<ul class="m-portlet__nav">
-								<li class="m-portlet__nav-item">
-									<a th:href="@{/manage/debtor/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.debtor.addDebtor}"></a>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<div class="m-portlet__body">
-						<table class="table" id="debtorsTable">
-							<thead class="thead-default">
-							<tr>
-								<th>Id</th>
-								<th>Name</th>
-								<th>Work Sector</th>
-								<th>District</th>
-								<th>&nbsp;</th>
-							</tr>
-							</thead>
-						</table>
+						<!--end: Search Form -->
+						<!--begin: Datatable -->
+						<div class="m_datatable" id="ajax_data"></div>
+						<!--end: Datatable -->
 					</div>
 				</div>
 				<!--end::Portlet-->
@@ -67,11 +138,6 @@
 <!-- end:: Page -->
 
 <div th:replace="fragments/footer :: footer-js"/>
-<script th:src="@{/assets/global/scripts/datatable.js}" type="text/javascript"></script>
-<script th:src="@{/assets/global/plugins/datatables/datatables.min.js}" type="text/javascript"></script>
-<script th:src="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js}" type="text/javascript"></script>
-<script th:src="@{/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"></script>
-<script th:src="@{/assets/pages/scripts/table-datatables-ajax.min.js}" type="text/javascript"></script>
 
 <script>
 	$('.m-portlet__head-tools .m-input-icon__icon').click(function(e){
@@ -80,17 +146,147 @@
 </script>
 
 <script type="text/javascript">
-    $(function() {
-        $("#debtorsTable").DataTable({
-			"processing":true,
-            "serverSide": true,
-            "processing": "Обработка ...",
-            "ajax": {
-                "url": "/api/debtors",
-                "type": "POST"
-            }
-        });
+    //== Class definition
 
+    var DatatableRemoteAjaxDemo = function () {
+        //== Private functions
+
+        // basic demo
+        var demo = function () {
+
+            var datatable = $('.m_datatable').mDatatable({
+                // datasource definition
+                data: {
+                    type: 'remote',
+                    source: {
+                        read: {
+                            url: '/api/debtors/'
+                        }
+                    },
+                    pageSize: 10,
+                    saveState: {
+                        cookie: false,
+                        webstorage: false
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+
+                // layout definition
+                layout: {
+                    theme: 'default', // datatable theme
+                    class: '', // custom wrapper class
+                    scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+                    footer: false // display/hide footer
+                },
+
+                // column sorting
+                sortable: true,
+
+                // column based filtering
+                filterable: false,
+
+                pagination: true,
+
+                // columns definition
+                columns: [{
+                    field: "View",
+                    width: 80,
+                    textAlign: 'center',
+                    title: "Просмотр",
+                    sortable: false,
+                    selector: false,
+                    overflow: 'visible',
+                    template: function (row) {
+                        return '\
+						<a href="/manage/debtor/'+ row.id +'/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
+					';
+                    }
+                },  {
+                    field: "id",
+                    title: "#",
+                    sortable: 'asc',
+                    width: 50,
+                    textAlign: 'center'
+                }, /*{
+                    field: "ownerName",
+                    title: "ownerName"
+                }, {
+                    field: "districtName",
+                    title: "districtName"
+                }, {
+                    field: "ownerId",
+                    title: "ownerId"
+                }, */{
+                    field: "debtorName",
+                    title: "Наименование"
+                }, {
+                    field: "workSectorName",
+                    title: "Work Sector",
+                    responsive: {visible: 'lg'}
+                }, {
+                    field: "ownerName",
+                    title: "Owner Name"
+                }],
+                translate: {
+                    records: {
+                        processing: 'Подождите пожалуйста...',
+                        noRecords: 'Записей не найдено'
+                    },
+                    toolbar: {
+                        pagination: {
+                            items: {
+                                default: {
+                                    first: 'Первая страница',
+                                    prev: 'Предыдущая страница',
+                                    next: 'Следующая страница',
+                                    last: 'Последняя страница',
+                                    more: 'Другие страницы',
+                                    input: 'Номер страницы',
+                                    select: 'Выбрать размер страницы'
+                                },
+                                info: 'Отображение {{start}} - {{end}} из {{total}} записей'
+                            }
+                        }
+                    }
+                }
+            });
+
+            var query = datatable.getDataSourceQuery();
+
+            $('#m_form_search').on('keyup', function (e) {
+                // shortcode to datatable.getDataSourceParam('query');
+                var query = datatable.getDataSourceQuery();
+                query.generalSearch = $(this).val().toLowerCase();
+                // shortcode to datatable.setDataSourceParam('query', query);
+                datatable.setDataSourceQuery(query);
+                datatable.load();
+            }).val(query.generalSearch);
+
+            $('#m_form_sector').on('change', function () {
+                datatable.search($(this).val(), 'workSectorId');
+            }).val(typeof query.workSectorId !== 'undefined' ? query.workSectorId : '');
+
+            $('#m_form_district').on('change', function () {
+                datatable.search($(this).val(), 'districtId');
+            }).val(typeof query.districtId !== 'undefined' ? query.districtId : '');
+
+
+            $('#m_form_sector, #m_form_district').selectpicker();
+
+        };
+
+        return {
+            // public functions
+            init: function () {
+                demo();
+            }
+        };
+    }();
+
+    jQuery(document).ready(function () {
+        DatatableRemoteAjaxDemo.init();
     });
 </script>
 

@@ -1,12 +1,13 @@
-package kg.gov.mf.loan.web.util;
+package kg.gov.mf.loan.web.fetchModels;
+
+import kg.gov.mf.loan.web.util.Meta;
 
 import java.util.List;
 
-public class Datatable<E> {
+public class DebtorMetaModel {
 
     private Meta meta;
-
-    List<E> data;
+    private List<DebtorModel> data;
 
     public Meta getMeta() {
         return meta;
@@ -16,11 +17,11 @@ public class Datatable<E> {
         this.meta = meta;
     }
 
-    public List<E> getData() {
+    public List<DebtorModel> getData() {
         return data;
     }
 
-    public void setData(List<E> data) {
+    public void setData(List<DebtorModel> data) {
         this.data = data;
     }
 }

@@ -1,5 +1,6 @@
 package kg.gov.mf.loan.web.controller.manage;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.model.debtor.OwnerType;
@@ -9,23 +10,24 @@ import kg.gov.mf.loan.manage.repository.debtor.DebtorRepository;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.web.exception.ResourceNotFoundExcption;
-import kg.gov.mf.loan.web.util.Datatable;
-import kg.gov.mf.loan.web.util.DebtorV;
+import kg.gov.mf.loan.web.fetchModels.DebtorMetaModel;
+import kg.gov.mf.loan.web.fetchModels.DebtorModel;
 import kg.gov.mf.loan.web.util.Meta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -40,6 +42,10 @@ public class RestDebtorController {
 
 	@Autowired
 	LoanRepository loanRepository;
+
+	/** The entity manager. */
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@GetMapping("/owners")
 	public Page<Owner> getAllOwners(Pageable pageable) {
@@ -115,33 +121,85 @@ public class RestDebtorController {
 	}
 
 	@PostMapping("/debtors")
-	public DataResponse getAllDebtors(@RequestParam("draw") int draw,
-									  @RequestParam("start") int start,
-									  @RequestParam("length") int length) {
+	public DebtorMetaModel getAllDebtors(@RequestParam Map<String, String> datatable) {
 
-		long count = debtorRepository.count();
-		Pageable pageable = new PageRequest(start/length, length);
-		DataResponse<Object> dr = new DataResponse<>();
-		List<List<Object>> data = new ArrayList<>();
-		List<Debtor> debtors = debtorRepository.findAll(pageable).getContent();
-		for (Debtor debtor: debtors
-			 ) {
-			List<Object> vals = new ArrayList<>();
-			vals.add(debtor.getId());
-			vals.add(debtor.getName());
-			vals.add(debtor.getWorkSector().getName());
-			vals.add(debtor.getOwner().getAddress().getDistrict().getName());
-			vals.add("<a href=\"/manage/debtor/"+ debtor.getId() + "/view\" class=\"btn btn-sm btn-outline grey-salsa\"><i class=\"fa fa-search\"></i> View</a>'");
-			data.add(vals);
-		}
+	    String pageStr = datatable.get("datatable[pagination][page]");
+	    String perPageStr = datatable.get("datatable[pagination][perpage]");
+        String sortStr = datatable.get("datatable[sort][sort]");
+        String sortField = datatable.get("datatable[sort][field]");
 
-		dr.setData(data);
-		dr.setRecordsFiltered(count);
-		dr.setRecordsTotal(count);
-		dr.setDraw(draw);
+        boolean searchBySector = datatable.containsKey("datatable[query][workSectorId]");
+        boolean searchByDistrict = datatable.containsKey("datatable[query][districtId]");
+        boolean searchByOwner = datatable.containsKey("datatable[query][generalSearch]");
 
-		return dr;
+        String workSectorStr = searchBySector?datatable.get("datatable[query][workSectorId]"):null;
+        String districtStr = searchByDistrict?datatable.get("datatable[query][districtId]"):null;
+        String ownerStr = searchByOwner?datatable.get("datatable[query][generalSearch]"):null;
+
+        Integer page = Integer.parseInt(pageStr);
+        Integer perPage = Integer.parseInt(perPageStr);
+        Integer offset = (page-1)*perPage;
+
+		String baseQuery = "SELECT debtor.id as id, debtor.name as debtorName,\n" +
+				"debtor.workSectorId, ws.name as workSectorName, debtor.ownerId, owner.name as ownerName,\n" +
+				"address.district_id as districtId, district.name as districtName\n" +
+				"FROM debtor debtor, workSector ws,\n" +
+				"  owner owner, address address,\n" +
+				"  district district\n" +
+				"WHERE ws.id = debtor.workSectorId\n" +
+				"AND owner.id = debtor.ownerId\n" +
+				"AND owner.addressId = address.id\n" +
+				"AND address.district_id = district.id " +
+                getWorkSectorQuery(searchBySector, workSectorStr) +
+                getDistrictQuery(searchByDistrict, districtStr) +
+                getOwnerQuery(searchByOwner, ownerStr) +
+                "order by " + sortField + " " + sortStr + " LIMIT " + offset +"," + perPage;
+
+		Query query = entityManager.createNativeQuery(baseQuery, DebtorModel.class);
+
+		List<DebtorModel> debtors = query.getResultList();
+
+		String countQuery = "SELECT count(1)\n" +
+                "FROM debtor debtor, workSector ws,\n" +
+                "  owner owner, address address,\n" +
+                "  district district\n" +
+                "WHERE ws.id = debtor.workSectorId\n" +
+                "AND owner.id = debtor.ownerId\n" +
+                "AND owner.addressId = address.id\n" +
+                "AND address.district_id = district.id " +
+                getWorkSectorQuery(searchBySector, workSectorStr) +
+                getDistrictQuery(searchByDistrict, districtStr) +
+                getOwnerQuery(searchByOwner, ownerStr);
+
+		BigInteger count = (BigInteger)entityManager.createNativeQuery(countQuery).getResultList().get(0);
+
+        DebtorMetaModel metaModel = new DebtorMetaModel();
+        Meta meta = new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, sortStr, sortField);
+        metaModel.setMeta(meta);
+        metaModel.setData(debtors);
+        return metaModel;
 	}
+
+	private String getWorkSectorQuery(boolean searchBySector, String workSectorStr){
+	    if(searchBySector)
+	        return "AND debtor.workSectorId = " + workSectorStr + " \n";
+	    else
+	        return "";
+    }
+
+    private String getDistrictQuery(boolean searchByDistrict, String districtStr){
+        if(searchByDistrict)
+            return "AND address.district_id = " + districtStr + " \n";
+        else
+            return "";
+    }
+
+    private String getOwnerQuery(boolean searchByOwner, String ownerStr){
+        if(searchByOwner)
+            return "AND debtor.name like '%" + ownerStr + "%' \n";
+        else
+            return "";
+    }
 
 	/*
 	@PostMapping("/debtors")

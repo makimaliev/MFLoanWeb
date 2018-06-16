@@ -1,15 +1,17 @@
 package kg.gov.mf.loan.web.util;
 
+import java.math.BigInteger;
+
 public class Meta {
 
-    private int page;
-    private int pages;
-    private int perpage;
-    private int total;
+    private Integer page;
+    private BigInteger pages;
+    private Integer perpage;
+    private BigInteger total;
     private String sort;
     private String field;
 
-    public Meta(int page, int pages, int perpage, int total, String sort, String field) {
+    public Meta(Integer page, BigInteger pages, Integer perpage, BigInteger total, String sort, String field) {
         this.page = page;
         this.pages = pages;
         this.perpage = perpage;
@@ -18,35 +20,35 @@ public class Meta {
         this.field = field;
     }
 
-    public int getPage() {
+    public Integer getPage() {
         return page;
     }
 
-    public void setPage(int page) {
+    public void setPage(Integer page) {
         this.page = page;
     }
 
-    public int getPages() {
+    public BigInteger getPages() {
         return pages;
     }
 
-    public void setPages(int pages) {
+    public void setPages(BigInteger pages) {
         this.pages = pages;
     }
 
-    public int getPerpage() {
+    public Integer getPerpage() {
         return perpage;
     }
 
-    public void setPerpage(int perpage) {
+    public void setPerpage(Integer perpage) {
         this.perpage = perpage;
     }
 
-    public int getTotal() {
+    public BigInteger getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(BigInteger total) {
         this.total = total;
     }
 

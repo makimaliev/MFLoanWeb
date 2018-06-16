@@ -265,7 +265,29 @@
                         template: function (row) {
                             return row.progress + '%';
                         }
-                    }]
+                    }],
+                translate: {
+                    records: {
+                        processing: 'Подождите пожалуйста...',
+                        noRecords: 'Записей не найдено'
+                    },
+                    toolbar: {
+                        pagination: {
+                            items: {
+                                default: {
+                                    first: 'First',
+                                    prev: 'Previous',
+                                    next: 'Next',
+                                    last: 'Last',
+                                    more: 'More pages',
+                                    input: 'Page number',
+                                    select: 'Select page size'
+                                },
+                                info: 'Отображение {{start}} - {{end}} из {{total}} записей'
+                            }
+                        }
+                    }
+                }
             });
 
             var query = datatable.getDataSourceQuery();

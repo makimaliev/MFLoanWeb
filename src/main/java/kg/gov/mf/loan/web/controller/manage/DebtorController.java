@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import kg.gov.mf.loan.admin.org.service.DistrictService;
 import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
 import kg.gov.mf.loan.manage.model.collection.CollectionProcedure;
@@ -94,6 +95,12 @@ public class DebtorController {
     @Autowired
     JobItemService jobItemService;
 
+	@Autowired
+	DistrictService districtService;
+
+	@Autowired
+	WorkSectorService workSectorService;
+
 	private static final int BUTTONS_TO_SHOW = 5;
 	private static final int INITIAL_PAGE = 0;
 	private static final int INITIAL_PAGE_SIZE = 10;
@@ -141,26 +148,14 @@ public class DebtorController {
 	}
 
 	@RequestMapping(value = { "/manage/debtor/", "/manage/debtor/list" }, method = RequestMethod.GET)
-	public String listDebtors(@RequestParam("pageSize") Optional<Integer> pageSize, @RequestParam("page") Optional<Integer> page, ModelMap model) {
+	public String listDebtors(ModelMap model) {
 
-		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
-		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
 
-		List<Debtor> debtors = debtorService.listByParam("id", evalPage*evalPageSize, evalPageSize);
-		int count = debtorService.count();
-
-		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
-
-		model.addAttribute("debtor", new Debtor());
-		model.addAttribute("count", count/evalPageSize+1);
-		model.addAttribute("debtors", debtors);
-		model.addAttribute("selectedPageSize", evalPageSize);
-		model.addAttribute("pageSizes", PAGE_SIZES);
-		model.addAttribute("pager", pager);
-		model.addAttribute("current", evalPage);
+		model.addAttribute("districts", districtService.findAll());
+		model.addAttribute("sectors", workSectorService.list());
 
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
-		return "/manage/debtor/list";
+		return "/manage/debtor/list2";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/manage/debtor/search")
