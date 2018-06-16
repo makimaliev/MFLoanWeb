@@ -55,58 +55,70 @@
                             <div class="row align-items-center">
                                 <div class="col-xl-8 order-2 order-xl-1">
                                     <div class="form-group m-form__group row align-items-center">
+
+                                        <div class="col-md-4">
+                                            <div class="m-form__group m-form__group--inline">
+                                                <div class="m-form__label">
+                                                    <label class="m-label m-label--single">
+                                                        Owner:
+                                                    </label>
+                                                </div>
+                                                <div class="m-typeahead">
+                                                    <input class="form-control m-input" id="owner_typeahead" type="text" placeholder="Owners">
+                                                </div>
+                                            </div>
+                                            <div class="d-md-none m--margin-bottom-10"></div>
+                                        </div>
+
                                         <div class="col-md-4">
                                             <div class="m-form__group m-form__group--inline">
                                                 <div class="m-form__label">
                                                     <label>
-                                                        Status:
+                                                        Район:
+                                                    </label>
+                                                </div>
+                                                <div class="m-form__control">
+                                                    <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_district">
+                                                        <option value="">
+                                                            Все
+                                                        </option>
+                                                        <option th:each="district : ${districts}" th:value="${district.id}" th:text="${district.name}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="d-md-none m--margin-bottom-10"></div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="m-form__group m-form__group--inline">
+                                                <div class="m-form__label">
+                                                    <label>
+                                                        Статус:
                                                     </label>
                                                 </div>
                                                 <div class="m-form__control">
                                                     <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_status">
                                                         <option value="">
-                                                            All
+                                                            Все
                                                         </option>
                                                         <option value="1">
-                                                            Pending
-                                                        </option>
-                                                        <option value="2">
-                                                            Delivered
+                                                            На стадии коплектации
                                                         </option>
                                                         <option value="3">
-                                                            Canceled
+                                                            На стадии проверки
+                                                        </option>
+                                                        <option value="5">
+                                                            На стадии регистрации
+                                                        </option>
+                                                        <option value="6">
+                                                            Регистрация завершена
                                                         </option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="d-md-none m--margin-bottom-10"></div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="m-form__group m-form__group--inline">
-                                                <div class="m-form__label">
-                                                    <label class="m-label m-label--single">
-                                                        Type:
-                                                    </label>
-                                                </div>
-                                                <div class="m-form__control">
-                                                    <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_type">
-                                                        <option value="">
-                                                            All
-                                                        </option>
-                                                        <option value="1">
-                                                            Online
-                                                        </option>
-                                                        <option value="2">
-                                                            Retail
-                                                        </option>
-                                                        <option value="3">
-                                                            Direct
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="d-md-none m--margin-bottom-10"></div>
-                                        </div>
+                                        <!--
                                         <div class="col-md-4">
                                             <div class="m-input-icon m-input-icon--left">
                                                 <input type="text" class="form-control m-input m-input--solid" placeholder="Search..." id="m_form_search">
@@ -117,6 +129,7 @@
 														</span>
                                             </div>
                                         </div>
+                                        -->
                                     </div>
                                 </div>
                                 <!--
@@ -177,8 +190,8 @@
                     source: '/api/entityDocuments',
                     pageSize: 10,
                     saveState: {
-                        cookie: true,
-                        webstorage: true
+                        cookie: false,
+                        webstorage: false
                     }
                 },
 
@@ -221,7 +234,13 @@
                     sortable: 'asc',
                     width: 50,
                     textAlign: 'center'
+                }, /*{
+                    field: "ownerName",
+                    title: "ownerName"
                 }, {
+                    field: "districtName",
+                    title: "districtName"
+                }, */{
                     field: "docName",
                     title: "Наименование"
                 }, {
@@ -232,45 +251,50 @@
                     field: "typeName",
                     title: "Вид"
                 }, {
-                    field: "stateName",
+                    field: "statusName",
                     title: "Статус"
-                }, {
-                    field: "",
-                    width: 60,
-                    title: "",
-                    sortable: false,
-                    selector: false,
-                    overflow: 'visible',
-                    template: function (row) {
-                        var dropup = (row.getDatatable().getPageSize() - row.getIndex()) <= 4 ? 'dropup' : '';
-
-                        return '\
-						<a href="/manage/order/'+ row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="label.table.edit">\
-							<i class="la la-edit"></i>\
-						</a>\
-						<a href="/manage/order/'+ row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="label.table.delete">\
-							<i class="la la-trash"></i>\
-						</a>\
-					';
-                    }
-                }]
+                },
+                    {
+                        field: "progress",
+                        title: "Прогресс",
+                        template: function (row) {
+                            return row.progress + '%';
+                        }
+                    }]
             });
 
             var query = datatable.getDataSourceQuery();
 
+            /*
             $('#m_form_search').on('keyup', function (e) {
                 datatable.search($(this).val().toLowerCase());
             }).val(query.generalSearch);
+            */
+
+            $('#owner_typeahead').on('typeahead:selected', function () {
+                var owner_text = document.getElementById("owner_typeahead").value;
+                var owner_id = owner_text.match(/[^[\]]+(?=])/g);
+                datatable.search(owner_id, 'ownerId');
+            }).val(typeof query.ownerId !== 'undefined' ? query.ownerId : '');
+
+            $('#owner_typeahead').on('click', function () {
+                if (!$("#owner_typeahead").val().length == 0)
+                    $('#owner_typeahead').val('');
+                    datatable.search(owner_id, 'ownerId');
+
+
+            });
 
             $('#m_form_status').on('change', function () {
-                datatable.search($(this).val(), 'Status');
-            }).val(typeof query.Status !== 'undefined' ? query.Status : '');
+                datatable.search($(this).val(), 'statusId');
+            }).val(typeof query.statusId !== 'undefined' ? query.statusId : '');
 
-            $('#m_form_type').on('change', function () {
-                datatable.search($(this).val(), 'Type');
-            }).val(typeof query.Type !== 'undefined' ? query.Type : '');
+            $('#m_form_district').on('change', function () {
+                datatable.search($(this).val(), 'districtId');
+            }).val(typeof query.districtId !== 'undefined' ? query.districtId : '');
 
-            $('#m_form_status, #m_form_type').selectpicker();
+
+            $('#m_form_status, #m_form_district').selectpicker();
 
         };
 

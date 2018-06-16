@@ -11,7 +11,13 @@ public class EntityDocumentModel {
     private String docName;
     private String packageName;
     private String typeName;
-    private String stateName;
+    private String ownerName;
+    private long ownerId;
+    private long districtId;
+    private String districtName;
+    private long statusId;
+    private String statusName;
+    private int progress;
     private long packageId;
     private long entityId;
     private long entityListId;
@@ -49,12 +55,36 @@ public class EntityDocumentModel {
         this.typeName = typeName;
     }
 
-    public String getStateName() {
-        return stateName;
+    public long getOwnerId() {
+        return ownerId;
     }
 
-    public void setStateName(String stateName) {
-        this.stateName = stateName;
+    public void setOwnerId(long ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public long getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(long statusId) {
+        this.statusId = statusId;
+    }
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
     }
 
     public long getPackageId() {
@@ -87,5 +117,29 @@ public class EntityDocumentModel {
 
     public void setOrderId(long orderId) {
         this.orderId = orderId;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
+    }
+
+    public long getDistrictId() {
+        return districtId;
+    }
+
+    public void setDistrictId(long districtId) {
+        this.districtId = districtId;
+    }
+
+    public String getDistrictName() {
+        return districtName;
+    }
+
+    public void setDistrictName(String districtName) {
+        this.districtName = districtName;
     }
 }

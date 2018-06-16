@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import kg.gov.mf.loan.admin.org.service.DistrictService;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.orderdocument.OrderDocumentType;
@@ -66,6 +67,9 @@ public class EntityDocumentController {
 	@Autowired
 	AppliedEntityService entityService;
 
+	@Autowired
+	DistrictService districtService;
+
 	private static final int BUTTONS_TO_SHOW = 5;
 	private static final int INITIAL_PAGE = 0;
 	private static final int INITIAL_PAGE_SIZE = 10;
@@ -79,24 +83,9 @@ public class EntityDocumentController {
 	}
 
 	@RequestMapping(value = {"/manage/order/entitydocument/list" }, method = RequestMethod.GET)
-	public String listEntityDocuments(@RequestParam("pageSize") Optional<Integer> pageSize,
-									   @RequestParam("page") Optional<Integer> page, ModelMap model) {
+	public String listEntityDocuments(ModelMap model) {
 
-		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
-		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
-
-		List<EntityDocument> documents = edService.listByParam("id", evalPage*evalPageSize, evalPageSize);
-		int count = edService.count();
-
-		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
-
-		model.addAttribute("count", count/evalPageSize+1);
-		model.addAttribute("documents", documents);
-		model.addAttribute("selectedPageSize", evalPageSize);
-		model.addAttribute("pageSizes", PAGE_SIZES);
-		model.addAttribute("pager", pager);
-		model.addAttribute("current", evalPage);
-
+		model.addAttribute("districts", districtService.findAll());
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
 		return "/manage/order/entityDocumentList";
 	}
