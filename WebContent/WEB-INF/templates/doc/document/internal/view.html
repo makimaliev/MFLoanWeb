@@ -1,10 +1,10 @@
-<!-- internal.html-->
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
     <title>MFLoan | Docflow</title>
     <div th:replace="fragments/header :: header-css"/>
+
 </head>
 <!-- end::Head -->
 
@@ -23,11 +23,11 @@
         <div class="m-grid__item m-grid__item--fluid m-wrapper">
             <div class="m-content">
                 <div class="m-portlet m-portlet--full-height">
-                    <form th:action="@{/doc/save}" id="document_form" class="m-form m-form--fit m-form--label-align-right" th:object="${document}" method="POST" enctype="multipart/form-data">
+                    <form th:object="${document}" class="m-form m-form--fit m-form--label-align-right">
                         <div class="m-portlet__head">
                             <div class="m-portlet__head-caption">
                                 <div class="m-portlet__head-title">
-                                    <h3 class="m-portlet__head-text">Детали документа</h3>
+                                    <h3 class="m-portlet__head-text" th:text="*{'Детали документа №' + id}"></h3>
                                 </div>
                             </div>
                             <div class="m-portlet__head-tools">
@@ -44,12 +44,12 @@
                             </div>
                         </div>
                         <div class="m-portlet__body">
-                            <div class="m-scrollable m-scrollable-no-margin" data-scrollbar-shown="true"  data-axis="y"  data-height="200">
+                            <div class="m-scrollable m-scrollable-no-margin">
                                 <!--begin::Form-->
                                 <div class="row">
                                     <div class="col-7">
                                         <!-- Sender Registered Number -->
-                                        <div class="m-form__group row" th:if="*{documentState.ordinal() > 2}">
+                                        <div class="m-form__group row" th:if="*{senderRegisteredNumber}">
                                             <label class="form-label col-3">
                                                 <span> № Регистрации : </span>
                                             </label>
@@ -58,12 +58,12 @@
                                             </div>
                                         </div>
                                         <!-- Sender Registered Date -->
-                                        <div class="m-form__group row" th:if="*{documentState.ordinal() > 2}">
+                                        <div class="m-form__group row" th:if="*{senderRegisteredDate}">
                                             <label class="form-label col-3">
                                                 <span> Дата регистрации : </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <label class="form-control" th:text="*{senderRegisteredDate}"> Description </label>
+                                                <label class="form-control" th:text="*{#dates.format(senderRegisteredDate, 'dd-MM-yyyy HH:mm')}"> Description </label>
                                             </div>
                                         </div>
                                         <!-- Sender Responsible -->
@@ -72,7 +72,7 @@
                                                 <span> ОТ :  </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <label class="form-control" th:each="s : *{senderResponsible.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+                                                <label class="form-control" th:each="s : *{senderResponsible?.staff}" th:text="${s.name}"> Staff </label>
                                             </div>
                                         </div>
                                         <!-- Receiver Responsible -->
@@ -81,8 +81,8 @@
                                                 <span> Кому : </span>
                                             </label>
                                             <div class="col-9">
-                                                <label class="form-control"  th:each="s : *{receiverResponsible.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
-                                                <label class="form-control"  th:each="s : *{receiverResponsible.departments}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+                                                <label class="form-control" th:each="s : *{receiverResponsible?.staff}" th:text="${s.name}"> Staff </label>
+                                                <label class="form-control" th:each="s : *{receiverResponsible?.departments}" th:text="${s.name}"> Staff </label>
                                             </div>
                                         </div>
                                         <!-- TITLE -->
@@ -91,7 +91,7 @@
                                                 <span> Относительно : </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <label class="form-control" th:text="*{title}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+                                                <label class="form-control" th:text="*{title}"> Title </label>
                                             </div>
                                         </div>
                                         <!-- DESCRIPTION -->
@@ -100,16 +100,21 @@
                                                 <span> Описание : </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <label class="form-control" style="white-space: pre-wrap" th:text="*{description}" th:if="*{documentState.ordinal() > 1}"> Description </label>
+                                                <label class="form-control" style="white-space: pre-wrap" th:utext="*{description}"> Description </label>
                                             </div>
                                         </div>
                                         <!-- Sender Attachment -->
-                                        <div class="m-form__group row" th:hidden="*{documentState.ordinal() > 1 and senderAttachment == null}">
+                                        <div class="m-form__group row">
                                             <label class="form-label col-3">
-                                                <span> Прикрепление : </span>
+                                                <span> Приложения : </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <a class="form-control" th:each="attachment : *{senderAttachment}" th:href="@{/doc/download/__${attachment.id}__}" th:text="${attachment.name}" th:if="*{documentState.ordinal() > 1}"> Title </a>
+                                                <table class="form-control">
+                                                    <tr th:if="*{#lists.isEmpty(senderAttachment)}"><td><label>Нет приложений</label></td></tr>
+                                                    <tr th:if="*{not #lists.isEmpty(senderAttachment)}" th:each="attachment : *{senderAttachment}">
+                                                        <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
+                                                    </tr>
+                                                </table>
                                             </div>
                                         </div>
                                         <!-- Sender Due Date -->
@@ -118,7 +123,7 @@
                                                 <span> Срок : </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <label class="form-control" th:text="*{senderDueDate} != null ? *{senderDueDate} : 'Срок не установлен'" th:if="*{documentState.ordinal() > 1}"> Title </label>
+                                                <label class="form-control" th:text="*{senderDueDate} != null ? *{#dates.format(senderDueDate, 'dd-MM-yyyy HH:mm')} : 'Срок не установлен'"> Title </label>
                                             </div>
                                         </div>
                                         <br th:if="*{documentState.ordinal() > 1}">
@@ -137,7 +142,7 @@
                                                 <span> Дата регистрации : </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <label class="form-control" th:text="*{receiverRegisteredDate}"> Description </label>
+                                                <label class="form-control" th:text="*{#dates.format(receiverRegisteredDate, 'dd-MM-yyyy HH:mm')}"> Description </label>
                                             </div>
                                         </div>
                                         <!-- Receiver Executor -->
@@ -146,16 +151,21 @@
                                                 <span> Испонитель : </span>
                                             </label>
                                             <div class="col-9">
-                                                <label class="form-control"  th:each="s : *{receiverExecutor.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+                                                <label class="form-control"  th:each="s : *{receiverExecutor.staff}" th:text="${s.name}"> Staff </label>
                                             </div>
                                         </div>
                                         <!-- Receiver Attachment -->
                                         <div class="m-form__group row" th:hidden="*{documentState.ordinal() < 5}">
                                             <label class="form-label col-3">
-                                                <span> Прикрепление : </span>
+                                                <span> Приложения : </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <a class="form-control" th:each="attachment : *{receiverAttachment}" th:href="@{/doc/download/__${attachment.id}__}" th:text="${attachment.name}" th:if="*{documentState.ordinal() > 1}"> Title </a>
+                                                <table class="form-control">
+                                                    <tr th:if="*{#lists.isEmpty(receiverAttachment)}"><td><label>Нет приложений</label></td></tr>
+                                                    <tr th:if="*{not #lists.isEmpty(receiverAttachment)}" th:each="attachment : *{receiverAttachment}">
+                                                        <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
+                                                    </tr>
+                                                </table>
                                             </div>
                                         </div>
                                         <!-- Receiver Due Date -->
@@ -164,35 +174,21 @@
                                                 <span> Срок : </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <label class="form-control" th:text="*{receiverDueDate} != null ? *{receiverDueDate} : 'Срок не установлен'" th:if="*{documentState.ordinal() > 6}"> Title </label>
+                                                <label class="form-control" th:text="*{receiverDueDate} != null ? *{#dates.format(receiverDueDate, 'dd-MM-yyyy HH:mm')} : 'Срок не установлен'"> Title </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-5">
                                         <div class="m-form__group">
-                                            <label class="form-label">
-                                                <span> Состояние </span>
-                                            </label>
-                                            <ol>
-                                                <li th:each="dd : *{senderDispatchData}"><label th:text="${dd.dispatchType?.name} + ' в ' + ${dd.dispatchInitTime}"></label>
-                                                <li th:each="dd : *{receiverDispatchData}"><label th:text="${dd.dispatchType?.name} + ' в ' + ${dd.dispatchInitTime}"></label>
-                                            </ol>
+                                            <th:block th:replace="doc/document/layout::statusData"/>
                                         </div>
                                     </div>
                                 </div>
                                 <!--end::Form-->
                             </div>
                         </div>
-                        <div class="m-portlet__foot m-portlet__foot--fit">
-                            <div class="m-form__actions m-form__actions">
-                                <div class="row">
-                                    <div class="col-1">
-                                    </div>
-                                    <div class="col-11">
-                                        <button type="button" class="btn btn-primary" onclick="window.history.back()"> Назад </button>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="m-portlet__foot">
+                            <button type="button" class="btn btn-primary" onclick="window.history.back()"> Назад </button>
                         </div>
                     </form>
                 </div>
@@ -208,5 +204,7 @@
     <i class="la la-arrow-up"></i>
 </div>
 <div th:replace="fragments/footer :: footer-js"/>
+
+<!--begin::Page Resources -->
 </body>
 </html>

@@ -11,6 +11,9 @@
 <!-- end::Body -->
 <body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
 <!-- begin:: Page -->
+
+
+
 <div class="m-grid m-grid--hor m-grid--root m-page">
     <!-- BEGIN: Header -->
     <div th:replace="layout/header"/>
@@ -43,106 +46,65 @@
                         </div>
                     </div>
                     <div class="m-portlet__body">
-                        <div class="m-scrollable m-scrollable-no-margin" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
-                            <div>
-                                <table class="table" id="documentTable">
-                                    <thead class="thead-default">
-                                    <tr>
-                                        <th>№</th>
-                                        <th th:text="#{label.document.title}">Заголовок</th>
-                                        <th th:text="#{label.document.description}">Описание</th>
-                                        <th th:text="#{label.document.documentType}" th:if="${type == 'archived'}">Вид документа</th>
-                                        <th th:text="#{label.document.documentSubType}">Тип документа</th>
-                                        <th th:text="#{label.document.generalStatus}">Состояние</th>
-                                        <th th:text="#{label.document.sender}">Отправитель</th>
-                                        <th th:text="#{label.document.receiver}">Получатель</th>
-                                        <th></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="document : ${documents}">
-                                        <td th:text="${document.id}"></td>
-                                        <td th:text="${document.title}"></td>
-                                        <td th:text="${document.description}"></td>
-                                        <td th:text="${document.documentType.name}" th:if="${type == 'archived'}"></td>
-                                        <td th:text="${document.documentSubType.name}"></td>
-                                        <td th:text="${document.generalStatus?.name}"></td>
-                                        <td th:text="${responsible[__${document.getSenderResponsible()?.responsibleType}__ ?: 0]}">None</td>
-                                        <td th:text="${responsible[__${document.getReceiverResponsible()?.responsibleType}__ ?: 0]}">None</td>
-                                        <td class="table-actions text-right">
-                                            <span>
-                                                <div class="dropdown">
-                                                    <a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown"><i class="la la-ellipsis-h"></i></a>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <a class="dropdown-item"  th:href="@{/doc/view/__${document.id}__}">
-                                                            <span th:text="#{label.view}"></span>
-                                                        </a>
-                                                        <a class="dropdown-item"  th:href="@{/doc/edit/__${document.id}__}" th:if="${document.documentState.ordinal() < 2}">
-                                                            <span th:text="#{label.edit}"></span>
-                                                        </a>
-                                                        <a class="dropdown-item"  th:href="@{/doc/delete/__${document.id}__}" th:if="${document.documentState.ordinal() < 2}">
-                                                            <span th:text="#{label.delete}"></span>
-                                                        </a>
-                                                    </div>
+                        <div >
+                            <div >
+
+                            </div>
+                            <table class="table" id="documentTable">
+                                <thead class="thead-default">
+                                <tr>
+                                    <th>№</th>
+                                    <th th:text="#{label.document.title}">Заголовок</th>
+                                    <th th:text="#{label.document.documentType}" th:if="${type == 'archived'}">Вид документа</th>
+                                    <th th:text="#{label.document.documentSubType}">Тип документа</th>
+                                    <th th:text="#{label.document.generalStatus}">Состояние</th>
+                                    <th th:text="#{label.document.sender}">Отправитель</th>
+                                    <th th:text="#{label.document.receiver}">Получатель</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!--  alert alert-metal -->
+                                <tr th:each="document : ${documents}" th:classappend="${tasks.?[objectId == __${document.id}__].isEmpty() ? '': 'm--bg-metal'}">
+                                    <td th:text="${document.id}"></td>
+                                    <td th:text="${document.title}"></td>
+                                    <td th:text="${document.documentType.name}" th:if="${type == 'archived'}"></td>
+                                    <td th:text="${document.documentSubType.name}"></td>
+                                    <td th:text="${document.generalStatus.name}"></td>
+                                    <td th:text="${responsible[__${document.getSenderResponsible()?.responsibleType}__ ?: 0]}">None</td>
+                                    <td th:text="${responsible[__${document.getReceiverResponsible()?.responsibleType}__ ?: 0]}">None</td>
+                                    <td class="table-actions text-right">
+                                        <span>
+                                            <div class="dropdown">
+                                                <a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown"><i class="la la-ellipsis-h"></i></a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a class="dropdown-item"  th:href="@{/doc/view/__${document.id}__}">
+                                                        <span th:text="#{label.view}"></span>
+                                                    </a>
+                                                    <a class="dropdown-item"  th:href="@{/doc/edit/__${document.id}__}" th:if="${document.documentState.ordinal() < 2}">
+                                                        <span th:text="#{label.edit}"></span>
+                                                    </a>
+                                                    <a class="dropdown-item" th:each="task : ${tasks}" th:href="${task.objectType}" th:if="${task.objectId == document.id}">
+                                                        <span th:text="#{label.open}"></span>
+                                                    </a>
+                                                    <a class="dropdown-item"  th:href="@{/doc/delete/__${document.id}__}" th:if="${document.documentState.ordinal() < 2}">
+                                                        <span th:text="#{label.delete}"></span>
+                                                    </a>
                                                 </div>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                                            </div>
+                                        </span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
-
                     </div>
-                    <!--div class="m-portlet__foot">
-                        <div class="m-datatable m-datatable--default">
-                            <div class="m-datatable__pager m-datatable--paging-loaded clearfix">
-                                <ul class="m-datatable__pager-nav">
-                                    <li th:class="${current == 0} ? disabled">
-                                        <a th:title="#{label.pagination.first}" class="m-datatable__pager-link m-datatable__pager-link--first" th:href="@{/doc/order/list(pageSize=${selectedPageSize}, page=1)}">
-                                            <i class="la la-angle-double-left"></i>
-                                        </a>
-                                    </li>
-                                    <li th:class="${current == 0} ? disabled">
-                                        <a th:title="#{label.pagination.prev}" class="m-datatable__pager-link m-datatable__pager-link--prev" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${current})}">
-                                            <i class="la la-angle-left"></i>
-                                        </a>
-                                    </li>
-
-                                    <li th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
-                                        <a th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${page})}" class="m-datatable__pager-link m-datatable__pager-link-number" th:text="${page}" th:classappend="${current == (page - 1)} ? 'm-datatable__pager-link--active'"></a>
-                                    </li>
-
-                                    <li th:class="${current + 1 == count} ? disabled">
-                                        <a th:title="#{label.pagination.next}" class="m-datatable__pager-link m-datatable__pager-link--next" th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${current + 2})}">
-                                            <i class="la la-angle-right"></i>
-                                        </a>
-                                    </li>
-                                    <li th:class="${current + 1 == count} ? disabled">
-                                        <a th:href="@{/manage/order/list(pageSize=${selectedPageSize}, page=${count})}" th:title="#{label.pagination.last}" class="m-datatable__pager-link m-datatable__pager-link--last">
-                                            <i class="la la-angle-double-right"></i>
-                                        </a>
-                                    </li>
-                                </ul>
-                                <div class="m-datatable__pager-info">
-                                    <span class="m-datatable__pager-detail" th:text="#{label.pageSize}"></span>
-                                    <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 70px;">
-                                        <select id="pageSizeSelect" class="selectpicker m-datatable__pager_size" title="Select page size" data-width="70px">
-                                            <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}" th:value="${pageSize}"
-                                                    th:selected="${pageSize} == ${selectedPageSize}"></option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div-->
-                </div>
-                <div class="row">
-                    <div class="col-md-12" th:if="${type != 'archived'}">
+                    <div class="m-portlet__foot">
                         <button class="btn btn-primary"> Filter </button>
                         <span th:each="dst : ${documentSubTypes}">
                             <a th:href="@{/doc/new/__${dst.internalName}__}" class="btn btn-success" th:text="${dst.name}"> New Document </a>
                         </span>
+
                     </div>
                 </div>
             </div>
@@ -157,12 +119,19 @@
     <i class="la la-arrow-up"></i>
 </div>
 <div th:replace="fragments/footer :: footer-js"/>
+<script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
+<script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>
 
-<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript">
+
     $(document).ready(function() {
 
         var table = $('#documentTable').DataTable({
+            language: {
+                emptyTable: "Данный жок"
+            },
             stateSave: true,
+            "info": false,
             language: {
                 paginate: {
                     previous: '<i class="la la-angle-left"></i>', // or '→'
@@ -170,10 +139,7 @@
                 },
                 lengthMenu: "Показать _MENU_",
             },
-            "info": false,
-            keys: {
-                focus: ':eq(0)'
-            },
+
             "sDom": 'rtlip'
         } );
 

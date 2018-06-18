@@ -1,13 +1,12 @@
-<!-- internal.html-->
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
     <title>MFLoan | Docflow</title>
     <div th:replace="fragments/header :: header-css"/>
-
+    <link th:href="@{/assets/global/plugins/bootstrap-sweetalert/sweetalert.css}" rel="stylesheet" type="text/css" />
     <link th:href="@{/assets/global/plugins/select2/css/select2-bootstrap.min.css}" rel="stylesheet" type="text/css" />
-
+    <link th:href="@{/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css}" rel="stylesheet" type="text/css" />
 </head>
 <!-- end::Head -->
 
@@ -30,7 +29,7 @@
                         <div class="m-portlet__head">
                             <div class="m-portlet__head-caption">
                                 <div class="m-portlet__head-title">
-                                    <h3 class="m-portlet__head-text">Детали документа</h3>
+                                    <h3 class="m-portlet__head-text" th:text="*{id != null ? 'Детали документа №' + id : 'Новый входящий документ'}"></h3>
                                 </div>
                             </div>
                             <div class="m-portlet__head-tools">
@@ -49,102 +48,74 @@
                         <div class="m-portlet__body">
                             <div class="m-scrollable m-scrollable-no-margin" data-scrollbar-shown="true"  data-axis="y"  data-height="200">
                                 <!--begin::Form-->
-                                <input type="hidden" th:field="*{id}"/>
-                                <input type="hidden" th:field="*{owner}"/>
-                                <input type="hidden" th:field="*{documentType.id}"/>
-                                <input type="hidden" th:field="*{documentSubType.id}"/>
-                                <input type="hidden" th:field="*{senderExecutor.executorType}"/>
-                                <input type="hidden" th:field="*{senderResponsible.responsibleType}"/>
-                                <input type="hidden" th:field="*{receiverExecutor.executorType}"/>
-
+                                <th:block th:replace="doc/document/layout::hiddenFields"/>
                                 <div class="row">
                                     <div class="col-7">
-                                        <!-- Sender Registered Number -->
-                                        <div class="m-form__group row" th:if="*{documentState.ordinal() > 2}">
+                                        <!-- Receiver Registered Number -->
+                                        <div class="m-form__group row">
                                             <label class="form-label col-3">
-                                                <span> № Регистрации </span> <span class="m--font-danger">*</span>
+                                                <span> № Регистрации : </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <input class="form-control" required th:field="*{senderRegisteredNumber}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'">
-                                                <label class="form-control" th:text="*{senderRegisteredNumber}"> Description </label>
+                                                <input class="form-control" required th:field="*{receiverRegisteredNumber}" autocomplete="off" th:type="*{documentState.ordinal() < 5} ? 'text' : 'hidden'">
+                                                <label class="form-control" th:text="*{receiverRegisteredNumber}" th:if="*{documentState.ordinal() >= 5}"> Description </label>
                                             </div>
                                         </div>
-                                        <!-- Sender Registered Date -->
-                                        <div class="m-form__group row" th:if="*{documentState.ordinal() > 2}">
+                                        <!-- Receiver Registered Date -->
+                                        <div class="m-form__group row">
                                             <label class="form-label col-3">
-                                                <span> Дата регистрации </span> <span class="m--font-danger">*</span>
+                                                <span> Дата регистрации : </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <input class="form-control" th:field="*{senderRegisteredDate}" th:type="*{documentState.ordinal() < 2} ? 'date' : 'hidden'">
-                                                <label class="form-control" th:text="*{senderRegisteredDate}"> Description </label>
+                                                <input class="form-control" id="receiverRegisteredDate_dtp" th:field="*{receiverRegisteredDate}" th:type="*{documentState.ordinal() < 5} ? 'text' : 'hidden'" autocomplete="off"/>
+                                                <label class="form-control" th:text="*{#dates.format(receiverRegisteredDate, 'dd-MM-yyyy HH:mm')}" th:if="*{documentState.ordinal() >= 5}"> Description </label>
                                             </div>
                                         </div>
                                         <!-- Sender Responsible -->
                                         <div class="m-form__group row">
-                                            <label class="col-3">
-                                                <span> ОТ : </span> <span class="m--font-danger">*</span>
+                                            <label class="form-label col-3">
+                                                <span> ОТ :  </span>
                                             </label>
                                             <div th:class="*{documentState.ordinal() > 1} ? 'col-0' : 'col-3'" th:hidden="*{documentState.ordinal() > 1}">
                                                 <select class="form-control" id="srt_select" th:field="*{senderResponsible.responsibleType}" style="width: 100%">
-                                                    <option th:each="r : ${responsible}"
-                                                            th:value="${r.key}"
-                                                            th:text="${r.value}">Responsible</option>
+                                                    <option value="3">Организация</option>
+                                                    <option value="4">ФИЗ Лицо</option>
                                                 </select>
                                             </div>
                                             <div th:class="*{documentState.ordinal() > 1} ? 'col-9' : 'col-6'">
-                                                <div class="rdr" id="ri1" th:hidden="*{documentState.ordinal() > 1}">
-                                                    <select class="form-control" id="seo" th:field="*{senderResponsible.organization}" multiple="multiple" style="width: 100%">
-                                                        <option th:each="r : *{senderResponsible?.organization}"
+                                                <div class="sdr" id="si3" th:hidden="*{documentState.ordinal() > 1}">
+                                                    <select class="form-control" id="sro" th:field="*{senderResponsible.organizations}" multiple="multiple" style="width: 100%">
+                                                        <option th:each="r : *{senderResponsible?.organizations}"
                                                                 th:value="${r.id}"
                                                                 th:text="${r.name}">Responsible</option>
                                                     </select>
                                                 </div>
-                                                <div class="rdr" id="ri2" th:hidden="*{documentState.ordinal() > 1}">
-                                                    <select class="form-control" id="sep" th:field="*{senderResponsible.person}" multiple="multiple" style="width: 100%">
+                                                <div class="sdr" id="si4" th:hidden="*{documentState.ordinal() > 1}">
+                                                    <select class="form-control" id="srp" th:field="*{senderResponsible.person}" multiple="multiple" style="width: 100%">
                                                         <option th:each="r : ${senderResponsible?.person}"
                                                                 th:value="${r.id}"
                                                                 th:text="${r.name}">Responsible</option>
                                                     </select>
                                                 </div>
-                                                <label class="form-control"  th:each="s : *{senderResponsible.organization}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
-                                                <label class="form-control"  th:each="s : *{senderResponsible.person}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+                                                <label class="form-control" th:each="s : *{senderResponsible.organizations}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+                                                <label class="form-control" th:each="s : *{senderResponsible.person}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
                                             </div>
                                         </div>
                                         <!-- Receiver Responsible -->
                                         <div class="m-form__group row">
                                             <label class="col-3">
-                                                <span> Кому : </span> <span class="m--font-danger">*</span>
+                                                <span> Кому : </span>
                                             </label>
-                                            <div th:class="*{documentState.ordinal() > 1} ? 'col-0' : 'col-3'" th:hidden="*{documentState.ordinal() > 1}">
-                                                <select class="form-control" id="rrt_select" th:field="*{receiverResponsible.responsibleType}" style="width: 100%">
-                                                    <option th:each="r : ${responsible}"
-                                                            th:value="${r.key}"
-                                                            th:text="${r.value}">Responsible</option>
-                                                </select>
-                                            </div>
-                                            <div th:class="*{documentState.ordinal() > 1} ? 'col-9' : 'col-6'">
-                                                <div class="rdr" id="ri1" th:hidden="*{documentState.ordinal() > 1}">
-                                                    <select class="form-control" id="rrs" th:field="*{receiverResponsible.staff}" multiple="multiple" style="width: 100%">
-                                                        <option th:each="r : *{receiverResponsible?.staff}"
-                                                                th:value="${r.id}"
-                                                                th:text="${r.name}">Responsible</option>
-                                                    </select>
-                                                </div>
-                                                <div class="rdr" id="ri2" th:hidden="*{documentState.ordinal() > 1}">
-                                                    <select class="form-control" id="rrd" th:field="*{receiverResponsible.departments}" multiple="multiple" style="width: 100%">
-                                                        <option th:each="r : ${receiverResponsible?.departments}"
-                                                                th:value="${r.id}"
-                                                                th:text="${r.name}">Responsible</option>
-                                                    </select>
-                                                </div>
-                                                <label class="form-control"  th:each="s : *{receiverResponsible.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
-                                                <label class="form-control"  th:each="s : *{receiverResponsible.departments}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+                                            <div class="col-9">
+                                                <input type="hidden" th:field="*{receiverResponsible.responsibleType}">
+                                                <input type="hidden" th:field="*{receiverResponsible.staff}">
+                                                <label class="form-control" th:each="s : *{receiverResponsible?.staff}" th:text="${s.name}"> Staff </label>
                                             </div>
                                         </div>
                                         <!-- TITLE -->
                                         <div class="m-form__group row">
                                             <label class="form-label col-3">
-                                                <span> Относительно </span> <span class="m--font-danger">*</span>
+                                                <span> Относительно : </span>
                                             </label>
                                             <div class="col-sm-9">
                                                 <input class="form-control" required th:field="*{title}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'">
@@ -154,114 +125,90 @@
                                         <!-- DESCRIPTION -->
                                         <div class="m-form__group row">
                                             <label class="form-label col-3">
-                                                <span> Описание </span> <span class="m--font-danger">*</span>
+                                                <span> Описание : </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <textarea class="form-control" required rows="5" id="description" th:field="*{description}" th:hidden="*{documentState.ordinal() > 1}"></textarea>
-                                                <label class="form-control" style="white-space: pre-wrap" th:text="*{description}" th:if="*{documentState.ordinal() > 1}"> Description </label>
+                                                <textarea th:field="*{description}"></textarea>
                                             </div>
                                         </div>
                                         <!-- Sender Attachment -->
-                                        <div class="m-form__group row">
+                                        <div class="m-form__group row" th:hidden="*{documentState.ordinal() > 1 and senderAttachment == null}">
                                             <label class="form-label col-3">
-                                                <span> Прикрепление </span> <span class="m--font-danger">*</span>
+                                                <span> Приложения : </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <input class="form-control" type="file" id="senderFile" name="senderFile" th:hidden="*{documentState.ordinal() > 1}">
-                                                <a class="form-control" th:href="@{/doc/download/__${document.senderAttachment?.id}__}" th:text="*{senderAttachment?.name}" th:if="*{documentState.ordinal() > 1}"> Title </a>
+                                                <input type="file" id="senderFiles" name="senderFiles" multiple style="display:none" onchange="handleFiles(this.files, 'senderFilesList')">
+                                                <a class="btn" role="button" href="javascript:doClick('senderFiles')" th:if="*{documentState.ordinal() < 2}"> Добавить приложения </a>
+                                                <table id="senderFilesList" class="form-control">
+                                                    <tr th:if="*{#lists.isEmpty(senderAttachment)}"><td><label>Нет приложений</label></td></tr>
+                                                    <tr th:if="*{not #lists.isEmpty(senderAttachment)}" th:each="attachment : *{senderAttachment}">
+                                                        <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
+                                                    </tr>
+                                                </table>
                                             </div>
                                         </div>
                                         <!-- Sender Due Date -->
                                         <div class="m-form__group row">
                                             <label class="form-label col-3">
-                                                <span> Срок </span> <span class="m--font-danger">*</span>
+                                                <span> Срок : </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <input class="form-control" th:field="*{senderDueDate}" th:type="*{documentState.ordinal() < 2} ? 'date' : 'hidden'">
-                                                <label class="form-control" th:text="*{senderDueDate} != null ? *{senderDueDate} : 'Срок не установлен'" th:if="*{documentState.ordinal() > 1}"> Title </label>
+                                                <input class="form-control" id="senderDueDate_dtp" th:field="*{senderDueDate}" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'" autocomplete="off"/>
+                                                <label class="form-control" th:text="*{senderDueDate} != null ? *{#dates.format(senderDueDate, 'dd-MM-yyyy HH:mm')} : 'Срок не установлен'" th:if="*{documentState.ordinal() > 1}"> Title </label>
                                             </div>
                                         </div>
-                                        <br th:if="*{documentState.ordinal() > 1}">
-                                        <!-- Receiver Registered Number -->
-                                        <div class="m-form__group row" th:if="*{receiverRegisteredNumber}">
-                                            <label class="form-label col-3">
-                                                <span> № Регистрации </span> <span class="m--font-danger">*</span>
-                                            </label>
-                                            <div class="col-sm-9">
-                                                <input th:field="*{receiverRegisteredNumber}" type="hidden"/>
-                                                <label class="form-control" th:text="*{receiverRegisteredNumber}"> Description </label>
-                                            </div>
-                                        </div>
-                                        <!-- Receiver Registered Date -->
-                                        <div class="m-form__group row" th:if="*{receiverRegisteredDate}">
-                                            <label class="form-label col-3">
-                                                <span> Дата регистрации </span> <span class="m--font-danger">*</span>
-                                            </label>
-                                            <div class="col-sm-9">
-                                                <input th:field="*{receiverRegisteredDate}" type="hidden"/>
-                                                <label class="form-control" th:text="*{receiverRegisteredDate}"> Description </label>
-                                            </div>
-                                        </div>
+
                                         <!-- Receiver Executor -->
-                                        <div class="m-form__group row">
+                                        <div class="m-form__group row" th:hidden="*{documentState.ordinal() < 5}">
                                             <label class="col-3">
-                                                <span> Испонитель : </span> <span class="m--font-danger">*</span>
+                                                <span> Испонитель : </span>
                                             </label>
                                             <div class="col-9">
-                                                <div>
+                                                <div th:hidden="*{documentState.ordinal() > 5}">
                                                     <select class="form-control" id="res" th:field="*{receiverExecutor.staff}" multiple="multiple" style="width: 100%">
                                                         <option th:each="r : *{receiverExecutor?.staff}"
                                                                 th:value="${r.id}"
                                                                 th:text="${r.name}">Responsible</option>
                                                     </select>
                                                 </div>
-                                                <label class="form-control"  th:each="s : *{receiverExecutor.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+                                                <label class="form-control"  th:each="s : *{receiverExecutor.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 6}"> Staff </label>
                                             </div>
                                         </div>
                                         <!-- Receiver Attachment -->
-                                        <div class="m-form__group row" th:hidden="*{documentState.ordinal() < 3}">
+                                        <div class="m-form__group row" th:hidden="*{documentState.ordinal() < 8}">
                                             <label class="form-label col-3">
-                                                <span> Прикрепление </span> <span class="m--font-danger">*</span>
+                                                <span> Приложения : </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <input class="form-control" id="receiverFile" name="receiverFile" type="file" th:hidden="*{documentState.ordinal() > 3}"/>
-                                                <a th:href="@{/doc/download/__${document?.receiverAttachment?.id}__}" class="form-control m-input" th:text="*{receiverAttachment?.name}" th:if="*{documentState.ordinal() > 3}"></a>
+                                                <input type="file" id="receiverFiles" name="receiverFiles" multiple style="display:none" onchange="handleFiles(this.files, 'receiverFilesList')">
+                                                <a class="btn" role="button" href="javascript:doClick('receiverFiles')" th:if="*{documentState.ordinal() > 7}"> Добавить приложения </a>
+                                                <table id="receiverFilesList" class="form-control">
+                                                    <tr th:if="*{#lists.isEmpty(receiverAttachment)}"><td><label>Нет приложений</label></td></tr>
+                                                    <tr th:if="*{not #lists.isEmpty(receiverAttachment)}" th:each="attachment : *{receiverAttachment}">
+                                                        <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}" class="btn" role="button"></label></a></td>
+                                                    </tr>
+                                                </table>
                                             </div>
                                         </div>
-                                        <!-- Receiver Due Date -->
-                                        <div class="m-form__group row">
+                                        <!-- Comment -->
+                                        <div class="m-form__group row" th:if="${hasReject}">
                                             <label class="form-label col-3">
-                                                <span> Срок </span> <span class="m--font-danger">*</span>
+                                                <span> Примечание : </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <input class="form-control" th:field="*{receiverDueDate}" th:type="*{documentState.ordinal() < 2} ? 'date' : 'hidden'">
-                                                <label class="form-control" th:text="*{receiverDueDate} != null ? *{receiverDueDate} : 'Срок не установлен'" th:if="*{documentState.ordinal() > 2}"> Title </label>
+                                                <textarea class="form-control" rows="5" th:field="*{comment}"></textarea>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-5">
-                                        <div class="m-form__group">
-                                            <label> Состояние </label>
-                                            <ol>
-                                                <li th:each="dd : *{senderDispatchData}" th:text="${dd.dispatchType?.name} + ' в ' + ${dd.dispatchInitTime}">
-                                                <li th:each="dd : *{getReceiverDispatchData()}" th:text="${dd.dispatchType?.name} + ' в ' + ${dd.dispatchInitTime}">
-                                            </ol>
-                                        </div>
+                                        <th:block th:replace="doc/document/layout::statusData"/>
                                     </div>
                                 </div>
                                 <!--end::Form-->
                             </div>
                         </div>
-                        <div class="m-portlet__foot m-portlet__foot--fit">
-                            <div class="m-form__actions m-form__actions">
-                                <div class="row">
-                                    <div class="col-lg-4"></div>
-                                    <div class="col-lg-6">
-                                        <button type="button" class="btn btn-primary" onclick="window.history.back()"> Назад </button>
-                                        <button type="submit" style="margin: 3px" class="btn btn-success" name="action" th:each="action : ${actions}" th:value="${action.internalName}" th:text="${action.actionName}" ></button>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="m-portlet__foot">
+                            <th:block th:replace="doc/document/layout::documentActions"/>
                         </div>
                     </form>
                 </div>
@@ -278,104 +225,13 @@
 </div>
 <div th:replace="fragments/footer :: footer-js"/>
 
-<script th:src="@{/assets/global/plugins/select2/js/select2-bootstrap.min.js}" type="text/javascript"></script>
+<script th:src="@{/assets/global/plugins/select2/js/select2.min.js}" type="text/javascript"></script>
+<script th:src="@{/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js}" type="text/javascript"></script>
+<script th:src="@{/assets/global/plugins/bootstrap-sweetalert/sweetalert.min.js}" type="text/javascript"></script>
+<script th:src="@{/assets/global/plugins/ckeditor/ckeditor.js}" type="text/javascript"></script>
+
+<th:block th:replace="doc/document/layout::script"/>
 <!--begin::Page Resources -->
-
-<script type="text/javascript" th:inline="javascript">
-
-    $(document).ready(function() {
-
-        $('.rdr').hide();
-
-        if($('#id').val() > 0 || $('#id').val() != null)
-        {
-            $('#ri' + $('#rrt_select').val()).show();
-        } else {
-            $('#ri1').show();
-            $('#rei1').show();
-        }
-
-        $('#rrt_select').change(function(){
-            $('.rdr ').hide();
-            $('#ri' + $(this).val()).show();
-        });
-
-        $('#srs').select2({
-            tags: true,
-            minimumInputLength: 2,
-            ajax: {
-                url: '/data/staff',
-                data: function (params) {
-                    var query = {
-                        name: params.term
-                    }
-                    return query;
-                },
-                processResults: function (data) {
-                    return {
-                        results : data
-                    };
-                }
-            }
-        });
-        $('#rrs').select2({
-            tags: true,
-            minimumInputLength: 2,
-            ajax: {
-                url: '/data/staff',
-                data: function (params) {
-                    var query = {
-                        name: params.term
-                    }
-                    return query;
-                },
-                processResults: function (data) {
-                    return {
-                        results : data
-                    };
-                }
-            }
-        });
-        $('#rrd').select2({
-            tags: true,
-            minimumInputLength: 2,
-            ajax: {
-                url: '/data/department',
-                data: function (params) {
-                    var query = {
-                        name: params.term
-                    }
-                    return query;
-                },
-                processResults: function (data) {
-                    return {
-                        results : data
-                    };
-                }
-            }
-        });
-        $('#res').select2({
-            tags: true,
-            minimumInputLength: 2,
-            ajax: {
-                url: '/data/staff',
-                data: function (params) {
-                    var query = {
-                        name: params.term
-                    }
-                    return query;
-                },
-                processResults: function (data) {
-                    return {
-                        results : data
-                    };
-                }
-            }
-        });
-
-    });
-
-</script>
 
 </body>
 </html>

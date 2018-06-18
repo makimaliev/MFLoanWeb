@@ -2,38 +2,28 @@ package kg.gov.mf.loan.web.controller.doc;
 
 import kg.gov.mf.loan.admin.org.model.Department;
 import kg.gov.mf.loan.admin.org.model.Organization;
-import kg.gov.mf.loan.admin.org.model.Person;
 import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.org.service.StaffService;
+import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.doc.model.*;
 import kg.gov.mf.loan.doc.service.DocumentStatusService;
 import kg.gov.mf.loan.doc.service.*;
 import kg.gov.mf.loan.doc.model.Transition;
-import kg.gov.mf.loan.manage.model.order.CreditOrder;
 import kg.gov.mf.loan.task.model.Task;
 import kg.gov.mf.loan.task.service.TaskService;
-import kg.gov.mf.loan.web.util.Pager;
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -46,43 +36,32 @@ public class DocumentFlowController extends BaseController {
     private DocumentTypeService documentTypeService;
     private DocumentSubTypeService documentSubTypeService;
     private DocumentStatusService documentStatusService;
-    private AccountService accountService;
     private TaskService taskService;
     private AttachmentService attachmentService;
-    private HttpServletRequest request;
-    private StaffService staffService;
     private RegisterService registerService;
+    private StaffService staffService;
 
     @Autowired
     public DocumentFlowController(DocumentService documentService,
                                   DocumentTypeService documentTypeService,
                                   DocumentSubTypeService documentSubTypeService,
                                   DocumentStatusService documentStatusService,
-                                  AccountService accountService,
                                   TaskService taskService,
                                   AttachmentService attachmentService,
-                                  HttpServletRequest request,
-                                  StaffService staffService,
-                                  RegisterService registerService)
+                                  RegisterService registerService,
+                                  StaffService staffService)
     {
         this.documentService = documentService;
         this.documentTypeService = documentTypeService;
         this.documentSubTypeService = documentSubTypeService;
         this.documentStatusService = documentStatusService;
-        this.accountService = accountService;
         this.taskService = taskService;
         this.attachmentService = attachmentService;
-        this.request = request;
-        this.staffService = staffService;
         this.registerService = registerService;
+        this.staffService = staffService;
     }
+
     //endregion
-
-    private static final int BUTTONS_TO_SHOW = 5;
-    private static final int INITIAL_PAGE = 0;
-    private static final int INITIAL_PAGE_SIZE = 10;
-    private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
-
     private final static Map<Integer, String> responsible = new HashMap<Integer, String>() {
         {
             put(1, "Сотрудник");
@@ -92,10 +71,10 @@ public class DocumentFlowController extends BaseController {
         }
     };
     private String path =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
-
+    private enum CURRENTVIEW { INTERNAL, INCOMING, OUTGOING}
+    private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm");
     //region TYPE
-    private enum TYPE { internal, incoming, outgoing}
-    private String[][][] actionString =
+    private String[][][] ACTIONS =
             {
                 {
                     {"create", "request"},
@@ -114,8 +93,8 @@ public class DocumentFlowController extends BaseController {
                     {},
                     {},
                     {},
-                    {"accept", "reject"},
                     {"send"},
+                    {},
                     {"start", "reject"},
                     {"done"}
                 },
@@ -123,60 +102,53 @@ public class DocumentFlowController extends BaseController {
                     {"create", "request"},
                     {"request"},
                     {"approve", "reject"},
-                    {"register", "done"},
-                    {},
-                    {"register", "done"}
+                    {"register"}
                 }
             };
     //endregion
 
     @InitBinder
-    public void initBinder(WebDataBinder binder)
-    {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String index(@RequestParam("type") String type, /* @RequestParam("pageSize") Optional<Integer> pageSize, @RequestParam("page") Optional<Integer> page, */ Model model) {
-        /*
-        int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
-        int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
+    public String index(@RequestParam("type") String type, Model model) {
 
-        List<Document> documents = type.equals("archived") ? documentService.getArchivedDocuments(getUser().getId()) : documentService.getDocuments(type, getUser().getId());
-                //documentService.listByParam("id", evalPage*evalPageSize, evalPageSize);
-        int count = documentService.findAll().size();
+        if(getUser() == null)
+            return "/login/login";
 
-        Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
+        List<Document> documents = documentService.getInvolvedDocuments(type, getUser().getId());
+        DocumentType documentType = documentTypeService.getByInternalName(type);
+        String title = documentType.getName();
 
-        model.addAttribute("count", count/evalPageSize+1);
-        model.addAttribute("selectedPageSize", evalPageSize);
-        model.addAttribute("pageSizes", PAGE_SIZES);
-        model.addAttribute("pager", pager);
-        model.addAttribute("current", evalPage);
-        */
-        List<Document> documents = type.equals("incoming") ? documentService.getInvolvedDocuments(getUser().getId()) : documentService.getDocuments(type, getUser().getId());
+        List<Task> tasks = taskService.getOpenTasks(getUser().getId());
+
+        model.addAttribute("tasks", tasks);
+        model.addAttribute("ACTIONS", ACTIONS);
+        model.addAttribute("row", CURRENTVIEW.valueOf(type.toUpperCase()).ordinal());
+        model.addAttribute("ds", documentStatusService);
         model.addAttribute("documents", documents);
-        String title = documentTypeService.getByInternalName(type).getName();
-        //model.addAttribute("documents", documentService.getDocuments(type, getUser().getId()));
         model.addAttribute("title", title);
         model.addAttribute("responsible", responsible);
-        model.addAttribute("documentSubTypes", documentTypeService.getByInternalName(type).getDocumentSubTypes());
+        model.addAttribute("documentSubTypes", documentType.getDocumentSubTypes());
         model.addAttribute("type", type);
 
         return "/doc/document/index";
     }
 
     @RequestMapping(value = "/new/{subType}", method = RequestMethod.GET)
-    public String newDocument(@PathVariable("subType") String type, Model model) {
+    public String newDocument(@PathVariable("subType") String subType, Model model) {
 
-        DocumentType documentType = documentSubTypeService.getByInternalName(type).getDocumentType();
+        if(getUser() == null)
+            return "/login/login";
+
+        DocumentType documentType = documentSubTypeService.getByInternalName(subType).getDocumentType();
         String currentView = documentType.getInternalName();
 
-        int row = TYPE.valueOf(currentView).ordinal();
-
         List<DocumentStatus> actions = new ArrayList<>();
-        for(String action : actionString[row][0])
+        for(String action : ACTIONS[CURRENTVIEW.valueOf(currentView.toUpperCase()).ordinal()][0])
         {
             actions.add(documentStatusService.getByInternalName(action));
         }
@@ -184,34 +156,20 @@ public class DocumentFlowController extends BaseController {
         Document document = new Document();
         document.setOwner(getUser().getId());
         document.setDocumentType(documentType);
-        document.setDocumentSubType(documentSubTypeService.getByInternalName(type));
+        document.setDocumentSubType(documentSubTypeService.getByInternalName(subType));
 
-        if(currentView.equals("internal"))
+        if(documentType.getInternalName().equals("incoming"))
         {
-            Responsible resp = new Responsible();
-            resp.setResponsibleType(1);
-            document.setSenderResponsible(resp);
-
-            Staff staff = staffService.findById(getUser().getId());
-
-            Executor exec = new Executor();
-            exec.setExecutorType(1);
-            exec.getStaff().add(staff);
-            document.setSenderExecutor(exec);
-        }
-        else if(currentView.equals("outgoing"))
-        {
-
+            Responsible responsible = new Responsible();
+            responsible.setResponsibleType(1);
+            responsible.getStaff().add(getUser().getStaff());
+            document.setReceiverResponsible(responsible);
         }
 
         model.addAttribute("actions", actions);
         model.addAttribute("document", document);
         model.addAttribute("responsible", responsible);
         model.addAttribute("documentState",  document.getDocumentState().toString());
-        model.addAttribute("staff", accountService.getStaff());
-        model.addAttribute("department", accountService.getDepartments());
-        model.addAttribute("organization", accountService.getOrganizations());
-        model.addAttribute("person", accountService.getPerson());
 
         return "/doc/document/" + currentView + "/" + currentView;
     }
@@ -219,27 +177,31 @@ public class DocumentFlowController extends BaseController {
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String editDocument(@PathVariable("id") Long id, Model model) {
 
+        if(getUser() == null)
+            return "/login/login";
+
         Document document = documentService.findById(id);
         String currentView = document.getDocumentType().getInternalName();
 
-        int row = TYPE.valueOf(currentView).ordinal();
+        int row = CURRENTVIEW.valueOf(currentView.toUpperCase()).ordinal();
         int col = document.getDocumentState().ordinal();
 
+        boolean hasReject = false;
+
+        if(ACTIONS[row][col].length > 1){
+            hasReject = ACTIONS[row][col][1].equals("reject") ? true : false;
+        }
+
         List<DocumentStatus> actions = new ArrayList<>();
-        for(String action : actionString[row][col])
+        for(String action : ACTIONS[row][col])
         {
             actions.add(documentStatusService.getByInternalName(action));
         }
 
+        model.addAttribute("hasReject", hasReject);
         model.addAttribute("actions", actions);
         model.addAttribute("document", document);
         model.addAttribute("responsible", responsible);
-
-        model.addAttribute("staff", accountService.getStaff());
-        model.addAttribute("department", accountService.getDepartments());
-        model.addAttribute("organization", accountService.getOrganizations());
-        model.addAttribute("person", accountService.getPerson());
-
         model.addAttribute("documentState", document.getDocumentState().toString());
 
         return "/doc/document/" + currentView + "/" + currentView;
@@ -249,96 +211,59 @@ public class DocumentFlowController extends BaseController {
     public String saveDocument(@ModelAttribute("document") Document document,
                                @RequestParam("action") String action,
                                @RequestParam("senderFiles") MultipartFile[] senderFiles,
-                               @RequestParam("receiverFiles") MultipartFile[] receiverFiles) {
+                               @RequestParam("receiverFiles") MultipartFile[] receiverFiles) throws IOException {
 
         String docType = documentTypeService.findById(document.getDocumentType().getId()).getInternalName();
 
-        //region ATA
-        /*
-        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
-        Iterator<String> itr = multipartRequest.getFileNames();
-
-        try {
-
-            while (itr.hasNext()) {
-
-                String uuid = UUID.randomUUID().toString();
-                String fsname = uuid + ".atach";
-
-                String uploadedFile = itr.next();
-                MultipartFile file = multipartRequest.getFile(uploadedFile);
-
-                byte[] bytes = file.getBytes();
-                Path p = Paths.get(path + fsname);
-                Files.write(p, bytes);
-
-                Attachment attachment = new Attachment();
-                attachment.setName(file.getOriginalFilename());
-                attachment.setInternalName(fsname);
-                attachment.setMimeType(file.getContentType());
-
-                document.getSenderAttachment().add(attachment);
-            }
-        } catch (Exception e)
+        if(document.getId() != null)
         {
-
+            Document doc = documentService.findById(document.getId());
+            document.setSenderAttachment(doc.getSenderAttachment());
+            document.setReceiverAttachment(doc.getReceiverAttachment());
         }
-        */
-        //endregion
 
         //region ATTACHMENTS
-        for(MultipartFile multipartFile : senderFiles)
-        {
-            if(multipartFile.getOriginalFilename().length() > 1) {
+        if(senderFiles.length != 0) {
+            for (MultipartFile senderFile : senderFiles) {
+                String fileName = senderFile.getOriginalFilename();
+                if(fileName.length() > 1) {
 
-                try {
                     String uuid = UUID.randomUUID().toString();
                     String fsname = uuid + ".atach";
 
-                    byte[] bytes = multipartFile.getBytes();
-                    Path p = Paths.get(path + fsname);
-                    Files.write(p, bytes);
+                    File file = new File(path + fsname);
+                    senderFile.transferTo(file);
 
-                    /*
                     Attachment attachment = new Attachment();
-                    attachment.setName(multipartFile.getOriginalFilename());
+                    attachment.setName(senderFile.getOriginalFilename());
                     attachment.setInternalName(fsname);
-                    attachment.setMimeType(multipartFile.getContentType());
-                    */
-
-
-                    //document.getSenderAttachment().add(attachment);
-                } catch (Exception e) {
-                    String str = "You failed to upload " + multipartFile.getOriginalFilename() + ": " + e.getMessage();
+                    attachment.setMimeType(senderFile.getContentType());
+                    document.getSenderAttachment().add(attachment);
                 }
             }
         }
 
-        /*
-        for(MultipartFile multipartFile : receiverFiles)
-        {
-            if(!multipartFile.getOriginalFilename().isEmpty()) {
+        if(receiverFiles.length != 0) {
+            for (MultipartFile receiverFile : receiverFiles) {
+                String fileName = receiverFile.getOriginalFilename();
+                if(fileName.length() > 1) {
+                    String uuid = UUID.randomUUID().toString();
+                    String fsname = uuid + ".atach";
 
-                String uuid = UUID.randomUUID().toString();
-                String fsname = uuid + ".atach";
+                    File file = new File(path + fsname);
+                    receiverFile.transferTo(file);
 
-                Attachment attachment = new Attachment();
-                attachment.setName(multipartFile.getOriginalFilename());
-                attachment.setInternalName(fsname);
-                attachment.setMimeType(multipartFile.getContentType());
-
-                byte[] bytes = multipartFile.getBytes();
-                Path p = Paths.get(path + fsname);
-                Files.write(p, bytes);
-
-                document.getReceiverAttachment().add(attachment);
+                    Attachment attachment = new Attachment();
+                    attachment.setName(receiverFile.getOriginalFilename());
+                    attachment.setInternalName(fsname);
+                    attachment.setMimeType(receiverFile.getContentType());
+                    document.getReceiverAttachment().add(attachment);
+                }
             }
         }
-        */
         //endregion
 
-        /*
-         if(docType.equals("internal"))
+        if(docType.equals("internal"))
         {
             saveInternalDocument(document, action);
         }
@@ -350,7 +275,7 @@ public class DocumentFlowController extends BaseController {
         {
             saveOutgoingDocument(document, action);
         }
-        */
+
         return "redirect:/doc?type=" + docType;
     }
 
@@ -391,7 +316,7 @@ public class DocumentFlowController extends BaseController {
         return "redirect:/doc?type=" + document.getDocumentType().getInternalName();
     }
 
-    @RequestMapping(value = "/download/{attachmentId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/attachments/download/{attachmentId}", method = RequestMethod.GET)
     public void downloadFile(HttpServletResponse response, @PathVariable("attachmentId") Long attachmentId) throws IOException {
 
         Attachment attachment = attachmentService.findById(attachmentId);
@@ -411,279 +336,206 @@ public class DocumentFlowController extends BaseController {
         FileCopyUtils.copy(inputStream, response.getOutputStream());
     }
 
-    private DispatchData setDispatchData(String internalName, Document document) {
+    @RequestMapping(value = "/attachments/delete/{attachmentId}", method = RequestMethod.GET)
+    public void deleteFile(HttpServletResponse response, @PathVariable("attachmentId") Long attachmentId) throws IOException {
+
+        Attachment attachment = attachmentService.findById(attachmentId);
+        File file = new File(path + attachment.getInternalName());
+        file.delete();
+
+        attachmentService.deleteById(attachment);
+    }
+
+    private DispatchData setDispatchData(State state, String description /*, User toUser */) {
 
         DispatchData dispatchData = new DispatchData();
-        dispatchData.setDescription(document.getDocumentState().stringValue());
-        dispatchData.setDispatchBy(getUser());
-        dispatchData.setDispatchTo(userService.findById(2L));
-        dispatchData.setDispatchInitTime(new Date());
-        dispatchData.setDispatchType(document.getDocumentState());
 
-        if(document.getDocumentState() == State.NEW) //documentStatus.getInternalName() == "create"
-        {
-            dispatchData.setParent(true);
-        }
-        else
-        {
-            dispatchData.setParent(false);
-        }
+        dispatchData.setParent(false);
+        dispatchData.setDescription(description);
+        dispatchData.setDispatchType(state);
+        dispatchData.setDispatchInitTime(new Date());
+        dispatchData.setDispatchBy(getUser());
+        dispatchData.setDispatchTo(userService.findById(1L));
+        //dispatchData.setDispatchResponseTime();
 
         return dispatchData;
     }
-    private Task addTask(Document document, Object responsible) {
-
-        Integer responsibleType = document.getReceiverResponsible().getResponsibleType();
+    private Task addTask(Document document, User user) {
 
         Task task = new Task();
-        task.setSummary("Документ : ");
-        //task.setSummary("Документ : " + document.getDocumentState().next(Transition.valueOf(document.getGeneralStatus().getInternalName().toUpperCase())));
-        task.setDescription(document.getDescription());
-        task.setResolutionSummary(document.getDescription());
-        task.setProgress(document.getGeneralStatus().getInternalName().toUpperCase());
+        //task.setDescription("");
+        //task.setResolutionSummary("");
+        //task.setProgress("");
+        task.setSummary(document.getGeneralStatus().getActionName());
+
+        task.setCreatedBy(getUser());
         task.setIdentifiedByUserId(getUser().getId());
         task.setModifiedByUserId(getUser().getId());
-        task.setObjectType("/doc/edit/" + document.getId());
-        task.setObjectId(document.getId());
-        task.setTargetResolutionDate(document.getReceiverDueDate() != null ? document.getReceiverDueDate() : new Date());
-        task.setCreatedBy(getUser());
 
-        if(responsibleType == 1)
+        task.setAssignedToUserId(user.getId());
+        task.setTargetResolutionDate(document.getSenderDueDate());
+        /*
+        if(document.getDocumentState().ordinal() < 7)
         {
-            task.setAssignedToUserId(getUser((Staff)responsible).getId());
-        }
-        else if(responsibleType == 2)
-        {
-            task.setAssignedToUserId(getUser((Department)responsible).getId());
-        }
-        else if(responsibleType == 3)
-        {
-            task.setAssignedToUserId(getUser((Organization) responsible).getId());
+            task.setTargetResolutionDate(document.getSenderDueDate());
         }
         else
         {
-            task.setAssignedToUserId(getUser((Person)responsible).getId());
+            task.setTargetResolutionDate(document.getReceiverDueDate());
         }
+        */
+
+        task.setObjectId(document.getId());
+        task.setObjectType("/doc/edit/" + document.getId().toString());
 
         return task;
     }
-    private Document setER(Document document) {
 
-        if(document.getSenderResponsible() != null)
-            switch(document.getSenderResponsible().getResponsibleType()) {
-                case 1:
-                    for(Staff s : document.getSenderResponsible().getStaff())
-                    {
-                        document.getUsers().add(getUser(s));
-                    }
-                    break;
-                case 2:
-                    for(Department d : document.getSenderResponsible().getDepartments())
-                    {
-                        document.getUsers().add(getUser(d));
-                    }
-                    break;
-                case 3:
-                    for(Organization o : document.getSenderResponsible().getOrganizations())
-                    {
-                        document.getUsers().add(getUser(o));
-                    }
-                    break;
-                case 4:
-                    for(Person p : document.getSenderResponsible().getPerson())
-                    {
-                        document.getUsers().add(getUser(p));
-                    }
-                    break;
-                default:
-                    break;
-            }
-
-        if(document.getSenderExecutor() != null)
-            switch(document.getSenderExecutor().getExecutorType()) {
-                case 1:
-                    for(Staff s : document.getSenderExecutor().getStaff())
-                    {
-                        document.getUsers().add(getUser(s));
-                    }
-                    break;
-                case 2:
-                    for(Department d : document.getSenderExecutor().getDepartments())
-                    {
-                        document.getUsers().add(getUser(d));
-                    }
-                    break;
-                case 3:
-                    for(Organization o : document.getSenderExecutor().getOrganizations())
-                    {
-                        document.getUsers().add(getUser(o));
-                    }
-                    break;
-                case 4:
-                    for(Person p : document.getSenderExecutor().getPerson())
-                    {
-                        document.getUsers().add(getUser(p));
-                    }
-                    break;
-                default:
-                    break;
-            }
-
-        if(document.getReceiverResponsible() != null)
-            switch(document.getReceiverResponsible().getResponsibleType()) {
-                case 1:
-                    for(Staff s : document.getReceiverResponsible().getStaff())
-                    {
-                        document.getUsers().add(getUser(s));
-                    }
-                    break;
-                case 2:
-                    for(Department d : document.getReceiverResponsible().getDepartments())
-                    {
-                        document.getUsers().add(getUser(d));
-                    }
-                    break;
-                case 3:
-                    for(Organization o : document.getReceiverResponsible().getOrganizations())
-                    {
-                        document.getUsers().add(getUser(o));
-                    }
-                    break;
-                case 4:
-                    for(Person p : document.getReceiverResponsible().getPerson())
-                    {
-                        document.getUsers().add(getUser(p));
-                    }
-                    break;
-                default:
-                    break;
-            }
-
-        if(document.getReceiverExecutor() != null)
-            switch(document.getReceiverExecutor().getExecutorType()) {
-                case 1:
-                    for(Staff s : document.getReceiverExecutor().getStaff())
-                    {
-                        document.getUsers().add(getUser(s));
-                    }
-                    break;
-                case 2:
-                    for(Department d : document.getReceiverExecutor().getDepartments())
-                    {
-                        document.getUsers().add(getUser(d));
-                    }
-                    break;
-                case 3:
-                    for(Organization o : document.getReceiverExecutor().getOrganizations())
-                    {
-                        document.getUsers().add(getUser(o));
-                    }
-                    break;
-                case 4:
-                    for(Person p : document.getReceiverExecutor().getPerson())
-                    {
-                        document.getUsers().add(getUser(p));
-                    }
-                    break;
-                default:
-                    break;
-            }
-        return document;
-    }
     private void saveInternalDocument(Document document, String action) {
 
-        DispatchData dispatchData = setDispatchData(action, document);
         DocumentStatus documentStatus = documentStatusService.getByInternalName(action);
-
-        document = setER(document);
         document.setGeneralStatus(documentStatus);
-        document.getUsers().add(getUser());
 
         if(document.getId() == null)
         {
-            document.getSenderDispatchData().add(dispatchData);
-            document.setSenderStatus(documentStatus);
+            document.getUsers().add(getUser());
             document.setDocumentState(document.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
+            document.setSenderStatus(documentStatus);
 
             if(action.equals("request"))
             {
-                documentService.save(document);
-                for(final Staff s : document.getSenderResponsible().getStaff()) {
-                    taskService.add(addTask(document, s));
+                document.getSenderDispatchData().add(setDispatchData(State.DRAFT, ""));
+                document.getSenderDispatchData().add(setDispatchData(document.getDocumentState(), ""));
+                document = documentService.save(document);
+
+                for(Staff staff : document.getSenderResponsible().getStaff())
+                {   // Add Sender Responsible
+                    taskService.add(addTask(document, getUser(staff)));
+                    document.getUsers().add(getUser(staff));
                 }
-            } else {
+                documentService.update(document);
+            }
+            else
+            {
+                document.getSenderDispatchData().add(setDispatchData(document.getDocumentState(), ""));
                 documentService.save(document);
             }
         }
         else
         {
             Document doc = documentService.findById(document.getId());
+            document.setUsers(doc.getUsers());
             document.setDocumentState(doc.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
+            document.setSenderDispatchData(doc.getSenderDispatchData());
 
-            document.setSenderDispatchData(doc.getSenderDispatchData());            // add existing Sender DispatchData
-            document.setSenderStatus(doc.getSenderStatus());                        // add existing Sender DocumentStatus
+            if(doc.getDocumentState().ordinal() < 3)
+            {   // Sender Data
+                document.setSenderStatus(documentStatus);
 
-            //document.setSenderAttachment(doc.getSenderAttachment());
-            //document.setReceiverAttachment(doc.getReceiverAttachment());
+                if(action.equals("reject"))
+                {
+                    taskService.completeTask(document.getId(), getUser()); // ????????????????????????????????????????????
+                    document.getSenderDispatchData().add(setDispatchData(State.REJECTED, document.getComment()));
+                }
+                else {
 
-            if(doc.getSenderStatus().getInternalName().equals("approve"))
+                    document.getSenderDispatchData().add(setDispatchData(document.getDocumentState(), ""));
+
+                    if (action.equals("request"))
+                    {   // Add Sender Responsible
+                        for (Staff staff : document.getSenderResponsible().getStaff())
+                        {   // Add task and Users
+                            taskService.add(addTask(document, getUser(staff)));
+                            document.getUsers().add(getUser(staff));
+                        }
+                    }
+                    if (action.equals("approve"))
+                    {
+                        taskService.completeTask(document.getId(), getUser());
+
+                        document.setSenderRegisteredNumber(registerService.generateRegistrationNumber());
+                        document.setSenderRegisteredDate(new Date());
+
+                        document.getSenderDispatchData().add(setDispatchData(State.REGISTERED, "Исходящий № : "
+                                + document.getSenderRegisteredNumber() + "<br> Дата : "
+                                + DATE_FORMAT.format(document.getSenderRegisteredDate()))
+                        );
+                        // Add Task and Receiver Responsible
+                        if (document.getReceiverResponsible().getResponsibleType() == 1) {
+                            for (Staff staff : document.getReceiverResponsible().getStaff()) {
+                                taskService.add(addTask(document, getUser(staff)));
+                                document.getUsers().add(getUser(staff));
+                            }
+                        } else {
+                            for (Department department : document.getReceiverResponsible().getDepartments()) {
+                                taskService.add(addTask(document, getUser(department)));
+                                document.getUsers().add(getUser(department));
+                            }
+                        }
+                        //endregion
+                    }
+                }
+
+            }
+            else
             {   // Receiver Data
-                document.setReceiverDispatchData(doc.getReceiverDispatchData());    // add existing Receiver DispatchData
-                document.getReceiverDispatchData().add(dispatchData);               // add new Receiver DispatchData
-                document.setReceiverStatus(documentStatus);                         // update Receiver DocumentStatus
-
-                taskService.completeTask(document.getId(), getUser());
+                document.setReceiverDispatchData(doc.getReceiverDispatchData());                                      // add existing Receiver DispatchData
+                document.setReceiverStatus(documentStatus);                                                           // update Receiver DocumentStatus
+                document.getReceiverDispatchData().add(setDispatchData(document.getDocumentState(), ""));  // add new Receiver DispatchData
 
                 if(action.equals("accept"))
                 {
+                    taskService.completeTask(document.getId(), getUser());
+
                     document.setReceiverRegisteredNumber(registerService.generateRegistrationNumber());
                     document.setReceiverRegisteredDate(new Date());
+
+                    document.getReceiverDispatchData().add(setDispatchData(State.REGISTERED, "Входящий № : "
+                            + document.getReceiverRegisteredNumber() + "<br> Дата : "
+                            + DATE_FORMAT.format(document.getReceiverRegisteredDate()))
+                    );
                     //region Add task
-                    for(Staff s : document.getReceiverExecutor().getStaff()) {
-                        taskService.add(addTask(document, s));
+                    if(document.getReceiverResponsible().getResponsibleType() == 1)
+                    {
+                        for(Staff staff : document.getReceiverResponsible().getStaff()) {
+                            taskService.add(addTask(document, getUser(staff)));
+                        }
+                    }
+                    else
+                    {
+                        for(Department department : document.getReceiverResponsible().getDepartments()) {
+                            taskService.add(addTask(document, getUser(department)));
+                        }
+                    }
+                    //endregion
+                }
+
+                if(action.equals("send"))
+                {   // Add Receiver Executer
+                    taskService.completeTask(document.getId(), getUser());
+                    for(Staff staff : document.getReceiverExecutor().getStaff()) {
+                        taskService.add(addTask(document, getUser(staff)));
+                        document.getUsers().add(getUser(staff));
                     }
                 }
 
                 if(action.equals("start"))
                 {
-                    for(Staff s : document.getReceiverExecutor().getStaff()) {
-                        taskService.add(addTask(document, s));
-                    }
-                }
-            }
-            else
-            {   // Sender Data
-                document.getSenderDispatchData().add(dispatchData);                 // add new Sender DispatchData
-                document.setSenderStatus(documentStatus);                           // update Sender DocumentStatus
-
-                if(action.equals("request"))
-                {
-                    for(final Staff s : doc.getSenderResponsible().getStaff()) {
-                        taskService.add(addTask(document, s));
-                    }
-                }
-
-                if(action.equals("approve"))
-                {
-
-                    document.setSenderRegisteredNumber(registerService.generateRegistrationNumber());
-                    document.setSenderRegisteredDate(new Date());
                     taskService.completeTask(document.getId(), getUser());
-                    //region Add task
-                    Integer responsibleType = document.getReceiverResponsible().getResponsibleType();
-                    if(responsibleType == 1)
-                    {
-                        for(Staff s : document.getReceiverResponsible().getStaff()) {
-                            taskService.add(addTask(document, s));
-                        }
+                    for(Staff staff : document.getReceiverExecutor().getStaff()) {
+                        taskService.add(addTask(document, getUser(staff)));
                     }
-                    else
-                    {
-                        for(Department d : document.getReceiverResponsible().getDepartments()) {
-                            taskService.add(addTask(document, d));
-                        }
-                    }
-                    //endregion
+                }
+
+                if(action.equals("done"))
+                {
+                    taskService.completeTask(document.getId(), getUser());
+                }
+
+                if(action.equals("reject"))
+                {
+                    taskService.completeTask(document.getId(), getUser());
+                    document.getReceiverDispatchData().add(setDispatchData(State.REJECTED, document.getComment()));
                 }
             }
             documentService.update(document);
@@ -692,250 +544,180 @@ public class DocumentFlowController extends BaseController {
     private void saveIncomingDocument(Document document, String action) {
 
         DocumentStatus documentStatus = documentStatusService.getByInternalName(action);
-        DispatchData dispatchData = setDispatchData(action, document);
-
-        document = setER(document);
         document.setGeneralStatus(documentStatus);
-        document.getUsers().add(getUser());
 
         if(document.getId() == null)
         {
-            document.getSenderDispatchData().add(dispatchData);                     // add new Sender DispatchData
-            document.setSenderStatus(documentStatus);                               // update Sender DocumentStatus
+            document.getUsers().add(getUser());
             document.setDocumentState(document.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
 
             if(action.equals("register"))
             {
+                document.getReceiverDispatchData().add(setDispatchData(State.DRAFT, ""));
+                document.getReceiverDispatchData().add(setDispatchData(State.REGISTERED, "Входящий № : "
+                        + document.getReceiverRegisteredNumber() + "<br> Дата : "
+                        + DATE_FORMAT.format(document.getReceiverRegisteredDate()))
+                );
                 document = documentService.save(document);
-
-                for(final Staff s : document.getSenderResponsible().getStaff()) {
-                    taskService.add(addTask(document, s));
-                }
-            } else {
+                //region Add task and Users
+                taskService.add(addTask(document, getUser()));
+                //endregion
+                documentService.update(document);
+            }
+            else
+            {
+                document.getReceiverDispatchData().add(setDispatchData(document.getDocumentState(), ""));
                 documentService.save(document);
             }
         }
         else
         {
             Document doc = documentService.findById(document.getId());
-
-            document.setSenderDispatchData(doc.getSenderDispatchData());            // add existing Sender DispatchData
-            document.setSenderStatus(doc.getSenderStatus());                        // add existing Sender DocumentStatus
+            document.setUsers(doc.getUsers());
             document.setDocumentState(doc.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
+            document.setReceiverDispatchData(doc.getReceiverDispatchData());                                      // add existing Receiver DispatchData
+            document.setReceiverStatus(documentStatus);                                                           // update Receiver DocumentStatus
 
-            if(doc.getSenderStatus().getInternalName().equals("register"))
-            {   // Receiver Data
-                document.setReceiverDispatchData(doc.getReceiverDispatchData());    // add existing Receiver DispatchData
-                document.getReceiverDispatchData().add(dispatchData);               // add new Receiver DispatchData
-                document.setReceiverStatus(documentStatus);                         // update Receiver DocumentStatus
-
+            if(action.equals("reject"))
+            {
                 taskService.completeTask(document.getId(), getUser());
-
-                if(action.equals("accept"))
-                {
-                    document.setReceiverRegisteredNumber("DOCR-" + new Random().nextInt(100));
-                    document.setReceiverRegisteredDate(new Date());
-                    //region Add Task
-                    Integer responsibleType = document.getReceiverResponsible().getResponsibleType();
-                    if(responsibleType == 1)
-                    {
-                        for(Staff s : document.getReceiverExecutor().getStaff()) {
-                            taskService.add(addTask(document, s));
-                        }
-                    }
-                    else if(responsibleType == 2)
-                    {
-                        for(Department d : document.getReceiverExecutor().getDepartments()) {
-                            taskService.add(addTask(document, d));
-                        }
-                    }
-                    else if(responsibleType == 3)
-                    {
-                        for(Organization o : document.getReceiverExecutor().getOrganizations()) {
-                            taskService.add(addTask(document, o));
-                        }
-                    }
-                    else
-                    {
-                        for(Person p : document.getReceiverExecutor().getPerson()) {
-                            taskService.add(addTask(document, p));
-                        }
-                    }
-                    //endregion
-                }
-
-                if(action.equals("start"))
-                {
-                    //region Add Task
-                    Integer responsibleType = document.getReceiverResponsible().getResponsibleType();
-                    if(responsibleType == 1)
-                    {
-                        for(Staff s : document.getReceiverExecutor().getStaff()) {
-                            taskService.add(addTask(document, s));
-                        }
-                    }
-                    else if(responsibleType == 2)
-                    {
-                        for(Department d : document.getReceiverExecutor().getDepartments()) {
-                            taskService.add(addTask(document, d));
-                        }
-                    }
-                    else if(responsibleType == 3)
-                    {
-                        for(Organization o : document.getReceiverExecutor().getOrganizations()) {
-                            taskService.add(addTask(document, o));
-                        }
-                    }
-                    else
-                    {
-                        for(Person p : document.getReceiverExecutor().getPerson()) {
-                            taskService.add(addTask(document, p));
-                        }
-                    }
-                    //endregion
-                }
+                document.getReceiverDispatchData().add(setDispatchData(State.REJECTED, document.getComment()));
             }
             else
-            {   // Sender Data
-                document.getSenderDispatchData().add(dispatchData);                 // add new Sender DispatchData
-                document.setSenderStatus(documentStatus);                           // update Sender DocumentStatus
-
-                if(action.equals("register"))
+            {
+                if (action.equals("register"))
                 {
-                    document.setSenderRegisteredNumber("DOCS-" + new Random().nextInt(100));
-                    document.setSenderRegisteredDate(new Date());
-                    //region ADD Task
-                    Integer responsibleType = document.getReceiverResponsible().getResponsibleType();
-                    if(responsibleType == 1)
-                    {
-                        for(Staff s : document.getReceiverResponsible().getStaff()) {
-                            taskService.add(addTask(document, s));
-                        }
-                    }
-                    else if(responsibleType == 2)
-                    {
-                        for(Department d : document.getReceiverResponsible().getDepartments()) {
-                            taskService.add(addTask(document, d));
-                        }
-                    }
-                    else if(responsibleType == 3)
-                    {
-                        for(Organization o : document.getReceiverResponsible().getOrganizations()) {
-                            taskService.add(addTask(document, o));
-                        }
-                    }
-                    else
-                    {
-                        for(Person p : document.getReceiverResponsible().getPerson()) {
-                            taskService.add(addTask(document, p));
-                        }
-                    }
+                    document.getReceiverDispatchData().add(setDispatchData(State.REGISTERED, "Входящий № : "
+                            + document.getReceiverRegisteredNumber() + "<br> Дата : "
+                            + DATE_FORMAT.format(document.getReceiverRegisteredDate()))
+                    );
+                    //region Add task and Users
+                    taskService.add(addTask(document, getUser()));
                     //endregion
                 }
+                else {
+                    document.getReceiverDispatchData().add(setDispatchData(document.getDocumentState(), ""));  // add new Receiver DispatchData
+                }
             }
+
+            if(action.equals("send"))
+            {
+                taskService.completeTask(document.getId(), getUser());
+                for(Staff staff : document.getReceiverExecutor().getStaff()) {
+                    taskService.add(addTask(document, getUser(staff)));
+                    document.getUsers().add(getUser(staff));
+                }
+            }
+
+            if(action.equals("start"))
+            {
+                taskService.completeTask(document.getId(), getUser());
+                taskService.add(addTask(document, getUser()));
+            }
+
+            if(action.equals("done"))
+            {
+                taskService.completeTask(document.getId(), getUser());
+            }
+
             documentService.update(document);
         }
     }
     private void saveOutgoingDocument(Document document, String action) {
 
-        DispatchData dispatchData = setDispatchData(action, document);
         DocumentStatus documentStatus = documentStatusService.getByInternalName(action);
-
-        document = setER(document);
         document.setGeneralStatus(documentStatus);
-        document.getUsers().add(getUser());
 
         if(document.getId() == null)
         {
-            document.getSenderDispatchData().add(dispatchData);
-            document.setSenderStatus(documentStatus);
+            document.getUsers().add(getUser());
             document.setDocumentState(document.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
+            document.setSenderStatus(documentStatus);
 
             if(action.equals("request"))
             {
-                document = documentService.save(document);
-                for(final Staff s : document.getSenderResponsible().getStaff()) {
-                    taskService.add(addTask(document, s));
+                document.getSenderDispatchData().add(setDispatchData(State.DRAFT, ""));
+                //region Add task and Users
+                if (document.getSenderResponsible().getResponsibleType() == 1) {
+                    for (Staff staff : document.getReceiverResponsible().getStaff()) {
+                        taskService.add(addTask(document, getUser(staff)));
+                        document.getUsers().add(getUser(staff));
+                    }
+                } else {
+                    for (Organization organization : document.getReceiverResponsible().getOrganizations()) {
+                        //taskService.add(addTask(document, organization));
+                        document.getUsers().add(getUser(organization));
+                    }
                 }
-            } else {
-                documentService.save(document);
+                //endregion
             }
+            document.getSenderDispatchData().add(setDispatchData(document.getDocumentState(), ""));
+            documentService.save(document);
         }
         else
         {
             Document doc = documentService.findById(document.getId());
+            document.setUsers(doc.getUsers());
             document.setDocumentState(doc.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
+            document.setSenderDispatchData(doc.getSenderDispatchData());
 
-            document.setSenderDispatchData(doc.getSenderDispatchData());            // add existing Sender DispatchData
-            document.setSenderStatus(doc.getSenderStatus());                        // add existing Sender DocumentStatus
+            document.setSenderStatus(documentStatus);
 
-            //document.setSenderAttachment(doc.getSenderAttachment());
-            //document.setReceiverAttachment(doc.getReceiverAttachment());
-
-            if(doc.getSenderStatus().getInternalName().equals("approve"))
-            {   // Receiver Data
-                document.setReceiverDispatchData(doc.getReceiverDispatchData());    // add existing Receiver DispatchData
-                document.getReceiverDispatchData().add(dispatchData);               // add new Receiver DispatchData
-                document.setReceiverStatus(documentStatus);                         // update Receiver DocumentStatus
-
+            if(action.equals("reject"))
+            {
                 taskService.completeTask(document.getId(), getUser());
-
-                if(action.equals("register"))
-                {
-                    document.setReceiverRegisteredNumber("DOCR-" + new Random().nextInt(100));
-                    document.setReceiverRegisteredDate(new Date());
-                    document.setDocumentState(State.DONE);
-                    document.setGeneralStatus(documentStatusService.getByInternalName("done"));
-                }
+                document.getSenderDispatchData().add(setDispatchData(State.REJECTED, document.getComment()));
             }
             else
-            {   // Sender Data
-                document.getSenderDispatchData().add(dispatchData);                 // add new Sender DispatchData
-                document.setSenderStatus(documentStatus);                           // update Sender DocumentStatus
+            {
+                document.getSenderDispatchData().add(setDispatchData(document.getDocumentState(), ""));
 
-                if(action.equals("request"))
-                {
-                    for(final Staff s : doc.getSenderResponsible().getStaff()) {
-                        taskService.add(addTask(document, s));
-                    }
-                }
-
-                if(action.equals("approve"))
-                {
-                    document.setSenderRegisteredNumber("DOCS-" + new Random().nextInt(100));
-                    document.setSenderRegisteredDate(new Date());
-                    taskService.completeTask(document.getId(), getUser());
-                    //region Add task
-                    Integer responsibleType = document.getReceiverResponsible().getResponsibleType();
-                    if(responsibleType == 1)
-                    {
-                        for(Staff s : document.getReceiverResponsible().getStaff()) {
-                            taskService.add(addTask(document, s));
+                if (action.equals("request")) {
+                    //region Add task and Users
+                    if (document.getSenderResponsible().getResponsibleType() == 1) {
+                        for (Staff staff : document.getReceiverResponsible().getStaff()) {
+                            taskService.add(addTask(document, getUser(staff)));
+                            document.getUsers().add(getUser(staff));
                         }
-                    }
-                    else if(responsibleType == 2)
-                    {
-                        for(Department d : document.getReceiverResponsible().getDepartments()) {
-                            taskService.add(addTask(document, d));
-                        }
-                    }
-                    else if(responsibleType == 3)
-                    {
-                        for(Organization o : document.getReceiverResponsible().getOrganizations()) {
-                            taskService.add(addTask(document, o));
-                        }
-                    }
-                    else
-                    {
-                        for(Person p : document.getReceiverResponsible().getPerson()) {
-                            taskService.add(addTask(document, p));
+                    } else {
+                        for (Organization organization : document.getReceiverResponsible().getOrganizations()) {
+                            //taskService.add(addTask(document, organization));
+                            document.getUsers().add(getUser(organization));
                         }
                     }
                     //endregion
                 }
+                if (action.equals("approve")) {
+                    taskService.completeTask(document.getId(), getUser());
+
+                    document.setSenderRegisteredNumber(registerService.generateRegistrationNumber());
+                    document.setSenderRegisteredDate(new Date());
+
+                    document.getSenderDispatchData().add(setDispatchData(State.REGISTERED, "Исходящий № : "
+                            + document.getSenderRegisteredNumber() + "<br> Дата : "
+                            + DATE_FORMAT.format(document.getSenderRegisteredDate()))
+                    );
+
+                    document.getSenderDispatchData().add(setDispatchData(State.DONE, ""));
+
+                    //region Add task and Users
+                    if (document.getReceiverResponsible().getResponsibleType() == 1) {
+                        for (Staff staff : document.getReceiverResponsible().getStaff()) {
+                            taskService.add(addTask(document, getUser(staff)));
+                            document.getUsers().add(getUser(staff));
+                        }
+                    } else {
+                        for (Department department : document.getReceiverResponsible().getDepartments()) {
+                            //taskService.add(addTask(document, department));
+                            document.getUsers().add(getUser(department));
+                        }
+                    }
+                    //endregion
+                    document.setGeneralStatus(documentStatusService.getByInternalName("done"));
+                    document.setDocumentState(State.DONE);
+                }
             }
             documentService.update(document);
         }
-
     }
 }

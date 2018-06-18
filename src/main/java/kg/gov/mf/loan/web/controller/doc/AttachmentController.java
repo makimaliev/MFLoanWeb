@@ -15,7 +15,11 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.UUID;
 
 @CrossOrigin
 @RestController("restAttachmentController")
@@ -23,12 +27,46 @@ import java.util.Iterator;
 public class AttachmentController {
 
     private String path =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
-
     private AttachmentService attachmentService;
 
     @Autowired
     public AttachmentController(AttachmentService attachmentService) {
         this.attachmentService = attachmentService;
+    }
+
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    public ResponseEntity uploadFile(HttpServletRequest request) {
+
+        try {
+
+            String uuid = UUID.randomUUID().toString();
+            String fsname = uuid + ".atach";
+
+            MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
+            Iterator<String> itr = multipartRequest.getFileNames();
+
+            while (itr.hasNext()) {
+                String uploadedFile = itr.next();
+                MultipartFile file = multipartRequest.getFile(uploadedFile);
+                String mimeType = file.getContentType();
+                String filename = file.getOriginalFilename();
+
+                byte[] bytes = file.getBytes();
+                Path p = Paths.get(path + fsname);
+                Files.write(p, bytes);
+
+                Attachment attachment = new Attachment();
+                attachment.setName(filename);
+                attachment.setInternalName(fsname);
+                attachment.setMimeType(mimeType);
+                attachmentService.save(attachment);
+            }
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>("{}", HttpStatus.OK);
     }
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
@@ -67,39 +105,14 @@ public class AttachmentController {
         return new ResponseEntity<>(inputStream, headers, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public ResponseEntity uploadFile(HttpServletRequest request) {
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public ResponseEntity deleteFile(@RequestParam("id") Long id) {
 
-        try {
+        Attachment attachment = attachmentService.findById(id);
+        File file = new File(path + attachment.getInternalName());
+        file.delete();
 
-            String uuid = request.getParameterValues("uuid")[0];
-            String side = request.getParameterValues("side")[0];
-            MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
-            Iterator<String> itr = multipartRequest.getFileNames();
-
-            while (itr.hasNext()) {
-                String uploadedFile = itr.next();
-                MultipartFile file = multipartRequest.getFile(uploadedFile);
-                String mimeType = file.getContentType();
-                String filename = file.getOriginalFilename();
-                byte[] bytes = file.getBytes();
-
-                File f = new File(path + uuid + ".atach");
-                BufferedOutputStream buffStream = new BufferedOutputStream(new FileOutputStream(f));
-                buffStream.write(bytes);
-                buffStream.close();
-
-                Attachment attachment = new Attachment();
-                attachment.setName(filename);
-                attachment.setInternalName(uuid);
-                attachment.setMimeType(mimeType);
-                attachmentService.save(attachment);
-            }
-        }
-        catch (Exception e) {
-            return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
+        attachmentService.deleteById(attachment);
         return new ResponseEntity<>("{}", HttpStatus.OK);
     }
 }

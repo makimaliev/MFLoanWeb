@@ -1,0 +1,296 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+    <th:block th:fragment="hiddenFields">
+        <div hidden="hidden">
+            <input type="hidden" th:field="*{id}"/>
+            <input type="hidden" th:field="*{version}"/>
+            <input type="hidden" th:field="*{uuid}"/>
+            <input type="hidden" th:field="*{owner}"/>
+            <input type="hidden" th:field="*{archived}"/>
+            <input type="hidden" th:field="*{documentState}"/>
+            <input type="hidden" th:field="*{documentType.id}"/>
+            <input type="hidden" th:field="*{documentSubType.id}"/>
+        </div>
+    </th:block>
+    <th:block th:fragment="script">
+        <script type="text/javascript" th:inline="javascript">
+
+            $(document).ready(function() {
+
+                CKEDITOR.config.readOnly = [[${document.documentState.ordinal()}]] > 1;
+                CKEDITOR.replace("description", {
+                    language: 'ru',
+                    uiColor: '#ffffff',
+                    toolbar: [
+                        { name: 'clipboard', groups: [ 'clipboard' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteFromWord' ] },
+                        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
+                        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+                        { name: 'insert', items: [ 'Image', 'Table' ] },
+                        '/',
+                        { name: 'styles', items: [ 'Font', 'FontSize' ] },
+                        { name: 'colors', items: [ 'TextColor' ] },
+                        { name: 'tools', items: [ 'Maximize' ] }
+                    ],
+                    toolbarGroups: [
+                        { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+                        { name: 'forms' },
+                        '/',
+                        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+                        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align' ] },
+                        { name: 'insert' },
+                        '/',
+                        { name: 'styles' },
+                        { name: 'colors' },
+                        { name: 'tools' }
+                    ]
+                });
+
+                $('#senderDueDate_dtp').datetimepicker({
+                    autoclose: true,
+                    minView : 2,
+                    maxView : 2,
+                    format : 'dd-mm-yyyy hh:ii'
+                });
+                $('#senderRegisteredDate_dtp').datetimepicker({
+                    autoclose: true,
+                    minView : 2,
+                    maxView : 2,
+                    format : 'dd-mm-yyyy hh:ii'
+                });
+                $('#receiverDueDate_dtp').datetimepicker({
+                    autoclose: true,
+                    minView : 2,
+                    maxView : 2,
+                    format : 'dd-mm-yyyy hh:ii'
+                });
+                $('#receiverRegisteredDate_dtp').datetimepicker({
+                    autoclose: true,
+                    minView : 2,
+                    maxView : 2,
+                    format : 'dd-mm-yyyy hh:ii'
+                });
+
+                $('.sdr').hide();
+                $('.rdr').hide();
+
+                if($('#id').val() > 0 || $('#id').val() != null) {
+                    $('#si' + $('#srt_select').val()).show();
+                    $('#ri' + $('#rrt_select').val()).show();
+                }
+
+                $('#srt_select').change(function(){
+                    $('.sdr ').hide();
+                    $('#si' + $(this).val()).show();
+                });
+                $('#rrt_select').change(function(){
+                    $('.rdr ').hide();
+                    $('#ri' + $(this).val()).show();
+                });
+
+                $('#srs').select2({
+                    tags: true,
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: '/data/staff',
+                        data: function (params) {
+                            var query = {
+                                name: params.term
+                            }
+                            return query;
+                        },
+                        processResults: function (data) {
+                            return {
+                                results : data
+                            };
+                        }
+                    }
+                });
+                $('#sro').select2({
+                    tags: true,
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: '/data/organizations',
+                        data: function (params) {
+                            var query = {
+                                name: params.term
+                            }
+                            return query;
+                        },
+                        processResults: function (data) {
+                            return {
+                                results : data
+                            };
+                        }
+                    }
+                });
+                $('#srp').select2({
+                    tags: true,
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: '/data/person',
+                        data: function (params) {
+                            var query = {
+                                name: params.term
+                            }
+                            return query;
+                        },
+                        processResults: function (data) {
+                            return {
+                                results : data
+                            };
+                        }
+                    }
+                });
+
+                $('#rrs').select2({
+                    tags: true,
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: '/data/staff',
+                        data: function (params) {
+                            var query = {
+                                name: params.term
+                            }
+                            return query;
+                        },
+                        processResults: function (data) {
+                            return {
+                                results : data
+                            };
+                        }
+                    }
+                });
+                $('#rrd').select2({
+                    tags: true,
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: '/data/department',
+                        data: function (params) {
+                            var query = {
+                                name: params.term
+                            }
+                            return query;
+                        },
+                        processResults: function (data) {
+                            return {
+                                results : data
+                            };
+                        }
+                    }
+                });
+                $('#rro').select2({
+                    tags: true,
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: '/data/organizations',
+                        data: function (params) {
+                            var query = {
+                                name: params.term
+                            }
+                            return query;
+                        },
+                        processResults: function (data) {
+                            return {
+                                results : data
+                            };
+                        }
+                    }
+                });
+                $('#rrp').select2({
+                    tags: true,
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: '/data/person',
+                        data: function (params) {
+                            var query = {
+                                name: params.term
+                            }
+                            return query;
+                        },
+                        processResults: function (data) {
+                            return {
+                                results : data
+                            };
+                        }
+                    }
+                });
+
+                $('#res').select2({
+                    tags: true,
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: '/data/staff',
+                        data: function (params) {
+                            var query = {
+                                name: params.term
+                            }
+                            return query;
+                        },
+                        processResults: function (data) {
+                            return {
+                                results : data
+                            };
+                        }
+                    }
+                });
+            });
+
+            function doClick(side) {
+                var el = document.getElementById(side);
+                if (el) {
+                    el.click();
+                }
+            }
+            function handleFiles(files, side) {
+
+                var filesList = document.getElementById(side);
+
+                //document.getElementById(side).remove();
+                $("#" + side + " tr").remove();
+
+                if (files.length)
+                {
+                    filesList.style.display = "block"
+
+                    for (var i=0; i < files.length; i++) {
+
+                        var tr = document.createElement("tr");
+                        filesList.appendChild(tr);
+
+                        var td = document.createElement("td");
+                        tr.appendChild(td);
+
+                        var info = document.createElement("label");
+                        info.innerHTML = files[i].name;
+                        td.appendChild(info);
+                    }
+                }
+                else
+                {
+                    filesList.style.display = "none"
+                }
+            }
+        </script>
+    </th:block>
+    <th:block th:fragment="statusData">
+        <div class="m-form__group">
+            <ol>
+                <li th:each="dd : *{senderDispatchData}">
+                    <label class="form-control" th:utext="${dd.dispatchBy.getUsername()} + '<br>[ ' + ${#dates.format(dd.dispatchInitTime, 'dd-MM-yyyy HH:mm')} + ' ] :  <label class=\'text-success\'>' + ${dd.dispatchType.stringValue()} + '</label>'"></label>
+                    <label class="form-control alert alert-info" th:utext="${dd.description}" th:if="${not #strings.isEmpty(dd.description)}"></label>
+                <li th:each="dd : *{receiverDispatchData}">
+                    <label class="form-control" th:utext="${dd.dispatchBy.getUsername()} + '<br>[ ' + ${#dates.format(dd.dispatchInitTime, 'dd-MM-yyyy HH:mm')} + ' ] :  <label class=\'text-success\'>' + ${dd.dispatchType.stringValue()} + '</label>'"></label>
+                    <label class="form-control alert alert-info" th:utext="${dd.description}" th:if="${not #strings.isEmpty(dd.description)}"></label>
+            </ol>
+        </div>
+    </th:block>
+    <th:block th:fragment="documentActions">
+        <button type="button" class="btn btn-primary" onclick="window.history.back()"> Назад </button>
+        <button type="submit" style="margin: 3px" class="btn btn-success" name="action" th:each="action : ${actions}" th:value="${action.internalName}" th:text="${action.actionName}" ></button>
+    </th:block>
+
+</body>
+</html>

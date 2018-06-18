@@ -52,7 +52,7 @@ public class RestdataController {
         return data;
     }
 
-    @RequestMapping("/data/organization")
+    @RequestMapping("/data/organizations")
     @ResponseBody
     public List<Result> getOrganization(@RequestParam String name)
     {
