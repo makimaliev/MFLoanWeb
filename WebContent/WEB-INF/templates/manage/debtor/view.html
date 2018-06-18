@@ -147,85 +147,53 @@
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane active" id="loanListOfDebtor" role="tabpanel">
-								<div class="m-section">
-									<div class="m-section__content">
-										<a th:href="@{/manage/debtor/__${debtorId}__/loan/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.debtor.addLoan}" sec:authorize="hasRole('ADMIN')"></a>
-									</div>
-									<br>
-									<div class="m-section__content">
-										<a th:href="@{/manage/debtor/__${debtorId}__/generatesummary}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.debtor.generateSummary}" sec:authorize="hasRole('ADMIN')"></a>
-									</div>
-								</div>
-								<!--begin::Section-->
-								<div class="m-section">
-									<div class="m-section__content">
-										<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
-											<div>
-												<table class="table">
-													<thead class="thead-default">
-													<tr>
-														<th class="table-id">Id</th>
-														<th th:text="#{label.loan.table.regNumber}"></th>
-														<th th:text="#{label.loan.table.regDate}"></th>
-														<th th:text="#{label.loan.table.amount}"></th>
-														<th th:text="#{label.loan.table.currency}"></th>
-														<th th:text="#{label.loan.table.type}"></th>
-														<th th:text="#{label.loan.table.state}"></th>
-														<th th:text="#{label.loan.table.superId}"></th>
-														<!--<th th:text="#{label.loan.table.hasSubLoan}"></th>-->
-														<!--<th th:text="#{label.loan.table.parentId}"></th>-->
-														<th th:text="#{label.loan.table.creditOrderId}"></th>
-														<th>&nbsp;</th>
-													</tr>
-													</thead>
-													<tbody>
-													<tr th:each="loan : ${loans}">
-														<td class="table-id" th:text="${loan.id}"></td>
-														<td th:text="${loan.regNumber}"></td>
-														<td th:text="${loan.regDate}"></td>
-														<td th:text="${loan.amount}"></td>
-														<td th:text="${loan.currency.name}"></td>
-														<td th:text="${loan.loanType.name}"></td>
-														<td th:text="${loan.loanState.name}"></td>
-														<td th:text="${loan.supervisorId}"></td>
-														<!--<td th:text="${loan.hasSubLoan}"></td>-->
-														<!--<td th:text="${loan.parentLoan!=null} ? ${loan.parentLoan.id} : 'null'"></td>-->
-														<td th:text="${loan.creditOrder.id}"></td>
-														<td class="table-actions text-right">
+								<!--begin: Search Form -->
+								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+									<div class="row align-items-center">
+										<div class="col-xl-6 order-1 order-xl-1">
+											<div class="form-group m-form__group row align-items-center">
+												<div class="col-lg-6">
+													<div class="m-input-icon m-input-icon--left">
+														<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search">
+														<span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
-																<div class="dropdown">
-																	<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
-																		<i class="la la-ellipsis-h"></i>
-																	</a>
-																	<div class="dropdown-menu dropdown-menu-right">
-																		<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/view}">
-																			<span th:text="#{label.table.view}"></span>
-																		</a>
-																		<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/save}" sec:authorize="hasRole('ADMIN')">
-																			<span th:text="#{label.table.edit}"></span>
-																		</a>
-																		<!--
-																		<a class="dropdown-item" href="#" sec:authorize="hasRole('ADMIN')">
-																			<span>
-																				<form th:action="@{/manage/debtor/__${debtorId}__/loan/delete}" method="post">
-																					<input hidden="true" type="text" id="id" name="id" th:value="${loan.id}" />
-																					<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
-																				</form>
-																			</span>
-																		</a>
-																		-->
-																	</div>
-																</div>
+																<i class="la la-search"></i>
 															</span>
-														</td>
-													</tr>
-													</tbody>
-												</table>
+														</span>
+													</div>
+												</div>
 											</div>
+										</div>
+
+										<div class="col-xl-3 order-2 order-xl-2 m--align-right">
+											<a th:href="@{/manage/debtor/__${debtor.id}__/generatesummary}" class="btn btn-focus m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span>
+													<i class="la la-th-list "></i>
+													<span>
+														Создать сводку
+													</span>
+												</span>
+											</a>
+											<div class="m-separator m-separator--dashed d-xl-none"></div>
+										</div>
+
+										<div class="col-xl-3 order-3 order-xl-3 m--align-right">
+											<a th:href="@{/manage/debtor/__${debtor.id}__/loan/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span>
+													<i class="la la-plus"></i>
+													<span>
+														Добавить кредит
+													</span>
+												</span>
+											</a>
+											<div class="m-separator m-separator--dashed d-xl-none"></div>
 										</div>
 									</div>
 								</div>
-								<!--end::Section-->
+								<!--end: Search Form -->
+								<!--begin: Datatable -->
+								<div class="m_datatable" id="local_data"></div>
+								<!--end: Datatable -->
 							</div>
 							<div class="tab-pane" id="agreementListOfDebtor" role="tabpanel">
 								<div class="m-section">
@@ -388,6 +356,15 @@
 
 <div th:replace="fragments/footer :: footer-js"/>
 
+<!--begin::Page Resources -->
+<script th:src="@{/js/data-debtor-loan.js}" th:inline="javascript" type="text/javascript"></script>
+<!--end::Page Resources -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var jsonLoans = /*[[${loans}]]*/ [];
+    var debtorId = /*[[${debtor.id}]]*/ [];
+    /*]]>*/
+</script>
 </body>
 <!-- end::Body -->
 </html>

@@ -3,6 +3,8 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import kg.gov.mf.loan.admin.org.service.DistrictService;
 import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
@@ -12,7 +14,10 @@ import kg.gov.mf.loan.manage.model.debtor.*;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.repository.debtor.DebtorRepository;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
+import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.process.service.JobItemService;
+import kg.gov.mf.loan.web.fetchModels.EntityDocumentModel;
+import kg.gov.mf.loan.web.fetchModels.LoanModel;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -41,6 +46,10 @@ import kg.gov.mf.loan.manage.service.loan.LoanTypeService;
 import kg.gov.mf.loan.manage.service.order.CreditOrderService;
 import kg.gov.mf.loan.manage.service.orderterm.OrderTermCurrencyService;
 import kg.gov.mf.loan.web.util.Utils;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 @Controller
 public class DebtorController {
@@ -99,6 +108,13 @@ public class DebtorController {
 	@Autowired
 	WorkSectorService workSectorService;
 
+	@Autowired
+	LoanRepository loanRepository;
+
+	/** The entity manager. */
+	@PersistenceContext
+	private EntityManager entityManager;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
@@ -112,7 +128,10 @@ public class DebtorController {
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtor", debtor);
 
-		model.addAttribute("loans", debtor.getLoans());
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+		String jsonLoans = gson.toJson(getLoansByDebtorId(debtorId));
+		model.addAttribute("loans", jsonLoans);
+
 		Set<CollateralAgreement> allAgreements = new HashSet<>();
 		Set<CollectionProcedure> procs = new HashSet<>();
 		for (Loan loan: debtor.getLoans()
@@ -378,5 +397,22 @@ public class DebtorController {
 		return "redirect:" + "/manage/debtor/worksector/list";
 	}
 	//END - WORK SECTOR
+
+	private List<LoanModel> getLoansByDebtorId(long debtorId)
+	{
+		String baseQuery = "SELECT loan.id, loan.regNumber, loan.regDate, loan.amount, loan.currencyId, currency.name as currencyName,\n" +
+				"  loan.loanTypeId, type.name as loanTypeName, loan.loanStateId, state.name as loanStateName,\n" +
+				"  loan.supervisorId, loan.hasSubLoan, IFNULL(loan.parentLoanId, 0) as parentLoanId, loan.creditOrderId\n" +
+				"FROM loan loan, orderTermCurrency currency, loanType type, loanState state\n" +
+				"WHERE loan.currencyId = currency.id\n" +
+				"  AND loan.loanTypeId = type.id\n" +
+				"  AND loan.loanStateId = state.id\n" +
+				"  AND loan.debtorId =" + debtorId;
+
+		Query query = entityManager.createNativeQuery(baseQuery, LoanModel.class);
+
+		List<LoanModel> loans = query.getResultList();
+		return loans;
+	}
 
 }
