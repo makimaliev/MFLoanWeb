@@ -148,6 +148,7 @@
 											<tr>
 												<th class="table-id">Id</th>
 												<th th:text="#{label.inpection.onDate}"></th>
+												<th th:text="#{label.inpection.details}"></th>
 												<th th:text="#{label.inpection.type}"></th>
 												<th>&nbsp;</th>
 											</tr>
@@ -156,6 +157,7 @@
 											<tr th:each="ins : ${inpections}">
 												<td class="table-id" th:text="${ins.id}"></td>
 												<td th:text="${ins.onDate}"></td>
+												<td th:text="${ins.details}"></td>
 												<td th:text="${ins.inspectionResultType.name}"></td>
 												<td class="table-actions text-right">
 													<span>

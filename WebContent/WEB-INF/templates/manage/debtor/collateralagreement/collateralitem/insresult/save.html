@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
 	<title th:text="#{label.add.inspectionResult.title}"></title>
@@ -59,7 +59,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="description" th:value="${ins.details}">
+										<input type="text" class="form-control m-input" name="details" th:value="${ins.details}">
 									</div>
 								</div>
 
