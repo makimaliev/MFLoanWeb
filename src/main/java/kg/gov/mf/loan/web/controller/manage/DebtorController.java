@@ -26,8 +26,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import kg.gov.mf.loan.admin.org.model.Organization;
-import kg.gov.mf.loan.admin.org.model.Person;
 import kg.gov.mf.loan.admin.org.service.OrganizationService;
 import kg.gov.mf.loan.admin.org.service.PersonService;
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
@@ -101,11 +99,6 @@ public class DebtorController {
 	@Autowired
 	WorkSectorService workSectorService;
 
-	private static final int BUTTONS_TO_SHOW = 5;
-	private static final int INITIAL_PAGE = 0;
-	private static final int INITIAL_PAGE_SIZE = 10;
-	private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
-
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
@@ -155,42 +148,6 @@ public class DebtorController {
 		model.addAttribute("sectors", workSectorService.list());
 
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
-		return "/manage/debtor/list2";
-	}
-
-	@RequestMapping(method = RequestMethod.GET, value = "/manage/debtor/search")
-	public String findAllBySpecification(@RequestParam(value = "q") String q,
-										 @RequestParam("pageSize") Optional<Integer> pageSize,
-										 @RequestParam("page") Optional<Integer> page, ModelMap model) {
-
-		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
-		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
-
-		Sort sort = new Sort(new Sort.Order(Sort.Direction.ASC, "id"));
-		Pageable pageable = new PageRequest(evalPage, evalPageSize, sort);
-
-		QDebtor debtor = QDebtor.debtor;
-		BooleanExpression hasNameLike = debtor.name.like("%" + q + "%");
-		BooleanExpression hasWorksectorLike = debtor.workSector.name.like("%" + q + "%");
-		//BooleanExpression hasDistrictLike = debtor.owner.address.district.name.like("%" + q + "%");
-		Page<Debtor> page1 = debtorRepository.findAll(hasNameLike.or(hasWorksectorLike), pageable);
-		List<Debtor> debtors = page1.getContent();
-
-		int count = debtorRepository.findAll(hasNameLike, pageable).getTotalPages();
-
-		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
-
-		model.addAttribute("debtor", new Debtor());
-		model.addAttribute("count", count);
-		model.addAttribute("debtors", debtors);
-		model.addAttribute("selectedPageSize", evalPageSize);
-		model.addAttribute("pageSizes", PAGE_SIZES);
-		model.addAttribute("pager", pager);
-		model.addAttribute("current", evalPage);
-		model.addAttribute("q", q);
-
-		model.addAttribute("loggedinuser", Utils.getPrincipal());
-
 		return "/manage/debtor/list";
 	}
 
@@ -250,13 +207,13 @@ public class DebtorController {
 			debtorService.update(debtor);
 		}
 
-		return "redirect:" + "/manage/debtor/list";
+		return "redirect:" + "/manage/debtor/" + debtor.getId() + "/view";
 	}
 
-	@RequestMapping(value="/manage/debtor/delete", method=RequestMethod.POST)
-	public String deleteDebtor(long id) {
-		if(id > 0)
-			debtorService.remove(debtorService.getById(id));
+	@RequestMapping(value="/manage/debtor/{debtorId}/delete", method=RequestMethod.GET)
+	public String deleteDebtor(@PathVariable("debtorId")Long debtorId) {
+		if(debtorId > 0)
+			debtorRepository.delete(debtorRepository.findOne(debtorId));
 		return "redirect:" + "/manage/debtor/list";
 	}
 
