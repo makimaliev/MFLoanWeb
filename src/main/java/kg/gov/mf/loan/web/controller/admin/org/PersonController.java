@@ -246,7 +246,7 @@ public class PersonController {
 		
 		Region modelRegion = (Region) this.regionService.findById(1);
 
-		District modelDistrict = (District) this.districtService.findByRegion(modelRegion).get(5);
+		District modelDistrict = (District) this.districtService.findByRegion(modelRegion).get(0);
 
 		Aokmotu modelAokmotu = (Aokmotu) this.aokmotuService.findByDistrict(modelDistrict).get(0);
 

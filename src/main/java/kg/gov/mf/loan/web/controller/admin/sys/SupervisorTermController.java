@@ -134,7 +134,7 @@ public class SupervisorTermController {
 
 		Region modelRegion = (Region) this.regionService.findById(1);
 
-		District modelDistrict = (District) this.districtService.findByRegion(modelRegion).get(5);
+		District modelDistrict = (District) this.districtService.findByRegion(modelRegion).get(0);
 
 
 		model.addAttribute("regionList", this.regionService.findAll());
@@ -167,7 +167,7 @@ public class SupervisorTermController {
 
 		Region modelRegion = (Region) this.regionService.findById(1);
 
-		District modelDistrict = (District) this.districtService.findByRegion(modelRegion).get(5);
+		District modelDistrict = (District) this.districtService.findByRegion(modelRegion).get(0);
 
 
 		model.addAttribute("regionList", this.regionService.findAll());
