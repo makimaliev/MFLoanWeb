@@ -66,7 +66,21 @@ public class PrintoutTemplateController {
 		model.addAttribute("printoutTemplate", printoutTemplate);
 
 		return "output/printout/printoutTemplateDetails";
-	}	
+	}
+
+	@RequestMapping("printoutTemplate/{id}/objectId/{objectId}/select")
+	public String viewPrintoutTemplateSelectPageByObjectId(@PathVariable("id") long id, @PathVariable("objectId") long objectId,Model model) {
+
+		PrintoutTemplate printoutTemplate = this.printoutTemplateService.findById(id);
+
+		Printout printout = this.printoutService.findById(id);
+
+		model.addAttribute("printout", printout);
+		model.addAttribute("objectId", objectId);
+		model.addAttribute("printoutTemplateList", printout.getPrintoutTemplates());
+
+		return "output/printout/printoutTemplateSelectList";
+	}
     
 	
 	@RequestMapping(value = "/printoutTemplate/add", method = RequestMethod.GET)

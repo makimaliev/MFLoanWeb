@@ -1068,6 +1068,7 @@
 														<th th:text="#{label.loanSummary.overdueInterest}">overdueInterest</th>
 														<th th:text="#{label.loanSummary.overduePenalty}">overduePenalty</th>
 														<th th:text="#{label.loanSummary.overdueFee}">overdueFee</th>
+														<th>&nbsp;</th>
 													</tr>
 													</thead>
 													<tbody>
@@ -1091,6 +1092,37 @@
 														<td th:text="${#numbers.formatDecimal(summary.overdueInterest, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
 														<td th:text="${#numbers.formatDecimal(summary.overduePenalty, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
 														<td th:text="${#numbers.formatDecimal(summary.overdueFee, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
+														<td class="table-actions text-right">
+															<span>
+																<div class="dropdown">
+																	<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																		<i class="la la-ellipsis-h"></i>
+																	</a>
+																	<div class="dropdown-menu dropdown-menu-right">
+																		<a class="dropdown-item"
+																		   th:href="@{/printoutTemplate/1/objectId/__${summary.id}__/select}"
+																		   role="button">
+																			<span >Реестр погашений</span>
+																		</a>
+																		<a class="dropdown-item"
+																		   th:href="@{/printoutTemplate/2/objectId/__${summary.id}__/select}"
+																		   role="button">
+																			<span >Детальный расчет</span>
+																		</a>
+																		<a class="dropdown-item"
+																		   th:href="@{/printoutTemplate/3/objectId/__${summary.id}__/select}"
+																		   role="button">
+																			<span >Расчет</span>
+																		</a>
+																		<a class="dropdown-item"
+																		   th:href="@{/printoutTemplate/4/objectId/__${summary.id}__/select}"
+																		   role="button">
+																			<span >Акт сверки</span>
+																		</a>
+																	</div>
+																</div>
+															</span>
+														</td>
 													</tr>
 													</tbody>
 												</table>
