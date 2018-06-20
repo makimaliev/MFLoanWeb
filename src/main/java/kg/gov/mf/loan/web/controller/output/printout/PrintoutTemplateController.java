@@ -71,11 +71,8 @@ public class PrintoutTemplateController {
 	@RequestMapping("printoutTemplate/{id}/objectId/{objectId}/select")
 	public String viewPrintoutTemplateSelectPageByObjectId(@PathVariable("id") long id, @PathVariable("objectId") long objectId,Model model) {
 
-		PrintoutTemplate printoutTemplate = this.printoutTemplateService.findById(id);
-
 		Printout printout = this.printoutService.findById(id);
 
-		model.addAttribute("printout", printout);
 		model.addAttribute("objectId", objectId);
 		model.addAttribute("printoutTemplateList", printout.getPrintoutTemplates());
 
@@ -206,6 +203,27 @@ public class PrintoutTemplateController {
 
 					break;
 
+                case "LOAN_SUMMARY":
+
+
+                    try {
+
+                        PrintoutGeneratorLoanSummary printoutGeneratorLoanSummary = new PrintoutGeneratorLoanSummary();
+
+                        Document document = new Document(PageSize.A4.rotate(), 10, 10, 10, 10);
+
+                        PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
+
+                        response.setContentType("application/pdf");
+                        response.setHeader("Content-disposition","attachment; filename=xx.pdf");
+
+                        printoutGeneratorLoanSummary.generatePrintoutByTemplate(printoutTemplate, null, object_id,document);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    break;
 
 
 			}
