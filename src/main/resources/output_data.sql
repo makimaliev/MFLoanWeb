@@ -759,6 +759,126 @@ CREATE VIEW payment_view AS
 
 
 
+
+CREATE VIEW applied_entity_view AS
+  SELECT
+    `ae`.`id`                   AS `v_applied_entity_id`,
+    `ae`.`version`              AS `v_applied_entity_version`,
+    `ae`.`name`                 AS `v_applied_entity_name`,
+    `ae`.`appliedEntityListId`  AS `v_applied_entity_appliedEntityListId`,
+    `ae`.`appliedEntityStateId` AS `v_applied_entity_appliedEntityStateId`,
+    `ae`.`ownerId`              AS `v_applied_entity_ownerId`,
+    `ov`.`v_owner_address_id`   AS `v_owner_address_id`,
+    `ov`.`v_owner_region_id`    AS `v_owner_region_id`,
+    `ov`.`v_owner_district_id`  AS `v_owner_district_id`,
+    `ov`.`v_owner_aokmotu_id`   AS `v_owner_aokmotu_id`,
+    `ov`.`v_owner_village_id`   AS `v_owner_village_id`,
+    `ov`.`entityId`             AS `v_owner_entityId`,
+    `ov`.`ownerType`            AS `v_owner_ownerType`
+  FROM (`appliedentity` `ae`
+    JOIN `edu`.`owner_view` `ov`)
+  WHERE (`ae`.`ownerId` = `ov`.`id`);
+
+
+
+
+
+CREATE VIEW document_package_view AS
+  SELECT
+    `edu`.`documentpackage`.`id`                                 AS `v_document_package_id`,
+    `edu`.`documentpackage`.`approvedDate`                       AS `v_document_package_approvedDate`,
+    `edu`.`documentpackage`.`approvedRatio`                      AS `v_document_package_approvedRatio`,
+    `edu`.`documentpackage`.`completedDate`                      AS `v_document_package_completedDate`,
+    `edu`.`documentpackage`.`completedRatio`                     AS `v_document_package_completedRatio`,
+    `edu`.`documentpackage`.`name`                               AS `v_document_package_name`,
+    `edu`.`documentpackage`.`orderDocumentPackageId`             AS `v_document_package_orderDocumentPackageId`,
+    `edu`.`documentpackage`.`registeredRatio`                    AS `v_document_package_registeredRatio`,
+    `edu`.`documentpackage`.`appliedEntityId`                    AS `v_document_package_appliedEntityId`,
+    `edu`.`documentpackage`.`documentPackageStateId`             AS `v_document_package_documentPackageStateId`,
+    `edu`.`documentpackage`.`documentPackageTypeId`              AS `v_document_package_documentPackageTypeId`,
+    `applied_entity_view`.`v_applied_entity_id`                   AS `v_applied_entity_id`,
+    `applied_entity_view`.`v_applied_entity_version`              AS `v_applied_entity_version`,
+    `applied_entity_view`.`v_applied_entity_name`                 AS `v_applied_entity_name`,
+    `applied_entity_view`.`v_applied_entity_appliedEntityListId`  AS `v_applied_entity_appliedEntityListId`,
+    `applied_entity_view`.`v_applied_entity_appliedEntityStateId` AS `v_applied_entity_appliedEntityStateId`,
+    `applied_entity_view`.`v_applied_entity_ownerId`              AS `v_applied_entity_ownerId`,
+    `applied_entity_view`.`v_owner_address_id`                    AS `v_owner_address_id`,
+    `applied_entity_view`.`v_owner_region_id`                     AS `v_owner_region_id`,
+    `applied_entity_view`.`v_owner_district_id`                   AS `v_owner_district_id`,
+    `applied_entity_view`.`v_owner_aokmotu_id`                    AS `v_owner_aokmotu_id`,
+    `applied_entity_view`.`v_owner_village_id`                    AS `v_owner_village_id`,
+    `applied_entity_view`.`v_owner_entityId`                      AS `v_owner_entityId`,
+    `applied_entity_view`.`v_owner_ownerType`                     AS `v_owner_ownerType`
+  FROM (`edu`.`documentpackage`
+    JOIN `edu`.`applied_entity_view`)
+  WHERE (`edu`.`documentpackage`.`appliedEntityId` = `applied_entity_view`.`v_applied_entity_id`);
+
+
+
+
+CREATE VIEW entity_document_view AS
+  SELECT
+    `test`.`entitydocument`.`id`                                        AS `v_entity_document_id`,
+    `test`.`entitydocument`.`version`                                   AS `v_entity_document_version`,
+    `test`.`entitydocument`.`approvedBy`                                AS `v_entity_document_approvedBy`,
+    `test`.`entitydocument`.`approvedDate`                              AS `v_entity_document_approvedDate`,
+    `test`.`entitydocument`.`approvedDescription`                       AS `v_entity_document_approvedDescription`,
+    `test`.`entitydocument`.`completedBy`                               AS `v_entity_document_completedBy`,
+    `test`.`entitydocument`.`completedDate`                             AS `v_entity_document_completedDate`,
+    `test`.`entitydocument`.`completedDescription`                      AS `v_entity_document_completedDescription`,
+    `test`.`entitydocument`.`name`                                      AS `v_entity_document_name`,
+    `test`.`entitydocument`.`registeredDate`                            AS `v_entity_document_registeredDate`,
+    `test`.`entitydocument`.`registeredDescription`                     AS `v_entity_document_registeredDescription`,
+    `test`.`entitydocument`.`registeredNumber`                          AS `v_entity_document_registeredNumber`,
+    `test`.`entitydocument`.`documentPackageId`                         AS `v_entity_document_documentPackageId`,
+    `test`.`entitydocument`.`entityDocumentStateId`                     AS `v_entity_document_entityDocumentStateId`,
+    `test`.`entitydocument`.`entityDocumentRegisteredById`              AS `v_entity_document_entityDocumentRegisteredById`,
+    `test`.`entitydocument`.`documentTypeId`                            AS `v_entity_document_documentTypeId`,
+    `document_package_view`.`v_document_package_id`                     AS `v_document_package_id`,
+    `document_package_view`.`v_document_package_approvedDate`           AS `v_document_package_approvedDate`,
+    `document_package_view`.`v_document_package_approvedRatio`          AS `v_document_package_approvedRatio`,
+    `document_package_view`.`v_document_package_completedDate`          AS `v_document_package_completedDate`,
+    `document_package_view`.`v_document_package_completedRatio`         AS `v_document_package_completedRatio`,
+    `document_package_view`.`v_document_package_name`                   AS `v_document_package_name`,
+    `document_package_view`.`v_document_package_orderDocumentPackageId` AS `v_document_package_orderDocumentPackageId`,
+    `document_package_view`.`v_document_package_registeredRatio`        AS `v_document_package_registeredRatio`,
+    `document_package_view`.`v_document_package_appliedEntityId`        AS `v_document_package_appliedEntityId`,
+    `document_package_view`.`v_document_package_documentPackageStateId` AS `v_document_package_documentPackageStateId`,
+    `document_package_view`.`v_document_package_documentPackageTypeId`  AS `v_document_package_documentPackageTypeId`,
+    `document_package_view`.`v_applied_entity_id`                       AS `v_applied_entity_id`,
+    `document_package_view`.`v_applied_entity_version`                  AS `v_applied_entity_version`,
+    `document_package_view`.`v_applied_entity_name`                     AS `v_applied_entity_name`,
+    `document_package_view`.`v_applied_entity_appliedEntityListId`      AS `v_applied_entity_appliedEntityListId`,
+    `document_package_view`.`v_applied_entity_appliedEntityStateId`     AS `v_applied_entity_appliedEntityStateId`,
+    `document_package_view`.`v_applied_entity_ownerId`                  AS `v_applied_entity_ownerId`,
+    `document_package_view`.`v_owner_address_id`                        AS `v_owner_address_id`,
+    `document_package_view`.`v_owner_region_id`                         AS `v_owner_region_id`,
+    `document_package_view`.`v_owner_district_id`                       AS `v_owner_district_id`,
+    `document_package_view`.`v_owner_aokmotu_id`                        AS `v_owner_aokmotu_id`,
+    `document_package_view`.`v_owner_village_id`                        AS `v_owner_village_id`,
+    `document_package_view`.`v_owner_entityId`                          AS `v_owner_entityId`,
+    `document_package_view`.`v_owner_ownerType`                         AS `v_owner_ownerType`
+  FROM (`test`.`entitydocument`
+    JOIN `test`.`document_package_view`)
+  WHERE (`test`.`entitydocument`.`documentPackageId` = `document_package_view`.`v_document_package_id`);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 CREATE
   ALGORITHM = UNDEFINED
   DEFINER = `root`@`localhost`
