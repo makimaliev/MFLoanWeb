@@ -153,6 +153,11 @@
 																<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phase.id}__/save}">
 																	<span th:text="#{label.table.edit}"></span>
 																</a>
+																<a class="dropdown-item"
+																   th:href="@{/printoutTemplate/5/objectId/__${phase.id}__/select}"
+																   role="button">
+																			<span >Претензия</span>
+																		</a>
 																<a class="dropdown-item" href="#">
 																	<span>
 																		<form th:action="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/delete}" method="post">

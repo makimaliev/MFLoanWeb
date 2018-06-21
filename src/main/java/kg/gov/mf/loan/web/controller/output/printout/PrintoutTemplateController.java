@@ -3,6 +3,7 @@ package kg.gov.mf.loan.web.controller.output.printout;
 import com.lowagie.text.Document;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.pdf.PdfWriter;
+import com.lowagie.text.rtf.RtfWriter2;
 import kg.gov.mf.loan.output.printout.model.Printout;
 import kg.gov.mf.loan.output.printout.model.PrintoutTemplate;
 import kg.gov.mf.loan.output.printout.service.*;
@@ -224,6 +225,31 @@ public class PrintoutTemplateController {
                     }
 
                     break;
+
+				case "COLLECTION_SUMMARY":
+
+
+					try {
+
+						PrintoutGeneratorPhaseSummary printoutGeneratorPhaseSummary = new PrintoutGeneratorPhaseSummary();
+
+						Document document = new Document(PageSize.A4, 10, 10, 10, 10);
+
+
+						RtfWriter2 rtfWriter2 = RtfWriter2.getInstance(document,response.getOutputStream());
+
+						response.setContentType("application/rtf");
+						response.setHeader("Content-disposition","attachment; filename=claim.rtf");
+
+						printoutGeneratorPhaseSummary.generatePrintoutByTemplate(printoutTemplate, null, object_id,document);
+
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+					break;
+
 
 
 			}
