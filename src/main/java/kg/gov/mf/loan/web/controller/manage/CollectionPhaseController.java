@@ -1,11 +1,10 @@
 package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.manage.model.collection.*;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.service.collection.*;
@@ -15,10 +14,7 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.service.loan.LoanService;
@@ -78,21 +74,48 @@ public class CollectionPhaseController {
 		
 	}
 
-	@RequestMapping(value="/manage/debtor/{debtorId}/initializephase", method=RequestMethod.GET)
-	public String initializePhaseForm(ModelMap model, @PathVariable("debtorId")Long debtorId)
+	@RequestMapping(value="/manage/debtor/{debtorId}/initializephase", method=RequestMethod.POST)
+	@ResponseBody
+	public String initializePhaseForm(@PathVariable("debtorId")Long debtorId, @RequestParam Map<String, String> selectedLoans, @RequestParam Date initDate)
 	{
-		Debtor debtor = debtorService.getById(debtorId);
-		model.addAttribute("debtorId", debtorId);
-		model.addAttribute("tLoans", debtor.getLoans());
+		for (String value:selectedLoans.values()
+			 ) {
+			System.out.println(value);
+		}
+		System.out.println(initDate);
 
-		model.addAttribute("phaseForm", new CollectionPhaseForm());
-
-		model.addAttribute("statuses", statusService.list());
-		model.addAttribute("types", typeService.list());
-
-		return "/manage/debtor/initializephase/save";
+		Gson gson2 = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+		String result = gson2.toJson(getPhaseDetails());
+		return result;
 	}
 
+	private List<PhaseDetails> getPhaseDetails(){
+		List<PhaseDetails> result = new ArrayList<>();
+
+		PhaseDetails d1 = new PhaseDetails();
+		d1.setLoan_id(30897);
+		d1.setStartPrincipal(100.0);
+		d1.setStartInterest(20.0);
+		d1.setStartPenalty(10.0);
+		d1.setStartFee(0.0);
+		d1.setStartTotalAmount(1000.0);
+
+		result.add(d1);
+
+		PhaseDetails d2 = new PhaseDetails();
+		d2.setLoan_id(30898);
+		d2.setStartPrincipal(200.0);
+		d2.setStartInterest(10.0);
+		d2.setStartPenalty(30.0);
+		d2.setStartFee(0.0);
+		d2.setStartTotalAmount(2000.0);
+
+		result.add(d2);
+
+		return result;
+	}
+
+	/*
 	@RequestMapping(value="/manage/debtor/{debtorId}/initializephase", method=RequestMethod.POST)
 	public String initializePhaseSave(ModelMap model,
 									  @PathVariable("debtorId")Long debtorId,
@@ -117,6 +140,7 @@ public class CollectionPhaseController {
 
 		return "redirect:" + "/manage/debtor/{debtorId}/view";
 	}
+	*/
 	
 	@RequestMapping(value="/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/save", method=RequestMethod.GET)
 	public String formCollateralItem(ModelMap model, 

@@ -1,14 +1,14 @@
 //== Class definition
 
-var DatatableDataLocalDemo = function () {
+var DatatableDataLocalLoans = function () {
 	//== Private functions
 
 	// demo initializer
-	var demo = function () {
+	var mainTableInit = function () {
 
         var dataJSONArray = JSON.parse(jsonLoans);
 
-		var datatable = $('.m_datatable').mDatatable({
+		var datatable = $('#loansTable').mDatatable({
 			// datasource definition
 			data: {
 				type: 'local',
@@ -38,6 +38,13 @@ var DatatableDataLocalDemo = function () {
 
 			// columns definition
 			columns: [{
+                field: "id",
+                title: "#",
+                sortable: false, // disable sort for this column
+                width: 40,
+                textAlign: 'center',
+                selector: {class: 'm-checkbox--solid m-checkbox--brand'}
+            }, {
                 field: "View",
                 width: 80,
                 textAlign: 'center',
@@ -51,12 +58,8 @@ var DatatableDataLocalDemo = function () {
 					';
                 }
             }, {
-				field: "id",
-				title: "#",
-				width: 50,
-				textAlign: 'center'
-			}, {
 				field: "regNumber",
+                sortable: 'asc',
 				title: "Регистрационный номер",
 				responsive: {visible: 'lg'}
 			},{
@@ -75,7 +78,7 @@ var DatatableDataLocalDemo = function () {
                 field: "loanStateName",
                 title: "Статус"
             }, {
-                field: "",
+                field: "action",
                 width: 110,
                 title: "",
                 sortable: false,
@@ -131,17 +134,72 @@ var DatatableDataLocalDemo = function () {
 
 		$('#m_form_status, #m_form_type').selectpicker();
         */
+
+        var selectedLoans = {};
+        // on checkbox checked event
+        $('#loansTable')
+            .on('m-datatable--on-check', function (e, args) {
+                var str = args.toString().split(',')
+                for (var i = 0; i < str.length; i++) {
+                    selectedLoans[str[i]] = str[i];
+                }
+                var count = datatable.setSelectedRecords().getSelectedRecords().length;
+                $('#m_datatable_selected_number').html(count);
+                if (count > 0) {
+                    $('#m_datatable_group_action_form').collapse('show');
+                }
+            })
+            .on('m-datatable--on-uncheck m-datatable--on-layout-updated', function (e, args) {
+                var str = args.toString().split(',')
+                for (var i = 0; i < str.length; i++) {
+                    delete selectedLoans[str[i]];
+                }
+                var count = datatable.setSelectedRecords().getSelectedRecords().length;
+                $('#m_datatable_selected_number').html(count);
+                if (count === 0) {
+                    $('#m_datatable_group_action_form').collapse('hide');
+                    $('#phaseDetailsDiv').collapse('hide');
+                    selectedItems = [];
+                }
+            });
+
+        $('#bnt_init_phase')
+            .on('click', function () {
+                console.log(selectedLoans);
+                if (!$("#phaseInitDate").val())
+                {
+                    var alert = $('#m_form_2_msg');
+                    alert.removeClass('m--hide').show();
+                    mApp.scrollTo(alert, -200);
+                }
+                else
+                {
+                    var initDate = $("#phaseInitDate").val();
+                    $.ajax({
+                        type : 'POST',
+                        url : "/manage/debtor/"+debtorId+"/initializephase",
+                        data: {selectedLoans:selectedLoans, initDate: initDate},
+                        success:function (data) {
+                            phaseDetailsTableInit(data);
+                            var divT = $('#phaseDetailsDiv');
+                            divT.collapse('show');
+                            mApp.scrollTo(divT, -200);
+                        }
+                    });
+                    //$.post( "/manage/debtor/"+debtorId+"/initializephase", );
+                }
+            });
 	};
 
 	return {
 		//== Public functions
 		init: function () {
 			// init dmeo
-			demo();
+            mainTableInit();
 		}
 	};
 }();
 
 jQuery(document).ready(function () {
-	DatatableDataLocalDemo.init();
+    DatatableDataLocalLoans.init();
 });
