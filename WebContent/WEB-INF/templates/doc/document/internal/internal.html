@@ -33,7 +33,7 @@
                         <div class="m-portlet__head">
                             <div class="m-portlet__head-caption">
                                 <div class="m-portlet__head-title">
-                                    <h3 class="m-portlet__head-text" th:text="*{id != null ? 'Детали документа №' + id : 'Новый внутренний документ'}"></h3>
+                                    <h3 class="m-portlet__head-text" th:text="*{id != null ? 'Детали документа № ' + id : 'Новый внутренний документ'}"></h3>
                                 </div>
                             </div>
                             <div class="m-portlet__head-tools">
@@ -52,7 +52,7 @@
                         <div class="m-portlet__body">
                             <div class="m-scrollable m-scrollable-no-margin" data-scrollbar-shown="true"  data-axis="y"  data-height="200">
                                 <!--begin::Form-->
-                                <th:block th:replace="doc/document/layout::hiddenFields"/>
+                                <th:block th:replace="doc/layout::hiddenFields"/>
                                 <div class="row">
                                     <div class="col-7">
                                         <!-- Sender Registered Number -->
@@ -241,14 +241,14 @@
                                         </div>
                                     </div>
                                     <div class="col-5">
-                                        <th:block th:replace="doc/document/layout::statusData"/>
+                                        <th:block th:replace="doc/layout::statusData"/>
                                     </div>
                                 </div>
                                 <!--end::Form-->
                             </div>
                         </div>
                         <div class="m-portlet__foot">
-                            <th:block th:replace="doc/document/layout::documentActions"/>
+                            <th:block th:replace="doc/layout::documentActions"/>
                         </div>
                     </form>
                 </div>
@@ -270,7 +270,7 @@
 <script th:src="@{/assets/global/plugins/bootstrap-sweetalert/sweetalert.min.js}" type="text/javascript"></script>
 <script th:src="@{/assets/global/plugins/ckeditor/ckeditor.js}" type="text/javascript"></script>
 
-<th:block th:replace="doc/document/layout::script"/>
+<th:block th:replace="doc/layout::script"/>
 
 <!--begin::Page Resources -->
 

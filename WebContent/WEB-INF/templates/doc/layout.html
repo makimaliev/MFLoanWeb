@@ -2,7 +2,6 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <body>
-
     <th:block th:fragment="hiddenFields">
         <div hidden="hidden">
             <input type="hidden" th:field="*{id}"/>
@@ -82,10 +81,12 @@
                 }
 
                 $('#srt_select').change(function(){
+                    $('#si' + $(this).val()).find( "select" ).val('').trigger('change')
                     $('.sdr ').hide();
                     $('#si' + $(this).val()).show();
                 });
                 $('#rrt_select').change(function(){
+                    $('#ri' + $(this).val()).find( "select" ).val('').trigger('change')
                     $('.rdr ').hide();
                     $('#ri' + $(this).val()).show();
                 });
@@ -93,6 +94,7 @@
                 $('#srs').select2({
                     tags: true,
                     minimumInputLength: 2,
+                    allowClear: true,
                     ajax: {
                         url: '/data/staff',
                         data: function (params) {
@@ -111,6 +113,7 @@
                 $('#sro').select2({
                     tags: true,
                     minimumInputLength: 2,
+                    allowClear: true,
                     ajax: {
                         url: '/data/organizations',
                         data: function (params) {
@@ -129,6 +132,7 @@
                 $('#srp').select2({
                     tags: true,
                     minimumInputLength: 2,
+                    allowClear: true,
                     ajax: {
                         url: '/data/person',
                         data: function (params) {
@@ -148,6 +152,7 @@
                 $('#rrs').select2({
                     tags: true,
                     minimumInputLength: 2,
+                    allowClear: true,
                     ajax: {
                         url: '/data/staff',
                         data: function (params) {
@@ -166,6 +171,7 @@
                 $('#rrd').select2({
                     tags: true,
                     minimumInputLength: 2,
+                    allowClear: true,
                     ajax: {
                         url: '/data/department',
                         data: function (params) {
@@ -184,6 +190,7 @@
                 $('#rro').select2({
                     tags: true,
                     minimumInputLength: 2,
+                    allowClear: true,
                     ajax: {
                         url: '/data/organizations',
                         data: function (params) {
@@ -202,6 +209,7 @@
                 $('#rrp').select2({
                     tags: true,
                     minimumInputLength: 2,
+                    allowClear: true,
                     ajax: {
                         url: '/data/person',
                         data: function (params) {
@@ -221,6 +229,7 @@
                 $('#res').select2({
                     tags: true,
                     minimumInputLength: 2,
+                    allowClear: true,
                     ajax: {
                         url: '/data/staff',
                         data: function (params) {
@@ -248,7 +257,6 @@
 
                 var filesList = document.getElementById(side);
 
-                //document.getElementById(side).remove();
                 $("#" + side + " tr").remove();
 
                 if (files.length)
@@ -279,10 +287,10 @@
         <div class="m-form__group">
             <ol>
                 <li th:each="dd : *{senderDispatchData}">
-                    <label class="form-control" th:utext="${dd.dispatchBy.getUsername()} + '<br>[ ' + ${#dates.format(dd.dispatchInitTime, 'dd-MM-yyyy HH:mm')} + ' ] :  <label class=\'text-success\'>' + ${dd.dispatchType.stringValue()} + '</label>'"></label>
+                    <label class="form-control" th:utext="${dd.dispatchBy.staff.name} + '<br>[ ' + ${#dates.format(dd.dispatchInitTime, 'dd-MM-yyyy HH:mm')} + ' ] :  <label class=\'text-success\'>' + ${dd.dispatchType.stringValue()} + '</label>'"></label>
                     <label class="form-control alert alert-info" th:utext="${dd.description}" th:if="${not #strings.isEmpty(dd.description)}"></label>
                 <li th:each="dd : *{receiverDispatchData}">
-                    <label class="form-control" th:utext="${dd.dispatchBy.getUsername()} + '<br>[ ' + ${#dates.format(dd.dispatchInitTime, 'dd-MM-yyyy HH:mm')} + ' ] :  <label class=\'text-success\'>' + ${dd.dispatchType.stringValue()} + '</label>'"></label>
+                    <label class="form-control" th:utext="${dd.dispatchBy.staff.name} + '<br>[ ' + ${#dates.format(dd.dispatchInitTime, 'dd-MM-yyyy HH:mm')} + ' ] :  <label class=\'text-success\'>' + ${dd.dispatchType.stringValue()} + '</label>'"></label>
                     <label class="form-control alert alert-info" th:utext="${dd.description}" th:if="${not #strings.isEmpty(dd.description)}"></label>
             </ol>
         </div>
@@ -291,6 +299,5 @@
         <button type="button" class="btn btn-primary" onclick="window.history.back()"> Назад </button>
         <button type="submit" style="margin: 3px" class="btn btn-success" name="action" th:each="action : ${actions}" th:value="${action.internalName}" th:text="${action.actionName}" ></button>
     </th:block>
-
 </body>
 </html>

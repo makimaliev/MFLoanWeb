@@ -10,35 +10,30 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping("/doc")
+@RequestMapping("/doc/documentSubType")
 public class DocumentSubTypeController extends BaseController {
 
-    //region Dependancies
     DocumentTypeService documentTypeService;
     DocumentSubTypeService documentSubTypeService;
 
     @Autowired
-    public void setDocumentTypeService(DocumentTypeService documentTypeService) {
+    public DocumentSubTypeController(DocumentTypeService documentTypeService, DocumentSubTypeService documentSubTypeService) {
         this.documentTypeService = documentTypeService;
-    }
-
-    @Autowired
-    public void setDocumentSubTypeService(DocumentSubTypeService documentSubTypeService) {
         this.documentSubTypeService = documentSubTypeService;
     }
-    //endregion
 
-    @RequestMapping(value = "/documentSubType")
-    public String listDocumentSubTypes(Model model) {
+    @RequestMapping(method = RequestMethod.GET)
+    public String index(Model model) {
 
         model.addAttribute("documentSubTypes", documentSubTypeService.findAll());
         return "/doc/documentSubType/list";
     }
 
-    @RequestMapping(value = "/documentSubType/new")
-    public String newDocumentSubType(Model model) {
+    @RequestMapping(value = "/new", method = RequestMethod.GET)
+    public String add(Model model) {
 
         model.addAttribute("documentSubType", new DocumentSubType());
         model.addAttribute("documentTypes", documentTypeService.findAll());
@@ -46,8 +41,8 @@ public class DocumentSubTypeController extends BaseController {
         return "/doc/documentSubType/edit";
     }
 
-    @RequestMapping(value = "/documentSubType/edit/{id}")
-    public String editDocumentSubType(@PathVariable("id") Long id, Model model) {
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    public String edit(@PathVariable("id") Long id, Model model) {
 
         DocumentSubType documentSubType = documentSubTypeService.findById(id);
 
@@ -57,14 +52,14 @@ public class DocumentSubTypeController extends BaseController {
         return "/doc/documentSubType/edit";
     }
 
-    @RequestMapping(value = "/documentSubType/delete/{id}")
-    public String deleteDocumentSubType(@ModelAttribute("documentSubType") DocumentSubType documentSubType) {
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public String delete(@ModelAttribute("documentSubType") DocumentSubType documentSubType) {
         documentSubTypeService.deleteById(documentSubType);
         return "redirect:/doc/documentSubType";
     }
 
-    @RequestMapping(value = "/documentSubType/save")
-    public String saveDocumentSubType(@ModelAttribute("documentSubType") DocumentSubType documentSubType) {
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    public String save(@ModelAttribute("documentSubType") DocumentSubType documentSubType) {
         documentSubTypeService.save(documentSubType);
         return "redirect:/doc/documentSubType";
     }

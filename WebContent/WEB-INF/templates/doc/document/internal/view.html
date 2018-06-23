@@ -27,7 +27,7 @@
                         <div class="m-portlet__head">
                             <div class="m-portlet__head-caption">
                                 <div class="m-portlet__head-title">
-                                    <h3 class="m-portlet__head-text" th:text="*{'Детали документа №' + id}"></h3>
+                                    <h3 class="m-portlet__head-text" th:text="*{'Детали документа № ' + id}"></h3>
                                 </div>
                             </div>
                             <div class="m-portlet__head-tools">
@@ -100,7 +100,9 @@
                                                 <span> Описание : </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <label class="form-control" style="white-space: pre-wrap" th:utext="*{description}"> Description </label>
+                                                <div class="form-control">
+                                                    <p th:utext="*{description}"> Description </p>
+                                                </div>
                                             </div>
                                         </div>
                                         <!-- Sender Attachment -->
@@ -180,7 +182,7 @@
                                     </div>
                                     <div class="col-5">
                                         <div class="m-form__group">
-                                            <th:block th:replace="doc/document/layout::statusData"/>
+                                            <th:block th:replace="doc/layout::statusData"/>
                                         </div>
                                     </div>
                                 </div>

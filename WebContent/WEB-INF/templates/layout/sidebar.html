@@ -976,8 +976,8 @@
                                 </span>
                             </a>
                         </li>
-                        <li class="m-menu__item " aria-haspopup="true" >
-                            <a th:href="@{/doc(type='archived')}" class="m-menu__link ">
+                        <!--li class="m-menu__item " aria-haspopup="true" >
+                            <a th:href="@{/doc/archive}" class="m-menu__link ">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>
                                 </i>
@@ -985,7 +985,7 @@
                                     Архив
                                 </span>
                             </a>
-                        </li>
+                        </li-->
                         <li sec:authorize="hasRole('ADMIN')" class="m-menu__item " aria-haspopup="true" >
                             <a th:href="@{/doc/documentSubType}" class="m-menu__link ">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">

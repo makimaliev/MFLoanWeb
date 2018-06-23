@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/data")
 public class RestdataController {
 
     class Result {
@@ -29,10 +30,9 @@ public class RestdataController {
         this.accountService = accountService;
     }
 
-    @RequestMapping("/data/staff")
+    @RequestMapping("/staff")
     @ResponseBody
-    public List<Result> getStaff(@RequestParam String name)
-    {
+    public List<Result> getStaff(@RequestParam String name) {
         List<Result> data = new ArrayList<>();
         for(Account account : accountService.getByName("staff", name)) {
             data.add(new Result(account.getId(), account.getName()));
@@ -41,10 +41,9 @@ public class RestdataController {
         return data;
     }
 
-    @RequestMapping("/data/department")
+    @RequestMapping("/department")
     @ResponseBody
-    public List<Result> getDepartment(@RequestParam String name)
-    {
+    public List<Result> getDepartment(@RequestParam String name) {
         List<Result> data = new ArrayList<>();
         for(Account account : accountService.getByName("department", name)) {
             data.add(new Result(account.getId(), account.getName()));
@@ -52,10 +51,9 @@ public class RestdataController {
         return data;
     }
 
-    @RequestMapping("/data/organizations")
+    @RequestMapping("/organizations")
     @ResponseBody
-    public List<Result> getOrganization(@RequestParam String name)
-    {
+    public List<Result> getOrganization(@RequestParam String name) {
         List<Result> data = new ArrayList<>();
         for(Account account : accountService.getByName("organization", name)) {
             data.add(new Result(account.getId(), account.getName()));
@@ -63,10 +61,9 @@ public class RestdataController {
         return data;
     }
 
-    @RequestMapping("/data/person")
+    @RequestMapping("/person")
     @ResponseBody
-    public List<Result> getPerson(@RequestParam String name)
-    {
+    public List<Result> getPerson(@RequestParam String name) {
         List<Result> data = new ArrayList<>();
         for(Account account : accountService.getByName("person", name)) {
             data.add(new Result(account.getId(), account.getName()));

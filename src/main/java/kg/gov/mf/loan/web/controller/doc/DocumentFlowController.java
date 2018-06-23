@@ -1,7 +1,6 @@
 package kg.gov.mf.loan.web.controller.doc;
 
 import kg.gov.mf.loan.admin.org.model.Department;
-import kg.gov.mf.loan.admin.org.model.Organization;
 import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.org.service.StaffService;
 import kg.gov.mf.loan.admin.sys.model.User;
@@ -11,19 +10,15 @@ import kg.gov.mf.loan.doc.service.*;
 import kg.gov.mf.loan.doc.model.Transition;
 import kg.gov.mf.loan.task.model.Task;
 import kg.gov.mf.loan.task.service.TaskService;
-import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -37,7 +32,6 @@ public class DocumentFlowController extends BaseController {
     private DocumentSubTypeService documentSubTypeService;
     private DocumentStatusService documentStatusService;
     private TaskService taskService;
-    private AttachmentService attachmentService;
     private RegisterService registerService;
     private StaffService staffService;
 
@@ -47,7 +41,6 @@ public class DocumentFlowController extends BaseController {
                                   DocumentSubTypeService documentSubTypeService,
                                   DocumentStatusService documentStatusService,
                                   TaskService taskService,
-                                  AttachmentService attachmentService,
                                   RegisterService registerService,
                                   StaffService staffService)
     {
@@ -56,7 +49,6 @@ public class DocumentFlowController extends BaseController {
         this.documentSubTypeService = documentSubTypeService;
         this.documentStatusService = documentStatusService;
         this.taskService = taskService;
-        this.attachmentService = attachmentService;
         this.registerService = registerService;
         this.staffService = staffService;
     }
@@ -70,7 +62,6 @@ public class DocumentFlowController extends BaseController {
             put(4, "ФИЗ Лицо");
         }
     };
-    private String path =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
     private enum CURRENTVIEW { INTERNAL, INCOMING, OUTGOING}
     private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm");
     //region TYPE
@@ -125,7 +116,15 @@ public class DocumentFlowController extends BaseController {
 
         List<Task> tasks = taskService.getOpenTasks(getUser().getId());
 
+        String json = "[";
+        for(Task task : tasks)
+        {
+            json += "{'taskId':'" + task.getObjectId() + "'},";
+        }
+        json += "]";
+
         model.addAttribute("tasks", tasks);
+        model.addAttribute("json", json);
         model.addAttribute("ACTIONS", ACTIONS);
         model.addAttribute("row", CURRENTVIEW.valueOf(type.toUpperCase()).ordinal());
         model.addAttribute("ds", documentStatusService);
@@ -139,7 +138,7 @@ public class DocumentFlowController extends BaseController {
     }
 
     @RequestMapping(value = "/new/{subType}", method = RequestMethod.GET)
-    public String newDocument(@PathVariable("subType") String subType, Model model) {
+    public String add(@PathVariable("subType") String subType, Model model) {
 
         if(getUser() == null)
             return "/login/login";
@@ -158,6 +157,12 @@ public class DocumentFlowController extends BaseController {
         document.setDocumentType(documentType);
         document.setDocumentSubType(documentSubTypeService.getByInternalName(subType));
 
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, 10);
+
+        document.setSenderDueDate(cal.getTime());
+
         if(documentType.getInternalName().equals("incoming"))
         {
             Responsible responsible = new Responsible();
@@ -175,7 +180,7 @@ public class DocumentFlowController extends BaseController {
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-    public String editDocument(@PathVariable("id") Long id, Model model) {
+    public String edit(@PathVariable("id") Long id, Model model) {
 
         if(getUser() == null)
             return "/login/login";
@@ -208,7 +213,7 @@ public class DocumentFlowController extends BaseController {
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String saveDocument(@ModelAttribute("document") Document document,
+    public String save(@ModelAttribute("document") Document document,
                                @RequestParam("action") String action,
                                @RequestParam("senderFiles") MultipartFile[] senderFiles,
                                @RequestParam("receiverFiles") MultipartFile[] receiverFiles) throws IOException {
@@ -280,7 +285,7 @@ public class DocumentFlowController extends BaseController {
     }
 
     @RequestMapping(value = "/view/{id}", method = RequestMethod.GET)
-    public String viewDocument(@PathVariable("id") Long id, Model model) {
+    public String view(@PathVariable("id") Long id, Model model) {
 
         Document document = documentService.findById(id);
         String currentView = document.getDocumentType().getInternalName();
@@ -288,11 +293,11 @@ public class DocumentFlowController extends BaseController {
         model.addAttribute("document", document);
         model.addAttribute("responsible", responsible);
 
-        return "/doc/document/" + currentView + "/" + "view";
+        return "/doc/document/" + currentView + "/view";
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
-    public String deleteDocument(@PathVariable("id") Long id) {
+    public String delete(@PathVariable("id") Long id) {
 
         Document document = documentService.findById(id);
 
@@ -314,36 +319,6 @@ public class DocumentFlowController extends BaseController {
         }
         */
         return "redirect:/doc?type=" + document.getDocumentType().getInternalName();
-    }
-
-    @RequestMapping(value = "/attachments/download/{attachmentId}", method = RequestMethod.GET)
-    public void downloadFile(HttpServletResponse response, @PathVariable("attachmentId") Long attachmentId) throws IOException {
-
-        Attachment attachment = attachmentService.findById(attachmentId);
-
-        File file = new File(path + attachment.getInternalName());
-        String mimeType= URLConnection.guessContentTypeFromName(file.getName());
-
-        if(mimeType==null){
-            mimeType = "application/octet-stream";
-        }
-
-        response.setContentType(mimeType);
-        response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + attachment.getName() +"\""));
-        response.setContentLength((int)file.length());
-
-        InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
-        FileCopyUtils.copy(inputStream, response.getOutputStream());
-    }
-
-    @RequestMapping(value = "/attachments/delete/{attachmentId}", method = RequestMethod.GET)
-    public void deleteFile(HttpServletResponse response, @PathVariable("attachmentId") Long attachmentId) throws IOException {
-
-        Attachment attachment = attachmentService.findById(attachmentId);
-        File file = new File(path + attachment.getInternalName());
-        file.delete();
-
-        attachmentService.deleteById(attachment);
     }
 
     private DispatchData setDispatchData(State state, String description /*, User toUser */) {
@@ -374,6 +349,8 @@ public class DocumentFlowController extends BaseController {
 
         task.setAssignedToUserId(user.getId());
         task.setTargetResolutionDate(document.getSenderDueDate());
+        task.setTargetResolutionDate(document.getSenderDueDate());
+
         /*
         if(document.getDocumentState().ordinal() < 7)
         {
@@ -637,6 +614,7 @@ public class DocumentFlowController extends BaseController {
             if(action.equals("request"))
             {
                 document.getSenderDispatchData().add(setDispatchData(State.DRAFT, ""));
+                document = documentService.save(document);
                 //region Add task and Users
                 if (document.getSenderResponsible().getResponsibleType() == 1) {
                     for (Staff staff : document.getReceiverResponsible().getStaff()) {
@@ -644,15 +622,19 @@ public class DocumentFlowController extends BaseController {
                         document.getUsers().add(getUser(staff));
                     }
                 } else {
-                    for (Organization organization : document.getReceiverResponsible().getOrganizations()) {
-                        //taskService.add(addTask(document, organization));
-                        document.getUsers().add(getUser(organization));
-                    }
+                    // Static user
+                    User user = getUser(); //userService.findById(8);
+                    taskService.add(addTask(document, user));
+                    document.getUsers().add(user);
                 }
                 //endregion
+                documentService.update(document);
             }
-            document.getSenderDispatchData().add(setDispatchData(document.getDocumentState(), ""));
-            documentService.save(document);
+            else
+            {
+                document.getSenderDispatchData().add(setDispatchData(document.getDocumentState(), ""));
+                documentService.save(document);
+            }
         }
         else
         {
@@ -680,10 +662,10 @@ public class DocumentFlowController extends BaseController {
                             document.getUsers().add(getUser(staff));
                         }
                     } else {
-                        for (Organization organization : document.getReceiverResponsible().getOrganizations()) {
-                            //taskService.add(addTask(document, organization));
-                            document.getUsers().add(getUser(organization));
-                        }
+                        // Static user
+                        User user = userService.findById(8);
+                        taskService.add(addTask(document, user));
+                        document.getUsers().add(user);
                     }
                     //endregion
                 }

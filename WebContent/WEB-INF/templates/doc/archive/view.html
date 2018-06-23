@@ -4,7 +4,6 @@
 <head>
     <title>MFLoan | Docflow</title>
     <div th:replace="fragments/header :: header-css"/>
-
 </head>
 <!-- end::Head -->
 
@@ -23,11 +22,11 @@
         <div class="m-grid__item m-grid__item--fluid m-wrapper">
             <div class="m-content">
                 <div class="m-portlet m-portlet--full-height">
-                    <form th:object="${document}" class="m-form m-form--fit m-form--label-align-right">
+                    <form id="document_form" class="m-form m-form--fit m-form--label-align-right" th:object="${archive}" method="POST" enctype="multipart/form-data">
                         <div class="m-portlet__head">
                             <div class="m-portlet__head-caption">
                                 <div class="m-portlet__head-title">
-                                    <h3 class="m-portlet__head-text" th:text="*{'Детали документа № ' + id}"></h3>
+                                    <h3 class="m-portlet__head-text" th:text="*{id != null ? 'Детали документа №' + id : 'Новый документ'}"></h3>
                                 </div>
                             </div>
                             <div class="m-portlet__head-tools">
@@ -44,46 +43,26 @@
                             </div>
                         </div>
                         <div class="m-portlet__body">
-                            <div class="m-scrollable m-scrollable-no-margin">
+                            <div class="m-scrollable m-scrollable-no-margin" data-scrollbar-shown="true"  data-axis="y"  data-height="200">
                                 <!--begin::Form-->
                                 <div class="row">
-                                    <div class="col-7">
-                                        <!-- Sender Registered Number -->
-                                        <div class="m-form__group row" th:if="*{senderRegisteredNumber}">
-                                            <label class="form-label col-3">
-                                                <span> № Регистрации : </span>
-                                            </label>
-                                            <div class="col-sm-9">
-                                                <label class="form-control" th:text="*{senderRegisteredNumber}"> Description </label>
-                                            </div>
-                                        </div>
-                                        <!-- Sender Registered Date -->
-                                        <div class="m-form__group row" th:if="*{senderRegisteredDate}">
+                                    <div class="col-12">
+                                        <!-- Archive Registered Date -->
+                                        <div class="m-form__group row">
                                             <label class="form-label col-3">
                                                 <span> Дата регистрации : </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <label class="form-control" th:text="*{#dates.format(senderRegisteredDate, 'dd-MM-yyyy HH:mm')}"> Description </label>
+                                                <label class="form-control" th:text="*{#dates.format(registeredDate, 'dd-MM-yyyy HH:mm')}"></label>
                                             </div>
                                         </div>
-                                        <!-- Sender Responsible -->
+                                        <!-- Archive Registered Number -->
                                         <div class="m-form__group row">
                                             <label class="form-label col-3">
-                                                <span> ОТ :  </span>
+                                                <span> № Регистрации : </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <label class="form-control" th:each="s : *{senderResponsible.staff}" th:text="${s.name}"> Staff </label>
-                                                <label class="form-control" th:each="s : *{senderResponsible.organizations}" th:text="${s.name}"> Staff </label>
-                                            </div>
-                                        </div>
-                                        <!-- Receiver Responsible -->
-                                        <div class="m-form__group row">
-                                            <label class="col-3">
-                                                <span> Кому : </span>
-                                            </label>
-                                            <div class="col-9">
-                                                <label class="form-control" th:each="s : *{receiverResponsible.organizations}" th:text="${s.name}"> Staff </label>
-                                                <label class="form-control" th:each="s : *{receiverResponsible.person}" th:text="${s.name}"> Staff </label>
+                                                <label class="form-control" required th:text="*{registeredNumber}"></label>
                                             </div>
                                         </div>
                                         <!-- TITLE -->
@@ -92,7 +71,7 @@
                                                 <span> Относительно : </span>
                                             </label>
                                             <div class="col-sm-9">
-                                                <label class="form-control" th:text="*{title}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+                                                <label class="form-control" required th:text="*{title}"></label>
                                             </div>
                                         </div>
                                         <!-- DESCRIPTION -->
@@ -106,33 +85,67 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- Sender Attachment -->
-                                        <div class="m-form__group row" th:hidden="*{documentState.ordinal() > 1 and senderAttachment == null}"-->
+
+                                        <!-- ROOM *******************************************************************-->
+                                        <div class="m-form__group row">
+                                            <label class="form-label col-3">
+                                                <span> Кабинет : </span>
+                                            </label>
+                                            <div class="col-sm-9">
+                                                <label class="form-control" required th:text="*{room}"></label>
+                                            </div>
+                                        </div>
+                                        <!-- SHELVE -->
+                                        <div class="m-form__group row">
+                                            <label class="form-label col-3">
+                                                <span> Полка : </span>
+                                            </label>
+                                            <div class="col-sm-9">
+                                                <label class="form-control" required th:text="*{shelve}"></label>
+                                            </div>
+                                        </div>
+                                        <!-- COLUMN -->
+                                        <div class="m-form__group row">
+                                            <label class="form-label col-3">
+                                                <span> Колонка : </span>
+                                            </label>
+                                            <div class="col-sm-9">
+                                                <label class="form-control" required th:text="*{shelveColumn}"></label>
+                                            </div>
+                                        </div>
+                                        <!-- ROW -->
+                                        <div class="m-form__group row">
+                                            <label class="form-label col-3">
+                                                <span> Ряд : </span>
+                                            </label>
+                                            <div class="col-sm-9">
+                                                <label class="form-control" required th:text="*{shelveRow}"></label>
+                                            </div>
+                                        </div>
+                                        <!-- FOLDER -->
+                                        <div class="m-form__group row">
+                                            <label class="form-label col-3">
+                                                <span> Папка : </span>
+                                            </label>
+                                            <div class="col-sm-9">
+                                                <label class="form-control" required th:text="*{folder}"></label>
+                                            </div>
+                                        </div>
+                                        <!-- ************************************************************************-->
+
+                                        <!-- Attachments -->
+                                        <div class="m-form__group row">
                                             <label class="form-label col-3">
                                                 <span> Приложения : </span>
                                             </label>
                                             <div class="col-sm-9">
                                                 <table class="form-control">
-                                                    <tr th:if="*{#lists.isEmpty(senderAttachment)}"><td><label>Нет приложений</label></td></tr>
-                                                    <tr th:each="attachment : *{senderAttachment}">
+                                                    <tr th:if="*{#lists.isEmpty(attachments)}"><td><label>Нет приложений</label></td></tr>
+                                                    <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
                                                         <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
                                                     </tr>
                                                 </table>
                                             </div>
-                                        </div>
-                                        <!-- Sender Due Date -->
-                                        <div class="m-form__group row">
-                                            <label class="form-label col-3">
-                                                <span> Срок : </span>
-                                            </label>
-                                            <div class="col-sm-9">
-                                                <label class="form-control" th:text="*{senderDueDate} != null ? *{#dates.format(senderDueDate, 'dd-MM-yyyy HH:mm')} : 'Срок не установлен'" th:if="*{documentState.ordinal() > 1}"> Title </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-5">
-                                        <div class="m-form__group">
-                                            <th:block th:replace="doc/layout::statusData"/>
                                         </div>
                                     </div>
                                 </div>
@@ -158,5 +171,6 @@
 <div th:replace="fragments/footer :: footer-js"/>
 
 <!--begin::Page Resources -->
+
 </body>
 </html>

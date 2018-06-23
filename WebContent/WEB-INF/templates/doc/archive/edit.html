@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!-- begin::Head -->
+<head>
+    <title>MFLoan | Docflow</title>
+    <div th:replace="fragments/header :: header-css"/>
+    <link th:href="@{/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css}" rel="stylesheet" type="text/css" />
+</head>
+<!-- end::Head -->
+
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <div class="m-content">
+                <div class="m-portlet m-portlet--full-height">
+                    <form th:action="@{/doc/archive/save}" id="document_form" class="m-form m-form--fit m-form--label-align-right" th:object="${archive}" method="POST" enctype="multipart/form-data">
+                        <div class="m-portlet__head">
+                            <div class="m-portlet__head-caption">
+                                <div class="m-portlet__head-title">
+                                    <h3 class="m-portlet__head-text" th:text="*{id != null ? 'Детали документа №' + id : 'Новый документ'}"></h3>
+                                </div>
+                            </div>
+                            <div class="m-portlet__head-tools">
+                                <ul class="m-portlet__nav">
+                                    <li class="m-portlet__nav-item">
+                                        <div class="m-input-icon m-input-icon--left">
+                                            <input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
+                                            <span class="m-input-icon__icon m-input-icon__icon--left">
+                                                    <span><i class="la la-search"></i></span>
+                                                </span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="m-portlet__body">
+                            <div class="m-scrollable m-scrollable-no-margin" data-scrollbar-shown="true" data-axis="y" data-height="200">
+                                <!--begin::Form-->
+                                <div class="row">
+                                    <div class="col-8">
+                                        <!-- Archive Registered Date -->
+                                        <div class="m-form__group row">
+                                            <label class="form-label col-3">
+                                                <span> Дата регистрации : </span>
+                                            </label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control" required id="registeredDate_dtp" th:field="*{registeredDate}" autocomplete="off"/>
+                                            </div>
+                                        </div>
+                                        <!-- Archive Registered Number -->
+                                        <div class="m-form__group row">
+                                            <label class="form-label col-3">
+                                                <span> № Регистрации : </span>
+                                            </label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control" required th:field="*{registeredNumber}" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <!-- TITLE -->
+                                        <div class="m-form__group row">
+                                            <label class="form-label col-3">
+                                                <span> Загаловок : </span>
+                                            </label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control" required th:field="*{title}" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <!-- DESCRIPTION -->
+                                        <div class="m-form__group row">
+                                            <label class="form-label col-3">
+                                                <span> Описание : </span>
+                                            </label>
+                                            <div class="col-sm-9">
+                                                <textarea th:field="*{description}"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <!-- ROOM *******************************************************************-->
+                                        <div class="m-form__group row">
+                                            <label class="form-label col-3">
+                                                <span> Кабинет : </span>
+                                            </label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control" required th:field="*{room}">
+                                            </div>
+                                        </div>
+                                        <!-- SHELVE -->
+                                        <div class="m-form__group row">
+                                            <label class="form-label col-3">
+                                                <span> Полка : </span>
+                                            </label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control" required th:field="*{shelve}">
+                                            </div>
+                                        </div>
+                                        <!-- COLUMN -->
+                                        <div class="m-form__group row">
+                                            <label class="form-label col-3">
+                                                <span> Колонка : </span>
+                                            </label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control" required th:field="*{shelveColumn}">
+                                            </div>
+                                        </div>
+                                        <!-- ROW -->
+                                        <div class="m-form__group row">
+                                            <label class="form-label col-3">
+                                                <span> Ряд : </span>
+                                            </label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control" required th:field="*{shelveRow}">
+                                            </div>
+                                        </div>
+                                        <!-- FOLDER -->
+                                        <div class="m-form__group row">
+                                            <label class="form-label col-3">
+                                                <span> Папка : </span>
+                                            </label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control" required th:field="*{folder}">
+                                            </div>
+                                        </div>
+                                        <!-- ************************************************************************-->
+
+                                        <!-- Attachments -->
+                                        <div class="m-form__group row">
+                                            <label class="form-label col-3">
+                                                <span> Приложения : </span>
+                                            </label>
+                                            <div class="col-sm-9">
+                                                <input type="file" id="attachmentFiles" name="attachmentFiles" multiple style="display:none" onchange="handleFiles(this.files)">
+                                                <a class="btn" role="button" href="javascript:doClick()"> Добавить приложения </a>
+                                                <table id="attachmentsList" class="form-control">
+                                                    <tr th:if="*{#lists.isEmpty(attachments)}"><td><label>Нет приложений</label></td></tr>
+                                                    <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
+                                                        <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end::Form-->
+                            </div>
+                        </div>
+                        <div class="m-portlet__foot">
+                            <button type="submit" class="btn btn-success" th:text="#{label.save}"></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END CONTENT BODY -->
+    <!-- begin::Footer -->
+    <div th:replace="layout/footer"/>
+    <!-- end::Footer -->
+</div>
+<div class="m-scroll-top m-scroll-top--skin-top" data-toggle="m-scroll-top" data-scroll-offset="500" data-scroll-speed="300">
+    <i class="la la-arrow-up"></i>
+</div>
+<div th:replace="fragments/footer :: footer-js"/>
+
+<script th:src="@{/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js}" type="text/javascript"></script>
+<script th:src="@{/assets/global/plugins/ckeditor/ckeditor.js}" type="text/javascript"></script>
+
+<!--begin::Page Resources -->
+
+<script type="text/javascript" th:inline="javascript">
+
+    $(document).ready(function() {
+
+        CKEDITOR.replace("description", {
+            language: 'ru',
+            uiColor: '#ffffff',
+            toolbar: [
+                { name: 'clipboard', groups: [ 'clipboard' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteFromWord' ] },
+                { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
+                { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+                { name: 'insert', items: [ 'Image', 'Table' ] },
+                '/',
+                { name: 'styles', items: [ 'Font', 'FontSize' ] },
+                { name: 'colors', items: [ 'TextColor' ] },
+                { name: 'tools', items: [ 'Maximize' ] }
+            ],
+            toolbarGroups: [
+                { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+                { name: 'forms' },
+                '/',
+                { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+                { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align' ] },
+                { name: 'insert' },
+                '/',
+                { name: 'styles' },
+                { name: 'colors' },
+                { name: 'tools' }
+            ]
+        });
+
+        $('#registeredDate_dtp').datetimepicker({
+            autoclose: true,
+            minView : 2,
+            maxView : 2,
+            format : 'dd-mm-yyyy hh:ii'
+        });
+    });
+
+    function doClick() {
+        var el = document.getElementById("attachmentFiles");
+        if (el) {
+            el.click();
+        }
+    }
+    function handleFiles(files) {
+
+        var filesList = document.getElementById("attachmentsList");
+
+        $("#attachmentsList tr").remove();
+
+        if (files.length)
+        {
+            filesList.style.display = "block"
+
+            for (var i=0; i < files.length; i++) {
+
+                var tr = document.createElement("tr");
+                filesList.appendChild(tr);
+
+                var td = document.createElement("td");
+                tr.appendChild(td);
+
+                var info = document.createElement("label");
+                info.innerHTML = files[i].name;
+                td.appendChild(info);
+            }
+        }
+        else
+        {
+            filesList.style.display = "none"
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -8,31 +8,36 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping("/doc")
+@RequestMapping("/doc/documentType")
 public class DocumentTypeController extends BaseController {
 
-    @Autowired
     DocumentTypeService documentTypeService;
 
-    @RequestMapping(value = "/documentType")
-    public String listdocumentTypes(Model model) {
+    @Autowired
+    public DocumentTypeController(DocumentTypeService documentTypeService) {
+        this.documentTypeService = documentTypeService;
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public String index(Model model) {
 
         model.addAttribute("documentTypes", documentTypeService.findAll());
         return "/doc/documentType/list";
     }
 
-    @RequestMapping(value = "/documentType/new")
-    public String newdocumentType(Model model) {
+    @RequestMapping(value = "/new", method = RequestMethod.GET)
+    public String add(Model model) {
         model.addAttribute("documentType", new DocumentType());
         model.addAttribute("documentTypes", documentTypeService.findAll());
 
         return "/doc/documentType/edit";
     }
 
-    @RequestMapping(value = "/documentType/edit/{id}")
-    public String editdocumentType(@PathVariable("id") Long id, Model model) {
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    public String edit(@PathVariable("id") Long id, Model model) {
 
         DocumentType documentType = documentTypeService.findById(id);
 
@@ -42,14 +47,14 @@ public class DocumentTypeController extends BaseController {
         return "/doc/documentType/edit";
     }
 
-    @RequestMapping(value = "/documentType/delete/{id}")
-    public String deletedocumentType(@ModelAttribute("documentType") DocumentType documentType) {
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public String delete(@ModelAttribute("documentType") DocumentType documentType) {
         documentTypeService.deleteById(documentType);
         return "redirect:/doc/documentType";
     }
 
-    @RequestMapping(value = "/documentType/save")
-    public String savedocumentType(@ModelAttribute("documentType") DocumentType documentType) {
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    public String save(@ModelAttribute("documentType") DocumentType documentType) {
         documentTypeService.save(documentType);
         return "redirect:/doc/documentType";
     }
