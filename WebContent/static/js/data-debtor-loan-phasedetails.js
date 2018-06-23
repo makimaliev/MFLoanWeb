@@ -15,7 +15,6 @@ var phaseDetailsTableInit = function (jsonInput) {
             theme: 'default', // datatable theme
             class: '', // custom wrapper class
             scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
-            height: 450, // datatable's body's fixed height
             footer: false // display/hide footer
         },
 
@@ -25,38 +24,55 @@ var phaseDetailsTableInit = function (jsonInput) {
         // column based filtering(refer to Kendo UI)
         filterable: false,
 
-        pagination: true,
+        pagination: false,
 
         // inline and bactch editing(cooming soon)
         // editable: false,
 
         // columns definition
         columns: [{
-            field: "loan_id",
+            field: "loanId",
             title: "#",
             sortable: false, // disable sort for this column
-            width: 80,
+            width: 50,
             textAlign: 'center'
         },{
-            field: "startPrincipal",
-            title: "startPrincipal"
+            field: "loanRegNumber",
+            sortable: 'asc',
+            title: "Регистрационный номер",
+            responsive: {visible: 'lg'}
         }, {
-            field: "startInterest",
-            title: "startInterest"
-        },{
-            field: "action",
-            width: 110,
-            title: "",
-            sortable: false,
+            field: "startPrincipal",
+            title: "По осн.с.",
             template: function (row) {
                 return '\
-                    <a href="/manage/debtor/'+ debtorId + '/loan/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
-                        <i class="la la-edit"></i>\
-                    </a>\
-                    <a href="/manage/debtor/'+ debtorId + '/loan/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
-                        <i class="la la-trash"></i>\
-                    </a>\
-                ';
+						<input type="text" class="form-control m-input" id="startPrinc'+row.loanId+'" value="'+ row.startPrincipal + '">\
+					';
+            }
+        },{
+            field: "startInterest",
+            title: "По проц.",
+            template: function (row) {
+                return '\
+						<input type="text" class="form-control m-input" id="startInt'+row.loanId+'" value="'+ row.startInterest +'">\
+					';
+            }
+        },{
+            field: "startPenalty",
+            title: "По штр.",
+            template: function (row) {
+                return '\
+						<input type="text" class="form-control m-input" id="startPen'+row.loanId+'" value="'+ row.startPenalty +'">\
+					';
+            }
+        },{
+            field: "startTotalAmount",
+            title: "Итого",
+            width: 160,
+            template: function (row) {
+                return '\
+						<input type="text" class="form-control m-input" id="total'+row.loanId+'" value="'+ row.startTotalAmount +'" disabled>\
+					';
             }
         }],
         translate: {
@@ -83,17 +99,48 @@ var phaseDetailsTableInit = function (jsonInput) {
         }
     });
 
-    var query = datatable.getDataSourceQuery();
+    for (var i = 0; i < dataJSONArray.length; i++) {
+        var obj = dataJSONArray[i];
+        $.map(obj, function(val, key) {
+            if(key=='loanId')
+            {
+                console.log(val);
+                var startPrincInput ="#startPrinc" + val;
+                var startIntInput ="#startInt" + val;
+                var startPenInput ="#startPen" + val;
+                var totalInput = "#total" + val;
 
-    $('#m_form_search').on('keyup', function (e) {
-        datatable.search($(this).val().toLowerCase());
-    }).val(query.generalSearch);
+                $(startPrincInput).on('input', function () {
+                    updateTotal();
+                });
+
+                $(startIntInput).on('input', function () {
+                    updateTotal();
+                });
+
+                $(startPenInput).on('input', function () {
+                    updateTotal();
+                });
+
+                function updateTotal() {
+                    var sum = 0.0;
+                    sum = parseFloat($(startPrincInput).val()) + parseFloat($(startIntInput).val()) + parseFloat($(startPenInput).val());
+                    $(totalInput).val(sum);
+                }
+            }
+        });
+    }
+
+    $('#initPhaseSaveBtn').click( function() {
+        var data = datatable.$('input, select').serialize();
+        alert(
+            "The following data would have been submitted to the server: \n\n"+
+            data.substr( 0, 120 )+'...'
+        );
+        return false;
+    } );
 
     /*
-    $('#m_form_status').on('change', function () {
-        datatable.search($(this).val(), 'Status');
-    }).val(typeof query.Status !== 'undefined' ? query.Status : '');
-
     $('#m_form_type').on('change', function () {
         datatable.search($(this).val(), 'Type');
     }).val(typeof query.Type !== 'undefined' ? query.Type : '');

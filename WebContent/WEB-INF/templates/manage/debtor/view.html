@@ -446,15 +446,23 @@
 					</div>
 				</div>
 				<!--end::Portlet-->
-
-				<div class="m-portlet m-portlet--mobile collapse" id="phaseDetailsDiv">
-					<div class="m-portlet__body">
-						<!--begin: Datatable -->
-						<div class="m_datatable" id="phaseDetailsTable"></div>
-						<!--end: Datatable -->
+				<!--begin::Form-->
+				<form class="m-form m-form--fit m-form--label-align-right collapse" id="phaseDetailsDiv">
+					<div class="m-portlet m-portlet--mobile">
+						<div class="m-portlet__body">
+							<!--begin: Datatable -->
+							<div class="m_datatable" id="phaseDetailsTable"></div>
+							<!--end: Datatable -->
+						</div>
 					</div>
-				</div>
-
+					<div class="m-portlet__foot m-portlet__foot--fit">
+						<div class="m-form__actions">
+							<button id="initPhaseSaveBtn" class="btn btn-primary">
+								Сохранить
+							</button>
+						</div>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>

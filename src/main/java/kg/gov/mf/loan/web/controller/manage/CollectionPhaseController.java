@@ -7,8 +7,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.manage.model.collection.*;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
+import kg.gov.mf.loan.manage.model.process.LoanDetailedSummary;
+import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.service.collection.*;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
+import kg.gov.mf.loan.manage.service.process.LoanDetailedSummaryService;
+import kg.gov.mf.loan.process.service.JobItemService;
+import kg.gov.mf.loan.web.fetchModels.PhaseDetailsModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -47,6 +52,15 @@ public class CollectionPhaseController {
 	@Autowired
 	DebtorService debtorService;
 
+	@Autowired
+	LoanRepository loanRepository;
+
+	@Autowired
+	JobItemService jobItemService;
+
+	@Autowired
+	LoanDetailedSummaryService loanDetailedSummaryService;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
@@ -78,70 +92,39 @@ public class CollectionPhaseController {
 	@ResponseBody
 	public String initializePhaseForm(@PathVariable("debtorId")Long debtorId, @RequestParam Map<String, String> selectedLoans, @RequestParam Date initDate)
 	{
+		List<PhaseDetailsModel> result = new ArrayList<>();
+		int count = 0;
 		for (String value:selectedLoans.values()
 			 ) {
-			System.out.println(value);
+			if(count == selectedLoans.size()-1) continue;
+			PhaseDetailsModel dTemp = new PhaseDetailsModel();
+			Loan loan = loanRepository.findOne(Long.parseLong(value));
+			dTemp.setLoanId(loan.getId());
+			dTemp.setLoanRegNumber(loan.getRegNumber());
+			this.jobItemService.runManualCalculateProcedure(loan.getId(), initDate);
+			LoanDetailedSummary summary = loanDetailedSummaryService.getByOnDateAndLoanId(initDate, loan.getId());
+			dTemp.setStartPrincipal(summary.getPrincipalOverdue());
+			dTemp.setStartInterest(summary.getInterestOverdue());
+			dTemp.setStartPenalty(summary.getPenaltyOverdue());
+			dTemp.setStartTotalAmount(summary.getPrincipalOverdue() + summary.getInterestOverdue() + summary.getPenaltyOverdue());
+			result.add(dTemp);
+			count++;
 		}
 		System.out.println(initDate);
 
 		Gson gson2 = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-		String result = gson2.toJson(getPhaseDetails());
-		return result;
+		String jsonResult = gson2.toJson(result);
+		return jsonResult;
 	}
 
-	private List<PhaseDetails> getPhaseDetails(){
-		List<PhaseDetails> result = new ArrayList<>();
-
-		PhaseDetails d1 = new PhaseDetails();
-		d1.setLoan_id(30897);
-		d1.setStartPrincipal(100.0);
-		d1.setStartInterest(20.0);
-		d1.setStartPenalty(10.0);
-		d1.setStartFee(0.0);
-		d1.setStartTotalAmount(1000.0);
-
-		result.add(d1);
-
-		PhaseDetails d2 = new PhaseDetails();
-		d2.setLoan_id(30898);
-		d2.setStartPrincipal(200.0);
-		d2.setStartInterest(10.0);
-		d2.setStartPenalty(30.0);
-		d2.setStartFee(0.0);
-		d2.setStartTotalAmount(2000.0);
-
-		result.add(d2);
-
-		return result;
-	}
-
-	/*
-	@RequestMapping(value="/manage/debtor/{debtorId}/initializephase", method=RequestMethod.POST)
-	public String initializePhaseSave(ModelMap model,
-									  @PathVariable("debtorId")Long debtorId,
-									  CollectionPhaseForm phaseForm)
+	@RequestMapping(value="/manage/debtor/{debtorId}/initializephasesave", method=RequestMethod.POST)
+	public String initializePhaseSave(ModelMap model, @PathVariable("debtorId")Long debtorId, @RequestParam Map<String, String> datatable)
 	{
-		CollectionPhase phase = phaseForm.getCollectionPhase();
-		Set<Loan> selectedLoans = phaseForm.getLoans();
-		phase.setLoans(selectedLoans);
-
-		CollectionProcedure procedure = new CollectionProcedure();
-		procedure.setStartDate(phase.getStartDate());
-		procedure.setProcedureStatus(procedureStatusService.getById(1L));
-		procedure.setProcedureType(procedureTypeService.getById(1L));
-		procService.add(procedure);
-
-		phase.setCollectionProcedure(procedure);
-		phaseService.add(phase);
-
-		procedure.setLastPhase(phase.getId());
-		procedure.setLastStatusId(phase.getLastStatusId());
-		procService.update(procedure);
+		System.out.println("Hello");
 
 		return "redirect:" + "/manage/debtor/{debtorId}/view";
 	}
-	*/
-	
+
 	@RequestMapping(value="/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/save", method=RequestMethod.GET)
 	public String formCollateralItem(ModelMap model, 
 			@PathVariable("debtorId")Long debtorId, 
