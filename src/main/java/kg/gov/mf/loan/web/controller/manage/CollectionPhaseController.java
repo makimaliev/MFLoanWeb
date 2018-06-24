@@ -26,6 +26,11 @@ import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.web.util.Utils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 @Controller
 public class CollectionPhaseController {
 	
@@ -64,6 +69,10 @@ public class CollectionPhaseController {
 
 	@Autowired
 	PhaseDetailsService phaseDetailsService;
+
+	/** The entity manager. */
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -176,33 +185,6 @@ public class CollectionPhaseController {
 		return "OK";
 	}
 
-	/*
-	@RequestMapping(value="/manage/debtor/{debtorId}/initializephase", method=RequestMethod.POST)
-	public String initializePhaseSave(ModelMap model,
-									  @PathVariable("debtorId")Long debtorId,
-									  CollectionPhaseForm phaseForm)
-	{
-		CollectionPhase phase = phaseForm.getCollectionPhase();
-		Set<Loan> selectedLoans = phaseForm.getLoans();
-		phase.setLoans(selectedLoans);
-
-		CollectionProcedure procedure = new CollectionProcedure();
-		procedure.setStartDate(phase.getStartDate());
-		procedure.setProcedureStatus(procedureStatusService.getById(1L));
-		procedure.setProcedureType(procedureTypeService.getById(1L));
-		procService.add(procedure);
-
-		phase.setCollectionProcedure(procedure);
-		phaseService.add(phase);
-
-		procedure.setLastPhase(phase.getId());
-		procedure.setLastStatusId(phase.getLastStatusId());
-		procService.update(procedure);
-
-		return "redirect:" + "/manage/debtor/{debtorId}/view";
-	}
-	*/
-
 	@RequestMapping(value="/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/save", method=RequestMethod.GET)
 	public String formCollateralItem(ModelMap model, 
 			@PathVariable("debtorId")Long debtorId, 
@@ -241,8 +223,34 @@ public class CollectionPhaseController {
 		CollectionProcedure procedure = procService.getById(procId);
 		phase.setCollectionProcedure(procedure);
 
-		if(phase.getId() == 0)
+		if(phase.getId() == 0){
 			phaseService.add(phase);
+			Set<Loan> loans = phase.getLoans();
+			for (Loan loan: loans)
+			{
+				PhaseDetails details = new PhaseDetails();
+				details.setLoan_id(loan.getId());
+				PhaseDetails latestDetails = phaseDetailsService.getById(getLatestDetailsByDate(loan.getId()));
+				if(latestDetails != null)
+				{
+					details.setStartPrincipal(latestDetails.getStartPrincipal());
+					details.setStartInterest(latestDetails.getStartInterest());
+					details.setStartPenalty(latestDetails.getStartPenalty());
+					details.setStartTotalAmount(latestDetails.getStartTotalAmount());
+				}
+				else
+				{
+					details.setStartPrincipal(0.0);
+					details.setStartInterest(0.0);
+					details.setStartPenalty(0.0);
+					details.setStartTotalAmount(0.0);
+				}
+
+				details.setCollectionPhase(phase);
+				phaseDetailsService.add(details);
+			}
+		}
+
 		else
 			phaseService.update(phase);
 		
@@ -342,6 +350,30 @@ public class CollectionPhaseController {
 		if(id > 0)
 			typeService.remove(typeService.getById(id));
 		return "redirect:" + "/manage/debtor/collectionprocedure/collectionphase/type/list";
+	}
+
+	private long getLatestDetailsByDate(long loanId)
+	{
+		String baseQuery = "SELECT det.id\n" +
+				"FROM phaseDetails det, collectionPhase phase, loanCollectionPhase lph\n" +
+				"WHERE det.loan_id = lph.loanId\n" +
+				"AND phase.id = lph.collectionPhaseId\n" +
+				"AND det.collectionPhaseId = lph.collectionPhaseId\n" +
+				"AND det.loan_id = " +
+				loanId + " " +
+				"ORDER BY phase.startDate DESC LIMIT 1";
+
+		long result = -1;
+
+		try {
+			Long id = ((Number) entityManager.createNativeQuery(baseQuery)
+					.getSingleResult()).longValue();
+			result = id;
+		}
+		catch (NoResultException ex){
+			}
+
+		return result;
 	}
 	
 }
