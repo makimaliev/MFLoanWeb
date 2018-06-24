@@ -14,6 +14,7 @@ import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.process.LoanDetailedSummaryService;
 import kg.gov.mf.loan.process.service.JobItemService;
 import kg.gov.mf.loan.web.fetchModels.PhaseDetailsModel;
+import kg.gov.mf.loan.web.fetchModels.PhaseDetailsModelList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -60,6 +61,9 @@ public class CollectionPhaseController {
 
 	@Autowired
 	LoanDetailedSummaryService loanDetailedSummaryService;
+
+	@Autowired
+	PhaseDetailsService phaseDetailsService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -118,12 +122,86 @@ public class CollectionPhaseController {
 	}
 
 	@RequestMapping(value="/manage/debtor/{debtorId}/initializephasesave", method=RequestMethod.POST)
-	public String initializePhaseSave(ModelMap model, @PathVariable("debtorId")Long debtorId, @RequestParam Map<String, String> datatable)
+	@ResponseBody
+	public String initializePhaseSave(@PathVariable("debtorId")Long debtorId, @RequestBody PhaseDetailsModelList phaseDetailsModels)
 	{
-		System.out.println("Hello");
+		if(phaseDetailsModels.getPhaseDetailsModels().size() > 0){
+
+		    Date startDate = null;
+
+            CollectionPhase phase = new CollectionPhase();
+
+		    List<PhaseDetailsModel> list = phaseDetailsModels.getPhaseDetailsModels();
+            Set<Loan> loans = new HashSet<>();
+
+            for (PhaseDetailsModel model: list
+                 ) {
+                Loan loan = loanRepository.findOne(model.getLoanId());
+                loans.add(loan);
+
+                startDate = model.getInitDate();
+            }
+
+            phase.setLoans(loans);
+            phase.setPhaseStatus(statusService.getById(1L));
+            phase.setPhaseType(typeService.getById(1L));
+            phase.setStartDate(startDate);
+
+            CollectionProcedure procedure = new CollectionProcedure();
+            procedure.setStartDate(startDate);
+            procedure.setProcedureStatus(procedureStatusService.getById(1L));
+            procedure.setProcedureType(procedureTypeService.getById(1L));
+            procService.add(procedure);
+            phase.setCollectionProcedure(procedure);
+            phaseService.add(phase);
+
+            for (PhaseDetailsModel model: list
+                    ) {
+                PhaseDetails details = new PhaseDetails();
+                details.setLoan_id(model.getLoanId());
+                details.setStartPrincipal(model.getStartPrincipal());
+                details.setStartInterest(model.getStartInterest());
+                details.setStartPenalty(model.getStartPenalty());
+                details.setStartTotalAmount(model.getStartTotalAmount());
+                details.setCollectionPhase(phase);
+                phaseDetailsService.add(details);
+            }
+
+            procedure.setLastPhase(phase.getId());
+            //procedure.setLastStatusId(phase.getLastStatusId());
+            procService.update(procedure);
+
+        }
+
+		return "OK";
+	}
+
+	/*
+	@RequestMapping(value="/manage/debtor/{debtorId}/initializephase", method=RequestMethod.POST)
+	public String initializePhaseSave(ModelMap model,
+									  @PathVariable("debtorId")Long debtorId,
+									  CollectionPhaseForm phaseForm)
+	{
+		CollectionPhase phase = phaseForm.getCollectionPhase();
+		Set<Loan> selectedLoans = phaseForm.getLoans();
+		phase.setLoans(selectedLoans);
+
+		CollectionProcedure procedure = new CollectionProcedure();
+		procedure.setStartDate(phase.getStartDate());
+		procedure.setProcedureStatus(procedureStatusService.getById(1L));
+		procedure.setProcedureType(procedureTypeService.getById(1L));
+		procService.add(procedure);
+
+		phase.setCollectionProcedure(procedure);
+		phaseService.add(phase);
+
+		procedure.setLastPhase(phase.getId());
+		procedure.setLastStatusId(phase.getLastStatusId());
+		procService.update(procedure);
 
 		return "redirect:" + "/manage/debtor/{debtorId}/view";
 	}
+	*/
 
 	@RequestMapping(value="/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/save", method=RequestMethod.GET)
 	public String formCollateralItem(ModelMap model, 

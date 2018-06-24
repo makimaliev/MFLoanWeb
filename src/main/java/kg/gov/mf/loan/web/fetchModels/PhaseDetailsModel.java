@@ -1,7 +1,8 @@
 package kg.gov.mf.loan.web.fetchModels;
 
+import java.util.Date;
+
 public class PhaseDetailsModel {
-    private Long id;
     private Long loanId;
     private String loanRegNumber;
     private Double startTotalAmount;
@@ -19,14 +20,7 @@ public class PhaseDetailsModel {
     private Double paidInterest;
     private Double paidPenalty;
     private Double paidFee;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private Date initDate;
 
     public Long getLoanId() {
         return loanId;
@@ -162,5 +156,13 @@ public class PhaseDetailsModel {
 
     public void setPaidFee(Double paidFee) {
         this.paidFee = paidFee;
+    }
+
+    public Date getInitDate() {
+        return initDate;
+    }
+
+    public void setInitDate(Date initDate) {
+        this.initDate = initDate;
     }
 }
