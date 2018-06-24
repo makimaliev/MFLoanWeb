@@ -219,7 +219,7 @@ public class CollectionPhaseController {
 			model.addAttribute("tLoans", debtor.getLoans());
 		}
 
-		if(procId > 0)
+		if(phaseId > 0)
 		{
 			CollectionPhase phase = phaseService.getById(phaseId);
 			model.addAttribute("phase", phase);
