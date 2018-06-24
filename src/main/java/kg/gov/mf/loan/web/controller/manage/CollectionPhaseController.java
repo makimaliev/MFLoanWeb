@@ -211,9 +211,20 @@ public class CollectionPhaseController {
 	{
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtorId", debtorId);
-		model.addAttribute("tLoans", debtor.getLoans());
+		model.addAttribute("procId", procId);
 
-		model.addAttribute("phaseForm", new CollectionPhaseForm());
+		if(phaseId == 0)
+		{
+			model.addAttribute("phase", new CollectionPhase());
+			model.addAttribute("tLoans", debtor.getLoans());
+		}
+
+		if(procId > 0)
+		{
+			CollectionPhase phase = phaseService.getById(phaseId);
+			model.addAttribute("phase", phase);
+			model.addAttribute("tLoans", phase.getLoans());
+		}
 
 		model.addAttribute("statuses", statusService.list());
 		model.addAttribute("types", typeService.list());
@@ -222,17 +233,18 @@ public class CollectionPhaseController {
 	}
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/save"}, method=RequestMethod.POST)
-    public String saveCollateralItem(CollectionPhaseForm phaseForm,
+    public String saveCollateralItem(CollectionPhase phase,
     		@PathVariable("debtorId")Long debtorId,
     		@PathVariable("procId")Long procId,
     		ModelMap model)
     {
-    	CollectionProcedure procedure = procService.getById(procId);
-		CollectionPhase phase = phaseForm.getCollectionPhase();
-		Set<Loan> selectedLoans = phaseForm.getLoans();
-		phase.setLoans(selectedLoans);
+		CollectionProcedure procedure = procService.getById(procId);
 		phase.setCollectionProcedure(procedure);
-		phaseService.add(phase);
+
+		if(phase.getId() == 0)
+			phaseService.add(phase);
+		else
+			phaseService.update(phase);
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/collectionprocedure/{procId}/view";
     }

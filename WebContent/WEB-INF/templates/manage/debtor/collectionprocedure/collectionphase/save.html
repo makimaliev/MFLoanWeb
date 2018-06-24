@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
 	<title th:text="#{label.add.collectionphase.title}"></title>
@@ -23,7 +23,6 @@
 		<div class="m-grid__item m-grid__item--fluid m-wrapper">
 			<div class="m-content">
 				<!--begin::Form-->
-				<form th:action="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/save}" th:object="${phaseForm}" method="post" class="m-form m-form--fit m-form--label-align-right">
 					<!--begin::Portlet-->
 					<div class="m-portlet m-portlet--full-height">
 						<div class="m-portlet__head">
@@ -33,117 +32,123 @@
 								</div>
 							</div>
 						</div>
-						<div class="m-portlet__body">
-							<div class="m-form__section">
+						<!--begin::Form-->
+						<form th:action="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/save}" th:object="${phase}" method="post" class="m-form m-form--fit m-form--label-align-right">
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.collectionphase.startDate}"></span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{collectionPhase.startDate}"/>
-											<span class="input-group-addon">
-													<i class="la la-calendar glyphicon-th"></i>
-												</span>
+							<input type="hidden" th:field="*{id}"/>
+							<div class="m-portlet__body">
+								<div class="m-form__section">
+
+									<div class="form-group m-form__group row">
+										<label class="col-form-label col-lg-4 col-sm-12">
+											<span th:text="#{label.collectionphase.startDate}"></span>
+										</label>
+										<div class="col-lg-4 col-md-9 col-sm-12">
+											<div class="input-group date m_datetimepicker_6">
+												<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{startDate}"/>
+												<span class="input-group-addon">
+														<i class="la la-calendar glyphicon-th"></i>
+													</span>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group m-form__group row">
+										<label class="col-form-label col-lg-4 col-sm-12">
+											<span th:text="#{label.collectionphase.closeDate}"></span>
+										</label>
+										<div class="col-lg-4 col-md-9 col-sm-12">
+											<div class="input-group date m_datetimepicker_6">
+												<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{closeDate}"/>
+												<span class="input-group-addon">
+														<i class="la la-calendar glyphicon-th"></i>
+													</span>
+											</div>
+										</div>
+									</div>
+
+									<!--
+									<div class="form-group m-form__group row">
+										<label class="col-form-label col-lg-4 col-sm-12">
+											<span th:text="#{label.collectionphase.lastEvent}"></span>
+											<span class="m--font-danger">*</span>
+										</label>
+										<div class="col-lg-4 col-md-9 col-sm-12">
+											<input type="text" class="form-control m-input" th:field="*{lastEvent}">
+										</div>
+									</div>
+
+									<div class="form-group m-form__group row">
+										<label class="col-form-label col-lg-4 col-sm-12">
+											<span th:text="#{label.collectionphase.lastStatusId}"></span>
+											<span class="m--font-danger">*</span>
+										</label>
+										<div class="col-lg-4 col-md-9 col-sm-12">
+											<input type="text" class="form-control m-input" th:field="*{lastStatusId}">
+										</div>
+									</div>
+									-->
+									<div class="form-group m-form__group row">
+										<label class="col-form-label col-lg-4 col-sm-12">
+											<span th:text="#{label.collectionPhase.phaseStatus}"></span>
+											<span class="m--font-danger">*</span>
+										</label>
+										<div class="col-lg-4 col-md-9 col-sm-12">
+											<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{phaseStatus}">
+												<option th:each="status : ${statuses}" th:value="${{status}}" th:text="${status.name}"></option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group m-form__group row">
+										<label class="col-form-label col-lg-4 col-sm-12">
+											<span th:text="#{label.collectionPhase.phaseType}"></span>
+											<span class="m--font-danger">*</span>
+										</label>
+										<div class="col-lg-4 col-md-9 col-sm-12">
+											<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{phaseType}">
+												<option value="0" th:text="#{label.select}"></option>
+												<option th:each="type : ${types}" th:value="${{type}}" th:text="${type.name}"></option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group m-form__group row">
+										<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.loans}">
+											Loans <span class="m--font-danger">*</span>
+										</label>
+										<div class="col-lg-4 col-md-9 col-sm-12">
+											<select class="form-control m-bootstrap-select m_selectpicker" multiple th:field="*{loans}">
+												<option th:each="loan : ${tLoans}"
+														th:value="${{loan}}"
+														th:text="${loan.regNumber}">
+												</option>
+											</select>
 										</div>
 									</div>
 								</div>
-
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.collectionphase.closeDate}"></span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{collectionPhase.closeDate}"/>
-											<span class="input-group-addon">
-													<i class="la la-calendar glyphicon-th"></i>
-												</span>
+							</div>
+							<div class="m-portlet__foot m-portlet__foot--fit">
+								<div class="m-form__actions m-form__actions">
+									<div class="row">
+										<div class="col-lg-4"></div>
+										<div class="col-lg-6">
+											<button type="submit" class="btn btn-primary" th:text="#{label.initialize.collectionphase.save}">
+												Save
+											</button>
+											<button onclick="window.history.back()" type="button" class="btn btn-secondary" th:text="#{label.add.debtor.cancel}">
+												Cancel
+											</button>
 										</div>
 									</div>
 								</div>
-
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.collectionphase.lastEvent}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" th:field="*{collectionPhase.lastEvent}">
-									</div>
-								</div>
-
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.collectionphase.lastStatusId}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" th:field="*{collectionPhase.lastStatusId}">
-									</div>
-								</div>
-
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.collectionPhase.phaseStatus}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{collectionPhase.phaseStatus}">
-											<option value="0" th:text="#{label.select}"></option>
-											<option th:each="status : ${statuses}" th:value="${{status}}" th:text="${status.name}"></option>
-										</select>
-									</div>
-								</div>
-
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.collectionPhase.phaseType}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{collectionPhase.phaseType}">
-											<option value="0" th:text="#{label.select}"></option>
-											<option th:each="type : ${types}" th:value="${{type}}" th:text="${type.name}"></option>
-										</select>
-									</div>
-								</div>
-
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.loans}">
-										Loans <span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-select2" id="m_select2_3" name="param" multiple="multiple" th:field="*{loans}">
-											<option th:each="loan : ${tLoans}"
-													th:value="${{loan}}"
-													th:text="${loan.regNumber}">
-											</option>
-										</select>
-									</div>
-								</div>
 							</div>
-						</div>
-						<div class="m-portlet__foot m-portlet__foot--fit">
-							<div class="m-form__actions m-form__actions">
-								<div class="row">
-									<div class="col-lg-4"></div>
-									<div class="col-lg-6">
-										<button type="submit" class="btn btn-primary" th:text="#{label.initialize.collectionphase.save}">
-											Save
-										</button>
-										<button onclick="window.history.back()" type="button" class="btn btn-secondary" th:text="#{label.add.debtor.cancel}">
-											Cancel
-										</button>
-									</div>
-								</div>
-							</div>
-						</div>
+						</form>
+						<!--end::Form-->
+
 					</div>
 					<!--end::Portlet-->
-				</form>
-				<!--end::Form-->
+
 			</div>
 		</div>
 	</div>
