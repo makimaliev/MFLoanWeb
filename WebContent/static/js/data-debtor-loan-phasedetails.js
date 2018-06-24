@@ -99,6 +99,52 @@ var phaseDetailsTableInit = function (jsonInput) {
         }
     });
 
+    $('#initPhaseSaveBtn')
+        .on('click', function () {
+            var initDate = $("#phaseInitDate").val();
+            var phaseDetailsModels = [];
+            for (var i = 0; i < dataJSONArray.length; i++) {
+                var obj = dataJSONArray[i];
+                $.map(obj, function(val, key) {
+                    if(key=='loanId')
+                    {
+                        var PhaseDetailsModel = {};
+                        var startPrincInput ="#startPrinc" + val;
+                        var startIntInput ="#startInt" + val;
+                        var startPenInput ="#startPen" + val;
+                        var totalInput = "#total" + val;
+
+                        PhaseDetailsModel['loanId'] = val;
+                        PhaseDetailsModel['startPrincipal'] = parseFloat($(startPrincInput).val());
+                        PhaseDetailsModel['startInterest'] = parseFloat($(startIntInput).val());
+                        PhaseDetailsModel['startPenalty'] = parseFloat($(startPenInput).val());
+                        PhaseDetailsModel['startTotalAmount'] = parseFloat($(totalInput).val());
+                        PhaseDetailsModel['initDate'] = initDate;
+                        phaseDetailsModels.push(PhaseDetailsModel);
+                    }
+                });
+            }
+            console.log(phaseDetailsModels);
+            console.log(initDate);
+            phaseDetailsModels = JSON.stringify({
+                'phaseDetailsModels' : phaseDetailsModels
+            });
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type : 'POST',
+                url : "/manage/debtor/"+debtorId+"/initializephasesave",
+                data: phaseDetailsModels,
+                dataType: 'json',
+                success:function (data) {
+                    if(data == 'OK')
+                        window.location.replace("/manage/debtor/"+debtorId+"/view");
+                }
+            });
+        });
+
     for (var i = 0; i < dataJSONArray.length; i++) {
         var obj = dataJSONArray[i];
         $.map(obj, function(val, key) {
@@ -130,15 +176,6 @@ var phaseDetailsTableInit = function (jsonInput) {
             }
         });
     }
-
-    $('#initPhaseSaveBtn').click( function() {
-        var data = datatable.$('input, select').serialize();
-        alert(
-            "The following data would have been submitted to the server: \n\n"+
-            data.substr( 0, 120 )+'...'
-        );
-        return false;
-    } );
 
     /*
     $('#m_form_type').on('change', function () {
