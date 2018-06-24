@@ -102,87 +102,43 @@
 					</div>
 				</div>
 				<!--end::Portlet-->
-						<!-- BEGIN BORDERED TABLE PORTLET-->
-						<!--
-						<div class="portlet light portlet-fit ">
-							<div class="portlet-title">
-								<div class="caption">
-									<i class="icon-settings font-green"></i> 
-									<span class="caption-subject font-green sbold uppercase" th:text="'Id : '+${phase.id}">123</span>
+				<!--begin::Portlet-->
+				<div class="m-portlet m-portlet--mobile">
+					<div class="m-portlet__body">
+						<!--begin::Section-->
+						<div class="m-section">
+							<div class="m-section__content">
+								<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+									<div>
+										<table class="table">
+											<thead class="thead-default">
+											<tr>
+												<th class="table-id">Id</th>
+												<th th:text="#{label.collectionphaseDetails.startPrincipal}"></th>
+												<th th:text="#{label.collectionphaseDetails.startInterest}"></th>
+												<th th:text="#{label.collectionphaseDetails.startPenalty}"></th>
+												<th th:text="#{label.collectionphaseDetails.startTotalAmount}"></th>
+											</tr>
+											</thead>
+											<tbody>
+											<tr th:each="details : ${phaseDetails}">
+												<td class="table-id" th:text="${details.id}"></td>
+												<td th:text="${details.startPrincipal}"></td>
+												<td th:text="${details.startInterest}"></td>
+												<td th:text="${details.startPenalty}"></td>
+												<td th:text="${details.startTotalAmount}"></td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
 								</div>
 							</div>
-							<div class="portlet-body form">
-								<form class="form-horizontal" role="form">
-									<div class="form-body" style="padding: 20px">
-										<div class="row">
-											<div class="col-md-6">
-												<div class="form-group">
-													<label class="control-label col-md-3">Id:</label>
-													<div class="col-md-9">
-														<p class="form-control-static" th:text="${phase.id}">1</p>
-													</div>
-												</div>
-											</div>
-											<div class="col-md-6">
-												<div class="form-group">
-													<label class="control-label col-md-3">Start Date:</label>
-													<div class="col-md-9">
-														<p class="form-control-static" th:text="${phase.startDate}">Coll 1</p>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-md-6">
-												<div class="form-group">
-													<label class="control-label col-md-3">Close Date:</label>
-													<div class="col-md-9">
-														<p class="form-control-static" th:text="${phase.closeDate}">1</p>
-													</div>
-												</div>
-											</div>
-											<div class="col-md-6">
-												<div class="form-group">
-													<label class="control-label col-md-3">Last Phase:</label>
-													<div class="col-md-9">
-														<p class="form-control-static" th:text="${phase.lastEvent}">Coll 1</p>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-md-6">
-												<div class="form-group">
-													<label class="control-label col-md-3">Last Status Id:</label>
-													<div class="col-md-9">
-														<p class="form-control-static" th:text="${phase.lastStatusId}">1</p>
-													</div>
-												</div>
-											</div>
-											<div class="col-md-6">
-												<div class="form-group">
-													<label class="control-label col-md-3">Phase Status:</label>
-													<div class="col-md-9">
-														<p class="form-control-static" th:text="${phase.phaseStatus.name}">Coll 1</p>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-md-6">
-												<div class="form-group">
-													<label class="control-label col-md-3">Phase Type:</label>
-													<div class="col-md-9">
-														<p class="form-control-static" th:text="${phase.phaseType.name}">1</p>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</form>
-							</div>
 						</div>
-						<!-- END BORDERED TABLE PORTLET-->
+						<!--end::Section-->
+
+					</div>
+				</div>
+				<!--end::Portlet-->
 			</div>
 		</div>
 	</div>

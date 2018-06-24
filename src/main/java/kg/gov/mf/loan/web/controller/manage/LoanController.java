@@ -174,6 +174,8 @@ public class LoanController {
         model.addAttribute("Bankrupts", loan.getBankrupts());
         model.addAttribute("Collaterals", loan.getCollaterals());
         model.addAttribute("debtorId", debtorId);
+		Debtor debtor = debtorService.getById(debtorId);
+		model.addAttribute("debtor", debtor);
 
 		model.addAttribute("detailedSummaries", loan.getLoanDetailedSummaries());
 		model.addAttribute("summaries", loan.getLoanSummaries());
@@ -188,7 +190,8 @@ public class LoanController {
 	{
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtorId", debtorId);
-		
+		model.addAttribute("debtor", debtor);
+
 		if(loanId == 0)
 		{
 			model.addAttribute("loan", new Loan());

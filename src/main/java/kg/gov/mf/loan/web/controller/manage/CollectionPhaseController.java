@@ -84,7 +84,7 @@ public class CollectionPhaseController {
 		CollectionPhase phase = phaseService.getById(phaseId);
 		Set<PhaseDetails> phaseDetails = phase.getPhaseDetails();
 		model.addAttribute("phase", phase);
-		//model.addAttribute("phaseDetails", phaseDetails);
+		model.addAttribute("phaseDetails", phaseDetails);
 		
 		//model.addAttribute("events", phase.getCollectionEvents());
 		

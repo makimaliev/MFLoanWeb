@@ -62,6 +62,9 @@ public class CollateralAgreementController {
 		CollateralAgreement agreement = agreementService.getById(agreementId);
 		model.addAttribute("agreement", agreement);
 		model.addAttribute("items", agreement.getCollateralItems());
+		Debtor debtor = debtorService.getById(debtorId);
+		model.addAttribute("debtorId", debtorId);
+		model.addAttribute("debtor", debtor);
 		
 		return "/manage/debtor/collateralagreement/view";
 		
@@ -74,6 +77,7 @@ public class CollateralAgreementController {
 	{
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtorId", debtorId);
+		model.addAttribute("debtor", debtor);
 		model.addAttribute("tLoans", debtor.getLoans());
 		
 		if(agreementId == 0)
