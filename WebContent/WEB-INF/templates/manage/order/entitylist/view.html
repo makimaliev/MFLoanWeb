@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <!-- begin::Head -->
 <head>
 	<title th:text="${'Список получателей: ' + entityList.listNumber}"></title>
@@ -156,7 +156,7 @@
 						<!--<itemcheck th:if="${#lists.isEmpty(aFs)}">-->
 						<div class="m-section">
 							<div class="m-section__content">
-								<a th:href="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.entity.add}"></a>
+								<a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.entity.add}"></a>
 							</div>
 						</div>
 						<!--</itemcheck>-->
