@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
 <head>
 
 	<title th:text="#{label.user.page.title}">	MFLoan | Users </title>
@@ -25,6 +26,12 @@
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
 								<h3 class="m-portlet__head-text" th:text="#{label.user.page.title}"></h3>
+
+								<!--<p sec:authentication='principal.password'></p>-->
+
+								<!--<h3>-->
+									<!--<span class="bold" th:text="${@userServiceJpaImpl.findByUsername(#authentication.name).toString()}"></span>-->
+								<!--</h3>-->
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
@@ -38,7 +45,7 @@
 									</div>
 								</li>
 								<li class="m-portlet__nav-item">
-									<a data-remote="false" data-toggle="modal"
+									<a sec:authorize="hasAuthority('PERM_ADD_USER')" data-remote="false" data-toggle="modal"
 									   data-target="#userFormModal" th:href="@{/user/add}"
 									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.user.button.addUser}"> Add User</a>
 									<a data-remote="false" data-toggle="modal"

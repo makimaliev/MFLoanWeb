@@ -1,3 +1,5 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
 <header class="m-grid__item    m-header "  data-minimize-mobile="hide" data-minimize-offset="200" data-minimize-mobile-offset="200" data-minimize="minimize" >
     <div class="m-container m-container--fluid m-container--full-height">
         <div class="m-stack m-stack--ver m-stack--desktop">
@@ -158,7 +160,8 @@
                             <li class="m-nav__item m-topbar__user-profile m-topbar__user-profile--img  m-dropdown m-dropdown--medium m-dropdown--arrow m-dropdown--header-bg-fill m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light" data-dropdown-toggle="click">
                                 <a href="#" class="m-nav__link m-dropdown__toggle">
                                     <span class="m-topbar__userpic">
-                                        <img th:src="@{/assets/custom/app/media/img/users/user4.jpg}" class="m--img-rounded m--marginless m--img-centered" alt=""/>
+                                        <!--<img th:src="@{/assets/custom/app/media/img/users/user4.jpg}" class="m&#45;&#45;img-rounded m&#45;&#45;marginless m&#45;&#45;img-centered" alt=""/>-->
+                                        <i class="flaticon-information"></i>
                                     </span>
                                     <span class="m-topbar__username m--hide">
                                         Nick
@@ -169,15 +172,14 @@
                                     <div class="m-dropdown__inner">
                                         <div class="m-dropdown__header m--align-center" style="background: url(/assets/custom/app/media/img/misc/user_profile_bg.jpg); background-size: cover;">
                                             <div class="m-card-user m-card-user--skin-dark">
-                                                <div class="m-card-user__pic">
-                                                    <img th:src="@{/assets/custom/app/media/img/users/user4.jpg}" class="m--img-rounded m--marginless" alt=""/>
-                                                </div>
+                                                <!--<div class="m-card-user__pic">-->
+                                                    <!--<img th:src="@{/assets/custom/app/media/img/users/user4.jpg}" class="m&#45;&#45;img-rounded m&#45;&#45;marginless" alt=""/>-->
+                                                <!--</div>-->
                                                 <div class="m-card-user__details">
-                                                    <span class="m-card-user__name m--font-weight-500">
+                                                    <a th:href="@{/user/__${@userServiceJpaImpl.findByUsername(#authentication.name).getId()}__/details}">
+                                                    <span class="m-card-user__name m--font-weight-500" th:text="${@userServiceJpaImpl.findByUsername(#authentication.name)?.staff?.name}">
                                                         Mark Andre
                                                     </span>
-                                                    <a href="" class="m-card-user__email m--font-weight-300 m-link">
-                                                        mark.andre@gmail.com
                                                     </a>
                                                 </div>
                                             </div>
@@ -190,34 +192,32 @@
                                                             Section
                                                         </span>
                                                     </li>
-                                                    <li class="m-nav__item">
-                                                        <a href="#" class="m-nav__link">
-                                                            <i class="m-nav__link-icon flaticon-profile-1"></i>
-                                                            <span class="m-nav__link-title">
-                                                                <span class="m-nav__link-wrap">
-                                                                    <span class="m-nav__link-text">
-                                                                        My Profile
-                                                                    </span>
-                                                                </span>
-                                                            </span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="m-nav__item">
-                                                        <a href="#" class="m-nav__link">
-                                                            <i class="m-nav__link-icon flaticon-share"></i>
-                                                            <span class="m-nav__link-text">
-                                                                Activity
-                                                            </span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="m-nav__item">
-                                                        <a href="#" class="m-nav__link">
-                                                            <i class="m-nav__link-icon flaticon-chat-1"></i>
-                                                            <span class="m-nav__link-text">
-                                                                Messages
-                                                            </span>
-                                                        </a>
-                                                    </li>
+                                                    <!--<li class="m-nav__item">-->
+                                                        <!--<a href="#" class="m-nav__link">-->
+                                                            <!--<i class="m-nav__link-icon flaticon-profile-1"></i>-->
+                                                            <!--<span class="m-nav__link-title">-->
+                                                                <!--<span class="m-nav__link-wrap">-->
+
+                                                                <!--</span>-->
+                                                            <!--</span>-->
+                                                        <!--</a>-->
+                                                    <!--</li>-->
+                                                    <!--<li class="m-nav__item">-->
+                                                        <!--<a href="#" class="m-nav__link">-->
+                                                            <!--<i class="m-nav__link-icon flaticon-share"></i>-->
+                                                            <!--<span class="m-nav__link-text">-->
+                                                                <!--Activity-->
+                                                            <!--</span>-->
+                                                        <!--</a>-->
+                                                    <!--</li>-->
+                                                    <!--<li class="m-nav__item">-->
+                                                        <!--<a href="#" class="m-nav__link">-->
+                                                            <!--<i class="m-nav__link-icon flaticon-chat-1"></i>-->
+                                                            <!--<span class="m-nav__link-text">-->
+                                                                <!--Messages-->
+                                                            <!--</span>-->
+                                                        <!--</a>-->
+                                                    <!--</li>-->
                                                     <li class="m-nav__separator m-nav__separator--fit"></li>
                                                     <li class="m-nav__item">
                                                         <a th:href="@{/logout}" class="btn m-btn--pill btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder">
