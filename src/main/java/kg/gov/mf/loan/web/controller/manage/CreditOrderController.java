@@ -93,7 +93,7 @@ public class CreditOrderController {
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
-		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
+		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 	
@@ -135,9 +135,7 @@ public class CreditOrderController {
 		{
 			model.addAttribute("creditOrder", creditOrderService.getById(orderId));
 		}
-		List<CreditOrderState> states = creditOrderStateService.list();
 		List<CreditOrderType> types = creditOrderTypeService.list();
-		model.addAttribute("states", states);
 		model.addAttribute("types", types);
 		return "/manage/order/save";
 	}
@@ -151,7 +149,13 @@ public class CreditOrderController {
 			creditOrderService.add(creditOrder);
 		}
 		else
+		{
+			CreditOrder order = creditOrderService.getById(creditOrder.getId());
+			CreditOrderState state = creditOrderStateService.getById(order.getCreditOrderState().getId());
+			creditOrder.setCreditOrderState(state);
 			creditOrderService.update(creditOrder);
+		}
+
 
 		return "redirect:" + "/manage/order/" + creditOrder.getId() + "/view";
 	}

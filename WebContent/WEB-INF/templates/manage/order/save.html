@@ -75,8 +75,17 @@
 							<div class="m-form__section">
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
+										<span th:text="#{label.order.type}"></span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${creditOrder.creditOrderType.id}" id="creditOrderType" th:title="#{label.select}">
+											<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12">
 										<span th:text="#{label.order.registrationNumber}"></span>
-										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="regNumber" th:value="${creditOrder.regNumber}">
@@ -88,7 +97,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:value="${creditOrder.regDate}" name="regDate"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:value="${#dates.format(creditOrder.regDate,'dd.MM.yyyy')}" name="regDate"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -98,7 +107,6 @@
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12" for="description">
 										<span th:text="#{label.order.description}"></span>
-										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<textarea class="form-control m-input" id="description" rows="3" name="description" th:value="${creditOrder.description}"></textarea>
@@ -117,17 +125,6 @@
 									</div>
 								</div>
 								-->
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.order.type}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${creditOrder.creditOrderType.id}" id="creditOrderType" th:title="#{label.select}">
-											<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
-										</select>
-									</div>
-								</div>
 							</div>
 						</div>
 						<div class="m-portlet__foot m-portlet__foot--fit">

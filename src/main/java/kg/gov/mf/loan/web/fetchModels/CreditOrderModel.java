@@ -17,7 +17,7 @@ public class CreditOrderModel {
     private String regNumber;
     private String description;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy", timezone = "Asia/Bishkek")
     private Date regDate;
     private long status;
     private long type;
