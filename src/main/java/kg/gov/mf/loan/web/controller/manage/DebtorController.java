@@ -128,7 +128,7 @@ public class DebtorController {
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtor", debtor);
 
-		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
 		String jsonLoans = gson.toJson(getLoansByDebtorId(debtorId));
 		model.addAttribute("loans", jsonLoans);
 

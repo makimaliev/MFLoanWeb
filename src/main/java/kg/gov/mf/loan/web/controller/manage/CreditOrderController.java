@@ -5,7 +5,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.manage.repository.order.CreditOrderRepository;
+import kg.gov.mf.loan.web.fetchModels.AppliedEntityListModel;
 import kg.gov.mf.loan.web.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +37,10 @@ import kg.gov.mf.loan.manage.service.orderterm.OrderTermFundService;
 import kg.gov.mf.loan.manage.service.orderterm.OrderTermRatePeriodService;
 import kg.gov.mf.loan.manage.service.orderterm.OrderTermTransactionOrderService;
 import kg.gov.mf.loan.web.util.Utils;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 @Controller
 @SessionAttributes("roles")
@@ -82,13 +89,10 @@ public class CreditOrderController {
 
 	@Autowired
 	CreditOrderRepository creditOrderRepository;
-	
-	static final Logger loggerEntityList = LoggerFactory.getLogger(AppliedEntityList.class);
 
-	private static final int BUTTONS_TO_SHOW = 5;
-	private static final int INITIAL_PAGE = 0;
-	private static final int INITIAL_PAGE_SIZE = 10;
-	private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
+	/** The entity manager. */
+	@PersistenceContext
+	private EntityManager entityManager;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -102,8 +106,11 @@ public class CreditOrderController {
 
 		CreditOrder order = creditOrderService.getById(orderId);
         model.addAttribute("order", order);
+
+		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+		String jsonLists = gson.toJson(getListsByOrderId(orderId));
+		model.addAttribute("entityLists", jsonLists);
         
-        model.addAttribute("entityLists", order.getAppliedEntityLists());
         model.addAttribute("orderDocumentPackages", order.getOrderDocumentPackages());
         model.addAttribute("orderTerms", order.getOrderTerms());
         
@@ -261,4 +268,20 @@ public class CreditOrderController {
 			creditOrderTypeService.remove(creditOrderTypeService.getById(id));
         return "redirect:" + "/manage/order/type/list";
     }
+
+	private List<AppliedEntityListModel> getListsByOrderId(long orderId)
+	{
+		String baseQuery = "SELECT list.id,\n" +
+				"  list.listDate,\n" +
+				"  list.listNumber,\n" +
+				"  list.appliedEntityListStateId as state,\n" +
+				"  list.appliedEntityListTypeId as type\n" +
+				"FROM appliedEntityList list\n" +
+				"WHERE list.creditOrderId = " + orderId;
+
+		Query query = entityManager.createNativeQuery(baseQuery, AppliedEntityListModel.class);
+
+		List<AppliedEntityListModel> lists = query.getResultList();
+		return lists;
+	}
 }
