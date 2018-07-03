@@ -1,5 +1,6 @@
 package kg.gov.mf.loan.web.fetchModels;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
@@ -16,8 +17,7 @@ public class CreditOrderModel {
     private String regNumber;
     private String description;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.DATE)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
     private Date regDate;
     private long status;
     private long type;
