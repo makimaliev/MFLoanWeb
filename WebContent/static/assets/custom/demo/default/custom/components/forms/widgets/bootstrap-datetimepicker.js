@@ -85,7 +85,7 @@ var BootstrapDatetimepicker = function () {
         });
 
         $('#m_datetimepicker_6').datetimepicker({
-            format: "yyyy-mm-dd",
+            format: "dd.mm.yyyy",
             todayHighlight: true,
             autoclose: true,
             startView: 2,
@@ -95,7 +95,7 @@ var BootstrapDatetimepicker = function () {
         });
 
         $('.m_datetimepicker_6').datetimepicker({
-            format: "yyyy-mm-dd",
+            format: "dd.mm.yyyy",
             todayHighlight: true,
             autoclose: true,
             startView: 2,
