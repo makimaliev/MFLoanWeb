@@ -1,160 +1,160 @@
 
 
-INSERT INTO `edu`.`report` (`name`, `reportType`) VALUES ('Отчет по задолженности', 'LOAN_SUMMARY');
-INSERT INTO `edu`.`report` (`name`, `reportType`) VALUES ('Отчет по погашениям', 'LOAN_PAYMENT');
-INSERT INTO `edu`.`report` (`name`, `reportType`) VALUES ('Отчет по графикам', 'LOAN_SCHEDULE');
-INSERT INTO `edu`.`report` (`name`, `reportType`) VALUES ('Отчет по плану', 'LOAN_PLAN');
-INSERT INTO `edu`.`report` (`name`, `reportType`) VALUES ('Отчет по залогу', 'COLLATERAL_ITEM');
-INSERT INTO `edu`.`report` (`name`, `reportType`) VALUES ('Отчет по взысканию', 'COLLECTION_PHASE');
+INSERT INTO `mfloan`.`report` (`name`, `reportType`) VALUES ('Отчет по задолженности', 'LOAN_SUMMARY');
+INSERT INTO `mfloan`.`report` (`name`, `reportType`) VALUES ('Отчет по погашениям', 'LOAN_PAYMENT');
+INSERT INTO `mfloan`.`report` (`name`, `reportType`) VALUES ('Отчет по графикам', 'LOAN_SCHEDULE');
+INSERT INTO `mfloan`.`report` (`name`, `reportType`) VALUES ('Отчет по плану', 'LOAN_PLAN');
+INSERT INTO `mfloan`.`report` (`name`, `reportType`) VALUES ('Отчет по залогу', 'COLLATERAL_ITEM');
+INSERT INTO `mfloan`.`report` (`name`, `reportType`) VALUES ('Отчет по взысканию', 'COLLECTION_PHASE');
 
-INSERT INTO `edu`.`generation_parameter_type` (`name`) VALUES ('Дата расчета');
-INSERT INTO `edu`.`generation_parameter_type` (`name`) VALUES ('Дата состояния');
-INSERT INTO `edu`.`generation_parameter_type` (`name`) VALUES ('Единица валюты');
-INSERT INTO `edu`.`generation_parameter_type` (`name`) VALUES ('1. разрез');
-INSERT INTO `edu`.`generation_parameter_type` (`name`) VALUES ('2. разрез');
-INSERT INTO `edu`.`generation_parameter_type` (`name`) VALUES ('3. разрез');
-INSERT INTO `edu`.`generation_parameter_type` (`name`) VALUES ('4. разрез');
-INSERT INTO `edu`.`generation_parameter_type` (`name`) VALUES ('5. разрез');
-INSERT INTO `edu`.`generation_parameter_type` (`name`) VALUES ('6. разрез');
-
-
-INSERT INTO `edu`.`generation_parameter` (`date`, `name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('2018-01-01', 'на 01.01.2018г.', '1', '1', '0', '1');
-
-INSERT INTO `edu`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('1. разрез (область)', '2', '1', '0', '4');
-INSERT INTO `edu`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('2. разрез (область)', '2', '1', '0', '5');
-
-INSERT INTO `edu`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('1. разрез (район)', '2', '2', '0', '4');
-INSERT INTO `edu`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('2. разрез (район)', '2', '2', '0', '5');
-
-INSERT INTO `edu`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('1. разрез (заемщик)', '2', '3', '0', '4');
-INSERT INTO `edu`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('2. разрез (заемщик)', '2', '3', '0', '5');
-INSERT INTO `edu`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('3. разрез (заемщик)', '2', '3', '0', '6');
-
-INSERT INTO `edu`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('1. разрез (кредит)', '2', '4', '0', '4');
-INSERT INTO `edu`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('2. разрез (кредит)', '2', '4', '0', '5');
-INSERT INTO `edu`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('3. разрез (кредит)', '2', '4', '0', '6');
-INSERT INTO `edu`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('4. разрез (кредит)', '2', '4', '0', '7');
-
-INSERT INTO `edu`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('1. разрез (погашение)', '2', '5', '0', '4');
-INSERT INTO `edu`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('2. разрез (погашение)', '2', '5', '0', '5');
-INSERT INTO `edu`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('3. разрез (погашение)', '2', '5', '0', '6');
-INSERT INTO `edu`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('4. разрез (погашение)', '2', '5', '0', '7');
-INSERT INTO `edu`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('5. разрез (погашение)', '2', '5', '0', '8');
+INSERT INTO `mfloan`.`generation_parameter_type` (`name`) VALUES ('Дата расчета');
+INSERT INTO `mfloan`.`generation_parameter_type` (`name`) VALUES ('Дата состояния');
+INSERT INTO `mfloan`.`generation_parameter_type` (`name`) VALUES ('Единица валюты');
+INSERT INTO `mfloan`.`generation_parameter_type` (`name`) VALUES ('1. разрез');
+INSERT INTO `mfloan`.`generation_parameter_type` (`name`) VALUES ('2. разрез');
+INSERT INTO `mfloan`.`generation_parameter_type` (`name`) VALUES ('3. разрез');
+INSERT INTO `mfloan`.`generation_parameter_type` (`name`) VALUES ('4. разрез');
+INSERT INTO `mfloan`.`generation_parameter_type` (`name`) VALUES ('5. разрез');
+INSERT INTO `mfloan`.`generation_parameter_type` (`name`) VALUES ('6. разрез');
 
 
-INSERT INTO `edu`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('1. разрезе (отрасль)', '2', '6', '0', '4');
-INSERT INTO `edu`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('2. разрезе (отрасль)', '2', '6', '0', '4');
+INSERT INTO `mfloan`.`generation_parameter` (`date`, `name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('2018-01-01', 'на 01.01.2018г.', '1', '1', '0', '1');
+
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('1. разрез (область)', '2', '1', '0', '4');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('2. разрез (область)', '2', '1', '0', '5');
+
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('1. разрез (район)', '2', '2', '0', '4');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('2. разрез (район)', '2', '2', '0', '5');
+
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('1. разрез (заемщик)', '2', '3', '0', '4');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('2. разрез (заемщик)', '2', '3', '0', '5');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('3. разрез (заемщик)', '2', '3', '0', '6');
+
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('1. разрез (кредит)', '2', '4', '0', '4');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('2. разрез (кредит)', '2', '4', '0', '5');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('3. разрез (кредит)', '2', '4', '0', '6');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('4. разрез (кредит)', '2', '4', '0', '7');
+
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('1. разрез (погашение)', '2', '5', '0', '4');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('2. разрез (погашение)', '2', '5', '0', '5');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('3. разрез (погашение)', '2', '5', '0', '6');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('4. разрез (погашение)', '2', '5', '0', '7');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('5. разрез (погашение)', '2', '5', '0', '8');
 
 
-INSERT INTO `edu`.`object_list` (`name`, `object_type_id`) VALUES ('По республике', '1');
-
-INSERT INTO `edu`.`object_list` (`name`, `object_type_id`) VALUES ('По Баткенской области', '1');
-INSERT INTO `edu`.`object_list` (`name`, `object_type_id`) VALUES ('По Ошской области', '1');
-INSERT INTO `edu`.`object_list` (`name`, `object_type_id`) VALUES ('По Таласской области', '1');
-INSERT INTO `edu`.`object_list` (`name`, `object_type_id`) VALUES ('По Нарынской области', '1');
-INSERT INTO `edu`.`object_list` (`name`, `object_type_id`) VALUES ('По Иссык-Кульской области', '1');
-INSERT INTO `edu`.`object_list` (`name`, `object_type_id`) VALUES ('По Чуйской области', '1');
-INSERT INTO `edu`.`object_list` (`name`, `object_type_id`) VALUES ('По г.Бишкек', '1');
-
-INSERT INTO `edu`.`object_list_value` (`name`, `object_list_id`) VALUES ('1', '1');
-INSERT INTO `edu`.`object_list_value` (`name`, `object_list_id`) VALUES ('2', '1');
-INSERT INTO `edu`.`object_list_value` (`name`, `object_list_id`) VALUES ('3', '1');
-INSERT INTO `edu`.`object_list_value` (`name`, `object_list_id`) VALUES ('4', '1');
-INSERT INTO `edu`.`object_list_value` (`name`, `object_list_id`) VALUES ('5', '1');
-INSERT INTO `edu`.`object_list_value` (`name`, `object_list_id`) VALUES ('6', '1');
-INSERT INTO `edu`.`object_list_value` (`name`, `object_list_id`) VALUES ('7', '1');
-
-INSERT INTO `edu`.`object_list_value` (`name`, `object_list_id`) VALUES ('1', '2');
-INSERT INTO `edu`.`object_list_value` (`name`, `object_list_id`) VALUES ('2', '3');
-INSERT INTO `edu`.`object_list_value` (`name`, `object_list_id`) VALUES ('3', '4');
-INSERT INTO `edu`.`object_list_value` (`name`, `object_list_id`) VALUES ('4', '5');
-INSERT INTO `edu`.`object_list_value` (`name`, `object_list_id`) VALUES ('5', '6');
-INSERT INTO `edu`.`object_list_value` (`name`, `object_list_id`) VALUES ('6', '7');
-INSERT INTO `edu`.`object_list_value` (`name`, `object_list_id`) VALUES ('7', '8');
-
-INSERT INTO `edu`.`filter_parameter` (`comparator`, `compared_value`, `filterParameterType`, `name`, `object_list_id`) VALUES ('EQUALS', '', 'OBJECT_LIST', 'По республике', '1');
-INSERT INTO `edu`.`filter_parameter` (`comparator`, `compared_value`, `filterParameterType`, `name`, `object_list_id`) VALUES ('EQUALS', '', 'OBJECT_LIST', 'По Баткенской области', '2');
-INSERT INTO `edu`.`filter_parameter` (`comparator`, `compared_value`, `filterParameterType`, `name`, `object_list_id`) VALUES ('EQUALS', '', 'OBJECT_LIST', 'По Ошской области', '3');
-INSERT INTO `edu`.`filter_parameter` (`comparator`, `compared_value`, `filterParameterType`, `name`, `object_list_id`) VALUES ('EQUALS', '', 'OBJECT_LIST', 'По Таласской области', '4');
-INSERT INTO `edu`.`filter_parameter` (`comparator`, `compared_value`, `filterParameterType`, `name`, `object_list_id`) VALUES ('EQUALS', '', 'OBJECT_LIST', 'По Нарынской области', '5');
-INSERT INTO `edu`.`filter_parameter` (`comparator`, `compared_value`, `filterParameterType`, `name`, `object_list_id`) VALUES ('EQUALS', '', 'OBJECT_LIST', 'По Иссык-Кульской области', '6');
-INSERT INTO `edu`.`filter_parameter` (`comparator`, `compared_value`, `filterParameterType`, `name`, `object_list_id`) VALUES ('EQUALS', '', 'OBJECT_LIST', 'По Чуйской области', '7');
-INSERT INTO `edu`.`filter_parameter` (`comparator`, `compared_value`, `filterParameterType`, `name`, `object_list_id`) VALUES ('EQUALS', '', 'OBJECT_LIST', 'По г.Бишкек', '8');
-
-INSERT INTO `edu`.`report_template` (`name`, `report_id`) VALUES ('по республике (область, район, заемщик, кредит', '1');
-INSERT INTO `edu`.`report_template` (`name`, `report_id`) VALUES ('по Баткенской области (область, район, заемщик, кредит', '1');
-INSERT INTO `edu`.`report_template` (`name`, `report_id`) VALUES ('по Ошской области (область, район, заемщик, кредит', '1');
-
-INSERT INTO `edu`.`report_template` (`name`, `report_id`) VALUES ('по республике (отрасль, область, заемщик, кредит', '1');
-
-INSERT INTO `edu`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('1', '1');
-INSERT INTO `edu`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('2', '2');
-INSERT INTO `edu`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('3', '3');
-INSERT INTO `edu`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('4', '1');
-
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('1', '1');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('1', '2');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('1', '5');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('1', '8');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('1', '12');
-
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('2', '1');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('2', '2');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('2', '5');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('2', '8');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('2', '12');
-
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('3', '1');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('3', '2');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('3', '5');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('3', '8');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('3', '12');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('1. разрезе (отрасль)', '2', '6', '0', '4');
+INSERT INTO `mfloan`.`generation_parameter` (`name`, `position`, `position_in_list`, `ref_id`, `generation_parameter_type__id`) VALUES ('2. разрезе (отрасль)', '2', '6', '0', '4');
 
 
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('4', '1');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('4', '18');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('4', '3');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('4', '8');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('4', '12');
+INSERT INTO `mfloan`.`object_list` (`name`, `object_type_id`) VALUES ('По республике', '1');
+
+INSERT INTO `mfloan`.`object_list` (`name`, `object_type_id`) VALUES ('По Баткенской области', '1');
+INSERT INTO `mfloan`.`object_list` (`name`, `object_type_id`) VALUES ('По Ошской области', '1');
+INSERT INTO `mfloan`.`object_list` (`name`, `object_type_id`) VALUES ('По Таласской области', '1');
+INSERT INTO `mfloan`.`object_list` (`name`, `object_type_id`) VALUES ('По Нарынской области', '1');
+INSERT INTO `mfloan`.`object_list` (`name`, `object_type_id`) VALUES ('По Иссык-Кульской области', '1');
+INSERT INTO `mfloan`.`object_list` (`name`, `object_type_id`) VALUES ('По Чуйской области', '1');
+INSERT INTO `mfloan`.`object_list` (`name`, `object_type_id`) VALUES ('По г.Бишкек', '1');
+
+INSERT INTO `mfloan`.`object_list_value` (`name`, `object_list_id`) VALUES ('1', '1');
+INSERT INTO `mfloan`.`object_list_value` (`name`, `object_list_id`) VALUES ('2', '1');
+INSERT INTO `mfloan`.`object_list_value` (`name`, `object_list_id`) VALUES ('3', '1');
+INSERT INTO `mfloan`.`object_list_value` (`name`, `object_list_id`) VALUES ('4', '1');
+INSERT INTO `mfloan`.`object_list_value` (`name`, `object_list_id`) VALUES ('5', '1');
+INSERT INTO `mfloan`.`object_list_value` (`name`, `object_list_id`) VALUES ('6', '1');
+INSERT INTO `mfloan`.`object_list_value` (`name`, `object_list_id`) VALUES ('7', '1');
+
+INSERT INTO `mfloan`.`object_list_value` (`name`, `object_list_id`) VALUES ('1', '2');
+INSERT INTO `mfloan`.`object_list_value` (`name`, `object_list_id`) VALUES ('2', '3');
+INSERT INTO `mfloan`.`object_list_value` (`name`, `object_list_id`) VALUES ('3', '4');
+INSERT INTO `mfloan`.`object_list_value` (`name`, `object_list_id`) VALUES ('4', '5');
+INSERT INTO `mfloan`.`object_list_value` (`name`, `object_list_id`) VALUES ('5', '6');
+INSERT INTO `mfloan`.`object_list_value` (`name`, `object_list_id`) VALUES ('6', '7');
+INSERT INTO `mfloan`.`object_list_value` (`name`, `object_list_id`) VALUES ('7', '8');
+
+INSERT INTO `mfloan`.`filter_parameter` (`comparator`, `compared_value`, `filterParameterType`, `name`, `object_list_id`) VALUES ('EQUALS', '', 'OBJECT_LIST', 'По республике', '1');
+INSERT INTO `mfloan`.`filter_parameter` (`comparator`, `compared_value`, `filterParameterType`, `name`, `object_list_id`) VALUES ('EQUALS', '', 'OBJECT_LIST', 'По Баткенской области', '2');
+INSERT INTO `mfloan`.`filter_parameter` (`comparator`, `compared_value`, `filterParameterType`, `name`, `object_list_id`) VALUES ('EQUALS', '', 'OBJECT_LIST', 'По Ошской области', '3');
+INSERT INTO `mfloan`.`filter_parameter` (`comparator`, `compared_value`, `filterParameterType`, `name`, `object_list_id`) VALUES ('EQUALS', '', 'OBJECT_LIST', 'По Таласской области', '4');
+INSERT INTO `mfloan`.`filter_parameter` (`comparator`, `compared_value`, `filterParameterType`, `name`, `object_list_id`) VALUES ('EQUALS', '', 'OBJECT_LIST', 'По Нарынской области', '5');
+INSERT INTO `mfloan`.`filter_parameter` (`comparator`, `compared_value`, `filterParameterType`, `name`, `object_list_id`) VALUES ('EQUALS', '', 'OBJECT_LIST', 'По Иссык-Кульской области', '6');
+INSERT INTO `mfloan`.`filter_parameter` (`comparator`, `compared_value`, `filterParameterType`, `name`, `object_list_id`) VALUES ('EQUALS', '', 'OBJECT_LIST', 'По Чуйской области', '7');
+INSERT INTO `mfloan`.`filter_parameter` (`comparator`, `compared_value`, `filterParameterType`, `name`, `object_list_id`) VALUES ('EQUALS', '', 'OBJECT_LIST', 'По г.Бишкек', '8');
+
+INSERT INTO `mfloan`.`report_template` (`name`, `report_id`) VALUES ('по республике (область, район, заемщик, кредит', '1');
+INSERT INTO `mfloan`.`report_template` (`name`, `report_id`) VALUES ('по Баткенской области (область, район, заемщик, кредит', '1');
+INSERT INTO `mfloan`.`report_template` (`name`, `report_id`) VALUES ('по Ошской области (область, район, заемщик, кредит', '1');
+
+INSERT INTO `mfloan`.`report_template` (`name`, `report_id`) VALUES ('по республике (отрасль, область, заемщик, кредит', '1');
+
+INSERT INTO `mfloan`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('1', '1');
+INSERT INTO `mfloan`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('2', '2');
+INSERT INTO `mfloan`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('3', '3');
+INSERT INTO `mfloan`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('4', '1');
+
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('1', '1');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('1', '2');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('1', '5');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('1', '8');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('1', '12');
+
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('2', '1');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('2', '2');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('2', '5');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('2', '8');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('2', '12');
+
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('3', '1');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('3', '2');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('3', '5');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('3', '8');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('3', '12');
+
+
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('4', '1');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('4', '18');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('4', '3');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('4', '8');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('4', '12');
 
 
 
 
-INSERT INTO `edu`.`report_template` (`name`, `report_id`) VALUES ('по республике (область, район, заемщик, кредит', '2');
-INSERT INTO `edu`.`report_template` (`name`, `report_id`) VALUES ('по Баткенской области (область, район, заемщик, кредит', '2');
-INSERT INTO `edu`.`report_template` (`name`, `report_id`) VALUES ('по Ошской области (область, район, заемщик, кредит', '2');
+INSERT INTO `mfloan`.`report_template` (`name`, `report_id`) VALUES ('по республике (область, район, заемщик, кредит', '2');
+INSERT INTO `mfloan`.`report_template` (`name`, `report_id`) VALUES ('по Баткенской области (область, район, заемщик, кредит', '2');
+INSERT INTO `mfloan`.`report_template` (`name`, `report_id`) VALUES ('по Ошской области (область, район, заемщик, кредит', '2');
 
-INSERT INTO `edu`.`report_template` (`name`, `report_id`) VALUES ('по республике (отрасль, область, заемщик, кредит', '2');
+INSERT INTO `mfloan`.`report_template` (`name`, `report_id`) VALUES ('по республике (отрасль, область, заемщик, кредит', '2');
 
-INSERT INTO `edu`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('5', '1');
-INSERT INTO `edu`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('6', '2');
-INSERT INTO `edu`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('7', '3');
-INSERT INTO `edu`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('8', '1');
+INSERT INTO `mfloan`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('5', '1');
+INSERT INTO `mfloan`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('6', '2');
+INSERT INTO `mfloan`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('7', '3');
+INSERT INTO `mfloan`.`report_template_filter_parameter` (`report_template_id`, `filter_parameter_id`) VALUES ('8', '1');
 
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('5', '1');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('5', '2');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('5', '5');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('5', '8');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('5', '12');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('5', '1');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('5', '2');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('5', '5');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('5', '8');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('5', '12');
 
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('6', '1');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('6', '2');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('6', '5');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('6', '8');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('6', '12');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('6', '1');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('6', '2');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('6', '5');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('6', '8');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('6', '12');
 
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('7', '1');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('7', '2');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('7', '5');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('7', '8');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('7', '12');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('7', '1');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('7', '2');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('7', '5');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('7', '8');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('7', '12');
 
 
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('8', '1');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('8', '18');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('8', '3');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('8', '8');
-INSERT INTO `edu`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('8', '12');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('8', '1');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('8', '18');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('8', '3');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('8', '8');
+INSERT INTO `mfloan`.`report_template_generation_parameter` (`report_template_id`, `generation_parameter_id`) VALUES ('8', '12');
 
 
 
@@ -215,8 +215,8 @@ CREATE VIEW person_view AS
     `a`.`district_id`        AS `v_person_district_id`,
     `a`.`region_id`          AS `v_person_region_id`,
     `a`.`village_id`         AS `v_person_village_id`
-  FROM (`edu`.`address` `a`
-    JOIN `edu`.`person` `p` ON ((`a`.`id` = `p`.`address_id`)));
+  FROM (`mfloan`.`address` `a`
+    JOIN `mfloan`.`person` `p` ON ((`a`.`id` = `p`.`address_id`)));
 
 
 CREATE VIEW organization_view AS
@@ -233,53 +233,53 @@ CREATE VIEW organization_view AS
     `a`.`district_id`     AS `v_organization_district_id`,
     `a`.`aokmotu_id`      AS `v_organization_aokmotu_id`,
     `a`.`village_id`      AS `v_organization_village_id`
-  FROM (`edu`.`address` `a`
-    JOIN `edu`.`organization` `o` ON ((`a`.`id` = `o`.`address_id`)));
+  FROM (`mfloan`.`address` `a`
+    JOIN `mfloan`.`organization` `o` ON ((`a`.`id` = `o`.`address_id`)));
 
 
 CREATE VIEW owner_view AS
   SELECT
     (CASE WHEN (`o`.`ownerType` = 'PERSON')
       THEN (SELECT `pv`.`v_person_address_id`
-            FROM `edu`.`person_view` `pv`
+            FROM `mfloan`.`person_view` `pv`
             WHERE (`pv`.`v_person_id` = `o`.`entityId`))
      ELSE (SELECT `ov`.`v_organization_address_id`
-           FROM `edu`.`organization_view` `ov`
+           FROM `mfloan`.`organization_view` `ov`
            WHERE (`ov`.`v_organization_id` = `o`.`entityId`)) END) AS `v_owner_address_id`,
     (CASE WHEN (`o`.`ownerType` = 'PERSON')
       THEN (SELECT `pv`.`v_person_region_id`
-            FROM `edu`.`person_view` `pv`
+            FROM `mfloan`.`person_view` `pv`
             WHERE (`pv`.`v_person_id` = `o`.`entityId`))
      ELSE (SELECT `ov`.`v_organization_region_id`
-           FROM `edu`.`organization_view` `ov`
+           FROM `mfloan`.`organization_view` `ov`
            WHERE (`ov`.`v_organization_id` = `o`.`entityId`)) END) AS `v_owner_region_id`,
     (CASE WHEN (`o`.`ownerType` = 'PERSON')
       THEN (SELECT `pv`.`v_person_district_id`
-            FROM `edu`.`person_view` `pv`
+            FROM `mfloan`.`person_view` `pv`
             WHERE (`pv`.`v_person_id` = `o`.`entityId`))
      ELSE (SELECT `ov`.`v_organization_district_id`
-           FROM `edu`.`organization_view` `ov`
+           FROM `mfloan`.`organization_view` `ov`
            WHERE (`ov`.`v_organization_id` = `o`.`entityId`)) END) AS `v_owner_district_id`,
     (CASE WHEN (`o`.`ownerType` = 'PERSON')
       THEN (SELECT `pv`.`v_person_aokmotu_id`
-            FROM `edu`.`person_view` `pv`
+            FROM `mfloan`.`person_view` `pv`
             WHERE (`pv`.`v_person_id` = `o`.`entityId`))
      ELSE (SELECT `ov`.`v_organization_aokmotu_id`
-           FROM `edu`.`organization_view` `ov`
+           FROM `mfloan`.`organization_view` `ov`
            WHERE (`ov`.`v_organization_id` = `o`.`entityId`)) END) AS `v_owner_aokmotu_id`,
     (CASE WHEN (`o`.`ownerType` = 'PERSON')
       THEN (SELECT `pv`.`v_person_village_id`
-            FROM `edu`.`person_view` `pv`
+            FROM `mfloan`.`person_view` `pv`
             WHERE (`pv`.`v_person_id` = `o`.`entityId`))
      ELSE (SELECT `ov`.`v_organization_village_id`
-           FROM `edu`.`organization_view` `ov`
+           FROM `mfloan`.`organization_view` `ov`
            WHERE (`ov`.`v_organization_id` = `o`.`entityId`)) END) AS `v_owner_village_id`,
     `o`.`id`                                                       AS `id`,
     `o`.`version`                                                  AS `version`,
     `o`.`entityId`                                                 AS `entityId`,
     `o`.`name`                                                     AS `name`,
     `o`.`ownerType`                                                AS `ownerType`
-  FROM `edu`.`owner` `o`;
+  FROM `mfloan`.`owner` `o`;
 
 
 
@@ -335,11 +335,11 @@ CREATE VIEW loan_view AS
     `r`.`name`                     AS `v_region_name`,
     `d`.`name`                     AS `v_district_name`,
     `ws`.`name`                    AS `v_work_sector_name`
-  FROM (((((`edu`.`loan` `l`
-    JOIN `edu`.`debtor_view` `dv` ON ((`dv`.`v_debtor_id` = `l`.`debtorId`))) JOIN `edu`.`creditOrder` `co`
-      ON ((`co`.`id` = `l`.`creditOrderId`))) JOIN `edu`.`region` `r`
-      ON ((`r`.`id` = `dv`.`v_debtor_region_id`))) JOIN `edu`.`district` `d`
-      ON ((`d`.`id` = `dv`.`v_debtor_district_id`))) JOIN `edu`.`workSector` `ws`
+  FROM (((((`mfloan`.`loan` `l`
+    JOIN `mfloan`.`debtor_view` `dv` ON ((`dv`.`v_debtor_id` = `l`.`debtorId`))) JOIN `mfloan`.`creditOrder` `co`
+      ON ((`co`.`id` = `l`.`creditOrderId`))) JOIN `mfloan`.`region` `r`
+      ON ((`r`.`id` = `dv`.`v_debtor_region_id`))) JOIN `mfloan`.`district` `d`
+      ON ((`d`.`id` = `dv`.`v_debtor_district_id`))) JOIN `mfloan`.`workSector` `ws`
       ON ((`ws`.`id` = `dv`.`v_debtor_work_sector_id`)));
 
 
@@ -373,9 +373,9 @@ CREATE VIEW collateral_agreement_view AS
     `r`.`name`                       AS `v_region_name`,
     `d`.`name`                       AS `v_district_name`,
     `ws`.`name`                      AS `v_work_sector_name`
-  FROM ((((((`edu`.`collateralAgreement` `ca`
-    JOIN `edu`.`debtor_view` `dv`) JOIN `edu`.`owner` `o1`) JOIN `edu`.`owner` `o2`) JOIN
-    `edu`.`region` `r`) JOIN `edu`.`district` `d`) JOIN `edu`.`workSector` `ws`)
+  FROM ((((((`mfloan`.`collateralAgreement` `ca`
+    JOIN `mfloan`.`debtor_view` `dv`) JOIN `mfloan`.`owner` `o1`) JOIN `mfloan`.`owner` `o2`) JOIN
+    `mfloan`.`region` `r`) JOIN `mfloan`.`district` `d`) JOIN `mfloan`.`workSector` `ws`)
   WHERE (
     (`ca`.`ownerId` = `o1`.`id`) AND (`dv`.`v_debtor_owner_id` = `o2`.`id`) AND (`o1`.`entityId` = `o2`.`entityId`) AND
     (`r`.`id` = `dv`.`v_debtor_region_id`) AND (`d`.`id` = `dv`.`v_debtor_district_id`) AND
@@ -426,8 +426,8 @@ CREATE VIEW collateral_item_view AS
     `ci`.`conditionTypeId`                 AS `v_ci_conditionTypeId`,
     `ci`.`itemTypeId`                      AS `v_ci_itemTypeId`,
     `ci`.`quantityTypeId`                  AS `v_ci_quantityTypeId`
-  FROM (`edu`.`collateral_agreement_view` `cav`
-    JOIN `edu`.`collateralItem` `ci`)
+  FROM (`mfloan`.`collateral_agreement_view` `cav`
+    JOIN `mfloan`.`collateralItem` `ci`)
   WHERE (`ci`.`collateralAgreementId` = `cav`.`v_ca_id`);
 
 
@@ -440,11 +440,11 @@ CREATE VIEW collection_procedure_debtor_view AS
   SELECT DISTINCT
     `pr`.`id` AS `v_cp_id`,
     `d`.`id`  AS `v_debtor_id`
-  FROM `edu`.`collectionProcedure` `pr`
-    JOIN `edu`.`collectionPhase` `ph`
-    JOIN `edu`.`phaseDetails` `pd`
-    JOIN `edu`.`loan` `l`
-    JOIN `edu`.`debtor` `d`
+  FROM `mfloan`.`collectionProcedure` `pr`
+    JOIN `mfloan`.`collectionPhase` `ph`
+    JOIN `mfloan`.`phaseDetails` `pd`
+    JOIN `mfloan`.`loan` `l`
+    JOIN `mfloan`.`debtor` `d`
   WHERE ((`ph`.`collectionProcedureId` = `pr`.`id`) AND (`ph`.`id` = `pd`.`id`) AND (`pd`.`loan_id` = `l`.`id`) AND
          (`l`.`debtorId` = `d`.`id`));
 
@@ -473,8 +473,8 @@ CREATE VIEW collection_procedure_view AS
     `dv`.`v_debtor_district_id`    AS `v_debtor_district_id`,
     `dv`.`v_debtor_aokmotu_id`     AS `v_debtor_aokmotu_id`,
     `dv`.`v_debtor_village_id`     AS `v_debtor_village_id`
-  FROM ((`edu`.`collectionProcedure` `cp`
-    JOIN `edu`.`debtor_view` `dv`) JOIN `edu`.`collection_procedure_debtor_view` `cpdv`)
+  FROM ((`mfloan`.`collectionProcedure` `cp`
+    JOIN `mfloan`.`debtor_view` `dv`) JOIN `mfloan`.`collection_procedure_debtor_view` `cpdv`)
   WHERE ((`cp`.`id` = `cpdv`.`v_cp_id`) AND (`dv`.`v_debtor_id` = `cpdv`.`v_debtor_id`));
 
 
@@ -515,11 +515,11 @@ CREATE VIEW collection_phase_view AS
     `d`.`name`                      AS `v_district_name`,
     `ws`.`name`                     AS `v_work_sector_name`,
     ( select sum(phd.startTotalAmount) from phaseDetails phd where phd.collectionPhaseId = cph.id) as v_cph_start_total_amount
-  FROM `edu`.`collection_procedure_view` `cpv`
-    JOIN `edu`.`collectionPhase` `cph`
-    JOIN `edu`.`region` `r`
-    JOIN `edu`.`district` `d`
-    JOIN `edu`.`workSector` `ws`
+  FROM `mfloan`.`collection_procedure_view` `cpv`
+    JOIN `mfloan`.`collectionPhase` `cph`
+    JOIN `mfloan`.`region` `r`
+    JOIN `mfloan`.`district` `d`
+    JOIN `mfloan`.`workSector` `ws`
   WHERE ((`cpv`.`v_cp_id` = `cph`.`collectionProcedureId`) AND (`cpv`.`v_debtor_region_id` = `r`.`id`) AND
          (`cpv`.`v_debtor_district_id` = `d`.`id`) AND (`cpv`.`v_debtor_work_sector_id` = `ws`.`id`));
 
@@ -593,8 +593,8 @@ CREATE VIEW loan_detailed_summary_view AS
     `lds`.`totalPrincipalPayment`                 AS `v_lds_totalPrincipalPayment`,
     `lds`.`totalPrincipalWriteOff`                AS `v_lds_totalPrincipalWriteOff`,
     `lds`.`loanId`                                AS `v_lds_loanId`
-  FROM `edu`.`loan_view` `lv`
-    JOIN `edu`.`loanDetailedSummary` `lds`
+  FROM `mfloan`.`loan_view` `lv`
+    JOIN `mfloan`.`loanDetailedSummary` `lds`
   WHERE (`lds`.`loanId` = `lv`.`v_loan_id`);
 
 
@@ -653,8 +653,8 @@ CREATE VIEW loan_summary_view AS
     `ls`.`totalOverdue`               AS `v_ls_totalOverdue`,
     `ls`.`totalPaid`                  AS `v_ls_totalPaid`,
     `ls`.`loanId`                     AS `v_ls_loanId`
-  FROM (`edu`.`loan_view` `lv`
-    JOIN `edu`.`loanSummary` `ls`)
+  FROM (`mfloan`.`loan_view` `lv`
+    JOIN `mfloan`.`loanSummary` `ls`)
   WHERE (`ls`.`loanId` = `lv`.`v_loan_id`);
 
 
@@ -702,8 +702,8 @@ CREATE VIEW payment_schedule_view AS
     `ps`.`principalPayment`           AS `v_ps_principalPayment`,
     `ps`.`installmentStateId`         AS `v_ps_installmentStateId`,
     `ps`.`loanId`                     AS `v_ps_loanId`
-  FROM (`edu`.`loan_view` `lv`
-    JOIN `edu`.`paymentSchedule` `ps`)
+  FROM (`mfloan`.`loan_view` `lv`
+    JOIN `mfloan`.`paymentSchedule` `ps`)
   WHERE (`ps`.`loanId` = `lv`.`v_loan_id`);
 
 
@@ -753,31 +753,46 @@ CREATE VIEW payment_view AS
     `p`.exchange_rate                 AS `v_payment_exchange_rate`,
     `p`.in_loan_currency AS `v_payment_in_loan_currency`,
     `lv`.`v_work_sector_name`         AS `v_work_sector_name`
-  FROM ((`edu`.`loan_view` `lv`
-    JOIN `edu`.`payment` `p` ON ((`p`.`loanId` = `lv`.`v_loan_id`))) JOIN `edu`.`paymentType` `pt`
+  FROM ((`mfloan`.`loan_view` `lv`
+    JOIN `mfloan`.`payment` `p` ON ((`p`.`loanId` = `lv`.`v_loan_id`))) JOIN `mfloan`.`paymentType` `pt`
       ON ((`pt`.`id` = `p`.`paymentTypeId`)));
-
 
 
 
 CREATE VIEW applied_entity_view AS
   SELECT
-    `ae`.`id`                   AS `v_applied_entity_id`,
-    `ae`.`version`              AS `v_applied_entity_version`,
-    `ae`.`name`                 AS `v_applied_entity_name`,
-    `ae`.`appliedEntityListId`  AS `v_applied_entity_appliedEntityListId`,
-    `ae`.`appliedEntityStateId` AS `v_applied_entity_appliedEntityStateId`,
-    `ae`.`ownerId`              AS `v_applied_entity_ownerId`,
-    `ov`.`v_owner_address_id`   AS `v_owner_address_id`,
-    `ov`.`v_owner_region_id`    AS `v_owner_region_id`,
-    `ov`.`v_owner_district_id`  AS `v_owner_district_id`,
-    `ov`.`v_owner_aokmotu_id`   AS `v_owner_aokmotu_id`,
-    `ov`.`v_owner_village_id`   AS `v_owner_village_id`,
-    `ov`.`entityId`             AS `v_owner_entityId`,
-    `ov`.`ownerType`            AS `v_owner_ownerType`
-  FROM (`appliedentity` `ae`
-    JOIN `edu`.`owner_view` `ov`)
-  WHERE (`ae`.`ownerId` = `ov`.`id`);
+    `ae`.`id`                        AS `v_applied_entity_id`,
+    `ae`.`version`                   AS `v_applied_entity_version`,
+    `ae`.`appliedEntityListId`       AS `v_applied_entity_appliedEntityListId`,
+    `ae`.`appliedEntityStateId`      AS `v_applied_entity_appliedEntityStateId`,
+    `ae`.`ownerId`                   AS `v_applied_entity_ownerId`,
+    `ov`.`v_owner_address_id`        AS `v_owner_address_id`,
+    `ov`.`v_owner_region_id`         AS `v_owner_region_id`,
+    `ov`.`v_owner_district_id`       AS `v_owner_district_id`,
+    `ov`.`v_owner_aokmotu_id`        AS `v_owner_aokmotu_id`,
+    `ov`.`v_owner_village_id`        AS `v_owner_village_id`,
+    `ov`.`entityId`                  AS `v_owner_entityId`,
+    `ov`.`ownerType`                 AS `v_owner_ownerType`,
+    `ov`.`name`                      AS `v_owner_name`,
+    `ael`.`id`                       AS `v_ael_id`,
+    `ael`.`version`                  AS `v_ael_version`,
+    `ael`.`listDate`                 AS `v_ael_listDate`,
+    `ael`.`listNumber`               AS `v_ael_listNumber`,
+    `ael`.`appliedEntityListStateId` AS `v_ael_appliedEntityListStateId`,
+    `ael`.`appliedEntityListTypeId`  AS `v_ael_appliedEntityListTypeId`,
+    `ael`.`creditOrderId`            AS `v_ael_creditOrderId`,
+    `co`.`id`                        AS `v_co_id`,
+    `co`.`version`                   AS `v_co_version`,
+    `co`.`description`               AS `v_co_description`,
+    `co`.`regDate`                   AS `v_co_regDate`,
+    `co`.`regNumber`                 AS `v_co_regNumber`,
+    `co`.`creditOrderStateId`        AS `v_co_creditOrderStateId`,
+    `co`.`creditOrderTypeId`         AS `v_co_creditOrderTypeId`
+  FROM (((`mfloan`.`appliedEntity` `ae`
+    JOIN `mfloan`.`owner_view` `ov`) JOIN `mfloan`.`appliedEntityList` `ael`) JOIN `mfloan`.`creditOrder` `co`)
+  WHERE ((`ae`.`ownerId` = `ov`.`id`) AND (`ael`.`id` = `ae`.`appliedEntityListId`) AND
+         (`co`.`id` = `ael`.`creditOrderId`));
+
 
 
 
@@ -785,20 +800,19 @@ CREATE VIEW applied_entity_view AS
 
 CREATE VIEW document_package_view AS
   SELECT
-    `edu`.`documentpackage`.`id`                                 AS `v_document_package_id`,
-    `edu`.`documentpackage`.`approvedDate`                       AS `v_document_package_approvedDate`,
-    `edu`.`documentpackage`.`approvedRatio`                      AS `v_document_package_approvedRatio`,
-    `edu`.`documentpackage`.`completedDate`                      AS `v_document_package_completedDate`,
-    `edu`.`documentpackage`.`completedRatio`                     AS `v_document_package_completedRatio`,
-    `edu`.`documentpackage`.`name`                               AS `v_document_package_name`,
-    `edu`.`documentpackage`.`orderDocumentPackageId`             AS `v_document_package_orderDocumentPackageId`,
-    `edu`.`documentpackage`.`registeredRatio`                    AS `v_document_package_registeredRatio`,
-    `edu`.`documentpackage`.`appliedEntityId`                    AS `v_document_package_appliedEntityId`,
-    `edu`.`documentpackage`.`documentPackageStateId`             AS `v_document_package_documentPackageStateId`,
-    `edu`.`documentpackage`.`documentPackageTypeId`              AS `v_document_package_documentPackageTypeId`,
+    `mfloan`.`documentPackage`.`id`                               AS `v_document_package_id`,
+    `mfloan`.`documentPackage`.`approvedDate`                     AS `v_document_package_approvedDate`,
+    `mfloan`.`documentPackage`.`approvedRatio`                    AS `v_document_package_approvedRatio`,
+    `mfloan`.`documentPackage`.`completedDate`                    AS `v_document_package_completedDate`,
+    `mfloan`.`documentPackage`.`completedRatio`                   AS `v_document_package_completedRatio`,
+    `mfloan`.`documentPackage`.`name`                             AS `v_document_package_name`,
+    `mfloan`.`documentPackage`.`orderDocumentPackageId`           AS `v_document_package_orderDocumentPackageId`,
+    `mfloan`.`documentPackage`.`registeredRatio`                  AS `v_document_package_registeredRatio`,
+    `mfloan`.`documentPackage`.`appliedEntityId`                  AS `v_document_package_appliedEntityId`,
+    `mfloan`.`documentPackage`.`documentPackageStateId`           AS `v_document_package_documentPackageStateId`,
+    `mfloan`.`documentPackage`.`documentPackageTypeId`            AS `v_document_package_documentPackageTypeId`,
     `applied_entity_view`.`v_applied_entity_id`                   AS `v_applied_entity_id`,
     `applied_entity_view`.`v_applied_entity_version`              AS `v_applied_entity_version`,
-    `applied_entity_view`.`v_applied_entity_name`                 AS `v_applied_entity_name`,
     `applied_entity_view`.`v_applied_entity_appliedEntityListId`  AS `v_applied_entity_appliedEntityListId`,
     `applied_entity_view`.`v_applied_entity_appliedEntityStateId` AS `v_applied_entity_appliedEntityStateId`,
     `applied_entity_view`.`v_applied_entity_ownerId`              AS `v_applied_entity_ownerId`,
@@ -808,32 +822,47 @@ CREATE VIEW document_package_view AS
     `applied_entity_view`.`v_owner_aokmotu_id`                    AS `v_owner_aokmotu_id`,
     `applied_entity_view`.`v_owner_village_id`                    AS `v_owner_village_id`,
     `applied_entity_view`.`v_owner_entityId`                      AS `v_owner_entityId`,
-    `applied_entity_view`.`v_owner_ownerType`                     AS `v_owner_ownerType`
-  FROM (`edu`.`documentpackage`
-    JOIN `edu`.`applied_entity_view`)
-  WHERE (`edu`.`documentpackage`.`appliedEntityId` = `applied_entity_view`.`v_applied_entity_id`);
+    `applied_entity_view`.`v_owner_ownerType`                     AS `v_owner_ownerType`,
+    `applied_entity_view`.`v_owner_name`                          AS `v_owner_name`,
+    `applied_entity_view`.`v_ael_id`                              AS `v_ael_id`,
+    `applied_entity_view`.`v_ael_listDate`                        AS `v_ael_listDate`,
+    `applied_entity_view`.`v_ael_listNumber`                      AS `v_ael_listNumber`,
+    `applied_entity_view`.`v_ael_appliedEntityListStateId`        AS `v_ael_appliedEntityListStateId`,
+    `applied_entity_view`.`v_ael_appliedEntityListTypeId`         AS `v_ael_appliedEntityListTypeId`,
+    `applied_entity_view`.`v_ael_creditOrderId`                   AS `v_ael_creditOrderId`,
+    `applied_entity_view`.`v_co_id`                               AS `v_co_id`,
+    `applied_entity_view`.`v_co_regDate`                          AS `v_co_regDate`,
+    `applied_entity_view`.`v_co_regNumber`                        AS `v_co_regNumber`,
+    `applied_entity_view`.`v_co_creditOrderStateId`               AS `v_co_creditOrderStateId`,
+    `applied_entity_view`.`v_co_creditOrderTypeId`                AS `v_co_creditOrderTypeId`
+  FROM (`mfloan`.`documentPackage`
+    JOIN `mfloan`.`applied_entity_view`)
+  WHERE (`mfloan`.`documentPackage`.`appliedEntityId` = `applied_entity_view`.`v_applied_entity_id`);
+
+
+
 
 
 
 
 CREATE VIEW entity_document_view AS
   SELECT
-    `test`.`entitydocument`.`id`                                        AS `v_entity_document_id`,
-    `test`.`entitydocument`.`version`                                   AS `v_entity_document_version`,
-    `test`.`entitydocument`.`approvedBy`                                AS `v_entity_document_approvedBy`,
-    `test`.`entitydocument`.`approvedDate`                              AS `v_entity_document_approvedDate`,
-    `test`.`entitydocument`.`approvedDescription`                       AS `v_entity_document_approvedDescription`,
-    `test`.`entitydocument`.`completedBy`                               AS `v_entity_document_completedBy`,
-    `test`.`entitydocument`.`completedDate`                             AS `v_entity_document_completedDate`,
-    `test`.`entitydocument`.`completedDescription`                      AS `v_entity_document_completedDescription`,
-    `test`.`entitydocument`.`name`                                      AS `v_entity_document_name`,
-    `test`.`entitydocument`.`registeredDate`                            AS `v_entity_document_registeredDate`,
-    `test`.`entitydocument`.`registeredDescription`                     AS `v_entity_document_registeredDescription`,
-    `test`.`entitydocument`.`registeredNumber`                          AS `v_entity_document_registeredNumber`,
-    `test`.`entitydocument`.`documentPackageId`                         AS `v_entity_document_documentPackageId`,
-    `test`.`entitydocument`.`entityDocumentStateId`                     AS `v_entity_document_entityDocumentStateId`,
-    `test`.`entitydocument`.`entityDocumentRegisteredById`              AS `v_entity_document_entityDocumentRegisteredById`,
-    `test`.`entitydocument`.`documentTypeId`                            AS `v_entity_document_documentTypeId`,
+    `mfloan`.`entityDocument`.`id`                                      AS `v_entity_document_id`,
+    `mfloan`.`entityDocument`.`version`                                 AS `v_entity_document_version`,
+    `mfloan`.`entityDocument`.`approvedBy`                              AS `v_entity_document_approvedBy`,
+    `mfloan`.`entityDocument`.`approvedDate`                            AS `v_entity_document_approvedDate`,
+    `mfloan`.`entityDocument`.`approvedDescription`                     AS `v_entity_document_approvedDescription`,
+    `mfloan`.`entityDocument`.`completedBy`                             AS `v_entity_document_completedBy`,
+    `mfloan`.`entityDocument`.`completedDate`                           AS `v_entity_document_completedDate`,
+    `mfloan`.`entityDocument`.`completedDescription`                    AS `v_entity_document_completedDescription`,
+    `mfloan`.`entityDocument`.`name`                                    AS `v_entity_document_name`,
+    `mfloan`.`entityDocument`.`registeredDate`                          AS `v_entity_document_registeredDate`,
+    `mfloan`.`entityDocument`.`registeredDescription`                   AS `v_entity_document_registeredDescription`,
+    `mfloan`.`entityDocument`.`registeredNumber`                        AS `v_entity_document_registeredNumber`,
+    `mfloan`.`entityDocument`.`documentPackageId`                       AS `v_entity_document_documentPackageId`,
+    `mfloan`.`entityDocument`.`entityDocumentStateId`                   AS `v_entity_document_entityDocumentStateId`,
+    `mfloan`.`entityDocument`.`entityDocumentRegisteredById`            AS `v_entity_document_entityDocumentRegisteredById`,
+    `mfloan`.`entityDocument`.`documentTypeId`                          AS `v_entity_document_documentTypeId`,
     `document_package_view`.`v_document_package_id`                     AS `v_document_package_id`,
     `document_package_view`.`v_document_package_approvedDate`           AS `v_document_package_approvedDate`,
     `document_package_view`.`v_document_package_approvedRatio`          AS `v_document_package_approvedRatio`,
@@ -847,7 +876,6 @@ CREATE VIEW entity_document_view AS
     `document_package_view`.`v_document_package_documentPackageTypeId`  AS `v_document_package_documentPackageTypeId`,
     `document_package_view`.`v_applied_entity_id`                       AS `v_applied_entity_id`,
     `document_package_view`.`v_applied_entity_version`                  AS `v_applied_entity_version`,
-    `document_package_view`.`v_applied_entity_name`                     AS `v_applied_entity_name`,
     `document_package_view`.`v_applied_entity_appliedEntityListId`      AS `v_applied_entity_appliedEntityListId`,
     `document_package_view`.`v_applied_entity_appliedEntityStateId`     AS `v_applied_entity_appliedEntityStateId`,
     `document_package_view`.`v_applied_entity_ownerId`                  AS `v_applied_entity_ownerId`,
@@ -857,10 +885,27 @@ CREATE VIEW entity_document_view AS
     `document_package_view`.`v_owner_aokmotu_id`                        AS `v_owner_aokmotu_id`,
     `document_package_view`.`v_owner_village_id`                        AS `v_owner_village_id`,
     `document_package_view`.`v_owner_entityId`                          AS `v_owner_entityId`,
-    `document_package_view`.`v_owner_ownerType`                         AS `v_owner_ownerType`
-  FROM (`test`.`entitydocument`
-    JOIN `test`.`document_package_view`)
-  WHERE (`test`.`entitydocument`.`documentPackageId` = `document_package_view`.`v_document_package_id`);
+    `document_package_view`.`v_owner_ownerType`                         AS `v_owner_ownerType`,
+    `document_package_view`.`v_owner_name`                              AS `v_owner_name`,
+    `document_package_view`.`v_ael_id`                                  AS `v_ael_id`,
+    `document_package_view`.`v_ael_listDate`                            AS `v_ael_listDate`,
+    `document_package_view`.`v_ael_listNumber`                          AS `v_ael_listNumber`,
+    `document_package_view`.`v_ael_appliedEntityListStateId`            AS `v_ael_appliedEntityListStateId`,
+    `document_package_view`.`v_ael_appliedEntityListTypeId`             AS `v_ael_appliedEntityListTypeId`,
+    `document_package_view`.`v_ael_creditOrderId`                       AS `v_ael_creditOrderId`,
+    `document_package_view`.`v_co_id`                                   AS `v_co_id`,
+    `document_package_view`.`v_co_regDate`                              AS `v_co_regDate`,
+    `document_package_view`.`v_co_regNumber`                            AS `v_co_regNumber`,
+    `document_package_view`.`v_co_creditOrderStateId`                   AS `v_co_creditOrderStateId`,
+    `document_package_view`.`v_co_creditOrderTypeId`                    AS `v_co_creditOrderTypeId`
+  FROM (`mfloan`.`entityDocument`
+    JOIN `mfloan`.`document_package_view`)
+  WHERE (`mfloan`.`entityDocument`.`documentPackageId` = `document_package_view`.`v_document_package_id`);
+
+
+
+
+
 
 
 
@@ -892,30 +937,30 @@ VIEW `accounts` AS
     `data`.`name` AS `name`
   FROM
     (SELECT
-       `edu`.`organization`.`id` AS `id`,
-       `edu`.`organization`.`name` AS `name`,
+       `mfloan`.`organization`.`id` AS `id`,
+       `mfloan`.`organization`.`name` AS `name`,
        'organization' AS `internalName`
      FROM
-       `edu`.`organization` UNION ALL SELECT
-                                           `edu`.`department`.`id` AS `id`,
-                                           `edu`.`department`.`name` AS `name`,
+       `mfloan`.`organization` UNION ALL SELECT
+                                           `mfloan`.`department`.`id` AS `id`,
+                                           `mfloan`.`department`.`name` AS `name`,
                                            'department' AS `internalName`
                                          FROM
-                                           `edu`.`department`
+                                           `mfloan`.`department`
                                          WHERE
-                                           (`edu`.`department`.`organization_id` = 1) UNION ALL SELECT
-                                                                                                     `edu`.`staff`.`id` AS `id`,
-                                                                                                     `edu`.`staff`.`name` AS `name`,
+                                           (`mfloan`.`department`.`organization_id` = 1) UNION ALL SELECT
+                                                                                                     `mfloan`.`staff`.`id` AS `id`,
+                                                                                                     `mfloan`.`staff`.`name` AS `name`,
                                                                                                      'staff' AS `internalName`
                                                                                                    FROM
-                                                                                                     `edu`.`staff`
+                                                                                                     `mfloan`.`staff`
                                                                                                    WHERE
-                                                                                                     (`edu`.`staff`.`organization_id` = 1) UNION ALL SELECT
-                                                                                                                                                          `edu`.`person`.`id` AS `id`,
-                                                                                                                                                          `edu`.`person`.`name` AS `name`,
+                                                                                                     (`mfloan`.`staff`.`organization_id` = 1) UNION ALL SELECT
+                                                                                                                                                          `mfloan`.`person`.`id` AS `id`,
+                                                                                                                                                          `mfloan`.`person`.`name` AS `name`,
                                                                                                                                                           'person' AS `internalName`
                                                                                                                                                         FROM
-                                                                                                                                                          `edu`.`person`) `data`
+                                                                                                                                                          `mfloan`.`person`) `data`
   ORDER BY `data`.`id`;
 
 
