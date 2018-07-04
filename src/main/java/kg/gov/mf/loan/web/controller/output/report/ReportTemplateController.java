@@ -192,17 +192,15 @@ public class ReportTemplateController {
 	@RequestMapping("/reportTemplate/{id}/generate")
 	public void generateReportByReportTemplate(@PathVariable("id") long id, HttpServletResponse response) {
 
+		ReportGenerator paymentReportGenerator = new ReportGeneratorPayment();
 
-		ReportGeneratorLoan loanReportGenerator = new ReportGeneratorLoan();
-		ReportGeneratorPayment paymentReportGenerator = new ReportGeneratorPayment();
+		ReportGenerator collateralItemReportGenerator = new ReportGeneratorCollateralItem();
 
-		ReportGeneratorCollateralItem collateralItemReportGenerator = new ReportGeneratorCollateralItem();
+		ReportGenerator loanSummaryReportGenerator = new ReportGeneratorLoanSummary();
 
-		ReportGeneratorLoanSummary loanSummaryReportGenerator = new ReportGeneratorLoanSummary();
+		ReportGenerator paymentScheduleReportGenerator = new ReportGeneratorPaymentSchedule();
 
-		ReportGeneratorPaymentSchedule paymentScheduleReportGenerator = new ReportGeneratorPaymentSchedule();
-
-		ReportGeneratorCollectionPhase collectionPhaseReportGenerator = new ReportGeneratorCollectionPhase();
+		ReportGenerator collectionPhaseReportGenerator = new ReportGeneratorCollectionPhase();
 
 		response.setContentType("application/vnd.ms-excel");
 		response.setHeader("Content-disposition","attachment; filename=report.xls");
@@ -216,64 +214,27 @@ public class ReportTemplateController {
 		switch(reportTemplate.getReport().getReportType().toString())
 		{
 			case "LOAN_SUMMARY":
-
-
-				try {
-					out = response.getOutputStream();
-					loanSummaryReportGenerator.generateReportByTemplate(reportTemplate).write(out);
-					out.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
+				generateReport(out,response,loanSummaryReportGenerator, reportTemplate);
 				break;
 
 			case "LOAN_PAYMENT":
 
-				try {
-					out = response.getOutputStream();
-					paymentReportGenerator.generateReportByTemplate(reportTemplate).write(out);
-					out.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
+				generateReport(out,response,paymentReportGenerator, reportTemplate);
 				break;
 
 			case "COLLATERAL_ITEM":
 
-				try {
-					out = response.getOutputStream();
-					collateralItemReportGenerator.generateReportByTemplate(reportTemplate).write(out);
-					out.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
+				generateReport(out,response,collateralItemReportGenerator, reportTemplate);
 				break;
 
 			case "LOAN_SCHEDULE":
 
-				try {
-					out = response.getOutputStream();
-					paymentScheduleReportGenerator.generateReportByTemplate(reportTemplate).write(out);
-					out.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
+				generateReport(out,response,paymentScheduleReportGenerator, reportTemplate);
 				break;
 
 			case "COLLECTION_PHASE":
 
-				try {
-					out = response.getOutputStream();
-					collectionPhaseReportGenerator.generateReportByTemplate(reportTemplate).write(out);
-					out.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
+				generateReport(out,response,collectionPhaseReportGenerator, reportTemplate);
 				break;
 
 		}
@@ -286,6 +247,18 @@ public class ReportTemplateController {
 
 
 
+
+	}
+
+	public void generateReport(OutputStream out, HttpServletResponse response, ReportGenerator reportGenerator, ReportTemplate reportTemplate  )
+	{
+		try {
+			out = response.getOutputStream();
+			reportGenerator.generateReportByTemplate(reportTemplate).write(out);
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 
