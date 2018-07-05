@@ -81,7 +81,7 @@ public class OrderTermController {
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
-		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
+		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 
@@ -172,9 +172,36 @@ public class OrderTermController {
 		term.setCreditOrder(creditOrder);
 		
 		if(term.getId() == 0)
+		{
+			term.setFund(fundService.getById(term.getFund().getId()));
+			term.setCurrency(currService.getById(term.getCurrency().getId()));
+			term.setFrequencyType(freqTypeService.getById(term.getFrequencyType().getId()));
+			term.setInterestRateValuePerPeriod(ratePeriodService.getById(term.getInterestRateValuePerPeriod().getId()));
+			term.setInterestType(rateTypeService.getById(term.getInterestType().getId()));
+			term.setPenaltyOnPrincipleOverdueType(rateTypeService.getById(term.getPenaltyOnPrincipleOverdueType().getId()));
+			term.setPenaltyOnInterestOverdueType(rateTypeService.getById(term.getPenaltyOnInterestOverdueType().getId()));
+			term.setDaysInYearMethod(daysMethodService.getById(term.getDaysInYearMethod().getId()));
+			term.setDaysInMonthMethod(daysMethodService.getById(term.getDaysInMonthMethod().getId()));
+			term.setTransactionOrder(txOrderService.getById(term.getTransactionOrder().getId()));
+			term.setInterestAccrMethod(accrMethodService.getById(term.getInterestAccrMethod().getId()));
 			orderTermService.add(term);
+		}
+
 		else
+		{
+			term.setFund(fundService.getById(term.getFund().getId()));
+			term.setCurrency(currService.getById(term.getCurrency().getId()));
+			term.setFrequencyType(freqTypeService.getById(term.getFrequencyType().getId()));
+			term.setInterestRateValuePerPeriod(ratePeriodService.getById(term.getInterestRateValuePerPeriod().getId()));
+			term.setInterestType(rateTypeService.getById(term.getInterestType().getId()));
+			term.setPenaltyOnPrincipleOverdueType(rateTypeService.getById(term.getPenaltyOnPrincipleOverdueType().getId()));
+			term.setPenaltyOnInterestOverdueType(rateTypeService.getById(term.getPenaltyOnInterestOverdueType().getId()));
+			term.setDaysInYearMethod(daysMethodService.getById(term.getDaysInYearMethod().getId()));
+			term.setDaysInMonthMethod(daysMethodService.getById(term.getDaysInMonthMethod().getId()));
+			term.setTransactionOrder(txOrderService.getById(term.getTransactionOrder().getId()));
+			term.setInterestAccrMethod(accrMethodService.getById(term.getInterestAccrMethod().getId()));
 			orderTermService.update(term);
+		}
 			
 		return "redirect:" + "/manage/order/{orderId}/view#orderTerms";
 	}
