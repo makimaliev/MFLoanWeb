@@ -61,7 +61,7 @@ var DatatableDataLocalPackages = function () {
                 width: 200,
 				responsive: {visible: 'lg'}
 			},{
-                field: "type",
+                field: "typeName",
                 title: "Вид"
             },{
                 field: "action",

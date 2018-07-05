@@ -137,7 +137,7 @@ public class OrderDocumentController {
 			return "redirect:" + "/manage/order/{orderId}/orderdocumentpackage/{oDPId}/view";
 	}
 	
-	@RequestMapping(value="/manage/order/{orderId}/orderdocumentpackage/{oDPId}/orderdocument/delete", method=RequestMethod.POST)
+	@RequestMapping(value="/manage/order/{orderId}/orderdocumentpackage/{oDPId}/orderdocument/delete", method=RequestMethod.GET)
     public String deleteOrderDocument(long id, @PathVariable("orderId")Long orderId, @PathVariable("oDPId")Long oDPId) {
 		if(id > 0) {
 			odService.remove(odService.getById(id));

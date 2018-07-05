@@ -283,10 +283,15 @@ public class CreditOrderController {
 		String baseQuery = "SELECT list.id,\n" +
 				"  list.listDate,\n" +
 				"  list.listNumber,\n" +
-				"  list.appliedEntityListStateId as state,\n" +
-				"  list.appliedEntityListTypeId as type\n" +
-				"FROM appliedEntityList list\n" +
-				"WHERE list.creditOrderId = " + orderId;
+				"  list.appliedEntityListStateId as stateId,\n" +
+				"  state.name as stateName,\n" +
+				"  list.appliedEntityListTypeId as typeId,\n" +
+				"  type.name as typeName\n" +
+				"FROM appliedEntityList list, appliedEntityListState state,\n" +
+				"  appliedEntityListType type\n" +
+				"WHERE list.appliedEntityListStateId = state.id\n" +
+				"  AND list.appliedEntityListTypeId = type.id\n" +
+				"  AND list.creditOrderId = " + orderId;
 
 		Query query = entityManager.createNativeQuery(baseQuery, AppliedEntityListModel.class);
 
@@ -299,9 +304,11 @@ public class CreditOrderController {
 	{
 		String baseQuery = "SELECT pk.id,\n" +
 				"  pk.name,\n" +
-				"  pk.documentPackageTypeId as type\n" +
-				"FROM orderDocumentPackage pk\n" +
-				"WHERE pk.creditOrderId = " + orderId;
+				"  pk.documentPackageTypeId as typeId,\n" +
+				"  type.name as typeName\n" +
+				"FROM orderDocumentPackage pk, documentPackageType type\n" +
+				"WHERE pk.documentPackageTypeId = type.id\n" +
+				"  AND pk.creditOrderId =" + orderId;
 
 		Query query = entityManager.createNativeQuery(baseQuery, OrderDocumentPackageModel.class);
 

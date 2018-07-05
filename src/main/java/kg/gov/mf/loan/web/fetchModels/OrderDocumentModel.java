@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-public class OrderDocumentPackageModel {
+public class OrderDocumentModel {
 
     @Id
     private Long id;
