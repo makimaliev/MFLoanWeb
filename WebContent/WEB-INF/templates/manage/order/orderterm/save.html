@@ -132,7 +132,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="firstInstallmentDate" th:value="${term.firstInstallmentDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="firstInstallmentDate" th:value="${#dates.format(term.firstInstallmentDate,'dd.MM.yyyy')}" />
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -146,7 +146,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="lastInstallmentDate" th:value="${term.lastInstallmentDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="lastInstallmentDate" th:value="${#dates.format(term.lastInstallmentDate,'dd.MM.yyyy')}" />
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
