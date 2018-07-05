@@ -150,7 +150,7 @@ var DatatableDataLocalTerms = function () {
 
 		var query = datatable.getDataSourceQuery();
 
-		$('#m_form_search').on('keyup', function (e) {
+		$('#m_form_search3').on('keyup', function (e) {
 			datatable.search($(this).val().toLowerCase());
 		}).val(query.generalSearch);
 
