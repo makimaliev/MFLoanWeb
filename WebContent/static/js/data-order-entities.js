@@ -62,7 +62,8 @@ var DatatableDataLocalEntities = function () {
 			},{
                 field: "status",
                 title: "Статус"
-            }, {
+            }
+            /*, {
                 field: "action",
                 width: 50,
                 title: "",
@@ -85,7 +86,7 @@ var DatatableDataLocalEntities = function () {
 
                     return result;
                 }
-            }],
+            }*/],
             translate: {
                 records: {
                     processing: 'Подождите пожалуйста...',
