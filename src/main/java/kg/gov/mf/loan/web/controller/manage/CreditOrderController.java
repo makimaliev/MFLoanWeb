@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.manage.repository.order.CreditOrderRepository;
 import kg.gov.mf.loan.web.fetchModels.AppliedEntityListModel;
+import kg.gov.mf.loan.web.fetchModels.AppliedEntityModel;
 import kg.gov.mf.loan.web.fetchModels.OrderDocumentPackageModel;
 import kg.gov.mf.loan.web.fetchModels.OrderTermModel;
 import kg.gov.mf.loan.web.util.Pager;
@@ -118,6 +119,9 @@ public class CreditOrderController {
 
         String jsonTerms = gson.toJson(getTermsByOrderId(orderId));
         model.addAttribute("orderTerms", jsonTerms);
+
+        String jsonEntities = gson.toJson(getEntitiesByOrderId(orderId));
+        model.addAttribute("entities", jsonEntities);
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "/manage/order/view";
@@ -373,6 +377,22 @@ public class CreditOrderController {
 
         List<OrderTermModel> terms = query.getResultList();
         return terms;
+    }
+
+    private List<AppliedEntityModel> getEntitiesByOrderId(long orderId)
+    {
+        String baseQuery = "SELECT ent.id, owner.name as ownerName, state.name as status, list.id as listId\n" +
+                "FROM appliedEntity ent, appliedEntityList list,\n" +
+                "  owner owner, appliedEntityState state\n" +
+                "WHERE ent.appliedEntityListId = list.id\n" +
+                "  AND owner.id = ent.ownerId\n" +
+                "  AND ent.appliedEntityStateId = state.id\n" +
+                "  AND list.creditOrderId =" + orderId;
+
+        Query query = entityManager.createNativeQuery(baseQuery, AppliedEntityModel.class);
+
+        List<AppliedEntityModel> entities = query.getResultList();
+        return entities;
     }
 
 }
