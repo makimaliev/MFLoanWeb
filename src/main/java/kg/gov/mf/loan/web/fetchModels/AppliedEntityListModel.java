@@ -16,8 +16,11 @@ public class AppliedEntityListModel {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy", timezone = "Asia/Bishkek")
     private Date listDate;
 
-    private long state;
-    private long type;
+    private long stateId;
+    private String stateName;
+
+    private long typeId;
+    private String typeName;
 
     public Long getId() {
         return id;
@@ -43,19 +46,35 @@ public class AppliedEntityListModel {
         this.listDate = listDate;
     }
 
-    public long getState() {
-        return state;
+    public long getStateId() {
+        return stateId;
     }
 
-    public void setState(long state) {
-        this.state = state;
+    public void setStateId(long stateId) {
+        this.stateId = stateId;
     }
 
-    public long getType() {
-        return type;
+    public String getStateName() {
+        return stateName;
     }
 
-    public void setType(long type) {
-        this.type = type;
+    public void setStateName(String stateName) {
+        this.stateName = stateName;
+    }
+
+    public long getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(long typeId) {
+        this.typeId = typeId;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 }

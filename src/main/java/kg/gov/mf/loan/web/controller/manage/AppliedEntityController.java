@@ -5,9 +5,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
+import kg.gov.mf.loan.manage.model.debtor.OwnerType;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
+import kg.gov.mf.loan.manage.repository.entity.AppliedEntityRepository;
 import kg.gov.mf.loan.manage.service.orderdocumentpackage.OrderDocumentPackageService;
+import kg.gov.mf.loan.web.fetchModels.EntityDocumentPackageModel;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,6 +44,10 @@ import kg.gov.mf.loan.manage.service.entitylist.AppliedEntityListService;
 import kg.gov.mf.loan.manage.service.order.CreditOrderService;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 @Controller
 public class AppliedEntityController {
@@ -79,42 +88,23 @@ public class AppliedEntityController {
 	@Autowired
 	OrderDocumentPackageService odpService;
 
-	private static final int BUTTONS_TO_SHOW = 5;
-	private static final int INITIAL_PAGE = 0;
-	private static final int INITIAL_PAGE_SIZE = 10;
-	private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
+	@Autowired
+	AppliedEntityRepository appliedEntityRepository;
 
-	@RequestMapping(value = {"/manage/order/entitylist/entity/list" }, method = RequestMethod.GET)
-	public String listEntities(@RequestParam("pageSize") Optional<Integer> pageSize,
-								  @RequestParam("page") Optional<Integer> page, ModelMap model) {
+	/** The entity manager. */
+	@PersistenceContext
+	private EntityManager entityManager;
 
-		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
-		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
-
-		List<AppliedEntity> entities = entityService.listByParam("id", evalPage*evalPageSize, evalPageSize);
-		int count = entityService.count();
-
-		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
-
-		model.addAttribute("count", count/evalPageSize+1);
-		model.addAttribute("entities", entities);
-		model.addAttribute("selectedPageSize", evalPageSize);
-		model.addAttribute("pageSizes", PAGE_SIZES);
-		model.addAttribute("pager", pager);
-		model.addAttribute("current", evalPage);
-
-		model.addAttribute("loggedinuser", Utils.getPrincipal());
-		return "/manage/order/entitylist/entity/list";
-	}
-	
 	@RequestMapping(value = { "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/view"})
     public String viewEntity(ModelMap model, @PathVariable("orderId")Long orderId, @PathVariable("listId")Long listId, @PathVariable("entityId")Long entityId) {
 
 		AppliedEntity entity = entityService.getById(entityId);
         model.addAttribute("entity", entity);
-        
-        model.addAttribute("dPackages", entity.getDocumentPackages());
-        
+
+		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+		String jsonPackages = gson.toJson(getPackagesByEntityId(entityId));
+		model.addAttribute("dPackages", jsonPackages);
+
         model.addAttribute("orderId", orderId);
 		model.addAttribute("order", orderService.getById(orderId));
         model.addAttribute("listId", listId);
@@ -130,12 +120,19 @@ public class AppliedEntityController {
 		if(entityId == 0)
 		{
 			model.addAttribute("entity", new AppliedEntity());
+			model.addAttribute("ownerText", "");
 		}
 			
 		
 		if(entityId > 0)
 		{
-			model.addAttribute("entity", entityService.getById(entityId));
+			AppliedEntity entity = entityService.getById(entityId);
+			Owner owner = entity.getOwner();
+			model.addAttribute("entity", entity);
+			String ownerText = "[" + owner.getId() + "] "
+					+ owner.getName()
+					+ " (" + (owner.getOwnerType().equals(OwnerType.ORGANIZATION)? "Организация":"Физ. лицо") +")";
+			model.addAttribute("ownerText", ownerText);
 		}
 		model.addAttribute("orderId", orderId);
 		model.addAttribute("order", orderService.getById(orderId));
@@ -173,10 +170,10 @@ public class AppliedEntityController {
 		return "redirect:" + "/manage/order/" + orderId+"/entitylist/"+listId+"/entity/"+ entity.getId()+"/view";
 	}
 	
-	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/delete", method=RequestMethod.POST)
-    public String deleteAppliedEntity(long id, @PathVariable("orderId")Long orderId, @PathVariable("listId")Long listId) {
-		if(id > 0)
-			entityService.remove(entityService.getById(id));
+	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/delete", method=RequestMethod.GET)
+    public String deleteAppliedEntity(@PathVariable("orderId")Long orderId, @PathVariable("listId")Long listId, @PathVariable("entityId")Long entityId) {
+		if(entityId > 0)
+			appliedEntityRepository.delete(appliedEntityRepository.findOne(entityId));
 		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/view";
     }
 	
@@ -248,5 +245,31 @@ public class AppliedEntityController {
 				edService.add(newDoc);
 			}
 		}
+	}
+
+	private List<EntityDocumentPackageModel> getPackagesByEntityId(long entityId)
+	{
+		String baseQuery = "SELECT pk.id,\n" +
+				"  pk.name,\n" +
+				"  pk.completedDate,\n" +
+				"  pk.approvedDate,\n" +
+				"  pk.completedRatio,\n" +
+				"  pk.approvedRatio,\n" +
+				"  pk.registeredRatio,\n" +
+				"  pk.orderDocumentPackageId,\n" +
+				"  pk.documentPackageStateId as stateId,\n" +
+				"  state.name as stateName,\n" +
+				"  pk.documentPackageTypeId as typeId,\n" +
+				"  type.name as typeName\n" +
+				"FROM documentPackage pk, documentPackageState state,\n" +
+				"  documentPackageType type\n" +
+				"WHERE pk.documentPackageStateId = state.id\n" +
+				"      AND pk.documentPackageTypeId = type.id\n" +
+				"      AND pk.appliedEntityId =" + entityId;
+
+		Query query = entityManager.createNativeQuery(baseQuery, EntityDocumentPackageModel.class);
+
+		List<EntityDocumentPackageModel> packages = query.getResultList();
+		return packages;
 	}
 }

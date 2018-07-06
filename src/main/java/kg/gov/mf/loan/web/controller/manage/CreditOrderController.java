@@ -9,6 +9,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.manage.repository.order.CreditOrderRepository;
 import kg.gov.mf.loan.web.fetchModels.AppliedEntityListModel;
+import kg.gov.mf.loan.web.fetchModels.AppliedEntityModel;
+import kg.gov.mf.loan.web.fetchModels.OrderDocumentPackageModel;
+import kg.gov.mf.loan.web.fetchModels.OrderTermModel;
 import kg.gov.mf.loan.web.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,9 +113,15 @@ public class CreditOrderController {
 		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
 		String jsonLists = gson.toJson(getListsByOrderId(orderId));
 		model.addAttribute("entityLists", jsonLists);
-        
-        model.addAttribute("orderDocumentPackages", order.getOrderDocumentPackages());
-        model.addAttribute("orderTerms", order.getOrderTerms());
+
+        String jsonPackages = gson.toJson(getPackagesByOrderId(orderId));
+        model.addAttribute("orderDocumentPackages", jsonPackages);
+
+        String jsonTerms = gson.toJson(getTermsByOrderId(orderId));
+        model.addAttribute("orderTerms", jsonTerms);
+
+        String jsonEntities = gson.toJson(getEntitiesByOrderId(orderId));
+        model.addAttribute("entities", jsonEntities);
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "/manage/order/view";
@@ -274,14 +283,123 @@ public class CreditOrderController {
 		String baseQuery = "SELECT list.id,\n" +
 				"  list.listDate,\n" +
 				"  list.listNumber,\n" +
-				"  list.appliedEntityListStateId as state,\n" +
-				"  list.appliedEntityListTypeId as type\n" +
-				"FROM appliedEntityList list\n" +
-				"WHERE list.creditOrderId = " + orderId;
+				"  list.appliedEntityListStateId as stateId,\n" +
+				"  state.name as stateName,\n" +
+				"  list.appliedEntityListTypeId as typeId,\n" +
+				"  type.name as typeName\n" +
+				"FROM appliedEntityList list, appliedEntityListState state,\n" +
+				"  appliedEntityListType type\n" +
+				"WHERE list.appliedEntityListStateId = state.id\n" +
+				"  AND list.appliedEntityListTypeId = type.id\n" +
+				"  AND list.creditOrderId = " + orderId;
 
 		Query query = entityManager.createNativeQuery(baseQuery, AppliedEntityListModel.class);
 
 		List<AppliedEntityListModel> lists = query.getResultList();
 		return lists;
 	}
+
+
+	private List<OrderDocumentPackageModel> getPackagesByOrderId(long orderId)
+	{
+		String baseQuery = "SELECT pk.id,\n" +
+				"  pk.name,\n" +
+				"  pk.documentPackageTypeId as typeId,\n" +
+				"  type.name as typeName\n" +
+				"FROM orderDocumentPackage pk, documentPackageType type\n" +
+				"WHERE pk.documentPackageTypeId = type.id\n" +
+				"  AND pk.creditOrderId =" + orderId;
+
+		Query query = entityManager.createNativeQuery(baseQuery, OrderDocumentPackageModel.class);
+
+		List<OrderDocumentPackageModel> packages = query.getResultList();
+		return packages;
+	}
+
+    private List<OrderTermModel> getTermsByOrderId(long orderId)
+    {
+        String baseQuery = "SELECT term.id,\n" +
+                "  term.description,\n" +
+                "  term.amount,\n" +
+                "  term.installmentQuantity,\n" +
+                "  term.installmentFirstDay,\n" +
+                "  term.firstInstallmentDate,\n" +
+                "  term.lastInstallmentDate,\n" +
+                "  term.minDaysDisbFirstInst,\n" +
+                "  term.maxDaysDisbFirstInst,\n" +
+                "  term.graceOnPrinciplePaymentInst,\n" +
+                "  term.graceOnPrinciplePaymentDays,\n" +
+                "  term.graceOnInterestPaymentInst,\n" +
+                "  term.graceOnInterestPaymentDays,\n" +
+                "  term.graceOnInterestAccrInst,\n" +
+                "  term.graceOnInterestAccrDays,\n" +
+                "  term.interestRateValue,\n" +
+                "  term.frequencyQuantity,\n" +
+                "  term.penaltyOnPrincipleOverdueRateValue,\n" +
+                "  term.fundId,\n" +
+                "  fund.name as fundName,\n" +
+                "  term.penaltyOnInterestOverdueRateValue,\n" +
+                "  term.earlyRepaymentAllowed,\n" +
+                "  term.penaltyLimitPercent,\n" +
+                "  term.collateralFree,\n" +
+                "  term.currencyId,\n" +
+                "  curr.name as currencyName,\n" +
+                "  term.frequencyTypeId,\n" +
+                "  freqType.name as frequencyTypeName,\n" +
+                "  term.interestRateValuePerPeriodId,\n" +
+                "  ratePeriod.name as interestRateValuePerPeriodName,\n" +
+                "  term.interestTypeId,\n" +
+                "  rateType.name as interestTypeName,\n" +
+                "  term.penaltyOnPrincipleOverdueTypeId,\n" +
+                "  rateType.name as penaltyOnPrincipleOverdueTypeName,\n" +
+                "  term.penaltyOnInterestOverdueTypeId,\n" +
+                "  rateType.name as penaltyOnInterestOverdueTypeName,\n" +
+                "  term.daysInYearMethodId,\n" +
+                "  dMethod.name as daysInYearMethodName,\n" +
+                "  term.daysInMonthMethodId,\n" +
+                "  dMethod.name as daysInMonthMethodName,\n" +
+                "  term.transactionOrderId,\n" +
+                "  txOrder.name as transactionOrderName,\n" +
+                "  term.interestAccrMethodId,\n" +
+                "  accMethod.name as interestAccrMethodName\n" +
+                "FROM orderTerm term, orderTermCurrency curr,\n" +
+                "  orderTermFund fund, orderTermFrequencyType freqType,\n" +
+                "  orderTermRatePeriod ratePeriod, orderTermFloatingRateType rateType,\n" +
+                "  orderTermDaysMethod dMethod, orderTermTransactionOrder txOrder,\n" +
+                "  orderTermAccrMethod accMethod\n" +
+                "WHERE term.currencyId = curr.id\n" +
+                "  AND term.fundId = fund.id\n" +
+                "  AND term.frequencyTypeId = freqType.id\n" +
+                "  AND term.interestRateValuePerPeriodId = ratePeriod.id\n" +
+                "  AND term.interestTypeId = rateType.id\n" +
+                "  AND term.penaltyOnPrincipleOverdueTypeId = rateType.id\n" +
+                "  AND term.penaltyOnInterestOverdueTypeId = rateType.id\n" +
+                "  AND term.daysInYearMethodId = dMethod.id\n" +
+                "  AND term.daysInMonthMethodId = dMethod.id\n" +
+                "  AND term.transactionOrderId = txOrder.id\n" +
+                "  AND term.interestAccrMethodId = accMethod.id\n" +
+                "  AND creditOrderId = " + orderId;
+
+        Query query = entityManager.createNativeQuery(baseQuery, OrderTermModel.class);
+
+        List<OrderTermModel> terms = query.getResultList();
+        return terms;
+    }
+
+    private List<AppliedEntityModel> getEntitiesByOrderId(long orderId)
+    {
+        String baseQuery = "SELECT ent.id, owner.name as ownerName, state.name as status, list.id as listId\n" +
+                "FROM appliedEntity ent, appliedEntityList list,\n" +
+                "  owner owner, appliedEntityState state\n" +
+                "WHERE ent.appliedEntityListId = list.id\n" +
+                "  AND owner.id = ent.ownerId\n" +
+                "  AND ent.appliedEntityStateId = state.id\n" +
+                "  AND list.creditOrderId =" + orderId;
+
+        Query query = entityManager.createNativeQuery(baseQuery, AppliedEntityModel.class);
+
+        List<AppliedEntityModel> entities = query.getResultList();
+        return entities;
+    }
+
 }

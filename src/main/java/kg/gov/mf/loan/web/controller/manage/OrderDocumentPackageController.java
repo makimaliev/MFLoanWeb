@@ -5,8 +5,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackageType;
 import kg.gov.mf.loan.manage.model.entity.AppliedEntity;
+import kg.gov.mf.loan.manage.repository.orderdocumentpackage.OrderDocumentPackageRepository;
+import kg.gov.mf.loan.web.fetchModels.OrderDocumentModel;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -24,6 +28,10 @@ import kg.gov.mf.loan.manage.service.order.CreditOrderService;
 import kg.gov.mf.loan.manage.service.orderdocument.OrderDocumentTypeService;
 import kg.gov.mf.loan.manage.service.orderdocumentpackage.OrderDocumentPackageService;
 import kg.gov.mf.loan.web.util.Utils;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 @Controller
 public class OrderDocumentPackageController {
@@ -46,48 +54,29 @@ public class OrderDocumentPackageController {
 	@Autowired
 	DocumentPackageTypeService dpTypeService;
 
-	private static final int BUTTONS_TO_SHOW = 5;
-	private static final int INITIAL_PAGE = 0;
-	private static final int INITIAL_PAGE_SIZE = 10;
-	private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
-	
+	@Autowired
+	OrderDocumentPackageRepository orderDocumentPackageRepository;
+
+	/** The entity manager. */
+	@PersistenceContext
+	private EntityManager entityManager;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
-		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
+		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 
-	@RequestMapping(value = {"/manage/order/orderdocumentpackage/list" }, method = RequestMethod.GET)
-	public String listODPs(@RequestParam("pageSize") Optional<Integer> pageSize,
-							   @RequestParam("page") Optional<Integer> page, ModelMap model) {
-
-		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
-		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
-
-		List<OrderDocumentPackage> oDPs = oDPService.listByParam("id", evalPage*evalPageSize, evalPageSize);
-		int count = oDPService.count();
-
-		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
-
-		model.addAttribute("count", count/evalPageSize+1);
-		model.addAttribute("oDPs", oDPs);
-		model.addAttribute("selectedPageSize", evalPageSize);
-		model.addAttribute("pageSizes", PAGE_SIZES);
-		model.addAttribute("pager", pager);
-		model.addAttribute("current", evalPage);
-
-		model.addAttribute("loggedinuser", Utils.getPrincipal());
-		return "/manage/order/orderdocumentpackage/list";
-	}
-	
 	@RequestMapping(value = { "/manage/order/{orderId}/orderdocumentpackage/{oDPId}/view"})
     public String viewOrderDocumentPackage(ModelMap model, @PathVariable("orderId")Long orderId, @PathVariable("oDPId")Long oDPId) {
 
 		OrderDocumentPackage oDP = oDPService.getById(oDPId);
         model.addAttribute("oDP", oDP);
-        
-        model.addAttribute("documents", oDP.getOrderDocuments());
+
+		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+		String jsonDocuments = gson.toJson(getDocumentsByPackageId(oDPId));
+		model.addAttribute("documents", jsonDocuments);
         
         model.addAttribute("orderId", orderId);
 		model.addAttribute("order", orderService.getById(orderId));
@@ -138,15 +127,29 @@ public class OrderDocumentPackageController {
 		return "redirect:" + "/manage/order/"+ orderId + "/orderdocumentpackage/" + oDP.getId()+ "/view";
 	}
 	
-	@RequestMapping(value="/manage/order/{orderId}/orderdocumentpackage/delete", method=RequestMethod.POST)
-    public String deleteOrderDocumentPackage(long id, @PathVariable("orderId")Long orderId) {
-		if(id > 0) {
-			oDPService.remove(oDPService.getById(id));
-			//deleteInEntities(id);
-		}
-			
-		return "redirect:" + "/manage/order/{orderId}/view#documentPackages";
+	@RequestMapping(value="/manage/order/{orderId}/orderdocumentpackage/{packageId}/delete", method=RequestMethod.GET)
+    public String deleteOrderDocumentPackage(@PathVariable("orderId")Long orderId, @PathVariable("packageId")Long packageId) {
+		if(packageId > 0)
+			orderDocumentPackageRepository.delete(orderDocumentPackageRepository.findOne(packageId));
+
+		return "redirect:" + "/manage/order/{orderId}/view";
     }
+
+	private List<OrderDocumentModel> getDocumentsByPackageId(long packageId)
+	{
+		String baseQuery = "SELECT doc.id,\n" +
+				"  doc.name,\n" +
+				"  doc.orderDocumentTypeId as typeId,\n" +
+				"  type.name as typeName\n" +
+				"FROM orderDocument doc, orderDocumentType type\n" +
+				"WHERE doc.orderDocumentTypeId = type.id\n" +
+				"  AND doc.orderDocumentPackageId = " + packageId;
+
+		Query query = entityManager.createNativeQuery(baseQuery, OrderDocumentModel.class);
+
+		List<OrderDocumentModel> documents = query.getResultList();
+		return documents;
+	}
 	
 	/*
 	private void addToEntities(CreditOrder creditOrder, OrderDocumentPackage oDP) {

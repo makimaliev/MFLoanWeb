@@ -1,14 +1,14 @@
 //== Class definition
 
-var DatatableDataLocalLists = function () {
+var DatatableDataLocalEntities = function () {
 	//== Private functions
 
 	// demo initializer
 	var mainTableInit = function () {
 
-        var dataJSONArray = JSON.parse(jsonLists);
+        var dataJSONArray = JSON.parse(jsonEntities);
 
-		var datatable = $('#listsTable').mDatatable({
+		var datatable = $('#entitiesTable').mDatatable({
 			// datasource definition
 			data: {
 				type: 'local',
@@ -52,21 +52,16 @@ var DatatableDataLocalLists = function () {
                 overflow: 'visible',
                 template: function (row) {
                     return '\
-						<a href="/manage/order/'+ orderId + '/entitylist/' + row.id +'/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
+						<a href="/manage/order/'+ orderId + '/entitylist/' + row.listId +'/entity/' +  row.id + '/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
 					';
                 }
             }, {
-				field: "listNumber",
-				title: "Номер",
+				field: "ownerName",
+				title: "Наименование",
+                width: 200,
 				responsive: {visible: 'lg'}
 			},{
-                field: "listDate",
-                title: "Дата"
-            }, {
-                field: "typeName",
-                title: "Вид"
-            }, {
-                field: "stateName",
+                field: "status",
                 title: "Статус"
             }, {
                 field: "action",
@@ -78,10 +73,10 @@ var DatatableDataLocalLists = function () {
                     var result = '';
 
                     result = result + '\
-						<a href="/manage/order/'+ orderId + '/entitylist/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+						<a href="/manage/order/'+ orderId + '/entitylist/' + row.listId +'/entity/' +row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-edit"></i>\
 						</a>\
-						<a href="/manage/order/'+ orderId + '/entitylist/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
+						<a href="/manage/order/'+ orderId + '/entitylist/' + row.listId +'/entity/' +row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
 							<i class="la la-trash"></i>\
 						</a>\
 					';
@@ -146,5 +141,5 @@ var DatatableDataLocalLists = function () {
 }();
 
 jQuery(document).ready(function () {
-    DatatableDataLocalLists.init();
+    DatatableDataLocalEntities.init();
 });

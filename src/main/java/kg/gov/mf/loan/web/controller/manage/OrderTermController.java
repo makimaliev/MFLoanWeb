@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import kg.gov.mf.loan.manage.model.orderdocumentpackage.OrderDocumentPackage;
+import kg.gov.mf.loan.manage.repository.orderterm.OrderTermRepository;
 import kg.gov.mf.loan.web.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +72,9 @@ public class OrderTermController {
 	@Autowired
 	OrderTermService orderTermService;
 
+	@Autowired
+	OrderTermRepository orderTermRepository;
+
 	private static final int BUTTONS_TO_SHOW = 5;
 	private static final int INITIAL_PAGE = 0;
 	private static final int INITIAL_PAGE_SIZE = 10;
@@ -81,7 +85,7 @@ public class OrderTermController {
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
-		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
+		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 
@@ -172,18 +176,45 @@ public class OrderTermController {
 		term.setCreditOrder(creditOrder);
 		
 		if(term.getId() == 0)
+		{
+			term.setFund(fundService.getById(term.getFund().getId()));
+			term.setCurrency(currService.getById(term.getCurrency().getId()));
+			term.setFrequencyType(freqTypeService.getById(term.getFrequencyType().getId()));
+			term.setInterestRateValuePerPeriod(ratePeriodService.getById(term.getInterestRateValuePerPeriod().getId()));
+			term.setInterestType(rateTypeService.getById(term.getInterestType().getId()));
+			term.setPenaltyOnPrincipleOverdueType(rateTypeService.getById(term.getPenaltyOnPrincipleOverdueType().getId()));
+			term.setPenaltyOnInterestOverdueType(rateTypeService.getById(term.getPenaltyOnInterestOverdueType().getId()));
+			term.setDaysInYearMethod(daysMethodService.getById(term.getDaysInYearMethod().getId()));
+			term.setDaysInMonthMethod(daysMethodService.getById(term.getDaysInMonthMethod().getId()));
+			term.setTransactionOrder(txOrderService.getById(term.getTransactionOrder().getId()));
+			term.setInterestAccrMethod(accrMethodService.getById(term.getInterestAccrMethod().getId()));
 			orderTermService.add(term);
+		}
+
 		else
+		{
+			term.setFund(fundService.getById(term.getFund().getId()));
+			term.setCurrency(currService.getById(term.getCurrency().getId()));
+			term.setFrequencyType(freqTypeService.getById(term.getFrequencyType().getId()));
+			term.setInterestRateValuePerPeriod(ratePeriodService.getById(term.getInterestRateValuePerPeriod().getId()));
+			term.setInterestType(rateTypeService.getById(term.getInterestType().getId()));
+			term.setPenaltyOnPrincipleOverdueType(rateTypeService.getById(term.getPenaltyOnPrincipleOverdueType().getId()));
+			term.setPenaltyOnInterestOverdueType(rateTypeService.getById(term.getPenaltyOnInterestOverdueType().getId()));
+			term.setDaysInYearMethod(daysMethodService.getById(term.getDaysInYearMethod().getId()));
+			term.setDaysInMonthMethod(daysMethodService.getById(term.getDaysInMonthMethod().getId()));
+			term.setTransactionOrder(txOrderService.getById(term.getTransactionOrder().getId()));
+			term.setInterestAccrMethod(accrMethodService.getById(term.getInterestAccrMethod().getId()));
 			orderTermService.update(term);
+		}
 			
-		return "redirect:" + "/manage/order/{orderId}/view#orderTerms";
+		return "redirect:" + "/manage/order/{orderId}/view";
 	}
 	
-	@RequestMapping(value="/manage/order/{orderId}/orderterm/delete", method=RequestMethod.POST)
-    public String deleteOrderTerm(long id, @PathVariable("orderId")Long orderId) {
-		if(id > 0)
-			orderTermService.remove(orderTermService.getById(id));
-		return "redirect:" + "/manage/order/{orderId}/view#orderTerms";
+	@RequestMapping(value="/manage/order/{orderId}/orderterm/{termId}/delete", method=RequestMethod.GET)
+    public String deleteOrderTerm(@PathVariable("orderId")Long orderId, @PathVariable("termId")Long termId) {
+		if(termId > 0)
+			orderTermRepository.delete(orderTermRepository.findOne(termId));
+		return "redirect:" + "/manage/order/{orderId}/view";
     }
 	
 	//BEGIN - ORDER TERM FUND

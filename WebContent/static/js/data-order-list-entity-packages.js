@@ -1,14 +1,14 @@
 //== Class definition
 
-var DatatableDataLocalLists = function () {
+var DatatableDataLocalEntityPackages = function () {
 	//== Private functions
 
 	// demo initializer
 	var mainTableInit = function () {
 
-        var dataJSONArray = JSON.parse(jsonLists);
+        var dataJSONArray = JSON.parse(jsonEntityPackages);
 
-		var datatable = $('#listsTable').mDatatable({
+		var datatable = $('#entityPackagesTable').mDatatable({
 			// datasource definition
 			data: {
 				type: 'local',
@@ -52,22 +52,44 @@ var DatatableDataLocalLists = function () {
                 overflow: 'visible',
                 template: function (row) {
                     return '\
-						<a href="/manage/order/'+ orderId + '/entitylist/' + row.id +'/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
+						<a href="/manage/order/'+ orderId + '/entitylist/' + listId +'/entity/' + entityId +'/documentpackage/'+  row.id + '/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
 					';
                 }
             }, {
-				field: "listNumber",
-				title: "Номер",
+				field: "name",
+				title: "Наименование",
+                width: 200,
 				responsive: {visible: 'lg'}
 			},{
-                field: "listDate",
-                title: "Дата"
+                field: "completedDate",
+                title: "Дата комплектации"
             }, {
-                field: "typeName",
-                title: "Вид"
+                field: "approvedDate",
+                title: "Дата подтверждения"
+            }, {
+                field: "completedRatio",
+                title: "Доля комплектации",
+                template: function (row) {
+                    return  row.completedRatio + ' %';
+                }
+            }, {
+                field: "approvedRatio",
+                title: "Доля подтверждения",
+                template: function (row) {
+                    return  row.approvedRatio + ' %';
+                }
+            }, {
+                field: "registeredRatio",
+                title: "Доля регистрации",
+                template: function (row) {
+                    return  row.registeredRatio + ' %';
+                }
             }, {
                 field: "stateName",
                 title: "Статус"
+            }, {
+                field: "typeName",
+                title: "Вид"
             }, {
                 field: "action",
                 width: 50,
@@ -78,10 +100,10 @@ var DatatableDataLocalLists = function () {
                     var result = '';
 
                     result = result + '\
-						<a href="/manage/order/'+ orderId + '/entitylist/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+						<a href="/manage/order/'+ orderId + '/entitylist/' + listId +'/entity/'+ entityId +'/documentpackage/' +row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-edit"></i>\
 						</a>\
-						<a href="/manage/order/'+ orderId + '/entitylist/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
+						<a href="/manage/order/'+ orderId + '/entitylist/' + listId +'/entity/'+ entityId +'/documentpackage/' +row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
 							<i class="la la-trash"></i>\
 						</a>\
 					';
@@ -146,5 +168,5 @@ var DatatableDataLocalLists = function () {
 }();
 
 jQuery(document).ready(function () {
-    DatatableDataLocalLists.init();
+    DatatableDataLocalEntityPackages.init();
 });
