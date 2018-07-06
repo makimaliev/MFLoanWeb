@@ -1,8 +1,12 @@
 package kg.gov.mf.loan.web.controller.output.report;
 
-import kg.gov.mf.loan.admin.org.service.DistrictService;
-import kg.gov.mf.loan.admin.org.service.RegionService;
+import kg.gov.mf.loan.admin.org.model.Department;
+import kg.gov.mf.loan.admin.org.model.Organization;
+import kg.gov.mf.loan.admin.org.model.Staff;
+import kg.gov.mf.loan.admin.org.service.*;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
+import kg.gov.mf.loan.manage.service.debtor.WorkSectorService;
+import kg.gov.mf.loan.manage.service.loan.LoanTypeService;
 import kg.gov.mf.loan.output.report.model.ObjectList;
 import kg.gov.mf.loan.output.report.model.ObjectListValue;
 import kg.gov.mf.loan.output.report.service.ObjectListService;
@@ -13,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,9 +41,21 @@ public class ObjectListController {
     private DistrictService districtService;
 
 	@Autowired
-    private DebtorService debtorService;
-	
-	
+    private WorkSectorService workSectorService;
+
+	@Autowired
+	private LoanTypeService loanTypeService;
+
+	@Autowired
+	private DepartmentService departmentService;
+
+	@Autowired
+	private StaffService staffService;
+
+	@Autowired
+	private OrganizationService organizationService;
+
+
 
    public void setObjectListService(ObjectListService rs)
     {
@@ -107,7 +124,9 @@ public class ObjectListController {
 		ObjectList modelObjectList = new ObjectList();
 		modelObjectList.setObjectTypeId(Long.parseLong(object_type));
 		model.addAttribute("objectList", modelObjectList);
-		
+
+		Organization gaubk = new Organization();
+
 		switch (object_type)
 		{
 			case "1": 
@@ -117,8 +136,33 @@ public class ObjectListController {
 				model.addAttribute("objectListValueList", this.districtService.findAll());
 				break;
 			case "3":
-				model.addAttribute("objectListValueList", this.debtorService.list());
+				model.addAttribute("objectListValueList", this.workSectorService.list());
 				break;
+			case "4":
+				model.addAttribute("objectListValueList", this.loanTypeService.list());
+				break;
+			case "5":
+
+				gaubk = this.organizationService.findById((long)1);
+
+				List<Staff> staffList = new ArrayList<Staff>();
+
+				for (Department department: gaubk.getDepartment())
+				{
+					staffList.addAll(this.staffService.findAllByDepartment(department));
+				}
+
+				model.addAttribute("objectListValueList", staffList);
+				break;
+			case "6":
+
+				gaubk = this.organizationService.findById((long)1);
+
+				model.addAttribute("objectListValueList", gaubk.getDepartment());
+				break;
+
+
+
 			
 		}
 	
@@ -140,8 +184,8 @@ public class ObjectListController {
 	
 	@RequestMapping("/objectList/{id}/edit")
 	public String getObjectListEditForm(@PathVariable("id") long id, Model model) {
-		
-		
+
+		Organization gaubk = new Organization();
 		
 		model.addAttribute("objectList", this.objectListService.findById(id));
 		
@@ -159,7 +203,29 @@ public class ObjectListController {
 				model.addAttribute("objectListValueList", this.districtService.findAll());
 				break;
 			case "3":
-				model.addAttribute("objectListValueList", this.debtorService.list());
+				model.addAttribute("objectListValueList", this.workSectorService.list());
+				break;
+			case "4":
+				model.addAttribute("objectListValueList", this.loanTypeService.list());
+				break;
+			case "5":
+
+				gaubk = this.organizationService.findById((long)1);
+
+				List<Staff> staffList = new ArrayList<Staff>();
+
+				for (Department department: gaubk.getDepartment())
+				{
+					staffList.addAll(this.staffService.findAllByDepartment(department));
+				}
+
+				model.addAttribute("objectListValueList", staffList);
+				break;
+			case "6":
+
+				gaubk = this.organizationService.findById((long)1);
+
+				model.addAttribute("objectListValueList", gaubk.getDepartment());
 				break;
 			
 		}

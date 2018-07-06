@@ -202,6 +202,10 @@ public class ReportTemplateController {
 
 		ReportGenerator collectionPhaseReportGenerator = new ReportGeneratorCollectionPhase();
 
+		ReportGenerator entityDocumentReportGenerator = new ReportGeneratorEntityDocument();
+
+
+
 		response.setContentType("application/vnd.ms-excel");
 		response.setHeader("Content-disposition","attachment; filename=report.xls");
 		OutputStream out = null;
@@ -235,6 +239,11 @@ public class ReportTemplateController {
 			case "COLLECTION_PHASE":
 
 				generateReport(out,response,collectionPhaseReportGenerator, reportTemplate);
+				break;
+
+			case "ENTITY_DOCUMENT":
+
+				generateReport(out,response,entityDocumentReportGenerator, reportTemplate);
 				break;
 
 		}
