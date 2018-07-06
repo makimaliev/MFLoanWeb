@@ -85,16 +85,16 @@
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
-												<h3 class="m-widget1__title">ID</h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${entityList.id}"></span>
+												<h3 class="m-widget1__title" th:text="#{label.entityList.listNumber}"></h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${entityList.listNumber}"></span>
 											</div>
 										</div>
 									</div>
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.entityList.listNumber}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${entityList.listNumber}"></span>
+												<h3 class="m-widget1__title" th:text="#{label.entityList.type}"></h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${entityList.appliedEntityListType.name}"></span>
 											</div>
 										</div>
 									</div>
@@ -126,11 +126,11 @@
 							<div class="col-md-12 col-lg-12 col-xl-4">
 								<!--begin:: Widgets/Stats2-3 -->
 								<div class="m-widget1">
-									<div class="m-widget1__item">
+									<div class="m-widget1__item" sec:authorize="hasRole('ADMIN')">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.entityList.type}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${entityList.appliedEntityListType.name}"></span>
+												<h3 class="m-widget1__title">ID</h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${entityList.id}"></span>
 											</div>
 										</div>
 									</div>
@@ -153,67 +153,41 @@
 					</div>
 					<div class="m-portlet__body">
 
-						<!--<itemcheck th:if="${#lists.isEmpty(aFs)}">-->
-						<div class="m-section">
-							<div class="m-section__content">
-								<a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.entity.add}"></a>
-							</div>
-						</div>
-						<!--</itemcheck>-->
-
-						<!--begin::Section-->
-						<div class="m-section">
-							<div class="m-section__content">
-								<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
-									<div>
-										<table class="table">
-											<thead class="thead-default">
-											<tr>
-												<th class="table-id">#</th>
-												<th th:text="#{label.entity.owner}"></th>
-												<th th:text="#{label.entity.state}"></th>
-												<th>&nbsp;</th>
-											</tr>
-											</thead>
-											<tbody>
-											<tr th:each="e, iterator : ${entities}">
-												<td class="table-id" th:text="${iterator.index+1}"></td>
-												<td th:text="${e.owner.name}"></td>
-												<td th:text="${e.appliedEntityState.name}"></td>
-												<td class="table-actions text-right">
-													<span>
-														<div class="dropdown">
-															<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
-																<i class="la la-ellipsis-h"></i>
-															</a>
-															<div class="dropdown-menu dropdown-menu-right">
-																<a class="dropdown-item" th:href="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${e.id}__/view}">
-																	<span th:text="#{label.table.view}"></span>
-																</a>
-																<a class="dropdown-item" th:href="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${e.id}__/save}">
-																	<span th:text="#{label.table.edit}"></span>
-																</a>
-																<a class="dropdown-item" href="#">
-																	<span>
-																		<form th:action="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/delete}" method="post">
-																			<input hidden="true" type="text" id="id" name="id" th:value="${e.id}" />
-																			<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
-																		</form>
-																	</span>
-																</a>
-															</div>
-														</div>
-													</span>
-												</td>
-											</tr>
-											</tbody>
-										</table>
+						<!--begin: Search Form -->
+						<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+							<div class="row align-items-center">
+								<div class="col-xl-9 order-1 order-xl-1">
+									<div class="form-group m-form__group row align-items-center">
+										<div class="col-lg-6">
+											<div class="m-input-icon m-input-icon--left">
+												<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search1">
+												<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+											</div>
+										</div>
 									</div>
+								</div>
+
+								<div class="col-xl-3 order-3 order-xl-3 m--align-right">
+									<a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/order/__${orderId}__/entitylist/__${entityList.id}__/entity/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span>
+													<i class="la la-plus"></i>
+													<span>
+														Добавить получателя
+													</span>
+												</span>
+									</a>
+									<div class="m-separator m-separator--dashed d-xl-none"></div>
 								</div>
 							</div>
 						</div>
-						<!--end::Section-->
-
+						<!--end: Search Form -->
+						<!--begin: Datatable -->
+						<div class="m_datatable" id="entitiesTable"></div>
+						<!--end: Datatable -->
 					</div>
 				</div>
 				<!--end::Portlet-->
@@ -229,6 +203,23 @@
 <!-- end:: Page -->
 
 <div th:replace="fragments/footer :: footer-js"/>
+
+<div th:with="isAdmin = ${#authorization.expression('hasRole(''ADMIN'')')}">
+	<script th:inline="javascript">
+        /*<![CDATA[*/
+        var hasRoleAdmin = /*[[${isAdmin}]]*/ [];
+        /*]]>*/
+	</script>
+</div>
+
+<script th:src="@{/js/data-order-list-entities.js}" th:inline="javascript" type="text/javascript"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var jsonEntities = /*[[${entities}]]*/ [];
+    var orderId = /*[[${orderId}]]*/ [];
+    var listId = /*[[${entityList.id}]]*/ [];
+    /*]]>*/
+</script>
 
 </body>
 <!-- end::Body -->

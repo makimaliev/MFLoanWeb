@@ -63,8 +63,7 @@ var DatatableDataLocalEntities = function () {
 			},{
                 field: "status",
                 title: "Статус"
-            }
-            /*, {
+            }, {
                 field: "action",
                 width: 50,
                 title: "",
@@ -87,7 +86,7 @@ var DatatableDataLocalEntities = function () {
 
                     return result;
                 }
-            }*/],
+            }],
             translate: {
                 records: {
                     processing: 'Подождите пожалуйста...',
@@ -114,7 +113,7 @@ var DatatableDataLocalEntities = function () {
 
 		var query = datatable.getDataSourceQuery();
 
-		$('#m_form_search4').on('keyup', function (e) {
+		$('#m_form_search1').on('keyup', function (e) {
 			datatable.search($(this).val().toLowerCase());
 		}).val(query.generalSearch);
 

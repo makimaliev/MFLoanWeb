@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackageType;
 import kg.gov.mf.loan.manage.model.entity.AppliedEntity;
+import kg.gov.mf.loan.manage.repository.orderdocumentpackage.OrderDocumentPackageRepository;
 import kg.gov.mf.loan.web.fetchModels.OrderDocumentModel;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,9 @@ public class OrderDocumentPackageController {
 	
 	@Autowired
 	DocumentPackageTypeService dpTypeService;
+
+	@Autowired
+	OrderDocumentPackageRepository orderDocumentPackageRepository;
 
 	/** The entity manager. */
 	@PersistenceContext
@@ -123,14 +127,12 @@ public class OrderDocumentPackageController {
 		return "redirect:" + "/manage/order/"+ orderId + "/orderdocumentpackage/" + oDP.getId()+ "/view";
 	}
 	
-	@RequestMapping(value="/manage/order/{orderId}/orderdocumentpackage/delete", method=RequestMethod.POST)
-    public String deleteOrderDocumentPackage(long id, @PathVariable("orderId")Long orderId) {
-		if(id > 0) {
-			oDPService.remove(oDPService.getById(id));
-			//deleteInEntities(id);
-		}
-			
-		return "redirect:" + "/manage/order/{orderId}/view#documentPackages";
+	@RequestMapping(value="/manage/order/{orderId}/orderdocumentpackage/{packageId}/delete", method=RequestMethod.GET)
+    public String deleteOrderDocumentPackage(@PathVariable("orderId")Long orderId, @PathVariable("packageId")Long packageId) {
+		if(packageId > 0)
+			orderDocumentPackageRepository.delete(orderDocumentPackageRepository.findOne(packageId));
+
+		return "redirect:" + "/manage/order/{orderId}/view";
     }
 
 	private List<OrderDocumentModel> getDocumentsByPackageId(long packageId)

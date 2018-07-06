@@ -5,6 +5,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.manage.repository.entitylist.AppliedEntityListRepository;
+import kg.gov.mf.loan.web.fetchModels.AppliedEntityModel;
 import kg.gov.mf.loan.web.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +31,10 @@ import kg.gov.mf.loan.manage.service.entitylist.AppliedEntityListTypeService;
 import kg.gov.mf.loan.manage.service.order.CreditOrderService;
 import kg.gov.mf.loan.web.util.Utils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 @Controller
 public class AppliedEntityListController {
 	
@@ -44,13 +52,15 @@ public class AppliedEntityListController {
 	
 	@Autowired
 	AppliedEntityStateService entityStateService;
+
+	@Autowired
+	AppliedEntityListRepository appliedEntityListRepository;
+
+	/** The entity manager. */
+	@PersistenceContext
+	private EntityManager entityManager;
 	
 	static final Logger loggerEntityList = LoggerFactory.getLogger(AppliedEntityList.class);
-
-	private static final int BUTTONS_TO_SHOW = 5;
-	private static final int INITIAL_PAGE = 0;
-	private static final int INITIAL_PAGE_SIZE = 10;
-	private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -58,36 +68,17 @@ public class AppliedEntityListController {
 		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
 	    binder.registerCustomEditor(Date.class, editor);
 	}
-
-	@RequestMapping(value = {"/manage/order/entitylist/list" }, method = RequestMethod.GET)
-	public String listEntityLists(@RequestParam("pageSize") Optional<Integer> pageSize,
-							 @RequestParam("page") Optional<Integer> page, ModelMap model) {
-
-		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
-		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
-
-		List<AppliedEntityList> lists = listService.listByParam("id", evalPage*evalPageSize, evalPageSize);
-		int count = listService.count();
-
-		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
-
-		model.addAttribute("count", count/evalPageSize+1);
-		model.addAttribute("lists", lists);
-		model.addAttribute("selectedPageSize", evalPageSize);
-		model.addAttribute("pageSizes", PAGE_SIZES);
-		model.addAttribute("pager", pager);
-		model.addAttribute("current", evalPage);
-
-		model.addAttribute("loggedinuser", Utils.getPrincipal());
-		return "/manage/order/entitylist/list";
-	}
 	
 	@RequestMapping(value = { "/manage/order/{orderId}/entitylist/{listId}/view"})
     public String viewEntityList(ModelMap model, @PathVariable("orderId")Long orderId, @PathVariable("listId")Long listId) {
 
 		AppliedEntityList list = listService.getById(listId);
         model.addAttribute("entityList", list);
-        model.addAttribute("entities", list.getAppliedEntities());
+
+		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+		String jsonEntities = gson.toJson(getEntitiesByListId(listId));
+		model.addAttribute("entities", jsonEntities);
+
         model.addAttribute("orderId", orderId);
 		model.addAttribute("order", orderService.getById(orderId));
         
@@ -139,10 +130,10 @@ public class AppliedEntityListController {
 		return "redirect:" + "/manage/order/" + orderId +"/entitylist/" + list.getId()+ "/view";
 	}
 	
-	@RequestMapping(value="/manage/order/{orderId}/entitylist/delete", method=RequestMethod.POST)
-    public String deleteAppliedEntityList(long id, @PathVariable("orderId")Long orderId) {
-		if(id > 0)
-			listService.remove(listService.getById(id));
+	@RequestMapping(value="/manage/order/{orderId}/entitylist/{listId}/delete", method=RequestMethod.GET)
+    public String deleteAppliedEntityList(@PathVariable("orderId")Long orderId, @PathVariable("listId")Long listId) {
+		if(listId > 0)
+			appliedEntityListRepository.delete(appliedEntityListRepository.findOne(listId));
 		return "redirect:" + "/manage/order/{orderId}/view";
     }
 	
@@ -232,5 +223,21 @@ public class AppliedEntityListController {
 			elTypeService.remove(elTypeService.getById(id));
 		return "redirect:" + "/manage/order/entitylist/type/list";
     }
+
+	private List<AppliedEntityModel> getEntitiesByListId(long listId)
+	{
+		String baseQuery = "SELECT ent.id, owner.name as ownerName, state.name as status, list.id as listId\n" +
+				"FROM appliedEntity ent, appliedEntityList list,\n" +
+				"  owner owner, appliedEntityState state\n" +
+				"WHERE ent.appliedEntityListId = list.id\n" +
+				"  AND owner.id = ent.ownerId\n" +
+				"  AND ent.appliedEntityStateId = state.id\n" +
+				"  AND list.id =" + listId;
+
+		Query query = entityManager.createNativeQuery(baseQuery, AppliedEntityModel.class);
+
+		List<AppliedEntityModel> entities = query.getResultList();
+		return entities;
+	}
 	
 }

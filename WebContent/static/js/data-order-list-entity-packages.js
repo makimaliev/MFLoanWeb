@@ -1,14 +1,14 @@
 //== Class definition
 
-var DatatableDataLocalEntities = function () {
+var DatatableDataLocalEntityPackages = function () {
 	//== Private functions
 
 	// demo initializer
 	var mainTableInit = function () {
 
-        var dataJSONArray = JSON.parse(jsonEntities);
+        var dataJSONArray = JSON.parse(jsonEntityPackages);
 
-		var datatable = $('#entitiesTable').mDatatable({
+		var datatable = $('#entityPackagesTable').mDatatable({
 			// datasource definition
 			data: {
 				type: 'local',
@@ -52,19 +52,45 @@ var DatatableDataLocalEntities = function () {
                 overflow: 'visible',
                 template: function (row) {
                     return '\
-						<a href="/manage/order/'+ orderId + '/entitylist/' + row.listId +'/entity/' +  row.id + '/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
+						<a href="/manage/order/'+ orderId + '/entitylist/' + listId +'/entity/' + entityId +'/documentpackage/'+  row.id + '/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
 					';
                 }
             }, {
-				field: "ownerName",
+				field: "name",
 				title: "Наименование",
                 width: 200,
 				responsive: {visible: 'lg'}
 			},{
-                field: "status",
+                field: "completedDate",
+                title: "Дата комплектации"
+            }, {
+                field: "approvedDate",
+                title: "Дата подтверждения"
+            }, {
+                field: "completedRatio",
+                title: "Доля комплектации",
+                template: function (row) {
+                    return  row.completedRatio + ' %';
+                }
+            }, {
+                field: "approvedRatio",
+                title: "Доля подтверждения",
+                template: function (row) {
+                    return  row.approvedRatio + ' %';
+                }
+            }, {
+                field: "registeredRatio",
+                title: "Доля регистрации",
+                template: function (row) {
+                    return  row.registeredRatio + ' %';
+                }
+            }, {
+                field: "stateName",
                 title: "Статус"
-            }
-            /*, {
+            }, {
+                field: "typeName",
+                title: "Вид"
+            }, {
                 field: "action",
                 width: 50,
                 title: "",
@@ -74,10 +100,10 @@ var DatatableDataLocalEntities = function () {
                     var result = '';
 
                     result = result + '\
-						<a href="/manage/order/'+ orderId + '/entitylist/' + row.listId +'/entity/' +row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+						<a href="/manage/order/'+ orderId + '/entitylist/' + listId +'/entity/'+ entityId +'/documentpackage/' +row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-edit"></i>\
 						</a>\
-						<a href="/manage/order/'+ orderId + '/entitylist/' + row.listId +'/entity/' +row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
+						<a href="/manage/order/'+ orderId + '/entitylist/' + listId +'/entity/'+ entityId +'/documentpackage/' +row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
 							<i class="la la-trash"></i>\
 						</a>\
 					';
@@ -87,7 +113,7 @@ var DatatableDataLocalEntities = function () {
 
                     return result;
                 }
-            }*/],
+            }],
             translate: {
                 records: {
                     processing: 'Подождите пожалуйста...',
@@ -114,7 +140,7 @@ var DatatableDataLocalEntities = function () {
 
 		var query = datatable.getDataSourceQuery();
 
-		$('#m_form_search4').on('keyup', function (e) {
+		$('#m_form_search1').on('keyup', function (e) {
 			datatable.search($(this).val().toLowerCase());
 		}).val(query.generalSearch);
 
@@ -142,5 +168,5 @@ var DatatableDataLocalEntities = function () {
 }();
 
 jQuery(document).ready(function () {
-    DatatableDataLocalEntities.init();
+    DatatableDataLocalEntityPackages.init();
 });
