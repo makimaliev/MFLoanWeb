@@ -3,9 +3,12 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentRegisteredBy;
 import kg.gov.mf.loan.manage.service.entitylist.AppliedEntityListService;
 import kg.gov.mf.loan.manage.service.order.CreditOrderService;
+import kg.gov.mf.loan.web.fetchModels.EntityDocumentModel;
 import kg.gov.mf.loan.web.util.EntityDocumentProgress;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,10 @@ import kg.gov.mf.loan.manage.service.entity.AppliedEntityService;
 import kg.gov.mf.loan.manage.service.entitydocument.EntityDocumentRegisteredByService;
 import kg.gov.mf.loan.manage.service.entitydocument.EntityDocumentStateService;
 import kg.gov.mf.loan.web.util.Utils;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 @Controller
 public class DocumentPackageController {
@@ -58,39 +65,15 @@ public class DocumentPackageController {
     @Autowired
     AppliedEntityListService listService;
 
-	private static final int BUTTONS_TO_SHOW = 5;
-	private static final int INITIAL_PAGE = 0;
-	private static final int INITIAL_PAGE_SIZE = 10;
-	private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
-	
+	/** The entity manager. */
+	@PersistenceContext
+	private EntityManager entityManager;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
 		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
 	    binder.registerCustomEditor(Date.class, editor);
-	}
-
-	@RequestMapping(value = {"/manage/order/entitylist/entity/documentpackage/list" }, method = RequestMethod.GET)
-	public String listDocumentPackages(@RequestParam("pageSize") Optional<Integer> pageSize,
-							   @RequestParam("page") Optional<Integer> page, ModelMap model) {
-
-		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
-		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
-
-		List<DocumentPackage> dps = dpService.listByParam("id", evalPage*evalPageSize, evalPageSize);
-		int count = dpService.count();
-
-		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
-
-		model.addAttribute("count", count/evalPageSize+1);
-		model.addAttribute("PackageType", dps);
-		model.addAttribute("selectedPageSize", evalPageSize);
-		model.addAttribute("pageSizes", PAGE_SIZES);
-		model.addAttribute("pager", pager);
-		model.addAttribute("current", evalPage);
-
-		model.addAttribute("loggedinuser", Utils.getPrincipal());
-		return "/manage/order/entitylist/entity/documentpackage/list";
 	}
 	
 	@RequestMapping(value = { "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/documentpackage/{dpId}/view"})
@@ -103,27 +86,10 @@ public class DocumentPackageController {
 
 		DocumentPackage dp = dpService.getById(dpId);
         model.addAttribute("dp", dp);
-        
-		model.addAttribute("emptyED", new EntityDocument());
 
-        Set<EntityDocument> entityDocuments =  dp.getEntityDocuments();
-        List<EntityDocumentProgress> progressList = new ArrayList<>();
-        for (EntityDocument doc: entityDocuments
-             ) {
-
-            EntityDocumentProgress progress = new EntityDocumentProgress();
-            progress.setDocument(doc);
-            if(doc.getEntityDocumentState().getId() == 3)
-                progress.setCompleted(true);
-            if(doc.getEntityDocumentState().getId() == 5)
-                progress.setApproved(true);
-            if(doc.getEntityDocumentState().getId() == 6)
-                progress.setRegistered(true);
-            progress.calculateProgress();
-            progressList.add(progress);
-        }
-
-        model.addAttribute("progressList", progressList);
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String jsonDocuments = gson.toJson(getDocumentsByPackageId(dpId));
+        model.addAttribute("entityDocuments", jsonDocuments);
         
         model.addAttribute("orderId", orderId);
 		model.addAttribute("order", orderService.getById(orderId));
@@ -132,6 +98,7 @@ public class DocumentPackageController {
         model.addAttribute("entityId", entityId);
 		model.addAttribute("entity", entityService.getById(entityId));
         model.addAttribute("dpId", dpId);
+
         List<EntityDocumentRegisteredBy> rBs = edRBService.list();
         model.addAttribute("rBs", rBs);
         
@@ -192,9 +159,17 @@ public class DocumentPackageController {
 		}
 
 		else
+		{
+			DocumentPackage tDp = dpService.getById(dp.getId());
+			dp.setDocumentPackageState(tDp.getDocumentPackageState());
+			dp.setCompletedDate(tDp.getCompletedDate());
+			dp.setCompletedRatio(tDp.getCompletedRatio());
+			dp.setApprovedDate(tDp.getApprovedDate());
+			dp.setApprovedRatio(tDp.getApprovedRatio());
+			dp.setRegisteredRatio(tDp.getRegisteredRatio());
 			dpService.update(dp);
-			
-		
+		}
+
 		return "redirect:" + "/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/view";
 	}
 	
@@ -290,5 +265,52 @@ public class DocumentPackageController {
 			dpTypeService.remove(dpTypeService.getById(id));
 		return "redirect:" + "/manage/order/entitylist/entity/documentpackage/type/list";
     }
+
+	private List<EntityDocumentModel> getDocumentsByPackageId(long packageId)
+	{
+		String baseQuery = "SELECT doc.id,\n" +
+				"  doc.name as docName,\n" +
+				"  pck.name as packageName,\n" +
+				"  tp.name as typeName,\n" +
+				"  owner.name as ownerName,\n" +
+				"  owner.id as ownerId,\n" +
+				"  address.district_id as districtId,\n" +
+				"  district.name as districtName,\n" +
+				"  st.id as statusId,\n" +
+				"  st.name as statusName,\n" +
+				"  CASE\n" +
+				"  WHEN st.id = 1 THEN 0\n" +
+				"  WHEN st.id = 3 THEN 33\n" +
+				"  WHEN st.id = 5 THEN  66\n" +
+				"  WHEN st.id = 6 THEN 100\n" +
+				"  END as progress,\n" +
+				"  doc.documentPackageId as packageId,\n" +
+				"  pck.appliedEntityId as entityId,\n" +
+				"  ent.appliedEntityListId as entityListId,\n" +
+				"  list.creditOrderId as orderId\n" +
+				"FROM entityDocument doc,\n" +
+				"  documentPackage pck,\n" +
+				"  orderDocumentType tp,\n" +
+				"  entityDocumentState st,\n" +
+				"  appliedEntity ent,\n" +
+				"  appliedEntityList list,\n" +
+				"  owner owner,\n" +
+				"  address address,\n" +
+				"  district district\n" +
+				"WHERE pck.id = doc.documentPackageId\n" +
+				"AND tp.id = doc.documentTypeId\n" +
+				"AND st.id = doc.entityDocumentStateId\n" +
+				"AND ent.id = pck.appliedEntityId\n" +
+				"AND list.id = ent.appliedEntityListId\n" +
+				"AND owner.id = ent.ownerId\n" +
+				"AND owner.addressId = address.id\n" +
+				"AND district.id = address.district_id\n" +
+				"AND doc.documentPackageId = " + packageId;
+
+		Query query = entityManager.createNativeQuery(baseQuery, EntityDocumentModel.class);
+
+		List<EntityDocumentModel> documents = query.getResultList();
+		return documents;
+	}
 
 }
