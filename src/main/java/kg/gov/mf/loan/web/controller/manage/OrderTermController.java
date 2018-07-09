@@ -3,13 +3,11 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
-import kg.gov.mf.loan.manage.model.orderdocumentpackage.OrderDocumentPackage;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.manage.repository.orderterm.OrderTermRepository;
-import kg.gov.mf.loan.web.util.Pager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import kg.gov.mf.loan.web.fetchModels.AgreementTemplateModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -38,6 +36,10 @@ import kg.gov.mf.loan.manage.service.orderterm.OrderTermRatePeriodService;
 import kg.gov.mf.loan.manage.service.orderterm.OrderTermService;
 import kg.gov.mf.loan.manage.service.orderterm.OrderTermTransactionOrderService;
 import kg.gov.mf.loan.web.util.Utils;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 @Controller
 public class OrderTermController {
@@ -75,41 +77,15 @@ public class OrderTermController {
 	@Autowired
 	OrderTermRepository orderTermRepository;
 
-	private static final int BUTTONS_TO_SHOW = 5;
-	private static final int INITIAL_PAGE = 0;
-	private static final int INITIAL_PAGE_SIZE = 10;
-	private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
-	
-	static final Logger loggerOrderTerm = LoggerFactory.getLogger(OrderTerm.class);
-	
+	/** The entity manager. */
+	@PersistenceContext
+	private EntityManager entityManager;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
 		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
 	    binder.registerCustomEditor(Date.class, editor);
-	}
-
-	@RequestMapping(value = {"/manage/order/orderterm/list" }, method = RequestMethod.GET)
-	public String listTerms(@RequestParam("pageSize") Optional<Integer> pageSize,
-						   @RequestParam("page") Optional<Integer> page, ModelMap model) {
-
-		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
-		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
-
-		List<OrderTerm> terms = orderTermService.listByParam("id", evalPage*evalPageSize, evalPageSize);
-		int count = orderTermService.count();
-
-		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
-
-		model.addAttribute("count", count/evalPageSize+1);
-		model.addAttribute("terms", terms);
-		model.addAttribute("selectedPageSize", evalPageSize);
-		model.addAttribute("pageSizes", PAGE_SIZES);
-		model.addAttribute("pager", pager);
-		model.addAttribute("current", evalPage);
-
-		model.addAttribute("loggedinuser", Utils.getPrincipal());
-		return "/manage/order/orderterm/list";
 	}
 	
 	@RequestMapping(value = { "/manage/order/{orderId}/orderterm/{termId}/view"})
@@ -117,10 +93,13 @@ public class OrderTermController {
 
 		OrderTerm term = orderTermService.getById(termId);
 		model.addAttribute("term", term);
-		
-        model.addAttribute("templates", term.getAgreementTemplates());
+
+		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+		String jsonTemplates = gson.toJson(getTemplatesByTermId(termId));
+		model.addAttribute("templates", jsonTemplates);
 		
         model.addAttribute("orderId", orderId);
+		model.addAttribute("order", orderService.getById(orderId));
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "/manage/order/orderterm/view";
@@ -138,8 +117,10 @@ public class OrderTermController {
 		{
 			model.addAttribute("term", orderTermService.getById(termId));
 		}
+
 		model.addAttribute("orderId", orderId);
-		
+		model.addAttribute("order", orderService.getById(orderId));
+
 		List<OrderTermFund> funds = fundService.list();
         model.addAttribute("funds", funds);
         
@@ -576,4 +557,23 @@ public class OrderTermController {
 		return "redirect:" + "/manage/order/orderterm/accrmethod/list";
     }
 	//END - ORDER TERM FLOATING ACCR METHOD
+
+	private List<AgreementTemplateModel> getTemplatesByTermId(long termId)
+	{
+		String baseQuery = "SELECT tmp.id,\n" +
+				"  tmp.name,\n" +
+				"  tmp.createdBy,\n" +
+				"  tmp.createdDate,\n" +
+				"  tmp.createdDescription,\n" +
+				"  tmp.approvedBy,\n" +
+				"  tmp.approvedDate,\n" +
+				"  tmp.approvedDescription\n" +
+				"FROM agreementTemplate tmp\n" +
+				"WHERE tmp.orderTermId = " + termId;
+
+		Query query = entityManager.createNativeQuery(baseQuery, AgreementTemplateModel.class);
+
+		List<AgreementTemplateModel> templates = query.getResultList();
+		return templates;
+	}
 }

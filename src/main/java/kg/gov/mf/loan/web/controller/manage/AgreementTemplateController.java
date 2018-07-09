@@ -3,6 +3,8 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import kg.gov.mf.loan.manage.repository.orderterm.AgreementTemplateRepository;
+import kg.gov.mf.loan.manage.service.order.CreditOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -26,6 +28,12 @@ public class AgreementTemplateController {
 	
 	@Autowired
 	AgreementTemplateService templateService;
+
+	@Autowired
+	CreditOrderService orderService;
+
+	@Autowired
+	AgreementTemplateRepository templateRepository;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -48,7 +56,9 @@ public class AgreementTemplateController {
 			model.addAttribute("template", templateService.getById(templateId));
 		}
 		model.addAttribute("orderId", orderId);
+		model.addAttribute("order", orderService.getById(orderId));
 		model.addAttribute("termId", termId);
+		model.addAttribute("term", termService.getById(termId));
 			
 		return "/manage/order/orderterm/agreementtemplate/save";
 	}
@@ -72,10 +82,10 @@ public class AgreementTemplateController {
 		return "redirect:" + "/manage/order/{orderId}/orderterm/{termId}/view";
 	}
 	
-	@RequestMapping(value="/manage/order/{orderId}/orderterm/{termId}/agreementtemplate/delete", method=RequestMethod.POST)
-    public String deleteOrderDocument(long id, @PathVariable("orderId")Long orderId, @PathVariable("termId")Long termId) {
-		if(id > 0) {
-			templateService.remove(templateService.getById(id));
+	@RequestMapping(value="/manage/order/{orderId}/orderterm/{termId}/agreementtemplate/{templateId}/delete", method=RequestMethod.GET)
+    public String deleteOrderDocument(@PathVariable("orderId")Long orderId, @PathVariable("termId")Long termId,  @PathVariable("templateId")Long templateId) {
+		if(templateId > 0) {
+			templateRepository.delete(templateRepository.findOne(templateId));
 		}
 			
 		return "redirect:" + "/manage/order/{orderId}/orderterm/{termId}/view";
