@@ -122,7 +122,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="createdDate" th:value="${template.createdDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="createdDate" th:value="${#dates.format(template.createdDate,'dd.MM.yyyy')}" />
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -157,7 +157,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="approvedDate" th:value="${template.approvedDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="approvedDate" th:value="${#dates.format(template.approvedDate,'dd.MM.yyyy')}" />
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
