@@ -86,6 +86,8 @@ public class EntityDocumentController {
 	public String listEntityDocuments(ModelMap model) {
 
 		model.addAttribute("districts", districtService.findAll());
+		model.addAttribute("orders", orderService.list());
+
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
 		return "/manage/order/entityDocumentList";
 	}

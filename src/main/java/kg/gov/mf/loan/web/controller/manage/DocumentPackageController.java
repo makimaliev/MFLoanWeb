@@ -287,7 +287,8 @@ public class DocumentPackageController {
 				"  doc.documentPackageId as packageId,\n" +
 				"  pck.appliedEntityId as entityId,\n" +
 				"  ent.appliedEntityListId as entityListId,\n" +
-				"  list.creditOrderId as orderId\n" +
+				"  list.creditOrderId as orderId,\n" +
+				"  cOrder.regNumber as orderNumber\n" +
 				"FROM entityDocument doc,\n" +
 				"  documentPackage pck,\n" +
 				"  orderDocumentType tp,\n" +
@@ -296,7 +297,8 @@ public class DocumentPackageController {
 				"  appliedEntityList list,\n" +
 				"  owner owner,\n" +
 				"  address address,\n" +
-				"  district district\n" +
+				"  district district,\n" +
+				"  creditOrder cOrder\n" +
 				"WHERE pck.id = doc.documentPackageId\n" +
 				"AND tp.id = doc.documentTypeId\n" +
 				"AND st.id = doc.entityDocumentStateId\n" +
@@ -305,6 +307,7 @@ public class DocumentPackageController {
 				"AND owner.id = ent.ownerId\n" +
 				"AND owner.addressId = address.id\n" +
 				"AND district.id = address.district_id\n" +
+				"AND cOrder.id = list.creditOrderId\n" +
 				"AND doc.documentPackageId = " + packageId;
 
 		Query query = entityManager.createNativeQuery(baseQuery, EntityDocumentModel.class);

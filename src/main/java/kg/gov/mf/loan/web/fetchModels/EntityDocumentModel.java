@@ -22,6 +22,7 @@ public class EntityDocumentModel {
     private long entityId;
     private long entityListId;
     private long orderId;
+    private String orderNumber;
 
     public Long getId() {
         return id;
@@ -141,5 +142,13 @@ public class EntityDocumentModel {
 
     public void setDistrictName(String districtName) {
         this.districtName = districtName;
+    }
+
+    public String getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
     }
 }

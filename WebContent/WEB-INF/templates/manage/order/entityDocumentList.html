@@ -53,7 +53,7 @@
                         <!--begin: Search Form -->
                         <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                             <div class="row align-items-center">
-                                <div class="col-xl-8 order-2 order-xl-1">
+                                <div class="col-xl-12 order-2 order-xl-1">
                                     <div class="form-group m-form__group row align-items-center">
 
                                         <!--
@@ -74,7 +74,7 @@
 
                                         <div class="col-md-4">
                                             <div class="m-input-icon m-input-icon--left">
-                                                <input type="text" class="form-control m-input m-input--solid" placeholder="Владелец..." id="m_form_search">
+                                                <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search">
                                                 <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -233,21 +233,32 @@
                 },  {
                     field: "id",
                     title: "#",
-                    sortable: 'asc',
-                    width: 50,
-                    textAlign: 'center'
-                }, /*{
+                    sortable: 'desc',
+                    responsive: {hidden: 'xl'},
+                }, {
                     field: "ownerName",
-                    title: "ownerName"
+                    title: "Получатель"
                 }, {
-                    field: "districtName",
-                    title: "districtName"
-                }, {
-                    field: "ownerId",
-                    title: "ownerId"
-                }, */{
                     field: "docName",
                     title: "Наименование"
+                }, {
+                    field: "statusName",
+                    title: "Статус"
+                },{
+                    field: "progress",
+                    title: "Прогресс",
+                    template: function (row) {
+                        return row.progress + '%';
+                    }
+                }, {
+                    field: "districtName",
+                    title: "Район"
+                },{
+                    field: "orderNumber",
+                    title: "Решение"
+                } /*{
+                    field: "ownerId",
+                    title: "ownerId"
                 }, {
                     field: "packageName",
                     title: "Пакет",
@@ -255,17 +266,8 @@
                 }, {
                     field: "typeName",
                     title: "Вид"
-                }, {
-                    field: "statusName",
-                    title: "Статус"
-                },
-                    {
-                        field: "progress",
-                        title: "Прогресс",
-                        template: function (row) {
-                            return row.progress + '%';
-                        }
-                    }],
+                }, */
+                    ],
                 translate: {
                     records: {
                         processing: 'Подождите пожалуйста...',
