@@ -33,9 +33,8 @@ public class RestEntityDocumentController {
                 "  st.name as statusName,\n" +
                 "  CASE\n" +
                 "  WHEN st.id = 1 THEN 0\n" +
-                "  WHEN st.id = 3 THEN 33\n" +
-                "  WHEN st.id = 5 THEN  66\n" +
-                "  WHEN st.id = 6 THEN 100\n" +
+                "  WHEN st.id = 3 THEN 50\n" +
+                "  WHEN st.id = 4 THEN  100\n" +
                 "  END as progress,\n" +
                 "  doc.documentPackageId as packageId,\n" +
                 "  pck.appliedEntityId as entityId,\n" +

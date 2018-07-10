@@ -78,13 +78,13 @@ var DatatableDataLocalEntityPackages = function () {
                 template: function (row) {
                     return  row.approvedRatio + ' %';
                 }
-            }, {
+            }, /*{
                 field: "registeredRatio",
                 title: "Доля регистрации",
                 template: function (row) {
                     return  row.registeredRatio + ' %';
                 }
-            }, {
+            },*/ {
                 field: "stateName",
                 title: "Статус"
             }, {

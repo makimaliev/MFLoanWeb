@@ -205,7 +205,7 @@ public class EntityDocumentController {
 			document.setApprovedBy(user.getId());
 			document.setApprovedDate(today);
 			document.setApprovedDescription(description);
-			document.setEntityDocumentState(edStateService.getById(5L));
+			document.setEntityDocumentState(edStateService.getById(4L));
 		}
 		else
 		{

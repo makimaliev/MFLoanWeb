@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <!-- begin::Head -->
 <head>
 	<title th:text="#{label.entityDocument.title}"></title>
@@ -39,19 +39,25 @@
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
-												<h3 class="m-widget1__title">ID</h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${ed.id}"></span>
+												<h3 class="m-widget1__title" th:text="#{label.entityDocument.name}"></h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${ed.name}"></span>
 											</div>
 										</div>
 									</div>
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.entityDocument.name}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${ed.name}"></span>
+												<h3 class="m-widget1__title" th:text="#{label.entityDocument.state}"></h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${ed.entityDocumentState?.name}"></span>
 											</div>
 										</div>
 									</div>
+								</div>
+								<!--end:: Widgets/Stats2-1 -->
+							</div>
+							<div class="col-md-12 col-lg-12 col-xl-4">
+								<!--begin:: Widgets/Stats2-2 -->
+								<div class="m-widget1">
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
@@ -76,11 +82,21 @@
 											</div>
 										</div>
 									</div>
+									<!--
+									<div class="m-widget1__item">
+										<div class="row m-row--no-padding align-items-center">
+											<div class="col">
+												<h3 class="m-widget1__title" th:text="#{label.entityDocument.registeredNumber}"></h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${ed.registeredNumber}"></span>
+											</div>
+										</div>
+									</div>
+									-->
 								</div>
-								<!--end:: Widgets/Stats2-1 -->
+								<!--begin:: Widgets/Stats2-2 -->
 							</div>
 							<div class="col-md-12 col-lg-12 col-xl-4">
-								<!--begin:: Widgets/Stats2-2 -->
+								<!--begin:: Widgets/Stats2-3 -->
 								<div class="m-widget1">
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
@@ -106,20 +122,15 @@
 											</div>
 										</div>
 									</div>
-									<div class="m-widget1__item">
+									<div class="m-widget1__item" sec:authorize="hasRole('ADMIN')">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.entityDocument.registeredNumber}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${ed.registeredNumber}"></span>
+												<h3 class="m-widget1__title">ID</h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${ed.id}"></span>
 											</div>
 										</div>
 									</div>
-								</div>
-								<!--begin:: Widgets/Stats2-2 -->
-							</div>
-							<div class="col-md-12 col-lg-12 col-xl-4">
-								<!--begin:: Widgets/Stats2-3 -->
-								<div class="m-widget1">
+									<!--
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
@@ -144,14 +155,7 @@
 											</div>
 										</div>
 									</div>
-									<div class="m-widget1__item">
-										<div class="row m-row--no-padding align-items-center">
-											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.entityDocument.state}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${ed.entityDocumentState?.name}"></span>
-											</div>
-										</div>
-									</div>
+									-->
 								</div>
 								<!--begin:: Widgets/Stats2-3 -->
 							</div>
