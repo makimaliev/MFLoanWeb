@@ -70,13 +70,13 @@ var DatatableDataLocalEntityPackages = function () {
                 field: "completedRatio",
                 title: "Доля комплектации",
                 template: function (row) {
-                    return  row.completedRatio + ' %';
+                    return  row.completedRatio*100 + ' %';
                 }
             }, {
                 field: "approvedRatio",
                 title: "Доля подтверждения",
                 template: function (row) {
-                    return  row.approvedRatio + ' %';
+                    return  row.approvedRatio*100 + ' %';
                 }
             }, /*{
                 field: "registeredRatio",

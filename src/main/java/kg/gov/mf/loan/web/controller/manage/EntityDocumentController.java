@@ -244,10 +244,12 @@ public class EntityDocumentController {
 			dp.setDocumentPackageState(dpStateService.getById(3L));
 
 		if(dp.getApprovedRatio() == 1.0)
-			dp.setDocumentPackageState(dpStateService.getById(5L));
+			dp.setDocumentPackageState(dpStateService.getById(4L));
 
+		/*
 		if(dp.getRegisteredRatio() == 1.0)
 			dp.setDocumentPackageState(dpStateService.getById(6L));
+			*/
 
 		dpService.update(dp);
 
