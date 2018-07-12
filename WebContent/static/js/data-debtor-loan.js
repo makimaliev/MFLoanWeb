@@ -13,7 +13,7 @@ var DatatableDataLocalLoans = function () {
 			data: {
 				type: 'local',
 				source: dataJSONArray,
-				pageSize: 10
+				pageSize: 5
 			},
 
 			// layout definition
@@ -31,7 +31,7 @@ var DatatableDataLocalLoans = function () {
 			// column based filtering(refer to Kendo UI)
 			filterable: false,
 
-			pagination: false,
+			pagination: true,
 
 			// inline and bactch editing(cooming soon)
 			// editable: false,
@@ -60,23 +60,54 @@ var DatatableDataLocalLoans = function () {
             }, {
 				field: "regNumber",
                 sortable: 'asc',
+                width: 450,
 				title: "Регистрационный номер",
-				responsive: {visible: 'lg'}
+                template: function (row) {
+				    var result = '';
+
+				    if(row.regNumber.length <= 60)
+				        result = row.regNumber;
+				    else {
+				        result = row.regNumber.substr(0, 60);
+				        result = result + '...';
+                    }
+
+                    return result;
+                }
 			},{
                 field: "regDate",
-                title: "Дата регистрации"
+                title: "Дата регистрации",
+                width: 100
             }, {
                 field: "amount",
-                title: "Сумма по договору"
+                title: "Сумма по договору",
+                width: 120,
+                template: function (row) {
+                    return (row.amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                }
             },{
                 field: "currencyName",
-                title: "Валюта"
+                title: "Валюта",
+                width: 70
             }, {
                 field: "loanTypeName",
-                title: "Вид"
+                title: "Вид",
+                width: 180
             }, {
                 field: "loanStateName",
-                title: "Статус"
+                title: "Статус",
+                template: function (row) {
+                    var status = {
+                        1: {'class': ' m-badge--warning'},
+                        2: {'class': ' '},
+                        3: {'class': ' m-badge--danger'},
+                        4: {'class': ' m-badge--success'}
+                    };
+
+                    console.log(row.loanStateId)
+                    console.log( status[row.loanStateId].class)
+                    return '<span class="m-badge ' + status[row.loanStateId].class + ' m-badge--wide">' + row.loanStateName + '</span>';
+                }
             }, {
                 field: "action",
                 width: 110,
@@ -112,6 +143,16 @@ var DatatableDataLocalLoans = function () {
                             },
                             info: 'Отображение {{start}} - {{end}} из {{total}} записей'
                         }
+                    }
+                }
+            },
+
+            toolbar: {
+                items: {
+                    // pagination
+                    pagination: {
+                        // page size select
+                        pageSizeSelect: [5, 10, 20, 50, 100]
                     }
                 }
             }
