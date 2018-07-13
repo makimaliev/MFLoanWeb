@@ -71,6 +71,21 @@
 			</div>
 		</div>
 
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg-4 col-sm-12">
+				<span th:text="#{label.reportTemplate.outputParameters}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<select id="reportTemplate.outputParameters" name="reportTemplateOutputParametersIds" class="form-control m-bootstrap-select m_selectpicker" multiple th:title="#{label.select}">
+					<option th:each="outputParameterInList : ${outputParameterList}"
+							th:value="${outputParameterInList.id}"
+							th:text="${outputParameterInList.name}"
+							th:selected="${reportTemplateOutputParameters.contains(outputParameterInList)}"></option>
+				</select>
+			</div>
+		</div>
+
 	</div>
 	<div class="modal-footer">
 		<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.orgForm.button.cancel}"></button>

@@ -809,6 +809,16 @@
                                 </span>
                             </a>
                         </li>
+                        <li sec:authorize="hasRole('ADMIN')" class="m-menu__item " aria-haspopup="true" >
+                            <a th:href="@{/outputParameter/list/}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">
+                                    Параметры страницы
+                                </span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </li>

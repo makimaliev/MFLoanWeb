@@ -214,7 +214,7 @@ public class PersonController {
 		Person person = this.personService.findById(id);
 
 		model.addAttribute("person", person);
-		model.addAttribute("positionList", this.positionService.findAll());
+//		model.addAttribute("positionList", this.positionService.findAll());
 		model.addAttribute("informationList", this.informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2, person.getId()));		
 		
 
@@ -227,7 +227,7 @@ public class PersonController {
 		Person person = this.personService.findById(id);
 
 		model.addAttribute("person", person);
-		model.addAttribute("positionList", this.positionService.findAll());
+//		model.addAttribute("positionList", this.positionService.findAll());
 		model.addAttribute("informationList", this.informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2, person.getId()));
 
 
