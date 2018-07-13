@@ -8,10 +8,12 @@ import com.google.gson.GsonBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import kg.gov.mf.loan.admin.org.service.DistrictService;
 import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
+import kg.gov.mf.loan.manage.model.collateral.CollateralItem;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
 import kg.gov.mf.loan.manage.model.collection.CollectionProcedure;
 import kg.gov.mf.loan.manage.model.debtor.*;
 import kg.gov.mf.loan.manage.model.loan.Loan;
+import kg.gov.mf.loan.manage.repository.collateral.CollateralItemReposiory;
 import kg.gov.mf.loan.manage.repository.debtor.DebtorRepository;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
@@ -111,6 +113,9 @@ public class DebtorController {
 
 	@Autowired
 	LoanRepository loanRepository;
+
+	@Autowired
+	CollateralItemReposiory collateralItemReposiory;
 
 	/** The entity manager. */
 	@PersistenceContext
@@ -403,43 +408,49 @@ public class DebtorController {
 
 	private List<CollateralAgreementModel> getCollAgreementsByDebtorId(long debtorId)
 	{
-		String baseQuery = "SELECT agr.id as id,\n" +
-				"  agr.agreementNumber as agreementNumber,\n" +
-				"  agr.agreementDate as agreementDate,\n" +
-				"  agr.collateralOfficeRegNumber as collateralOfficeRegNumber,\n" +
-				"  agr.collateralOfficeRegDate as collateralOfficeRegDate,\n" +
-				"  agr.notaryOfficeRegNumber as notaryOfficeRegNumber,\n" +
-				"  agr.notaryOfficeRegDate as notaryOfficeRegDate,\n" +
-				"  agr.arrestRegNumber as arrestRegNumber,\n" +
-				"  agr.arrestRegDate as arrestRegDate,\n" +
-				"  agr.ownerId as ownerId,\n" +
-				"  item.id as itemId,\n" +
-				"  item.name AS itemName,\n" +
-				"  item.description AS itemDescription,\n" +
-				"  item.itemTypeId as itemTypeId,\n" +
-				"  type.name as itemTypeName,\n" +
-				"  item.quantity as quantity,\n" +
-				"  item.quantityTypeId as quantityTypeId,\n" +
-				"  qType.name as quantityTypeName,\n" +
-				"  item.collateralValue as collateralValue\n" +
-				"FROM collateralAgreement agr,\n" +
-				"loanCollateralAgreement loanAgr,\n" +
-				"loan loan,\n" +
-				"collateralItem item,\n" +
-				"collateralItemType type,\n" +
-				"collateralQuantityType qType\n" +
-				"WHERE agr.id = loanAgr.collateralAgreementId\n" +
-				"AND loan.id = loanAgr.loanId\n" +
-				"AND item.collateralAgreementId = agr.id\n" +
-				"AND item.itemTypeId = type.id\n" +
-				"AND item.quantityTypeId = qType.id\n" +
-				"AND loan.debtorId =" + debtorId + "\n" +
-				"GROUP BY item.id";
+	    Map<Long, CollateralAgreementModel> models = new HashMap<>();
+	    Debtor debtor = debtorService.getById(debtorId);
+	    for (Loan loan: debtor.getLoans())
+        {
+            Set<CollateralAgreement> agreements = loan.getCollateralAgreements();
+            for(CollateralAgreement agreement: agreements)
+            {
+                List<CollateralItem> items = collateralItemReposiory.findByCollateralAgreementId(agreement.getId());
+                for(CollateralItem item: items)
+                {
+                    CollateralAgreementModel model = new CollateralAgreementModel();
+                    model.setId(agreement.getId());
+                    model.setAgreementNumber(agreement.getAgreementNumber());
+                    model.setAgreementDate(agreement.getAgreementDate());
+                    model.setCollateralOfficeRegNumber(agreement.getCollateralOfficeRegNumber());
+                    model.setCollateralOfficeRegDate(agreement.getCollateralOfficeRegDate());
+                    model.setNotaryOfficeRegNumber(agreement.getNotaryOfficeRegNumber());
+                    model.setNotaryOfficeRegDate(agreement.getNotaryOfficeRegDate());
+                    model.setArrestRegNumber(agreement.getArrestRegNumber());
+                    model.setArrestRegDate(agreement.getArrestRegDate());
+                    model.setOwnerId(agreement.getOwner().getId());
+                    model.setItemId(item.getId());
+                    model.setItemName(item.getName());
+                    model.setItemDescription(item.getDescription());
+                    model.setItemTypeId(item.getItemType().getId());
+                    model.setItemTypeName(item.getItemType().getName());
+                    model.setQuantity(item.getQuantity());
+                    model.setQuantityTypeId(item.getQuantityType().getId());
+                    model.setQuantityTypeName(item.getQuantityType().getName());
+                    model.setCollateralValue(item.getCollateralValue());
 
-		Query query = entityManager.createNativeQuery(baseQuery, CollateralAgreementModel.class);
+                    if(!models.containsKey(model.getItemId()))
+                        models.put(model.getItemId(), model);
+                }
 
-		List<CollateralAgreementModel> agreements = query.getResultList();
-		return agreements;
+            }
+        }
+
+        List<CollateralAgreementModel> result = new ArrayList<>();
+        for(CollateralAgreementModel model: models.values())
+            result.add(model);
+        return result;
+
 	}
 
 }
