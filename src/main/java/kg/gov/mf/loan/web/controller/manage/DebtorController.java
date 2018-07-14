@@ -401,7 +401,8 @@ public class DebtorController {
 				"WHERE loan.currencyId = currency.id\n" +
 				"  AND loan.loanTypeId = type.id\n" +
 				"  AND loan.loanStateId = state.id\n" +
-				"  AND loan.debtorId =" + debtorId;
+				"  AND loan.debtorId =" + debtorId + "\n" +
+                "ORDER BY  loan.regDate DESC";
 
 		Query query = entityManager.createNativeQuery(baseQuery, LoanModel.class);
 
@@ -452,6 +453,8 @@ public class DebtorController {
         List<CollateralAgreementModel> result = new ArrayList<>();
         for(CollateralAgreementModel model: models.values())
             result.add(model);
+
+        Collections.sort(result);
         return result;
 
 	}
@@ -506,6 +509,8 @@ public class DebtorController {
         List<CollectionProcedureModel> result = new ArrayList<>();
         for(CollectionProcedureModel model: models.values())
             result.add(model);
+
+        Collections.sort(result);
         return result;
 	}
 

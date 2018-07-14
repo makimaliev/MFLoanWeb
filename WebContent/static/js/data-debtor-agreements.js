@@ -26,7 +26,7 @@ var DatatableDataLocalAgreements = function () {
 			},
 
 			// column sorting(refer to Kendo UI)
-			sortable: true,
+			sortable: false,
 
 			// column based filtering(refer to Kendo UI)
 			filterable: false,
@@ -46,7 +46,6 @@ var DatatableDataLocalAgreements = function () {
                 width: 80,
                 textAlign: 'center',
                 title: "Просмотр",
-                sortable: false,
                 selector: false,
                 overflow: 'visible',
                 template: function (row) {
@@ -57,7 +56,6 @@ var DatatableDataLocalAgreements = function () {
             }, {
 				field: "agreementNumber",
 				title: "Номер",
-                sortable: 'desc',
                 template: function (row) {
 				    var agrNum = row.agreementNumber;
 				    if (agrNum == null || agrNum == '')

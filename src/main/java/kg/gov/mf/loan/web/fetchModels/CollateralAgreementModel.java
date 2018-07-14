@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import java.util.Date;
 
 @Entity
-public class CollateralAgreementModel {
+public class CollateralAgreementModel implements Comparable<CollateralAgreementModel> {
 
     @Id
     private Long id;
@@ -46,6 +46,12 @@ public class CollateralAgreementModel {
     private long quantityTypeId;
     private String quantityTypeName;
     private Double collateralValue;
+
+    @Override
+    public int compareTo(CollateralAgreementModel model)
+    {
+        return model.agreementDate.compareTo(this.agreementDate);
+    }
 
     public Long getId() {
         return id;

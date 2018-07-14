@@ -26,7 +26,7 @@ var DatatableDataLocalLoans = function () {
 			},
 
 			// column sorting(refer to Kendo UI)
-			sortable: true,
+			sortable: false,
 
 			// column based filtering(refer to Kendo UI)
 			filterable: false,
@@ -40,7 +40,6 @@ var DatatableDataLocalLoans = function () {
 			columns: [{
                 field: "id",
                 title: "#",
-                sortable: false, // disable sort for this column
                 width: 40,
                 textAlign: 'center',
                 selector: {class: 'm-checkbox--solid m-checkbox--brand'}
@@ -49,7 +48,6 @@ var DatatableDataLocalLoans = function () {
                 width: 80,
                 textAlign: 'center',
                 title: "Просмотр",
-                sortable: false,
                 selector: false,
                 overflow: 'visible',
                 template: function (row) {
@@ -59,7 +57,6 @@ var DatatableDataLocalLoans = function () {
                 }
             }, {
 				field: "regNumber",
-                sortable: 'asc',
                 width: 450,
 				title: "Регистрационный номер",
                 template: function (row) {

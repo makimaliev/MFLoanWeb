@@ -26,7 +26,7 @@ var DatatableDataLocalProcs = function () {
 			},
 
 			// column sorting(refer to Kendo UI)
-			sortable: true,
+			sortable: false,
 
 			// column based filtering(refer to Kendo UI)
 			filterable: false,
@@ -46,8 +46,6 @@ var DatatableDataLocalProcs = function () {
                 width: 80,
                 textAlign: 'center',
                 title: "Просмотр",
-                sortable: false,
-                selector: false,
                 overflow: 'visible',
                 template: function (row) {
                     return '\
