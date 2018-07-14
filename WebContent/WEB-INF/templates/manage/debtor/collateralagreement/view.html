@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <!-- begin::Head -->
 <head>
 	<title th:text="${'Договор залога: ' + agreement.agreementNumber}"></title>
@@ -85,33 +85,11 @@
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
-												<h3 class="m-widget1__title">ID</h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${agreement.id}"></span>
-											</div>
-										</div>
-									</div>
-									<div class="m-widget1__item">
-										<div class="row m-row--no-padding align-items-center">
-											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.agreement.number}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${agreement.agreementNumber}"></span>
-											</div>
-										</div>
-									</div>
-									<div class="m-widget1__item">
-										<div class="row m-row--no-padding align-items-center">
-											<div class="col">
 												<h3 class="m-widget1__title" th:text="#{label.agreement.date}"></h3>
 												<span class="m-widget1__desc m--font-brand" th:text="${agreement.agreementDate}"></span>
 											</div>
 										</div>
 									</div>
-								</div>
-								<!--end:: Widgets/Stats2-1 -->
-							</div>
-							<div class="col-md-12 col-lg-12 col-xl-4">
-								<!--begin:: Widgets/Stats2-2 -->
-								<div class="m-widget1">
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
@@ -128,11 +106,25 @@
 											</div>
 										</div>
 									</div>
+								</div>
+								<!--end:: Widgets/Stats2-1 -->
+							</div>
+							<div class="col-md-12 col-lg-12 col-xl-4">
+								<!--begin:: Widgets/Stats2-2 -->
+								<div class="m-widget1">
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
 												<h3 class="m-widget1__title" th:text="#{label.agreement.notaryOfficeRegNumber}"></h3>
 												<span class="m-widget1__desc m--font-brand" th:text="${agreement.notaryOfficeRegNumber}"></span>
+											</div>
+										</div>
+									</div>
+									<div class="m-widget1__item">
+										<div class="row m-row--no-padding align-items-center">
+											<div class="col">
+												<h3 class="m-widget1__title" th:text="#{label.agreement.notaryOfficeRegDate}"></h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${agreement.notaryOfficeRegDate}"></span>
 											</div>
 										</div>
 									</div>
@@ -142,14 +134,6 @@
 							<div class="col-md-12 col-lg-12 col-xl-4">
 								<!--begin:: Widgets/Stats2-3 -->
 								<div class="m-widget1">
-									<div class="m-widget1__item">
-										<div class="row m-row--no-padding align-items-center">
-											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.agreement.notaryOfficeRegDate}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${agreement.notaryOfficeRegDate}"></span>
-											</div>
-										</div>
-									</div>
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
@@ -166,6 +150,14 @@
 											</div>
 										</div>
 									</div>
+									<div class="m-widget1__item" sec:authorize="hasRole('ADMIN')">
+										<div class="row m-row--no-padding align-items-center">
+											<div class="col">
+												<h3 class="m-widget1__title">ID</h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${agreement.id}"></span>
+											</div>
+										</div>
+									</div>
 								</div>
 								<!--begin:: Widgets/Stats2-3 -->
 							</div>
@@ -178,78 +170,41 @@
 				<div class="m-portlet m-portlet--mobile">
 					<div class="m-portlet__body">
 
-						<div class="m-section">
-							<div class="m-section__content">
-								<a th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.agreement.addItem}"></a>
-							</div>
-						</div>
+                        <!--begin: Search Form -->
+                        <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                            <div class="row align-items-center">
+                                <div class="col-xl-9 order-1 order-xl-1">
+                                    <div class="form-group m-form__group row align-items-center">
+                                        <div class="col-lg-6">
+                                            <div class="m-input-icon m-input-icon--left">
+                                                <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search1">
+                                                <span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-						<!--begin::Section-->
-						<div class="m-section">
-							<div class="m-section__content">
-								<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
-									<div>
-										<table class="table">
-											<thead class="thead-default">
-											<tr>
-												<th class="table-id">Id</th>
-												<th th:text="#{label.agreementItem.name}"></th>
-												<th th:text="#{label.agreementItem.description}"></th>
-												<th th:text="#{label.agreementItem.itemType}"></th>
-												<th th:text="#{label.agreementItem.quantity}"></th>
-												<th th:text="#{label.agreementItem.quantityType}"></th>
-												<th th:text="#{label.agreementItem.collateralValue}"></th>
-												<th th:text="#{label.agreementItem.estimatedValue}"></th>
-												<th th:text="#{label.agreementItem.conditionType}"></th>
-												<th>&nbsp;</th>
-											</tr>
-											</thead>
-											<tbody>
-											<tr th:each="item : ${items}">
-												<td class="table-id" th:text="${item.id}"></td>
-												<td th:text="${item.name}"></td>
-												<td th:text="${item.description}"></td>
-												<td th:text="${item.itemType.name}"></td>
-												<td th:text="${item.quantity}"></td>
-												<td th:text="${item.quantityType.name}"></td>
-												<td th:text="${item.collateralValue}"></td>
-												<td th:text="${item.estimatedValue}"></td>
-												<!--<td></td>-->
-												<td th:text="${item?.conditionType?.name}"></td>
-												<td class="table-actions text-right">
+                                <div class="col-xl-3 order-3 order-xl-3 m--align-right">
+                                    <a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreement.id}__/collateralitem/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span>
+													<i class="la la-plus"></i>
 													<span>
-														<div class="dropdown">
-															<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
-																<i class="la la-ellipsis-h"></i>
-															</a>
-															<div class="dropdown-menu dropdown-menu-right">
-																<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${item.id}__/view}">
-																	<span th:text="#{label.table.view}"></span>
-																</a>
-																<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${item.id}__/save}">
-																	<span th:text="#{label.table.edit}"></span>
-																</a>
-																<a class="dropdown-item" href="#">
-																	<span>
-																		<form th:action="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/delete}" method="post">
-																			<input hidden="true" type="text" id="id" name="id" th:value="${item.id}" />
-																			<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
-																		</form>
-																	</span>
-																</a>
-															</div>
-														</div>
+														Добавить предмет залога
 													</span>
-												</td>
-											</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!--end::Section-->
-
+												</span>
+                                    </a>
+                                    <div class="m-separator m-separator--dashed d-xl-none"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end: Search Form -->
+                        <!--begin: Datatable -->
+                        <div class="m_datatable" id="itemsTable"></div>
+                        <!--end: Datatable -->
 					</div>
 				</div>
 				<!--end::Portlet-->
@@ -265,6 +220,26 @@
 <!-- end:: Page -->
 
 <div th:replace="fragments/footer :: footer-js"/>
+
+<!--begin::Page Resources -->
+<script th:src="@{/js/data-debtor-agreement-items.js}" th:inline="javascript" type="text/javascript"></script>
+<!--end::Page Resources -->
+
+<div th:with="isAdmin = ${#authorization.expression('hasRole(''ADMIN'')')}">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var hasRoleAdmin = /*[[${isAdmin}]]*/ [];
+        /*]]>*/
+    </script>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var jsonItems = /*[[${items}]]*/ [];
+    var debtorId = /*[[${debtor.id}]]*/ [];
+    var agreementId = /*[[${agreement.id}]]*/ [];
+    /*]]>*/
+</script>
 
 </body>
 <!-- end::Body -->

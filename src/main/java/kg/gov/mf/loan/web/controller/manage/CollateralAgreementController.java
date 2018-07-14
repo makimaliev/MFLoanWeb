@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.manage.model.collateral.CollateralItem;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
+import kg.gov.mf.loan.web.fetchModels.CollateralItemModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -61,7 +65,11 @@ public class CollateralAgreementController {
 		
 		CollateralAgreement agreement = agreementService.getById(agreementId);
 		model.addAttribute("agreement", agreement);
-		model.addAttribute("items", agreement.getCollateralItems());
+
+		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+		String jsonItems = gson.toJson(getItemsByAgreementId(agreementId));
+		model.addAttribute("items", jsonItems);
+
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtorId", debtorId);
 		model.addAttribute("debtor", debtor);
@@ -130,6 +138,37 @@ public class CollateralAgreementController {
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/view";
     }
+
+	private List<CollateralItemModel> getItemsByAgreementId(long agreementId)
+	{
+		List<CollateralItemModel> result = new ArrayList<>();
+		CollateralAgreement agreement = agreementService.getById(agreementId);
+		for(CollateralItem item: agreement.getCollateralItems())
+		{
+			CollateralItemModel model = new CollateralItemModel();
+			model.setId(item.getId());
+			model.setName(item.getName());
+			model.setDescription(item.getDescription());
+			model.setItemTypeId(item.getItemType().getId());
+			model.setItemTypeName(item.getItemType().getName());
+			model.setQuantity(item.getQuantity());
+			model.setRisk_rate(item.getRisk_rate());
+			model.setDemand_rate(item.getDemand_rate());
+			model.setQuantityTypeId(item.getQuantityType().getId());
+			model.setQuantityTypeName(item.getQuantityType().getName());
+			model.setCollateralValue(item.getCollateralValue());
+			model.setEstimatedValue(item.getEstimatedValue());
+			if(item.getConditionType()!=null)
+            {
+                model.setConditionTypeId(item.getConditionType().getId());
+                model.setConditionTypeName(item.getConditionType().getName());
+            }
+
+			result.add(model);
+		}
+
+		return result;
+	}
 	
 	/*
 	@RequestMapping(value = { "/manage/collateral/{collateralId}/collateralagreement/{agreementId}/inspection/save"})
