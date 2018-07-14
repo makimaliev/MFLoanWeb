@@ -83,7 +83,7 @@ var DatatableDataLocalLoans = function () {
                 title: "Сумма по договору",
                 width: 120,
                 template: function (row) {
-                    return (row.amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                    return (row.amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
             },{
                 field: "currencyName",

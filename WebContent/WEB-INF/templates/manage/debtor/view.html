@@ -62,7 +62,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" id="debtorLink" th:text="${debtor.name + ' (' + debtor.owner.address.district.name + ')'}" onclick="gotoURL()" onMouseOver="this.style.cursor='pointer'"></h3>
+								<h3 class="m-portlet__head-text" id="debtorLink" th:text="${debtor.name}" onclick="gotoURL()" onMouseOver="this.style.cursor='pointer'"></h3>
 							</div>
 						</div>
 					</div>
@@ -264,79 +264,30 @@
 								<!--end: Datatable -->
 							</div>
 							<div class="tab-pane" id="procedureListOfDebtor" role="tabpanel">
-								<!--
-								<div class="m-section">
-									<div class="m-section__content">
-										<a th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.debtor.addProcedure}"></a>
-									</div>
-								</div>
-
-								<div class="m-section">
-									<div class="m-section__content">
-										<a th:href="@{/manage/debtor/__${debtorId}__/initializephase}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.debtor.initializePhase}"></a>
-									</div>
-								</div>
-								-->
-								<!--begin::Section-->
-								<div class="m-section">
-									<div class="m-section__content">
-										<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
-											<div>
-												<table class="table">
-													<thead class="thead-default">
-													<tr>
-														<th class="table-id" th:text="#{label.table.id}"></th>
-														<th th:text="#{label.procedure.table.startDate}"></th>
-														<th th:text="#{label.procedure.table.closeDate}"></th>
-														<th th:text="#{label.procedure.table.lastPhase}"></th>
-														<th th:text="#{label.procedure.table.lastStatusId}"></th>
-														<th th:text="#{label.procedure.table.status}"></th>
-														<th th:text="#{label.procedure.table.type}"></th>
-														<th>&nbsp;</th>
-													</tr>
-													</thead>
-													<tbody>
-													<tr th:each="proc : ${procs}">
-														<td class="table-id" th:text="${proc.id}"></td>
-														<td th:text="${proc.startDate}"></td>
-														<td th:text="${proc.closeDate}"></td>
-														<td th:text="${proc.lastPhase}"></td>
-														<td th:text="${proc.lastStatusId}"></td>
-														<td th:text="${proc.procedureStatus.name}"></td>
-														<td th:text="${proc.procedureType.name}"></td>
-														<td class="table-actions text-right">
+								<!--begin: Search Form -->
+								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+									<div class="row align-items-center">
+										<div class="col-xl-9 order-1 order-xl-1">
+											<div class="form-group m-form__group row align-items-center">
+												<div class="col-lg-6">
+													<div class="m-input-icon m-input-icon--left">
+														<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search2">
+														<span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
-																<div class="dropdown">
-																	<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
-																		<i class="la la-ellipsis-h"></i>
-																	</a>
-																	<div class="dropdown-menu dropdown-menu-right">
-																		<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${proc.id}__/view}">
-																			<span th:text="#{label.table.view}"></span>
-																		</a>
-																		<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${proc.id}__/save}">
-																			<span th:text="#{label.table.edit}"></span>
-																		</a>
-																		<a class="dropdown-item" href="#">
-																			<span>
-																				<form th:action="@{/manage/debtor/__${debtorId}__/collectionprocedure/delete}" method="post">
-																					<input hidden="true" type="text" id="id" name="id" th:value="${proc.id}" />
-																					<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
-																				</form>
-																			</span>
-																		</a>
-																	</div>
-																</div>
+																<i class="la la-search"></i>
 															</span>
-														</td>
-													</tr>
-													</tbody>
-												</table>
+														</span>
+													</div>
+												</div>
 											</div>
 										</div>
+
 									</div>
 								</div>
-								<!--end::Section-->
+								<!--end: Search Form -->
+								<!--begin: Datatable -->
+								<div class="m_datatable" id="procsTable"></div>
+								<!--end: Datatable -->
 							</div>
 						</div>
 					</div>
@@ -374,6 +325,7 @@
 <!--begin::Page Resources -->
 <script th:src="@{/js/data-debtor-loan.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-agreements.js}" th:inline="javascript" type="text/javascript"></script>
+<script th:src="@{/js/data-debtor-procs.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-phasedetails.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
 <!--end::Page Resources -->
@@ -390,6 +342,7 @@
     /*<![CDATA[*/
     var jsonLoans = /*[[${loans}]]*/ [];
     var jsonAgreements = /*[[${agreements}]]*/ [];
+    var jsonProcs = /*[[${procs}]]*/ [];
     var debtorId = /*[[${debtor.id}]]*/ [];
     var entityId = /*[[${debtor.owner.entityId}]]*/ [];
     var ownerType = /*[[${debtor.owner.ownerType}]]*/ [];

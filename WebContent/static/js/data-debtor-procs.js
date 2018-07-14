@@ -1,14 +1,14 @@
 //== Class definition
 
-var DatatableDataLocalAgreements = function () {
+var DatatableDataLocalProcs = function () {
 	//== Private functions
 
 	// demo initializer
 	var mainTableInit = function () {
 
-        var dataJSONArray = JSON.parse(jsonAgreements);
+        var dataJSONArray = JSON.parse(jsonProcs);
 
-		var datatable = $('#agreementsTable').mDatatable({
+		var datatable = $('#procsTable').mDatatable({
 			// datasource definition
 			data: {
 				type: 'local',
@@ -51,56 +51,40 @@ var DatatableDataLocalAgreements = function () {
                 overflow: 'visible',
                 template: function (row) {
                     return '\
-						<a href="/manage/debtor/'+ debtorId + '/collateralagreement/' + row.id + '/collateralitem/' + row.itemId + '/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
+						<a href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + row.id + '/collectionphase/' + row.phaseId + '/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
 					';
                 }
             }, {
-				field: "agreementNumber",
-				title: "Номер",
-                sortable: 'desc',
+				field: "procedureStatusName",
+				title: "Статус",
                 template: function (row) {
-				    var agrNum = row.agreementNumber;
-				    if (agrNum == null || agrNum == '')
-				        agrNum = 'б/н';
-
                     return '\
-						<a href="/manage/debtor/'+ debtorId + '/collateralagreement/' + row.id + '/view">'+agrNum+'</a>\
+						<a href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + row.id + '/view">'+row.procedureStatusName+'</a>\
 					';
                 }
 			},{
-                field: "agreementDate",
-                title: "Дата"
-            }, {
-                field: "itemName",
-                title: "Наименование",
-                width: 450,
-                template: function (row) {
-                    var result = '';
-
-                    if(row.itemName.length <= 50)
-                        result = row.itemName;
-                    else {
-                        result = row.itemName.substr(0, 50);
-                        result = result + '...';
-                    }
-
-                    return result;
-                }
-            }, {
-                field: "itemTypeName",
+                field: "phaseTypeName",
                 title: "Вид"
             }, {
-                field: "quantityNameValue",
-                title: "Кол-во",
-                width: 70,
+                field: "startDate",
+                title: "Дата фазы"
+            }, {
+                field: "startTotalAmount",
+                title: "Сумма фазы",
                 template: function (row) {
-                    return row.quantity + ' ' + row.quantityTypeName;
+                    return (row.startTotalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
             }, {
-                field: "collateralValue",
-                title: "Стоимость",
+                field: "phaseStatusName",
+                title: "Статус фазы"
+            }, {
+                field: "closeDate",
+                title: "Дата завершения"
+            }, {
+                field: "closeTotalAmount",
+                title: "Сумма завершения",
                 template: function (row) {
-                    return (row.collateralValue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                    return (row.closeTotalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
             }, {
                 field: "action",
@@ -109,10 +93,10 @@ var DatatableDataLocalAgreements = function () {
                 sortable: false,
                 template: function (row) {
                     return '\
-						<a href="/manage/debtor/'+ debtorId + '/collateralagreement/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+						<a href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-edit"></i>\
 						</a>\
-						<a href="/manage/debtor/'+ debtorId + '/collateralagreement/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
+						<a href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
 							<i class="la la-trash"></i>\
 						</a>\
 					';
@@ -154,7 +138,7 @@ var DatatableDataLocalAgreements = function () {
 
 		var query = datatable.getDataSourceQuery();
 
-		$('#m_form_search1').on('keyup', function (e) {
+		$('#m_form_search2').on('keyup', function (e) {
 			datatable.search($(this).val().toLowerCase());
 		}).val(query.generalSearch);
 
@@ -181,5 +165,5 @@ var DatatableDataLocalAgreements = function () {
 }();
 
 jQuery(document).ready(function () {
-    DatatableDataLocalAgreements.init();
+    DatatableDataLocalProcs.init();
 });

@@ -11,6 +11,7 @@ import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
 import kg.gov.mf.loan.manage.model.collateral.CollateralItem;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
 import kg.gov.mf.loan.manage.model.collection.CollectionProcedure;
+import kg.gov.mf.loan.manage.model.collection.PhaseDetails;
 import kg.gov.mf.loan.manage.model.debtor.*;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.repository.collateral.CollateralItemReposiory;
@@ -19,6 +20,7 @@ import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.process.service.JobItemService;
 import kg.gov.mf.loan.web.fetchModels.CollateralAgreementModel;
+import kg.gov.mf.loan.web.fetchModels.CollectionProcedureModel;
 import kg.gov.mf.loan.web.fetchModels.EntityDocumentModel;
 import kg.gov.mf.loan.web.fetchModels.LoanModel;
 import kg.gov.mf.loan.web.util.Pager;
@@ -141,7 +143,8 @@ public class DebtorController {
 		String jsonAgreements = gson.toJson(getCollAgreementsByDebtorId(debtorId));
 		model.addAttribute("agreements", jsonAgreements);
 
-		model.addAttribute("procs", null);
+        String jsonProcs = gson.toJson(getProcsByDebtorId(debtorId));
+        model.addAttribute("procs", jsonProcs);
 
 		List<CreditOrder> orders = orderService.list();
 		model.addAttribute("orders", orders);
@@ -451,6 +454,59 @@ public class DebtorController {
             result.add(model);
         return result;
 
+	}
+
+	private List<CollectionProcedureModel> getProcsByDebtorId(long debtorId)
+	{
+
+		Map<Long, CollectionProcedureModel> models = new HashMap<>();
+		Debtor debtor = debtorService.getById(debtorId);
+		Set<CollectionProcedure> procs = new HashSet<>();
+		for (Loan loan: debtor.getLoans()
+				) {
+
+			Set<CollectionPhase> phases = loan.getCollectionPhases();
+			for (CollectionPhase phase: phases
+					) {
+				CollectionProcedure proc = phase.getCollectionProcedure();
+
+				CollectionProcedureModel model = new CollectionProcedureModel();
+				model.setId(proc.getId());
+				model.setProcedureStatusId(proc.getProcedureStatus().getId());
+				model.setProcedureStatusName(proc.getProcedureStatus().getName());
+				model.setPhaseId(phase.getId());
+				model.setPhaseTypeId(phase.getPhaseType().getId());
+				model.setPhaseTypeName(phase.getPhaseType().getName());
+				model.setStartDate(phase.getStartDate());
+				double totalStartAmount = 0.0;
+				for(PhaseDetails details: phase.getPhaseDetails())
+				{
+                    if(details.getStartTotalAmount()!=null)
+					totalStartAmount += details.getStartTotalAmount();
+				}
+				model.setStartTotalAmount(totalStartAmount);
+
+				model.setPhaseStatusId(phase.getPhaseStatus().getId());
+				model.setPhaseStatusName(phase.getPhaseStatus().getName());
+
+				model.setCloseDate(phase.getCloseDate());
+				double totalClosetAmount = 0.0;
+				for(PhaseDetails details: phase.getPhaseDetails())
+				{
+				    if(details.getCloseTotalAmount()!=null)
+					    totalClosetAmount += details.getCloseTotalAmount();
+				}
+				model.setCloseTotalAmount(totalClosetAmount);
+
+				if(!models.containsKey(model.getPhaseId()))
+					models.put(model.getPhaseId(), model);
+			}
+		}
+
+        List<CollectionProcedureModel> result = new ArrayList<>();
+        for(CollectionProcedureModel model: models.values())
+            result.add(model);
+        return result;
 	}
 
 }
