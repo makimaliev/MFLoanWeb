@@ -1,12 +1,17 @@
 package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.repository.collateral.CollateralItemArrestFreeRepository;
+import kg.gov.mf.loan.web.fetchModels.ItemArrestFreeModel;
+import kg.gov.mf.loan.web.fetchModels.ItemInspectionResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -78,7 +83,7 @@ public class CollateralItemController {
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
-		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
+		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 	
@@ -99,15 +104,23 @@ public class CollateralItemController {
     		@PathVariable("itemId")Long itemId) {
 		
 		model.addAttribute("debtorId", debtorId);
+		model.addAttribute("debtor", debtorService.getById(debtorId));
 		model.addAttribute("agreementId", agreementId);
-		
+		model.addAttribute("agreement", agreementService.getById(agreementId));
+
 		CollateralItem tItem = itemService.getById(itemId);
 		CollateralItemDetails tDetails = tItem.getCollateralItemDetails();
 		model.addAttribute("item", tItem);
 		model.addAttribute("itemDetails", tDetails);
 		
-		model.addAttribute("aFs", tItem.getCollateralItemArrestFree());
-		model.addAttribute("inpections", tItem.getCollateralItemInspectionResults());
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String jsonInspections = gson.toJson(getInspectionsByItemId(itemId));
+        model.addAttribute("inspections", jsonInspections);
+
+        String jsonArrestFrees = gson.toJson(getArrestFreesByItemId(itemId));
+        model.addAttribute("arrestFrees", jsonArrestFrees);
+
+		//model.addAttribute("inpections", tItem.getCollateralItemInspectionResults());
 		
 		return "/manage/debtor/collateralagreement/collateralitem/view";
 		
@@ -120,7 +133,9 @@ public class CollateralItemController {
 			@PathVariable("itemId")Long itemId)
 	{
 		model.addAttribute("debtorId", debtorId);
+		model.addAttribute("debtor", debtorService.getById(debtorId));
 		model.addAttribute("agreementId", agreementId);
+		model.addAttribute("agreement", agreementService.getById(agreementId));
 		
 		if(itemId == 0)
 		{
@@ -186,6 +201,13 @@ public class CollateralItemController {
 			@PathVariable("itemId")Long itemId,
 			@PathVariable("afId")Long afId)
 	{
+
+        model.addAttribute("debtorId", debtorId);
+        model.addAttribute("debtor", debtorService.getById(debtorId));
+        model.addAttribute("agreementId", agreementId);
+        model.addAttribute("agreement", agreementService.getById(agreementId));
+        model.addAttribute("item", itemService.getById(itemId));
+
 		if(afId == 0)
 		{
 			model.addAttribute("af", new CollateralItemArrestFree());
@@ -245,6 +267,13 @@ public class CollateralItemController {
 			@PathVariable("itemId")Long itemId,
 			@PathVariable("insId")Long insId)
 	{
+
+        model.addAttribute("debtorId", debtorId);
+        model.addAttribute("debtor", debtorService.getById(debtorId));
+        model.addAttribute("agreementId", agreementId);
+        model.addAttribute("agreement", agreementService.getById(agreementId));
+        model.addAttribute("item", itemService.getById(itemId));
+
 		if(insId == 0)
 		{
 			model.addAttribute("ins", new CollateralItemInspectionResult());
@@ -463,5 +492,37 @@ public class CollateralItemController {
         return "redirect:" + "/manage/debtor/collateralagreement/collateralitem/conditiontype/list";
     }
     //END - C TYPE
-	
+
+    private List<ItemInspectionResultModel> getInspectionsByItemId(long itemId)
+    {
+        List<ItemInspectionResultModel> result = new ArrayList<>();
+        CollateralItem item = itemService.getById(itemId);
+        for(CollateralItemInspectionResult temp: item.getCollateralItemInspectionResults())
+        {
+            ItemInspectionResultModel model = new ItemInspectionResultModel();
+            model.setId(temp.getId());
+            model.setOnDate(temp.getOnDate());
+            model.setInspectionResultTypeId(temp.getInspectionResultType().getId());
+            model.setInspectionResultTypeName(temp.getInspectionResultType().getName());
+            model.setDetails(temp.getDetails());
+            result.add(model);
+        }
+        return result;
+    }
+
+    private List<ItemArrestFreeModel> getArrestFreesByItemId(long itemId)
+    {
+        List<ItemArrestFreeModel> result = new ArrayList<>();
+        CollateralItem item = itemService.getById(itemId);
+
+        CollateralItemArrestFree temp = item.getCollateralItemArrestFree();
+        ItemArrestFreeModel model = new ItemArrestFreeModel();
+        model.setId(temp.getId());
+        model.setOnDate(temp.getOnDate());
+        model.setArrestFreeBy(temp.getArrestFreeBy());
+        model.setDetails(temp.getDetails());
+        result.add(model);
+
+        return result;
+    }
 }
