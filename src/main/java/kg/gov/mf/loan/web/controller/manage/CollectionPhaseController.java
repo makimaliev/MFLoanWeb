@@ -13,6 +13,7 @@ import kg.gov.mf.loan.manage.service.collection.*;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.process.LoanDetailedSummaryService;
 import kg.gov.mf.loan.process.service.JobItemService;
+import kg.gov.mf.loan.web.fetchModels.CollectionPhaseDetailsModel;
 import kg.gov.mf.loan.web.fetchModels.PhaseDetailsModel;
 import kg.gov.mf.loan.web.fetchModels.PhaseDetailsModelList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,19 +87,21 @@ public class CollectionPhaseController {
     		@PathVariable("debtorId")Long debtorId, 
     		@PathVariable("procId")Long procId,
     		@PathVariable("phaseId")Long phaseId) {
-		
+
 		model.addAttribute("debtorId", debtorId);
+		model.addAttribute("debtor", debtorService.getById(debtorId));
 		model.addAttribute("procId", procId);
-		
+		model.addAttribute("proc", procService.getById(procId));
+
 		CollectionPhase phase = phaseService.getById(phaseId);
-		Set<PhaseDetails> phaseDetails = phase.getPhaseDetails();
 		model.addAttribute("phase", phase);
-		model.addAttribute("phaseDetails", phaseDetails);
-		
-		//model.addAttribute("events", phase.getCollectionEvents());
-		
+
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String jsonPhaseDetails = gson.toJson(getPhaseDetailsByPhaseId(phaseId));
+        model.addAttribute("phaseDetails", jsonPhaseDetails);
+
 		return "/manage/debtor/collectionprocedure/collectionphase/view";
-		
+
 	}
 
 	@RequestMapping(value="/manage/debtor/{debtorId}/initializephase", method=RequestMethod.POST)
@@ -193,7 +196,9 @@ public class CollectionPhaseController {
 	{
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtorId", debtorId);
+		model.addAttribute("debtor", debtor);
 		model.addAttribute("procId", procId);
+		model.addAttribute("proc", procService.getById(procId));
 
 		if(phaseId == 0)
 		{
@@ -375,5 +380,35 @@ public class CollectionPhaseController {
 
 		return result;
 	}
+
+    private List<CollectionPhaseDetailsModel> getPhaseDetailsByPhaseId(long phaseId)
+    {
+        List<CollectionPhaseDetailsModel> result = new ArrayList<>();
+        CollectionPhase phase = phaseService.getById(phaseId);
+        for(PhaseDetails temp: phase.getPhaseDetails())
+        {
+            CollectionPhaseDetailsModel model = new CollectionPhaseDetailsModel();
+            model.setId(temp.getId());
+            model.setStartTotalAmount(temp.getStartTotalAmount());
+            model.setStartPrincipal(temp.getStartPrincipal());
+            model.setStartInterest(temp.getStartInterest());
+            model.setStartPenalty(temp.getStartPenalty());
+            model.setStartFee(temp.getStartFee());
+            model.setCloseTotalAmount(temp.getCloseTotalAmount());
+            model.setClosePrincipal(temp.getClosePrincipal());
+            model.setCloseInterest(temp.getCloseInterest());
+            model.setClosePenalty(temp.getClosePenalty());
+            model.setCloseFee(temp.getCloseFee());
+            model.setPaidTotalAmount(temp.getPaidTotalAmount());
+            model.setPaidPrincipal(temp.getPaidPrincipal());
+            model.setPaidInterest(temp.getPaidInterest());
+            model.setPaidPenalty(temp.getPaidPenalty());
+            model.setPaidFee(temp.getPaidFee());
+            model.setLoan_id(temp.getLoan_id());
+            result.add(model);
+        }
+
+        return result;
+    }
 	
 }

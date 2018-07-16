@@ -3,7 +3,7 @@
 	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <!-- begin::Head -->
 <head>
-	<title th:text="${phase.id}"></title>
+	<title th:text="${'Фаза взыскания: ' + phase.phaseType.name + ', '+ phase.phaseStatus.name + ', ' + #dates.format(phase.startDate,'dd.MM.yyyy')}"></title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -20,83 +20,69 @@
 		<div th:replace="layout/sidebar"/>
 		<!-- END: Left Aside -->
 		<div class="m-grid__item m-grid__item--fluid m-wrapper">
+			<!-- BEGIN: Subheader -->
+			<div class="m-subheader ">
+				<div class="d-flex align-items-center">
+					<div class="mr-auto">
+						<h3 class="m-subheader__title m-subheader__title--separator">
+							Фаза взыскания
+						</h3>
+						<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+							<li class="m-nav__item m-nav__item--home">
+								<a th:href="@{/}" class="m-nav__link m-nav__link--icon">
+									<i class="m-nav__link-icon la la-home"></i>
+								</a>
+							</li>
+							<li class="m-nav__separator">
+								-
+							</li>
+							<li class="m-nav__item">
+								<a th:href="@{/manage/debtor/list}" class="m-nav__link">
+											<span class="m-nav__link-text">
+												Список заемщиков
+											</span>
+								</a>
+							</li>
+							<li class="m-nav__separator">
+								-
+							</li>
+							<li class="m-nav__item">
+								<a th:href="@{/manage/debtor/__${debtorId}__/view}" class="m-nav__link">
+											<span class="m-nav__link-text" th:text="${debtor.name}">
+												Заемщик
+											</span>
+								</a>
+							</li>
+							<li class="m-nav__separator">
+								-
+							</li>
+							<li class="m-nav__item">
+								<a th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/view}" class="m-nav__link">
+											<span class="m-nav__link-text" th:text="${proc.procedureType.name + ', '+ proc.procedureStatus.name + ', ' + #dates.format(proc.startDate,'dd.MM.yyyy')}">
+												Заемщик
+											</span>
+								</a>
+							</li>
+							<li class="m-nav__separator">
+								-
+							</li>
+							<li class="m-nav__item">
+								<span class="m-nav__link-text">
+												Фаза взыскания
+											</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- END: Subheader -->
 			<div class="m-content">
 				<!--begin::Portlet-->
 				<div class="m-portlet m-portlet--full-height">
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="${phase.id}"></h3>
-							</div>
-						</div>
-					</div>
-					<div class="m-portlet__body m-portlet__body--no-padding">
-						<div class="row m-row--no-padding m-row--col-separator-xl">
-							<div class="col-md-12 col-lg-12 col-xl-4">
-								<!--begin:: Widgets/Stats2-1 -->
-								<div class="m-widget1">
-									<div class="m-widget1__item">
-										<div class="row m-row--no-padding align-items-center">
-											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.phase.table.startDate}">ID</h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${phase.startDate}"></span>
-											</div>
-										</div>
-									</div>
-									<div class="m-widget1__item">
-										<div class="row m-row--no-padding align-items-center">
-											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.phase.table.closeDate}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${phase.closeDate}"></span>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!--end:: Widgets/Stats2-1 -->
-							</div>
-							<div class="col-md-12 col-lg-12 col-xl-4">
-								<!--begin:: Widgets/Stats2-2 -->
-								<div class="m-widget1">
-									<div class="m-widget1__item">
-										<div class="row m-row--no-padding align-items-center">
-											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.phase.table.lastEvent}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${phase.lastEvent}"></span>
-											</div>
-										</div>
-									</div>
-									<div class="m-widget1__item">
-										<div class="row m-row--no-padding align-items-center">
-											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.phase.table.lastStatusId}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${phase.lastStatusId}"></span>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!--begin:: Widgets/Stats2-2 -->
-							</div>
-							<div class="col-md-12 col-lg-12 col-xl-4">
-								<!--begin:: Widgets/Stats2-3 -->
-								<div class="m-widget1">
-									<div class="m-widget1__item">
-										<div class="row m-row--no-padding align-items-center">
-											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.phase.table.phaseStatus}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${phase.phaseStatus.name}"></span>
-											</div>
-										</div>
-									</div>
-									<div class="m-widget1__item">
-										<div class="row m-row--no-padding align-items-center">
-											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.phase.table.phaseType}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${phase.phaseType.name}"></span>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!--begin:: Widgets/Stats2-3 -->
+								<h3 class="m-portlet__head-text" th:text="${phase.phaseType.name + ', '+ phase.phaseStatus.name + ', ' + #dates.format(phase.startDate,'dd.MM.yyyy')}"></h3>
 							</div>
 						</div>
 					</div>
@@ -105,37 +91,29 @@
 				<!--begin::Portlet-->
 				<div class="m-portlet m-portlet--mobile">
 					<div class="m-portlet__body">
-						<!--begin::Section-->
-						<div class="m-section">
-							<div class="m-section__content">
-								<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
-									<div>
-										<table class="table">
-											<thead class="thead-default">
-											<tr>
-												<th class="table-id">Id</th>
-												<th th:text="#{label.collectionphaseDetails.startPrincipal}"></th>
-												<th th:text="#{label.collectionphaseDetails.startInterest}"></th>
-												<th th:text="#{label.collectionphaseDetails.startPenalty}"></th>
-												<th th:text="#{label.collectionphaseDetails.startTotalAmount}"></th>
-											</tr>
-											</thead>
-											<tbody>
-											<tr th:each="details : ${phaseDetails}">
-												<td class="table-id" th:text="${details.id}"></td>
-												<td th:text="${details.startPrincipal}"></td>
-												<td th:text="${details.startInterest}"></td>
-												<td th:text="${details.startPenalty}"></td>
-												<td th:text="${details.startTotalAmount}"></td>
-											</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!--end::Section-->
-
+                        <!--begin: Search Form -->
+                        <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                            <div class="row align-items-center">
+                                <div class="col-xl-9 order-1 order-xl-1">
+                                    <div class="form-group m-form__group row align-items-center">
+                                        <div class="col-lg-6">
+                                            <div class="m-input-icon m-input-icon--left">
+                                                <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search1">
+                                                <span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end: Search Form -->
+                        <!--begin: Datatable -->
+                        <div class="m_datatable" id="phaseDetailsTable"></div>
+                        <!--end: Datatable -->
 					</div>
 				</div>
 				<!--end::Portlet-->
@@ -150,6 +128,26 @@
 <!-- end:: Page -->
 
 <div th:replace="fragments/footer :: footer-js"/>
+
+<!--begin::Page Resources -->
+<script th:src="@{/js/data-debtor-proc-phase-details.js}" th:inline="javascript" type="text/javascript"></script>
+<!--end::Page Resources -->
+
+<div th:with="isAdmin = ${#authorization.expression('hasRole(''ADMIN'')')}">
+	<script th:inline="javascript">
+        /*<![CDATA[*/
+        var hasRoleAdmin = /*[[${isAdmin}]]*/ [];
+        /*]]>*/
+	</script>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var jsonPhaseDetails = /*[[${phaseDetails}]]*/ [];
+    var debtorId = /*[[${debtor.id}]]*/ [];
+    var procId = /*[[${procId}]]*/ [];
+    /*]]>*/
+</script>
 
 </body>
 <!-- end::Body -->

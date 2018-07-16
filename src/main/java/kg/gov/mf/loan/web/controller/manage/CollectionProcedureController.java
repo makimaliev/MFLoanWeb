@@ -1,9 +1,14 @@
 package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
+import kg.gov.mf.loan.web.fetchModels.CollectionPhaseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -50,8 +55,13 @@ public class CollectionProcedureController {
 		
 		CollectionProcedure proc = procService.getById(procId);
 		model.addAttribute("proc", proc);
-		model.addAttribute("phases", proc.getCollectionPhases());
+
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String jsonPhases = gson.toJson(getPhasesByProcId(procId));
+        model.addAttribute("phases", jsonPhases);
+
 		model.addAttribute("debtorId", debtorId);
+		model.addAttribute("debtor", debtorService.getById(debtorId));
 		model.addAttribute("procId", procId);
 		
 		return "/manage/debtor/collectionprocedure/view";
@@ -64,6 +74,7 @@ public class CollectionProcedureController {
 			@PathVariable("procId")Long procId)
 	{
 		model.addAttribute("debtorId", debtorId);
+        model.addAttribute("debtor", debtorService.getById(debtorId));
 		
 		if(procId == 0)
 		{
@@ -188,5 +199,27 @@ public class CollectionProcedureController {
 			procTypeService.remove(procTypeService.getById(id));
 		return "redirect:" + "/manage/debtor/collectionprocedure/type/list";
 	}
+
+    private List<CollectionPhaseModel> getPhasesByProcId(long procId)
+    {
+        List<CollectionPhaseModel> result = new ArrayList<>();
+        CollectionProcedure proc = procService.getById(procId);
+        for(CollectionPhase temp: proc.getCollectionPhases())
+        {
+            CollectionPhaseModel model = new CollectionPhaseModel();
+            model.setId(temp.getId());
+            model.setStartDate(temp.getStartDate());
+            model.setCloseDate(temp.getCloseDate());
+            model.setLastEvent(temp.getLastEvent());
+            model.setLastStatusId(temp.getLastStatusId());
+            model.setPhaseStatusId(temp.getPhaseStatus().getId());
+            model.setPhaseStatusName(temp.getPhaseStatus().getName());
+            model.setPhaseTypeId(temp.getPhaseType().getId());
+            model.setPhaseTypeName(temp.getPhaseType().getName());
+            result.add(model);
+        }
+
+        return result;
+    }
 	
 }
