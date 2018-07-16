@@ -120,7 +120,7 @@ public class CollateralItemController {
         String jsonArrestFrees = gson.toJson(getArrestFreesByItemId(itemId));
         model.addAttribute("arrestFrees", jsonArrestFrees);
 
-		//model.addAttribute("inpections", tItem.getCollateralItemInspectionResults());
+		//model.addAttribute("inspections", tItem.getCollateralItemInspectionResults());
 		
 		return "/manage/debtor/collateralagreement/collateralitem/view";
 		
@@ -251,10 +251,10 @@ public class CollateralItemController {
         return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/view";
     }
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/arrestfree/delete", method=RequestMethod.POST)
-    public String deleteItemArrestFree(long id, @PathVariable("itemId")Long itemId) {
-		if(id > 0) {
-			afService.remove(afService.getById(id));
+	@RequestMapping(value="/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/arrestfree/{afId}/delete", method=RequestMethod.GET)
+    public String deleteItemArrestFree(@PathVariable("afId")Long afId) {
+		if(afId > 0) {
+			afService.remove(afService.getById(afId));
 		}
 			
         return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/view";
@@ -516,12 +516,15 @@ public class CollateralItemController {
         CollateralItem item = itemService.getById(itemId);
 
         CollateralItemArrestFree temp = item.getCollateralItemArrestFree();
-        ItemArrestFreeModel model = new ItemArrestFreeModel();
-        model.setId(temp.getId());
-        model.setOnDate(temp.getOnDate());
-        model.setArrestFreeBy(temp.getArrestFreeBy());
-        model.setDetails(temp.getDetails());
-        result.add(model);
+        if(temp!=null)
+		{
+			ItemArrestFreeModel model = new ItemArrestFreeModel();
+			model.setId(temp.getId());
+			model.setOnDate(temp.getOnDate());
+			model.setArrestFreeBy(temp.getArrestFreeBy());
+			model.setDetails(temp.getDetails());
+			result.add(model);
+		}
 
         return result;
     }
