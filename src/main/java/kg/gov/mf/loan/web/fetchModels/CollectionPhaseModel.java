@@ -1,13 +1,14 @@
 package kg.gov.mf.loan.web.fetchModels;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Date;
 
 @Entity
-public class CollectionPhaseModel {
+public class CollectionPhaseModel implements Comparable<CollectionPhaseModel> {
 
     @Id
     private Long id;
@@ -26,6 +27,12 @@ public class CollectionPhaseModel {
 
     private long phaseTypeId;
     private String phaseTypeName;
+
+    @Override
+    public int compareTo(CollectionPhaseModel model)
+    {
+        return model.startDate.compareTo(this.startDate);
+    }
 
     public Long getId() {
         return id;

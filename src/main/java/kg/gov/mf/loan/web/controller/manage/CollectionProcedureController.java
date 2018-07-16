@@ -2,6 +2,7 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -218,6 +219,8 @@ public class CollectionProcedureController {
             model.setPhaseTypeName(temp.getPhaseType().getName());
             result.add(model);
         }
+
+        Collections.sort(result);
 
         return result;
     }
