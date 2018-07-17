@@ -157,11 +157,17 @@ public class LoanController {
         String jsonPayments = gson.toJson(getPaymentsByLoanId(loanId));
         model.addAttribute("payments", jsonPayments);
 
+        String jsonWriteOffs = gson.toJson(getWOsByLoanId(loanId));
+        model.addAttribute("WOs", jsonWriteOffs);
+
+        String jsonSupervisorPlans = gson.toJson(getSPsByLoanId(loanId));
+        model.addAttribute("SPs", jsonSupervisorPlans);
+
         //model.addAttribute("terms", loan.getCreditTerms());
         //model.addAttribute("PaymentSchedules", loan.getPaymentSchedules());
         //model.addAttribute("Payments", loan.getPayments());
-        model.addAttribute("WOs", loan.getWriteOffs());
-        model.addAttribute("SPs", loan.getSupervisorPlans());
+        //model.addAttribute("WOs", loan.getWriteOffs());
+        //model.addAttribute("SPs", loan.getSupervisorPlans());
         
         List<OrderTermRatePeriod> ratePeriods = ratePeriodService.list();
         model.addAttribute("ratePeriods", ratePeriods);
@@ -486,6 +492,56 @@ public class LoanController {
             model.setDetails(p.getDetails());
             model.setPaymentTypeId(p.getPaymentType().getId());
             model.setPaymentTypeName(p.getPaymentType().getName());
+
+            result.add(model);
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    private List<WriteOffModel> getWOsByLoanId(long loanId)
+    {
+        List<WriteOffModel> result = new ArrayList<>();
+        Loan loan = loanService.getById(loanId);
+        for(WriteOff w: loan.getWriteOffs())
+        {
+            WriteOffModel model = new WriteOffModel();
+            model.setId(w.getId());
+            model.setDate(w.getDate());
+            model.setTotalAmount(w.getTotalAmount());
+            model.setPrincipal(w.getPrincipal());
+            model.setInterest(w.getInterest());
+            model.setPenalty(w.getPenalty());
+            model.setFee(w.getFee());
+            model.setDescription(w.getDescription());
+
+            result.add(model);
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    private List<SupervisorPlanModel> getSPsByLoanId(long loanId)
+    {
+        List<SupervisorPlanModel> result = new ArrayList<>();
+        Loan loan = loanService.getById(loanId);
+        for(SupervisorPlan sp: loan.getSupervisorPlans())
+        {
+            SupervisorPlanModel model = new SupervisorPlanModel();
+            model.setId(sp.getId());
+            model.setDate(sp.getDate());
+            model.setAmount(sp.getAmount());
+            model.setPrincipal(sp.getPrincipal());
+            model.setInterest(sp.getInterest());
+            model.setPenalty(sp.getPenalty());
+            model.setFee(sp.getFee());
+            model.setDescription(sp.getDescription());
+            model.setReg_by_id(sp.getReg_by_id());
+            model.setReg_date(sp.getReg_date());
 
             result.add(model);
         }

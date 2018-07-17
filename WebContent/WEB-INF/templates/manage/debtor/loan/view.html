@@ -264,70 +264,41 @@
                                 <!--end: Datatable -->
 							</div>
 							<div class="tab-pane" id="writeOffs" role="tabpanel">
-								<div class="m-section">
-									<div class="m-section__content">
-										<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/wo/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.button.addNewWriteOff}"></a>
-									</div>
-								</div>
-								<!--begin::Section-->
-								<div class="m-section">
-									<div class="m-section__content">
-										<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
-											<div>
-												<table class="table">
-													<thead class="thead-default">
-													<tr>
-														<th class="table-id">Id</th>
-														<th th:text="#{label.writeOff.date}"></th>
-														<th th:text="#{label.writeOff.totalAmount}"></th>
-														<th th:text="#{label.writeOff.principal}"></th>
-														<th th:text="#{label.writeOff.interest}"></th>
-														<th th:text="#{label.writeOff.penalty}"></th>
-														<th th:text="#{label.writeOff.fee}"></th>
-														<th th:text="#{label.writeOff.description}"></th>
-														<th>&nbsp;</th>
-													</tr>
-													</thead>
-													<tbody>
-													<tr th:each="wo : ${WOs}">
-														<td class="table-id" th:text="${wo.id}"></td>
-														<td th:text="${wo.date}"></td>
-														<td th:text="${wo.totalAmount}"></td>
-														<td th:text="${wo.principal}"></td>
-														<td th:text="${wo.interest}"></td>
-														<td th:text="${wo.penalty}"></td>
-														<td th:text="${wo.fee}"></td>
-														<td th:text="${wo.description}"></td>
-														<td class="table-actions text-right">
+                                <!--begin: Search Form -->
+                                <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                                    <div class="row align-items-center">
+                                        <div class="col-xl-9 order-1 order-xl-1">
+                                            <div class="form-group m-form__group row align-items-center">
+                                                <div class="col-lg-6">
+                                                    <div class="m-input-icon m-input-icon--left">
+                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search7">
+                                                        <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
-																<div class="dropdown">
-																	<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
-																		<i class="la la-ellipsis-h"></i>
-																	</a>
-																	<div class="dropdown-menu dropdown-menu-right">
-																		<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/wo/__${wo.id}__/save}">
-																			<span th:text="#{label.table.edit}"></span>
-																		</a>
-																		<a class="dropdown-item" href="#">
-																			<span>
-																				<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/wo/delete}" method="post">
-																					<input hidden="true" type="text" id="id" name="id" th:value="${wo.id}" />
-																					<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
-																				</form>
-																			</span>
-																		</a>
-																	</div>
-																</div>
+																<i class="la la-search"></i>
 															</span>
-														</td>
-													</tr>
-													</tbody>
-												</table>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!--end::Section-->
+														</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xl-3 order-3 order-xl-3 m--align-right">
+                                            <a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/wo/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span>
+													<i class="la la-plus"></i>
+													<span>
+														Добавить списание
+													</span>
+												</span>
+                                            </a>
+                                            <div class="m-separator m-separator--dashed d-xl-none"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end: Search Form -->
+                                <!--begin: Datatable -->
+                                <div class="m_datatable" id="WOsTable"></div>
+                                <!--end: Datatable -->
 							</div>
 							<div class="tab-pane" id="paymentSchedules" role="tabpanel">
                                 <!--begin: Search Form -->
@@ -404,70 +375,41 @@
                                 <!--end: Datatable -->
 							</div>
 							<div class="tab-pane" id="supervisorPlans" role="tabpanel">
-								<div class="m-section">
-									<div class="m-section__content">
-										<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.button.addNewSupervisorPlan}"></a>
-									</div>
-								</div>
-								<!--begin::Section-->
-								<div class="m-section">
-									<div class="m-section__content">
-										<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
-											<div>
-												<table class="table">
-													<thead class="thead-default">
-													<tr>
-														<th class="table-id">ID</th>
-														<th th:text="#{label.supervisorPlan.date}"></th>
-														<th th:text="#{label.supervisorPlan.amount}">Amount</th>
-														<th th:text="#{label.supervisorPlan.principal}"></th>
-														<th th:text="#{label.supervisorPlan.interest}"></th>
-														<th th:text="#{label.supervisorPlan.penalty}"></th>
-														<th th:text="#{label.supervisorPlan.fee}"></th>
-														<th th:text="#{label.supervisorPlan.description}"></th>
-														<th>&nbsp;</th>
-													</tr>
-													</thead>
-													<tbody>
-													<tr th:each="sp : ${SPs}">
-														<td class="table-id" th:text="${sp.id}"></td>
-														<td th:text="${sp.date}"></td>
-														<td th:text="${sp.amount}"></td>
-														<td th:text="${sp.principal}"></td>
-														<td th:text="${sp.interest}"></td>
-														<td th:text="${sp.penalty}"></td>
-														<td th:text="${sp.fee}"></td>
-														<td th:text="${sp.description}"></td>
-														<td class="table-actions text-right">
+                                <!--begin: Search Form -->
+                                <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                                    <div class="row align-items-center">
+                                        <div class="col-xl-9 order-1 order-xl-1">
+                                            <div class="form-group m-form__group row align-items-center">
+                                                <div class="col-lg-6">
+                                                    <div class="m-input-icon m-input-icon--left">
+                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search8">
+                                                        <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
-																<div class="dropdown">
-																	<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
-																		<i class="la la-ellipsis-h"></i>
-																	</a>
-																	<div class="dropdown-menu dropdown-menu-right">
-																		<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/__${sp.id}__/save}">
-																			<span th:text="#{label.table.edit}"></span>
-																		</a>
-																		<a class="dropdown-item" href="#">
-																			<span>
-																				<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/delete}" method="post">
-																					<input hidden="true" type="text" id="id" name="id" th:value="${sp.id}" />
-																					<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
-																				</form>
-																			</span>
-																		</a>
-																	</div>
-																</div>
+																<i class="la la-search"></i>
 															</span>
-														</td>
-													</tr>
-													</tbody>
-												</table>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!--end::Section-->
+														</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xl-3 order-3 order-xl-3 m--align-right">
+                                            <a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span>
+													<i class="la la-plus"></i>
+													<span>
+														Добавить план
+													</span>
+												</span>
+                                            </a>
+                                            <div class="m-separator m-separator--dashed d-xl-none"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end: Search Form -->
+                                <!--begin: Datatable -->
+                                <div class="m_datatable" id="SPsTable"></div>
+                                <!--end: Datatable -->
 							</div>
 							<div class="tab-pane" id="loanGoods" role="tabpanel">
 								<div class="m-section">
@@ -767,59 +709,6 @@
 								</div>
 								<!--end::Section-->
 							</div>
-							<!---->
-							<!--<div class="tab-pane" id="collaterals" role="tabpanel">-->
-								<!--<div class="m-section">-->
-									<!--<div class="m-section__content">-->
-										<!--<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collateral/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn&#45;&#45;air" th:text="#{label.button.addNewCollateral}"></a>-->
-									<!--</div>-->
-								<!--</div>-->
-								<!--&lt;!&ndash;begin::Section&ndash;&gt;-->
-								<!--<div class="m-section">-->
-									<!--<div class="m-section__content">-->
-										<!--<table class="table">-->
-											<!--<thead class="thead-default">-->
-											<!--<tr>-->
-												<!--<th class="table-id">ID</th>-->
-												<!--<th>Name</th>-->
-												<!--<th>&nbsp;</th>-->
-											<!--</tr>-->
-											<!--</thead>-->
-											<!--<tbody>-->
-											<!--<tr th:each="coll : ${Collaterals}">-->
-												<!--<td class="table-id" th:text="${coll.id}"></td>-->
-												<!--<td th:text="${coll.name}"></td>-->
-												<!--<td class="table-actions text-right">-->
-													<!--<span>-->
-														<!--<div class="dropdown">-->
-															<!--<a href="#" class="btn m-btn m-btn&#45;&#45;hover-metal m-btn&#45;&#45;icon m-btn&#45;&#45;icon-only m-btn&#45;&#45;pill btn-dropdown" data-toggle="dropdown">-->
-																<!--<i class="la la-ellipsis-h"></i>-->
-															<!--</a>-->
-															<!--<div class="dropdown-menu dropdown-menu-right">-->
-																<!--<a class="dropdown-item" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collateral/__${coll.id}__/save}">-->
-																	<!--<span th:text="#{label.table.edit}"></span>-->
-																<!--</a>-->
-																<!--<a class="dropdown-item" href="#">-->
-																	<!--<span>-->
-																		<!--<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/collateral/delete}" method="post">-->
-																			<!--<input hidden="true" type="text" id="id" name="id" th:value="${coll.id}" />-->
-																			<!--<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>-->
-																		<!--</form>-->
-																	<!--</span>-->
-																<!--</a>-->
-															<!--</div>-->
-														<!--</div>-->
-													<!--</span>-->
-												<!--</td>-->
-											<!--</tr>-->
-											<!--</tbody>-->
-										<!--</table>-->
-									<!--</div>-->
-								<!--</div>-->
-								<!--&lt;!&ndash;end::Section&ndash;&gt;-->
-							<!--</div>-->
-							<!---->
-
 							<div class="tab-pane" id="collectionPhases" role="tabpanel">
 								<div class="m-section">
 									<div class="m-section__content">
@@ -982,6 +871,8 @@
 <script th:src="@{/js/data-debtor-loan-terms.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-paymentSchedules.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-payments.js}" th:inline="javascript" type="text/javascript"></script>
+<script th:src="@{/js/data-debtor-loan-writeOffs.js}" th:inline="javascript" type="text/javascript"></script>
+<script th:src="@{/js/data-debtor-loan-supervisorPlans.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-detailedSummaries.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-summaries.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-accrues.js}" th:inline="javascript" type="text/javascript"></script>
@@ -1002,6 +893,8 @@
     var jsonTerms = /*[[${terms}]]*/ [];
     var jsonPaymentSchedules = /*[[${paymentSchedules}]]*/ [];
     var jsonPayments = /*[[${payments}]]*/ [];
+    var jsonWOs = /*[[${WOs}]]*/ [];
+    var jsonSPs = /*[[${SPs}]]*/ [];
     var jsonDetailedSummaries = /*[[${detailedSummaries}]]*/ [];
     var jsonSummaries = /*[[${summaries}]]*/ [];
     var jsonAccrues = /*[[${accrues}]]*/ [];
