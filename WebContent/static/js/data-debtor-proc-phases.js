@@ -67,7 +67,10 @@ var DatatableDataLocalPhases = function () {
                 title: "",
                 sortable: false,
                 template: function (row) {
-                    return '\
+
+                    var result = '';
+
+                    result = result + '\
                         <a href="/printoutTemplate/5/objectId/'+ row.id + '/select" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Претензия">\
 							<i class="la la-exclamation-circle"></i>\
 						</a>\
@@ -78,6 +81,11 @@ var DatatableDataLocalPhases = function () {
 							<i class="la la-trash"></i>\
 						</a>\
 					';
+
+                    if(!hasRoleAdmin)
+                        result = '';
+
+                    return result;
                 }
             }],
             translate: {

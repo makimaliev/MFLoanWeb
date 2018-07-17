@@ -56,7 +56,10 @@ var DatatableDataLocalItemInspections = function () {
                 title: "",
                 sortable: false,
                 template: function (row) {
-                    return '\
+
+                    var result = '';
+
+                    result = result + '\
 						<a href="/manage/debtor/'+ debtorId + '/collateralagreement/'+ agreementId + '/collateralitem/'+ itemId + '/insresult/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-edit"></i>\
 						</a>\
@@ -64,6 +67,11 @@ var DatatableDataLocalItemInspections = function () {
 							<i class="la la-trash"></i>\
 						</a>\
 					';
+
+                    if(!hasRoleAdmin)
+                        result = '';
+
+                    return result;
                 }
             }],
             translate: {
