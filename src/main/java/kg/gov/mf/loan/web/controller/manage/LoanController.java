@@ -1,18 +1,21 @@
 package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
+import kg.gov.mf.loan.manage.model.loan.*;
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.repository.order.CreditOrderRepository;
 import kg.gov.mf.loan.manage.repository.org.StaffRepository;
+import kg.gov.mf.loan.web.fetchModels.CreditTermModel;
+import kg.gov.mf.loan.web.fetchModels.PaymentModel;
+import kg.gov.mf.loan.web.fetchModels.PaymentScheduleModel;
 import kg.gov.mf.loan.web.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +27,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
-import kg.gov.mf.loan.manage.model.loan.Loan;
-import kg.gov.mf.loan.manage.model.loan.LoanState;
-import kg.gov.mf.loan.manage.model.loan.LoanType;
 import kg.gov.mf.loan.manage.model.orderterm.OrderTermCurrency;
 import kg.gov.mf.loan.manage.model.orderterm.OrderTermDaysMethod;
 import kg.gov.mf.loan.manage.model.orderterm.OrderTermFloatingRateType;
@@ -145,12 +145,22 @@ public class LoanController {
 
 		Loan loan = loanService.getById(loanId);
         model.addAttribute("loan", loan);
-        
-        model.addAttribute("terms", loan.getCreditTerms());
+
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String jsonTerms = gson.toJson(getTermsByLoanId(loanId));
+        model.addAttribute("terms", jsonTerms);
+
+        String jsonPaymentSchedules = gson.toJson(getPaymentSchedulesByLoanId(loanId));
+        model.addAttribute("paymentSchedules", jsonPaymentSchedules);
+
+        String jsonPayments = gson.toJson(getPaymentsByLoanId(loanId));
+        model.addAttribute("payments", jsonPayments);
+
+        //model.addAttribute("terms", loan.getCreditTerms());
+        //model.addAttribute("PaymentSchedules", loan.getPaymentSchedules());
+        //model.addAttribute("Payments", loan.getPayments());
         model.addAttribute("WOs", loan.getWriteOffs());
         model.addAttribute("SPs", loan.getSupervisorPlans());
-        model.addAttribute("PaymentSchedules", loan.getPaymentSchedules());
-        model.addAttribute("Payments", loan.getPayments());
         
         List<OrderTermRatePeriod> ratePeriods = ratePeriodService.list();
         model.addAttribute("ratePeriods", ratePeriods);
@@ -383,6 +393,96 @@ public class LoanController {
 		if(id > 0)
 			loanTypeService.remove(loanTypeService.getById(id));
 		return "redirect:" + "/manage/debtor/loan/type/list";
+    }
+
+	private List<CreditTermModel> getTermsByLoanId(long loanId)
+	{
+		List<CreditTermModel> result = new ArrayList<>();
+		Loan loan = loanService.getById(loanId);
+		for(CreditTerm term: loan.getCreditTerms())
+		{
+            CreditTermModel model = new CreditTermModel();
+			model.setId(term.getId());
+			model.setStartDate(term.getStartDate());
+			model.setInterestRateValue(term.getInterestRateValue());
+			model.setRatePeriodId(term.getRatePeriod().getId());
+			model.setRatePeriodName(term.getRatePeriod().getName());
+			model.setFloatingRateTypeId(term.getFloatingRateType().getId());
+			model.setFloatingRateTypeName(term.getFloatingRateType().getName());
+			model.setPenaltyOnPrincipleOverdueRateValue(term.getPenaltyOnPrincipleOverdueRateValue());
+			model.setPenaltyOnPrincipleOverdueRateTypeId(term.getPenaltyOnPrincipleOverdueRateType().getId());
+			model.setPenaltyOnPrincipleOverdueRateTypeName(term.getPenaltyOnPrincipleOverdueRateType().getName());
+			model.setPenaltyOnInterestOverdueRateValue(term.getPenaltyOnInterestOverdueRateValue());
+			model.setPenaltyOnInterestOverdueRateTypeId(term.getPenaltyOnInterestOverdueRateType().getId());
+			model.setPenaltyOnInterestOverdueRateTypeName(term.getPenaltyOnInterestOverdueRateType().getName());
+			model.setPenaltyLimitPercent(term.getPenaltyLimitPercent());
+			model.setPenaltyLimitEndDate(term.getPenaltyLimitEndDate());
+			model.setTransactionOrderId(term.getTransactionOrder().getId());
+			model.setTransactionOrderName(term.getTransactionOrder().getName());
+			model.setDaysInMonthMethodId(term.getDaysInMonthMethod().getId());
+			model.setDaysInMonthMethodName(term.getDaysInMonthMethod().getName());
+			model.setDaysInYearMethodId(term.getDaysInYearMethod().getId());
+			model.setDaysInYearMethodName(term.getDaysInYearMethod().getName());
+			result.add(model);
+		}
+
+		Collections.sort(result);
+
+		return result;
+	}
+
+    private List<PaymentScheduleModel> getPaymentSchedulesByLoanId(long loanId)
+    {
+        List<PaymentScheduleModel> result = new ArrayList<>();
+        Loan loan = loanService.getById(loanId);
+        for(PaymentSchedule ps: loan.getPaymentSchedules())
+        {
+            PaymentScheduleModel model = new PaymentScheduleModel();
+            model.setId(ps.getId());
+            model.setExpectedDate(ps.getExpectedDate());
+            model.setDisbursement(ps.getDisbursement());
+            model.setPrincipalPayment(ps.getPrincipalPayment());
+            model.setInterestPayment(ps.getInterestPayment());
+            model.setCollectedInterestPayment(ps.getCollectedInterestPayment());
+            model.setCollectedPenaltyPayment(ps.getCollectedPenaltyPayment());
+            model.setInstallmentStateId(ps.getInstallmentState().getId());
+            model.setInstallmentStateName(ps.getInstallmentState().getName());
+
+            result.add(model);
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    private List<PaymentModel> getPaymentsByLoanId(long loanId)
+    {
+        List<PaymentModel> result = new ArrayList<>();
+        Loan loan = loanService.getById(loanId);
+        for(Payment p: loan.getPayments())
+        {
+            PaymentModel model = new PaymentModel();
+            model.setId(p.getId());
+            model.setPaymentDate(p.getPaymentDate());
+            model.setTotalAmount(p.getTotalAmount());
+            model.setPrincipal(p.getPrincipal());
+            model.setInterest(p.getInterest());
+            model.setPenalty(p.getPenalty());
+            model.setFee(p.getFee());
+            model.setExchange_rate(p.getExchange_rate());
+            model.setNumber(p.getNumber());
+            model.setIn_loan_currency(p.isIn_loan_currency());
+            model.setDetails(p.getDetails());
+            model.setPaymentTypeId(p.getPaymentType().getId());
+            model.setPaymentTypeName(p.getPaymentType().getName());
+
+            result.add(model);
+        }
+
+        Collections.sort(result);
+
+        return result;
     }
 
 }
