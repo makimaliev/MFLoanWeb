@@ -10,12 +10,13 @@ import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.loan.*;
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
+import kg.gov.mf.loan.manage.model.process.Accrue;
+import kg.gov.mf.loan.manage.model.process.LoanDetailedSummary;
+import kg.gov.mf.loan.manage.model.process.LoanSummary;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.repository.order.CreditOrderRepository;
 import kg.gov.mf.loan.manage.repository.org.StaffRepository;
-import kg.gov.mf.loan.web.fetchModels.CreditTermModel;
-import kg.gov.mf.loan.web.fetchModels.PaymentModel;
-import kg.gov.mf.loan.web.fetchModels.PaymentScheduleModel;
+import kg.gov.mf.loan.web.fetchModels.*;
 import kg.gov.mf.loan.web.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -187,9 +188,18 @@ public class LoanController {
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtor", debtor);
 
-		model.addAttribute("detailedSummaries", loan.getLoanDetailedSummaries());
-		model.addAttribute("summaries", loan.getLoanSummaries());
-		model.addAttribute("accrues", loan.getAccrues());
+        String jsonDetailedSummaries = gson.toJson(getDetailedSummariesByLoanId(loanId));
+        model.addAttribute("detailedSummaries", jsonDetailedSummaries);
+
+        String jsonSummaries = gson.toJson(getSummariesByLoanId(loanId));
+        model.addAttribute("summaries", jsonSummaries);
+
+        String jsonAccrues = gson.toJson(getAccruesByLoanId(loanId));
+        model.addAttribute("accrues", jsonAccrues);
+
+		//model.addAttribute("detailedSummaries", loan.getLoanDetailedSummaries());
+		//model.addAttribute("summaries", loan.getLoanSummaries());
+		//model.addAttribute("accrues", loan.getAccrues());
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "/manage/debtor/loan/view";
@@ -476,6 +486,121 @@ public class LoanController {
             model.setDetails(p.getDetails());
             model.setPaymentTypeId(p.getPaymentType().getId());
             model.setPaymentTypeName(p.getPaymentType().getName());
+
+            result.add(model);
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    private List<LoanDetailedSummaryModel> getDetailedSummariesByLoanId(long loanId)
+    {
+        List<LoanDetailedSummaryModel> result = new ArrayList<>();
+        Loan loan = loanService.getById(loanId);
+        for(LoanDetailedSummary d: loan.getLoanDetailedSummaries())
+        {
+            LoanDetailedSummaryModel model = new LoanDetailedSummaryModel();
+            model.setId(d.getId());
+            model.setOnDate(d.getOnDate());
+            model.setDisbursement(d.getDisbursement());
+            model.setTotalDisbursement(d.getTotalDisbursement());
+            model.setPrincipalPayment(d.getPrincipalPayment());
+            model.setTotalPrincipalPayment(d.getTotalPrincipalPayment());
+            model.setPrincipalPaid(d.getPrincipalPaid());
+            model.setTotalPrincipalPaid(d.getTotalPrincipalPaid());
+            model.setPrincipalWriteOff(d.getPrincipalWriteOff());
+            model.setTotalPrincipalWriteOff(d.getTotalPrincipalWriteOff());
+            model.setPrincipalOutstanding(d.getPrincipalOutstanding());
+            model.setPrincipalOverdue(d.getPrincipalOverdue());
+            model.setDaysInPeriod(d.getDaysInPeriod());
+            model.setInterestAccrued(d.getInterestAccrued());
+            model.setTotalInterestAccrued(d.getTotalInterestAccrued());
+            model.setTotalInterestAccruedOnInterestPayment(d.getTotalInterestAccruedOnInterestPayment());
+            model.setInterestPayment(d.getInterestPayment());
+            model.setTotalInterestPayment(d.getTotalInterestPayment());
+            model.setCollectedInterestPayment(d.getCollectedInterestPayment());
+            model.setTotalCollectedInterestPayment(d.getTotalCollectedInterestPayment());
+            model.setCollectedInterestDisbursed(d.getCollectedInterestDisbursed());
+            model.setInterestPaid(d.getInterestPaid());
+            model.setTotalInterestPaid(d.getTotalInterestPaid());
+            model.setInterestOutstanding(d.getInterestOutstanding());
+            model.setInterestOverdue(d.getInterestOverdue());
+            model.setPenaltyAccrued(d.getPenaltyAccrued());
+            model.setTotalPenaltyAccrued(d.getTotalPenaltyAccrued());
+            model.setCollectedPenaltyPayment(d.getCollectedPenaltyPayment());
+            model.setTotalCollectedPenaltyPayment(d.getTotalCollectedPenaltyPayment());
+            model.setCollectedPenaltyDisbursed(d.getCollectedPenaltyDisbursed());
+            model.setPenaltyPaid(d.getPenaltyPaid());
+            model.setTotalPenaltyPaid(d.getTotalPenaltyPaid());
+            model.setPenaltyOutstanding(d.getPenaltyOutstanding());
+            model.setPenaltyOverdue(d.getPenaltyOverdue());
+
+            result.add(model);
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    private List<LoanSummaryModel> getSummariesByLoanId(long loanId)
+    {
+        List<LoanSummaryModel> result = new ArrayList<>();
+        Loan loan = loanService.getById(loanId);
+        for(LoanSummary d: loan.getLoanSummaries())
+        {
+            LoanSummaryModel model = new LoanSummaryModel();
+            model.setId(d.getId());
+            model.setOnDate(d.getOnDate());
+            model.setLoanAmount(d.getLoanAmount());
+            model.setTotalDisbursed(d.getTotalDisbursed());
+            model.setTotalPaid(d.getTotalPaid());
+            model.setPaidPrincipal(d.getPaidPrincipal());
+            model.setPaidInterest(d.getPaidInterest());
+            model.setPaidPenalty(d.getPaidPenalty());
+            model.setPaidFee(d.getPaidFee());
+            model.setTotalOutstanding(d.getTotalOutstanding());
+            model.setOutstadingPrincipal(d.getOutstadingPrincipal());
+            model.setOutstadingInterest(d.getOutstadingInterest());
+            model.setOutstadingPenalty(d.getOutstadingPenalty());
+            model.setOutstadingFee(d.getOutstadingFee());
+            model.setTotalOverdue(d.getTotalOverdue());
+            model.setOverduePrincipal(d.getOverduePrincipal());
+            model.setOverdueInterest(d.getOverdueInterest());
+            model.setOverduePenalty(d.getOverduePenalty());
+            model.setOverdueFee(d.getOverdueFee());
+            model.setTotalPrincipalPaid(d.getTotalPrincipalPaid());
+            model.setTotalInterestPaid(d.getTotalInterestPaid());
+            model.setTotalPenaltyPaid(d.getTotalPenaltyPaid());
+            model.setTotalFeePaid(d.getTotalFeePaid());
+            model.setLoanSummaryType(d.getLoanSummaryType());
+
+            result.add(model);
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    private List<AccrueModel> getAccruesByLoanId(long loanId)
+    {
+        List<AccrueModel> result = new ArrayList<>();
+        Loan loan = loanService.getById(loanId);
+        for(Accrue d: loan.getAccrues())
+        {
+            AccrueModel model = new AccrueModel();
+            model.setId(d.getId());
+            model.setFromDate(d.getFromDate());
+            model.setToDate(d.getToDate());
+            model.setDaysInPeriod(d.getDaysInPeriod());
+            model.setInterestAccrued(d.getInterestAccrued());
+            model.setPenaltyAccrued(d.getPenaltyAccrued());
+            model.setPenaltyOnPrincipalOverdue(d.getPenaltyOnPrincipalOverdue());
+            model.setPenaltyOnInterestOverdue(d.getPenaltyOnInterestOverdue());
+            model.setLastInstPassed(d.isLastInstPassed());
 
             result.add(model);
         }

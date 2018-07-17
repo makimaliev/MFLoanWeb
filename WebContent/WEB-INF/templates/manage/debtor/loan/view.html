@@ -888,226 +888,79 @@
 								<!--end::Section-->
 							</div>
 							<div class="tab-pane" id="loanDetailedSummary" role="tabpanel">
-								<!--begin::Section-->
-								<div class="m-section">
-									<div class="m-section__content">
-										<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
-											<div>
-												<table class="table">
-													<thead class="thead-default">
-													<tr>
-														<th class="table-id">#</th>
-														<th th:text="#{label.loanDetailedSummary.onDate}">onDate</th>
-														<th th:text="#{label.loanDetailedSummary.disbursement}">disbursement</th>
-														<th th:text="#{label.loanDetailedSummary.totalDisbursement}">totalDisbursement</th>
-														<th th:text="#{label.loanDetailedSummary.principalPayment}">principalPayment</th>
-														<th th:text="#{label.loanDetailedSummary.totalPrincipalPayment}">totalPrincipalPayment</th>
-														<th th:text="#{label.loanDetailedSummary.principalPaid}">principalPaid</th>
-														<th th:text="#{label.loanDetailedSummary.totalPrincipalPaid}">totalPrincipalPaid</th>
-														<th th:text="#{label.loanDetailedSummary.principalWriteOff}">principalWriteOff</th>
-														<th th:text="#{label.loanDetailedSummary.totalPrincipalWriteOff}">totalPrincipalWriteOff</th>
-														<th th:text="#{label.loanDetailedSummary.principalOutstanding}">principalOutstanding</th>
-														<th th:text="#{label.loanDetailedSummary.principalOutstanding}">principalOutstanding</th>
-														<th th:text="#{label.loanDetailedSummary.daysInPeriod}">daysInPeriod</th>
-														<th th:text="#{label.loanDetailedSummary.interestAccrued}">interestAccrued</th>
-														<th th:text="#{label.loanDetailedSummary.totalInterestAccrued}">totalInterestAccrued</th>
-														<th th:text="#{label.loanDetailedSummary.totalInterestAccruedOnInterestPayment}">totalInterestAccruedOnInterestPayment</th>
-														<th th:text="#{label.loanDetailedSummary.interestPayment}">interestPayment</th>
-														<th th:text="#{label.loanDetailedSummary.totalInterestPayment}">totalInterestPayment</th>
-														<th th:text="#{label.loanDetailedSummary.collectedInterestPayment}">collectedInterestPayment</th>
-														<th th:text="#{label.loanDetailedSummary.totalCollectedInterestPayment}">totalCollectedInterestPayment</th>
-														<th th:text="#{label.loanDetailedSummary.collectedInterestDisbursed}">collectedInterestDisbursed</th>
-														<th th:text="#{label.loanDetailedSummary.interestPaid}">interestPaid</th>
-														<th th:text="#{label.loanDetailedSummary.totalInterestPaid}">totalInterestPaid</th>
-														<th th:text="#{label.loanDetailedSummary.interestOutstanding}">interestOutstanding</th>
-														<th th:text="#{label.loanDetailedSummary.interestOverdue}">interestOverdue</th>
-														<th th:text="#{label.loanDetailedSummary.penaltyAccrued}">penaltyAccrued</th>
-														<th th:text="#{label.loanDetailedSummary.totalPenaltyAccrued}">totalPenaltyAccrued</th>
-														<th th:text="#{label.loanDetailedSummary.collectedPenaltyPayment}">collectedPenaltyPayment</th>
-														<th th:text="#{label.loanDetailedSummary.totalCollectedPenaltyPayment}">totalCollectedPenaltyPayment</th>
-														<th th:text="#{label.loanDetailedSummary.collectedPenaltyDisbursed}">collectedPenaltyDisbursed</th>
-														<th th:text="#{label.loanDetailedSummary.penaltyPaid}">penaltyPaid</th>
-														<th th:text="#{label.loanDetailedSummary.totalPenaltyPaid}">totalPenaltyPaid</th>
-														<th th:text="#{label.loanDetailedSummary.penaltyOutstanding}">penaltyOutstanding</th>
-														<th th:text="#{label.loanDetailedSummary.penaltyOverdue}">penaltyOverdue</th>
-													</tr>
-													</thead>
-													<tbody>
-													<tr th:each="dSummary, iterator : ${detailedSummaries}">
-														<td class="table-id" th:text="${iterator.index+1}"></td>
-														<td th:text="${dSummary.onDate}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.disbursement, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.totalDisbursement, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.principalPayment, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.totalPrincipalPayment, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.principalPaid, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.totalPrincipalPaid, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.principalWriteOff, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.totalPrincipalWriteOff, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.principalOutstanding, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.principalOverdue, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.daysInPeriod, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.interestAccrued, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.totalInterestAccrued, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.totalInterestAccruedOnInterestPayment, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.interestPayment, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.totalInterestPayment, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.collectedInterestPayment, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.totalCollectedInterestPayment, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.collectedInterestDisbursed, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.interestPaid, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.totalInterestPaid, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.interestOutstanding, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.interestOverdue, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.penaltyAccrued, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.totalPenaltyAccrued, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.collectedPenaltyPayment, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.totalCollectedPenaltyPayment, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.collectedPenaltyDisbursed, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.penaltyPaid, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.totalPenaltyPaid, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.penaltyOutstanding, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(dSummary.penaltyOverdue, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-													</tr>
-													</tbody>
-												</table>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!--end::Section-->
+                                <!--begin: Search Form -->
+                                <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                                    <div class="row align-items-center">
+                                        <div class="col-xl-9 order-1 order-xl-1">
+                                            <div class="form-group m-form__group row align-items-center">
+                                                <div class="col-lg-6">
+                                                    <div class="m-input-icon m-input-icon--left">
+                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search4">
+                                                        <span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end: Search Form -->
+                                <!--begin: Datatable -->
+                                <div class="m_datatable" id="detailedSummariesTable"></div>
+                                <!--end: Datatable -->
 							</div>
 							<div class="tab-pane" id="loanSummary" role="tabpanel">
-								<!--begin::Section-->
-								<div class="m-section">
-									<div class="m-section__content">
-										<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
-											<div>
-												<table class="table">
-													<thead class="thead-default">
-													<tr>
-														<th class="table-id">#</th>
-														<th th:text="#{label.loanSummary.onDate}">onDate</th>
-														<th th:text="#{label.loanSummary.loanAmount}">loanAmount</th>
-														<th th:text="#{label.loanSummary.totalDisbursed}">totalDisbursed</th>
-														<th th:text="#{label.loanSummary.totalPaid}">totalPaid</th>
-														<th th:text="#{label.loanSummary.paidPrincipal}">paidPrincipal</th>
-														<th th:text="#{label.loanSummary.paidInterest}">paidInterest</th>
-														<th th:text="#{label.loanSummary.paidPenalty}">paidPenalty</th>
-														<th th:text="#{label.loanSummary.paidFee}">paidFee</th>
-														<th th:text="#{label.loanSummary.totalOutstanding}">totalOutstanding</th>
-														<th th:text="#{label.loanSummary.outstadingPrincipal}">outstadingPrincipal</th>
-														<th th:text="#{label.loanSummary.outstadingInterest}">outstadingInterest</th>
-														<th th:text="#{label.loanSummary.outstadingPenalty}">outstadingPenalty</th>
-														<th th:text="#{label.loanSummary.outstadingFee}">outstadingFee</th>
-														<th th:text="#{label.loanSummary.totalOverdue}">totalOverdue</th>
-														<th th:text="#{label.loanSummary.overduePrincipal}">overduePrincipal</th>
-														<th th:text="#{label.loanSummary.overdueInterest}">overdueInterest</th>
-														<th th:text="#{label.loanSummary.overduePenalty}">overduePenalty</th>
-														<th th:text="#{label.loanSummary.overdueFee}">overdueFee</th>
-														<th>&nbsp;</th>
-													</tr>
-													</thead>
-													<tbody>
-													<tr th:each="summary, iterator : ${summaries}">
-														<td class="table-id" th:text="${iterator.index+1}"></td>
-														<td th:text="${summary.onDate}"></td>
-														<td th:text="${#numbers.formatDecimal(summary.loanAmount, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(summary.totalDisbursed, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(summary.totalPaid, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(summary.paidPrincipal, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(summary.paidInterest, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(summary.paidPenalty, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(summary.paidFee, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(summary.totalOutstanding, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(summary.outstadingPrincipal, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(summary.outstadingInterest, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(summary.outstadingPenalty, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(summary.outstadingFee, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(summary.totalOverdue, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(summary.overduePrincipal, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(summary.overdueInterest, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(summary.overduePenalty, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td th:text="${#numbers.formatDecimal(summary.overdueFee, 0, 'DEFAULT', 2, 'DEFAULT')}"></td>
-														<td class="table-actions text-right">
+                                <!--begin: Search Form -->
+                                <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                                    <div class="row align-items-center">
+                                        <div class="col-xl-9 order-1 order-xl-1">
+                                            <div class="form-group m-form__group row align-items-center">
+                                                <div class="col-lg-6">
+                                                    <div class="m-input-icon m-input-icon--left">
+                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search5">
+                                                        <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
-																<div class="dropdown">
-																	<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
-																		<i class="la la-ellipsis-h"></i>
-																	</a>
-																	<div class="dropdown-menu dropdown-menu-right">
-																		<a class="dropdown-item"
-																		   th:href="@{/printoutTemplate/1/objectId/__${summary.id}__/select}"
-																		   role="button">
-																			<span >Реестр погашений</span>
-																		</a>
-																		<!--<a class="dropdown-item"-->
-																		   <!--th:href="@{/printoutTemplate/2/objectId/__${summary.id}__/select}"-->
-																		   <!--role="button">-->
-																			<!--<span >Детальный расчет</span>-->
-																		<!--</a>-->
-																		<!--<a class="dropdown-item"-->
-																		   <!--th:href="@{/printoutTemplate/3/objectId/__${summary.id}__/select}"-->
-																		   <!--role="button">-->
-																			<!--<span >Расчет</span>-->
-																		<!--</a>-->
-																		<a class="dropdown-item"
-																		   th:href="@{/printoutTemplate/4/objectId/__${summary.id}__/select}"
-																		   role="button">
-																			<span >Акт сверки</span>
-																		</a>
-																	</div>
-																</div>
+																<i class="la la-search"></i>
 															</span>
-														</td>
-													</tr>
-													</tbody>
-												</table>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!--end::Section-->
+														</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end: Search Form -->
+                                <!--begin: Datatable -->
+                                <div class="m_datatable" id="summariesTable"></div>
+                                <!--end: Datatable -->
 							</div>
 							<div class="tab-pane" id="accrue" role="tabpanel">
-								<!--begin::Section-->
-								<div class="m-section">
-									<div class="m-section__content">
-										<div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
-											<div>
-												<table class="table">
-													<thead class="thead-default">
-													<tr>
-														<th class="table-id">#</th>
-														<th th:text="#{label.accrue.fromDate}">fromDate</th>
-														<th th:text="#{label.accrue.toDate}">toDate</th>
-														<th th:text="#{label.accrue.daysInPeriod}">daysInPeriod</th>
-														<th th:text="#{label.accrue.interestAccrued}">interestAccrued</th>
-														<th th:text="#{label.accrue.penaltyAccrued}">penaltyAccrued</th>
-														<th th:text="#{label.accrue.penaltyOnPrincipalOverdue}">penaltyOnPrincipalOverdue</th>
-														<th th:text="#{label.accrue.penaltyOnInterestOverdue}">penaltyOnInterestOverdue</th>
-														<th th:text="#{label.accrue.lastInstPassed}">lastInstPassed</th>
-													</tr>
-													</thead>
-													<tbody>
-													<tr th:each="accrue, iterator : ${accrues}">
-														<td class="table-id" th:text="${iterator.index+1}"></td>
-														<td th:text="${accrue.fromDate}"></td>
-														<td th:text="${accrue.toDate}"></td>
-														<td th:text="${accrue.daysInPeriod}"></td>
-														<td th:text="${accrue.interestAccrued}"></td>
-														<td th:text="${accrue.penaltyAccrued}"></td>
-														<td th:text="${accrue.penaltyOnPrincipalOverdue}"></td>
-														<td th:text="${accrue.penaltyOnInterestOverdue}"></td>
-														<td th:text="${accrue.lastInstPassed}"></td>
-													</tr>
-													</tbody>
-												</table>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!--end::Section-->
+                                <!--begin: Search Form -->
+                                <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                                    <div class="row align-items-center">
+                                        <div class="col-xl-9 order-1 order-xl-1">
+                                            <div class="form-group m-form__group row align-items-center">
+                                                <div class="col-lg-6">
+                                                    <div class="m-input-icon m-input-icon--left">
+                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search6">
+                                                        <span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end: Search Form -->
+                                <!--begin: Datatable -->
+                                <div class="m_datatable" id="accruesTable"></div>
+                                <!--end: Datatable -->
 							</div>
 						</div>
 					</div>
@@ -1129,6 +982,9 @@
 <script th:src="@{/js/data-debtor-loan-terms.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-paymentSchedules.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-payments.js}" th:inline="javascript" type="text/javascript"></script>
+<script th:src="@{/js/data-debtor-loan-detailedSummaries.js}" th:inline="javascript" type="text/javascript"></script>
+<script th:src="@{/js/data-debtor-loan-summaries.js}" th:inline="javascript" type="text/javascript"></script>
+<script th:src="@{/js/data-debtor-loan-accrues.js}" th:inline="javascript" type="text/javascript"></script>
 <!--end::Page Resources -->
 
 <div th:with="isAdmin = ${#authorization.expression('hasRole(''ADMIN'')')}">
@@ -1146,6 +1002,9 @@
     var jsonTerms = /*[[${terms}]]*/ [];
     var jsonPaymentSchedules = /*[[${paymentSchedules}]]*/ [];
     var jsonPayments = /*[[${payments}]]*/ [];
+    var jsonDetailedSummaries = /*[[${detailedSummaries}]]*/ [];
+    var jsonSummaries = /*[[${summaries}]]*/ [];
+    var jsonAccrues = /*[[${accrues}]]*/ [];
     /*]]>*/
 </script>
 
