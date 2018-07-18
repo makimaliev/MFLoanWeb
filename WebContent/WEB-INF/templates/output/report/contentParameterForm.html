@@ -23,6 +23,31 @@
 		</div>
 
 		<div class="form-group ">
+			<label class="form-control-label">Row Type<span class="required"> * </span></label>
+			<div class="row">
+				<div class="col-12">
+					<select th:field="*{rowType}"  class="selectpicker">
+						<option th:each="rowTypeInList : ${T(kg.gov.mf.loan.output.report.model.RowType).values()}"
+								th:value="${rowTypeInList}"
+								th:text="${rowTypeInList}">RowType</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="form-group ">
+			<label class="form-control-label">Cell Type<span class="required"> * </span></label>
+			<div class="row">
+				<div class="col-12">
+					<select th:field="*{cellType}"  class="selectpicker">
+						<option th:each="cellTypeInList : ${T(kg.gov.mf.loan.output.report.model.CellType).values()}"
+								th:value="${cellTypeInList}"
+								th:text="${cellTypeInList}">CellType</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group ">
 			<label class="form-control-label">ContentType<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
@@ -46,6 +71,12 @@
 		</div>
 
 		<div class="form-group">
+			<label for="constantInt" class="form-control-label">Constant Int<span class="required"> * </span></label>
+			<input type="text" class="form-control" id="constantInt" name="constantInt" th:value="*{constantInt}">
+		</div>
+
+
+		<div class="form-group">
 			<label for="constantText" class="form-control-label">Constant Text<span class="required"> * </span></label>
 			<input type="text" class="form-control" id="constantText" name="constantText" th:value="*{constantText}">
 		</div>
@@ -64,6 +95,35 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="form-group">
+			<label  class="form-control-label">Position<span class="required"> * </span></label>
+			<input type="text" class="form-control" th:field="*{position}">
+		</div>
+
+		<div class="form-group">
+			<label  class="form-control-label">Column from<span class="required"> * </span></label>
+			<input type="text" class="form-control" th:field="*{col_from}">
+		</div>
+
+		<div class="form-group">
+			<label  class="form-control-label">Column to<span class="required"> * </span></label>
+			<input type="text" class="form-control" th:field="*{col_to}">
+		</div>
+
+
+		<div class="form-group">
+			<label  class="form-control-label">Row From<span class="required"> * </span></label>
+			<input type="text" class="form-control" th:field="*{row_from}">
+		</div>
+
+
+		<div class="form-group">
+			<label  class="form-control-label">Row to<span class="required"> * </span></label>
+			<input type="text" class="form-control" th:field="*{row_to}">
+		</div>
+
+
 
 	</div>
 
