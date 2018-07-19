@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
+import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
 import kg.gov.mf.loan.manage.model.loan.*;
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
 import kg.gov.mf.loan.manage.model.process.Accrue;
@@ -160,12 +161,24 @@ public class LoanController {
         String jsonDebtTransfers = gson.toJson(getDTsByLoanId(loanId));
         model.addAttribute("DTs", jsonDebtTransfers);
 
+        String jsonTargetedUses = gson.toJson(getTUsByLoanId(loanId));
+        model.addAttribute("TUs", jsonTargetedUses);
+
+        String jsonReconstructuredLists = gson.toJson(getRLsByLoanId(loanId));
+        model.addAttribute("RLs", jsonReconstructuredLists);
+
+        String jsonBankrupts = gson.toJson(getBankruptsByLoanId(loanId));
+        model.addAttribute("bankrupts", jsonBankrupts);
+
+        String jsonCollectionPhases = gson.toJson(getPhasesByLoanId(loanId));
+        model.addAttribute("phases", jsonCollectionPhases);
+
         //model.addAttribute("LGs", loan.getLoanGoods());
         //model.addAttribute("DTs", loan.getDebtTransfers());
-        model.addAttribute("TUs", loan.getTargetedUses());
-        model.addAttribute("RLs", loan.getReconstructedLists());
-        model.addAttribute("Bankrupts", loan.getBankrupts());
-        model.addAttribute("Collaterals", loan.getCollaterals());
+        //model.addAttribute("TUs", loan.getTargetedUses());
+        //model.addAttribute("RLs", loan.getReconstructedLists());
+        //model.addAttribute("Bankrupts", loan.getBankrupts());
+
         model.addAttribute("debtorId", debtorId);
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtor", debtor);
@@ -678,6 +691,95 @@ public class LoanController {
             model.setTransferCreditId(d.getTransferCreditId());
             model.setTransferPersonId(d.getTransferPersonId());
             model.setGoodsTypeId(d.getGoodsTypeId());
+
+            result.add(model);
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    private List<TargetedUseModel> getTUsByLoanId(long loanId)
+    {
+        List<TargetedUseModel> result = new ArrayList<>();
+        Loan loan = loanService.getById(loanId);
+        for(TargetedUse d: loan.getTargetedUses())
+        {
+            TargetedUseModel model = new TargetedUseModel();
+            model.setId(d.getId());
+            model.setTargetedUseResultId(d.getTargetedUseResultId());
+            model.setCreatedById(d.getCreatedById());
+            model.setCreatedDate(d.getCreatedDate());
+            model.setApprovedById(d.getApprovedById());
+            model.setApprovedDate(d.getApprovedDate());
+            model.setCheckedById(d.getCheckedById());
+            model.setCheckedDate(d.getCheckedDate());
+            model.setAttachmentId(d.getAttachmentId());
+
+            result.add(model);
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    private List<ReconstructedListModel> getRLsByLoanId(long loanId)
+    {
+        List<ReconstructedListModel> result = new ArrayList<>();
+        Loan loan = loanService.getById(loanId);
+        for(ReconstructedList d: loan.getReconstructedLists())
+        {
+            ReconstructedListModel model = new ReconstructedListModel();
+            model.setId(d.getId());
+            model.setOnDate(d.getOnDate());
+            model.setOldLoanId(d.getOldLoanId());
+
+            result.add(model);
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    private List<BankruptModel> getBankruptsByLoanId(long loanId)
+    {
+        List<BankruptModel> result = new ArrayList<>();
+        Loan loan = loanService.getById(loanId);
+        for(Bankrupt d: loan.getBankrupts())
+        {
+            BankruptModel model = new BankruptModel();
+            model.setId(d.getId());
+            model.setStartedOnDate(d.getStartedOnDate());
+            model.setFinishedOnDate(d.getFinishedOnDate());
+
+            result.add(model);
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    private List<CollectionPhaseModel> getPhasesByLoanId(long loanId)
+    {
+        List<CollectionPhaseModel> result = new ArrayList<>();
+        Loan loan = loanService.getById(loanId);
+        for(CollectionPhase d: loan.getCollectionPhases())
+        {
+            CollectionPhaseModel model = new CollectionPhaseModel();
+            model.setId(d.getId());
+            model.setStartDate(d.getStartDate());
+            model.setCloseDate(d.getCloseDate());
+            model.setLastEvent(d.getLastEvent());
+            model.setLastStatusId(d.getLastStatusId());
+            model.setPhaseStatusId(d.getPhaseStatus().getId());
+            model.setPhaseStatusName(d.getPhaseStatus().getName());
+            model.setPhaseTypeId(d.getPhaseType().getId());
+            model.setPhaseTypeName(d.getPhaseType().getName());
+            model.setProcedureId(d.getCollectionProcedure().getId());
 
             result.add(model);
         }

@@ -28,10 +28,20 @@ public class CollectionPhaseModel implements Comparable<CollectionPhaseModel> {
     private long phaseTypeId;
     private String phaseTypeName;
 
+    private long procedureId;
+
     @Override
     public int compareTo(CollectionPhaseModel model)
     {
         return model.startDate.compareTo(this.startDate);
+    }
+
+    public long getProcedureId() {
+        return procedureId;
+    }
+
+    public void setProcedureId(long procedureId) {
+        this.procedureId = procedureId;
     }
 
     public Long getId() {
