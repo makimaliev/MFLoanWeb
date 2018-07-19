@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
-	<title th:text="#{label.add.loan.wo.title}"></title>
+	<title>Добавить/Редактировать списание</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -21,13 +21,69 @@
 		<div th:replace="layout/sidebar"/>
 		<!-- END: Left Aside -->
 		<div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <!-- BEGIN: Subheader -->
+            <div class="m-subheader ">
+                <div class="d-flex align-items-center">
+                    <div class="mr-auto">
+                        <h3 class="m-subheader__title m-subheader__title--separator">
+                            Списание
+                        </h3>
+                        <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+                            <li class="m-nav__item m-nav__item--home">
+                                <a th:href="@{/}" class="m-nav__link m-nav__link--icon">
+                                    <i class="m-nav__link-icon la la-home"></i>
+                                </a>
+                            </li>
+                            <li class="m-nav__separator">
+                                -
+                            </li>
+                            <li class="m-nav__item">
+                                <a th:href="@{/manage/debtor/list}" class="m-nav__link">
+											<span class="m-nav__link-text">
+												Список заемщиков
+											</span>
+                                </a>
+                            </li>
+                            <li class="m-nav__separator">
+                                -
+                            </li>
+                            <li class="m-nav__item">
+                                <a th:href="@{/manage/debtor/__${debtorId}__/view}" class="m-nav__link">
+											<span class="m-nav__link-text" th:text="${debtor.name}">
+												Заемщик
+											</span>
+                                </a>
+                            </li>
+                            <li class="m-nav__separator">
+                                -
+                            </li>
+                            <li class="m-nav__item">
+                                <a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/view}" class="m-nav__link">
+											<span class="m-nav__link-text" th:text="${loan.regNumber}">
+												Заемщик
+											</span>
+                                </a>
+                            </li>
+                            <li class="m-nav__separator">
+                                -
+                            </li>
+                            <li class="m-nav__item">
+								<span class="m-nav__link-text">
+												Добавить/Редактировать списание
+											</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- END: Subheader -->
 			<div class="m-content">
 				<!--begin::Portlet-->
 				<div class="m-portlet m-portlet--full-height">
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.loan.wo.add}"></h3>
+								<h3 class="m-portlet__head-text">Списание</h3>
 							</div>
 						</div>
 					</div>
@@ -45,7 +101,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:value="${wo.date}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:value="${#dates.format(wo.date,'dd.MM.yyyy')}"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
