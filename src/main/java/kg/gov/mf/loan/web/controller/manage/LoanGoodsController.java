@@ -1,5 +1,6 @@
 package kg.gov.mf.loan.web.controller.manage;
 
+import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,6 +21,9 @@ public class LoanGoodsController {
 	
 	@Autowired
 	LoanGoodsService lgService;
+
+	@Autowired
+	DebtorService debtorService;
 	
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/loangoods/{lgId}/save", method=RequestMethod.GET)
 	public String formCreditTerm(ModelMap model, 
@@ -39,7 +43,9 @@ public class LoanGoodsController {
 		}
 		
         model.addAttribute("debtorId", debtorId);
+        model.addAttribute("debtor", debtorService.getById(debtorId));
         model.addAttribute("loanId", loanId);
+        model.addAttribute("loan", loanService.getById(loanId));
 			
 		return "/manage/debtor/loan/loangoods/save";
 	}

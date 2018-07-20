@@ -3,6 +3,7 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class DebtTransferController {
 	
 	@Autowired
 	DebtTransferService dtService;
+
+	@Autowired
+	DebtorService debtorService;
 	
 	static final Logger loggerDT = LoggerFactory.getLogger(DebtTransfer.class);
 
@@ -56,7 +60,9 @@ public class DebtTransferController {
 		}
 		
         model.addAttribute("debtorId", debtorId);
+        model.addAttribute("debtor", debtorService.getById(debtorId));
         model.addAttribute("loanId", loanId);
+        model.addAttribute("loan", loanService.getById(loanId));
 			
 		return "/manage/debtor/loan/debttransfer/save";
 	}

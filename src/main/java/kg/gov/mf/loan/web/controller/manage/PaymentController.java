@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -34,41 +35,14 @@ public class PaymentController {
 	@Autowired
 	PaymentService paymentService;
 
-	private static final int BUTTONS_TO_SHOW = 5;
-	private static final int INITIAL_PAGE = 0;
-	private static final int INITIAL_PAGE_SIZE = 10;
-	private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
+	@Autowired
+	DebtorService debtorService;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
-		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
+		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
 	    binder.registerCustomEditor(Date.class, editor);
-	}
-
-	@RequestMapping(value = { "/manage/debtor/loan/payment/list"})
-	public String listPayments(@RequestParam("pageSize") Optional<Integer> pageSize,
-							@RequestParam("page") Optional<Integer> page, ModelMap model) {
-
-		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
-		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
-
-		List<Payment> payments = paymentService.listByParam("id", evalPage*evalPageSize, evalPageSize);
-		int count = paymentService.count();
-
-		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
-
-		model.addAttribute("count", count/evalPageSize+1);
-		model.addAttribute("payments", payments);
-		model.addAttribute("selectedPageSize", evalPageSize);
-		model.addAttribute("pageSizes", PAGE_SIZES);
-		model.addAttribute("pager", pager);
-		model.addAttribute("current", evalPage);
-
-		model.addAttribute("loggedinuser", Utils.getPrincipal());
-
-		return "/manage/debtor/loan/payment/list";
-
 	}
 	
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/payment/{paymentId}/save", method=RequestMethod.GET)
@@ -92,7 +66,9 @@ public class PaymentController {
         model.addAttribute("pTypes", pTypes);
 		
         model.addAttribute("debtorId", debtorId);
+        model.addAttribute("debtor", debtorService.getById(debtorId));
         model.addAttribute("loanId", loanId);
+        model.addAttribute("loan", loanService.getById(loanId));
 			
 		return "/manage/debtor/loan/payment/save";
 	}
