@@ -1,5 +1,6 @@
 package kg.gov.mf.loan.web.controller.manage;
 
+import kg.gov.mf.loan.manage.repository.loan.LoanGoodsRepository;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,9 @@ public class LoanGoodsController {
 
 	@Autowired
 	DebtorService debtorService;
+
+	@Autowired
+	LoanGoodsRepository loanGoodsRepository;
 	
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/loangoods/{lgId}/save", method=RequestMethod.GET)
 	public String formCreditTerm(ModelMap model, 
@@ -61,14 +65,14 @@ public class LoanGoodsController {
 		else		
 			lgService.update(lg);
 		
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_5";
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/loangoods/delete", method=RequestMethod.POST)
-    public String deleteLoanGoods(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
-		if(id > 0)
-			lgService.remove(lgService.getById(id));
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_5";
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/loangoods/{goodsId}/delete", method=RequestMethod.GET)
+    public String deleteLoanGoods(@PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, @PathVariable("goodsId")Long goodsId) {
+		if(goodsId > 0)
+		    loanGoodsRepository.delete(loanGoodsRepository.findOne(goodsId));
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 
 }

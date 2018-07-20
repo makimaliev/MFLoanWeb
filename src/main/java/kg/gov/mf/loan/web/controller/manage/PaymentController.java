@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import kg.gov.mf.loan.manage.repository.loan.PaymentRepository;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,9 @@ public class PaymentController {
 
 	@Autowired
 	DebtorService debtorService;
+
+	@Autowired
+	PaymentRepository paymentRepository;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -84,14 +88,14 @@ public class PaymentController {
 		else
 			paymentService.update(payment);
 		
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_3";
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/payment/delete", method=RequestMethod.POST)
-    public String deletePayment(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
-		if(id > 0)
-			paymentService.remove(paymentService.getById(id));
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_3";
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/payment/{paymentId}/delete", method=RequestMethod.GET)
+    public String deletePayment(@PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, @PathVariable("paymentId")Long paymentId) {
+		if(paymentId > 0)
+            paymentRepository.delete(paymentRepository.findOne(paymentId));
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	
 	@RequestMapping(value = { "/manage/debtor/loan/payment/type/list" }, method = RequestMethod.GET)

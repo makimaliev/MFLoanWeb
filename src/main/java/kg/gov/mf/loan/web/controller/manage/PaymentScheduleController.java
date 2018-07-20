@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import kg.gov.mf.loan.manage.repository.loan.PaymentScheduleRepository;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ public class PaymentScheduleController {
 
 	@Autowired
 	DebtorService debtorService;
+
+	@Autowired
+	PaymentScheduleRepository paymentScheduleRepository;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -86,14 +90,14 @@ public class PaymentScheduleController {
 		else
 			paymentScheduleService.update(paymentSchedule);
 		
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_2";
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/paymentschedule/delete", method=RequestMethod.POST)
-    public String deletePaymentSchedule(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
-		if(id > 0)
-			paymentScheduleService.remove(paymentScheduleService.getById(id));
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_2";
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/paymentschedule/{psId}/delete", method=RequestMethod.POST)
+    public String deletePaymentSchedule(@PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, @PathVariable("psId")Long psId) {
+		if(psId > 0)
+            paymentScheduleRepository.delete(paymentScheduleRepository.findOne(psId));
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	
 	@RequestMapping(value = { "/manage/debtor/loan/paymentschedule/installmentstate/list" }, method = RequestMethod.GET)

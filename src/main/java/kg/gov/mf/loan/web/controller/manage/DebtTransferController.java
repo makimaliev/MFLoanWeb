@@ -3,6 +3,7 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import kg.gov.mf.loan.manage.repository.loan.DebtTransferRepository;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,9 @@ public class DebtTransferController {
 
 	@Autowired
 	DebtorService debtorService;
+
+	@Autowired
+	DebtTransferRepository debtTransferRepository;
 	
 	static final Logger loggerDT = LoggerFactory.getLogger(DebtTransfer.class);
 
@@ -78,14 +82,14 @@ public class DebtTransferController {
 		else
 			dtService.update(dt);
 		
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_6";
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/debttransfer/delete", method=RequestMethod.POST)
-    public String deleteDebtTransfer(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
-		if(id > 0)
-			dtService.remove(dtService.getById(id));
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_6";
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/debttransfer/{transferId}/delete", method=RequestMethod.GET)
+    public String deleteDebtTransfer(@PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, @PathVariable("transferId")Long transferId) {
+		if(transferId > 0)
+		    debtTransferRepository.delete(debtTransferRepository.findOne(transferId));
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	
 }

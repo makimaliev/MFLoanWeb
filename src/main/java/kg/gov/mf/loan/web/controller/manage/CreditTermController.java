@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import kg.gov.mf.loan.manage.repository.loan.CreditTermRepository;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.web.util.Pager;
 import kg.gov.mf.loan.web.util.Utils;
@@ -51,6 +52,9 @@ public class CreditTermController {
 
 	@Autowired
 	DebtorService debtorService;
+
+	@Autowired
+	CreditTermRepository termRepository;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -116,10 +120,10 @@ public class CreditTermController {
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
 	}
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/term/delete", method=RequestMethod.POST)
-    public String deleteCreditTerm(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
-		if(id > 0)
-			termService.remove(termService.getById(id));
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/term/{loanId/delete", method=RequestMethod.GET)
+    public String deleteCreditTerm(@PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, @PathVariable("termId")Long termId) {
+		if(termId > 0)
+            termRepository.delete(termRepository.findOne(termId));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	

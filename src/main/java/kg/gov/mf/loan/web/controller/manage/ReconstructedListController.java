@@ -3,6 +3,8 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import kg.gov.mf.loan.manage.repository.loan.ReconstructedListRepository;
+import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -26,6 +28,12 @@ public class ReconstructedListController {
 	
 	@Autowired
 	ReconstructedListService rlService;
+
+	@Autowired
+	DebtorService debtorService;
+
+	@Autowired
+	ReconstructedListRepository reconstructedListRepository;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -52,7 +60,9 @@ public class ReconstructedListController {
 		}
 		
         model.addAttribute("debtorId", debtorId);
+        model.addAttribute("debtor", debtorService.getById(debtorId));
         model.addAttribute("loanId", loanId);
+        model.addAttribute("loan", loanService.getById(loanId));
 			
 		return "/manage/debtor/loan/reconstructedlist/save";
 	}
@@ -71,14 +81,14 @@ public class ReconstructedListController {
 		else
 			rlService.update(rl);
 		
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_8";
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/reconstructedlist/delete", method=RequestMethod.POST)
-    public String deleteReconstructedList(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
-		if(id > 0)
-			rlService.remove(rlService.getById(id));
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_8";
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/reconstructedlist/{rlId}/delete", method=RequestMethod.GET)
+    public String deleteReconstructedList(@PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, @PathVariable("rlId")Long rlId) {
+		if(rlId > 0)
+		    reconstructedListRepository.delete(reconstructedListRepository.findOne(rlId));
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 
 }
