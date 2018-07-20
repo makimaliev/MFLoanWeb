@@ -3,6 +3,7 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,9 @@ public class BankruptController {
 	
 	@Autowired
 	BankruptService bankruptService;
+
+	@Autowired
+	DebtorService debtorService;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -52,7 +56,9 @@ public class BankruptController {
 		}
 		
         model.addAttribute("debtorId", debtorId);
+        model.addAttribute("debtor", debtorService.getById(debtorId));
         model.addAttribute("loanId", loanId);
+        model.addAttribute("loan", loanService.getById(loanId));
 			
 		return "/manage/debtor/loan/bankrupt/save";
 	}
