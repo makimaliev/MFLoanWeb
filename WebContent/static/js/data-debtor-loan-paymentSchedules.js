@@ -74,10 +74,10 @@ var DatatableDataLocalPaymentSchedules = function () {
                 template: function (row) {
                     return (row.collectedPenaltyPayment).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
-            }, {
+            }, /*{
                 field: "installmentStateName",
                 title: "Статус"
-            }, {
+            }, */{
                 field: "action",
                 width: 110,
                 title: "",

@@ -43,10 +43,16 @@ var DatatableDataLocalPayments = function () {
                 responsive: {hidden: 'xl'},
             }, {
 				field: "paymentDate",
-				title: "Дата"
-			},{
+				title: "Дата",
+                width: 70
+			}, {
+                field: "number",
+                title: "Номер",
+                width: 70
+            }, {
                 field: "totalAmount",
                 title: "Итого",
+                width: 80,
                 template: function (row) {
                     return (row.totalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
@@ -68,18 +74,16 @@ var DatatableDataLocalPayments = function () {
                 template: function (row) {
                     return (row.penalty).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
-            }, {
+            }, /*{
                 field: "fee",
                 title: "Комиссия",
                 template: function (row) {
                     return (row.fee).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
-            }, {
-                field: "number",
-                title: "Номер"
-            }, {
+            }, */{
                 field: "paymentTypeName",
-                title: "Вид платежа"
+                title: "Вид платежа",
+                width: 200
             }, {
                 field: "action",
                 width: 110,

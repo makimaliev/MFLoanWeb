@@ -50,7 +50,7 @@ var DatatableDataLocalWOs = function () {
                 template: function (row) {
                     return (row.totalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
-            }, {
+            }, /*{
                 field: "principal",
                 title: "Осн.сумма",
                 template: function (row) {
@@ -74,7 +74,7 @@ var DatatableDataLocalWOs = function () {
                 template: function (row) {
                     return (row.fee).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
-            }, {
+            }, */{
                 field: "description",
                 title: "Примечание"
             }, {

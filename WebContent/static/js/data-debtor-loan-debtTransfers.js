@@ -47,7 +47,7 @@ var DatatableDataLocalDebtTransfers = function () {
 			},{
                 field: "date",
                 title: "Дата"
-            }, {
+            }, /*{
                 field: "quantity",
                 title: "Кол-во"
             }, {
@@ -56,16 +56,16 @@ var DatatableDataLocalDebtTransfers = function () {
             }, {
                 field: "unitTypeId",
                 title: "Ед. изм."
-            }, {
+            }, */{
                 field: "totalCost",
                 title: "Сумма"
-            }, {
+            }, /*{
                 field: "transferPaymentId",
                 title: "Платеж"
             }, {
                 field: "transferCreditId",
                 title: "Кредит"
-            }, {
+            }, */{
                 field: "transferPersonId",
                 title: "Должник"
             }, {

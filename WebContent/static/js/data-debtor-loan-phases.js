@@ -53,24 +53,27 @@ var DatatableDataLocalLoanPhases = function () {
 					';
                 }
             }, {
+                field: "phaseTypeName",
+                title: "Вид"
+            }, {
                 field: "startDate",
-                title: "Дата инициирования"
+                title: "Дата инициирования",
+                width: 200
+            }, {
+                field: "phaseStatusName",
+                title: "Статус",
+                width: 120
             }, {
                 field: "closeDate",
-                title: "Дата инициирования"
-            }, {
+                title: "Дата завершения",
+                width: 200
+            } /*{
                 field: "lastEvent",
                 title: "Посл. событие"
             }, {
                 field: "lastStatusId",
                 title: "Посл. статус"
-            }, {
-                field: "phaseStatusName",
-                title: "Статус"
-            }, {
-                field: "phaseTypeName",
-                title: "Вид"
-            }],
+            }, */],
             translate: {
                 records: {
                     processing: 'Подождите пожалуйста...',

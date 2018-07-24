@@ -68,13 +68,13 @@ var DatatableDataLocalSPs = function () {
                 template: function (row) {
                     return (row.penalty).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
-            }, {
+            }, /*{
                 field: "fee",
                 title: "Комиссия",
                 template: function (row) {
                     return (row.fee).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
-            }, {
+            }, */{
                 field: "description",
                 title: "Примечание"
             }, {

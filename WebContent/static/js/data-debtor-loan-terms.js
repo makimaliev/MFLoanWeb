@@ -43,35 +43,52 @@ var DatatableDataLocalTerms = function () {
                 responsive: {hidden: 'xl'},
             }, {
 				field: "startDate",
-				title: "Дата"
+				title: "Дата",
+                width: 70
 			},{
                 field: "interestRateValue",
-                title: "Процентная ставка",
+                title: "Проц. ставка",
+                width: 120,
                 template: function (row) {
-                    return (row.interestRateValue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                    var result = (row.interestRateValue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+
+                    if(row.floatingRateTypeName!= '--')
+                        result = result + ' + ' + row.floatingRateTypeName;
+
+                    return result;
                 }
-            }, {
-                field: "ratePeriodName",
-                title: "Период начисления процентов"
-            }, {
+            }, /*{
                 field: "floatingRateTypeName",
                 title: "Плавающая ставка"
-            }, {
+            },*/ {
                 field: "penaltyOnPrincipleOverdueRateValue",
                 title: "Штраф по осн.с.",
+                width: 120,
                 template: function (row) {
-                    return (row.penaltyOnPrincipleOverdueRateValue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                    var result = (row.penaltyOnPrincipleOverdueRateValue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+
+                    if(row.penaltyOnPrincipleOverdueRateTypeName!= '--')
+                        result = result + ' + ' + row.penaltyOnPrincipleOverdueRateTypeName;
+
+                    return result;
                 }
-            }, {
+            }, /*{
                 field: "penaltyOnPrincipleOverdueRateTypeName",
                 title: "Ставка на штраф по осн.с."
-            }, {
+            }, */{
                 field: "penaltyOnInterestOverdueRateValue",
-                title: "Штраф по процентам",
+                title: "Штраф по проц.",
+                width: 130,
                 template: function (row) {
-                    return (row.penaltyOnInterestOverdueRateValue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                    var result = (row.penaltyOnInterestOverdueRateValue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+
+                    if(row.penaltyOnInterestOverdueRateTypeName!= '--')
+                        result = result + ' + ' + row.penaltyOnInterestOverdueRateTypeName;
+
+                    return result;
+
                 }
-            }, {
+            }, /*{
                 field: "penaltyOnInterestOverdueRateTypeName",
                 title: "Ставка на штраф по проц."
             }, {
@@ -86,12 +103,15 @@ var DatatableDataLocalTerms = function () {
             }, {
                 field: "transactionOrderName",
                 title: "Очередь погашения"
-            }, {
-                field: "daysInMonthMethodName",
-                title: "Метод кол-ва дней в мес."
-            }, {
-                field: "daysInYearMethodName",
-                title: "Метод кол-ва дней в год"
+            }, */{
+                field: "daysInMonthYearMethodName",
+                title: "Метод кол-ва дней в мес./в год",
+                width: 250,
+                template: function (row) {
+
+                    return row.daysInMonthMethodName + '/' + row.daysInYearMethodName;
+
+                }
             }, {
                 field: "action",
                 width: 110,

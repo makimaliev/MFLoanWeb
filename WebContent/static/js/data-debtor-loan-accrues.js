@@ -74,13 +74,13 @@ var DatatableDataLocalAccrues = function () {
                 template: function (row) {
                     return (row.penaltyOnInterestOverdue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
-            }, {
+            }/*{
                 field: "lastInstPassed",
                 title: "Проср. график?",
                 template: function (row) {
                     return row.lastInstPassed? 'Да': 'Нет';
                 }
-            }],
+            }*/],
             translate: {
                 records: {
                     processing: 'Подождите пожалуйста...',
