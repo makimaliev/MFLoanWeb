@@ -1,14 +1,14 @@
 //== Class definition
 
-var DatatableDataLocalSPs = function () {
+var DatatableDataLocalTargetedUses = function () {
 	//== Private functions
 
 	// demo initializer
 	var mainTableInit = function () {
 
-        var dataJSONArray = JSON.parse(jsonSPs);
+        var dataJSONArray = JSON.parse(jsonTUs);
 
-		var datatable = $('#SPsTable').mDatatable({
+		var datatable = $('#TUsTable').mDatatable({
 			// datasource definition
 			data: {
 				type: 'local',
@@ -42,41 +42,29 @@ var DatatableDataLocalSPs = function () {
                 title: "#",
                 responsive: {hidden: 'xl'},
             }, {
-				field: "date",
-				title: "Дата"
+				field: "targetedUseResultId",
+				title: "Результат"
 			},{
-                field: "amount",
-                title: "Итого",
-                template: function (row) {
-                    return (row.amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                field: "createdById",
+                title: "Внесено"
             }, {
-                field: "principal",
-                title: "Осн.сумма",
-                template: function (row) {
-                    return (row.principal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                field: "createdDate",
+                title: "Дата внесения"
             }, {
-                field: "interest",
-                title: "Проценты",
-                template: function (row) {
-                    return (row.interest).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                field: "approvedById",
+                title: "Подтверждено"
             }, {
-                field: "penalty",
-                title: "Штрафы",
-                template: function (row) {
-                    return (row.penalty).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, /*{
-                field: "fee",
-                title: "Комиссия",
-                template: function (row) {
-                    return (row.fee).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, */{
-                field: "description",
-                title: "Примечание"
+                field: "approvedDate",
+                title: "Дата подтверждения"
+            }, {
+                field: "checkedById",
+                title: "Проверено"
+            }, {
+                field: "checkedDate",
+                title: "Дата проверки"
+            }, {
+                field: "attachmentId",
+                title: "Приложение"
             }, {
                 field: "action",
                 width: 110,
@@ -87,10 +75,10 @@ var DatatableDataLocalSPs = function () {
                     var result = '';
 
                     result = result + '\
-						<a href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/sp/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+						<a href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/targeteduse/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-edit"></i>\
 						</a>\
-						<a href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/sp/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
+						<a href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/targeteduse/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
 							<i class="la la-trash"></i>\
 						</a>\
 					';
@@ -137,7 +125,7 @@ var DatatableDataLocalSPs = function () {
 
 		var query = datatable.getDataSourceQuery();
 
-		$('#m_form_search8').on('keyup', function (e) {
+		$('#m_form_search11').on('keyup', function (e) {
 			datatable.search($(this).val().toLowerCase());
 		}).val(query.generalSearch);
 
@@ -164,5 +152,5 @@ var DatatableDataLocalSPs = function () {
 }();
 
 jQuery(document).ready(function () {
-    DatatableDataLocalSPs.init();
+    DatatableDataLocalTargetedUses.init();
 });

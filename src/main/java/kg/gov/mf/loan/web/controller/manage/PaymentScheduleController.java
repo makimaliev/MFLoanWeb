@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import kg.gov.mf.loan.manage.repository.loan.PaymentScheduleRepository;
+import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.web.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -33,41 +35,17 @@ public class PaymentScheduleController {
 	@Autowired
 	InstallmentStateService installmentStateService;
 
-	private static final int BUTTONS_TO_SHOW = 5;
-	private static final int INITIAL_PAGE = 0;
-	private static final int INITIAL_PAGE_SIZE = 10;
-	private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
+	@Autowired
+	DebtorService debtorService;
+
+	@Autowired
+	PaymentScheduleRepository paymentScheduleRepository;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
-		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
+		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
 	    binder.registerCustomEditor(Date.class, editor);
-	}
-
-	@RequestMapping(value = { "/manage/debtor/loan/paymentschedule/list"})
-	public String listPaymentSchedules(@RequestParam("pageSize") Optional<Integer> pageSize,
-							   @RequestParam("page") Optional<Integer> page, ModelMap model) {
-
-		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
-		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
-
-		List<PaymentSchedule> paymentSchedules = paymentScheduleService.listByParam("id", evalPage*evalPageSize, evalPageSize);
-		int count = paymentScheduleService.count();
-
-		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
-
-		model.addAttribute("count", count/evalPageSize+1);
-		model.addAttribute("paymentSchedules", paymentSchedules);
-		model.addAttribute("selectedPageSize", evalPageSize);
-		model.addAttribute("pageSizes", PAGE_SIZES);
-		model.addAttribute("pager", pager);
-		model.addAttribute("current", evalPage);
-
-		model.addAttribute("loggedinuser", Utils.getPrincipal());
-
-		return "/manage/debtor/loan/paymentschedule/list";
-
 	}
 	
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/paymentschedule/{psId}/save", method=RequestMethod.GET)
@@ -91,8 +69,10 @@ public class PaymentScheduleController {
         model.addAttribute("iStates", iStates);
 		
         model.addAttribute("debtorId", debtorId);
+		model.addAttribute("debtor", debtorService.getById(debtorId));
         model.addAttribute("loanId", loanId);
-			
+		model.addAttribute("loan", loanService.getById(loanId));
+
 		return "/manage/debtor/loan/paymentschedule/save";
 	}
 	
@@ -110,14 +90,14 @@ public class PaymentScheduleController {
 		else
 			paymentScheduleService.update(paymentSchedule);
 		
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_2";
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/paymentschedule/delete", method=RequestMethod.POST)
-    public String deletePaymentSchedule(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
-		if(id > 0)
-			paymentScheduleService.remove(paymentScheduleService.getById(id));
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_2";
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/paymentschedule/{psId}/delete", method=RequestMethod.POST)
+    public String deletePaymentSchedule(@PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, @PathVariable("psId")Long psId) {
+		if(psId > 0)
+            paymentScheduleRepository.delete(paymentScheduleRepository.findOne(psId));
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	
 	@RequestMapping(value = { "/manage/debtor/loan/paymentschedule/installmentstate/list" }, method = RequestMethod.GET)

@@ -3,6 +3,8 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import kg.gov.mf.loan.manage.repository.loan.BankruptRepository;
+import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -26,6 +28,12 @@ public class BankruptController {
 	
 	@Autowired
 	BankruptService bankruptService;
+
+	@Autowired
+	DebtorService debtorService;
+
+	@Autowired
+	BankruptRepository bankruptRepository;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -52,7 +60,9 @@ public class BankruptController {
 		}
 		
         model.addAttribute("debtorId", debtorId);
+        model.addAttribute("debtor", debtorService.getById(debtorId));
         model.addAttribute("loanId", loanId);
+        model.addAttribute("loan", loanService.getById(loanId));
 			
 		return "/manage/debtor/loan/bankrupt/save";
 	}
@@ -68,14 +78,14 @@ public class BankruptController {
 		else
 			bankruptService.update(bankrupt);
 		
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_9";
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/bankrupt/delete", method=RequestMethod.POST)
-    public String deleteBankrupt(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
-		if(id > 0)
-			bankruptService.remove(bankruptService.getById(id));
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_9";
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/bankrupt/{bankruptId}/delete", method=RequestMethod.GET)
+    public String deleteBankrupt(@PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, @PathVariable("bankruptId")Long bankruptId) {
+		if(bankruptId > 0)
+		    bankruptRepository.delete(bankruptRepository.findOne(bankruptId));
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 
 }

@@ -3,6 +3,8 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import kg.gov.mf.loan.manage.repository.loan.TargetedUseRepository;
+import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -26,11 +28,17 @@ public class TargetedUseController {
 	
 	@Autowired
 	TargetedUseService tuService;
+
+	@Autowired
+	DebtorService debtorService;
+
+	@Autowired
+	TargetedUseRepository targetedUseRepository;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
-		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
+		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 	
@@ -53,6 +61,9 @@ public class TargetedUseController {
 		
         model.addAttribute("debtorId", debtorId);
         model.addAttribute("loanId", loanId);
+
+        model.addAttribute("debtor", debtorService.getById(debtorId));
+        model.addAttribute("loan", loanService.getById(loanId));
 			
 		return "/manage/debtor/loan/targeteduse/save";
 	}
@@ -68,14 +79,14 @@ public class TargetedUseController {
 		else
 			tuService.update(tu);
 		
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_7";
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/targeteduse/delete", method=RequestMethod.POST)
-    public String deleteTargetedUse(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
-		if(id > 0)
-			tuService.remove(tuService.getById(id));
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_7";
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/targeteduse/{tuId}/delete", method=RequestMethod.GET)
+    public String deleteTargetedUse(@PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, @PathVariable("tuId")Long tuId) {
+		if(tuId > 0)
+            targetedUseRepository.delete(targetedUseRepository.findOne(tuId));
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 
 }

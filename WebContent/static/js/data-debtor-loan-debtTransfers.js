@@ -1,14 +1,14 @@
 //== Class definition
 
-var DatatableDataLocalTerms = function () {
+var DatatableDataLocalDebtTransfers = function () {
 	//== Private functions
 
 	// demo initializer
 	var mainTableInit = function () {
 
-        var dataJSONArray = JSON.parse(jsonTerms);
+        var dataJSONArray = JSON.parse(jsonDTs);
 
-		var datatable = $('#termsTable').mDatatable({
+		var datatable = $('#DTsTable').mDatatable({
 			// datasource definition
 			data: {
 				type: 'local',
@@ -42,76 +42,35 @@ var DatatableDataLocalTerms = function () {
                 title: "#",
                 responsive: {hidden: 'xl'},
             }, {
-				field: "startDate",
-				title: "Дата",
-                width: 70
+				field: "number",
+				title: "Номер"
 			},{
-                field: "interestRateValue",
-                title: "Проц. ставка",
-                width: 120,
-                template: function (row) {
-                    var result = (row.interestRateValue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-
-                    if(row.floatingRateTypeName!= '--')
-                        result = result + ' + ' + row.floatingRateTypeName;
-
-                    return result;
-                }
+                field: "date",
+                title: "Дата"
             }, /*{
-                field: "floatingRateTypeName",
-                title: "Плавающая ставка"
-            },*/ {
-                field: "penaltyOnPrincipleOverdueRateValue",
-                title: "Штраф по осн.с.",
-                width: 120,
-                template: function (row) {
-                    var result = (row.penaltyOnPrincipleOverdueRateValue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-
-                    if(row.penaltyOnPrincipleOverdueRateTypeName!= '--')
-                        result = result + ' + ' + row.penaltyOnPrincipleOverdueRateTypeName;
-
-                    return result;
-                }
-            }, /*{
-                field: "penaltyOnPrincipleOverdueRateTypeName",
-                title: "Ставка на штраф по осн.с."
+                field: "quantity",
+                title: "Кол-во"
+            }, {
+                field: "pricePerUnit",
+                title: "Цена"
+            }, {
+                field: "unitTypeId",
+                title: "Ед. изм."
             }, */{
-                field: "penaltyOnInterestOverdueRateValue",
-                title: "Штраф по проц.",
-                width: 130,
-                template: function (row) {
-                    var result = (row.penaltyOnInterestOverdueRateValue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-
-                    if(row.penaltyOnInterestOverdueRateTypeName!= '--')
-                        result = result + ' + ' + row.penaltyOnInterestOverdueRateTypeName;
-
-                    return result;
-
-                }
+                field: "totalCost",
+                title: "Сумма"
             }, /*{
-                field: "penaltyOnInterestOverdueRateTypeName",
-                title: "Ставка на штраф по проц."
+                field: "transferPaymentId",
+                title: "Платеж"
             }, {
-                field: "penaltyLimitPercent",
-                title: "Лимит начисления штр.",
-                template: function (row) {
-                    return (row.penaltyLimitPercent).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, {
-                field: "penaltyLimitEndDate",
-                title: "Дата приост. нач.штр."
-            }, {
-                field: "transactionOrderName",
-                title: "Очередь погашения"
+                field: "transferCreditId",
+                title: "Кредит"
             }, */{
-                field: "daysInMonthYearMethodName",
-                title: "Метод кол-ва дней в мес./в год",
-                width: 250,
-                template: function (row) {
-
-                    return row.daysInMonthMethodName + '/' + row.daysInYearMethodName;
-
-                }
+                field: "transferPersonId",
+                title: "Должник"
+            }, {
+                field: "goodsTypeId",
+                title: "Товар"
             }, {
                 field: "action",
                 width: 110,
@@ -122,10 +81,10 @@ var DatatableDataLocalTerms = function () {
                     var result = '';
 
                     result = result + '\
-						<a href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/term/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+						<a href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/debttransfer/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-edit"></i>\
 						</a>\
-						<a href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/term/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
+						<a href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/debttransfer/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
 							<i class="la la-trash"></i>\
 						</a>\
 					';
@@ -172,7 +131,7 @@ var DatatableDataLocalTerms = function () {
 
 		var query = datatable.getDataSourceQuery();
 
-		$('#m_form_search1').on('keyup', function (e) {
+		$('#m_form_search10').on('keyup', function (e) {
 			datatable.search($(this).val().toLowerCase());
 		}).val(query.generalSearch);
 
@@ -199,5 +158,5 @@ var DatatableDataLocalTerms = function () {
 }();
 
 jQuery(document).ready(function () {
-    DatatableDataLocalTerms.init();
+    DatatableDataLocalDebtTransfers.init();
 });

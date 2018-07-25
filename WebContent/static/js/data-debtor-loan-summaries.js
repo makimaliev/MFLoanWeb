@@ -62,7 +62,7 @@ var DatatableDataLocalSummaries = function () {
                 template: function (row) {
                     return (row.totalPaid).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
-            }, {
+            }, /*{
                 field: "paidPrincipal",
                 title: "Пог. по осн.с.",
                 template: function (row) {
@@ -86,7 +86,7 @@ var DatatableDataLocalSummaries = function () {
                 template: function (row) {
                     return (row.paidFee).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
-            }, {
+            }, */{
                 field: "totalOutstanding",
                 title: "Всего ост.",
                 template: function (row) {
@@ -110,19 +110,19 @@ var DatatableDataLocalSummaries = function () {
                 template: function (row) {
                     return (row.outstadingPenalty).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
-            }, {
+            }, /*{
                 field: "outstadingFee",
                 title: "Ост. по комм.",
                 template: function (row) {
                     return (row.outstadingFee).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
-            }, {
+            }, */{
                 field: "totalOverdue",
                 title: "Всего проср.",
                 template: function (row) {
                     return (row.totalOverdue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
-            }, {
+            }, /*{
                 field: "overduePrincipal",
                 title: "Проср. по осн.с.",
                 template: function (row) {
@@ -145,6 +145,29 @@ var DatatableDataLocalSummaries = function () {
                 title: "Проср. по комм.",
                 template: function (row) {
                     return (row.overdueFee).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                }
+            }, */{
+                field: "action",
+                width: 110,
+                title: "",
+                sortable: false,
+                template: function (row) {
+
+                    var result = '';
+
+                    result = result + '\
+						<a href="/printoutTemplate/1/objectId/'+ row.id + '/select" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Реестр погашений">\
+							<i class="la la-archive"></i>\
+						</a>\
+						<a href="/printoutTemplate/4/objectId/'+ row.id + '/select" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Акт сверки">\
+							<i class="la la-file-text"></i>\
+						</a>\
+					';
+
+                    if(!hasRoleAdmin)
+                        result = '';
+
+                    return result;
                 }
             }],
             translate: {

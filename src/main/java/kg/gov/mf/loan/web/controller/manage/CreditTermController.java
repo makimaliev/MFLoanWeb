@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import kg.gov.mf.loan.manage.repository.loan.CreditTermRepository;
+import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.web.util.Pager;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,41 +50,17 @@ public class CreditTermController {
 	@Autowired
 	OrderTermDaysMethodService daysMethodService;
 
-	private static final int BUTTONS_TO_SHOW = 5;
-	private static final int INITIAL_PAGE = 0;
-	private static final int INITIAL_PAGE_SIZE = 10;
-	private static final int[] PAGE_SIZES = {5, 10, 20, 50, 100};
+	@Autowired
+	DebtorService debtorService;
+
+	@Autowired
+	CreditTermRepository termRepository;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
-		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
+		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
 	    binder.registerCustomEditor(Date.class, editor);
-	}
-
-	@RequestMapping(value = { "/manage/debtor/loan/term/list"})
-	public String listCreditTerms(@RequestParam("pageSize") Optional<Integer> pageSize,
-							   @RequestParam("page") Optional<Integer> page, ModelMap model) {
-
-		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
-		int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
-
-		List<CreditTerm> creditTerms = termService.listByParam("id", evalPage*evalPageSize, evalPageSize);
-		int count = termService.count();
-
-		Pager pager = new Pager(count/evalPageSize+1, evalPage, BUTTONS_TO_SHOW);
-
-		model.addAttribute("count", count/evalPageSize+1);
-		model.addAttribute("creditTerms", creditTerms);
-		model.addAttribute("selectedPageSize", evalPageSize);
-		model.addAttribute("pageSizes", PAGE_SIZES);
-		model.addAttribute("pager", pager);
-		model.addAttribute("current", evalPage);
-
-		model.addAttribute("loggedinuser", Utils.getPrincipal());
-
-		return "/manage/debtor/loan/term/list";
-
 	}
 	
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/term/{termId}/save", method=RequestMethod.GET)
@@ -118,7 +96,9 @@ public class CreditTermController {
         model.addAttribute("diyms", daysMethods);
         
         model.addAttribute("debtorId", debtorId);
+		model.addAttribute("debtor", debtorService.getById(debtorId));
         model.addAttribute("loanId", loanId);
+        model.addAttribute("loan", loanService.getById(loanId));
 			
 		return "/manage/debtor/loan/term/save";
 	}
@@ -140,10 +120,10 @@ public class CreditTermController {
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
 	}
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/term/delete", method=RequestMethod.POST)
-    public String deleteCreditTerm(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
-		if(id > 0)
-			termService.remove(termService.getById(id));
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/term/{loanId/delete", method=RequestMethod.GET)
+    public String deleteCreditTerm(@PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, @PathVariable("termId")Long termId) {
+		if(termId > 0)
+            termRepository.delete(termRepository.findOne(termId));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	

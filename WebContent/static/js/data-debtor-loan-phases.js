@@ -1,14 +1,14 @@
 //== Class definition
 
-var DatatableDataLocalSPs = function () {
+var DatatableDataLocalLoanPhases = function () {
 	//== Private functions
 
 	// demo initializer
 	var mainTableInit = function () {
 
-        var dataJSONArray = JSON.parse(jsonSPs);
+        var dataJSONArray = JSON.parse(jsonPhases);
 
-		var datatable = $('#SPsTable').mDatatable({
+		var datatable = $('#phasesTable').mDatatable({
 			// datasource definition
 			data: {
 				type: 'local',
@@ -21,7 +21,7 @@ var DatatableDataLocalSPs = function () {
 				theme: 'default', // datatable theme
 				class: '', // custom wrapper class
 				scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
-				height: 450, // datatable's body's fixed height
+				//height: 450, // datatable's body's fixed height
 				footer: false // display/hide footer
 			},
 
@@ -42,65 +42,38 @@ var DatatableDataLocalSPs = function () {
                 title: "#",
                 responsive: {hidden: 'xl'},
             }, {
-				field: "date",
-				title: "Дата"
-			},{
-                field: "amount",
-                title: "Итого",
+                field: "View",
+                width: 80,
+                textAlign: 'center',
+                title: "Просмотр",
+                overflow: 'visible',
                 template: function (row) {
-                    return (row.amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, {
-                field: "principal",
-                title: "Осн.сумма",
-                template: function (row) {
-                    return (row.principal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, {
-                field: "interest",
-                title: "Проценты",
-                template: function (row) {
-                    return (row.interest).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, {
-                field: "penalty",
-                title: "Штрафы",
-                template: function (row) {
-                    return (row.penalty).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, /*{
-                field: "fee",
-                title: "Комиссия",
-                template: function (row) {
-                    return (row.fee).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, */{
-                field: "description",
-                title: "Примечание"
-            }, {
-                field: "action",
-                width: 110,
-                title: "",
-                sortable: false,
-                template: function (row) {
-
-                    var result = '';
-
-                    result = result + '\
-						<a href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/sp/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
-							<i class="la la-edit"></i>\
-						</a>\
-						<a href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/sp/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
-							<i class="la la-trash"></i>\
-						</a>\
+                    return '\
+						<a href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + row.procedureId + '/collectionphase/' + row.id + '/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
 					';
-
-                    if(!hasRoleAdmin)
-                        result = '';
-
-                    return result;
                 }
-            }],
+            }, {
+                field: "phaseTypeName",
+                title: "Вид"
+            }, {
+                field: "startDate",
+                title: "Дата инициирования",
+                width: 200
+            }, {
+                field: "phaseStatusName",
+                title: "Статус",
+                width: 120
+            }, {
+                field: "closeDate",
+                title: "Дата завершения",
+                width: 200
+            } /*{
+                field: "lastEvent",
+                title: "Посл. событие"
+            }, {
+                field: "lastStatusId",
+                title: "Посл. статус"
+            }, */],
             translate: {
                 records: {
                     processing: 'Подождите пожалуйста...',
@@ -137,7 +110,7 @@ var DatatableDataLocalSPs = function () {
 
 		var query = datatable.getDataSourceQuery();
 
-		$('#m_form_search8').on('keyup', function (e) {
+		$('#m_form_search14').on('keyup', function (e) {
 			datatable.search($(this).val().toLowerCase());
 		}).val(query.generalSearch);
 
@@ -164,5 +137,5 @@ var DatatableDataLocalSPs = function () {
 }();
 
 jQuery(document).ready(function () {
-    DatatableDataLocalSPs.init();
+    DatatableDataLocalLoanPhases.init();
 });

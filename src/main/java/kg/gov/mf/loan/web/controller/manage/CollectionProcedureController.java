@@ -217,6 +217,7 @@ public class CollectionProcedureController {
             model.setPhaseStatusName(temp.getPhaseStatus().getName());
             model.setPhaseTypeId(temp.getPhaseType().getId());
             model.setPhaseTypeName(temp.getPhaseType().getName());
+            model.setProcedureId(temp.getCollectionProcedure().getId());
             result.add(model);
         }
 

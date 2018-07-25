@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import kg.gov.mf.loan.manage.repository.loan.SupervisorPlanRepository;
+import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.web.util.Pager;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,12 @@ public class SupervisorPlanController {
 	
 	@Autowired
 	SupervisorPlanService spService;
+
+	@Autowired
+	DebtorService debtorService;
+
+	@Autowired
+	SupervisorPlanRepository supervisorPlanRepository;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -53,7 +61,9 @@ public class SupervisorPlanController {
 		}
 		
         model.addAttribute("debtorId", debtorId);
+        model.addAttribute("debtor", debtorService.getById(debtorId));
         model.addAttribute("loanId", loanId);
+        model.addAttribute("loan", loanService.getById(loanId));
 			
 		return "/manage/debtor/loan/sp/save";
 	}
@@ -72,13 +82,13 @@ public class SupervisorPlanController {
 		else
 			spService.update(sp);
 		
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_4";
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/sp/delete", method=RequestMethod.POST)
-    public String deleteSupervisorPlan(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
-		if(id > 0)
-			spService.remove(spService.getById(id));
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_4";
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/sp/{spId}/delete", method=RequestMethod.GET)
+    public String deleteSupervisorPlan(@PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, @PathVariable("spId")Long spId) {
+		if(spId > 0)
+		    supervisorPlanRepository.delete(supervisorPlanRepository.findOne(spId));
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 }

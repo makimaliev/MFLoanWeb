@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import kg.gov.mf.loan.manage.repository.loan.WriteOffRepository;
+import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.web.util.Pager;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,12 @@ public class WriteOffController {
 	
 	@Autowired
 	WriteOffService woService;
+
+	@Autowired
+	DebtorService debtorService;
+
+	@Autowired
+	WriteOffRepository writeOffRepository;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -53,7 +61,9 @@ public class WriteOffController {
 		}
 		
         model.addAttribute("debtorId", debtorId);
+        model.addAttribute("debtor", debtorService.getById(debtorId));
         model.addAttribute("loanId", loanId);
+        model.addAttribute("loan", loanService.getById(loanId));
 			
 		return "/manage/debtor/loan/wo/save";
 	}
@@ -69,14 +79,14 @@ public class WriteOffController {
 		else
 			woService.update(wo);
 		
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_1";
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/wo/delete", method=RequestMethod.POST)
-    public String deleteWriteOff(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
-		if(id > 0)
-			woService.remove(woService.getById(id));
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#tab_1";
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/wo/{woId}/delete", method=RequestMethod.GET)
+    public String deleteWriteOff(@PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, @PathVariable("woId")Long woId) {
+		if(woId > 0)
+            writeOffRepository.delete(writeOffRepository.findOne(woId));
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	
 }
