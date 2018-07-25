@@ -13,6 +13,9 @@ import kg.gov.mf.loan.output.report.service.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Controller
 public class ReportTemplateController {
@@ -81,8 +84,7 @@ public class ReportTemplateController {
 
 		return "output/report/reportTemplateDetails";
 	}	
-    
-	
+
 	@RequestMapping(value = "/reportTemplate/add", method = RequestMethod.GET)
 	public String getReportTemplateAddForm(Model model) {
 
@@ -102,6 +104,9 @@ public class ReportTemplateController {
 	
 	@RequestMapping(value = "/report/{reportId}/reportTemplate/add", method = RequestMethod.GET)
 	public String getReportTemplateAddFormWithReport(@PathVariable("reportId") long reportId,Model model) {
+
+
+
 
 		ReportTemplate modelReportTemplate = new ReportTemplate();
 		
@@ -212,17 +217,9 @@ public class ReportTemplateController {
 	@RequestMapping("/reportTemplate/{id}/generate")
 	public void generateReportByReportTemplate(@PathVariable("id") long id, HttpServletResponse response) {
 
-		ReportGenerator paymentReportGenerator = new ReportGeneratorPayment();
-
-		ReportGenerator collateralItemReportGenerator = new ReportGeneratorCollateralItem();
-
-		ReportGenerator loanSummaryReportGenerator = new ReportGeneratorLoanSummary();
-
-		ReportGenerator paymentScheduleReportGenerator = new ReportGeneratorPaymentSchedule();
-
-		ReportGenerator collectionPhaseReportGenerator = new ReportGeneratorCollectionPhase();
-
-		ReportGenerator entityDocumentReportGenerator = new ReportGeneratorEntityDocument();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date startDate = new Date();
+		System.out.println(" START == "+dateFormat.format(startDate)); //2016/11/16 12:08:43
 
 
 
@@ -232,50 +229,40 @@ public class ReportTemplateController {
 
 		ReportTemplate reportTemplate = this.reportTemplateService.findById(id);
 
-
-		System.out.println(reportTemplate.getReport().getReportType());
+		Date dataGetDate = new Date();
+		System.out.println(" FINISH == "+dateFormat.format(dataGetDate)); //2016/11/16 12:08:43
+		System.out.println(" DIFF == "+(dataGetDate.getTime()-startDate.getTime())); //2016/11/16 12:08:43
 
 		switch(reportTemplate.getReport().getReportType().toString())
 		{
 			case "LOAN_SUMMARY":
-				generateReport(out,response,loanSummaryReportGenerator, reportTemplate);
+				generateReport(out,response,new ReportGeneratorLoanSummary(), reportTemplate);
+
 				break;
 
 			case "LOAN_PAYMENT":
-
-				generateReport(out,response,paymentReportGenerator, reportTemplate);
+				generateReport(out,response,new ReportGeneratorPayment(), reportTemplate);
 				break;
 
 			case "COLLATERAL_ITEM":
-
-				generateReport(out,response,collateralItemReportGenerator, reportTemplate);
+				generateReport(out,response,new ReportGeneratorCollateralItem(), reportTemplate);
 				break;
 
 			case "LOAN_SCHEDULE":
-
-				generateReport(out,response,paymentScheduleReportGenerator, reportTemplate);
+				generateReport(out,response,new ReportGeneratorPaymentSchedule(), reportTemplate);
 				break;
 
 			case "COLLECTION_PHASE":
-
-				generateReport(out,response,collectionPhaseReportGenerator, reportTemplate);
+				generateReport(out,response,new ReportGeneratorCollectionPhase(), reportTemplate);
 				break;
 
 			case "ENTITY_DOCUMENT":
+				generateReport(out,response,new ReportGeneratorEntityDocument(), reportTemplate);
 
-				generateReport(out,response,entityDocumentReportGenerator, reportTemplate);
+
 				break;
 
 		}
-
-
-
-
-
-
-
-
-
 
 	}
 
