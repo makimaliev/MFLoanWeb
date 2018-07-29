@@ -2091,7 +2091,33 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `calculateLoanDetailedSummaryUntilOn
 
 
 
-
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (1, 'Область', 'v_debtor_region_id', '(=regionMap(v_debtor_region_id)=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (2, 'Район', 'v_debtor_district_id', '(=districtMap(v_debtor_district_id)=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (3, 'Отрасль', 'v_debtor_work_sector_id', '(=workSectorMap(v_debtor_work_sector_id)=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (4, 'Вид кредита', 'v_loan_type_id', '(=loanTypeMap(v_loan_type_id)=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (5, 'Куратор', 'v_loan_supervisor_id', '(=supervisorMap(v_loan_supervisor_id)=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (6, 'Отдел', 'v_loan_department_id', '(=departmentMap(v_loan_department_id)=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (7, 'Заемщик', 'v_debtor_id', '(=v_debtor_name=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (8, 'Кредит', 'v_loan_id', '(=creditOrderMap(v_debtor_work_sector_id)=) (=v_loan_reg_number=) от (=v_loan_reg_date=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (9, 'Расчет', 'v_ls_id', 'Расчет');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (10, 'Погашение', 'v_payment_id', 'Погашение');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (11, 'График', 'v_ps_id', 'График');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (12, 'Решение о выдаче кредита', 'v_credit_order_id', '(=creditOrderMap(v_credit_order_id)=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (13, 'Получатель', 'v_applied_entity_id', '(=v_owner_name=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (14, 'Список получателей', 'v_ael_id', '(=v_ael_listNumber=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (15, 'Пакет документации', 'v_document_package_id', '(=v_document_package_name=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (16, 'Документ (оформление)', 'v_entity_document_id', '(=v_entity_document_name=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (17, 'Договор залога', 'v_ca_id', '(=v_ca_agreementNumber=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (18, 'Предмет залога', 'v_ci_id', '(=v_ci_name=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (19, 'Процедура взыскания', 'v_cp_id', '');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (20, 'Фаза взыскания', 'v_cph_id', '');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (21, 'Статус получателя', 'v_applied_entity_appliedEntityStateId', '(=appliedEntityStatusMap(v_applied_entity_appliedEntityStateId)=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (22, 'Статус документа(оформление)', 'v_entity_document_entityDocumentStateId', '(=entityDocumentStatusMap(v_entity_document_entityDocumentStateId)=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (23, 'Статус пакета док.', 'v_document_package_documentPackageStateId', '(=documentPackageStatusMap(v_document_package_documentPackageStateId)=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (24, 'Укомплектовано', 'v_entity_document_completedBy', '(=supervisorMap(v_entity_document_completedBy)=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (25, 'Проверено', 'v_entity_document_approvedBy', '(=supervisorMap(v_entity_document_approvedBy)=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (26, 'Область (получатель)', 'v_owner_region_id', '(=regionMap(v_owner_region_id)=)');
+INSERT INTO mfloan.group_type (id, name, field_name, row_name) VALUES (27, 'Район (получатель)', 'v_owner_district_id', '(=districtMap(v_owner_district_id)=)');
 
 
 

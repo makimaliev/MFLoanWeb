@@ -11,11 +11,9 @@ import kg.gov.mf.loan.doc.formatter.DocumentFormatter;
 import kg.gov.mf.loan.doc.formatter.DocumentSubTypeFormatter;
 import kg.gov.mf.loan.doc.formatter.DocumentTypeFormatter;
 import kg.gov.mf.loan.manage.converter.*;
-import kg.gov.mf.loan.output.report.converter.ContentParameterFormatter;
-import kg.gov.mf.loan.output.report.converter.GenerationParameterFormatter;
-import kg.gov.mf.loan.output.report.converter.GenerationParameterTypeFormatter;
-import kg.gov.mf.loan.output.report.converter.ObjectListFormatter;
+import kg.gov.mf.loan.output.report.converter.*;
 
+import kg.gov.mf.loan.output.report.service.GroupTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -148,6 +146,9 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 
     @Autowired
     SupervisorTermFormatter supervisorTermFormatter;
+
+    @Autowired
+    GroupTypeFormatter groupTypeFormatter;
 
 
     @Autowired
@@ -314,6 +315,7 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         registry.addFormatter(documentFormatter);
         registry.addFormatter(documentTypeFormatter);
         registry.addFormatter(documentSubTypeFormatter);
+        registry.addFormatter(groupTypeFormatter);
 
 
 
