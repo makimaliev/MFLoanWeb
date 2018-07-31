@@ -39,6 +39,9 @@ public class ReportTemplateController {
 
 	@Autowired
     private ReportService reportService;
+
+	@Autowired
+	private GroupTypeService groupTypeService;
 	
      
     public void setReportTemplateService(ReportTemplateService rs)
@@ -92,6 +95,7 @@ public class ReportTemplateController {
 		
 		modelReportTemplate.setReport(this.reportService.findById((long)1));
 		model.addAttribute("reportList", this.reportService.findAll());
+		model.addAttribute("groupTypeList", this.groupTypeService.findAll());
 		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
 		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
 		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
@@ -112,6 +116,7 @@ public class ReportTemplateController {
 		
 		modelReportTemplate.setReport(this.reportService.findById(reportId));
 		model.addAttribute("reportList", this.reportService.findAll());
+		model.addAttribute("groupTypeList", this.groupTypeService.findAll());
 		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
 		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
 		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
@@ -135,15 +140,28 @@ public class ReportTemplateController {
     	modelReportTemplate.setGenerationParameters(this.reportTemplateService.findById(id).getGenerationParameters());
 */
 
-		model.addAttribute("reportTemplateGenerationParameters", this.reportTemplateService.findById(id).getGenerationParameters());
-		model.addAttribute("reportTemplateFilterParameters", this.reportTemplateService.findById(id).getFilterParameters());
-		model.addAttribute("reportTemplateContentParameters", this.reportTemplateService.findById(id).getContentParameters());
-		model.addAttribute("reportTemplateOutputParameters", this.reportTemplateService.findById(id).getOutputParameters());
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date startDate = new Date();
+		System.out.println(" START == "+dateFormat.format(startDate)); //2016/11/16 12:08:43
 
 
-		model.addAttribute("reportTemplate", this.reportTemplateService.findById(id));
+		ReportTemplate modelReportTemplate = this.reportTemplateService.findById(id);
+
+		Date dataGetDate = new Date();
+		System.out.println(" FINISH == "+dateFormat.format(dataGetDate)); //2016/11/16 12:08:43
+		System.out.println(" DIFF == "+(dataGetDate.getTime()-startDate.getTime())); //2016/11/16 12:08:43
+
+
+		model.addAttribute("reportTemplateGenerationParameters", modelReportTemplate.getGenerationParameters());
+		model.addAttribute("reportTemplateFilterParameters", modelReportTemplate.getFilterParameters());
+		model.addAttribute("reportTemplateContentParameters", modelReportTemplate.getContentParameters());
+		model.addAttribute("reportTemplateOutputParameters", modelReportTemplate.getOutputParameters());
+
+
+		model.addAttribute("reportTemplate", modelReportTemplate);
 
 		model.addAttribute("reportList", this.reportService.findAll());
+		model.addAttribute("groupTypeList", this.groupTypeService.findAll());
 		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
 		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
 		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
@@ -217,10 +235,6 @@ public class ReportTemplateController {
 	@RequestMapping("/reportTemplate/{id}/generate")
 	public void generateReportByReportTemplate(@PathVariable("id") long id, HttpServletResponse response) {
 
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Date startDate = new Date();
-		System.out.println(" START == "+dateFormat.format(startDate)); //2016/11/16 12:08:43
-
 
 
 		response.setContentType("application/vnd.ms-excel");
@@ -229,9 +243,7 @@ public class ReportTemplateController {
 
 		ReportTemplate reportTemplate = this.reportTemplateService.findById(id);
 
-		Date dataGetDate = new Date();
-		System.out.println(" FINISH == "+dateFormat.format(dataGetDate)); //2016/11/16 12:08:43
-		System.out.println(" DIFF == "+(dataGetDate.getTime()-startDate.getTime())); //2016/11/16 12:08:43
+
 
 		switch(reportTemplate.getReport().getReportType().toString())
 		{
