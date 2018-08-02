@@ -8,14 +8,25 @@
             <input type="hidden" th:field="*{version}"/>
             <input type="hidden" th:field="*{uuid}"/>
             <input type="hidden" th:field="*{owner}"/>
-            <input type="hidden" th:field="*{archived}"/>
             <input type="hidden" th:field="*{documentState}"/>
             <input type="hidden" th:field="*{documentType.id}"/>
             <input type="hidden" th:field="*{documentSubType.id}"/>
+            <!--input type="hidden" th:field="*{reconciler}"/-->
         </div>
     </th:block>
     <th:block th:fragment="script">
         <script type="text/javascript" th:inline="javascript">
+
+            function davay() {
+                $('#pick').modal('hide')
+            }
+
+            var dt_settings = {
+                autoclose: true,
+                minView : 2,
+                maxView : 2,
+                format : 'dd-mm-yyyy hh:ii'
+            };
 
             $(document).ready(function() {
 
@@ -26,11 +37,10 @@
                     toolbar: [
                         { name: 'clipboard', groups: [ 'clipboard' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteFromWord' ] },
                         { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
-                        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+                        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
                         { name: 'insert', items: [ 'Image', 'Table' ] },
                         '/',
                         { name: 'styles', items: [ 'Font', 'FontSize' ] },
-                        { name: 'colors', items: [ 'TextColor' ] },
                         { name: 'tools', items: [ 'Maximize' ] }
                     ],
                     toolbarGroups: [
@@ -42,35 +52,11 @@
                         { name: 'insert' },
                         '/',
                         { name: 'styles' },
-                        { name: 'colors' },
                         { name: 'tools' }
                     ]
                 });
 
-                $('#senderDueDate_dtp').datetimepicker({
-                    autoclose: true,
-                    minView : 2,
-                    maxView : 2,
-                    format : 'dd-mm-yyyy hh:ii'
-                });
-                $('#senderRegisteredDate_dtp').datetimepicker({
-                    autoclose: true,
-                    minView : 2,
-                    maxView : 2,
-                    format : 'dd-mm-yyyy hh:ii'
-                });
-                $('#receiverDueDate_dtp').datetimepicker({
-                    autoclose: true,
-                    minView : 2,
-                    maxView : 2,
-                    format : 'dd-mm-yyyy hh:ii'
-                });
-                $('#receiverRegisteredDate_dtp').datetimepicker({
-                    autoclose: true,
-                    minView : 2,
-                    maxView : 2,
-                    format : 'dd-mm-yyyy hh:ii'
-                });
+                $('.dtp').datetimepicker(dt_settings);
 
                 $('.sdr').hide();
                 $('.rdr').hide();
@@ -91,12 +77,10 @@
                     $('#ri' + $(this).val()).show();
                 });
 
-                $('#srs').select2({
-                    tags: true,
+                var soption = {
+                    language: "ru",
                     minimumInputLength: 2,
-                    allowClear: true,
                     ajax: {
-                        url: '/data/staff',
                         data: function (params) {
                             var query = {
                                 name: params.term
@@ -109,142 +93,18 @@
                             };
                         }
                     }
-                });
-                $('#sro').select2({
-                    tags: true,
-                    minimumInputLength: 2,
-                    allowClear: true,
-                    ajax: {
-                        url: '/data/organizations',
-                        data: function (params) {
-                            var query = {
-                                name: params.term
-                            }
-                            return query;
-                        },
-                        processResults: function (data) {
-                            return {
-                                results : data
-                            };
-                        }
-                    }
-                });
-                $('#srp').select2({
-                    tags: true,
-                    minimumInputLength: 2,
-                    allowClear: true,
-                    ajax: {
-                        url: '/data/person',
-                        data: function (params) {
-                            var query = {
-                                name: params.term
-                            }
-                            return query;
-                        },
-                        processResults: function (data) {
-                            return {
-                                results : data
-                            };
-                        }
-                    }
-                });
+                }
 
-                $('#rrs').select2({
-                    tags: true,
-                    minimumInputLength: 2,
-                    allowClear: true,
-                    ajax: {
-                        url: '/data/staff',
-                        data: function (params) {
-                            var query = {
-                                name: params.term
-                            }
-                            return query;
-                        },
-                        processResults: function (data) {
-                            return {
-                                results : data
-                            };
-                        }
-                    }
-                });
-                $('#rrd').select2({
-                    tags: true,
-                    minimumInputLength: 2,
-                    allowClear: true,
-                    ajax: {
-                        url: '/data/department',
-                        data: function (params) {
-                            var query = {
-                                name: params.term
-                            }
-                            return query;
-                        },
-                        processResults: function (data) {
-                            return {
-                                results : data
-                            };
-                        }
-                    }
-                });
-                $('#rro').select2({
-                    tags: true,
-                    minimumInputLength: 2,
-                    allowClear: true,
-                    ajax: {
-                        url: '/data/organizations',
-                        data: function (params) {
-                            var query = {
-                                name: params.term
-                            }
-                            return query;
-                        },
-                        processResults: function (data) {
-                            return {
-                                results : data
-                            };
-                        }
-                    }
-                });
-                $('#rrp').select2({
-                    tags: true,
-                    minimumInputLength: 2,
-                    allowClear: true,
-                    ajax: {
-                        url: '/data/person',
-                        data: function (params) {
-                            var query = {
-                                name: params.term
-                            }
-                            return query;
-                        },
-                        processResults: function (data) {
-                            return {
-                                results : data
-                            };
-                        }
-                    }
-                });
+                $('#srs').select2(soption);
+                $('#sro').select2(soption);
+                $('#srp').select2(soption);
+                $('#rrs').select2(soption);
+                $('#rrd').select2(soption);
+                $('#rro').select2(soption);
+                $('#rrp').select2(soption);
+                $('#res').select2(soption);
 
-                $('#res').select2({
-                    tags: true,
-                    minimumInputLength: 2,
-                    allowClear: true,
-                    ajax: {
-                        url: '/data/staff',
-                        data: function (params) {
-                            var query = {
-                                name: params.term
-                            }
-                            return query;
-                        },
-                        processResults: function (data) {
-                            return {
-                                results : data
-                            };
-                        }
-                    }
-                });
+                $('#rr').select2(soption);
             });
 
             function doClick(side) {
@@ -283,21 +143,66 @@
             }
         </script>
     </th:block>
-    <th:block th:fragment="statusData">
-        <div class="m-form__group">
-            <ol>
-                <li th:each="dd : *{senderDispatchData}">
-                    <label class="form-control" th:utext="${dd.dispatchBy.staff.name} + '<br>[ ' + ${#dates.format(dd.dispatchInitTime, 'dd-MM-yyyy HH:mm')} + ' ] :  <label class=\'text-success\'>' + ${dd.dispatchType.stringValue()} + '</label>'"></label>
-                    <label class="form-control alert alert-info" th:utext="${dd.description}" th:if="${not #strings.isEmpty(dd.description)}"></label>
-                <li th:each="dd : *{receiverDispatchData}">
-                    <label class="form-control" th:utext="${dd.dispatchBy.staff.name} + '<br>[ ' + ${#dates.format(dd.dispatchInitTime, 'dd-MM-yyyy HH:mm')} + ' ] :  <label class=\'text-success\'>' + ${dd.dispatchType.stringValue()} + '</label>'"></label>
-                    <label class="form-control alert alert-info" th:utext="${dd.description}" th:if="${not #strings.isEmpty(dd.description)}"></label>
-            </ol>
+    <th:block th:fragment="history">
+        <div class="form-group m-form__group">
+            <table class="table table-bordered" id="documentTable">
+                <thead class="thead-default">
+                <tr>
+                    <th width="auto">Дата</th>
+                    <th>От</th>
+                    <th>Задачи</th>
+                    <th>Кому</th>
+                    <th>Результат</th>
+                    <th width="auto">Завершен</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="task : ${tasks}">
+                    <td th:text= "${#dates.format(task.createdOn, 'dd-MM-yyyy')}"></td>
+                    <td th:utext="${task.createdBy != null } ? ${task.createdBy.staff.name} : 'Автоматическое задание'"> Автоматическое задание </td>
+                    <td th:utext="${task.description}"></td>
+                    <td th:utext="${task.assignedTo.staff.name}"></td>
+                    <td th:utext="${task.resolutionSummary}"></td>
+                    <td th:text= "${#dates.format(task.actualResolutionDate, 'dd-MM-yyyy')}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </th:block>
+    <th:block th:fragment="journal">
+        <div class="form-group m-form__group">
+            <table class="table table-bordered" id="documentTable">
+                <thead class="thead-default">
+                <tr>
+                    <th width="130px">Дата</th>
+                    <th>Пользователь</th>
+                    <th>Действие</th>
+                    <th>Примечание</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="dd : *{dispatchData}">
+                    <td th:text= "${#dates.format(dd.dispatchInitTime, 'dd-MM-yyyy HH:mm')}"></td>
+                    <td th:text= "${dd.dispatchBy.staff.name}"></td>
+                    <td th:text= "${dd.dispatchType.text()}"></td>
+                    <td th:utext="${dd.description}"></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </th:block>
     <th:block th:fragment="documentActions">
-        <button type="button" class="btn btn-primary" onclick="window.history.back()"> Назад </button>
-        <button type="submit" style="margin: 3px" class="btn btn-success" name="action" th:each="action : ${actions}" th:value="${action.internalName}" th:text="${action.actionName}" ></button>
+        <button type="button" class="btn btn-primary" onclick="window.history.back()"> Отмена </button>
+        <button style="margin: 3px"
+                class="btn btn-success"
+                name="action"
+                th:each="action : ${actions}"
+                th:value="${action.name()}"
+                th:text="${action.text()}"
+                th:type="${action.toString() == 'TORECONCILE' or action.toString() == 'SEND'} ? 'button' : 'submit'"
+                th:attr="data-toggle=${action.toString() == 'TORECONCILE' or action.toString() == 'SEND'} ? 'modal' : '', data-target=${action.toString() == 'TORECONCILE' or action.toString() == 'SEND'} ? '#pick' : ''">
+        </button>
     </th:block>
 </body>
 </html>
