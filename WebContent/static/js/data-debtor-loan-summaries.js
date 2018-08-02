@@ -44,13 +44,13 @@ var DatatableDataLocalSummaries = function () {
             }, {
 				field: "onDate",
 				title: "На дату"
-			},{
+			},/*{
                 field: "loanAmount",
                 title: "Сумма по договору",
                 template: function (row) {
                     return (row.loanAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
-            }, {
+            }, */{
                 field: "totalDisbursed",
                 title: "Всего освоено",
                 template: function (row) {
