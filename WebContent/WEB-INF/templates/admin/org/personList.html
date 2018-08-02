@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <!-- begin::Head -->
 <head>
-	<title th:text="#{label.persons}"></title>
+	<title>Физ.лицо</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -17,177 +15,95 @@
 	<!-- BEGIN: Header -->
 	<div th:replace="layout/header"/>
 	<!-- END: Header -->
-
 	<!-- begin::Body -->
 	<div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
 		<!-- BEGIN: Left Aside -->
 		<div th:replace="layout/sidebar"/>
 		<!-- END: Left Aside -->
 		<div class="m-grid__item m-grid__item--fluid m-wrapper">
-
-			<div class="m-content">
-
-				<div class="m-portlet m-portlet--mobile">
-					<div class="m-portlet__head">
-						<div class="m-portlet__head-caption">
-							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.persons}"></h3>
-							</div>
-						</div>
-						<div class="m-portlet__head-tools">
-							<ul class="m-portlet__nav">
-								<li class="m-portlet__nav-item">
-									<form th:action="@{/person/search}" method="get">
-										<input type="hidden" name="pageSize" th:value="${selectedPageSize}">
-										<input type="hidden" name="page" th:value="${current}">
-										<div class="m-input-icon m-input-icon--left">
-											<input type="text" class="form-control m-input" th:placeholder="#{label.search}" name="q">
-											<span class="m-input-icon__icon m-input-icon__icon--left">
-												<span>
-													<i class="la la-search"></i>
-												</span>
-											</span>
-										</div>
-									</form>
-								</li>
-							</ul>
-						</div>
+			<!-- BEGIN: Subheader -->
+			<div class="m-subheader ">
+				<div class="d-flex align-items-center">
+					<div class="mr-auto">
+						<h3 class="m-subheader__title m-subheader__title--separator">
+							Физ.лица
+						</h3>
+						<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+							<li class="m-nav__item m-nav__item--home">
+								<a th:href="@{/}" class="m-nav__link m-nav__link--icon">
+									<i class="m-nav__link-icon la la-home"></i>
+								</a>
+							</li>
+							<li class="m-nav__separator">
+								-
+							</li>
+							<li class="m-nav__item">
+								<span class="m-nav__link-text">Список физ.лиц</span>
+							</li>
+						</ul>
 					</div>
+				</div>
+			</div>
+			<!-- END: Subheader -->
+			<div class="m-content">
+				<!--begin::Portlet-->
+				<div class="m-portlet">
 					<div class="m-portlet__body">
-
-						<div class="m-section">
-							<div class="m-section__content">
-								<a sec:authorize="hasRole('ADMIN')" data-remote="false"
-								   data-toggle="modal"
-								   data-target="#personFormModal"
-								   th:href="@{/person/add}"
-								   role="button"
-								   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
-								   th:text="#{label.add.person}"></a>
-								<!--<a data-remote="false"-->
-								   <!--data-toggle="modal"-->
-								   <!--data-target="#personFormModal"-->
-								   <!--th:href="@{/information/add}"-->
-								   <!--role="button"-->
-								   <!--class="m-portlet__nav-link btn btn-success m-btn m-btn&#45;&#45;air"-->
-								   <!--th:text="#{label.add.information}"></a>-->
-							</div>
-						</div>
-
-						<div class="m-section">
-							<table class="table" id="personTable">
-								<thead class="thead-default">
-								<tr>
-									<th>ID</th>
-									<th th:text="#{label.person.name}"></th>
-									<th th:text="#{label.person.district}"></th>
-									<th>&nbsp;</th>
-								</tr>
-								</thead>
-								<tbody>
-								<tr th:each="s : ${personList}">
-									<td th:text="${s.id}"></td>
-									<td th:text="${s.name}"></td>
-									<td th:text="${s.address.district.name}"></td>
-									<td class="table-actions text-right">
-										<span>
-											<div class="dropdown">
-												<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
-													<i class="la la-ellipsis-h"></i>
-												</a>
-												<div class="dropdown-menu dropdown-menu-right">
-													<a sec:authorize="hasRole('ADMIN')"  class="dropdown-item"
-													   data-remote="false" data-toggle="modal"
-													   data-target="#personFormModal"
-													   th:href="@{/person/__${s.id}__/edit}" role="button">
-														<span th:text="#{label.table.edit}"></span>
-													</a>
-													<a class="dropdown-item" th:href="@{/person/__${s.id}__/details}">
-																	<span th:text="#{label.table.view}"></span>
-																</a>
-													<a sec:authorize="hasRole('ADMIN')" class="dropdown-item" href="#">
-														<span>
-															<form th:action="@{/person/__${s.id}__/remove}" method="post">
-																<input hidden="true" type="text" id="id" name="id" th:value="${s.id}" />
-																<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
-															</form>
+						<!--begin: Search Form -->
+						<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+							<div class="row align-items-center">
+								<div class="col-xl-8 order-2 order-xl-1">
+									<div class="form-group m-form__group row align-items-center">
+										<div class="col-md-4">
+											<div class="m-input-icon m-input-icon--left">
+												<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search">
+												<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
 														</span>
-													</a>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="m-form__group m-form__group--inline">
+												<div class="m-form__label">
+													<label>
+														Район:
+													</label>
+												</div>
+												<div class="m-form__control">
+													<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_district">
+														<option value="">
+															Все
+														</option>
+														<option th:each="district : ${districts}" th:value="${district.id}" th:text="${district.name}"></option>
+													</select>
 												</div>
 											</div>
-										</span>
-									</td>
-								</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-
-
-
-					<div class="m-portlet__foot">
-						<div class="m-datatable m-datatable--default">
-							<div class="m-datatable__pager m-datatable--paging-loaded clearfix">
-								<ul class="m-datatable__pager-nav">
-									<li th:class="${current == 0} ? disabled">
-										<a th:title="#{label.pagination.first}" class="m-datatable__pager-link m-datatable__pager-link--first" th:href="${q} ? @{/person/search(pageSize=${selectedPageSize}, page=1, q=${q})} : @{/person/list(pageSize=${selectedPageSize}, page=1)}">
-											<i class="la la-angle-double-left"></i>
-										</a>
-									</li>
-									<li th:class="${current == 0} ? disabled">
-										<a th:title="#{label.pagination.prev}" class="m-datatable__pager-link m-datatable__pager-link--prev" th:href="${q} ? @{/person/search(pageSize=${selectedPageSize}, page=${current}, q=${q})} : @{/person/list(pageSize=${selectedPageSize}, page=${current})}">
-											<i class="la la-angle-left"></i>
-										</a>
-									</li>
-
-									<li th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
-										<a th:href="${q} ? @{/person/search(pageSize=${selectedPageSize}, page=${page}, q=${q})} : @{/person/list(pageSize=${selectedPageSize}, page=${page})}" class="m-datatable__pager-link m-datatable__pager-link-number" th:text="${page}" th:classappend="${current == (page - 1)} ? 'm-datatable__pager-link--active'"></a>
-
-									</li>
-
-									<li th:class="${current == count-2} ? disabled">
-										<a th:title="#{label.pagination.next}" class="m-datatable__pager-link m-datatable__pager-link--next" th:href="${q} ? @{/person/search(pageSize=${selectedPageSize}, page=${current + 2}, q=${q})} : @{/person/list(pageSize=${selectedPageSize}, page=${current + 2})}">
-											<i class="la la-angle-right"></i>
-										</a>
-									</li>
-									<li th:class="${current == count-1} ? disabled">
-										<a th:href="${q} ? @{/person/search(pageSize=${selectedPageSize}, page=${count}, q=${q})} : @{/person/list(pageSize=${selectedPageSize}, page=${count})}" th:title="#{label.pagination.last}" class="m-datatable__pager-link m-datatable__pager-link--last">
-											<i class="la la-angle-double-right"></i>
-										</a>
-									</li>
-								</ul>
-								<div class="m-datatable__pager-info">
-									<span class="m-datatable__pager-detail" th:text="#{label.pageSize}"></span>
-									<div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 70px;">
-										<select id="pageSizeSelect" class="selectpicker m-datatable__pager_size" title="Select page size" data-width="70px">
-											<option th:each="pageSize : ${pageSizes}" th:text="${pageSize}" th:value="${pageSize}"
-													th:selected="${pageSize} == ${selectedPageSize}"></option>
-										</select>
+										</div>
 									</div>
+								</div>
+								<div class="col-xl-4 order-1 order-xl-2 m--align-right">
+									<a sec:authorize="hasRole('ADMIN')" th:href="@{/person/0/save}" class="btn btn-focus m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+										<span>
+											<i class="la la-plus"></i>
+												<span>
+													Добавить новое физ.лицо
+												</span>
+										</span>
+									</a>
+									<div class="m-separator m-separator--dashed d-xl-none"></div>
 								</div>
 							</div>
 						</div>
-					</div>
-
-
-				</div>
-
-				<!--begin::Modal-->
-				<div class="modal fade" id="personFormModal" tabindex="-1" role="dialog" aria-hidden="true">
-					<div class="modal-dialog">
-						<div class="modal-content">
-						</div>
+						<!--end: Search Form -->
+						<!--begin: Datatable -->
+						<div class="m_datatable" id="ajax_data"></div>
+						<!--end: Datatable -->
 					</div>
 				</div>
-				<!--end::Modal-->
+				<!--end::Portlet-->
 
-			</div>
-
-			<div class="row">
-				<div class="col-md-12">
-					<input hidden="true" type="text" id="person_id" name="person_id" />
-					<div id="content"></div>
-				</div>
 			</div>
 		</div>
 	</div>
@@ -196,126 +112,163 @@
 	<div th:replace="layout/footer"/>
 	<!-- end::Footer -->
 </div>
+<!-- end:: Page -->
 
 <div th:replace="fragments/footer :: footer-js"/>
 
 <!--begin::Page Resources -->
-<script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
-<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
-<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
+<!--<script th:src="@{/assets/custom/demo/default/custom/components/datatables/base/data-json.js}" type="text/javascript"></script>-->
 <!--end::Page Resources -->
 
-<script>
-    function updateOrgFormId(sel)
-    {
-        $("#orgFormId").val(sel.value);
-    }
-
-    function updateAddressId(sel)
-    {
-        $("#addressId").val(sel.value);
-    }
-
-    function updateRegionId(sel)
-    {
-        $("#regionId").val(sel.value);
-    }
-
-    function updateDistrictId(sel)
-    {
-        $("#districtId").val(sel.value);
-    }
-
-    function updateAokmotuId(sel)
-    {
-        $("#aokmotuId").val(sel.value);
-    }
-
-    function updateVillageId(sel)
-    {
-        $("#villageId").val(sel.value);
-    }
-
-    function updateIdentityDocTypeId(sel)
-    {
-        $("#identityDocTypeId").val(sel.value);
-    }
-
-    function updateIdentityDocGivenById(sel)
-    {
-        $("#identityDocGivenById").val(sel.value);
-    }
-</script>
+<div th:with="isAdmin = ${#authorization.expression('hasRole(''ADMIN'')')}">
+	<script th:inline="javascript">
+        /*<![CDATA[*/
+        var hasRoleAdmin = /*[[${isAdmin}]]*/ [];
+        console.log(hasRoleAdmin);
+        /*]]>*/
+	</script>
+</div>
 
 <script type="text/javascript">
+    //== Class definition
 
-    $(document).ready(function()
-    {
-        var table = $('#personTable').DataTable({
-            stateSave: 	true,
-            info: false,
-            sDom: '',
-            language: {
-                paginate: {
-                    previous: '<i class="la la-angle-left"></i>',
-                    next: '<i class="la la-angle-right"></i>'
+    var DatatableJsonRemoteDemo = function () {
+        //== Private functions
+
+        // basic demo
+        var demo = function () {
+
+            var datatable = $('.m_datatable').mDatatable({
+                // datasource definition
+                data: {
+                    type: 'remote',
+                    source: '/api/persons',
+                    pageSize: 10,
+                    saveState: {
+                        cookie: false,
+                        webstorage: false
+                    }
                 },
-                lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
-            },
-            keys: {
-                focus: ':eq(0)'
-            }
-        });
 
-        table.on('key-focus', function(e, datatable, cell) {
+                // layout definition
+                layout: {
+                    theme: 'default', // datatable theme
+                    class: '', // custom wrapper class
+                    scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+                    height: 550, // datatable's body's fixed height
+                    footer: false // display/hide footer
+                },
 
-            var rowData = datatable.row(cell.index().row).data();
+                // column sorting
+                sortable: true,
 
-            $("#person_id").val(rowData[0]);
+                // column based filtering
+                filterable: false,
 
-            var sUrl ="/MFCredit/person/" + rowData[0]+"/view";
+                pagination: true,
 
-            $.get(sUrl, function(data) {
+                // columns definition
+                columns: [{
+                    field: "View",
+                    width: 80,
+                    textAlign: 'center',
+                    title: "Просмотр",
+                    sortable: false,
+                    selector: false,
+                    overflow: 'visible',
+                    template: function (row) {
+                        return '\
+						<a href="/person/'+ row.id +'/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
+					';
+                    }
+                },  {
+                    field: "id",
+                    title: "#",
+                    sortable: 'desc',
+                    responsive: {hidden: 'xl'},
+                }, {
+                    field: "personName",
+                    title: "Имя"
+                }, {
+                    field: "personDescription",
+                    title: "Примечание"
+                }, {
+                    field: "districtName",
+                    title: "Район"
+                }, {
+                    field: "",
+                    width: 110,
+                    title: "",
+                    sortable: false,
+                    template: function (row) {
+                        var dropup = (row.getDatatable().getPageSize() - row.getIndex()) <= 4 ? 'dropup' : '';
 
-                $('#content').html(data);
+                        return '\
+						<a href="/person/'+ row.id +'/edit" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+							<i class="la la-edit"></i>\
+						</a>\
+						<a href="/person/'+ row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
+							<i class="la la-trash"></i>\
+						</a>\
+					';
+                    }
+                }],
+                translate: {
+                    records: {
+                        processing: 'Подождите пожалуйста...',
+                        noRecords: 'Записей не найдено'
+                    },
+                    toolbar: {
+                        pagination: {
+                            items: {
+                                default: {
+                                    first: 'Первая страница',
+                                    prev: 'Предыдущая страница',
+                                    next: 'Следующая страница',
+                                    last: 'Последняя страница',
+                                    more: 'Другие страницы',
+                                    input: 'Номер страницы',
+                                    select: 'Выбрать размер страницы'
+                                },
+                                info: 'Отображение {{start}} - {{end}} из {{total}} записей'
+                            }
+                        }
+                    }
+                }
             });
 
-        });
 
-        $('#generalSearch').keyup(function(){
-            table.search($(this).val()).draw() ;
-        });
+            var query = datatable.getDataSourceQuery();
+            $('#m_form_search').on('keyup', function (e) {
+                // shortcode to datatable.getDataSourceParam('query');
+                var query = datatable.getDataSourceQuery();
+                query.generalSearch = $(this).val().toLowerCase();
+                // shortcode to datatable.setDataSourceParam('query', query);
+                datatable.setDataSourceQuery(query);
+                datatable.load();
+            }).val(query.generalSearch);
 
-        $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
-        $('.selectpicker').selectpicker('refresh');
 
-    });
+            $('#m_form_district').on('change', function () {
+                datatable.search($(this).val(), 'districtId');
+            }).val(typeof query.districtId !== 'undefined' ? query.districtId : '');
 
-    $("#personFormModal").on("show.bs.modal", function(e) {
 
-        var link = $(e.relatedTarget);
+            $('#m_form_district').selectpicker();
 
-        var personID = $("#person_id").val();
 
-        $(this).find(".modal-content").load(link.attr("href"));
+        };
 
-        // if(link.attr("href").indexOf('bankData/add')>0) {
-        //
-        //     $(this).find(".modal-content").load(link.attr("href").replace("/bankData/add","/person/"+personID+"/bankData/add"));
-        //
-        // } else if(link.attr("href").indexOf('information/add')>0) {
-        //
-        //     $(this).find(".modal-content").load(link.attr("href").replace("/information/add","/3/"+personID+"/information/add"));
-        //
-        // } else if(link.attr("href").indexOf('department/add')>0) {
-        //
-        //     $(this).find(".modal-content").load(link.attr("href").replace("/department/add","/person/"+personID+"/department/add"));
-        //
-        // } else {
-        //
-        //     $(this).find(".modal-content").load(link.attr("href"));
-        //
-        // }
+        return {
+            // public functions
+            init: function () {
+                demo();
+            }
+        };
+    }();
+
+    jQuery(document).ready(function () {
+        DatatableJsonRemoteDemo.init();
     });
 </script>
 
