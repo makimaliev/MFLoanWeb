@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class PaymentViewController {
 
 
+
     @RequestMapping(value = {"/","/list"}, method = RequestMethod.GET)
     private String getAll(ModelMap model){
 

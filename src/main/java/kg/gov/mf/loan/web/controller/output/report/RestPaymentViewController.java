@@ -17,7 +17,6 @@ public class RestPaymentViewController {
     PaymentViewService paymentViewService;
 
 
-
     @PostMapping("/paymentViews")
     private List<PaymentView> allPaymentViews(){
 
