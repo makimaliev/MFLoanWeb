@@ -21,9 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class TaskController {
@@ -52,8 +50,28 @@ public class TaskController {
     @RequestMapping(value = { "/tasks" }, method = RequestMethod.GET)
     public String tasks(ModelMap model)
     {
-        List<Task> openTasks = taskService.getOpenTasks(userService.findByUsername(Utils.getPrincipal()).getId());
-        List<Task> closedTasks = taskService.getClosedTasks(userService.findByUsername(Utils.getPrincipal()).getId());
+        String userId = String.valueOf(userService.findByUsername(Utils.getPrincipal()).getId());
+        Map<String, String> vars = new HashMap<>();
+        vars.put("assignedTo", userId);
+        vars.put("status", "OPEN");
+
+        List<Task> openTasks = taskService.getTasks(vars);
+
+        vars.clear();
+        vars.put("assignedTo", userId);
+        vars.put("status", "CLOSED");
+        List<Task> closedTasks = taskService.getTasks(vars);
+
+        /*
+        Map<String, String> atrs = new HashMap<String, String>()
+        {
+            {
+                put("objectId", "131");
+                put("status", "open");
+            }
+        };
+        List<Task> tasks = taskService.getTasks(userService.findByUsername(Utils.getPrincipal()).getId(), atrs);
+        */
 
         model.addAttribute("openTasks", openTasks);
         model.addAttribute("closedTasks", closedTasks);

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!-- begin::Head -->
+<head>
+    <title>MFLoan | Docflow</title>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<!-- end::Head -->
+
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <div class="m-content">
+                <div class="m-portlet m-portlet--full-height">
+                    <form th:object="${document}" class="m-form m-form--fit m-form--label-align-right">
+                        <div class="m-portlet__head">
+                            <div class="m-portlet__head-caption">
+                                <div class="m-portlet__head-title">
+                                    <h3 class="m-portlet__head-text" th:text="*{'Детали документа № ' + id}"></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-portlet__body">
+                            <div class="m-scrollable">
+                                <!--begin::Form-->
+                                <div class="row">
+
+                                    <div class="col-12 m--padding-20">
+                                        <nav>
+                                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                                <a class="nav-item nav-link active" id="nav-main-tab" data-toggle="tab" href="#main" role="tab" aria-controls="nav-main" aria-selected="true">Общие</a>
+                                                <a class="nav-item nav-link" id="nav-stages-tab" data-toggle="tab" href="#stages" role="tab" aria-controls="nav-stages" aria-selected="false">Этапы</a>
+                                                <a class="nav-item nav-link" id="nav-history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="nav-history" aria-selected="false">Журнал действий</a>
+                                                <a class="nav-item nav-link" id="nav-journal-tab" data-toggle="tab" href="#journal" role="tab" aria-controls="nav-journal" aria-selected="false">История</a>
+                                            </div>
+                                        </nav>
+                                        <div class="tab-content" id="nav-tabContent">
+                                            <div class="tab-pane fade show active m--padding-left-50 m--padding-right-50" id="main" role="tabpanel" aria-labelledby="nav-main-tab">
+                                                <th:block th:replace="doc/document/viewcontent::__${document.documentType.internalName}__"/>
+                                            </div>
+                                            <div class="tab-pane fade" id="stages" role="tabpanel" aria-labelledby="nav-stages-tab">Stages</div>
+                                            <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="nav-history-tab">
+                                                <th:block th:replace="doc/layout::history"/>
+                                            </div>
+                                            <div class="tab-pane fade" id="journal" role="tabpanel" aria-labelledby="nav-journal-tab">
+                                                <th:block th:replace="doc/layout::journal"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!--end::Form-->
+
+                            </div>
+                        </div>
+                        <div class="m-portlet__foot">
+                            <button type="button" class="btn btn-primary" onclick="window.history.back()"> Назад </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END CONTENT BODY -->
+    <!-- begin::Footer -->
+    <div th:replace="layout/footer"/>
+    <!-- end::Footer -->
+</div>
+<div class="m-scroll-top m-scroll-top--skin-top" data-toggle="m-scroll-top" data-scroll-offset="500" data-scroll-speed="300">
+    <i class="la la-arrow-up"></i>
+</div>
+<div th:replace="fragments/footer :: footer-js"/>
+
+<!--begin::Page Resources -->
+</body>
+</html>

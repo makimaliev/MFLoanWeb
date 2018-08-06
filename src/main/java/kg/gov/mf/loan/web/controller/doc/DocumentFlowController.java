@@ -1,8 +1,8 @@
 package kg.gov.mf.loan.web.controller.doc;
 
 import kg.gov.mf.loan.admin.org.model.Department;
+import kg.gov.mf.loan.admin.org.model.Organization;
 import kg.gov.mf.loan.admin.org.model.Staff;
-import kg.gov.mf.loan.admin.org.service.StaffService;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.doc.model.*;
 import kg.gov.mf.loan.doc.service.DocumentStatusService;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -33,7 +34,6 @@ public class DocumentFlowController extends BaseController {
     private DocumentStatusService documentStatusService;
     private TaskService taskService;
     private RegisterService registerService;
-    private StaffService staffService;
 
     @Autowired
     public DocumentFlowController(DocumentService documentService,
@@ -41,8 +41,7 @@ public class DocumentFlowController extends BaseController {
                                   DocumentSubTypeService documentSubTypeService,
                                   DocumentStatusService documentStatusService,
                                   TaskService taskService,
-                                  RegisterService registerService,
-                                  StaffService staffService)
+                                  RegisterService registerService)
     {
         this.documentService = documentService;
         this.documentTypeService = documentTypeService;
@@ -50,9 +49,48 @@ public class DocumentFlowController extends BaseController {
         this.documentStatusService = documentStatusService;
         this.taskService = taskService;
         this.registerService = registerService;
-        this.staffService = staffService;
     }
-
+    //endregion
+    //region TYPE
+    private Transition[][][] ACTIONS =
+            {
+                {   // Internal
+                    { Transition.REQUEST, Transition.TORECONCILE },     // NEW
+                    { Transition.REQUEST, Transition.TORECONCILE },     // DRAFT
+                    { Transition.RECONCILE, Transition.REJECT },        // PENDING
+                    { Transition.APPROVE, Transition.REJECT },          // REQUESTED
+                    { Transition.REQUEST, Transition.TORECONCILE },     // RECONCILED
+                    { Transition.ACCEPT, Transition.REJECT },           // APPROVED
+                    {},                                                 // REJECTED
+                    {},                                                 // REGISTERED
+                    { Transition.SEND },                                // ACCEPTED
+                    { Transition.START, Transition.SEND },              // SENT
+                    { Transition.DONE }                                 // STARTED
+                },
+                {   // Incoming
+                    { Transition.REGISTER },                            // NEW
+                    { Transition.REGISTER },                            // DRAFT
+                    {},                                                 // PENDING
+                    {},                                                 // REQUESTED
+                    {},                                                 // RECONCILED
+                    {},                                                 // APPROVED
+                    {},                                                 // REJECTED
+                    { Transition.SEND },                                // REGISTERED
+                    {},                                                 // ACCEPTED
+                    { Transition.START, Transition.SEND },              // SENT
+                    { Transition.DONE }                                 // STARTED
+                },
+                {   // Outgoing
+                    { Transition.REQUEST, Transition.TORECONCILE },     // NEW
+                    { Transition.REQUEST, Transition.TORECONCILE },     // DRAFT
+                    { Transition.RECONCILE, Transition.REJECT },        // PENDING
+                    { Transition.APPROVE, Transition.REJECT },          // REQUESTED
+                    { Transition.REQUEST, Transition.TORECONCILE },     // RECONCILED
+                    { Transition.REGISTER },                            // APPROVED
+                    {},                                                 // REJECTED
+                    {}                                                  // REGISTERED
+                }
+            };
     //endregion
     private final static Map<Integer, String> responsible = new HashMap<Integer, String>() {
         {
@@ -63,44 +101,11 @@ public class DocumentFlowController extends BaseController {
         }
     };
     private enum CURRENTVIEW { INTERNAL, INCOMING, OUTGOING}
-    private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-    //region TYPE
-    private String[][][] ACTIONS =
-            {
-                {
-                    {"create", "request"},
-                    {"request"},
-                    {"approve", "reject"},
-                    {"accept", "reject"},
-                    {},
-                    {},
-                    {"send"},
-                    {"start", "reject"},
-                    {"done"}
-                },
-                {
-                    {"create", "register"},
-                    {"register"},
-                    {},
-                    {},
-                    {},
-                    {"send"},
-                    {},
-                    {"start", "reject"},
-                    {"done"}
-                },
-                {
-                    {"create", "request"},
-                    {"request"},
-                    {"approve", "reject"},
-                    {"register"}
-                }
-            };
-    //endregion
+    private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        SimpleDateFormat dateFormat = DATE_FORMAT;
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 
@@ -114,17 +119,11 @@ public class DocumentFlowController extends BaseController {
         DocumentType documentType = documentTypeService.getByInternalName(type);
         String title = documentType.getName();
 
-        List<Task> tasks = taskService.getOpenTasks(getUser().getId());
+        Map<String, String> vars = new HashMap<>();
+        vars.put("assignedTo", String.valueOf(getUser().getId()));
+        vars.put("status", "OPEN");
 
-        String json = "[";
-        for(Task task : tasks)
-        {
-            json += "{'taskId':'" + task.getObjectId() + "'},";
-        }
-        json += "]";
-
-        model.addAttribute("tasks", tasks);
-        model.addAttribute("json", json);
+        model.addAttribute("tasks", taskService.getTasks(vars));
         model.addAttribute("ACTIONS", ACTIONS);
         model.addAttribute("row", CURRENTVIEW.valueOf(type.toUpperCase()).ordinal());
         model.addAttribute("ds", documentStatusService);
@@ -133,6 +132,7 @@ public class DocumentFlowController extends BaseController {
         model.addAttribute("responsible", responsible);
         model.addAttribute("documentSubTypes", documentType.getDocumentSubTypes());
         model.addAttribute("type", type);
+        model.addAttribute("cu", getUser().getId());
 
         return "/doc/document/index";
     }
@@ -146,10 +146,10 @@ public class DocumentFlowController extends BaseController {
         DocumentType documentType = documentSubTypeService.getByInternalName(subType).getDocumentType();
         String currentView = documentType.getInternalName();
 
-        List<DocumentStatus> actions = new ArrayList<>();
-        for(String action : ACTIONS[CURRENTVIEW.valueOf(currentView.toUpperCase()).ordinal()][0])
+        List<Transition> actions = new ArrayList<>();
+        for(Transition action : ACTIONS[CURRENTVIEW.valueOf(currentView.toUpperCase()).ordinal()][0])
         {
-            actions.add(documentStatusService.getByInternalName(action));
+            actions.add(action);
         }
 
         Document document = new Document();
@@ -157,26 +157,12 @@ public class DocumentFlowController extends BaseController {
         document.setDocumentType(documentType);
         document.setDocumentSubType(documentSubTypeService.getByInternalName(subType));
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        cal.add(Calendar.DATE, 10);
-
-        document.setSenderDueDate(cal.getTime());
-
-        if(documentType.getInternalName().equals("incoming"))
-        {
-            Responsible responsible = new Responsible();
-            responsible.setResponsibleType(1);
-            responsible.getStaff().add(getUser().getStaff());
-            document.setReceiverResponsible(responsible);
-        }
-
         model.addAttribute("actions", actions);
         model.addAttribute("document", document);
         model.addAttribute("responsible", responsible);
         model.addAttribute("documentState",  document.getDocumentState().toString());
 
-        return "/doc/document/" + currentView + "/" + currentView;
+        return "/doc/document/edit";
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
@@ -186,6 +172,19 @@ public class DocumentFlowController extends BaseController {
             return "/login/login";
 
         Document document = documentService.findById(id);
+
+        //region XTRA
+        // *************************************************************************************************************
+        Map<String, String> vars = new HashMap<>();
+        vars.put("objectId", document.getId().toString());
+        vars.put("status", "OPEN");
+        Task task = taskService.getTask(getUser(), vars);
+
+        if(task != null && task.getProgress() != null)
+            document.setDocumentState(State.valueOf(task.getProgress()));
+        // *************************************************************************************************************
+        //endregion
+
         String currentView = document.getDocumentType().getInternalName();
 
         int row = CURRENTVIEW.valueOf(currentView.toUpperCase()).ordinal();
@@ -194,29 +193,35 @@ public class DocumentFlowController extends BaseController {
         boolean hasReject = false;
 
         if(ACTIONS[row][col].length > 1){
-            hasReject = ACTIONS[row][col][1].equals("reject") ? true : false;
+            hasReject = ACTIONS[row][col][1].equals(Transition.REJECT) ? true : false;
         }
 
-        List<DocumentStatus> actions = new ArrayList<>();
-        for(String action : ACTIONS[row][col])
+        List<Transition> actions = new ArrayList<>();
+        for(Transition action : ACTIONS[row][col])
         {
-            actions.add(documentStatusService.getByInternalName(action));
+            actions.add(action);
         }
 
+        vars.clear();
+        vars.put("objectId", document.getId().toString());
+
+        model.addAttribute("tasks", taskService.getTasks(vars));
         model.addAttribute("hasReject", hasReject);
         model.addAttribute("actions", actions);
         model.addAttribute("document", document);
         model.addAttribute("responsible", responsible);
         model.addAttribute("documentState", document.getDocumentState().toString());
 
-        return "/doc/document/" + currentView + "/" + currentView;
+        return "/doc/document/edit";
+        //return "/doc/document/" + currentView + "/" + currentView;
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(@ModelAttribute("document") Document document,
                                @RequestParam("action") String action,
                                @RequestParam("senderFiles") MultipartFile[] senderFiles,
-                               @RequestParam("receiverFiles") MultipartFile[] receiverFiles) throws IOException {
+                               @RequestParam("receiverFiles") MultipartFile[] receiverFiles,
+                                HttpServletRequest request) throws IOException {
 
         String docType = documentTypeService.findById(document.getDocumentType().getId()).getInternalName();
 
@@ -288,12 +293,18 @@ public class DocumentFlowController extends BaseController {
     public String view(@PathVariable("id") Long id, Model model) {
 
         Document document = documentService.findById(id);
-        String currentView = document.getDocumentType().getInternalName();
+
+        Map<String, String> vars = new HashMap<>();
+        vars.put("objectId", document.getId().toString());
+
+        List<Task> tasks = taskService.getTasks(vars);
+
+        model.addAttribute("tasks", tasks);
 
         model.addAttribute("document", document);
         model.addAttribute("responsible", responsible);
 
-        return "/doc/document/" + currentView + "/view";
+        return "/doc/document/view";
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
@@ -321,385 +332,579 @@ public class DocumentFlowController extends BaseController {
         return "redirect:/doc?type=" + document.getDocumentType().getInternalName();
     }
 
-    private DispatchData setDispatchData(State state, String description /*, User toUser */) {
+    private DispatchData setDispatchData(State state, String description) {
 
         DispatchData dispatchData = new DispatchData();
 
-        dispatchData.setParent(false);
         dispatchData.setDescription(description);
         dispatchData.setDispatchType(state);
         dispatchData.setDispatchInitTime(new Date());
         dispatchData.setDispatchBy(getUser());
-        dispatchData.setDispatchTo(userService.findById(1L));
-        //dispatchData.setDispatchResponseTime();
 
         return dispatchData;
     }
-    private Task addTask(Document document, User user) {
+    private void addTask(String description, Long id, User user, Date dueDate) {
 
         Task task = new Task();
-        //task.setDescription("");
-        //task.setResolutionSummary("");
-        //task.setProgress("");
-        task.setSummary(document.getGeneralStatus().getActionName());
 
+        task.setDescription(description);
+        task.setSummary("");
+        task.setObjectId(id);
+        task.setObjectType(Document.class.getSimpleName());
         task.setCreatedBy(getUser());
-        task.setIdentifiedByUserId(getUser().getId());
-        task.setModifiedByUserId(getUser().getId());
+        task.setAssignedTo(user);
+        task.setTargetResolutionDate(dueDate);
 
-        task.setAssignedToUserId(user.getId());
-        task.setTargetResolutionDate(document.getSenderDueDate());
-        task.setTargetResolutionDate(document.getSenderDueDate());
+        taskService.add(task);
+    }
+    private void addTask(String description, Long id, User fromUser, User toUser,Date dueDate, State state) {
 
-        /*
-        if(document.getDocumentState().ordinal() < 7)
-        {
-            task.setTargetResolutionDate(document.getSenderDueDate());
-        }
-        else
-        {
-            task.setTargetResolutionDate(document.getReceiverDueDate());
-        }
-        */
+        Task task = new Task();
 
-        task.setObjectId(document.getId());
-        task.setObjectType("/doc/edit/" + document.getId().toString());
+        task.setDescription(description);
+        task.setSummary("");
+        task.setProgress(state.toString());
+        task.setObjectId(id);
+        task.setObjectType(Document.class.getSimpleName());
+        task.setCreatedBy(fromUser);
+        task.setAssignedTo(toUser);
+        task.setTargetResolutionDate(dueDate);
 
-        return task;
+        taskService.add(task);
     }
 
     private void saveInternalDocument(Document document, String action) {
 
-        DocumentStatus documentStatus = documentStatusService.getByInternalName(action);
-        document.setGeneralStatus(documentStatus);
+        String description = document.getComment();
 
+        //region New Document
         if(document.getId() == null)
         {
             document.getUsers().add(getUser());
-            document.setDocumentState(document.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
-            document.setSenderStatus(documentStatus);
+            document.setDocumentState(Transition.valueOf(action.toUpperCase()).state());
+            document.getDispatchData().add(setDispatchData(State.DRAFT, ""));
+            document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), ""));
 
-            if(action.equals("request"))
+            documentService.save(document);
+
+            if(action.equals("REQUEST"))
             {
-                document.getSenderDispatchData().add(setDispatchData(State.DRAFT, ""));
-                document.getSenderDispatchData().add(setDispatchData(document.getDocumentState(), ""));
-                document = documentService.save(document);
-
                 for(Staff staff : document.getSenderResponsible().getStaff())
-                {   // Add Sender Responsible
-                    taskService.add(addTask(document, getUser(staff)));
+                {
                     document.getUsers().add(getUser(staff));
+                    addTask(State.REQUESTED.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
                 }
                 documentService.update(document);
             }
-            else
+
+            if(action.equals("TORECONCILE"))
             {
-                document.getSenderDispatchData().add(setDispatchData(document.getDocumentState(), ""));
-                documentService.save(document);
+                for(Staff staff : document.getReconciler())
+                {
+                    document.getUsers().add(getUser(staff));
+                    addTask(State.PENDING.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
+                }
+                documentService.update(document);
             }
         }
+        //endregion
+        //region Existing Document
         else
         {
             Document doc = documentService.findById(document.getId());
+
             document.setUsers(doc.getUsers());
-            document.setDocumentState(doc.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
-            document.setSenderDispatchData(doc.getSenderDispatchData());
+            document.setDocumentState(doc.getDocumentState());
+            document.setDispatchData(doc.getDispatchData());
 
-            if(doc.getDocumentState().ordinal() < 3)
-            {   // Sender Data
-                document.setSenderStatus(documentStatus);
+            // *********************************************************************************************************
+            // ******************************************** Complete Tasks *********************************************
+            // *********************************************************************************************************
+            if (action.equals("RECONCILE") || action.equals("APPROVE") || action.equals("ACCEPT") || action.equals("SEND") || action.equals("START") || action.equals("DONE") || action.equals("REJECT"))
+            {
+                taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
+            }
 
-                if(action.equals("reject"))
+            // *********************************************************************************************************
+            // *********************************** Add Tasks, Users and Description ************************************
+            // *********************************************************************************************************
+            if (action.equals("TORECONCILE"))
+            {
+                Map<String, String> vars = new HashMap<>();
+                vars.put("objectId", document.getId().toString());
+                vars.put("status", "OPEN");
+                Task task = taskService.getTask(getUser(), vars);
+
+                if(task != null && task.getProgress() != null && task.getCreatedBy() == null)
                 {
-                    taskService.completeTask(document.getId(), getUser()); // ????????????????????????????????????????????
-                    document.getSenderDispatchData().add(setDispatchData(State.REJECTED, document.getComment()));
+                    taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
                 }
-                else {
 
-                    document.getSenderDispatchData().add(setDispatchData(document.getDocumentState(), ""));
+                //region [User, Task]
+                for(Staff staff : document.getReconciler())
+                {
+                    document.getUsers().add(getUser(staff));
+                    addTask(State.PENDING.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
+                }
+                //endregion
+            }
 
-                    if (action.equals("request"))
-                    {   // Add Sender Responsible
-                        for (Staff staff : document.getSenderResponsible().getStaff())
-                        {   // Add task and Users
-                            taskService.add(addTask(document, getUser(staff)));
-                            document.getUsers().add(getUser(staff));
-                        }
-                    }
-                    if (action.equals("approve"))
+            if (action.equals("REQUEST"))
+            {
+                Map<String, String> vars = new HashMap<>();
+                vars.put("objectId", document.getId().toString());
+                vars.put("status", "OPEN");
+                Task task = taskService.getTask(getUser(), vars);
+
+                if(task != null && task.getProgress() != null && task.getCreatedBy() == null)
+                {
+                    taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
+                }
+
+                //region [User, Task]
+                for (Staff staff : document.getSenderResponsible().getStaff())
+                {
+                    document.getUsers().add(getUser(staff));
+                    addTask(State.REQUESTED.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
+                }
+                //endregion
+            }
+
+            if (action.equals("APPROVE"))
+            {
+                //region [Description, User, Task]
+                document.setSenderRegisteredNumber(registerService.generateRegistrationNumber());
+                document.setSenderRegisteredDate(new Date());
+                description = "<strong>Зарегистрирован</strong>"
+                        + "<br>Исходящий № : " + document.getSenderRegisteredNumber()
+                        + "<br>Дата : " + DATE_FORMAT.format(document.getSenderRegisteredDate());
+
+                if (document.getReceiverResponsible().getResponsibleType() == 1)
+                {
+                    for (Staff staff : document.getReceiverResponsible().getStaff())
                     {
-                        taskService.completeTask(document.getId(), getUser());
-
-                        document.setSenderRegisteredNumber(registerService.generateRegistrationNumber());
-                        document.setSenderRegisteredDate(new Date());
-
-                        document.getSenderDispatchData().add(setDispatchData(State.REGISTERED, "Исходящий № : "
-                                + document.getSenderRegisteredNumber() + "<br> Дата : "
-                                + DATE_FORMAT.format(document.getSenderRegisteredDate()))
-                        );
-                        // Add Task and Receiver Responsible
-                        if (document.getReceiverResponsible().getResponsibleType() == 1) {
-                            for (Staff staff : document.getReceiverResponsible().getStaff()) {
-                                taskService.add(addTask(document, getUser(staff)));
-                                document.getUsers().add(getUser(staff));
-                            }
-                        } else {
-                            for (Department department : document.getReceiverResponsible().getDepartments()) {
-                                taskService.add(addTask(document, getUser(department)));
-                                document.getUsers().add(getUser(department));
-                            }
-                        }
-                        //endregion
+                        document.getUsers().add(getUser(staff));
+                        addTask("Документ на обработку", document.getId(), getUser(staff), document.getDocumentDueDate());
                     }
                 }
+                else
+                {
+                    for (Department department : document.getReceiverResponsible().getDepartments())
+                    {
+                        document.getUsers().add(getUser(department));
+                        addTask("Документ на обработку", document.getId(), getUser(department), document.getDocumentDueDate());
+                    }
+                }
+                //endregion
+            }
 
+            if (action.equals("ACCEPT"))
+            {
+                //region [Description, User, AutoTask]
+                document.setReceiverRegisteredNumber(registerService.generateRegistrationNumber());
+                document.setReceiverRegisteredDate(new Date());
+                description = "<strong>Зарегистрирован</strong>"
+                        + "<br>Входящий № : " + document.getReceiverRegisteredNumber()
+                        + "<br>Дата : " + DATE_FORMAT.format(document.getReceiverRegisteredDate());
+
+                if (document.getReceiverResponsible().getResponsibleType() == 1) {
+                    for (Staff staff : document.getReceiverResponsible().getStaff())
+                    {
+                        addTask("Назначить исполнителя", document.getId(), null, getUser(staff), document.getDocumentDueDate(),State.ACCEPTED);
+                    }
+                } else {
+                    for (Department department : document.getReceiverResponsible().getDepartments())
+                    {
+                        addTask("Назначить исполнителя", document.getId(), null, getUser(department), document.getDocumentDueDate(),State.ACCEPTED);
+                    }
+                }
+                //endregion
+            }
+
+            if (action.equals("SEND"))
+            {
+                //region [User, Task]
+                for (Staff staff : document.getExecutor())
+                {
+                    document.getUsers().add(getUser(staff));
+                    addTask("На исполнение", document.getId(), getUser(staff), document.getDocumentDueDate());
+                }
+                //endregion
+            }
+
+            if (action.equals("START"))
+            {
+                //region [User, AutoTask]
+                document.getReceiverExecutor().getStaff().add(getUser().getStaff());
+                addTask("Завершить задачу", document.getId(),null, getUser(), document.getDocumentDueDate(), State.STARTED);
+                //endregion
+            }
+
+            // *********************************************************************************************************
+            // ************************************* Update Document State *********************************************
+            // *********************************************************************************************************
+            if(action.equals("START") || action.equals("DONE") || action.equals("RECONCILE") || action.equals("REJECT"))
+            {
+                Map<String, String> vars = new HashMap<>();
+                vars.put("objectId", document.getId().toString());
+                vars.put("status", "OPEN");
+                int taskCount = taskService.getTasks(vars).size();
+
+                if (action.equals("RECONCILE") && taskCount == 0)
+                {
+                    addTask("Согласование завершено", document.getId(), null, getUser(document.getOwner()), document.getDocumentDueDate(), State.DRAFT);
+                }
+
+                if (action.equals("START") && taskCount == 0)
+                {
+                    document.setDocumentState(Transition.valueOf(action).state());
+                }
+
+                if (action.equals("DONE") && taskCount == 0)
+                {
+                    document.setDocumentState(Transition.valueOf(action).state());
+                }
+
+                if(action.equals("REJECT"))
+                {
+                    if(document.getDocumentState() == State.PENDING && taskCount == 0)
+                    {
+                        addTask("Согласование завершено", document.getId(), null, getUser(document.getOwner()), document.getDocumentDueDate(), State.DRAFT);
+                    }
+
+                    if(document.getDocumentState() == State.REQUESTED)
+                    {
+                        addTask("Доработать : " + description, document.getId(), null, getUser(document.getOwner()), document.getDocumentDueDate(), State.DRAFT);
+                    }
+
+                    if (document.getDocumentState() == State.APPROVED)
+                    {
+                        //region [Description]
+                        document.setReceiverRegisteredNumber(registerService.generateRegistrationNumber());
+                        document.setReceiverRegisteredDate(new Date());
+                        description = "<strong>Зарегистрирован</strong>"
+                                + "<br>Входящий № : " + document.getReceiverRegisteredNumber()
+                                + "<br>Дата : " + DATE_FORMAT.format(document.getReceiverRegisteredDate());
+                        //endregion
+                        document.setDocumentState(State.DONE);
+                    }
+                }
             }
             else
-            {   // Receiver Data
-                document.setReceiverDispatchData(doc.getReceiverDispatchData());                                      // add existing Receiver DispatchData
-                document.setReceiverStatus(documentStatus);                                                           // update Receiver DocumentStatus
-                document.getReceiverDispatchData().add(setDispatchData(document.getDocumentState(), ""));  // add new Receiver DispatchData
-
-                if(action.equals("accept"))
-                {
-                    taskService.completeTask(document.getId(), getUser());
-
-                    document.setReceiverRegisteredNumber(registerService.generateRegistrationNumber());
-                    document.setReceiverRegisteredDate(new Date());
-
-                    document.getReceiverDispatchData().add(setDispatchData(State.REGISTERED, "Входящий № : "
-                            + document.getReceiverRegisteredNumber() + "<br> Дата : "
-                            + DATE_FORMAT.format(document.getReceiverRegisteredDate()))
-                    );
-                    //region Add task
-                    if(document.getReceiverResponsible().getResponsibleType() == 1)
-                    {
-                        for(Staff staff : document.getReceiverResponsible().getStaff()) {
-                            taskService.add(addTask(document, getUser(staff)));
-                        }
-                    }
-                    else
-                    {
-                        for(Department department : document.getReceiverResponsible().getDepartments()) {
-                            taskService.add(addTask(document, getUser(department)));
-                        }
-                    }
-                    //endregion
-                }
-
-                if(action.equals("send"))
-                {   // Add Receiver Executer
-                    taskService.completeTask(document.getId(), getUser());
-                    for(Staff staff : document.getReceiverExecutor().getStaff()) {
-                        taskService.add(addTask(document, getUser(staff)));
-                        document.getUsers().add(getUser(staff));
-                    }
-                }
-
-                if(action.equals("start"))
-                {
-                    taskService.completeTask(document.getId(), getUser());
-                    for(Staff staff : document.getReceiverExecutor().getStaff()) {
-                        taskService.add(addTask(document, getUser(staff)));
-                    }
-                }
-
-                if(action.equals("done"))
-                {
-                    taskService.completeTask(document.getId(), getUser());
-                }
-
-                if(action.equals("reject"))
-                {
-                    taskService.completeTask(document.getId(), getUser());
-                    document.getReceiverDispatchData().add(setDispatchData(State.REJECTED, document.getComment()));
-                }
+            {
+                document.setDocumentState(Transition.valueOf(action).state());
             }
+
+            // *********************************************************************************************************
+            // *************************************** Add Dispatch Data ***********************************************
+            // *********************************************************************************************************
+            document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), description));
+
             documentService.update(document);
         }
+        //endregion
     }
     private void saveIncomingDocument(Document document, String action) {
 
-        DocumentStatus documentStatus = documentStatusService.getByInternalName(action);
-        document.setGeneralStatus(documentStatus);
+        String description = document.getComment();
 
+        //region New Document
         if(document.getId() == null)
         {
             document.getUsers().add(getUser());
-            document.setDocumentState(document.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
+            document.setDocumentState(Transition.valueOf(action).state());
 
-            if(action.equals("register"))
+            if(action.equals("REGISTER"))
             {
-                document.getReceiverDispatchData().add(setDispatchData(State.DRAFT, ""));
-                document.getReceiverDispatchData().add(setDispatchData(State.REGISTERED, "Входящий № : "
-                        + document.getReceiverRegisteredNumber() + "<br> Дата : "
-                        + DATE_FORMAT.format(document.getReceiverRegisteredDate()))
-                );
-                document = documentService.save(document);
-                //region Add task and Users
-                taskService.add(addTask(document, getUser()));
-                //endregion
+                // Register Outgoing
+                description = "<strong>Зарегистрирован</strong>"
+                        + "<br>Исходящий № : " + document.getSenderRegisteredNumber()
+                        + "<br>Дата : " + DATE_FORMAT.format(document.getSenderRegisteredDate());
+                document.getDispatchData().add(setDispatchData(State.DRAFT, description));
+
+                // Register Incoming
+                document.setReceiverRegisteredNumber(registerService.generateRegistrationNumber());
+                document.setReceiverRegisteredDate(new Date());
+                description = "<strong>Зарегистрирован</strong>"
+                        + "<br>Входящий № : " + document.getReceiverRegisteredNumber()
+                        + "<br>Дата : " + DATE_FORMAT.format(document.getReceiverRegisteredDate());
+                document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), description));
+
+                documentService.save(document);
+
+                if (document.getReceiverResponsible().getResponsibleType() == 1)
+                {
+                    for (Staff staff : document.getReceiverResponsible().getStaff())
+                    {
+                        document.getUsers().add(getUser(staff));
+                        addTask("Назначить исполнителя", document.getId(), getUser(staff), document.getDocumentDueDate());
+                    }
+                }
+                else
+                {
+                    for (Organization organization : document.getReceiverResponsible().getOrganizations())
+                    {
+                        document.getUsers().add(getUser(organization));
+                        addTask("Назначить исполнителя", document.getId(), getUser(organization), document.getDocumentDueDate());
+                    }
+                }
                 documentService.update(document);
             }
-            else
-            {
-                document.getReceiverDispatchData().add(setDispatchData(document.getDocumentState(), ""));
-                documentService.save(document);
-            }
         }
+        //endregion
+        //region Existing Document
         else
         {
             Document doc = documentService.findById(document.getId());
-            document.setUsers(doc.getUsers());
-            document.setDocumentState(doc.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
-            document.setReceiverDispatchData(doc.getReceiverDispatchData());                                      // add existing Receiver DispatchData
-            document.setReceiverStatus(documentStatus);                                                           // update Receiver DocumentStatus
 
-            if(action.equals("reject"))
+            document.setUsers(doc.getUsers());
+            document.setDocumentState(doc.getDocumentState());
+            document.setDispatchData(doc.getDispatchData());
+
+            // *********************************************************************************************************
+            // ******************************************** Complete Tasks *********************************************
+            // *********************************************************************************************************
+            if (action.equals("SEND") || action.equals("START") || action.equals("DONE"))
             {
-                taskService.completeTask(document.getId(), getUser());
-                document.getReceiverDispatchData().add(setDispatchData(State.REJECTED, document.getComment()));
+                taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
+            }
+
+            // *********************************************************************************************************
+            // *********************************** Add Tasks, Users and Description ************************************
+            // *********************************************************************************************************
+
+            if (action.equals("SEND"))
+            {
+                //region [User, Task]
+                for (Staff staff : document.getExecutor())
+                {
+                    document.getUsers().add(getUser(staff));
+                    addTask("На исполнение", document.getId(), getUser(staff), document.getDocumentDueDate());
+                }
+                //endregion
+            }
+
+            if (action.equals("START"))
+            {
+                //region [User, AutoTask]
+                document.getReceiverExecutor().getStaff().add(getUser().getStaff());
+                addTask("Завершить задачу", document.getId(),null, getUser(), document.getDocumentDueDate(), State.STARTED);
+                //endregion
+            }
+
+            // *********************************************************************************************************
+            // ************************************* Update Document State *********************************************
+            // *********************************************************************************************************
+            if(action.equals("START") || action.equals("DONE"))
+            {
+                Map<String, String> vars = new HashMap<>();
+                vars.put("objectId", document.getId().toString());
+                vars.put("status", "OPEN");
+                int taskCount = taskService.getTasks(vars).size();
+
+                if (action.equals("START") && taskCount == 0)
+                {
+                    document.setDocumentState(Transition.valueOf(action).state());
+                }
+
+                if (action.equals("DONE") && taskCount == 0)
+                {
+                    document.setDocumentState(Transition.valueOf(action).state());
+                }
             }
             else
             {
-                if (action.equals("register"))
-                {
-                    document.getReceiverDispatchData().add(setDispatchData(State.REGISTERED, "Входящий № : "
-                            + document.getReceiverRegisteredNumber() + "<br> Дата : "
-                            + DATE_FORMAT.format(document.getReceiverRegisteredDate()))
-                    );
-                    //region Add task and Users
-                    taskService.add(addTask(document, getUser()));
-                    //endregion
-                }
-                else {
-                    document.getReceiverDispatchData().add(setDispatchData(document.getDocumentState(), ""));  // add new Receiver DispatchData
-                }
+                document.setDocumentState(Transition.valueOf(action).state());
             }
 
-            if(action.equals("send"))
-            {
-                taskService.completeTask(document.getId(), getUser());
-                for(Staff staff : document.getReceiverExecutor().getStaff()) {
-                    taskService.add(addTask(document, getUser(staff)));
-                    document.getUsers().add(getUser(staff));
-                }
-            }
-
-            if(action.equals("start"))
-            {
-                taskService.completeTask(document.getId(), getUser());
-                taskService.add(addTask(document, getUser()));
-            }
-
-            if(action.equals("done"))
-            {
-                taskService.completeTask(document.getId(), getUser());
-            }
+            // *********************************************************************************************************
+            // *************************************** Add Dispatch Data ***********************************************
+            // *********************************************************************************************************
+            document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), description));
 
             documentService.update(document);
         }
+        //endregion
     }
     private void saveOutgoingDocument(Document document, String action) {
 
-        DocumentStatus documentStatus = documentStatusService.getByInternalName(action);
-        document.setGeneralStatus(documentStatus);
+        String description = document.getComment();
 
+        //region New Document
         if(document.getId() == null)
         {
             document.getUsers().add(getUser());
-            document.setDocumentState(document.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
-            document.setSenderStatus(documentStatus);
+            document.setDocumentState(Transition.valueOf(action.toUpperCase()).state());
+            document.getDispatchData().add(setDispatchData(State.DRAFT, ""));
+            document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), ""));
 
-            if(action.equals("request"))
+            documentService.save(document);
+
+            if(action.equals("REQUEST"))
             {
-                document.getSenderDispatchData().add(setDispatchData(State.DRAFT, ""));
-                document = documentService.save(document);
-                //region Add task and Users
-                if (document.getSenderResponsible().getResponsibleType() == 1) {
-                    for (Staff staff : document.getReceiverResponsible().getStaff()) {
-                        taskService.add(addTask(document, getUser(staff)));
+                if (document.getSenderResponsible().getResponsibleType() == 1)
+                {
+                    for (Staff staff : document.getSenderResponsible().getStaff())
+                    {
                         document.getUsers().add(getUser(staff));
+                        addTask(State.REQUESTED.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
                     }
-                } else {
-                    // Static user
-                    User user = getUser(); //userService.findById(8);
-                    taskService.add(addTask(document, user));
-                    document.getUsers().add(user);
                 }
-                //endregion
+                else
+                {
+                    for (Organization organization : document.getSenderResponsible().getOrganizations())
+                    {
+                        document.getUsers().add(getUser(organization));
+                        addTask(State.REQUESTED.text(), document.getId(), getUser(organization), document.getDocumentDueDate());
+                    }
+                }
+
                 documentService.update(document);
             }
-            else
+
+            if(action.equals("TORECONCILE"))
             {
-                document.getSenderDispatchData().add(setDispatchData(document.getDocumentState(), ""));
-                documentService.save(document);
+                for(Staff staff : document.getReconciler())
+                {
+                    document.getUsers().add(getUser(staff));
+                    addTask(State.PENDING.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
+                }
+                documentService.update(document);
             }
         }
+        //endregion
+        //region Existing Document
         else
         {
             Document doc = documentService.findById(document.getId());
+
             document.setUsers(doc.getUsers());
-            document.setDocumentState(doc.getDocumentState().next(Transition.valueOf(action.toUpperCase())));
-            document.setSenderDispatchData(doc.getSenderDispatchData());
+            document.setDocumentState(doc.getDocumentState());
+            document.setDispatchData(doc.getDispatchData());
 
-            document.setSenderStatus(documentStatus);
-
-            if(action.equals("reject"))
+            // *********************************************************************************************************
+            // ******************************************** Complete Tasks *********************************************
+            // *********************************************************************************************************
+            if (action.equals("RECONCILE") || action.equals("APPROVE") || action.equals("REGISTER") || action.equals("REJECT"))
             {
-                taskService.completeTask(document.getId(), getUser());
-                document.getSenderDispatchData().add(setDispatchData(State.REJECTED, document.getComment()));
+                taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
             }
-            else
+
+            // *********************************************************************************************************
+            // *********************************** Add Tasks, Users and Description ************************************
+            // *********************************************************************************************************
+            if (action.equals("TORECONCILE"))
             {
-                document.getSenderDispatchData().add(setDispatchData(document.getDocumentState(), ""));
+                Map<String, String> vars = new HashMap<>();
+                vars.put("objectId", document.getId().toString());
+                vars.put("status", "OPEN");
+                Task task = taskService.getTask(getUser(), vars);
 
-                if (action.equals("request")) {
-                    //region Add task and Users
-                    if (document.getSenderResponsible().getResponsibleType() == 1) {
-                        for (Staff staff : document.getReceiverResponsible().getStaff()) {
-                            taskService.add(addTask(document, getUser(staff)));
-                            document.getUsers().add(getUser(staff));
-                        }
-                    } else {
-                        // Static user
-                        User user = userService.findById(8);
-                        taskService.add(addTask(document, user));
-                        document.getUsers().add(user);
-                    }
-                    //endregion
+                if(task != null && task.getProgress() != null && task.getCreatedBy() == null)
+                {
+                    taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
                 }
-                if (action.equals("approve")) {
-                    taskService.completeTask(document.getId(), getUser());
 
-                    document.setSenderRegisteredNumber(registerService.generateRegistrationNumber());
-                    document.setSenderRegisteredDate(new Date());
+                //region [User, Task]
+                for(Staff staff : document.getReconciler())
+                {
+                    document.getUsers().add(getUser(staff));
+                    addTask(State.PENDING.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
+                }
+                //endregion
+            }
 
-                    document.getSenderDispatchData().add(setDispatchData(State.REGISTERED, "Исходящий № : "
-                            + document.getSenderRegisteredNumber() + "<br> Дата : "
-                            + DATE_FORMAT.format(document.getSenderRegisteredDate()))
-                    );
+            if (action.equals("REQUEST"))
+            {
+                Map<String, String> vars = new HashMap<>();
+                vars.put("objectId", document.getId().toString());
+                vars.put("status", "OPEN");
+                Task task = taskService.getTask(getUser(), vars);
 
-                    document.getSenderDispatchData().add(setDispatchData(State.DONE, ""));
+                if(task != null && task.getProgress() != null && task.getCreatedBy() == null)
+                {
+                    taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
+                }
 
-                    //region Add task and Users
-                    if (document.getReceiverResponsible().getResponsibleType() == 1) {
-                        for (Staff staff : document.getReceiverResponsible().getStaff()) {
-                            taskService.add(addTask(document, getUser(staff)));
-                            document.getUsers().add(getUser(staff));
-                        }
-                    } else {
-                        for (Department department : document.getReceiverResponsible().getDepartments()) {
-                            //taskService.add(addTask(document, department));
-                            document.getUsers().add(getUser(department));
-                        }
+                //region [User, Task]
+                if (document.getSenderResponsible().getResponsibleType() == 1)
+                {
+                    for (Staff staff : document.getSenderResponsible().getStaff())
+                    {
+                        document.getUsers().add(getUser(staff));
+                        addTask(State.REQUESTED.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
                     }
-                    //endregion
-                    document.setGeneralStatus(documentStatusService.getByInternalName("done"));
+                }
+                else
+                {
+                    for (Organization organization : document.getSenderResponsible().getOrganizations())
+                    {
+                        document.getUsers().add(getUser(organization));
+                        addTask(State.REQUESTED.text(), document.getId(), getUser(organization), document.getDocumentDueDate());
+                    }
+                }
+                //endregion
+            }
+
+            if (action.equals("APPROVE"))
+            {
+                document.getUsers().add(getUser(staticUser));
+                addTask(Transition.REGISTER.text(), document.getId(), null, getUser(staticUser), document.getDocumentDueDate(), State.APPROVED);
+            }
+
+            if (action.equals("REGISTER"))
+            {
+                //region [Description, User, AutoTask]
+                document.setSenderRegisteredNumber(registerService.generateRegistrationNumber());
+                document.setSenderRegisteredDate(new Date());
+                description = "<strong>Зарегистрирован</strong>"
+                        + "<br>Исходящий № : " + document.getSenderRegisteredNumber()
+                        + "<br>Дата : " + DATE_FORMAT.format(document.getSenderRegisteredDate());
+                //endregion
+            }
+
+            // *********************************************************************************************************
+            // ************************************* Update Document State *********************************************
+            // *********************************************************************************************************
+            if(action.equals("REJECT") || action.equals("RECONCILE") || action.equals("REGISTER"))
+            {
+                Map<String, String> vars = new HashMap<>();
+                vars.put("objectId", document.getId().toString());
+                vars.put("status", "OPEN");
+                int taskCount = taskService.getTasks(vars).size();
+
+                if (action.equals("RECONCILE") && taskCount == 0)
+                {
+                    addTask("Согласование завершено", document.getId(), null, getUser(document.getOwner()), document.getDocumentDueDate(), State.DRAFT);
+                }
+
+                if(document.getDocumentState() == State.PENDING && taskCount == 0)
+                {
+                    addTask("Согласование завершено", document.getId(), null, getUser(document.getOwner()), document.getDocumentDueDate(), State.DRAFT);
+                }
+
+                if(document.getDocumentState() == State.REQUESTED)
+                {
+                    addTask("Доработать : " + description, document.getId(), null, getUser(document.getOwner()), document.getDocumentDueDate(), State.DRAFT);
+                }
+
+                if(action.equals("REGISTER"))
+                {
                     document.setDocumentState(State.DONE);
                 }
             }
+            else
+            {
+                document.setDocumentState(Transition.valueOf(action).state());
+            }
+
+            // *********************************************************************************************************
+            // *************************************** Add Dispatch Data ***********************************************
+            // *********************************************************************************************************
+            document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), description));
+
             documentService.update(document);
         }
+        //endregion
     }
 }
