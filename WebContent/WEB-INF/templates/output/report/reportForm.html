@@ -39,6 +39,69 @@
 			</div>
 		</div>
 
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg-4 col-sm-12">
+				<span th:text="#{label.report.filterParameters}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<select id="report.filterParameters" name="reportFilterParametersIds" class="form-control m-bootstrap-select m_selectpicker" multiple th:title="#{label.select}">
+					<option th:each="filterParameterInList : ${filterParameterList}"
+							th:value="${filterParameterInList.id}"
+							th:text="${filterParameterInList.name}"
+							th:selected="${reportFilterParameters.contains(filterParameterInList)}"></option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg-4 col-sm-12">
+				<span th:text="#{label.report.contentParameters}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<select id="report.contentParameters" name="reportContentParametersIds" class="form-control m-bootstrap-select m_selectpicker" multiple th:title="#{label.select}">
+					<option th:each="contentParameterInList : ${contentParameterList}"
+							th:value="${contentParameterInList.id}"
+							th:text="${contentParameterInList.name}"
+							th:selected="${reportContentParameters.contains(contentParameterInList)}"></option>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg-4 col-sm-12">
+				<span th:text="#{label.report.outputParameters}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<select id="report.outputParameters" name="reportOutputParametersIds" class="form-control m-bootstrap-select m_selectpicker" multiple th:title="#{label.select}">
+					<option th:each="outputParameterInList : ${outputParameterList}"
+							th:value="${outputParameterInList.id}"
+							th:text="${outputParameterInList.name}"
+							th:selected="${reportOutputParameters.contains(outputParameterInList)}"></option>
+				</select>
+			</div>
+		</div>
+
+
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg-4 col-sm-12">
+				<span th:text="#{label.report.groupType}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<select id="report.groupTypes" name="reportGroupTypeIds" class="form-control m-bootstrap-select m_selectpicker" multiple th:title="#{label.select}">
+					<option th:each="groupTypeInList : ${groupTypeList}"
+							th:value="${groupTypeInList.id}"
+							th:text="${groupTypeInList.name}"
+							th:selected="${reportGroupTypes.contains(groupTypeInList)}">
+
+					</option>
+				</select>
+			</div>
+		</div>
+
+
 	</div>
 	<div class="modal-footer">
 		<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.orgForm.button.cancel}"></button>

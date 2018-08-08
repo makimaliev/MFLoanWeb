@@ -19,9 +19,26 @@
 		<div class="form-group">
 			<label for="name" class="form-control-label">Name<span class="required"> * </span></label>
 			<input hidden="true" type="text" id="id" name="id" th:field="*{id}" />
+			<input hidden="true" type="text" th:field="*{groupType}" />
 			<input hidden="true" type="text" id="objectTypeId" name="objectTypeId" th:field="*{objectTypeId}" />
 			<input type="text" class="form-control" id="name" name="name" th:value="*{name}">
 		</div>
+
+		<!--<div class="form-group m-form__group row">-->
+			<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+				<!--<span th:text="#{label.reportTemplate.groupType1}"></span>-->
+				<!--<span class="m&#45;&#45;font-danger">*</span>-->
+			<!--</label>-->
+			<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+
+				<!--<select th:field="*{groupType}" class="form-control m-bootstrap-select m_selectpicker">-->
+					<!--<option th:value="null">-</option>-->
+					<!--<option th:each="groupTypeInList : ${groupTypeList}"-->
+							<!--th:value="${{groupTypeInList}}"-->
+							<!--th:text="${groupTypeInList.name}">groupType</option>-->
+				<!--</select>-->
+			<!--</div>-->
+		<!--</div>		-->
 
 
 		<div class="form-group ">

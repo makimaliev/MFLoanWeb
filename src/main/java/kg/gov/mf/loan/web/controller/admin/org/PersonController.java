@@ -194,6 +194,7 @@ public class PersonController {
 		model.addAttribute("pager", pager);
 		model.addAttribute("current", evalPage);
 
+		model.addAttribute("districts", districtService.findAll());
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
 		return "/admin/org/personList";
 	}

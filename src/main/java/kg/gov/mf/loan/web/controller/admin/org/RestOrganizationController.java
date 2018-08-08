@@ -29,16 +29,18 @@ public class RestOrganizationController {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @GetMapping("/organizations/search")
-    public String[] getOrganizationsByName(@RequestParam(value = "s" )String s){
-        List<Organization> organizations=organizationRepository.findByName(s);
-        String[] sOrganizations=new String[organizations.size()];
-        int i=-1;
-        for (Organization organization:organizations){
-            sOrganizations[i++]="["+organization.getId()+"]"+organization.getName();
-        }
-        return sOrganizations;
-    }
+//    @GetMapping("/organizations/search")
+//    public String[] getOrganizationsByName(@RequestParam(value = "s" )String s){
+//        List<Organization> organizations=organizationRepository.findByName(s);
+//        String[] sOrganizations=new String[organizations.size()];
+//        int i=-1;
+//        for (Organization organization:organizations){
+//            sOrganizations[i++]="["+organization.getId()+"]"+organization.getName();
+//        }
+//        return sOrganizations;
+//    }
+
+
     @PostMapping("/organizations")
     public List<OrganizationModel> getOrganizations(){
 

@@ -20,6 +20,19 @@ public class ReportController {
 	
 	@Autowired
     private ReportService reportService;
+
+	@Autowired
+	private FilterParameterService filterParameterService;
+
+
+	@Autowired
+	private ContentParameterService contentParameterService;
+
+	@Autowired
+	private OutputParameterService outputParameterService;
+
+	@Autowired
+	private GroupTypeService groupTypeService;
      
     public void setReportService(ReportService rs)
     {
@@ -28,8 +41,19 @@ public class ReportController {
 
 	@RequestMapping(value = "/report/list", method = RequestMethod.GET)
 	public String listReports(Model model) {
-		model.addAttribute("report", new Report());
+
+    	Report modelReport = new Report();
+		model.addAttribute("report", modelReport);
 		model.addAttribute("reportList", this.reportService.findAll());
+
+//		model.addAttribute("groupTypeList", this.groupTypeService.findAll());
+//		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
+//		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
+//
+//
+//		model.addAttribute("reportFilterParameters", modelReport.getFilterParameters());
+//		model.addAttribute("reportContentParameters", modelReport.getContentParameters());
+//		model.addAttribute("reportContentParameters", modelReport.getGroupTypes());
 
 		return "output/report/reportList";
 	}
@@ -58,20 +82,83 @@ public class ReportController {
 	@RequestMapping(value = "/report/add", method = RequestMethod.GET)
 	public String getReportAddForm(Model model) {
 
-		model.addAttribute("report", new Report());
+
+		Report modelReport = new Report();
+		model.addAttribute("report", modelReport);
+		model.addAttribute("reportList", this.reportService.findAll());
+
+		model.addAttribute("groupTypeList", this.groupTypeService.findAll());
+		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
+		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
+		model.addAttribute("outputParameterList", this.outputParameterService.findAll());
+
+
+		model.addAttribute("reportFilterParameters", modelReport.getFilterParameters());
+		model.addAttribute("reportContentParameters", modelReport.getContentParameters());
+		model.addAttribute("reportGroupTypes", modelReport.getGroupTypes());
+		model.addAttribute("reportOutputParameters", modelReport.getOutputParameters());
 
 		return "output/report/reportForm";
 	}
 
 	@RequestMapping("/report/{id}/edit")
 	public String getReportEditForm(@PathVariable("id") long id, Model model) {
-		model.addAttribute("report", this.reportService.findById(id));
+
+		Report modelReport = this.reportService.findById(id);
+
+		model.addAttribute("report", modelReport);
+		model.addAttribute("reportList", this.reportService.findAll());
+
+		model.addAttribute("groupTypeList", this.groupTypeService.findAll());
+		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
+		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
+		model.addAttribute("outputParameterList", this.outputParameterService.findAll());
+
+
+		model.addAttribute("reportFilterParameters", modelReport.getFilterParameters());
+		model.addAttribute("reportContentParameters", modelReport.getContentParameters());
+		model.addAttribute("reportGroupTypes", modelReport.getGroupTypes());
+		model.addAttribute("reportOutputParameters", modelReport.getOutputParameters());
+
 		return "output/report/reportForm";
 
 	}
 
 	@RequestMapping(value = "/report/save", method = RequestMethod.POST)
-	public String saveReportAndRedirectToReportList(@Validated @ModelAttribute("report") Report report, BindingResult result) {
+	public String saveReportAndRedirectToReportList(@Validated @ModelAttribute("report") Report report,
+													String[] reportFilterParametersIds,
+													String[] reportContentParametersIds,
+													String[] reportOutputParametersIds,
+													String[] reportGroupTypeIds,
+													BindingResult result) {
+
+
+
+		if(reportGroupTypeIds!=null)
+			for (String id: reportGroupTypeIds)
+			{
+				report.getGroupTypes().add(this.groupTypeService.findById(Long.valueOf(id)));
+			}
+
+		if(reportFilterParametersIds!=null)
+			for (String id: reportFilterParametersIds)
+			{
+				report.getFilterParameters().add(this.filterParameterService.findById(Long.valueOf(id)));
+			}
+
+
+		if(reportContentParametersIds!=null)
+			for (String id: reportContentParametersIds)
+			{
+				report.getContentParameters().add(this.contentParameterService.findById(Long.valueOf(id)));
+			}
+
+		if(reportOutputParametersIds!=null)
+			for (String id: reportOutputParametersIds)
+			{
+				report.getOutputParameters().add(this.outputParameterService.findById(Long.valueOf(id)));
+			}
+
 
 		if (result.hasErrors()) {
 			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());

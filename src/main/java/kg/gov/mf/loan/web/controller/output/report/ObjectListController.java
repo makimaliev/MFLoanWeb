@@ -7,9 +7,13 @@ import kg.gov.mf.loan.admin.org.service.*;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.debtor.WorkSectorService;
 import kg.gov.mf.loan.manage.service.loan.LoanTypeService;
+import kg.gov.mf.loan.output.report.model.GroupType;
 import kg.gov.mf.loan.output.report.model.ObjectList;
 import kg.gov.mf.loan.output.report.model.ObjectListValue;
+import kg.gov.mf.loan.output.report.model.ReferenceView;
+import kg.gov.mf.loan.output.report.service.GroupTypeService;
 import kg.gov.mf.loan.output.report.service.ObjectListService;
+import kg.gov.mf.loan.output.report.service.ReferenceViewService;
 import kg.gov.mf.loan.output.report.service.ReportTemplateService;
 
 import java.util.ArrayList;
@@ -17,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import kg.gov.mf.loan.output.report.utils.ReportTool;
 import org.omg.CORBA.ORB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -55,7 +60,11 @@ public class ObjectListController {
 	@Autowired
 	private OrganizationService organizationService;
 
+	@Autowired
+	private GroupTypeService groupTypeService;
 
+	@Autowired
+	ReferenceViewService referenceViewService;
 
    public void setObjectListService(ObjectListService rs)
     {
@@ -123,48 +132,57 @@ public class ObjectListController {
 		
 		ObjectList modelObjectList = new ObjectList();
 		modelObjectList.setObjectTypeId(Long.parseLong(object_type));
+
+		GroupType groupType = groupTypeService.findById(Long.valueOf(object_type));
+
+		modelObjectList.setGroupType(groupType);
+
 		model.addAttribute("objectList", modelObjectList);
 
 		Organization gaubk = new Organization();
 
-		switch (object_type)
-		{
-			case "1": 
-				model.addAttribute("objectListValueList", this.regionService.findAll());
-				break;
-			case "2": 
-				model.addAttribute("objectListValueList", this.districtService.findAll());
-				break;
-			case "3":
-				model.addAttribute("objectListValueList", this.workSectorService.list());
-				break;
-			case "4":
-				model.addAttribute("objectListValueList", this.loanTypeService.list());
-				break;
-			case "5":
+		ReportTool reportTool = new ReportTool();
 
-				gaubk = this.organizationService.findById((long)1);
+		model.addAttribute("objectListValueList", referenceViewService.findByParameter(reportTool.getMapNameOfGroupType(groupType)));
 
-				List<Staff> staffList = new ArrayList<Staff>();
-
-				for (Department department: gaubk.getDepartment())
-				{
-					staffList.addAll(this.staffService.findAllByDepartment(department));
-				}
-
-				model.addAttribute("objectListValueList", staffList);
-				break;
-			case "6":
-
-				gaubk = this.organizationService.findById((long)1);
-
-				model.addAttribute("objectListValueList", gaubk.getDepartment());
-				break;
-
-
-
-			
-		}
+//		switch (object_type)
+//		{
+//			case "1":
+//				model.addAttribute("objectListValueList", this.regionService.findAll());
+//				break;
+//			case "2":
+//				model.addAttribute("objectListValueList", this.districtService.findAll());
+//				break;
+//			case "3":
+//				model.addAttribute("objectListValueList", this.workSectorService.list());
+//				break;
+//			case "4":
+//				model.addAttribute("objectListValueList", this.loanTypeService.list());
+//				break;
+//			case "5":
+//
+//				gaubk = this.organizationService.findById((long)1);
+//
+//				List<Staff> staffList = new ArrayList<Staff>();
+//
+//				for (Department department: gaubk.getDepartment())
+//				{
+//					staffList.addAll(this.staffService.findAllByDepartment(department));
+//				}
+//
+//				model.addAttribute("objectListValueList", staffList);
+//				break;
+//			case "6":
+//
+//				gaubk = this.organizationService.findById((long)1);
+//
+//				model.addAttribute("objectListValueList", gaubk.getDepartment());
+//				break;
+//
+//
+//
+//
+//		}
 	
 		
 		List<Long> selectedObjectListValuesIds = new ArrayList<Long>();
@@ -192,43 +210,46 @@ public class ObjectListController {
 		
 		
 		ObjectList modelObjectList = this.objectListService.findById(id);
-		
-	
-		switch (String.valueOf(modelObjectList.getObjectTypeId()))
-		{
-			case "1": 
-				model.addAttribute("objectListValueList", this.regionService.findAll());
-				break;
-			case "2": 
-				model.addAttribute("objectListValueList", this.districtService.findAll());
-				break;
-			case "3":
-				model.addAttribute("objectListValueList", this.workSectorService.list());
-				break;
-			case "4":
-				model.addAttribute("objectListValueList", this.loanTypeService.list());
-				break;
-			case "5":
 
-				gaubk = this.organizationService.findById((long)1);
+        ReportTool reportTool = new ReportTool();
 
-				List<Staff> staffList = new ArrayList<Staff>();
+        model.addAttribute("objectListValueList", referenceViewService.findByParameter(reportTool.getMapNameOfGroupType(modelObjectList.getGroupType())));
 
-				for (Department department: gaubk.getDepartment())
-				{
-					staffList.addAll(this.staffService.findAllByDepartment(department));
-				}
-
-				model.addAttribute("objectListValueList", staffList);
-				break;
-			case "6":
-
-				gaubk = this.organizationService.findById((long)1);
-
-				model.addAttribute("objectListValueList", gaubk.getDepartment());
-				break;
-			
-		}
+//		switch (String.valueOf(modelObjectList.getObjectTypeId()))
+//		{
+//			case "1":
+//				model.addAttribute("objectListValueList", this.regionService.findAll());
+//				break;
+//			case "2":
+//				model.addAttribute("objectListValueList", this.districtService.findAll());
+//				break;
+//			case "3":
+//				model.addAttribute("objectListValueList", this.workSectorService.list());
+//				break;
+//			case "4":
+//				model.addAttribute("objectListValueList", this.loanTypeService.list());
+//				break;
+//			case "5":
+//
+//				gaubk = this.organizationService.findById((long)1);
+//
+//				List<Staff> staffList = new ArrayList<Staff>();
+//
+//				for (Department department: gaubk.getDepartment())
+//				{
+//					staffList.addAll(this.staffService.findAllByDepartment(department));
+//				}
+//
+//				model.addAttribute("objectListValueList", staffList);
+//				break;
+//			case "6":
+//
+//				gaubk = this.organizationService.findById((long)1);
+//
+//				model.addAttribute("objectListValueList", gaubk.getDepartment());
+//				break;
+//
+//		}
 	
 		
 		List<Long> selectedObjectListValuesIds = new ArrayList<Long>();

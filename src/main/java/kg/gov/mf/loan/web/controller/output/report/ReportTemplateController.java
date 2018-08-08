@@ -53,10 +53,10 @@ public class ReportTemplateController {
 	public String listReportTemplates(Model model) {
 		model.addAttribute("reportTemplate", new ReportTemplate());
 		model.addAttribute("reportTemplateList", this.reportTemplateService.findAll());
-		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
-		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
-		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
-		model.addAttribute("outputParameterList", this.outputParameterService.findAll());
+//		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
+//		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
+//		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
+//		model.addAttribute("outputParameterList", this.outputParameterService.findAll());
 
 		return "output/report/reportTemplateList";
 	}
@@ -65,10 +65,10 @@ public class ReportTemplateController {
 	public String viewReportTemplateById(@PathVariable("id") long id, Model model) {
 
 		ReportTemplate reportTemplate = this.reportTemplateService.findById(id);
-		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
-		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
-		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
-		model.addAttribute("outputParameterList", this.outputParameterService.findAll());
+//		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
+//		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
+//		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
+//		model.addAttribute("outputParameterList", this.outputParameterService.findAll());
 
 		model.addAttribute("reportTemplate", reportTemplate);
 
@@ -79,10 +79,10 @@ public class ReportTemplateController {
 	public String viewReportTemplateDetailsById(@PathVariable("id") long id, Model model) {
 
 		ReportTemplate reportTemplate = this.reportTemplateService.findById(id);
-		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
-		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
-		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
-		model.addAttribute("outputParameterList", this.outputParameterService.findAll());
+//		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
+//		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
+//		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
+//		model.addAttribute("outputParameterList", this.outputParameterService.findAll());
 		model.addAttribute("reportTemplate", reportTemplate);
 
 		return "output/report/reportTemplateDetails";
@@ -95,11 +95,11 @@ public class ReportTemplateController {
 		
 		modelReportTemplate.setReport(this.reportService.findById((long)1));
 		model.addAttribute("reportList", this.reportService.findAll());
-		model.addAttribute("groupTypeList", this.groupTypeService.findAll());
-		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
-		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
-		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
-		model.addAttribute("outputParameterList", this.outputParameterService.findAll());
+//		model.addAttribute("groupTypeList", this.groupTypeService.findAll());
+//		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
+//		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
+//		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
+//		model.addAttribute("outputParameterList", this.outputParameterService.findAll());
 		model.addAttribute("reportTemplate",modelReportTemplate);
 		
 
@@ -113,14 +113,18 @@ public class ReportTemplateController {
 
 
 		ReportTemplate modelReportTemplate = new ReportTemplate();
-		
-		modelReportTemplate.setReport(this.reportService.findById(reportId));
-		model.addAttribute("reportList", this.reportService.findAll());
-		model.addAttribute("groupTypeList", this.groupTypeService.findAll());
+
+		Report modelReport = this.reportService.findById(reportId);
+
+		modelReportTemplate.setReport(modelReport);
+
+
+//		model.addAttribute("reportList", this.reportService.findAll());
+		model.addAttribute("groupTypeList", modelReport.getGroupTypes());
 		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
-		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
-		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
-		model.addAttribute("outputParameterList", this.outputParameterService.findAll());
+		model.addAttribute("filterParameterList", modelReport.getFilterParameters());
+		model.addAttribute("contentParameterList", modelReport.getContentParameters());
+		model.addAttribute("outputParameterList", modelReport.getOutputParameters());
 
 		model.addAttribute("reportTemplateGenerationParameters", modelReportTemplate.getGenerationParameters());
 		model.addAttribute("reportTemplateFilterParameters", modelReportTemplate.getFilterParameters());
@@ -152,21 +156,21 @@ public class ReportTemplateController {
 		System.out.println(" DIFF == "+(dataGetDate.getTime()-startDate.getTime())); //2016/11/16 12:08:43
 
 
+
+		Report modelReport = this.reportService.findById(modelReportTemplate.getReport().getId());
+
+		model.addAttribute("groupTypeList", modelReport.getGroupTypes());
+		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
+		model.addAttribute("filterParameterList", modelReport.getFilterParameters());
+		model.addAttribute("contentParameterList", modelReport.getContentParameters());
+		model.addAttribute("outputParameterList", modelReport.getOutputParameters());
+
 		model.addAttribute("reportTemplateGenerationParameters", modelReportTemplate.getGenerationParameters());
 		model.addAttribute("reportTemplateFilterParameters", modelReportTemplate.getFilterParameters());
 		model.addAttribute("reportTemplateContentParameters", modelReportTemplate.getContentParameters());
 		model.addAttribute("reportTemplateOutputParameters", modelReportTemplate.getOutputParameters());
 
-
 		model.addAttribute("reportTemplate", modelReportTemplate);
-
-		model.addAttribute("reportList", this.reportService.findAll());
-		model.addAttribute("groupTypeList", this.groupTypeService.findAll());
-		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
-		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
-		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
-		model.addAttribute("outputParameterList", this.outputParameterService.findAll());
-
 
 		return "output/report/reportTemplateForm";
 
