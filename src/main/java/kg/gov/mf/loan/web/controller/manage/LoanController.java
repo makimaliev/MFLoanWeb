@@ -209,7 +209,7 @@ public class LoanController {
 
 		if(loanId == 0)
 		{
-			model.addAttribute("loan", new Loan());
+			model.addAttribute("loan", new NormalLoan());
 			model.addAttribute("ownerText", "");
 			model.addAttribute("orderText", "");
 			model.addAttribute("pLoanText", "");
@@ -229,7 +229,7 @@ public class LoanController {
 			String orderText = "[" + order.getId() + "] "+ order.getRegNumber();
 			model.addAttribute("orderText", orderText);
 
-			Loan pLoan = loan.getParentLoan();
+			Loan pLoan = loan.getParent();
 			if(pLoan == null)
 				model.addAttribute("pLoanText", "");
 			else
@@ -264,13 +264,13 @@ public class LoanController {
 		
 		if(loan.getId() == 0)
 		{
-		    if(loan.getParentLoan().getId() > 0)
+		    if(loan.getParent().getId() > 0)
             {
-                Loan tLoan = loanRepository.findOne(loan.getParentLoan().getId());
-                loan.setParentLoan(tLoan);
+                Loan tLoan = loanRepository.findOne(loan.getParent().getId());
+                loan.setParent(tLoan);
             }
             else
-                loan.setParentLoan(null);
+                loan.setParent(null);
 
             CreditOrder creditOrder = creditOrderRepository.findOne(loan.getCreditOrder().getId());
             loan.setCreditOrder(creditOrder);
@@ -285,13 +285,13 @@ public class LoanController {
 		}
 		else
 		{
-			if(loan.getParentLoan().getId() > 0)
+			if(loan.getParent().getId() > 0)
 			{
-				Loan tLoan = loanRepository.findOne(loan.getParentLoan().getId());
-				loan.setParentLoan(tLoan);
+				Loan tLoan = loanRepository.findOne(loan.getParent().getId());
+				loan.setParent(tLoan);
 			}
 			else
-				loan.setParentLoan(null);
+				loan.setParent(null);
 
 			CreditOrder creditOrder = creditOrderRepository.findOne(loan.getCreditOrder().getId());
 			loan.setCreditOrder(creditOrder);
