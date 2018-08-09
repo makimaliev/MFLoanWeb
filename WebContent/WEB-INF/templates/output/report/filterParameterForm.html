@@ -49,18 +49,25 @@
 			</div>
 		</div>
 
-		<div class="form-group ">
-			<label class="form-control-label">Content Params<span class="required"> * </span></label>
-			<div class="row">
-				<div class="col-12">
-					<select th:field="*{contentParameter}"  class="selectpicker">
-						<option th:each="contentParameterInList : ${contentParameterList}"
-								th:value="${{contentParameterInList}}"
-								th:text="${contentParameterInList.name}">Region</option>
-					</select>
-				</div>
-			</div>
+		<!--<div class="form-group ">-->
+			<!--<label class="form-control-label">Content Params<span class="required"> * </span></label>-->
+			<!--<div class="row">-->
+				<!--<div class="col-12">-->
+					<!--<select th:field="*{contentParameter}"  class="selectpicker">-->
+						<!--<option th:each="contentParameterInList : ${contentParameterList}"-->
+								<!--th:value="${{contentParameterInList}}"-->
+								<!--th:text="${contentParameterInList.name}">Region</option>-->
+					<!--</select>-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
+
+
+		<div class="form-group">
+			<label for="fieldName" class="form-control-label">Field Name<span class="required"> * </span></label>
+			<input type="text" class="form-control" id="fieldName" name="fieldName" th:value="*{fieldName}">
 		</div>
+
 
 		<div class="form-group ">
 			<label class="form-control-label">Comparator<span class="required"> * </span></label>
@@ -76,8 +83,8 @@
 		</div>
 
 		<div class="form-group">
-			<label for="fieldName" class="form-control-label">Compared Value<span class="required"> * </span></label>
-			<input type="text" class="form-control" id="fieldName" name="comparedValue" th:field="*{comparedValue}">
+			<label class="form-control-label">Compared Value<span class="required"> * </span></label>
+			<input type="text" class="form-control" name="comparedValue" th:field="*{comparedValue}">
 		</div>
 
 	</div>

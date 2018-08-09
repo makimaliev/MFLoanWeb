@@ -3,27 +3,7 @@
 		<ul class="nav nav-tabs" role="tablist" id="region_tabs">
 			<li class="nav-item">
 				<a class="nav-link active" data-toggle="tab" href="#districtListOfRegion">
-					Общая информация
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" data-toggle="tab" href="#aokmotuListOfRegion">
-					1
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" data-toggle="tab" href="#seloListOfRegion">
-					2
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" data-toggle="tab" href="#debtorListOfRegion">
-					3
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" data-toggle="tab" href="#loanListOfRegion">
-					4
+					Списки объектов
 				</a>
 			</li>
 		</ul>
@@ -32,31 +12,53 @@
 				<div class="row">
 					<div class="col-md-6">
 						<div class="panel panel-primary">
-							<div class="panel-heading">
-								<h3 class="panel-title">Report general information</h3>
-							</div>
-							<div class="panel-body">
-								<dl class="dl-horizontal">
 
-								</dl>
-
-
-								<dl class="dl-horizontal">
-									<dt>Name</dt>
-								</dl>
-							</div>
+							<table class="table" id="objectListTable">
+								<thead class="thead-default">
+								<tr>
+									<th>Id</th>
+									<th>Name</th>
+									<th>&nbsp;</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr th:each="s : ${objectListList}">
+									<td th:text="${s.id}">Id</td>
+									<td th:text="${s.name}">Name</td>
+									<td class="table-actions text-right">
+										<span>
+											<div class="dropdown">
+												<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+													<i class="la la-ellipsis-h"></i>
+												</a>
+												<div class="dropdown-menu dropdown-menu-right">
+													<a th:href="@{/objectList/__${s.id}__/details}"
+													   role="button" class="dropdown-item"> <span th:text="#{label.table.view}"></span>
+													</a>
+													<a data-remote="false" data-toggle="modal"
+													   data-target="#objectListFormModal"
+													   th:href="@{/objectList/__${s.id}__/edit}" role="button"
+													   class="dropdown-item"> <span th:text="#{label.table.edit}"></span>
+													</a>
+													<a class="dropdown-item" href="#">
+														<span>
+															<form th:action="@{/objectList/__${s.id}__/remove}" method="post">
+																<button type="submit" class="btn btn-reset"th:text="#{label.user.button.delete}"></button>
+															</form>
+														</span>
+													</a>
+												</div>
+											</div>
+										</span>
+									</td>
+								</tr>
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="tab-pane" id="aokmotuListOfRegion" role="tabpanel">
-			</div>
-			<div class="tab-pane" id="seloListOfRegion" role="tabpanel">
-			</div>
-			<div class="tab-pane" id="debtorListOfRegion" role="tabpanel">
-			</div>
-			<div class="tab-pane" id="loanListOfRegion">
-			</div>
+
 		</div>
 	</div>
 </div>

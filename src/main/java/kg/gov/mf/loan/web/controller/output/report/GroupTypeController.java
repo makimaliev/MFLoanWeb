@@ -1,7 +1,9 @@
 package kg.gov.mf.loan.web.controller.output.report;
 
 import kg.gov.mf.loan.output.report.model.GroupType;
+import kg.gov.mf.loan.output.report.model.ObjectList;
 import kg.gov.mf.loan.output.report.service.GroupTypeService;
+import kg.gov.mf.loan.output.report.service.ObjectListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +19,9 @@ public class GroupTypeController {
 	
 	@Autowired
     private GroupTypeService groupTypeService;
+
+	@Autowired
+	private ObjectListService objectListService;
 	
 
    public void setGroupTypeService(GroupTypeService rs)
@@ -38,6 +43,8 @@ public class GroupTypeController {
 		GroupType groupType = this.groupTypeService.findById(id);
 
 		model.addAttribute("groupType", groupType);
+
+		model.addAttribute("objectListList", this.objectListService.findAllByGroupType(groupType));
 
 		return "output/report/groupTypeView";
 	}

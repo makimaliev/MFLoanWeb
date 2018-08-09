@@ -86,20 +86,20 @@ public class ObjectListController {
 		
 		ObjectList copyObjectList = new ObjectList();
 
+
+		ReportTool reportTool = new ReportTool();
+
+		List<ReferenceView> referenceViewList = referenceViewService.findByParameter(reportTool.getMapNameOfGroupType(objectList.getGroupType()));
+
 		for(ObjectListValue objectListValue : objectList.getObjectListValues())
 		{
-			switch (String.valueOf(objectListValue.getObjectList().getObjectTypeId()))
+			for (ReferenceView referenceView: referenceViewList)
 			{
-				case "1": 
-					copyObjectList.getObjectListValues().add(new ObjectListValue(objectListValue.getId(),this.regionService.findById(Long.parseLong(objectListValue.getName())).getName(),objectListValue.getObjectList()));
-					break;
-				case "2": 
-					copyObjectList.getObjectListValues().add(new ObjectListValue(objectListValue.getId(),this.districtService.findById(Long.parseLong(objectListValue.getName())).getName(),objectListValue.getObjectList()));
-					break;
-				case "3":
-					copyObjectList.getObjectListValues().add(new ObjectListValue(objectListValue.getId(),this.regionService.findById(Long.parseLong(objectListValue.getName())).getName(),objectListValue.getObjectList()));
-					break;
-				
+				if(referenceView.getId()==Long.parseLong(objectListValue.getName()))
+				{
+					copyObjectList.getObjectListValues().add(new ObjectListValue(objectListValue.getId(),referenceView.getName(),objectListValue.getObjectList()));
+				}
+
 			}
 		}
 		model.addAttribute("objectList", copyObjectList);
@@ -145,45 +145,7 @@ public class ObjectListController {
 
 		model.addAttribute("objectListValueList", referenceViewService.findByParameter(reportTool.getMapNameOfGroupType(groupType)));
 
-//		switch (object_type)
-//		{
-//			case "1":
-//				model.addAttribute("objectListValueList", this.regionService.findAll());
-//				break;
-//			case "2":
-//				model.addAttribute("objectListValueList", this.districtService.findAll());
-//				break;
-//			case "3":
-//				model.addAttribute("objectListValueList", this.workSectorService.list());
-//				break;
-//			case "4":
-//				model.addAttribute("objectListValueList", this.loanTypeService.list());
-//				break;
-//			case "5":
-//
-//				gaubk = this.organizationService.findById((long)1);
-//
-//				List<Staff> staffList = new ArrayList<Staff>();
-//
-//				for (Department department: gaubk.getDepartment())
-//				{
-//					staffList.addAll(this.staffService.findAllByDepartment(department));
-//				}
-//
-//				model.addAttribute("objectListValueList", staffList);
-//				break;
-//			case "6":
-//
-//				gaubk = this.organizationService.findById((long)1);
-//
-//				model.addAttribute("objectListValueList", gaubk.getDepartment());
-//				break;
-//
-//
-//
-//
-//		}
-	
+
 		
 		List<Long> selectedObjectListValuesIds = new ArrayList<Long>();
 		
@@ -215,42 +177,7 @@ public class ObjectListController {
 
         model.addAttribute("objectListValueList", referenceViewService.findByParameter(reportTool.getMapNameOfGroupType(modelObjectList.getGroupType())));
 
-//		switch (String.valueOf(modelObjectList.getObjectTypeId()))
-//		{
-//			case "1":
-//				model.addAttribute("objectListValueList", this.regionService.findAll());
-//				break;
-//			case "2":
-//				model.addAttribute("objectListValueList", this.districtService.findAll());
-//				break;
-//			case "3":
-//				model.addAttribute("objectListValueList", this.workSectorService.list());
-//				break;
-//			case "4":
-//				model.addAttribute("objectListValueList", this.loanTypeService.list());
-//				break;
-//			case "5":
-//
-//				gaubk = this.organizationService.findById((long)1);
-//
-//				List<Staff> staffList = new ArrayList<Staff>();
-//
-//				for (Department department: gaubk.getDepartment())
-//				{
-//					staffList.addAll(this.staffService.findAllByDepartment(department));
-//				}
-//
-//				model.addAttribute("objectListValueList", staffList);
-//				break;
-//			case "6":
-//
-//				gaubk = this.organizationService.findById((long)1);
-//
-//				model.addAttribute("objectListValueList", gaubk.getDepartment());
-//				break;
-//
-//		}
-	
+
 		
 		List<Long> selectedObjectListValuesIds = new ArrayList<Long>();
 		
