@@ -253,7 +253,7 @@ public class LoanController {
 	}
 	
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/save", method=RequestMethod.POST)
-	public String saveLoan(Loan loan,
+	public String saveLoan(NormalLoan loan,
 			String[] agreementIdList,
 			@PathVariable("debtorId")Long debtorId, 
 			ModelMap model)
@@ -262,9 +262,9 @@ public class LoanController {
 		Debtor debtor = debtorService.getById(debtorId);
 		loan.setDebtor(debtor);
 		
-		if(loan.getId() == 0)
+		if(loan.getId() == null)
 		{
-		    if(loan.getParent().getId() > 0)
+		    if(loan.getParent().getId() != null)
             {
                 Loan tLoan = loanRepository.findOne(loan.getParent().getId());
                 loan.setParent(tLoan);
@@ -285,7 +285,7 @@ public class LoanController {
 		}
 		else
 		{
-			if(loan.getParent().getId() > 0)
+			if(loan.getParent().getId() != null)
 			{
 				Loan tLoan = loanRepository.findOne(loan.getParent().getId());
 				loan.setParent(tLoan);

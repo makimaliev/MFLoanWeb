@@ -28,7 +28,6 @@ public class LoanModel {
     private long loanStateId;
     private String loanStateName;
     private long supervisorId;
-    private boolean hasSubLoan;
     private long parentLoanId;
     private long creditOrderId;
 
@@ -118,14 +117,6 @@ public class LoanModel {
 
     public void setSupervisorId(long supervisorId) {
         this.supervisorId = supervisorId;
-    }
-
-    public boolean isHasSubLoan() {
-        return hasSubLoan;
-    }
-
-    public void setHasSubLoan(boolean hasSubLoan) {
-        this.hasSubLoan = hasSubLoan;
     }
 
     public long getParentLoanId() {
