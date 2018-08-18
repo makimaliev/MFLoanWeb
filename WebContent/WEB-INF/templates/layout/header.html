@@ -223,6 +223,10 @@
                                                         <a th:href="@{/logout}" class="btn m-btn--pill btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder">
                                                             Logout
                                                         </a>
+
+                                                        <a sec:authorize="hasRole('ADMIN')" th:href="@{/startMigration}" class="btn m-btn--pill btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder">
+                                                            Start Migration
+                                                        </a>
                                                     </li>
                                                 </ul>
                                             </div>
