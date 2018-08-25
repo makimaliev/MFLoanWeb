@@ -9,7 +9,7 @@ import javax.persistence.TemporalType;
 import java.util.Date;
 
 @Entity
-public class LoanModel {
+public class LoanModel implements Comparable<LoanModel> {
 
     @Id
     private Long id;
@@ -30,6 +30,12 @@ public class LoanModel {
     private long supervisorId;
     private long parentLoanId;
     private long creditOrderId;
+
+    @Override
+    public int compareTo(LoanModel model)
+    {
+        return model.regDate.compareTo(this.regDate);
+    }
 
     public Long getId() {
         return id;

@@ -151,21 +151,19 @@
                                             </div>
                                         </div>
                                     </div>
-									<!--
-									<div class="m-widget1__item">
-										<div class="row m-row--no-padding align-items-center">
-											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.loan.table.hasSubLoan}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${loan.hasSubLoan}"></span>
-											</div>
-										</div>
-									</div>
-									-->
 									<div class="m-widget1__item">
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
 												<h3 class="m-widget1__title">ID</h3>
 												<span class="m-widget1__desc m--font-brand" th:text="${loan.id}"></span>
+											</div>
+										</div>
+									</div>
+									<div class="m-widget1__item" th:if="${loan.parent != null}">
+										<div class="row m-row--no-padding align-items-center">
+											<div class="col">
+												<h3 class="m-widget1__title" th:text="#{label.loan.table.parent}"></h3>
+												<span class="m-widget1__desc m--font-brand"><a th:href="@{/manage/debtor/__${debtor.id}__/loan/__${loan.parent.id}__/view}" th:text="${loan.parent.regNumber}"></a></span>
 											</div>
 										</div>
 									</div>
@@ -184,6 +182,9 @@
 							<li class="nav-item">
 								<a class="nav-link m--font-primary active" data-toggle="tab" href="#creditTerms" th:text="#{label.creditTerms}"></a>
 							</li>
+                            <li class="nav-item">
+                                <a class="nav-link m--font-primary" data-toggle="tab" href="#childList" th:text="#{label.childList}"></a>
+                            </li>
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#writeOffs" th:text="#{label.writeOffs}"></a>
 							</li>
@@ -211,9 +212,6 @@
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#bankrupts" th:text="#{label.bankrupts}"></a>
 							</li>
-							<!--<li class="nav-item">-->
-								<!--<a class="nav-link m&#45;&#45;font-primary" data-toggle="tab" href="#collaterals" th:text="#{label.collaterals}"></a>-->
-							<!--</li>-->
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#collectionPhases" th:text="#{label.collectionPhases}"></a>
 							</li>
@@ -265,6 +263,11 @@
                                 <div class="m_datatable" id="termsTable"></div>
                                 <!--end: Datatable -->
 							</div>
+                            <div class="tab-pane" id="childList" role="tabpanel">
+                                <!--begin: Datatable -->
+                                <div class="m_datatable" id="childTable"></div>
+                                <!--end: Datatable -->
+                            </div>
 							<div class="tab-pane" id="writeOffs" role="tabpanel">
                                 <!--begin: Search Form -->
                                 <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
@@ -716,6 +719,7 @@
 
 <!--begin::Page Resources -->
 <script th:src="@{/js/data-debtor-loan-terms.js}" th:inline="javascript" type="text/javascript"></script>
+<script th:src="@{/js/data-debtor-loan-children.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-paymentSchedules.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-payments.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-writeOffs.js}" th:inline="javascript" type="text/javascript"></script>
@@ -743,6 +747,7 @@
     /*<![CDATA[*/
     var debtorId = /*[[${debtor.id}]]*/ [];
     var loanId = /*[[${loan.id}]]*/ [];
+    var jsonChildren = /*[[${children}]]*/ [];
     var jsonTerms = /*[[${terms}]]*/ [];
     var jsonPaymentSchedules = /*[[${paymentSchedules}]]*/ [];
     var jsonPayments = /*[[${payments}]]*/ [];
