@@ -87,7 +87,7 @@
                                         <div class="row m-row--no-padding align-items-center">
                                             <div class="col">
                                                 <h3 class="m-widget1__title" th:text="#{label.loan.table.amount}"></h3>
-                                                <span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(loan.totalAmount(), 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                                                <span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(loan.amount, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
                                             </div>
                                         </div>
                                     </div>
