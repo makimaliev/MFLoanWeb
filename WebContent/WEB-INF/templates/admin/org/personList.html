@@ -84,13 +84,18 @@
 									</div>
 								</div>
 								<div class="col-xl-4 order-1 order-xl-2 m--align-right">
-									<a sec:authorize="hasRole('ADMIN')" th:href="@{/person/0/save}" class="btn btn-focus m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-										<span>
-											<i class="la la-plus"></i>
+									<a sec:authorize="hasRole('ADMIN')" data-remote="false"
+									   data-toggle="modal"
+									   data-target="#personFormModal"
+									   th:href="@{/person/add}"
+									   role="button"
+									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
 												<span>
-													Добавить новое физ.лицо
+													<i class="la la-plus"></i>
+													<span>
+														Add new person
+													</span>
 												</span>
-										</span>
 									</a>
 									<div class="m-separator m-separator--dashed d-xl-none"></div>
 								</div>
@@ -100,6 +105,14 @@
 						<!--begin: Datatable -->
 						<div class="m_datatable" id="ajax_data"></div>
 						<!--end: Datatable -->
+						<!--begin: Modal-->
+						<div class="modal fade" id="personFormModal" tabindex="-1" role="dialog" aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+								</div>
+							</div>
+						</div>
+						<!--end: Modal-->
 					</div>
 				</div>
 				<!--end::Portlet-->
@@ -271,7 +284,55 @@
         DatatableJsonRemoteDemo.init();
     });
 </script>
+<script type="text/javascript">
+    function updateOrgFormId(sel)
+    {
+        $("#orgFormId").val(sel.value);
+    }
 
+    function updateAddressId(sel)
+    {
+        $("#addressId").val(sel.value);
+    }
+
+    function updateRegionId(sel)
+    {
+        $("#regionId").val(sel.value);
+    }
+
+    function updateDistrictId(sel)
+    {
+        $("#districtId").val(sel.value);
+    }
+
+    function updateAokmotuId(sel)
+    {
+        $("#aokmotuId").val(sel.value);
+    }
+
+    function updateVillageId(sel)
+    {
+        $("#villageId").val(sel.value);
+    }
+
+    function updateIdentityDocTypeId(sel)
+    {
+        $("#identityDocTypeId").val(sel.value);
+    }
+
+    function updateIdentityDocGivenById(sel)
+    {
+        $("#identityDocGivenById").val(sel.value);
+    }
+
+
+    $("#personFormModal").on("show.bs.modal", function(e) {
+        var link = $(e.relatedTarget);
+        $(this).find(".modal-title").html(link.attr("href"));
+        $(this).find(".modal-content").load(link.attr("href"));
+        // }
+    });
+</script>
 </body>
 <!-- end::Body -->
 </html>

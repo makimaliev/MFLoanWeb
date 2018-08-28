@@ -4,16 +4,18 @@ import kg.gov.mf.loan.manage.model.orderterm.CurrencyRate;
 import kg.gov.mf.loan.manage.model.orderterm.OrderTermCurrency;
 import kg.gov.mf.loan.manage.service.orderterm.CurrencyRateService;
 import kg.gov.mf.loan.manage.service.orderterm.OrderTermCurrencyService;
+import kg.gov.mf.loan.web.fetchModels.CurrencyRateModel;
+import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.List;
 
 @Controller
@@ -24,7 +26,13 @@ public class CurrencyRateController {
 
 	@Autowired
 	OrderTermCurrencyService currService;
-     
+
+	@PersistenceContext
+	EntityManager entityManager;
+
+	private String fromDate="";
+	private String toDate="";
+
     public void setCurrencyRateService(CurrencyRateService rs)
     {
         this.currencyRateService = rs;
@@ -32,17 +40,31 @@ public class CurrencyRateController {
 
 	@RequestMapping(value = "/currencyRate/list", method = RequestMethod.GET)
 	public String listCurrencyRates(Model model) {
+
+		model.addAttribute("fromdate",this.fromDate);
+		model.addAttribute("todate",this.toDate);
+
+		List<OrderTermCurrency> currencies = currService.list();
+		model.addAttribute("types", currencies);
+
 		model.addAttribute("currencyRate", new CurrencyRate());
-		model.addAttribute("currencyRateList", this.currencyRateService.findAll());
+		model.addAttribute("loggedinuser", Utils.getPrincipal());
 
 		return "admin/sys/currencyRateList";
 	}
-	
+
+	@RequestMapping(value = "/currencyRatesDates",method = RequestMethod.POST)
+	public String something(@RequestParam(value = "fromDate") String fromDate,@RequestParam(value = "toDate") String toDate){
+    	this.fromDate=fromDate;
+    	this.toDate=toDate;
+		return "admin/sys/currencyRateList";
+	}
 	
 	@RequestMapping("/currencyRate/{id}/view")
 	public String viewCurrencyRateById(@PathVariable("id") long id, Model model) {
 
 		CurrencyRate currencyRate = this.currencyRateService.findById(id);
+
 
 		model.addAttribute("currencyRate", currencyRate);
 

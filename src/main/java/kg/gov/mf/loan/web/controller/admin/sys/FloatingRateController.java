@@ -34,8 +34,11 @@ public class FloatingRateController {
 
 	@RequestMapping(value = "/floatingRate/list", method = RequestMethod.GET)
 	public String listFloatingRates(Model model) {
+
+		List<OrderTermFloatingRateType> rateTypes = rateTypeService.list();
+
 		model.addAttribute("floatingRate", new FloatingRate());
-		model.addAttribute("floatingRateList", this.floatingRateService.findAll());
+		model.addAttribute("types", rateTypes);
 
 		return "admin/sys/floatingRateList";
 	}
