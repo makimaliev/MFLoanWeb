@@ -161,8 +161,7 @@ public class ObjectListController {
 		return "output/report/objectListForm";
 	}
 
-	
-	@RequestMapping("/objectList/{id}/edit")
+	@RequestMapping(value = "/objectList/{id}/edit", method = RequestMethod.GET)
 	public String getObjectListEditForm(@PathVariable("id") long id, Model model) {
 
 		Organization gaubk = new Organization();
@@ -199,7 +198,8 @@ public class ObjectListController {
 	public String saveObjectListAndRedirectToObjectListList(@Validated @ModelAttribute("objectList") ObjectList objectList, 
 			String[] ObjectListValuesIds,BindingResult result) {
 
-		
+
+   		String groupTypeId = "";
 		if (result.hasErrors()) 
 		{
 			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
@@ -212,7 +212,9 @@ public class ObjectListController {
 					objectList.getObjectListValues().add(new ObjectListValue(id, objectList));
 				}
 			this.objectListService.create(objectList);
-		} 
+
+			groupTypeId = String.valueOf(objectList.getGroupType().getId());
+		}
 		else 
 		{
 			ObjectList modelObjectList = this.objectListService.findById(objectList.getId());
@@ -229,9 +231,13 @@ public class ObjectListController {
 				}
 
 			this.objectListService.edit(modelObjectList);
+
+			groupTypeId = String.valueOf(modelObjectList.getGroupType().getId());
+
 		}
 
-		return "redirect:/objectList/list";
+//		return "redirect:/objectList/list";
+		return "redirect:/groupType/"+groupTypeId+"/details";
 
 	}
 

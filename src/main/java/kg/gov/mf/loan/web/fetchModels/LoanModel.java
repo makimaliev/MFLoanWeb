@@ -9,7 +9,7 @@ import javax.persistence.TemporalType;
 import java.util.Date;
 
 @Entity
-public class LoanModel {
+public class LoanModel implements Comparable<LoanModel> {
 
     @Id
     private Long id;
@@ -28,9 +28,14 @@ public class LoanModel {
     private long loanStateId;
     private String loanStateName;
     private long supervisorId;
-    private boolean hasSubLoan;
     private long parentLoanId;
     private long creditOrderId;
+
+    @Override
+    public int compareTo(LoanModel model)
+    {
+        return model.regDate.compareTo(this.regDate);
+    }
 
     public Long getId() {
         return id;
@@ -118,14 +123,6 @@ public class LoanModel {
 
     public void setSupervisorId(long supervisorId) {
         this.supervisorId = supervisorId;
-    }
-
-    public boolean isHasSubLoan() {
-        return hasSubLoan;
-    }
-
-    public void setHasSubLoan(boolean hasSubLoan) {
-        this.hasSubLoan = hasSubLoan;
     }
 
     public long getParentLoanId() {

@@ -18,7 +18,6 @@ import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.repository.order.CreditOrderRepository;
 import kg.gov.mf.loan.manage.repository.org.StaffRepository;
 import kg.gov.mf.loan.web.fetchModels.*;
-import kg.gov.mf.loan.web.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,6 +121,9 @@ public class LoanController {
         String jsonTerms = gson.toJson(getTermsByLoanId(loanId));
         model.addAttribute("terms", jsonTerms);
 
+        String jsonChildList = gson.toJson(getChildrenByLoanId(loanId));
+        model.addAttribute("children", jsonChildList);
+
         String jsonPaymentSchedules = gson.toJson(getPaymentSchedulesByLoanId(loanId));
         model.addAttribute("paymentSchedules", jsonPaymentSchedules);
 
@@ -134,12 +136,6 @@ public class LoanController {
         String jsonSupervisorPlans = gson.toJson(getSPsByLoanId(loanId));
         model.addAttribute("SPs", jsonSupervisorPlans);
 
-        //model.addAttribute("terms", loan.getCreditTerms());
-        //model.addAttribute("PaymentSchedules", loan.getPaymentSchedules());
-        //model.addAttribute("Payments", loan.getPayments());
-        //model.addAttribute("WOs", loan.getWriteOffs());
-        //model.addAttribute("SPs", loan.getSupervisorPlans());
-        
         List<OrderTermRatePeriod> ratePeriods = ratePeriodService.list();
         model.addAttribute("ratePeriods", ratePeriods);
         
@@ -173,12 +169,6 @@ public class LoanController {
         String jsonCollectionPhases = gson.toJson(getPhasesByLoanId(loanId));
         model.addAttribute("phases", jsonCollectionPhases);
 
-        //model.addAttribute("LGs", loan.getLoanGoods());
-        //model.addAttribute("DTs", loan.getDebtTransfers());
-        //model.addAttribute("TUs", loan.getTargetedUses());
-        //model.addAttribute("RLs", loan.getReconstructedLists());
-        //model.addAttribute("Bankrupts", loan.getBankrupts());
-
         model.addAttribute("debtorId", debtorId);
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtor", debtor);
@@ -192,10 +182,6 @@ public class LoanController {
         String jsonAccrues = gson.toJson(getAccruesByLoanId(loanId));
         model.addAttribute("accrues", jsonAccrues);
 
-		//model.addAttribute("detailedSummaries", loan.getLoanDetailedSummaries());
-		//model.addAttribute("summaries", loan.getLoanSummaries());
-		//model.addAttribute("accrues", loan.getAccrues());
-        
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "/manage/debtor/loan/view";
     }
@@ -253,7 +239,7 @@ public class LoanController {
 	}
 	
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/save", method=RequestMethod.POST)
-	public String saveLoan(Loan loan,
+	public String saveLoan(NormalLoan loan,
 			String[] agreementIdList,
 			@PathVariable("debtorId")Long debtorId, 
 			ModelMap model)
@@ -262,9 +248,9 @@ public class LoanController {
 		Debtor debtor = debtorService.getById(debtorId);
 		loan.setDebtor(debtor);
 		
-		if(loan.getId() == 0)
+		if(loan.getId() == null)
 		{
-		    if(loan.getParent().getId() > 0)
+		    if(loan.getParent().getId() != null)
             {
                 Loan tLoan = loanRepository.findOne(loan.getParent().getId());
                 loan.setParent(tLoan);
@@ -285,7 +271,7 @@ public class LoanController {
 		}
 		else
 		{
-			if(loan.getParent().getId() > 0)
+			if(loan.getParent().getId() != null)
 			{
 				Loan tLoan = loanRepository.findOne(loan.getParent().getId());
 				loan.setParent(tLoan);
@@ -435,6 +421,35 @@ public class LoanController {
 
 		return result;
 	}
+
+    private List<LoanModel> getChildrenByLoanId(long loanId)
+    {
+        List<LoanModel> result = new ArrayList<>();
+        Loan loan = loanService.getById(loanId);
+        for(Loan child: loan.getChildren())
+        {
+            LoanModel model = new LoanModel();
+            model.setId(child.getId());
+            model.setRegNumber(child.getRegNumber());
+            model.setRegDate(child.getRegDate());
+            model.setAmount(child.getAmount());
+            model.setCurrencyId(child.getCurrency().getId());
+            model.setCurrencyName(child.getCurrency().getName());
+            model.setLoanTypeId(child.getLoanType().getId());
+            model.setLoanTypeName(child.getLoanType().getName());
+            model.setLoanStateId(child.getLoanState().getId());
+            model.setLoanStateName(child.getLoanState().getName());
+            model.setSupervisorId(child.getSupervisorId());
+            model.setParentLoanId(child.getParent().getId());
+            model.setCreditOrderId(child.getCreditOrder().getId());
+
+            result.add(model);
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
 
     private List<PaymentScheduleModel> getPaymentSchedulesByLoanId(long loanId)
     {

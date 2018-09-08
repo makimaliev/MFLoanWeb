@@ -66,17 +66,17 @@
 													<i class="la la-ellipsis-h"></i>
 												</a>
 												<div class="dropdown-menu dropdown-menu-right">
-													<a th:href="@{/objectList/__${s.id}__/details}"
+													<a th:href="@{/objectList/__${objectList.id}__/details}"
 													   role="button" class="dropdown-item"> <span th:text="#{label.table.view}"></span>
 													</a>
 													<a data-remote="false" data-toggle="modal"
 													   data-target="#objectListFormModal"
-													   th:href="@{/objectList/__${s.id}__/edit}" role="button"
+													   th:href="@{/objectList/__${objectList.id}__/edit}" role="button"
 													   class="dropdown-item"> <span th:text="#{label.table.edit}"></span>
 													</a>
 													<a class="dropdown-item" href="#">
 														<span>
-															<form th:action="@{/objectList/__${s.id}__/remove}" method="post">
+															<form th:action="@{/objectList/__${objectList.id}__/remove}" method="post">
 																<button type="submit" class="btn btn-reset"th:text="#{label.user.button.delete}"></button>
 															</form>
 														</span>
@@ -99,15 +99,6 @@
 					</div>
 					<!--end::Modal-->
 
-
-					<div class="row">
-						<div class="col-md-12">
-							<a data-remote="false" data-toggle="modal"
-								data-target="#objectListFormModal" th:href="@{/objectList/__${objectList.id}__/objectList/add}"
-								role="button" class="btn btn-large btn-primary"> Add
-								Generation Parameter</a>
-						</div>
-					</div>
 				</div>
 			</div>
 			<!-- END BORDERED TABLE PORTLET-->
