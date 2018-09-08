@@ -1,114 +1,71 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<head>
-
-</head>
-
-
-
-<body>
-
-	<form th:action="@{/floatingRate/save}" id="form_sample_2"  th:object="${floatingRate}"
-		class="form-horizontal" method="post">
-		<div class="form-body">
-			<div class="alert alert-danger display-hide">
-				<button class="close" data-close="alert"></button>
-				You have some form errors. Please check below.
-			</div>
-			<!-- 
-                     <div class="alert alert-success display-hide">
-                     	<button class="close" data-close="alert"></button> Your form validation is successful! 
-                     </div>
-                     -->
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">Rate <span
-					class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-					<input hidden="true" type="text" id="id" name="id"
-						th:field="*{id}" />
-
-						
-						
-					<div class="input-icon right">
-						<i class="fa"></i> <input type="text" class="form-control"
-							name="name" th:field="*{rate}" />
-					</div>
-					
-					
+<form th:action="@{/floatingRate/save}" th:object="${floatingRate}"
+	  class="form-horizontal" method="post">
+	<div class="modal-header">
+		<h5 class="modal-title" th:text="#{label.add.floatingRate}"></h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<div class="form-group ">
+			<label class="control-label col-md-3">Rate
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-md-4">
+				<input hidden="true" type="text" id="id" name="id" th:field="*{id}" />
+				<div class="input-icon right">
+					<i class="fa"></i> <input type="text" class="form-control" name="name" th:field="*{rate}" />
 				</div>
+
+
 			</div>
-
-			<div class="form-group">
-				<label class="control-label col-md-3">Currency
-					<span class="required"> * </span>
-				</label>
-				<div class="col-md-4">
-					<select class="form-control" th:field="${floatingRate.rateType.id}"  id="currency">
-						<option th:each="curr : ${rateTypes}" th:value="${curr.id}" th:text="${curr.name}"></option>
-					</select>
-				</div>
-			</div>
-
-
-
-			<div class="form-group  margin-top-20">
-				<label class="control-label col-md-3">date</label>
-				<div class="col-md-4">
-					<div class="input-group date date-picker"
-						 data-date-format="dd.mm.yyyy" id="informationDate">
-						<input type="text" class="form-control" name="date"
-							   th:value="${floatingRate.date}" /> <span class="input-group-btn">
-							<button class="btn default" type="button">
-								<i class="fa fa-calendar"></i>
-							</button>
-						</span>
-					</div>
-
-
-					<!-- /input-group -->
-					<span class="help-block"> select a date </span>
-				</div>
-				<script>
-                    $('#informationDate').datepicker();
-				</script>
-			</div>
-
-
-
-
-			<!--<div class="form-group  margin-top-20">-->
-				<!--<label class="control-label col-md-3">Date <span-->
-						<!--class="required"> * </span>-->
-				<!--</label>-->
-				<!--<div class="col-md-4">-->
-					<!--<div class="input-group date date-picker" data-date-format="dd.mm.yyyy">-->
-						<!--<input type="text" class="form-control" name="date" th:field="*{date}"/>-->
-						<!--<span class="input-group-btn">-->
-	                                                         <!--<button class="btn default" type="button">-->
-	                                                             <!--<i class="fa fa-calendar"></i>-->
-	                                                         <!--</button>-->
-	                                                     <!--</span>-->
-					<!--</div>-->
-
-
-				<!--</div>-->
-			<!--</div>-->
-
-
 		</div>
-		<div class="form-actions">
-			<div class="row">
-				<div class="col-md-offset-3 col-md-9">
-					<button type="submit" class="btn green">Submit</button>
-					<button type="button" class="btn default"
-						onclick="window.location.href='/currencyRate/list'">Cancel</button>
+
+		<div class="form-group ">
+			<label class="control-label col-md-3">Rate Type
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-md-4">
+				<select class="form-control" th:field="${floatingRate.rateType.id}"  id="rateType">
+					<option th:each="curr : ${rateTypes}" th:value="${curr.id}" th:text="${curr.name}"></option>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group ">
+			<label class="col-form-label col-lg-4 col-sm-12">
+				Date
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<div class="input-group date m_datetimepicker_6">
+					<input type="text" class="form-control m-input" th:placeholder="#{select.date}" th:vaue="${floatingRate.date}" name="date"/>
+					<span class="input-group-addon">
+						<i class="la la-calendar glyphicon-th"></i>
+					</span>
 				</div>
 			</div>
 		</div>
-	</form>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.floatingRate.button.cancel}"></button>
+		<button type="submit" class="btn btn-primary" th:text="#{label.button.save}"></button>
+	</div>
 
-</body>
-</html>
+</form>
+<script>
+    $('#rateType').selectpicker('refresh');
+
+    $(".m_datetimepicker_6").on('keyup',function () {
+		console.log($(this).val());
+    })
+    $('.m_datetimepicker_6').datepicker({
+        format: "dd.mm.yyyy",
+        todayHighlight: true,
+        autoclose: true,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        pickerPosition: 'bottom-left'
+    });
+</script>
