@@ -44,29 +44,29 @@
                     <div class="m-portlet__body">
                         <table class="table table-bordered" id="documentTable">
                             <thead class="thead-default">
-                                <tr>
-                                    <th width="50px"></th>
-                                    <th>№</th>
-                                    <th th:text="#{label.document.title}">Заголовок</th>
-                                    <th th:text="#{label.document.documentSubType}">Тип документа</th>
-                                    <th th:text="#{label.document.generalStatus}">Состояние</th>
-                                    <th th:text="#{label.document.sender}">Отправитель</th>
-                                    <th th:text="#{label.document.receiver}">Получатель</th>
-                                    <th th:text="#{label.document.dueDate}" width="130px">Срок</th>
-                                    <th width="30px"></th>
-                                </tr>
+                            <tr>
+                                <th width="50px"></th>
+                                <th>№</th>
+                                <th th:text="#{label.document.title}">Заголовок</th>
+                                <th th:text="#{label.document.documentSubType}">Тип документа</th>
+                                <th th:text="#{label.document.generalStatus}">Состояние</th>
+                                <th th:text="#{label.document.sender}">Отправитель</th>
+                                <th th:text="#{label.document.receiver}">Получатель</th>
+                                <th th:text="#{label.document.dueDate}" width="130px">Срок</th>
+                                <th width="30px"></th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="document : ${documents}">
-                                    <td class="text-danger text-center"><span th:if="${document.documentDueDate}">K</span></td>
-                                    <td th:text="${document.id}"></td>
-                                    <td th:text="${document.title}"></td>
-                                    <td th:text="${document.documentSubType.name}"></td>
-                                    <td th:text="${document.documentState.text()}"></td>
-                                    <td th:text="${responsible[__${document.getSenderResponsible()?.responsibleType}__ ?: 0]}">None</td>
-                                    <td th:text="${responsible[__${document.getReceiverResponsible()?.responsibleType}__ ?: 0]}">None</td>
-                                    <td th:text="${document.documentDueDate} != null ? ${#dates.format(document.documentDueDate, 'dd-MM-yyyy')} : 'Не установлен'">None</td>
-                                    <td class="table-actions text-right">
+                            <tr th:each="document : ${documents}">
+                                <td class="text-danger text-center"><span th:if="${document.documentDueDate}">K</span></td>
+                                <td th:text="${document.id}"></td>
+                                <td th:text="${document.title}"></td>
+                                <td th:text="${document.documentSubType.name}"></td>
+                                <td th:text="${document.documentState.text()}"></td>
+                                <td th:text="${responsible[__${document.getSenderResponsible()?.responsibleType}__ ?: 0]}">None</td>
+                                <td th:text="${responsible[__${document.getReceiverResponsible()?.responsibleType}__ ?: 0]}">None</td>
+                                <td th:text="${document.documentDueDate} != null ? ${#dates.format(document.documentDueDate, 'dd-MM-yyyy')} : 'Не установлен'">None</td>
+                                <td class="table-actions text-right">
                                         <span>
                                             <div class="dropdown">
                                                 <a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown"><i class="la la-ellipsis-h"></i></a>
@@ -86,10 +86,11 @@
                                                 </div>
                                             </div>
                                         </span>
-                                    </td>
-                                </tr>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
+
                     </div>
                     <div class="m-portlet__foot">
                         <button class="btn btn-primary"> Filter </button>

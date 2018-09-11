@@ -35,9 +35,9 @@
                                 <!--begin::Form-->
                                 <div class="row">
 
-                                    <div class="col-12 m--padding-20">
+                                    <div class="col-12">
                                         <nav>
-                                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                            <div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
                                                 <a class="nav-item nav-link active" id="nav-main-tab" data-toggle="tab" href="#main" role="tab" aria-controls="nav-main" aria-selected="true">Общие</a>
                                                 <a class="nav-item nav-link" id="nav-stages-tab" data-toggle="tab" href="#stages" role="tab" aria-controls="nav-stages" aria-selected="false">Этапы</a>
                                                 <a class="nav-item nav-link" id="nav-history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="nav-history" aria-selected="false">Журнал действий</a>
@@ -45,14 +45,34 @@
                                             </div>
                                         </nav>
                                         <div class="tab-content" id="nav-tabContent">
-                                            <div class="tab-pane fade show active m--padding-left-50 m--padding-right-50" id="main" role="tabpanel" aria-labelledby="nav-main-tab">
-                                                <th:block th:replace="doc/document/viewcontent::__${document.documentType.internalName}__"/>
+                                            <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="nav-main-tab">
+                                                <div class="col-10 justify-content-center">
+                                                    <th:block th:replace="doc/document/viewcontent::__${document.documentType.internalName}__"/>
+                                                </div>
                                             </div>
-                                            <div class="tab-pane fade" id="stages" role="tabpanel" aria-labelledby="nav-stages-tab">Stages</div>
-                                            <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="nav-history-tab">
+                                            <div class="tab-pane fade" role="tabpanel" id="stages" aria-labelledby="nav-stages-tab">
+                                                <div class="form-group m-form__group">
+                                                    <table class="table table-striped table-bordered">
+                                                        <tr th:each="stage : ${stages}">
+                                                            <td>
+                                                                <label
+                                                                    class="align-middle m-2"
+                                                                    th:utext="${stage.text()}"></label>
+                                                            </td>
+                                                            <td>
+                                                                <label
+                                                                    class="align-middle m-2"
+                                                                    th:utext="${stage.state().ordinal() &gt; document.documentState.ordinal()} ? '-' : 'Выполнен'"
+                                                                    th:classappend="${stage.state().ordinal() &gt; document.documentState.ordinal()} ? 'text-warning' : 'text-success'"></label>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" role="tabpanel" id="history" aria-labelledby="nav-history-tab">
                                                 <th:block th:replace="doc/layout::history"/>
                                             </div>
-                                            <div class="tab-pane fade" id="journal" role="tabpanel" aria-labelledby="nav-journal-tab">
+                                            <div class="tab-pane fade" role="tabpanel" id="journal" aria-labelledby="nav-journal-tab">
                                                 <th:block th:replace="doc/layout::journal"/>
                                             </div>
                                         </div>

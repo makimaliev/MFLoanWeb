@@ -25,11 +25,12 @@
         <div class="m-grid__item m-grid__item--fluid m-wrapper">
             <div class="m-content">
                 <div class="m-portlet m-portlet--full-height">
+
                     <form th:action="@{/doc/save}" id="document_form" class="m-form m-form--fit m-form--label-align-right" th:object="${document}" method="POST" enctype="multipart/form-data">
                         <div class="m-portlet__head">
                             <div class="m-portlet__head-caption">
                                 <div class="m-portlet__head-title">
-                                    <h3 class="m-portlet__head-text" th:text="*{id != null} ? 'Детали документа № ' + id : 'Новый ' + *{documentType.name} + ' документ'"></h3>
+                                    <h3 class="m-portlet__head-text" th:text="*{id != null} ? 'Детали документа № ' + *{id} : 'Новый ' + *{documentType.name} + ' документ'"></h3>
                                 </div>
                             </div>
                         </div>
@@ -37,25 +38,38 @@
                             <div class="m-scrollable" data-scrollbar-shown="true"  data-axis="y"  data-height="200">
                                 <!--begin::Form-->
                                 <th:block th:replace="doc/layout::hiddenFields"/>
-                                <div class="row">
+                                <div class="row ">
 
-                                    <div class="col-12 m--padding-20">
+                                    <div class="col-12">
                                         <nav>
-                                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                                <a class="nav-item nav-link active" id="nav-main-tab" data-toggle="tab" href="#main" role="tab" aria-controls="nav-main" aria-selected="true">Общие</a>
-                                                <a class="nav-item nav-link" id="nav-stages-tab" data-toggle="tab" href="#stages" role="tab" aria-controls="nav-stages" aria-selected="false">Этапы</a>
-                                                <a class="nav-item nav-link" id="nav-history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="nav-history" aria-selected="false">Журнал задач</a>
-                                                <a class="nav-item nav-link" id="nav-journal-tab" data-toggle="tab" href="#journal" role="tab" aria-controls="nav-journal" aria-selected="false">История</a>
+                                            <div class="nav nav-tabs justify-content-center" id="tabstages" role="tablist">
+                                                <a role="tab" data-toggle="tab" aria-selected="true"  class="nav-item nav-link active"  id="nav-main-tab"       href="#main" aria-controls="nav-main">Общие</a>
+                                                <a role="tab" data-toggle="tab" aria-selected="false" class="nav-item nav-link"         id="nav-stages-tab"     href="#stages" aria-controls="nav-stages">Этапы</a>
+                                                <a role="tab" data-toggle="tab" aria-selected="false" class="nav-item nav-link"         id="nav-history-tab"    href="#history" aria-controls="nav-history">Журнал задач</a>
+                                                <a role="tab" data-toggle="tab" aria-selected="false" class="nav-item nav-link"         id="nav-journal-tab"    href="#journal" aria-controls="nav-journal">История</a>
                                             </div>
                                         </nav>
                                         <div class="tab-content" id="nav-tabContent">
-                                            <div class="tab-pane fade show active m--padding-left-50 m--padding-right-50" id="main" role="tabpanel" aria-labelledby="nav-main-tab">
-                                                <th:block th:replace="doc/document/editcontent::__${document.documentType.internalName}__"/>
-                                                <div class="align-content-center">
-                                                    <th:block th:replace="doc/layout::documentActions"/>
+                                            <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="nav-main-tab">
+                                                <div class="col-10 justify-content-center">
+                                                    <th:block th:replace="doc/document/editcontent::__${document.documentType.internalName}__"/>
                                                 </div>
                                             </div>
-                                            <div class="tab-pane fade" id="stages" role="tabpanel" aria-labelledby="nav-stages-tab">Stages</div>
+                                            <div class="tab-pane fade" id="stages" role="tabpanel" aria-labelledby="nav-stages-tab">
+                                                <div class="form-group m-form__group">
+                                                    <table class="table table-striped table-bordered">
+                                                        <tr th:each="stage : ${stages}">
+                                                            <td><label
+                                                                    class="align-middle m-2"
+                                                                    th:utext="${stage.text()}"></label></td>
+                                                            <td><label
+                                                                    class="align-middle m-2"
+                                                                    th:utext="${stage.state().ordinal() &gt; document.documentState.ordinal()} ? '-' : 'Выполнен'"
+                                                                    th:classappend="${stage.state().ordinal() &gt; document.documentState.ordinal()} ? 'text-warning' : 'text-success'"></label></td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
                                             <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="nav-history-tab">
                                                 <th:block th:replace="doc/layout::history"/>
                                             </div>
@@ -70,7 +84,8 @@
                             </div>
                         </div>
                         <div class="m-portlet__foot">
-
+                            <button type="button" class="btn btn-primary float-none" onclick="window.history.back()"> Отмена </button>
+                            <th:block th:replace="doc/layout::documentActions"/>
                         </div>
                     </form>
                 </div>
@@ -104,7 +119,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <select class="form-control m-input" id="rr" th:name="${document.documentState.ordinal() &lt; 5} ? 'reconciler' : 'executor'" style="width: 100%" data-ajax--url="/data/staff" form="document_form" multiple>
+                <select class="s2 form-control m-input" th:name="${document.documentState.ordinal() &lt; 5} ? 'reconciler' : 'executor'" style="width:100%" data-ajax--url="/data/staff" form="document_form" multiple>
                     <option value="">Select</option>
                 </select>
             </div>

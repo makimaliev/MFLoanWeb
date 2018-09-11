@@ -29,17 +29,22 @@
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label"> Описание : </label>
         <div class="col-9">
-            <div class="form-control m-input" th:utext="*{description}"> Title </div>
+            <div class="form-control bg-secondary">
+                <div class="m-4 p-5 bg-white" th:utext="*{description}">
+                </div>
+            </div>
         </div>
     </div>
-    <!-- Sender Attachment -->
+    <!-- Sender And Receiver Attachment -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label"> Приложения : </label>
         <div class="col-9">
             <table class="form-control">
-                <tr th:if="*{#lists.isEmpty(senderAttachment)}"><td><label>Нет приложений</label></td></tr>
                 <tr th:if="*{not #lists.isEmpty(senderAttachment)}" th:each="attachment : *{senderAttachment}">
-                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
+                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}" class="text-info"></label></a></td>
+                </tr>
+                <tr th:if="*{not #lists.isEmpty(receiverAttachment)}" th:each="attachment : *{receiverAttachment}">
+                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}" class="text-info"></label></a></td>
                 </tr>
             </table>
         </div>
@@ -52,28 +57,14 @@
         </div>
     </div>
     <!-- Receiver Executor -->
-    <div class="form-group m-form__group row" th:hidden="*{documentState.ordinal() < 7}">
+    <div class="form-group m-form__group row" th:hidden="*{documentState.ordinal() < 11}">
         <label class="col-3 col-form-label"> Испонитель : </label>
         <div class="col-9">
-            <label class="form-control"  th:each="s : *{receiverExecutor?.staff}" th:text="${s.name}"> Staff </label>
+            <label class="form-control" th:each="s : *{receiverExecutor?.staff}" th:text="${s.name}"> Staff </label>
         </div>
     </div>
-    <!-- Receiver Attachment -->
-    <div class="form-group m-form__group row" th:hidden="*{documentState.ordinal() < 7}">
-        <label class="col-3 col-form-label"> Приложения : </label>
-        <div class="col-9">
-            <table class="form-control">
-                <tr th:if="*{#lists.isEmpty(receiverAttachment)}"><td> Нет приложений </td></tr>
-                <tr th:if="*{not #lists.isEmpty(receiverAttachment)}" th:each="attachment : *{receiverAttachment}">
-                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
 </th:block>
 <th:block th:fragment="incoming">
-
     <!-- Sender Registration Data -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
@@ -126,12 +117,13 @@
             <span> Описание : </span>
         </label>
         <div class="col-sm-9">
-            <div class="form-control">
-                <p th:utext="*{description}"> Description </p>
+            <div class="form-control bg-secondary">
+                <div class="m-4 p-5 bg-white" th:utext="*{description}">
+                </div>
             </div>
         </div>
     </div>
-    <!-- Sender Attachment -->
+    <!-- Sender and Receiver Attachment -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
             <span> Приложения : </span>
@@ -139,7 +131,10 @@
         <div class="col-sm-9">
             <table class="form-control">
                 <tr th:each="attachment : *{senderAttachment}">
-                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
+                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}" class="text-info"></label></a></td>
+                </tr>
+                <tr th:each="attachment : *{receiverAttachment}" th:if="*{documentState.ordinal() == 9}">
+                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}" class="text-info"></label></a></td>
                 </tr>
             </table>
         </div>
@@ -154,25 +149,12 @@
         </div>
     </div>
     <!-- Receiver Executor -->
-    <div class="form-group m-form__group row" th:hidden="*{documentState.ordinal() < 7}">
+    <div class="form-group m-form__group row" th:hidden="*{documentState.ordinal() < 11}">
         <label class="col-3 col-form-label">
             <span> Испонитель : </span>
         </label>
         <div class="col-9">
             <label class="form-control"  th:each="s : *{receiverExecutor.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 6}"> Staff </label>
-        </div>
-    </div>
-    <!-- Receiver Attachment -->
-    <div class="form-group m-form__group row" th:hidden="*{documentState.ordinal() < 7}">
-        <label class="col-3 col-form-label">
-            <span> Приложения : </span>
-        </label>
-        <div class="col-sm-9">
-            <table class="form-control">
-                <tr th:each="attachment : *{receiverAttachment}" th:if="*{documentState.ordinal() == 9}">
-                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
-                </tr>
-            </table>
         </div>
     </div>
 </th:block>
@@ -212,23 +194,19 @@
             <span> Описание : </span>
         </label>
         <div class="col-sm-9">
-            <div class="form-control">
-                <p th:utext="*{description}"> Description </p>
+            <div class="form-control bg-secondary">
+                <div class="m-4 p-5 bg-white" th:utext="*{description}">
+                </div>
             </div>
         </div>
     </div>
-    <!-- Sender Attachment -->
-    <div class="form-group m-form__group row" th:hidden="*{documentState.ordinal() > 1 and senderAttachment == null}"-->
+    <!-- INDEXNO -->
+    <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
-            <span> Приложения : </span>
+            <span> Индекс : </span>
         </label>
         <div class="col-sm-9">
-            <table class="form-control">
-                <tr th:if="*{#lists.isEmpty(senderAttachment)}"><td><label>Нет приложений</label></td></tr>
-                <tr th:each="attachment : *{senderAttachment}">
-                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
-                </tr>
-            </table>
+            <label class="form-control" th:text="*{indexNo}" th:if="*{documentState.ordinal() > 1}"> Title </label>
         </div>
     </div>
     <!-- Document Due Date -->
@@ -238,6 +216,19 @@
         </label>
         <div class="col-sm-9">
             <label class="form-control" th:text="*{documentDueDate} != null ? *{#dates.format(documentDueDate, 'dd-MM-yyyy')} : 'Срок не установлен'" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- Sender Attachment -->
+    <div class="form-group m-form__group row" th:hidden="*{documentState.ordinal() > 1 and senderAttachment == null}">
+        <label class="col-3 col-form-label">
+            <span> Приложения : </span>
+        </label>
+        <div class="col-sm-9">
+            <table class="form-control">
+                <tr th:each="attachment : *{senderAttachment}">
+                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}" class="text-info"></label></a></td>
+                </tr>
+            </table>
         </div>
     </div>
 </th:block>
