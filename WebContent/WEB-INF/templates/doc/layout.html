@@ -11,7 +11,6 @@
             <input type="hidden" th:field="*{documentState}"/>
             <input type="hidden" th:field="*{documentType.id}"/>
             <input type="hidden" th:field="*{documentSubType.id}"/>
-            <!--input type="hidden" th:field="*{reconciler}"/-->
         </div>
     </th:block>
     <th:block th:fragment="script">
@@ -20,13 +19,6 @@
             function davay() {
                 $('#pick').modal('hide')
             }
-
-            var dt_settings = {
-                autoclose: true,
-                minView : 2,
-                maxView : 2,
-                format : 'dd-mm-yyyy hh:ii'
-            };
 
             $(document).ready(function() {
 
@@ -39,7 +31,6 @@
                         { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
                         { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
                         { name: 'insert', items: [ 'Image', 'Table' ] },
-                        '/',
                         { name: 'styles', items: [ 'Font', 'FontSize' ] },
                         { name: 'tools', items: [ 'Maximize' ] }
                     ],
@@ -56,6 +47,12 @@
                     ]
                 });
 
+                var dt_settings = {
+                    autoclose: true,
+                    minView : 2,
+                    maxView : 2,
+                    format : 'dd-mm-yyyy hh:ii'
+                };
                 $('.dtp').datetimepicker(dt_settings);
 
                 $('.sdr').hide();
@@ -78,8 +75,19 @@
                 });
 
                 var soption = {
-                    language: "ru",
                     minimumInputLength: 2,
+                    placeholder: "Выбрать",
+                    language: {
+                        inputTooShort: function () {
+                            return "";
+                        },
+                        noResults: function () {
+                            return "Не найден";
+                        },
+                        searching: function () {
+                            return "";
+                        },
+                    },
                     ajax: {
                         data: function (params) {
                             var query = {
@@ -94,17 +102,29 @@
                         }
                     }
                 }
+                var ssoption = {
+                    minimumResultsForSearch: -1,
+                    placeholder: "Выбрать",
+                    language: {
+                        inputTooShort: function () {
+                            return "";
+                        },
+                        noResults: function () {
+                            return "Не найден";
+                        },
+                        searching: function () {
+                            return "";
+                        }
+                    }
+                }
 
-                $('#srs').select2(soption);
-                $('#sro').select2(soption);
-                $('#srp').select2(soption);
-                $('#rrs').select2(soption);
-                $('#rrd').select2(soption);
-                $('#rro').select2(soption);
-                $('#rrp').select2(soption);
-                $('#res').select2(soption);
+                $('.s2 ').select2(soption);
+                $('.s2s ').select2(ssoption);
 
-                $('#rr').select2(soption);
+                $('#tabstages a').on('click', function (e)
+                {
+                    e.currentTarget.id == "nav-main-tab" ? $(".act").show() : $(".act").hide()
+                })
             });
 
             function doClick(side) {
@@ -145,25 +165,25 @@
     </th:block>
     <th:block th:fragment="history">
         <div class="form-group m-form__group">
-            <table class="table table-bordered" id="documentTable">
-                <thead class="thead-default">
+            <table class="table table-bordered table-striped">
+                <thead class="bg-info">
                 <tr>
-                    <th width="auto">Дата</th>
-                    <th>От</th>
-                    <th>Задачи</th>
-                    <th>Кому</th>
-                    <th>Результат</th>
-                    <th width="auto">Завершен</th>
+                    <th class="align-middle m-2 text-white" width="auto">Дата</th>
+                    <th class="align-middle m-2 text-white">От</th>
+                    <th class="align-middle m-2 text-white">Задачи</th>
+                    <th class="align-middle m-2 text-white">Кому</th>
+                    <th class="align-middle m-2 text-white">Результат</th>
+                    <th class="align-middle m-2 text-white" width="auto">Завершен</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="task : ${tasks}">
-                    <td th:text= "${#dates.format(task.createdOn, 'dd-MM-yyyy')}"></td>
-                    <td th:utext="${task.createdBy != null } ? ${task.createdBy.staff.name} : 'Автоматическое задание'"> Автоматическое задание </td>
-                    <td th:utext="${task.description}"></td>
-                    <td th:utext="${task.assignedTo.staff.name}"></td>
-                    <td th:utext="${task.resolutionSummary}"></td>
-                    <td th:text= "${#dates.format(task.actualResolutionDate, 'dd-MM-yyyy')}"></td>
+                    <td><label class="align-middle m-2" th:text= "${#dates.format(task.createdOn, 'dd-MM-yyyy')}"></label></td>
+                    <td><label class="align-middle m-2" th:utext="${task.createdBy != null } ? ${task.createdBy.staff.name} : 'Система'"></label></td>
+                    <td><label class="align-middle m-2" th:utext="${task.description}"></label></td>
+                    <td><label class="align-middle m-2" th:utext="${task.assignedTo.staff.name}"></label></td>
+                    <td><label class="align-middle m-2" th:utext="${task.resolutionSummary}"></label></td>
+                    <td><label class="align-middle m-2" th:text= "${#dates.format(task.actualResolutionDate, 'dd-MM-yyyy')}"></label></td>
                 </tr>
                 </tbody>
             </table>
@@ -172,30 +192,29 @@
     </th:block>
     <th:block th:fragment="journal">
         <div class="form-group m-form__group">
-            <table class="table table-bordered" id="documentTable">
-                <thead class="thead-default">
+            <table class="table table-bordered table-striped">
+                <thead class="bg-info">
                 <tr>
-                    <th width="130px">Дата</th>
-                    <th>Пользователь</th>
-                    <th>Действие</th>
-                    <th>Примечание</th>
+                    <th class="align-middle m-2 text-white">Дата</th>
+                    <th class="align-middle m-2 text-white">Пользователь</th>
+                    <th class="align-middle m-2 text-white">Действие</th>
+                    <th class="align-middle m-2 text-white">Примечание</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="dd : *{dispatchData}">
-                    <td th:text= "${#dates.format(dd.dispatchInitTime, 'dd-MM-yyyy HH:mm')}"></td>
-                    <td th:text= "${dd.dispatchBy.staff.name}"></td>
-                    <td th:text= "${dd.dispatchType.text()}"></td>
-                    <td th:utext="${dd.description}"></td>
+                    <td><label class="align-middle m-2" th:text="${#dates.format(dd.dispatchInitTime, 'dd-MM-yyyy HH:mm')}"></label></td>
+                    <td><label class="align-middle m-2" th:text="${dd.dispatchBy.staff.name}"></label></td>
+                    <td><label class="align-middle m-2" th:text="${dd.dispatchType.text()}"></label></td>
+                    <td><label class="align-middle m-2" th:utext="${dd.description}"></label></td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </th:block>
     <th:block th:fragment="documentActions">
-        <button type="button" class="btn btn-primary" onclick="window.history.back()"> Отмена </button>
         <button style="margin: 3px"
-                class="btn btn-success"
+                class="act btn btn-success"
                 name="action"
                 th:each="action : ${actions}"
                 th:value="${action.name()}"

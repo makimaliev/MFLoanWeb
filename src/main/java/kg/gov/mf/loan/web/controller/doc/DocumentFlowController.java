@@ -8,8 +8,10 @@ import kg.gov.mf.loan.doc.model.*;
 import kg.gov.mf.loan.doc.service.DocumentStatusService;
 import kg.gov.mf.loan.doc.service.*;
 import kg.gov.mf.loan.doc.model.Transition;
+import kg.gov.mf.loan.task.model.ObjectType;
 import kg.gov.mf.loan.task.model.Task;
 import kg.gov.mf.loan.task.service.TaskService;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -26,6 +27,8 @@ import java.util.*;
 @Controller
 @RequestMapping("/doc")
 public class DocumentFlowController extends BaseController {
+
+    private String data;
 
     //region Dependencies
     private DocumentService documentService;
@@ -101,7 +104,7 @@ public class DocumentFlowController extends BaseController {
         }
     };
     private enum CURRENTVIEW { INTERNAL, INCOMING, OUTGOING}
-    private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
+    private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -140,23 +143,32 @@ public class DocumentFlowController extends BaseController {
     @RequestMapping(value = "/new/{subType}", method = RequestMethod.GET)
     public String add(@PathVariable("subType") String subType, Model model) {
 
-        if(getUser() == null)
-            return "/login/login";
+        if(getUser() == null) return "/login/login";
 
-        DocumentType documentType = documentSubTypeService.getByInternalName(subType).getDocumentType();
-        String currentView = documentType.getInternalName();
+        Document document = new Document();
+        document.setOwner(getUser().getId());
+        document.setDocumentType(documentSubTypeService.getByInternalName(subType).getDocumentType());
+        document.setDocumentSubType(documentSubTypeService.getByInternalName(subType));
+        //**************************************************************************************************************
+
+        String currentView = document.getDocumentType().getInternalName();
+        int row = CURRENTVIEW.valueOf(currentView.toUpperCase()).ordinal();
+        int col = document.getDocumentState().ordinal();
 
         List<Transition> actions = new ArrayList<>();
-        for(Transition action : ACTIONS[CURRENTVIEW.valueOf(currentView.toUpperCase()).ordinal()][0])
+        for(Transition action : ACTIONS[row][col])
         {
             actions.add(action);
         }
 
-        Document document = new Document();
-        document.setOwner(getUser().getId());
-        document.setDocumentType(documentType);
-        document.setDocumentSubType(documentSubTypeService.getByInternalName(subType));
+        boolean hasReject = false;
 
+        if(ACTIONS[row][col].length > 1){
+            hasReject = ACTIONS[row][col][1].equals(Transition.REJECT) ? true : false;
+        }
+
+        model.addAttribute("stages", getStages(currentView));
+        model.addAttribute("hasReject", hasReject);
         model.addAttribute("actions", actions);
         model.addAttribute("document", document);
         model.addAttribute("responsible", responsible);
@@ -168,11 +180,9 @@ public class DocumentFlowController extends BaseController {
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String edit(@PathVariable("id") Long id, Model model) {
 
-        if(getUser() == null)
-            return "/login/login";
+        if(getUser() == null) return "/login/login";
 
         Document document = documentService.findById(id);
-
         //region XTRA
         // *************************************************************************************************************
         Map<String, String> vars = new HashMap<>();
@@ -182,19 +192,15 @@ public class DocumentFlowController extends BaseController {
 
         if(task != null && task.getProgress() != null)
             document.setDocumentState(State.valueOf(task.getProgress()));
+
+        vars.clear();
+        vars.put("objectId", document.getId().toString());
         // *************************************************************************************************************
         //endregion
 
         String currentView = document.getDocumentType().getInternalName();
-
         int row = CURRENTVIEW.valueOf(currentView.toUpperCase()).ordinal();
         int col = document.getDocumentState().ordinal();
-
-        boolean hasReject = false;
-
-        if(ACTIONS[row][col].length > 1){
-            hasReject = ACTIONS[row][col][1].equals(Transition.REJECT) ? true : false;
-        }
 
         List<Transition> actions = new ArrayList<>();
         for(Transition action : ACTIONS[row][col])
@@ -202,11 +208,15 @@ public class DocumentFlowController extends BaseController {
             actions.add(action);
         }
 
-        vars.clear();
-        vars.put("objectId", document.getId().toString());
+        boolean hasReject = false;
 
-        model.addAttribute("tasks", taskService.getTasks(vars));
+        if(ACTIONS[row][col].length > 1){
+            hasReject = ACTIONS[row][col][1].equals(Transition.REJECT) ? true : false;
+        }
+
+        model.addAttribute("stages", getStages(currentView));
         model.addAttribute("hasReject", hasReject);
+        model.addAttribute("tasks", taskService.getTasks(vars));
         model.addAttribute("actions", actions);
         model.addAttribute("document", document);
         model.addAttribute("responsible", responsible);
@@ -218,10 +228,9 @@ public class DocumentFlowController extends BaseController {
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(@ModelAttribute("document") Document document,
-                               @RequestParam("action") String action,
-                               @RequestParam("senderFiles") MultipartFile[] senderFiles,
-                               @RequestParam("receiverFiles") MultipartFile[] receiverFiles,
-                                HttpServletRequest request) throws IOException {
+                       @RequestParam("action") String action,
+                       @RequestParam("senderFiles") MultipartFile[] senderFiles,
+                       @RequestParam("receiverFiles") MultipartFile[] receiverFiles) throws IOException {
 
         String docType = documentTypeService.findById(document.getDocumentType().getId()).getInternalName();
 
@@ -292,15 +301,15 @@ public class DocumentFlowController extends BaseController {
     @RequestMapping(value = "/view/{id}", method = RequestMethod.GET)
     public String view(@PathVariable("id") Long id, Model model) {
 
+        if(getUser() == null) return "/login/login";
+
         Document document = documentService.findById(id);
 
         Map<String, String> vars = new HashMap<>();
         vars.put("objectId", document.getId().toString());
 
-        List<Task> tasks = taskService.getTasks(vars);
-
-        model.addAttribute("tasks", tasks);
-
+        model.addAttribute("tasks", taskService.getTasks(vars));
+        model.addAttribute("stages", getStages(document.getDocumentType().getInternalName()));
         model.addAttribute("document", document);
         model.addAttribute("responsible", responsible);
 
@@ -319,20 +328,45 @@ public class DocumentFlowController extends BaseController {
 
         documentService.deleteById(document);
 
-        /*
-        if(document.getDocumentState().toString() == "DRAFT")
-        {
-            for(Task task : taskService.getTasksByObjectId(document.getId()))
-            {
-                taskService.remove(task);
-            }
-            documentService.deleteById(document);
-        }
-        */
         return "redirect:/doc?type=" + document.getDocumentType().getInternalName();
     }
 
+    private List<Transition> getStages(String docType) {
+
+        List<Transition> stages = new ArrayList<>();
+
+        if(docType.equals("internal"))
+        {
+            stages.add(Transition.CREATE);
+            stages.add(Transition.RECONCILE);
+            stages.add(Transition.APPROVE);
+            stages.add(Transition.ACCEPT);
+            stages.add(Transition.START);
+            stages.add(Transition.DONE);
+        }
+
+        if(docType.equals("incoming"))
+        {
+            stages.add(Transition.REGISTER);
+            stages.add(Transition.SEND);
+            stages.add(Transition.START);
+            stages.add(Transition.DONE);
+        }
+
+        if(docType.equals("outgoing"))
+        {
+            stages.add(Transition.CREATE);
+            stages.add(Transition.RECONCILE);
+            stages.add(Transition.APPROVE);
+            stages.add(Transition.REGISTER);
+            stages.add(Transition.DONE);
+        }
+
+        return stages;
+    }
     private DispatchData setDispatchData(State state, String description) {
+
+
 
         DispatchData dispatchData = new DispatchData();
 
@@ -343,6 +377,7 @@ public class DocumentFlowController extends BaseController {
 
         return dispatchData;
     }
+
     private void addTask(String description, Long id, User user, Date dueDate) {
 
         Task task = new Task();
@@ -473,7 +508,8 @@ public class DocumentFlowController extends BaseController {
             if (action.equals("APPROVE"))
             {
                 //region [Description, User, Task]
-                document.setSenderRegisteredNumber(registerService.generateRegistrationNumber());
+                document.setSenderRegisteredNumber(registerService.generateRegistrationNumber(doc));
+
                 document.setSenderRegisteredDate(new Date());
                 description = "<strong>Зарегистрирован</strong>"
                         + "<br>Исходящий № : " + document.getSenderRegisteredNumber()
@@ -501,7 +537,8 @@ public class DocumentFlowController extends BaseController {
             if (action.equals("ACCEPT"))
             {
                 //region [Description, User, AutoTask]
-                document.setReceiverRegisteredNumber(registerService.generateRegistrationNumber());
+                document.setSenderRegisteredNumber(registerService.generateRegistrationNumber(doc));
+
                 document.setReceiverRegisteredDate(new Date());
                 description = "<strong>Зарегистрирован</strong>"
                         + "<br>Входящий № : " + document.getReceiverRegisteredNumber()
@@ -574,7 +611,7 @@ public class DocumentFlowController extends BaseController {
 
                     if(document.getDocumentState() == State.REQUESTED)
                     {
-                        addTask("Доработать : " + description, document.getId(), null, getUser(document.getOwner()), document.getDocumentDueDate(), State.DRAFT);
+                        addTask("Доработать", document.getId(), null, getUser(document.getOwner()), document.getDocumentDueDate(), State.DRAFT);
                     }
 
                     if (document.getDocumentState() == State.APPROVED)
@@ -623,7 +660,8 @@ public class DocumentFlowController extends BaseController {
                 document.getDispatchData().add(setDispatchData(State.DRAFT, description));
 
                 // Register Incoming
-                document.setReceiverRegisteredNumber(registerService.generateRegistrationNumber());
+                document.setSenderRegisteredNumber(registerService.generateRegistrationNumber(document));
+
                 document.setReceiverRegisteredDate(new Date());
                 description = "<strong>Зарегистрирован</strong>"
                         + "<br>Входящий № : " + document.getReceiverRegisteredNumber()
@@ -855,7 +893,7 @@ public class DocumentFlowController extends BaseController {
             if (action.equals("REGISTER"))
             {
                 //region [Description, User, AutoTask]
-                document.setSenderRegisteredNumber(registerService.generateRegistrationNumber());
+                document.setSenderRegisteredNumber(registerService.generateRegistrationNumber(document));
                 document.setSenderRegisteredDate(new Date());
                 description = "<strong>Зарегистрирован</strong>"
                         + "<br>Исходящий № : " + document.getSenderRegisteredNumber()

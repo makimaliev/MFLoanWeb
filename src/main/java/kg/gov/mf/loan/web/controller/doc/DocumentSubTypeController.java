@@ -28,6 +28,9 @@ public class DocumentSubTypeController extends BaseController {
     @RequestMapping(method = RequestMethod.GET)
     public String index(Model model) {
 
+        if(getUser() == null)
+            return "/login/login";
+
         model.addAttribute("documentSubTypes", documentSubTypeService.findAll());
         return "/doc/documentSubType/list";
     }
@@ -35,33 +38,47 @@ public class DocumentSubTypeController extends BaseController {
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     public String add(Model model) {
 
-        model.addAttribute("documentSubType", new DocumentSubType());
-        model.addAttribute("documentTypes", documentTypeService.findAll());
+        if(getUser() == null)
+            return "/login/login";
 
+        model.addAttribute("documentTypes", documentTypeService.findAll());
+        model.addAttribute("documentSubType", new DocumentSubType());
         return "/doc/documentSubType/edit";
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String edit(@PathVariable("id") Long id, Model model) {
 
-        DocumentSubType documentSubType = documentSubTypeService.findById(id);
+        if(getUser() == null)
+            return "/login/login";
 
-        model.addAttribute("documentSubType", documentSubType);
         model.addAttribute("documentTypes", documentTypeService.findAll());
-
+        model.addAttribute("documentSubType", documentSubTypeService.findById(id));
         return "/doc/documentSubType/edit";
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public String delete(@ModelAttribute("documentSubType") DocumentSubType documentSubType) {
+
+        if(getUser() == null)
+            return "/login/login";
+
         documentSubTypeService.deleteById(documentSubType);
         return "redirect:/doc/documentSubType";
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(@ModelAttribute("documentSubType") DocumentSubType documentSubType) {
-        documentSubTypeService.save(documentSubType);
+
+        if(documentSubType.getId() == null)
+        {
+            documentSubTypeService.save(documentSubType);
+        }
+        else
+        {
+            documentSubTypeService.update(documentSubType);
+        }
+
         return "redirect:/doc/documentSubType";
     }
-
 }

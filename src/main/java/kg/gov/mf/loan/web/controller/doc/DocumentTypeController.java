@@ -24,26 +24,32 @@ public class DocumentTypeController extends BaseController {
     @RequestMapping(method = RequestMethod.GET)
     public String index(Model model) {
 
+        if(getUser() == null)
+            return "/login/login";
+
         model.addAttribute("documentTypes", documentTypeService.findAll());
         return "/doc/documentType/list";
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     public String add(Model model) {
-        model.addAttribute("documentType", new DocumentType());
-        model.addAttribute("documentTypes", documentTypeService.findAll());
 
+        if(getUser() == null)
+            return "/login/login";
+
+        model.addAttribute("documentType", new DocumentType());
         return "/doc/documentType/edit";
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String edit(@PathVariable("id") Long id, Model model) {
 
+        if(getUser() == null)
+            return "/login/login";
+
         DocumentType documentType = documentTypeService.findById(id);
 
         model.addAttribute("documentType", documentType);
-        model.addAttribute("documentTypes", documentTypeService.findAll());
-
         return "/doc/documentType/edit";
     }
 
@@ -55,7 +61,16 @@ public class DocumentTypeController extends BaseController {
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(@ModelAttribute("documentType") DocumentType documentType) {
-        documentTypeService.save(documentType);
+
+        if(documentType.getId() == null)
+        {
+            documentTypeService.save(documentType);
+        }
+        else
+        {
+            documentTypeService.update(documentType);
+        }
+
         return "redirect:/doc/documentType";
     }
 }

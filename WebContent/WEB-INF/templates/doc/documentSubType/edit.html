@@ -34,15 +34,16 @@
                     </div>
                     <!--begin::Form-->
                     <form th:action="@{/doc/documentSubType/save}" method="post" class="m-form m-form--fit m-form--label-align-right" th:object="${documentSubType}">
-                        <input type="hidden" method="post" th:field="*{id}" name="id"/>
+                        <input type="hidden" th:field="*{id}"/>
+                        <input type="hidden" th:field="*{version}"/>
+                        <input type="hidden" th:field="*{uuid}"/>
+                        <input type="hidden" th:field="*{internalName}"/>
+
                         <div class="m-portlet__body">
                             <div class="m-form__section">
 
                                 <div class="form-group m-form__group row">
-                                    <label class="col-form-label col-lg-4 col-sm-12">
-                                        <span th:text="#{label.document.documentType}"></span>
-                                        <span class="m--font-danger">*</span>
-                                    </label>
+                                    <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.documentSubType.documentType}"></label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
                                         <select class="form-control m-bootstrap-select m_selectpicker" th:field="*{documentType}" title="Select...">
                                             <option th:each="dt : ${documentTypes}"
@@ -51,25 +52,23 @@
                                         </select>
                                     </div>
                                 </div>
-
                                 <div class="form-group m-form__group row">
-                                    <label class="col-form-label col-lg-4 col-sm-12">
-                                        <span th:text="#{label.document.documentSubType}">
-                                        </span> <span class="m--font-danger">*</span>
-                                    </label>
+                                    <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.documentSubType.code}"></label>
+                                    <div class="col-lg-4 col-md-9 col-sm-12">
+                                        <input type="text" class="form-control m-input" th:field="*{code}" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="form-group m-form__group row">
+                                    <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.documentSubType.name}"></label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
                                         <input type="text" class="form-control m-input" th:field="*{name}" onkeyup="translit()" autocomplete="off">
                                     </div>
                                 </div>
-
                                 <div class="form-group m-form__group row">
-                                    <label class="col-form-label col-lg-4 col-sm-12">
-                                        <span th:text="#{label.documentSubType.internalName}"></span>
-                                        <span class="m--font-danger">*</span>
-                                    </label>
+                                    <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.documentSubType.internalName}"></label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
                                         <input type="hidden" class="form-control m-input" th:field="*{internalName}">
-                                        <label id="prev" th:text="*{internalName}"></label>
+                                        <label class="form-control m-input" id="prev" th:text="*{internalName}"></label>
                                     </div>
                                 </div>
 
