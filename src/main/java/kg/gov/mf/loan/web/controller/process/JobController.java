@@ -170,10 +170,10 @@ public class JobController {
         return "redirect:" + "/job/list";
     }
 
-    @RequestMapping(value="/job/delete", method=RequestMethod.POST)
-    public String deleteJob(long id) {
-        if(id > 0)
-            jobItemService.remove(jobItemService.getById(id));
+    @RequestMapping(value="/job/{jobId}/delete", method=RequestMethod.GET)
+    public String deleteJob(@PathVariable("jobId")Long jobId) {
+        if(jobId > 0)
+            jobItemService.remove(jobItemService.getById(jobId));
         return "redirect:" + "/job/list";
     }
 
