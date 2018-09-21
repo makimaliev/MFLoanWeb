@@ -1,10 +1,7 @@
 package kg.gov.mf.loan.web.controller.manage;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.model.debtor.OwnerType;
-import kg.gov.mf.loan.manage.model.debtor.QDebtor;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.repository.debtor.DebtorRepository;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
@@ -240,14 +237,6 @@ public class RestDebtorController {
 		}
 
 		return sLoans;
-	}
-
-	@GetMapping("/debtors/search")
-	public Page<Debtor> searchDebtors(Pageable pageable, @RequestParam(value = "q") String q) {
-
-		QDebtor debtor = QDebtor.debtor;
-		BooleanExpression hasNameLike = debtor.name.like("%" + q + "%");
-		return debtorRepository.findAll(hasNameLike, pageable);
 	}
 
 	@PutMapping("/debtors/{debtorId}")

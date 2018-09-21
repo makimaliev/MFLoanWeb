@@ -1,20 +1,13 @@
 package kg.gov.mf.loan.web.controller.admin.org;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
 import kg.gov.mf.loan.admin.org.repository.OrganizationRepository;
-import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.model.debtor.OwnerType;
-import kg.gov.mf.loan.manage.model.debtor.QDebtor;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.web.util.Pager;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -27,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import kg.gov.mf.loan.admin.org.model.*;
 import kg.gov.mf.loan.admin.org.service.*;
 
-import kg.gov.mf.loan.admin.sys.model.*;
 import kg.gov.mf.loan.admin.sys.service.*;
 
 import java.text.SimpleDateFormat;
@@ -392,6 +384,7 @@ public class OrganizationController {
 	}
 
 
+	/*
 	@RequestMapping(method = RequestMethod.GET, value = "/organization/search")
 	public String findAllBySpecification(@RequestParam(value = "q") String q,
 										 @RequestParam("pageSize") Optional<Integer> pageSize,
@@ -426,5 +419,6 @@ public class OrganizationController {
 
 		return "/admin/org/organizationList";
 	}
+	*/
 
 }
