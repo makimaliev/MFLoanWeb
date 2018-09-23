@@ -54,53 +54,18 @@
                                     </div>
                                     <div id="inputValues">
                                     </div>
-                                    <!--
-                                    <div id="saveContainer">
-                                        <button disabled="true" type="button" id="saveAll">Save classification</button>
-                                    </div>
-                                    -->
-                                </div>
-
-                                <!--
-
-                                <div>
-                                    <div>
-                                        Choose field:
-                                        <select id="selectedField" th:field="*{fieldName}" th:title="#{label.select}">
-                                        </select>
+                                    <div id="generateContainer">
+                                        <br>
+                                        <div>
+                                            <button type="button" id="generateQuery">Generate query</button>
+                                        </div>
+                                        <div>
+                                            <textarea rows="4" cols="50" id="queryText"></textarea>
+                                        </div>
                                     </div>
                                 </div>
-
-                                <div>
-                                    <div>
-                                        <button type="button">Add value filter</button>
-                                        <button type="button">Add range filter</button>
-                                    </div>
-                                </div>
-                                -->
-
-
 							</div>
 						</div>
-
-						<div class="m-portlet__foot m-portlet__foot--fit">
-							<div class="m-form__actions m-form__actions">
-								<div class="row">
-									<div class="col-lg-4"></div>
-									<div class="col-lg-6">
-										<button type="button" class="btn btn-primary">
-											Generate Query
-										</button>
-										<!--
-                                        <button onclick="window.history.back()" type="button" class="btn btn-secondary" th:text="#{label.add.debtor.cancel}">
-											Cancel
-										</button>
-										-->
-									</div>
-								</div>
-							</div>
-						</div>
-
                     </form>
 					<!--end::Form-->
 				</div>
@@ -124,18 +89,28 @@
 <script type="text/javascript">
     $(document).ready(function(){
 
+        var tags = {};
+        var orButtonTags = {};
         var fieldNames = {};
-        var tempFieldNames = {};
         var inputDiv = $('#inputValues');
         var i = 1;
 
         //disable add filter button initially
-        disableEnableAddFilter(fieldNames, tempFieldNames);
+        disableEnableAddFilter(fieldNames, tags);
 
         $('#selectedView').change(
             function() {
                 fieldNames = {};
-                tempFieldNames = {};
+                for (var item in tags) {
+                    $('#temp' + item).remove();
+                }
+                tags = {};
+
+                for (var t in orButtonTags) {
+                    $('#orButton' + t).remove();
+                }
+                orButtonTags = {};
+
                 $.getJSON("/classify/fields", {
                     viewName : $(this).val(),
                     ajax : 'true'
@@ -145,7 +120,7 @@
                         fieldNames[data[i].fieldName] = data[i].fieldType;
                     }
                     //enable add filter button
-                    disableEnableAddFilter(fieldNames, tempFieldNames);
+                    disableEnableAddFilter(fieldNames, tags);
                 });
             });
 
@@ -157,17 +132,28 @@
                 options = options + '<option value="' + item + '">'+ item + '</option>';
             }
 
-            console.log(options);
+            var tag = '';
 
-            var tag = '<div id="temp'+ i +'">' +
+            var tagsSize = Object.keys(tags).length;
+
+            if(tagsSize > 0)
+            {
+                tag = tag + '<div id="orButton'+ i +'">' +
+                    '<button id="btnOR'+ i + '" type="button">AND</button>' +
+                    '</div>';
+            }
+
+            tag =  tag + '<div id="temp'+ i +'">' +
                 '<select id="fieldNames'+ i +'">' +
                 options +
                 '</select>' +
-                '<select id="operators">' +
+                '<select id="operators' + i +'">' +
                 '<option value="eq">=</option>' +
                 '<option value="neq">!=</option>' +
                 '<option value="gt">></option>' +
-                '<option value="st"><</option>' +
+                '<option value="gte">>=</option>' +
+                '<option value="lt"><</option>' +
+                '<option value="lte"><=</option>' +
                 '</select>' +
                 '<input type="text" value="" id="input'+ i + '"/>' +
                 '<button id="checkFilter'+ i + '" type="button">&#9989;</button>' +
@@ -175,56 +161,169 @@
                 '</div>';
 
             $(tag).appendTo(inputDiv);
-            createRemoveFunction(i, tempFieldNames, fieldNames);
-            var optionText = $('#fieldNames' + i + ' option:selected').text();
-            console.log(optionText);
+            createRemoveFunction(i, fieldNames, tags);
+            createOnChangeFunction(i, fieldNames);
+            createOrButtons(i, orButtonTags);
+            changeInputType(i, fieldNames);
+            tags[i] = i;
             i++;
-            console.log(i);
             return false;
         });
+
+        $('#generateQuery').on('click', function() {
+
+            console.log(tags);
+            console.log(fieldNames);
+
+            var txt = 'SELECT * FROM ';
+            txt = txt + $('#selectedView option:selected').text() + '\n';
+            txt = txt + 'WHERE ';
+
+            var tagsCount = 0;
+
+            for (var item in tags) {
+                if(tagsCount > 0){
+                    if(orButtonTags.hasOwnProperty(item))
+                        txt = txt + ' OR ';
+                    else
+                        txt = txt + ' AND ';
+                }
+
+                txt = txt + $('#fieldNames' + item + ' option:selected').text();
+                txt = txt + $('#operators' + item + ' option:selected').text();
+                txt = txt + wrapValue(item, fieldNames);
+                tagsCount++;
+            }
+
+            txt = txt + ';';
+            $('#queryText').val(txt);
+            return false;
+        });
+
     });
 
-    function createRemoveFunction(i, temp, orig) {
+    function createRemoveFunction(i, orig, tags) {
         $(document).on('click','#checkFilter' + i,function() {
-            console.log(this);
             $(this).text('X');
             $(this).attr('id', 'removeFilter' + i);
             var optionText = $('#fieldNames' + i + ' option:selected').text();
-            console.log(optionText);
-            temp[optionText] = orig[optionText];
-            delete orig[optionText];
-            filterChecked(i, temp, orig, optionText);
-            console.log(temp);
+            filterChecked(i, orig, optionText, tags);
             return false;
         });
     }
 
-    function filterChecked(i, temp, orig, key) {
-        disableEnableAddFilter(orig, temp);
+    function filterChecked(i, orig, key, tags) {
+        disableEnableAddFilter(orig, tags);
         $(document).on('click','#removeFilter' + i,function() {
-            orig[key] = temp[key];
-            delete temp[key];
             $('#temp' + i).remove();
+            $('#orButton' + i).remove();
+            delete tags[i];
             i--;
-            disableEnableAddFilter(orig, temp);
+            disableEnableAddFilter(orig, tags);
             return false;
         });
     }
 
-    function disableEnableAddFilter(orig, temp) {
-        var len1 = Object.keys(orig).length;
-        var len2 = Object.keys(temp).length;
-        console.log(orig);
-        console.log(temp);
+    function createOnChangeFunction(i, orig) {
+        $('#fieldNames'+i).change(
+            function() {
+                changeInputType(i, orig)
+            return false;
+        });
+    }
 
-        if(len1 <= 0)
+    function createOrButtons(i, buttonTags) {
+        $(document).on('click','#btnOR' + i,function() {
+            console.log(buttonTags);
+
+            if (buttonTags.hasOwnProperty(i)) {
+                $('#btnOR' + i).html('AND');
+                delete buttonTags[i];
+            }
+            else {
+                $('#btnOR' + i).html('OR');
+                //$('#btnOR' + i).css('font-weight', 'bold');
+                buttonTags[i] = i;
+            }
+            return false;
+        });
+    }
+
+    function disableEnableAddFilter(orig, tags) {
+        var sizeOrig = Object.keys(orig).length;
+        var sizeTags = Object.keys(tags).length;
+
+        if(sizeOrig == 0)
         {
             $('#addFilter').attr("disabled", true);
+            $('#generateContainer').attr("hidden", true);
+            $('#queryText').val('');
         }
-        else
+
+        if(sizeOrig > 0)
         {
             $('#addFilter').removeAttr("disabled");
         }
+
+        if(sizeTags == 0)
+        {
+            $('#generateContainer').attr("hidden", true);
+            $('#queryText').val('');
+        }
+
+        if(sizeTags > 0)
+        {
+            $('#generateContainer').removeAttr("hidden");
+        }
+
+    }
+
+    function changeInputType(i, orig)
+    {
+        var optionText = $('#fieldNames' + i + ' option:selected').text();
+        var type = orig[optionText];
+        console.log(type);
+        if(type == 'bigint(20)')
+        {
+            $('#input' + i).attr("type", "text");
+        }
+        else if(type == 'date')
+        {
+            $('#input' + i).attr("type", "date");
+        }
+        else
+        {
+            $('#input' + i).attr("type", "text");
+        }
+
+        return false;
+    }
+
+    function wrapValue(item, orig)
+    {
+        var result = '';
+        var optionText = $('#fieldNames' + item + ' option:selected').text();
+        var type = orig[optionText];
+        var inputVal=$('#input' + item).val();
+
+        if(type == 'bigint(20)')
+        {
+            result = inputVal;
+        }
+        else if(type == 'date')
+        {
+            result = '\'' + inputVal + '\'';
+        }
+        else if(type.match("^varchar"))
+        {
+            result = '\'' + inputVal + '\'';
+        }
+        else
+        {
+            result = inputVal;
+        }
+
+        return result;
     }
 
 </script>
