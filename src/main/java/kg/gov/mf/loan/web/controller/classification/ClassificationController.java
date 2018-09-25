@@ -1,5 +1,7 @@
 package kg.gov.mf.loan.web.controller.classification;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kg.gov.mf.loan.web.fetchModels.ClassificationForm;
 import kg.gov.mf.loan.web.fetchModels.FieldProperty;
 import org.springframework.stereotype.Controller;
@@ -9,8 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ClassificationController {
@@ -38,6 +45,37 @@ public class ClassificationController {
     List<FieldProperty> findFields(
             @RequestParam(value = "viewName", required = true) String viewName) {
         return getFields(viewName);
+    }
+
+    @RequestMapping(value = "/classify/calcPercentage", method = RequestMethod.GET)
+    public @ResponseBody
+    String calculatePercentage(
+            @RequestParam(value = "data", required = true)String data) throws IOException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(data);
+
+        String selectedField = root.path("field").asText();
+        String selectedViewName = root.path("viewName").asText();
+        String query = root.path("query").asText();
+
+        String baseQuery = "SELECT count(" + selectedField + ") FROM " + selectedViewName;
+
+        Query q = entityManager.createNativeQuery(baseQuery);
+
+        BigInteger countBase = (BigInteger) q.getSingleResult();
+
+        String qModified = query.replaceFirst(selectedField, "COUNT(" + selectedField +")");
+
+        Query q2 = entityManager.createNativeQuery(qModified);
+
+        BigInteger countActual = (BigInteger) q2.getSingleResult();
+
+        BigDecimal decCountBase = new BigDecimal(countBase);
+        BigDecimal decCountActual = new BigDecimal(countActual);
+        BigDecimal result = decCountActual.divide(decCountBase, MathContext.DECIMAL32).multiply(new BigDecimal("100"));
+
+        return result.toString();
     }
 
     private void getViews(ModelMap model)
@@ -69,6 +107,9 @@ public class ClassificationController {
 
     private List<FieldProperty> getFields(String viewName)
     {
+        if(viewName.equals("") || viewName == null)
+            return null;
+
         String baseQuery = "desc " + viewName;
 
         Query query = entityManager.createNativeQuery(baseQuery);

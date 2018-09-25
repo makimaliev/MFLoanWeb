@@ -49,6 +49,8 @@
                                 </div>
 
                                 <div id="mainContainer">
+                                    <div id="chooseField">
+                                    </div>
                                     <div id="addContainer">
                                         <button type="button" id="addFilter">Add filter</button>
                                     </div>
@@ -61,6 +63,13 @@
                                         </div>
                                         <div>
                                             <textarea rows="4" cols="50" id="queryText"></textarea>
+                                        </div>
+                                        <br>
+                                        <div>
+                                            <button type="button" id="calcPercentage">Calculate percentage</button>
+                                        </div>
+                                        <div>
+                                            <textarea rows="1" cols="50" id="outputPercentage"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -93,6 +102,7 @@
         var orButtonTags = {};
         var fieldNames = {};
         var inputDiv = $('#inputValues');
+        var chooseFieldDiv = $('#chooseField');
         var i = 1;
 
         //disable add filter button initially
@@ -111,17 +121,27 @@
                 }
                 orButtonTags = {};
 
-                $.getJSON("/classify/fields", {
-                    viewName : $(this).val(),
-                    ajax : 'true'
-                }, function(data) {
-                    var html = '';
-                    for ( var i = 0; i < data.length; i++) {
-                        fieldNames[data[i].fieldName] = data[i].fieldType;
-                    }
-                    //enable add filter button
-                    disableEnableAddFilter(fieldNames, tags);
-                });
+                $('#selectedField').remove();
+
+                $('#addFilter').attr("hidden", true);
+
+                var selectedItem = $(this).val();
+
+                if(selectedItem.length > 0)
+                {
+                    $.getJSON("/classify/fields", {
+                        viewName : $(this).val(),
+                        ajax : 'true'
+                    }, function(data) {
+                        for ( var i = 0; i < data.length; i++) {
+                            fieldNames[data[i].fieldName] = data[i].fieldType;
+                        }
+
+                        addChooseField(fieldNames, chooseFieldDiv);
+                        //enable add filter button
+                        disableEnableAddFilter(fieldNames, tags);
+                    });
+                }
             });
 
         $('#addFilter').on('click', function() {
@@ -172,10 +192,12 @@
 
         $('#generateQuery').on('click', function() {
 
-            console.log(tags);
-            console.log(fieldNames);
+            //console.log(tags);
+            //console.log(fieldNames);
 
-            var txt = 'SELECT * FROM ';
+            var txt = 'SELECT ' +
+                $('#selectedField option:selected').text()+
+                ' FROM ';
             txt = txt + $('#selectedView option:selected').text() + '\n';
             txt = txt + 'WHERE ';
 
@@ -200,7 +222,48 @@
             return false;
         });
 
+        $('#calcPercentage').on('click', function() {
+
+            var selectedField = $('#selectedField option:selected').text();
+            var selectedView = $('#selectedView option:selected').text();
+
+            var query = $('#queryText').val();
+
+            console.log(selectedField);
+            console.log(selectedView);
+            console.log(query);
+
+            var calcValues = {};
+            calcValues['field'] = selectedField;
+            calcValues['viewName'] = selectedView;
+            calcValues['query'] = query;
+
+            $.getJSON("/classify/calcPercentage", {
+                data : JSON.stringify(calcValues),
+                ajax : 'true'
+            }, function(data) {
+                $('#outputPercentage').val(data + '%');
+            });
+
+            return false;
+        });
+
     });
+
+    function addChooseField(orig, divSelected)
+    {
+        var temp = '';
+
+        for (var t in orig) {
+            temp = temp + '<option value="' + t + '">'+ t + '</option>';
+        }
+
+        var tTag = '<select id="selectedField">' +
+            temp +
+            '</select>';
+
+        $(tTag).appendTo(divSelected);
+    }
 
     function createRemoveFunction(i, orig, tags) {
         $(document).on('click','#checkFilter' + i,function() {
@@ -234,7 +297,7 @@
 
     function createOrButtons(i, buttonTags) {
         $(document).on('click','#btnOR' + i,function() {
-            console.log(buttonTags);
+            //console.log(buttonTags);
 
             if (buttonTags.hasOwnProperty(i)) {
                 $('#btnOR' + i).html('AND');
@@ -255,14 +318,14 @@
 
         if(sizeOrig == 0)
         {
-            $('#addFilter').attr("disabled", true);
+            $('#addFilter').attr("hidden", true);
             $('#generateContainer').attr("hidden", true);
             $('#queryText').val('');
         }
 
         if(sizeOrig > 0)
         {
-            $('#addFilter').removeAttr("disabled");
+            $('#addFilter').removeAttr("hidden");
         }
 
         if(sizeTags == 0)
@@ -282,7 +345,7 @@
     {
         var optionText = $('#fieldNames' + i + ' option:selected').text();
         var type = orig[optionText];
-        console.log(type);
+        //console.log(type);
         if(type == 'bigint(20)')
         {
             $('#input' + i).attr("type", "text");
