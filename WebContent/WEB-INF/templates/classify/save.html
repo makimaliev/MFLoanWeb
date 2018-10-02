@@ -37,7 +37,7 @@
 						<div class="m-portlet__body">
 							<div class="m-form__section">
 
-                                <div>
+                                <div id="mainContainer">
                                     <div>
                                         Choose view:
                                         <select id="selectedView" th:field="*{viewName}">
@@ -46,9 +46,6 @@
                                             </option>
                                         </select>
                                     </div>
-                                </div>
-
-                                <div id="mainContainer">
                                     <div id="chooseField">
                                     </div>
                                     <div id="addContainer">
@@ -56,23 +53,51 @@
                                     </div>
                                     <div id="inputValues">
                                     </div>
-                                    <div id="generateContainer">
-                                        <br>
-                                        <div>
-                                            <button type="button" id="generateQuery">Generate query</button>
-                                        </div>
-                                        <div>
-                                            <textarea rows="4" cols="50" id="queryText"></textarea>
-                                        </div>
-                                        <br>
-                                        <div>
-                                            <button type="button" id="calcPercentage">Calculate percentage</button>
-                                        </div>
-                                        <div>
-                                            <textarea rows="1" cols="50" id="outputPercentage"></textarea>
-                                        </div>
+                                    <div id="chooseJoinField">
                                     </div>
                                 </div>
+                                <hr style="border-top: dotted 1px;" />
+                                <button type="button" id="joinButton">Join with another table</button>
+                                <hr style="border-top: dotted 1px;" />
+                                <div id="mainContainer2_">
+                                    <div>
+                                        Choose view:
+                                        <select id="selectedView2" th:field="*{viewName}">
+                                            <option value="">--Select item--</option>
+                                            <option th:each="name : ${viewNames}" th:value="${{name}}" th:text="${name}"></option>
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div id="chooseField2_">
+                                    </div>
+                                    <div id="addContainer2_">
+                                        <button type="button" id="addFilter2_">Add filter</button>
+                                    </div>
+                                    <div id="inputValues2_">
+                                    </div>
+                                    <div id="chooseJoinField2_">
+                                    </div>
+                                    <hr style="border-top: dotted 1px;" />
+                                </div>
+
+                                <div id="generateContainer">
+                                    <div>
+                                        <button type="button" id="generateQuery">Generate query</button>
+                                    </div>
+                                    <div>
+                                        <textarea rows="4" cols="50" id="queryText"></textarea>
+                                    </div>
+                                    <br>
+                                    <!--
+                                    <div>
+                                        <button type="button" id="calcPercentage">Calculate percentage</button>
+                                    </div>
+                                    <div>
+                                        <textarea rows="1" cols="50" id="outputPercentage"></textarea>
+                                    </div>
+                                    -->
+                                </div>
+
 							</div>
 						</div>
                     </form>
@@ -103,25 +128,40 @@
         var fieldNames = {};
         var inputDiv = $('#inputValues');
         var chooseFieldDiv = $('#chooseField');
+        var chooseJoinFieldDiv = $('#chooseJoinField');
         var i = 1;
+
+        $('#chooseJoinField').attr("hidden", true);
+
+        $('#mainContainer2_').attr("hidden", true);
+        var tags2 = {};
+        var orButtonTags2 = {};
+        var fieldNames2 = {};
+        var inputDiv2 = $('#inputValues2_');
+        var chooseFieldDiv2 = $('#chooseField2_')
+        var chooseJoinFieldDiv2 = $('#chooseJoinField2_');;
+        var i2 = 1;
+
+        $('#chooseJoinField2_').attr("hidden", true);
+
+        var joinEnabled = false;
 
         //disable add filter button initially
         disableEnableAddFilter(fieldNames, tags);
+        disableEnableAddFilter2(fieldNames2, tags2);
 
         $('#selectedView').change(
             function() {
                 fieldNames = {};
                 for (var item in tags) {
                     $('#temp' + item).remove();
+                    $('#orButton' + item).remove();
                 }
                 tags = {};
-
-                for (var t in orButtonTags) {
-                    $('#orButton' + t).remove();
-                }
                 orButtonTags = {};
 
                 $('#selectedField').remove();
+                $('#selectedJoinField').remove();
 
                 $('#addFilter').attr("hidden", true);
 
@@ -138,11 +178,84 @@
                         }
 
                         addChooseField(fieldNames, chooseFieldDiv);
+                        addJoinField(fieldNames, chooseJoinFieldDiv);
                         //enable add filter button
                         disableEnableAddFilter(fieldNames, tags);
                     });
                 }
             });
+
+        $('#selectedView2').change(
+            function() {
+                fieldNames2 = {};
+                for (var item in tags2) {
+                    $('#temp2_' + item).remove();
+                    $('#orButton2_' + item).remove();
+                }
+                tags2 = {};
+                orButtonTags2 = {};
+
+                $('#selectedField2_').remove();
+                $('#selectedJoinField2_').remove();
+
+                $('#addFilter2_').attr("hidden", true);
+
+                var selectedItem = $(this).val();
+
+                if(selectedItem.length > 0)
+                {
+                    $.getJSON("/classify/fields", {
+                        viewName : $(this).val(),
+                        ajax : 'true'
+                    }, function(data) {
+                        for ( var i = 0; i < data.length; i++) {
+                            fieldNames2[data[i].fieldName] = data[i].fieldType;
+                        }
+
+                        addChooseField2(fieldNames2, chooseFieldDiv2);
+                        addJoinField2(fieldNames2, chooseJoinFieldDiv2);
+                        //enable add filter button
+                        disableEnableAddFilter2(fieldNames2, tags2);
+                    });
+                }
+            });
+
+        $('#joinButton').on('click', function() {
+
+            if(joinEnabled)
+            {
+                $('#joinButton').html('Join with another table');
+                joinEnabled = false;
+                $('#mainContainer2_').attr("hidden", true);
+
+                fieldNames2 = {};
+                for (var item in tags2) {
+                    $('#temp2_' + item).remove();
+                    $('#orButton2_' + item).remove();
+                }
+                tags2 = {};
+                orButtonTags2 = {};
+
+                $('#selectedField2_').remove();
+                $('#selectedJoinField').remove();
+                $('#selectedJoinField2_').remove();
+
+                $('#addFilter2_').attr("hidden", true);
+                $('#chooseJoinField').attr("hidden", true);
+                $('#chooseJoinField2_').attr("hidden", true);
+
+            }
+            else
+            {
+                $('#joinButton').html('Cancel join');
+                joinEnabled = true;
+                $('#mainContainer2_').removeAttr("hidden");
+                $('#chooseJoinField').removeAttr("hidden");
+                $('#chooseJoinField2_').removeAttr("hidden");
+            }
+
+            return false;
+        });
 
         $('#addFilter').on('click', function() {
 
@@ -190,15 +303,76 @@
             return false;
         });
 
+        $('#addFilter2_').on('click', function() {
+
+            var options = '';
+
+            for (var item in fieldNames2) {
+                options = options + '<option value="' + item + '">'+ item + '</option>';
+            }
+
+            var tag = '';
+
+            var tagsSize = Object.keys(tags2).length;
+
+            if(tagsSize > 0)
+            {
+                tag = tag + '<div id="orButton2_'+ i2 +'">' +
+                    '<button id="btnOR2_'+ i2 + '" type="button">AND</button>' +
+                    '</div>';
+            }
+
+            tag =  tag + '<div id="temp2_'+ i2 +'">' +
+                '<select id="fieldNames2_'+ i2 +'">' +
+                options +
+                '</select>' +
+                '<select id="operators2_' + i2 +'">' +
+                '<option value="eq">=</option>' +
+                '<option value="neq">!=</option>' +
+                '<option value="gt">></option>' +
+                '<option value="gte">>=</option>' +
+                '<option value="lt"><</option>' +
+                '<option value="lte"><=</option>' +
+                '</select>' +
+                '<input type="text" value="" id="input2_'+ i2 + '"/>' +
+                '<button id="checkFilter2_'+ i2 + '" type="button">&#9989;</button>' +
+                '</div>' +
+                '</div>';
+
+            $(tag).appendTo(inputDiv2);
+            createRemoveFunction2(i2, fieldNames2, tags2);
+            createOnChangeFunction2(i2, fieldNames2);
+            createOrButtons2(i2, orButtonTags2);
+            changeInputType2(i2, fieldNames2);
+            tags2[i2] = i2;
+            i2++;
+            return false;
+        });
+
         $('#generateQuery').on('click', function() {
 
             //console.log(tags);
             //console.log(fieldNames);
 
-            var txt = 'SELECT ' +
-                $('#selectedField option:selected').text()+
-                ' FROM ';
-            txt = txt + $('#selectedView option:selected').text() + '\n';
+            var sel1 = $('#selectedField option:selected').val();
+            var sel2 = $('#selectedField2_ option:selected').val();
+
+            var txt = 'SELECT DISTINCT ';
+            if(sel1.length > 1)
+                txt = txt + 't1.' + $('#selectedField option:selected').text();
+            else
+                txt = txt + 't2.' + $('#selectedField2_ option:selected').text();
+
+            txt = txt + ' FROM ' + $('#selectedView option:selected').text() + ' t1';
+
+            if(joinEnabled == true)
+            {
+                txt = txt + ", "
+                txt = txt + $('#selectedView2 option:selected').text() + ' t2\n';
+            }
+            else
+                txt = txt + "\n";
+
             txt = txt + 'WHERE ';
 
             var tagsCount = 0;
@@ -211,10 +385,33 @@
                         txt = txt + ' AND ';
                 }
 
-                txt = txt + $('#fieldNames' + item + ' option:selected').text();
+                txt = txt + 't1.' + $('#fieldNames' + item + ' option:selected').text();
                 txt = txt + $('#operators' + item + ' option:selected').text();
                 txt = txt + wrapValue(item, fieldNames);
                 tagsCount++;
+            }
+
+            if(joinEnabled == true)
+            {
+                txt = txt + ' AND ';
+
+                var tagsCount2 = 0;
+
+                for (var item2 in tags2) {
+                    if(tagsCount2 > 0){
+                        if(orButtonTags2.hasOwnProperty(item2))
+                            txt = txt + ' OR ';
+                        else
+                            txt = txt + ' AND ';
+                    }
+
+                    txt = txt + 't2.' + $('#fieldNames2_' + item2 + ' option:selected').text();
+                    txt = txt + $('#operators2_' + item2 + ' option:selected').text();
+                    txt = txt + wrapValue2(item2, fieldNames2);
+                    tagsCount2++;
+                }
+
+                txt = txt + ' AND t1.' + $('#selectedJoinField option:selected').text() + '= t2.' + $('#selectedJoinField2_ option:selected').text();
             }
 
             txt = txt + ';';
@@ -252,13 +449,58 @@
 
     function addChooseField(orig, divSelected)
     {
-        var temp = '';
+        var temp = '<option value="">' + '--Select item--' + '</option>';
 
         for (var t in orig) {
             temp = temp + '<option value="' + t + '">'+ t + '</option>';
         }
 
         var tTag = '<select id="selectedField">' +
+            temp +
+            '</select>';
+
+        $(tTag).appendTo(divSelected);
+    }
+
+    function addChooseField2(orig, divSelected)
+    {
+        var temp = '<option value="">' + '--Select item--' + '</option>';
+
+        for (var t in orig) {
+            temp = temp + '<option value="' + t + '">'+ t + '</option>';
+        }
+
+        var tTag = '<select id="selectedField2_">' +
+            temp +
+            '</select>';
+
+        $(tTag).appendTo(divSelected);
+    }
+
+    function addJoinField(orig, divSelected)
+    {
+        var temp = '';
+
+        for (var t in orig) {
+            temp = temp + '<option value="' + t + '">'+ t + '</option>';
+        }
+
+        var tTag = '<select id="selectedJoinField">' +
+            temp +
+            '</select>';
+
+        $(tTag).appendTo(divSelected);
+    }
+
+    function addJoinField2(orig, divSelected)
+    {
+        var temp = '';
+
+        for (var t in orig) {
+            temp = temp + '<option value="' + t + '">'+ t + '</option>';
+        }
+
+        var tTag = '<select id="selectedJoinField2_">' +
             temp +
             '</select>';
 
@@ -275,6 +517,16 @@
         });
     }
 
+    function createRemoveFunction2(i, orig, tags) {
+        $(document).on('click','#checkFilter2_' + i,function() {
+            $(this).text('X');
+            $(this).attr('id', 'removeFilter2_' + i);
+            var optionText = $('#fieldNames2_' + i + ' option:selected').text();
+            filterChecked2(i, orig, optionText, tags);
+            return false;
+        });
+    }
+
     function filterChecked(i, orig, key, tags) {
         disableEnableAddFilter(orig, tags);
         $(document).on('click','#removeFilter' + i,function() {
@@ -287,12 +539,32 @@
         });
     }
 
+    function filterChecked2(i, orig, key, tags) {
+        disableEnableAddFilter2(orig, tags);
+        $(document).on('click','#removeFilter2_' + i,function() {
+            $('#temp2_' + i).remove();
+            $('#orButton2_' + i).remove();
+            delete tags[i];
+            i--;
+            disableEnableAddFilter2(orig, tags);
+            return false;
+        });
+    }
+
     function createOnChangeFunction(i, orig) {
         $('#fieldNames'+i).change(
             function() {
                 changeInputType(i, orig)
             return false;
         });
+    }
+
+    function createOnChangeFunction2(i, orig) {
+        $('#fieldNames2_'+i).change(
+            function() {
+                changeInputType2(i, orig)
+                return false;
+            });
     }
 
     function createOrButtons(i, buttonTags) {
@@ -305,6 +577,22 @@
             }
             else {
                 $('#btnOR' + i).html('OR');
+                //$('#btnOR' + i).css('font-weight', 'bold');
+                buttonTags[i] = i;
+            }
+            return false;
+        });
+    }
+
+    function createOrButtons2(i, buttonTags) {
+        $(document).on('click','#btnOR2_' + i,function() {
+
+            if (buttonTags.hasOwnProperty(i)) {
+                $('#btnOR2_' + i).html('AND');
+                delete buttonTags[i];
+            }
+            else {
+                $('#btnOR2_' + i).html('OR');
                 //$('#btnOR' + i).css('font-weight', 'bold');
                 buttonTags[i] = i;
             }
@@ -341,6 +629,21 @@
 
     }
 
+    function disableEnableAddFilter2(orig, tags) {
+        var sizeOrig = Object.keys(orig).length;
+        var sizeTags = Object.keys(tags).length;
+
+        if(sizeOrig == 0)
+        {
+            $('#addFilter2_').attr("hidden", true);
+        }
+
+        if(sizeOrig > 0)
+        {
+            $('#addFilter2_').removeAttr("hidden");
+        }
+    }
+
     function changeInputType(i, orig)
     {
         var optionText = $('#fieldNames' + i + ' option:selected').text();
@@ -362,12 +665,60 @@
         return false;
     }
 
+    function changeInputType2(i, orig)
+    {
+        var optionText = $('#fieldNames2_' + i + ' option:selected').text();
+        var type = orig[optionText];
+        //console.log(type);
+        if(type == 'bigint(20)')
+        {
+            $('#input2_' + i).attr("type", "text");
+        }
+        else if(type == 'date')
+        {
+            $('#input2_' + i).attr("type", "date");
+        }
+        else
+        {
+            $('#input2_' + i).attr("type", "text");
+        }
+
+        return false;
+    }
+
     function wrapValue(item, orig)
     {
         var result = '';
         var optionText = $('#fieldNames' + item + ' option:selected').text();
         var type = orig[optionText];
         var inputVal=$('#input' + item).val();
+
+        if(type == 'bigint(20)')
+        {
+            result = inputVal;
+        }
+        else if(type == 'date')
+        {
+            result = '\'' + inputVal + '\'';
+        }
+        else if(type.match("^varchar"))
+        {
+            result = '\'' + inputVal + '\'';
+        }
+        else
+        {
+            result = inputVal;
+        }
+
+        return result;
+    }
+
+    function wrapValue2(item, orig)
+    {
+        var result = '';
+        var optionText = $('#fieldNames2_' + item + ' option:selected').text();
+        var type = orig[optionText];
+        var inputVal=$('#input2_' + item).val();
 
         if(type == 'bigint(20)')
         {
