@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- begin::Head -->
+<head>
+	<title>Fields</title>
+
+	<div th:replace="fragments/header :: header-css"/>
+</head>
+<!-- end::Head -->
+
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+	<!-- BEGIN: Header -->
+	<div th:replace="layout/header"/>
+	<!-- END: Header -->
+	<!-- begin::Body -->
+	<div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+		<!-- BEGIN: Left Aside -->
+		<div th:replace="layout/sidebar"/>
+		<!-- END: Left Aside -->
+		<div class="m-grid__item m-grid__item--fluid m-wrapper">
+			<div class="m-content">
+				<!--begin::Portlet-->
+				<div class="m-portlet">
+					<div class="m-portlet__head">
+						<div class="m-portlet__head-caption">
+							<div class="m-portlet__head-title">
+								<h3 class="m-portlet__head-text">Fields</h3>
+							</div>
+						</div>
+						<div class="m-portlet__head-tools">
+							<ul class="m-portlet__nav">
+								<li class="m-portlet__nav-item">
+									<a th:href="@{/classify/table/__${tableId}__/field/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">Add field</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="m-portlet__body">
+						<!--begin::Section-->
+						<div class="m-section">
+							<div class="m-section__content">
+								<div class="m-scrollable m-scrollable-no-margin" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+									<div>
+										<table class="table">
+											<thead class="thead-default">
+											<tr>
+												<th>View</th>
+												<th>Field actual name</th>
+												<th>Field output name</th>
+												<th>Lookup table name</th>
+												<th>Field type</th>
+												<th>Action</th>
+											</tr>
+											</thead>
+											<tbody>
+											<tr th:each="field : ${fields}">
+												<td><a th:href="@{/classify/table/__${tableId}__/field/__${field.id}__/view}">View</a></td>
+												<td th:text="${field.fieldActualName}"></td>
+												<td th:text="${field.fieldOutputName}"></td>
+												<td th:text="${field.lookupTableName}"></td>
+												<td th:text="${field.field_type}"></td>
+												<td><a th:href="@{/classify/table/__${tableId}__/field/__${field.id}__/delete}">Delete</a></td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--end::Section-->
+					</div>
+				</div>
+				<!--end::Portlet-->
+			</div>
+		</div>
+	</div>
+	<!-- end:: Body -->
+	<!-- begin::Footer -->
+	<div th:replace="layout/footer"/>
+	<!-- end::Footer -->
+</div>
+<!-- end:: Page -->
+
+<div th:replace="fragments/footer :: footer-js"/>
+
+<script>
+    $('.m-portlet__head-tools .m-input-icon__icon').click(function(e){
+        $('.m-portlet__head-tools form').submit();
+    });
+</script>
+
+</body>
+<!-- end::Body -->
+</html>

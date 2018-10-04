@@ -53,8 +53,6 @@
                                     </div>
                                     <div id="inputValues">
                                     </div>
-                                    <div id="chooseJoinField">
-                                    </div>
                                 </div>
                                 <hr style="border-top: dotted 1px;" />
                                 <button type="button" id="joinButton">Join with another table</button>
@@ -74,8 +72,6 @@
                                         <button type="button" id="addFilter2_">Add filter</button>
                                     </div>
                                     <div id="inputValues2_">
-                                    </div>
-                                    <div id="chooseJoinField2_">
                                     </div>
                                     <hr style="border-top: dotted 1px;" />
                                 </div>
@@ -128,10 +124,7 @@
         var fieldNames = {};
         var inputDiv = $('#inputValues');
         var chooseFieldDiv = $('#chooseField');
-        var chooseJoinFieldDiv = $('#chooseJoinField');
         var i = 1;
-
-        $('#chooseJoinField').attr("hidden", true);
 
         $('#mainContainer2_').attr("hidden", true);
         var tags2 = {};
@@ -139,10 +132,7 @@
         var fieldNames2 = {};
         var inputDiv2 = $('#inputValues2_');
         var chooseFieldDiv2 = $('#chooseField2_')
-        var chooseJoinFieldDiv2 = $('#chooseJoinField2_');;
         var i2 = 1;
-
-        $('#chooseJoinField2_').attr("hidden", true);
 
         var joinEnabled = false;
 
@@ -161,7 +151,6 @@
                 orButtonTags = {};
 
                 $('#selectedField').remove();
-                $('#selectedJoinField').remove();
 
                 $('#addFilter').attr("hidden", true);
 
@@ -178,7 +167,6 @@
                         }
 
                         addChooseField(fieldNames, chooseFieldDiv);
-                        addJoinField(fieldNames, chooseJoinFieldDiv);
                         //enable add filter button
                         disableEnableAddFilter(fieldNames, tags);
                     });
@@ -196,7 +184,6 @@
                 orButtonTags2 = {};
 
                 $('#selectedField2_').remove();
-                $('#selectedJoinField2_').remove();
 
                 $('#addFilter2_').attr("hidden", true);
 
@@ -213,7 +200,6 @@
                         }
 
                         addChooseField2(fieldNames2, chooseFieldDiv2);
-                        addJoinField2(fieldNames2, chooseJoinFieldDiv2);
                         //enable add filter button
                         disableEnableAddFilter2(fieldNames2, tags2);
                     });
@@ -237,12 +223,8 @@
                 orButtonTags2 = {};
 
                 $('#selectedField2_').remove();
-                $('#selectedJoinField').remove();
-                $('#selectedJoinField2_').remove();
 
                 $('#addFilter2_').attr("hidden", true);
-                $('#chooseJoinField').attr("hidden", true);
-                $('#chooseJoinField2_').attr("hidden", true);
 
             }
             else
@@ -250,8 +232,6 @@
                 $('#joinButton').html('Cancel join');
                 joinEnabled = true;
                 $('#mainContainer2_').removeAttr("hidden");
-                $('#chooseJoinField').removeAttr("hidden");
-                $('#chooseJoinField2_').removeAttr("hidden");
             }
 
             return false;
@@ -410,8 +390,6 @@
                     txt = txt + wrapValue2(item2, fieldNames2);
                     tagsCount2++;
                 }
-
-                txt = txt + ' AND t1.' + $('#selectedJoinField option:selected').text() + '= t2.' + $('#selectedJoinField2_ option:selected').text();
             }
 
             txt = txt + ';';
@@ -471,36 +449,6 @@
         }
 
         var tTag = '<select id="selectedField2_">' +
-            temp +
-            '</select>';
-
-        $(tTag).appendTo(divSelected);
-    }
-
-    function addJoinField(orig, divSelected)
-    {
-        var temp = '';
-
-        for (var t in orig) {
-            temp = temp + '<option value="' + t + '">'+ t + '</option>';
-        }
-
-        var tTag = '<select id="selectedJoinField">' +
-            temp +
-            '</select>';
-
-        $(tTag).appendTo(divSelected);
-    }
-
-    function addJoinField2(orig, divSelected)
-    {
-        var temp = '';
-
-        for (var t in orig) {
-            temp = temp + '<option value="' + t + '">'+ t + '</option>';
-        }
-
-        var tTag = '<select id="selectedJoinField2_">' +
             temp +
             '</select>';
 

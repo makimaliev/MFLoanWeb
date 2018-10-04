@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- begin::Head -->
+<head>
+	<title>View/Add/Modify table</title>
+
+	<div th:replace="fragments/header :: header-css"/>
+</head>
+<!-- end::Head -->
+
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+	<!-- BEGIN: Header -->
+	<div th:replace="layout/header"/>
+	<!-- END: Header -->
+	<!-- begin::Body -->
+	<div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+		<!-- BEGIN: Left Aside -->
+		<div th:replace="layout/sidebar"/>
+		<!-- END: Left Aside -->
+		<div class="m-grid__item m-grid__item--fluid m-wrapper">
+			<!-- BEGIN: Subheader -->
+			<div class="m-subheader ">
+				<div class="d-flex align-items-center">
+					<div class="mr-auto">
+						<h3 class="m-subheader__title m-subheader__title--separator">
+							Table
+						</h3>
+						<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+							<li class="m-nav__item m-nav__item--home">
+								<a th:href="@{/}" class="m-nav__link m-nav__link--icon">
+									<i class="m-nav__link-icon la la-home"></i>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- END: Subheader -->
+			<div class="m-content">
+				<!--begin::Portlet-->
+				<div class="m-portlet m-portlet--full-height">
+					<div class="m-portlet__head">
+						<div class="m-portlet__head-caption">
+							<div class="m-portlet__head-title">
+								<h3 class="m-portlet__head-text">Table</h3>
+							</div>
+						</div>
+					</div>
+
+					<!--begin::Form-->
+					<form th:action="@{/classify/table/save}" th:object="${table}" id="tableForm" method="post" class="m-form m-form--fit m-form--label-align-right">
+						<input hidden="true" type="text" id="id" name="id" th:value="${table.id}"/>
+						<div class="m-portlet__body">
+							<div class="m-form__section">
+
+                                <div class="form-group m-form__group row">
+                                    <label class="col-form-label col-lg-4 col-sm-12">
+                                        Table <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-4 col-md-9 col-sm-12">
+                                        <select class="form-control m-bootstrap-select m_selectpicker" th:field="*{tableActualName}" id="tableActualName">
+                                            <option value="0" th:text="#{label.select}"></option>
+                                            <option th:each="view : ${viewNames}" th:value="${{view}}" th:text="${view}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12">
+										<span>Output name</span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<input type="text" class="form-control m-input" id="tableOutputName" name="tableOutputName" th:value="${table.tableOutputName}">
+									</div>
+								</div>
+
+							</div>
+						</div>
+						<div class="m-portlet__foot m-portlet__foot--fit">
+							<div class="m-form__actions m-form__actions">
+								<div class="row">
+									<div class="col-lg-4"></div>
+									<div class="col-lg-6">
+										<button id="addButton" class="btn btn-primary">
+											<span>Добавить</span>
+										</button>
+										<button onclick="window.history.back()" type="button" class="btn btn-secondary">
+											<span th:text="#{label.form.cancel}"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+					<!--end::Form-->
+				</div>
+				<!--end::Portlet-->
+			</div>
+		</div>
+	</div>
+	<!-- end:: Body -->
+	<!-- begin::Footer -->
+	<div th:replace="layout/footer"/>
+	<!-- end::Footer -->
+</div>
+<!-- end:: Page -->
+
+<div th:replace="fragments/footer :: footer-js"/>
+
+<!--begin::Page Resources -->
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
+<!--end::Page Resources -->
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var actionType = /*[[${action}]]*/ [];
+    /*]]>*/
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        var action = actionType;
+        console.log(action);
+
+        if(action == "view")
+        {
+            disableInputs();
+            $('#addButton').html('Редактировать');
+            $('#addButton').attr('id', 'editButton');
+        }
+
+        if(action == "edit")
+        {
+            enableInputs();
+            $('#addButton').html('Сохранить');
+            $('#addButton').attr('id', 'saveButton');
+        }
+
+        $(document).on('click','#addButton',function() {
+            console.log('add');
+            processForm();
+            return false;
+        });
+
+        $(document).on('click','#saveButton',function() {
+            console.log('save');
+            var t = $('#tableActualName option:selected').text();
+            $('#tableActualName').val(t);
+            processForm();
+            return false;
+        });
+
+        $(document).on('click','#editButton',function() {
+            enableInputs();
+            $('#editButton').html('Сохранить');
+            $('#editButton').attr('id', 'saveButton');
+            return false;
+        });
+
+    });
+
+    function disableInputs()
+    {
+        $('#tableActualName').attr("disabled", "disabled");
+        $('#tableOutputName').attr("disabled", "disabled");
+    }
+
+    function enableInputs()
+    {
+        $('#tableOutputName').removeAttr("disabled");
+    }
+
+    function processForm()
+    {
+        var form = document.getElementById("tableForm");
+        console.log(form);
+        form.submit();
+    }
+
+</script>
+
+</body>
+<!-- end::Body -->
+</html>

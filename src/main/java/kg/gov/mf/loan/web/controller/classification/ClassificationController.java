@@ -2,8 +2,13 @@ package kg.gov.mf.loan.web.controller.classification;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kg.gov.mf.loan.manage.model.classification.ClassificationField;
+import kg.gov.mf.loan.manage.model.classification.ClassificationTable;
+import kg.gov.mf.loan.manage.repository.classification.ClassificationFieldRepository;
+import kg.gov.mf.loan.manage.repository.classification.ClassificationTableRepository;
 import kg.gov.mf.loan.web.fetchModels.ClassificationForm;
 import kg.gov.mf.loan.web.fetchModels.FieldProperty;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +29,141 @@ public class ClassificationController {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired
+    ClassificationTableRepository classificationTableRepository;
+
+    @Autowired
+    ClassificationFieldRepository classificationFieldRepository;
+
+    @RequestMapping(value = {"/classify/table/list" }, method = RequestMethod.GET)
+    public String listClassifyTables(ModelMap model) {
+
+        model.addAttribute("tables", classificationTableRepository.findAll());
+        return "/classify/table/list";
+    }
+
+    @RequestMapping(value="/classify/table/{tableId}/view", method=RequestMethod.GET)
+    public String viewClassifyTable(ModelMap model, @PathVariable("tableId")Long tableId)
+    {
+
+        ClassificationTable t = classificationTableRepository.findById(tableId);
+
+        model.addAttribute("table", t);
+        model.addAttribute("action", "view");
+        getViews(model);
+
+        return "/classify/table/view";
+    }
+
+    @RequestMapping(value="/classify/table/{tableId}/save", method=RequestMethod.GET)
+    public String formClassifyTable(ModelMap model, @PathVariable("tableId")Long tableId)
+    {
+        if(tableId == 0)
+        {
+            model.addAttribute("table", new ClassificationTable());
+            model.addAttribute("action", "add");
+            getViews(model);
+        }
+
+        if(tableId > 0)
+        {
+            model.addAttribute("table", classificationTableRepository.findById(tableId));
+            model.addAttribute("action", "edit");
+        }
+
+        return "/classify/table/view";
+    }
+
+    @RequestMapping(value="/classify/table/save", method=RequestMethod.POST)
+    public String saveTable(ClassificationTable table)
+    {
+        if(table.getId()!=null && table.getId() > 0)
+        {
+            ClassificationTable orig = classificationTableRepository.findById(table.getId());
+            table.setTableActualName(orig.getTableActualName());
+        }
+        classificationTableRepository.save(table);
+        return "redirect:" + "/classify/table/list";
+    }
+
+    @RequestMapping(value="/classify/table/{tableId}/delete", method=RequestMethod.GET)
+    public String deleteTable(@PathVariable("tableId")Long tableId) {
+        if(tableId > 0)
+            classificationTableRepository.delete(classificationTableRepository.findById(tableId));
+        return "redirect:" + "/classify/table/list";
+    }
+
+    @RequestMapping(value="/classify/table/{tableId}/field/list", method=RequestMethod.GET)
+    public String listClassifyField(ModelMap model, @PathVariable("tableId")Long tableId)
+    {
+        model.addAttribute("tableId", tableId);
+        List<ClassificationField> fields = classificationFieldRepository.findByTableId(tableId);
+        model.addAttribute("fields", fields);
+
+        return "/classify/table/field/list";
+    }
+
+    @RequestMapping(value="/classify/table/{tableId}/field/{fieldId}/view", method=RequestMethod.GET)
+    public String viewClassifyField(ModelMap model, @PathVariable("tableId")Long tableId, @PathVariable("fieldId")Long fieldId)
+    {
+
+        ClassificationTable table = classificationTableRepository.findById(tableId);
+        model.put("fieldList", getFieldNames(table.getTableActualName()));
+        model.put("tableId", tableId);
+
+        ClassificationField field = classificationFieldRepository.findById(fieldId);
+
+        model.addAttribute("field", field);
+        model.addAttribute("action", "view");
+        getViews(model);
+
+        return "/classify/table/field/view";
+    }
+
+    @RequestMapping(value="/classify/table/{tableId}/field/{fieldId}/save", method=RequestMethod.GET)
+    public String formClassifyField(ModelMap model, @PathVariable("tableId")Long tableId, @PathVariable("fieldId")Long fieldId)
+    {
+        ClassificationTable table = classificationTableRepository.findById(tableId);
+        model.put("fieldList", getFieldNames(table.getTableActualName()));
+        model.put("tableId", tableId);
+
+        if(fieldId == 0)
+        {
+            model.addAttribute("field", new ClassificationField());
+            model.addAttribute("action", "add");
+        }
+
+        if(fieldId > 0)
+        {
+            model.addAttribute("field", classificationFieldRepository.findById(fieldId));
+            model.addAttribute("action", "edit");
+        }
+
+        return "/classify/table/field/view";
+    }
+
+    @RequestMapping(value="/classify/table/{tableId}/field/save", method=RequestMethod.POST)
+    public String saveField(ClassificationField field, @PathVariable("tableId")Long tableId)
+    {
+        if(field.getId() != null && field.getId() > 0)
+        {
+            ClassificationField orig = classificationFieldRepository.findById(field.getId());
+            field.setFieldActualName(orig.getFieldActualName());
+        }
+        ClassificationTable t = classificationTableRepository.findById(tableId);
+        field.setTable(t);
+        field.setField_type(getFieldType(t.getTableActualName(), field.getFieldActualName()));
+        classificationFieldRepository.save(field);
+        return "redirect:" + "/classify/table/{tableId}/field/list";
+    }
+
+    @RequestMapping(value="/classify/table/{tableId}/field/{fieldId}/delete", method=RequestMethod.GET)
+    public String deleteField(@PathVariable("tableId")Long tableId, @PathVariable("fieldId")Long fieldId) {
+        if(fieldId > 0)
+            classificationFieldRepository.delete(classificationFieldRepository.findById(fieldId));
+        return "redirect:" + "/classify/table/{tableId}/field/list";
+    }
 
     @RequestMapping(value = { "/classify/list" }, method = RequestMethod.GET)
     public String listClassifications(ModelMap model)
@@ -124,5 +264,49 @@ public class ClassificationController {
         }
 
         return fieldsOutput;
+    }
+
+    private List<String> getFieldNames(String viewName)
+    {
+        if(viewName.equals("") || viewName == null)
+            return null;
+
+        String baseQuery = "desc " + viewName;
+
+        Query query = entityManager.createNativeQuery(baseQuery);
+
+        List<Object[]> fields = query.getResultList();
+
+        List<String> fieldsOutput = new ArrayList<>();
+
+        for (Object field[]: fields)
+        {
+            fieldsOutput.add(field[0] + "");
+        }
+
+        return fieldsOutput;
+    }
+
+    private String getFieldType(String viewName, String fieldName)
+    {
+        String result = null;
+
+        String baseQuery = "desc " + viewName;
+
+        Query query = entityManager.createNativeQuery(baseQuery);
+
+        List<Object[]> fields = query.getResultList();
+
+        for (Object field[]: fields)
+        {
+            String tFieldName = field[0] + "";
+            if(tFieldName.equals(fieldName))
+            {
+                result = field[1] + "";
+                break;
+            }
+        }
+
+        return result;
     }
 }
