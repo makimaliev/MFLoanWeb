@@ -840,7 +840,7 @@ CREATE VIEW entity_document_view AS
     `dpv`.`v_ael_appliedEntityListStateId`            AS `v_ael_appliedEntityListStateId`,
     `dpv`.`v_ael_appliedEntityListTypeId`             AS `v_ael_appliedEntityListTypeId`,
     `dpv`.`v_ael_creditOrderId`                       AS `v_ael_creditOrderId`,
-    `dpv`.`v_co_id`                                   AS `v_co_id`,
+    `dpv`.`v_co_id`                                   AS `v_credit_order_id`,
     `dpv`.`v_co_regDate`                              AS `v_co_regDate`,
     `dpv`.`v_co_regNumber`                            AS `v_co_regNumber`,
     `dpv`.`v_co_creditOrderStateId`                   AS `v_co_creditOrderStateId`,
