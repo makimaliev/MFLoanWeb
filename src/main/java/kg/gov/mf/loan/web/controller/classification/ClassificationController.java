@@ -3,8 +3,10 @@ package kg.gov.mf.loan.web.controller.classification;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kg.gov.mf.loan.manage.model.classification.ClassificationField;
+import kg.gov.mf.loan.manage.model.classification.ClassificationJoin;
 import kg.gov.mf.loan.manage.model.classification.ClassificationTable;
 import kg.gov.mf.loan.manage.repository.classification.ClassificationFieldRepository;
+import kg.gov.mf.loan.manage.repository.classification.ClassificationJoinRepository;
 import kg.gov.mf.loan.manage.repository.classification.ClassificationTableRepository;
 import kg.gov.mf.loan.web.fetchModels.ClassificationForm;
 import kg.gov.mf.loan.web.fetchModels.FieldProperty;
@@ -36,6 +38,9 @@ public class ClassificationController {
     @Autowired
     ClassificationFieldRepository classificationFieldRepository;
 
+    @Autowired
+    ClassificationJoinRepository classificationJoinRepository;
+
     @RequestMapping(value = {"/classify/table/list" }, method = RequestMethod.GET)
     public String listClassifyTables(ModelMap model) {
 
@@ -52,6 +57,7 @@ public class ClassificationController {
         model.addAttribute("table", t);
         model.addAttribute("action", "view");
         getViews(model);
+        model.addAttribute("fields", getFieldNames(t.getTableActualName()));
 
         return "/classify/table/view";
     }
@@ -92,6 +98,67 @@ public class ClassificationController {
         if(tableId > 0)
             classificationTableRepository.delete(classificationTableRepository.findById(tableId));
         return "redirect:" + "/classify/table/list";
+    }
+
+    @RequestMapping(value = {"/classify/join/list" }, method = RequestMethod.GET)
+    public String listClassifyJoins(ModelMap model) {
+
+        model.addAttribute("joins", classificationJoinRepository.findAll());
+        return "/classify/join/list";
+    }
+
+    @RequestMapping(value="/classify/join/{joinId}/view", method=RequestMethod.GET)
+    public String viewClassifyJoin(ModelMap model, @PathVariable("joinId")Long joinId)
+    {
+
+        ClassificationJoin j = classificationJoinRepository.findById(joinId);
+
+        model.addAttribute("join", j);
+        model.addAttribute("action", "view");
+        getViews(model);
+
+        return "/classify/join/view";
+    }
+
+    @RequestMapping(value="/classify/join/{joinId}/save", method=RequestMethod.GET)
+    public String formClassifyJoin(ModelMap model, @PathVariable("joinId")Long joinId)
+    {
+        if(joinId == 0)
+        {
+            model.addAttribute("join", new ClassificationJoin());
+            model.addAttribute("action", "add");
+            getViews(model);
+        }
+
+        if(joinId > 0)
+        {
+            model.addAttribute("join", classificationJoinRepository.findById(joinId));
+            model.addAttribute("action", "edit");
+            getViews(model);
+        }
+
+        return "/classify/join/view";
+    }
+
+    @RequestMapping(value="/classify/join/save", method=RequestMethod.POST)
+    public String saveJoin(ClassificationJoin join)
+    {
+        if(join.getId()!=null && join.getId() > 0)
+        {
+            /*
+            ClassificationTable orig = classificationTableRepository.findById(table.getId());
+            table.setTableActualName(orig.getTableActualName());
+            */
+        }
+        classificationJoinRepository.save(join);
+        return "redirect:" + "/classify/join/list";
+    }
+
+    @RequestMapping(value="/classify/join/{joinId}/delete", method=RequestMethod.GET)
+    public String deleteJoin(@PathVariable("joinId")Long joinId) {
+        if(joinId > 0)
+            classificationJoinRepository.delete(classificationJoinRepository.findById(joinId));
+        return "redirect:" + "/classify/join/list";
     }
 
     @RequestMapping(value="/classify/table/{tableId}/field/list", method=RequestMethod.GET)
@@ -185,6 +252,13 @@ public class ClassificationController {
     List<FieldProperty> findFields(
             @RequestParam(value = "viewName", required = true) String viewName) {
         return getFields(viewName);
+    }
+
+    @RequestMapping(value = "/classify/fieldNames", method = RequestMethod.GET)
+    public @ResponseBody
+    List<String> findFieldNames(
+            @RequestParam(value = "viewName", required = true) String viewName) {
+        return getFieldNames(viewName);
     }
 
     @RequestMapping(value = "/classify/calcPercentage", method = RequestMethod.GET)
