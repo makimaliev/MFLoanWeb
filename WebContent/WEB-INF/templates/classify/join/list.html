@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
-	<title>Tables</title>
+	<title>Joins</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -27,13 +27,13 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text">Tables</h3>
+								<h3 class="m-portlet__head-text">Joins</h3>
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
 							<ul class="m-portlet__nav">
 								<li class="m-portlet__nav-item">
-									<a th:href="@{/classify/table/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">Add table</a>
+									<a th:href="@{/classify/join/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">Add join</a>
 								</li>
 							</ul>
 						</div>
@@ -48,21 +48,19 @@
 											<thead class="thead-default">
 											<tr>
 												<th>View</th>
-												<th>Table actual name</th>
-												<th>Table output name</th>
-												<th>Primary field</th>
-												<th>Fields</th>
+												<th>Left table name</th>
+												<th>Right table name</th>
+												<th>Join text</th>
 												<th>Action</th>
 											</tr>
 											</thead>
 											<tbody>
-											<tr th:each="table : ${tables}">
-												<td><a th:href="@{/classify/table/__${table.id}__/view}">View</a></td>
-												<td th:text="${table.tableActualName}"></td>
-												<td th:text="${table.tableOutputName}"></td>
-												<td th:text="${table.primaryField}"></td>
-												<td><a th:href="@{/classify/table/__${table.id}__/field/list}">Show Fields</a></td>
-												<td><a th:href="@{/classify/table/__${table.id}__/delete}">Delete</a></td>
+											<tr th:each="join : ${joins}">
+												<td><a th:href="@{/classify/join/__${join.id}__/view}">View</a></td>
+												<td th:text="${join.leftTableName}"></td>
+												<td th:text="${join.rightTableName}"></td>
+												<td th:text="${join.joinText}"></td>
+												<td><a th:href="@{/classify/join/__${join.id}__/delete}">Delete</a></td>
 											</tr>
 											</tbody>
 										</table>
