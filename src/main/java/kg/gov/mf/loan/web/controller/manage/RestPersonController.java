@@ -48,10 +48,12 @@ public class RestPersonController {
         String districtStr = searchByDistrict?datatable.get("datatable[query][districtId]"):null;
 
 
+
         String baseQuery="Select p.id as id, p.name as personName,p.description as personDescription,p.address_id as addressId," +
-                " a.district_id as districtId,d.name as districtName " +
-                "from person p,address a, district d " +
+                " a.district_id as districtId,d.name as districtName,c.name as contactName " +
+                "from person p,address a, district d,contact c " +
                 "where a.id=p.address_id " +
+                "AND p.contact_id = c.id " +
                 "AND a.district_id = d.id " +
                 getDistrictQuery(searchByDistrict,districtStr)+
                 getOwnerQuery(searchByPerson, personStr)+
@@ -61,8 +63,9 @@ public class RestPersonController {
         List<PersonModel> persons=query.getResultList();
 
         String countQuery="Select count(1) " +
-                "from person p,address a, district d " +
+                "from person p,address a, district d,contact c " +
                 "where a.id=p.address_id " +
+                "AND p.contact_id = c.id " +
                 "AND a.district_id = d.id " +
                 getDistrictQuery(searchByDistrict,districtStr)+
                 getOwnerQuery(searchByPerson, personStr);
@@ -86,7 +89,8 @@ public class RestPersonController {
     }
     private String getOwnerQuery(boolean searchByOwner, String personStr){
         if(searchByOwner)
-            return "AND p.name like '%" + personStr + "%' \n";
+            return " AND (p.name like '%" + personStr + "%' \n" +
+                    " or c.name like '%"+personStr +"%') \n";
         else
             return "";
     }

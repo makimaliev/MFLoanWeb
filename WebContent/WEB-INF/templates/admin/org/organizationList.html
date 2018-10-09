@@ -179,6 +179,8 @@
 
             var link = $(e.relatedTarget);
 
+        console.log(link);
+
             var organizationID = $("#organization_id").val();
 
             if(link.attr("href").indexOf('bankData/add')>0) {
@@ -217,12 +219,19 @@
                 // datasource definition
                 data: {
                     type: 'remote',
-                    source: '/api/organizations',
+                    source: {
+                        read: {
+                            url: '/api/organizations/'
+                        }
+                    },
                     pageSize: 10,
                     saveState: {
                         cookie: false,
                         webstorage: false
-                    }
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true,
                 },
                 // layout definition
                 layout: {

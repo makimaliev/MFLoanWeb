@@ -13,6 +13,15 @@ public class PersonModel {
     private long addressId;
     private long districtId;
     private String districtName;
+    private String contactName;
+
+    public String getContactName() {
+        return contactName;
+    }
+
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
 
     public long getAddressId() {
         return addressId;
