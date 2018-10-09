@@ -106,8 +106,8 @@
 						<div class="m_datatable" id="ajax_data"></div>
 						<!--end: Datatable -->
 						<!--begin: Modal-->
-						<div class="modal fade" id="personFormModal" tabindex="-1" role="dialog" aria-hidden="true">
-							<div class="modal-dialog" role="document">
+						<div class="modal fade bs-modal-lg in" id="personFormModal" tabindex="-1" role="dialog" aria-hidden="true">
+							<div class="modal-dialog modal-lg" role="document">
 								<div class="modal-content">
 								</div>
 							</div>
@@ -155,12 +155,19 @@
                 // datasource definition
                 data: {
                     type: 'remote',
-                    source: '/api/persons',
+                    source: {
+                        read: {
+                            url: '/api/persons/'
+                        }
+                    },
                     pageSize: 10,
                     saveState: {
                         cookie: false,
                         webstorage: false
-                    }
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
                 },
 
                 // layout definition
@@ -191,7 +198,7 @@
                     overflow: 'visible',
                     template: function (row) {
                         return '\
-						<a href="/person/'+ row.id +'/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
+						<a href="/person/'+ row.id +'/details" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
 					';
                     }
                 },  {
@@ -217,10 +224,10 @@
                         var dropup = (row.getDatatable().getPageSize() - row.getIndex()) <= 4 ? 'dropup' : '';
 
                         return '\
-						<a href="/person/'+ row.id +'/edit" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+						<a href="/person/'+ row.id +'/details" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-edit"></i>\
 						</a>\
-						<a href="/person/'+ row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
+						<a href="/person/'+ row.id +'/remove" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
 							<i class="la la-trash"></i>\
 						</a>\
 					';
@@ -252,6 +259,7 @@
 
 
             var query = datatable.getDataSourceQuery();
+
             $('#m_form_search').on('keyup', function (e) {
                 // shortcode to datatable.getDataSourceParam('query');
                 var query = datatable.getDataSourceQuery();

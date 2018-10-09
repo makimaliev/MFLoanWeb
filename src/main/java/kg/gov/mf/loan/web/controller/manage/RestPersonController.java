@@ -28,16 +28,6 @@ public class RestPersonController {
     EntityManager entityManager;
 
 
-    @GetMapping("/person/search")
-    public String[] getPersonByName(@RequestParam(value = "s") String s){
-        List<Person> people=personRepository.findByNameContains(s);
-        String[] sPeople=new String[people.size()];
-        int i=0;
-        for(Person person:people){
-            sPeople[i++]="["+person.getId()+"]"+person.getName();
-        }
-        return sPeople;
-    }
     @PostMapping("/persons")
     public  PersonMetaModel getPersons(@RequestParam Map<String, String> datatable){
 
@@ -45,6 +35,9 @@ public class RestPersonController {
         String perPageStr = datatable.get("datatable[pagination][perpage]");
         String sortStr = datatable.get("datatable[sort][sort]");
         String sortField = datatable.get("datatable[sort][field]");
+        boolean searchByPerson = datatable.containsKey("datatable[query][generalSearch]");
+
+        String personStr = searchByPerson?datatable.get("datatable[query][generalSearch]"):null;
 
         Integer page = Integer.parseInt(pageStr);
         Integer perPage = Integer.parseInt(perPageStr);
@@ -60,20 +53,25 @@ public class RestPersonController {
                 "from person p,address a, district d " +
                 "where a.id=p.address_id " +
                 "AND a.district_id = d.id " +
-                getDistrictQuery(searchByDistrict,districtStr);
-
-        String countQuery="Select count(1)\n" +
-                "from person p,address a, district d " +
-                "where a.id=p.address_id " +
-                "AND a.district_id = d.id " +
-                getDistrictQuery(searchByDistrict,districtStr);
-        BigInteger count = (BigInteger)entityManager.createNativeQuery(countQuery).getResultList().get(0);
-        PersonMetaModel metaModel= new PersonMetaModel();
-        Meta meta=new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, sortStr, sortField);
-
+                getDistrictQuery(searchByDistrict,districtStr)+
+                getOwnerQuery(searchByPerson, personStr)+
+                " order by " + sortField + " " + sortStr + " LIMIT " + offset +"," + perPage;
 
         Query query=entityManager.createNativeQuery(baseQuery,PersonModel.class);
         List<PersonModel> persons=query.getResultList();
+
+        String countQuery="Select count(1) " +
+                "from person p,address a, district d " +
+                "where a.id=p.address_id " +
+                "AND a.district_id = d.id " +
+                getDistrictQuery(searchByDistrict,districtStr)+
+                getOwnerQuery(searchByPerson, personStr);
+        BigInteger count = (BigInteger)entityManager.createNativeQuery(countQuery).getResultList().get(0);
+
+
+        PersonMetaModel metaModel= new PersonMetaModel();
+        Meta meta=new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, sortStr, sortField);
+
 
         metaModel.setMeta(meta);
         metaModel.setData(persons);
@@ -83,6 +81,12 @@ public class RestPersonController {
     private String getDistrictQuery(boolean searchByDistrict, String districtStr){
         if(searchByDistrict)
             return "AND a.district_id = " + districtStr + " \n";
+        else
+            return "";
+    }
+    private String getOwnerQuery(boolean searchByOwner, String personStr){
+        if(searchByOwner)
+            return "AND p.name like '%" + personStr + "%' \n";
         else
             return "";
     }

@@ -92,13 +92,7 @@
 									</div>
 								</div>
 								<div class="col-xl-4 order-1 order-xl-2 m--align-right">
-									<a sec:authorize="hasRole('ADMIN')" data-remote="false"
-									   data-toggle="modal"
-									   data-target="#organizationFormModal"
-									   th:href="@{/organization/add}"
-									   role="button"
-									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
-												<span>
+									<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal" data-target="#organizationFormModal" th:href="@{/organization/add}" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" <span>
 													<i class="la la-plus"></i>
 													<span>
 														Add new organization
@@ -113,8 +107,8 @@
 						<div class="m_datatable" id="ajax_data"></div>
 						<!--end: Datatable -->
 						<!--begin::Modal-->
-						<div class="modal fade" id="organizationFormModal" tabindex="-1" role="dialog" aria-hidden="true">
-							<div class="modal-dialog" role="document">
+						<div class="modal fade bs-modal-lg in" id="organizationFormModal" tabindex="-1" role="dialog" aria-hidden="true">
+							<div class="modal-dialog modal-lg" role="document">
 								<div class="modal-content">
 								</div>
 							</div>
@@ -187,8 +181,6 @@
 
             var organizationID = $("#organization_id").val();
 
-            console.log(organizationID);
-
             if(link.attr("href").indexOf('bankData/add')>0) {
 
                 $(this).find(".modal-content").load(link.attr("href"));
@@ -256,7 +248,7 @@
                     overflow: 'visible',
                     template: function (row) {
                         return '\
-						<a href="/organization/'+ row.id +'/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
+						\<a href="/organization/'+ row.id +'/details" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
 					';
                     }
                 },  {
@@ -285,8 +277,9 @@
                     template: function (row) {
                         var dropup = (row.getDatatable().getPageSize() - row.getIndex()) <= 4 ? 'dropup' : '';
                         return '\
-						<a href="/organization/'+ row.id +'/edit" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+						<a href="/organization/'+ row.id +'/details" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-edit"></i>\
+							\
 						</a>\
 						<a href="/organization/'+ row.id +'/remove" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
 							<i class="la la-trash"></i>\

@@ -42,7 +42,16 @@ public class RestOrganizationController {
 
 
     @PostMapping("/organizations")
-    public List<OrganizationModel> getOrganizations(){
+    public List<OrganizationModel> getOrganizations(@RequestParam Map<String, String> datatable){
+
+        String pageStr = datatable.get("datatable[pagination][page]");
+        String perPageStr = datatable.get("datatable[pagination][perpage]");
+        String sortStr = datatable.get("datatable[sort][sort]");
+        String sortField = datatable.get("datatable[sort][field]");
+
+        Integer page = Integer.parseInt(pageStr);
+        Integer perPage = Integer.parseInt(perPageStr);
+        Integer offset = (page-1)*perPage;
 
 
 
@@ -52,7 +61,8 @@ public class RestOrganizationController {
                 "from organization o, address a, district d,identity_doc i " +
                 "where a.id=o.address_id " +
                 "and d.id=a.district_id " +
-                "and i.id=o.identity_doc_id ";
+                "and i.id=o.identity_doc_id "+
+                "order by " + sortField + " " + sortStr + " LIMIT " + offset +"," + perPage;
 
         Query query=entityManager.createNativeQuery(baseQuery,OrganizationModel.class);
         List<OrganizationModel> organizations =query.getResultList();
