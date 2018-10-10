@@ -560,22 +560,49 @@
     {
         var optionVal = $('#fieldNames' + i + ' option:selected').val();
 
-        var type = orig[optionVal].field_type;
+        var lookupTableName = orig[optionVal].lookupTableName;
 
-        if(type == 'bigint(20)')
+        if(lookupTableName == '')
         {
-            $('#input' + i).attr("type", "text");
-        }
-        else if(type == 'date')
-        {
-            $('#input' + i).attr("type", "date");
+            var type = orig[optionVal].field_type;
+
+            if(type == 'bigint(20)')
+            {
+                $('#input' + i).attr("type", "text");
+            }
+            else if(type == 'date')
+            {
+                $('#input' + i).attr("type", "date");
+            }
+            else
+            {
+                $('#input' + i).attr("type", "text");
+            }
+
         }
         else
         {
-            $('#input' + i).attr("type", "text");
+            var lookupObjects = getObjectsFromLookupTable(lookupTableName);
+            console.log(lookupObjects);
         }
 
         return false;
+    }
+
+    function getObjectsFromLookupTable(lookupTable)
+    {
+        var fields = {};
+        $.getJSON("/classify/getObjectsFromLookupTable", {
+            tableName : lookupTable,
+            ajax : 'true'
+        }, function(data) {
+            console.log(data);
+            for ( var i = 0; i < data.length; i++) {
+                fields[data[i].id] = data[i];
+            }
+        });
+
+        return fields;
     }
 
     function changeInputType2(i, orig)
