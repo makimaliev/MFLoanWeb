@@ -243,8 +243,16 @@ public class ClassificationController {
     public String formClassification(ModelMap model, @PathVariable("clId")Long clId)
     {
         model.put("classificationForm", new ClassificationForm());
-        getViews(model);
+        model.put("tables", classificationTableRepository.findAll());
         return "/classify/save";
+    }
+
+    @RequestMapping(value = "/classify/fieldsByTable", method = RequestMethod.GET)
+    public @ResponseBody
+    List<ClassificationField> getFieldsByTable(
+            @RequestParam(value = "tableId", required = true) Long tableId) {
+        List<ClassificationField> result = classificationFieldRepository.findByTableId(tableId);
+        return result;
     }
 
     @RequestMapping(value = "/classify/fields", method = RequestMethod.GET)

@@ -42,11 +42,8 @@
                                         Choose view:
                                         <select id="selectedView" th:field="*{viewName}">
                                             <option value="">--Select item--</option>
-                                            <option th:each="name : ${viewNames}" th:value="${{name}}" th:text="${name}"></option>
-                                            </option>
+                                            <option th:each="table : ${tables}" th:value="${{table}}" th:text="${table.tableOutputName}"></option>
                                         </select>
-                                    </div>
-                                    <div id="chooseField">
                                     </div>
                                     <div id="addContainer">
                                         <button type="button" id="addFilter">Add filter</button>
@@ -65,8 +62,6 @@
                                             <option th:each="name : ${viewNames}" th:value="${{name}}" th:text="${name}"></option>
                                             </option>
                                         </select>
-                                    </div>
-                                    <div id="chooseField2_">
                                     </div>
                                     <div id="addContainer2_">
                                         <button type="button" id="addFilter2_">Add filter</button>
@@ -116,14 +111,22 @@
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
 <!--end::Page Resources -->
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var cTables = /*[[${tables}]]*/ [];
+    /*]]>*/
+</script>
+
 <script type="text/javascript">
     $(document).ready(function(){
+
+        var selectedTable = null;
 
         var tags = {};
         var orButtonTags = {};
         var fieldNames = {};
         var inputDiv = $('#inputValues');
-        var chooseFieldDiv = $('#chooseField');
         var i = 1;
 
         $('#mainContainer2_').attr("hidden", true);
@@ -131,7 +134,6 @@
         var orButtonTags2 = {};
         var fieldNames2 = {};
         var inputDiv2 = $('#inputValues2_');
-        var chooseFieldDiv2 = $('#chooseField2_')
         var i2 = 1;
 
         var joinEnabled = false;
@@ -150,23 +152,24 @@
                 tags = {};
                 orButtonTags = {};
 
-                $('#selectedField').remove();
-
                 $('#addFilter').attr("hidden", true);
 
                 var selectedItem = $(this).val();
 
+                selectedTable = cTables.reduce(function(a, b){
+                    return (a.id==selectedItem && a) || (b.id == selectedItem && b)
+                });
+
                 if(selectedItem.length > 0)
                 {
-                    $.getJSON("/classify/fields", {
-                        viewName : $(this).val(),
+                    $.getJSON("/classify/fieldsByTable", {
+                        tableId : $(this).val(),
                         ajax : 'true'
                     }, function(data) {
                         for ( var i = 0; i < data.length; i++) {
-                            fieldNames[data[i].fieldName] = data[i].fieldType;
+                            fieldNames[data[i].id] = data[i];
                         }
-
-                        addChooseField(fieldNames, chooseFieldDiv);
+                        //console.log(fieldNames);
                         //enable add filter button
                         disableEnableAddFilter(fieldNames, tags);
                     });
@@ -183,8 +186,6 @@
                 tags2 = {};
                 orButtonTags2 = {};
 
-                $('#selectedField2_').remove();
-
                 $('#addFilter2_').attr("hidden", true);
 
                 var selectedItem = $(this).val();
@@ -199,7 +200,6 @@
                             fieldNames2[data[i].fieldName] = data[i].fieldType;
                         }
 
-                        addChooseField2(fieldNames2, chooseFieldDiv2);
                         //enable add filter button
                         disableEnableAddFilter2(fieldNames2, tags2);
                     });
@@ -222,8 +222,6 @@
                 tags2 = {};
                 orButtonTags2 = {};
 
-                $('#selectedField2_').remove();
-
                 $('#addFilter2_').attr("hidden", true);
 
             }
@@ -239,11 +237,12 @@
 
         $('#addFilter').on('click', function() {
 
-            var options = '';
+            var options = '<option value="">--Select item--</option>';
 
-            for (var item in fieldNames) {
-                options = options + '<option value="' + item + '">'+ item + '</option>';
-            }
+            $.each(fieldNames, function( key, value ) {
+                options = options + '<option value="' + value.id + '">'+ value.fieldOutputName + '</option>';
+                }
+            );
 
             var tag = '';
 
@@ -277,7 +276,7 @@
             createRemoveFunction(i, fieldNames, tags);
             createOnChangeFunction(i, fieldNames);
             createOrButtons(i, orButtonTags);
-            changeInputType(i, fieldNames);
+            //changeInputType(i, fieldNames);
             tags[i] = i;
             i++;
             return false;
@@ -332,18 +331,14 @@
         $('#generateQuery').on('click', function() {
 
             //console.log(tags);
-            //console.log(fieldNames);
+            console.log(fieldNames);
 
-            var sel1 = $('#selectedField option:selected').val();
-            var sel2 = $('#selectedField2_ option:selected').val();
+            var primaryField = selectedTable.primaryField;
+            var primaryTable = selectedTable.tableActualName;
 
-            var txt = 'SELECT DISTINCT ';
-            if(sel1.length > 1)
-                txt = txt + 't1.' + $('#selectedField option:selected').text();
-            else
-                txt = txt + 't2.' + $('#selectedField2_ option:selected').text();
+            var txt = 'SELECT DISTINCT t1.' + primaryField;
 
-            txt = txt + ' FROM ' + $('#selectedView option:selected').text() + ' t1';
+            txt = txt + ' FROM ' + primaryTable + ' t1';
 
             if(joinEnabled == true)
             {
@@ -365,7 +360,9 @@
                         txt = txt + ' AND ';
                 }
 
-                txt = txt + 't1.' + $('#fieldNames' + item + ' option:selected').text();
+                var selectedFieldItem = $('#fieldNames' + item + ' option:selected').val();
+
+                txt = txt + 't1.' + fieldNames[selectedFieldItem].fieldActualName;
                 txt = txt + $('#operators' + item + ' option:selected').text();
                 txt = txt + wrapValue(item, fieldNames);
                 tagsCount++;
@@ -399,17 +396,14 @@
 
         $('#calcPercentage').on('click', function() {
 
-            var selectedField = $('#selectedField option:selected').text();
             var selectedView = $('#selectedView option:selected').text();
 
             var query = $('#queryText').val();
 
-            console.log(selectedField);
             console.log(selectedView);
             console.log(query);
 
             var calcValues = {};
-            calcValues['field'] = selectedField;
             calcValues['viewName'] = selectedView;
             calcValues['query'] = query;
 
@@ -424,36 +418,6 @@
         });
 
     });
-
-    function addChooseField(orig, divSelected)
-    {
-        var temp = '<option value="">' + '--Select item--' + '</option>';
-
-        for (var t in orig) {
-            temp = temp + '<option value="' + t + '">'+ t + '</option>';
-        }
-
-        var tTag = '<select id="selectedField">' +
-            temp +
-            '</select>';
-
-        $(tTag).appendTo(divSelected);
-    }
-
-    function addChooseField2(orig, divSelected)
-    {
-        var temp = '<option value="">' + '--Select item--' + '</option>';
-
-        for (var t in orig) {
-            temp = temp + '<option value="' + t + '">'+ t + '</option>';
-        }
-
-        var tTag = '<select id="selectedField2_">' +
-            temp +
-            '</select>';
-
-        $(tTag).appendTo(divSelected);
-    }
 
     function createRemoveFunction(i, orig, tags) {
         $(document).on('click','#checkFilter' + i,function() {
@@ -594,9 +558,10 @@
 
     function changeInputType(i, orig)
     {
-        var optionText = $('#fieldNames' + i + ' option:selected').text();
-        var type = orig[optionText];
-        //console.log(type);
+        var optionVal = $('#fieldNames' + i + ' option:selected').val();
+
+        var type = orig[optionVal].field_type;
+
         if(type == 'bigint(20)')
         {
             $('#input' + i).attr("type", "text");
@@ -637,8 +602,11 @@
     function wrapValue(item, orig)
     {
         var result = '';
-        var optionText = $('#fieldNames' + item + ' option:selected').text();
-        var type = orig[optionText];
+
+        var optionVal = $('#fieldNames' + item + ' option:selected').val();
+
+        var type = orig[optionVal].field_type;
+
         var inputVal=$('#input' + item).val();
 
         if(type == 'bigint(20)')
@@ -686,6 +654,15 @@
         }
 
         return result;
+    }
+
+    function objectFindByKey(array, key, value) {
+        for (var i = 0; i < array.length; i++) {
+            if (array[i][key] === value) {
+                return array[i];
+            }
+        }
+        return null;
     }
 
 </script>
