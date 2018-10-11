@@ -583,26 +583,22 @@
         else
         {
             var lookupObjects = getObjectsFromLookupTable(lookupTableName);
+
             console.log(lookupObjects);
+
+            var options = '<option value="">--Select item--</option>';
+
+            $.each(lookupObjects, function( k, v ) {
+                alert( "Key: " + k + ", Value: " + v );
+            });
+
+            $('#input' + i)
+                .replaceWith('<select id="input'+i+'">'+
+                    options +
+                    '</select>');
         }
 
         return false;
-    }
-
-    function getObjectsFromLookupTable(lookupTable)
-    {
-        var fields = {};
-        $.getJSON("/classify/getObjectsFromLookupTable", {
-            tableName : lookupTable,
-            ajax : 'true'
-        }, function(data) {
-            console.log(data);
-            for ( var i = 0; i < data.length; i++) {
-                fields[data[i].id] = data[i];
-            }
-        });
-
-        return fields;
     }
 
     function changeInputType2(i, orig)
@@ -624,6 +620,21 @@
         }
 
         return false;
+    }
+
+    function getObjectsFromLookupTable(lookupTable)
+    {
+        var fields = {};
+        $.getJSON("/classify/getObjectsFromLookupTable", {
+            tableName : lookupTable,
+            ajax : 'true'
+        }, function(data) {
+            for ( var i = 0; i < data.length; i++) {
+                fields[data[i].id] = data[i];
+            }
+        });
+
+        return fields;
     }
 
     function wrapValue(item, orig)
@@ -681,15 +692,6 @@
         }
 
         return result;
-    }
-
-    function objectFindByKey(array, key, value) {
-        for (var i = 0; i < array.length; i++) {
-            if (array[i][key] === value) {
-                return array[i];
-            }
-        }
-        return null;
     }
 
 </script>

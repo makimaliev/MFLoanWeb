@@ -8,11 +8,9 @@ import kg.gov.mf.loan.manage.model.classification.ClassificationTable;
 import kg.gov.mf.loan.manage.repository.classification.ClassificationFieldRepository;
 import kg.gov.mf.loan.manage.repository.classification.ClassificationJoinRepository;
 import kg.gov.mf.loan.manage.repository.classification.ClassificationTableRepository;
+import kg.gov.mf.loan.output.report.model.*;
 import kg.gov.mf.loan.web.fetchModels.ClassificationForm;
 import kg.gov.mf.loan.web.fetchModels.FieldProperty;
-import org.hibernate.Session;
-import org.hibernate.metadata.ClassMetadata;
-import org.hibernate.persister.entity.AbstractEntityPersister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -27,7 +25,6 @@ import java.math.BigInteger;
 import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class ClassificationController {
@@ -262,32 +259,25 @@ public class ClassificationController {
 
     @RequestMapping(value = "/classify/getObjectsFromLookupTable", method = RequestMethod.GET)
     public @ResponseBody
-    List<Object> getObjectsFromLookupTable(
+    List<ReferenceView> getObjectsFromLookupTable(
             @RequestParam(value = "tableName", required = true) String tableName) throws ClassNotFoundException {
 
-        String baseQuery = "SELECT * FROM " + tableName;
-        String className = null;
-
-        Map<String, ClassMetadata> tt = ((Session)entityManager.getDelegate()).getSessionFactory().getAllClassMetadata();
-
-        for (Map.Entry<String, ClassMetadata> entry : tt.entrySet()) {
-            ClassMetadata meta = entry.getValue();
-            String entityName = meta.getEntityName();
-            AbstractEntityPersister aep = (AbstractEntityPersister) meta;
-            String entityTableName = aep.getTableName();
-
-            if(tableName.equals(entityTableName))
-            {
-                Class<?> cls = Class.forName(entityName);
-
-                className = cls.getName();
-                System.out.println(className);
-            }
-        }
+        String baseQuery = "SELECT * FROM reference_view WHERE list_type = '" + tableName + "'";
 
         Query q2 = entityManager.createNativeQuery(baseQuery);
 
-        List<Object> result = q2.getResultList();
+        List<Object[]> fields = q2.getResultList();
+
+        List<ReferenceView> result = new ArrayList<>();
+
+        for (Object field[]: fields)
+        {
+            ReferenceView refView = new ReferenceView();
+            refView.setId(Long.parseLong(field[1] + ""));
+            refView.setList_type(field[0] + "");
+            refView.setName(field[2] + "");
+            result.add(refView);
+        }
 
         return result;
     }
@@ -366,9 +356,7 @@ public class ClassificationController {
 
     private void getTables(ModelMap model)
     {
-        String baseQuery = "SELECT TABLE_NAME\n" +
-                "        FROM information_schema.tables\n" +
-                "        WHERE TABLE_SCHEMA = 'mfloan'";
+        String baseQuery = "SELECT DISTINCT list_type FROM reference_view";
 
         List<String> tables = entityManager.createNativeQuery(baseQuery).getResultList();
 
