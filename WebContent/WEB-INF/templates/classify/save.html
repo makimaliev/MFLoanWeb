@@ -582,20 +582,7 @@
         }
         else
         {
-            var lookupObjects = getObjectsFromLookupTable(lookupTableName);
-
-            console.log(lookupObjects);
-
-            var options = '<option value="">--Select item--</option>';
-
-            $.each(lookupObjects, function( k, v ) {
-                alert( "Key: " + k + ", Value: " + v );
-            });
-
-            $('#input' + i)
-                .replaceWith('<select id="input'+i+'">'+
-                    options +
-                    '</select>');
+            getObjectsFromLookupTable(lookupTableName, i);
         }
 
         return false;
@@ -622,7 +609,7 @@
         return false;
     }
 
-    function getObjectsFromLookupTable(lookupTable)
+    function getObjectsFromLookupTable(lookupTable, index)
     {
         var fields = {};
         $.getJSON("/classify/getObjectsFromLookupTable", {
@@ -632,9 +619,26 @@
             for ( var i = 0; i < data.length; i++) {
                 fields[data[i].id] = data[i];
             }
+
+            getOptions(fields, index);
+        });
+    }
+
+    function getOptions(data, i)
+    {
+        var options = '<option value="">--Select item--</option>';
+
+        $.each(data, function( k, v ) {
+            options = options + '<option value="' + v.id + '">'+ v.name + '</option>';
         });
 
-        return fields;
+        console.log(options);
+        console.log(i);
+
+        $('#input' + i)
+            .replaceWith('<select id="input'+i+'">'+
+                options +
+                '</select>');
     }
 
     function wrapValue(item, orig)
