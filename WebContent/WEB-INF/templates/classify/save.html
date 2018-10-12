@@ -331,7 +331,7 @@
         $('#generateQuery').on('click', function() {
 
             //console.log(tags);
-            console.log(fieldNames);
+            //console.log(fieldNames);
 
             var primaryField = selectedTable.primaryField;
             var primaryTable = selectedTable.tableActualName;
@@ -363,8 +363,8 @@
                 var selectedFieldItem = $('#fieldNames' + item + ' option:selected').val();
 
                 txt = txt + 't1.' + fieldNames[selectedFieldItem].fieldActualName;
-                txt = txt + $('#operators' + item + ' option:selected').text();
-                txt = txt + wrapValue(item, fieldNames);
+                var opr = $('#operators' + item + ' option:selected').text();
+                txt = txt + wrapValue(item, fieldNames, opr);
                 tagsCount++;
             }
 
@@ -626,24 +626,21 @@
 
     function getOptions(data, i)
     {
-        var options = '<option value="">--Select item--</option>';
+        var options = '';
 
         $.each(data, function( k, v ) {
             options = options + '<option value="' + v.id + '">'+ v.name + '</option>';
         });
 
-        console.log(options);
-        console.log(i);
-
         $('#input' + i)
-            .replaceWith('<select id="input'+i+'">'+
+            .replaceWith('<select multiple id="input'+i+'">'+
                 options +
                 '</select>');
     }
 
-    function wrapValue(item, orig)
+    function wrapValue(item, orig, opr)
     {
-        var result = '';
+        var wrappedValue = '';
 
         var optionVal = $('#fieldNames' + item + ' option:selected').val();
 
@@ -653,22 +650,25 @@
 
         if(type == 'bigint(20)')
         {
-            result = inputVal;
+            wrappedValue = inputVal;
         }
         else if(type == 'date')
         {
-            result = '\'' + inputVal + '\'';
+            wrappedValue = '\'' + inputVal + '\'';
         }
         else if(type.match("^varchar"))
         {
-            result = '\'' + inputVal + '\'';
+            wrappedValue = '\'' + inputVal + '\'';
         }
         else
         {
-            result = inputVal;
+            wrappedValue = inputVal;
         }
 
-        return result;
+        if(wrappedValue.length > 1 && type == 'bigint(20)')
+            return ' IN (' + wrappedValue + ')';
+        else
+            return opr + wrappedValue;
     }
 
     function wrapValue2(item, orig)
