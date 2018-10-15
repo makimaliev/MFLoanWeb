@@ -257,6 +257,16 @@ public class ClassificationController {
         return result;
     }
 
+    @RequestMapping(value = "/classify/joinByTables", method = RequestMethod.GET)
+    public @ResponseBody
+    String getJoinByTables(
+            @RequestParam(value = "table1", required = true) String table1, @RequestParam(value = "table2", required = true) String table2) {
+
+        ClassificationJoin join = classificationJoinRepository.findByLeftTableNameAndRightTableName(table1, table2);
+
+        return join.getJoinText();
+    }
+
     @RequestMapping(value = "/classify/getObjectsFromLookupTable", method = RequestMethod.GET)
     public @ResponseBody
     List<ReferenceView> getObjectsFromLookupTable(

@@ -59,7 +59,7 @@
                                         Choose view:
                                         <select id="selectedView2" th:field="*{viewName}">
                                             <option value="">--Select item--</option>
-                                            <option th:each="name : ${viewNames}" th:value="${{name}}" th:text="${name}"></option>
+                                            <option th:each="table : ${tables}" th:value="${{table}}" th:text="${table.tableOutputName}"></option>
                                             </option>
                                         </select>
                                     </div>
@@ -129,6 +129,8 @@
         var inputDiv = $('#inputValues');
         var i = 1;
 
+        var selectedTable2 = null;
+
         $('#mainContainer2_').attr("hidden", true);
         var tags2 = {};
         var orButtonTags2 = {};
@@ -190,14 +192,18 @@
 
                 var selectedItem = $(this).val();
 
+                selectedTable2 = cTables.reduce(function(a, b){
+                    return (a.id==selectedItem && a) || (b.id == selectedItem && b)
+                });
+
                 if(selectedItem.length > 0)
                 {
-                    $.getJSON("/classify/fields", {
-                        viewName : $(this).val(),
+                    $.getJSON("/classify/fieldsByTable", {
+                        tableId : $(this).val(),
                         ajax : 'true'
                     }, function(data) {
                         for ( var i = 0; i < data.length; i++) {
-                            fieldNames2[data[i].fieldName] = data[i].fieldType;
+                            fieldNames2[data[i].id] = data[i];
                         }
 
                         //enable add filter button
@@ -284,11 +290,12 @@
 
         $('#addFilter2_').on('click', function() {
 
-            var options = '';
+            var options = '<option value="">--Select item--</option>';
 
-            for (var item in fieldNames2) {
-                options = options + '<option value="' + item + '">'+ item + '</option>';
-            }
+            $.each(fieldNames2, function( key, value ) {
+                    options = options + '<option value="' + value.id + '">'+ value.fieldOutputName + '</option>';
+                }
+            );
 
             var tag = '';
 
@@ -322,7 +329,7 @@
             createRemoveFunction2(i2, fieldNames2, tags2);
             createOnChangeFunction2(i2, fieldNames2);
             createOrButtons2(i2, orButtonTags2);
-            changeInputType2(i2, fieldNames2);
+            //changeInputType2(i2, fieldNames2);
             tags2[i2] = i2;
             i2++;
             return false;
@@ -336,14 +343,17 @@
             var primaryField = selectedTable.primaryField;
             var primaryTable = selectedTable.tableActualName;
 
-            var txt = 'SELECT DISTINCT t1.' + primaryField;
+            var primaryTable2 = null;
 
-            txt = txt + ' FROM ' + primaryTable + ' t1';
+            var txt = 'SELECT DISTINCT ' + primaryTable +'.' + primaryField;
+
+            txt = txt + ' FROM ' + primaryTable + ' ' + primaryTable;
 
             if(joinEnabled == true)
             {
+                primaryTable2 = selectedTable2.tableActualName;
                 txt = txt + ", "
-                txt = txt + $('#selectedView2 option:selected').text() + ' t2\n';
+                txt = txt + primaryTable2 + ' ' + primaryTable2 + '\n';
             }
             else
                 txt = txt + "\n";
@@ -362,7 +372,7 @@
 
                 var selectedFieldItem = $('#fieldNames' + item + ' option:selected').val();
 
-                txt = txt + 't1.' + fieldNames[selectedFieldItem].fieldActualName;
+                txt = txt + primaryTable + '.' + fieldNames[selectedFieldItem].fieldActualName;
                 var opr = $('#operators' + item + ' option:selected').text();
                 txt = txt + wrapValue(item, fieldNames, opr);
                 tagsCount++;
@@ -382,14 +392,17 @@
                             txt = txt + ' AND ';
                     }
 
-                    txt = txt + 't2.' + $('#fieldNames2_' + item2 + ' option:selected').text();
-                    txt = txt + $('#operators2_' + item2 + ' option:selected').text();
-                    txt = txt + wrapValue2(item2, fieldNames2);
+                    var selectedFieldItem2 = $('#fieldNames2_' + item2 + ' option:selected').val();
+
+                    txt = txt + primaryTable2 + '.' + fieldNames2[selectedFieldItem2].fieldActualName;
+                    var opr2 = $('#operators2_' + item2 + ' option:selected').text();
+                    txt = txt + wrapValue2(item2, fieldNames2, opr2);
                     tagsCount2++;
                 }
+
+                getJoinText(primaryTable, primaryTable2);
             }
 
-            txt = txt + ';';
             $('#queryText').val(txt);
             return false;
         });
@@ -543,7 +556,8 @@
 
     function disableEnableAddFilter2(orig, tags) {
         var sizeOrig = Object.keys(orig).length;
-        var sizeTags = Object.keys(tags).length;
+
+        console.log(orig);
 
         if(sizeOrig == 0)
         {
@@ -590,20 +604,26 @@
 
     function changeInputType2(i, orig)
     {
-        var optionText = $('#fieldNames2_' + i + ' option:selected').text();
-        var type = orig[optionText];
-        //console.log(type);
-        if(type == 'bigint(20)')
-        {
-            $('#input2_' + i).attr("type", "text");
-        }
-        else if(type == 'date')
-        {
-            $('#input2_' + i).attr("type", "date");
+        var optionVal = $('#fieldNames2_' + i + ' option:selected').val();
+
+        var lookupTableName = orig[optionVal].lookupTableName;
+
+        if(lookupTableName == '') {
+            var type = orig[optionVal].field_type;
+
+            if (type == 'bigint(20)') {
+                $('#input2_' + i).attr("type", "text");
+            }
+            else if (type == 'date') {
+                $('#input2_' + i).attr("type", "date");
+            }
+            else {
+                $('#input2_' + i).attr("type", "text");
+            }
         }
         else
         {
-            $('#input2_' + i).attr("type", "text");
+            getObjectsFromLookupTable2(lookupTableName, i);
         }
 
         return false;
@@ -624,6 +644,21 @@
         });
     }
 
+    function getObjectsFromLookupTable2(lookupTable, index)
+    {
+        var fields = {};
+        $.getJSON("/classify/getObjectsFromLookupTable", {
+            tableName : lookupTable,
+            ajax : 'true'
+        }, function(data) {
+            for ( var i = 0; i < data.length; i++) {
+                fields[data[i].id] = data[i];
+            }
+
+            getOptions2(fields, index);
+        });
+    }
+
     function getOptions(data, i)
     {
         var options = '';
@@ -634,6 +669,20 @@
 
         $('#input' + i)
             .replaceWith('<select multiple id="input'+i+'">'+
+                options +
+                '</select>');
+    }
+
+    function getOptions2(data, i)
+    {
+        var options = '';
+
+        $.each(data, function( k, v ) {
+            options = options + '<option value="' + v.id + '">'+ v.name + '</option>';
+        });
+
+        $('#input2_' + i)
+            .replaceWith('<select multiple id="input2_'+i+'">'+
                 options +
                 '</select>');
     }
@@ -671,31 +720,55 @@
             return opr + wrappedValue;
     }
 
-    function wrapValue2(item, orig)
+    function wrapValue2(item, orig, opr)
     {
-        var result = '';
-        var optionText = $('#fieldNames2_' + item + ' option:selected').text();
-        var type = orig[optionText];
+        var wrappedValue = '';
+
+        var optionVal = $('#fieldNames2_' + item + ' option:selected').val();
+
+        var type = orig[optionVal].field_type;
+
         var inputVal=$('#input2_' + item).val();
 
         if(type == 'bigint(20)')
         {
-            result = inputVal;
+            wrappedValue = inputVal;
         }
         else if(type == 'date')
         {
-            result = '\'' + inputVal + '\'';
+            wrappedValue = '\'' + inputVal + '\'';
         }
         else if(type.match("^varchar"))
         {
-            result = '\'' + inputVal + '\'';
+            wrappedValue = '\'' + inputVal + '\'';
         }
         else
         {
-            result = inputVal;
+            wrappedValue = inputVal;
         }
 
-        return result;
+        if(wrappedValue.length > 1 && type == 'bigint(20)')
+            return ' IN (' + wrappedValue + ')';
+        else
+            return opr + wrappedValue;
+    }
+
+    function getJoinText(table1, table2)
+    {
+        $.getJSON("/classify/joinByTables", {
+            table1 : table1,
+            table2: table2,
+            ajax : 'true'
+        }, function(data) {
+            setJoinText(data);
+        });
+    }
+
+    function setJoinText(txt)
+    {
+        var query = $('#queryText').val();
+        query = query + '\n' + txt;
+        $('#queryText').val(query);
     }
 
 </script>
