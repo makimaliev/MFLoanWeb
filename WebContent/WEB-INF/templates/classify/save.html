@@ -767,7 +767,7 @@
     function setJoinText(txt)
     {
         var query = $('#queryText').val();
-        query = query + '\n' + txt;
+        query = query + '\nAND ' + txt;
         $('#queryText').val(query);
     }
 
