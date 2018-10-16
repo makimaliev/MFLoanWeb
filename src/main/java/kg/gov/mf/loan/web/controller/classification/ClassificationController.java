@@ -2,14 +2,8 @@ package kg.gov.mf.loan.web.controller.classification;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kg.gov.mf.loan.manage.model.classification.Classification;
-import kg.gov.mf.loan.manage.model.classification.ClassificationField;
-import kg.gov.mf.loan.manage.model.classification.ClassificationJoin;
-import kg.gov.mf.loan.manage.model.classification.ClassificationTable;
-import kg.gov.mf.loan.manage.repository.classification.ClassificationFieldRepository;
-import kg.gov.mf.loan.manage.repository.classification.ClassificationJoinRepository;
-import kg.gov.mf.loan.manage.repository.classification.ClassificationRepository;
-import kg.gov.mf.loan.manage.repository.classification.ClassificationTableRepository;
+import kg.gov.mf.loan.manage.model.classification.*;
+import kg.gov.mf.loan.manage.repository.classification.*;
 import kg.gov.mf.loan.output.report.model.*;
 import kg.gov.mf.loan.web.fetchModels.ClassificationForm;
 import kg.gov.mf.loan.web.fetchModels.FieldProperty;
@@ -45,6 +39,9 @@ public class ClassificationController {
 
     @Autowired
     ClassificationRepository classificationRepository;
+
+    @Autowired
+    ClassificationResultRepository crRepository;
 
     @RequestMapping(value = {"/classify/table/list" }, method = RequestMethod.GET)
     public String listClassifyTables(ModelMap model) {
@@ -272,6 +269,31 @@ public class ClassificationController {
         classificationRepository.save(classification);
 
         return "success";
+    }
+
+    @RequestMapping(value = { "/classify/run" }, method = RequestMethod.GET)
+    public String runClassification()
+    {
+        List<Classification> classificationList = classificationRepository.findAll();
+
+        for (Classification cl: classificationList)
+        {
+            Query qTemp = entityManager.createNativeQuery(cl.getQuery());
+
+            List<BigInteger> fields = qTemp.getResultList();
+
+            for (BigInteger field: fields)
+            {
+                Long cId = cl.getId();
+                Long entityId = Long.parseLong(field + "");
+                ClassificationResult res = new ClassificationResult();
+                res.setClassificationId(cId);
+                res.setEntityId(entityId);
+                crRepository.save(res);
+            }
+        }
+
+        return "redirect:" + "/classify/list";
     }
 
     @RequestMapping(value = "/classify/fieldsByTable", method = RequestMethod.GET)
