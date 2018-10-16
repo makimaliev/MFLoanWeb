@@ -2,11 +2,13 @@ package kg.gov.mf.loan.web.controller.classification;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kg.gov.mf.loan.manage.model.classification.Classification;
 import kg.gov.mf.loan.manage.model.classification.ClassificationField;
 import kg.gov.mf.loan.manage.model.classification.ClassificationJoin;
 import kg.gov.mf.loan.manage.model.classification.ClassificationTable;
 import kg.gov.mf.loan.manage.repository.classification.ClassificationFieldRepository;
 import kg.gov.mf.loan.manage.repository.classification.ClassificationJoinRepository;
+import kg.gov.mf.loan.manage.repository.classification.ClassificationRepository;
 import kg.gov.mf.loan.manage.repository.classification.ClassificationTableRepository;
 import kg.gov.mf.loan.output.report.model.*;
 import kg.gov.mf.loan.web.fetchModels.ClassificationForm;
@@ -40,6 +42,9 @@ public class ClassificationController {
 
     @Autowired
     ClassificationJoinRepository classificationJoinRepository;
+
+    @Autowired
+    ClassificationRepository classificationRepository;
 
     @RequestMapping(value = {"/classify/table/list" }, method = RequestMethod.GET)
     public String listClassifyTables(ModelMap model) {
@@ -237,7 +242,8 @@ public class ClassificationController {
     @RequestMapping(value = { "/classify/list" }, method = RequestMethod.GET)
     public String listClassifications(ModelMap model)
     {
-        //showFields();
+        List<Classification> classificationList = classificationRepository.findAll();
+        model.addAttribute("classificationList",classificationList);
         return "/classify/list";
     }
 
@@ -247,6 +253,25 @@ public class ClassificationController {
         model.put("classificationForm", new ClassificationForm());
         model.put("tables", classificationTableRepository.findAll());
         return "/classify/save";
+    }
+
+    @RequestMapping(value = "/classify/save", method = RequestMethod.GET)
+    public @ResponseBody
+    String saveClassification(
+            @RequestParam(value = "entityType", required = true) String entityType,
+            @RequestParam(value = "entityField", required = true) String entityField,
+            @RequestParam(value = "name", required = true) String name,
+            @RequestParam(value = "query", required = true) String query) {
+
+        Classification classification = new Classification();
+        classification.setName(name);
+        classification.setEntityType(entityType);
+        classification.setEntityField(entityField);
+        classification.setQuery(query);
+
+        classificationRepository.save(classification);
+
+        return "success";
     }
 
     @RequestMapping(value = "/classify/fieldsByTable", method = RequestMethod.GET)
@@ -263,6 +288,11 @@ public class ClassificationController {
             @RequestParam(value = "table1", required = true) String table1, @RequestParam(value = "table2", required = true) String table2) {
 
         ClassificationJoin join = classificationJoinRepository.findByLeftTableNameAndRightTableName(table1, table2);
+
+        if(join == null)
+        {
+            join = classificationJoinRepository.findByLeftTableNameAndRightTableName(table2, table1);
+        }
 
         return join.getJoinText();
     }

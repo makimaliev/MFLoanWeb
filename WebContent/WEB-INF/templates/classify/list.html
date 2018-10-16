@@ -39,6 +39,34 @@
 						</div>
 					</div>
 					<div class="m-portlet__body">
+						<!--begin::Section-->
+						<div class="m-section">
+							<div class="m-section__content">
+								<div class="m-scrollable m-scrollable-no-margin" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+									<div>
+										<table class="table">
+											<thead class="thead-default">
+											<tr>
+												<th>Name</th>
+												<th>Entity field</th>
+												<th>Entity type</th>
+												<th>Query</th>
+											</tr>
+											</thead>
+											<tbody>
+											<tr th:each="cl : ${classificationList}">
+												<td th:text="${cl.name}"></td>
+												<td th:text="${cl.entityField}"></td>
+												<td th:text="${cl.entityType}"></td>
+                                                <td th:text="${cl.query}"></td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--end::Section-->
 					</div>
 				</div>
 				<!--end::Portlet-->

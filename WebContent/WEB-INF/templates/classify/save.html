@@ -79,18 +79,28 @@
                                         <textarea rows="4" cols="50" id="queryText"></textarea>
                                     </div>
                                     <br>
-                                    <!--
-                                    <div>
-                                        <button type="button" id="calcPercentage">Calculate percentage</button>
-                                    </div>
-                                    <div>
-                                        <textarea rows="1" cols="50" id="outputPercentage"></textarea>
-                                    </div>
-                                    -->
                                 </div>
+
+                                <div>
+                                    Classification name:
+                                    <input type="text" id="classificationName">
+                                </div>
+
 
 							</div>
 						</div>
+                        <div class="m-portlet__foot m-portlet__foot--fit">
+                            <div class="m-form__actions m-form__actions">
+                                <div class="row">
+                                    <div class="col-lg-4"></div>
+                                    <div class="col-lg-6">
+                                        <button type="button" id="saveButton" class="btn btn-primary">
+                                            <span>Save</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </form>
 					<!--end::Form-->
 				</div>
@@ -143,6 +153,29 @@
         //disable add filter button initially
         disableEnableAddFilter(fieldNames, tags);
         disableEnableAddFilter2(fieldNames2, tags2);
+
+        $(document).on('click','#saveButton',function() {
+
+            var entityType = selectedTable.tableActualName;
+            var entityField = selectedTable.primaryField;
+            var name = $('#classificationName').val();
+            var query = $('#queryText').val();
+            console.log(name);
+            console.log(query);
+
+            $.getJSON("/classify/save", {
+                entityType : entityType,
+                entityField: entityField,
+                name : name,
+                query: query,
+                ajax : 'true'
+            }, function(data) {
+                if(data == 'success')
+                    window.location.replace("/classify/list");
+            });
+
+            return false;
+        });
 
         $('#selectedView').change(
             function() {
@@ -352,11 +385,11 @@
             if(joinEnabled == true)
             {
                 primaryTable2 = selectedTable2.tableActualName;
-                txt = txt + ", "
-                txt = txt + primaryTable2 + ' ' + primaryTable2 + '\n';
+                txt = txt + ', ';
+                txt = txt + primaryTable2 + ' ' + primaryTable2 + ' ';
             }
             else
-                txt = txt + "\n";
+                txt = txt + ' ';
 
             txt = txt + 'WHERE ';
 
@@ -767,7 +800,7 @@
     function setJoinText(txt)
     {
         var query = $('#queryText').val();
-        query = query + '\nAND ' + txt;
+        query = query + ' AND ' + txt;
         $('#queryText').val(query);
     }
 
