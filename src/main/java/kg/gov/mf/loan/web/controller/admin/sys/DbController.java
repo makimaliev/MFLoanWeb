@@ -1,15 +1,20 @@
 package kg.gov.mf.loan.web.controller.admin.sys;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.CodeSource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.core.Authentication;
@@ -29,6 +34,17 @@ import kg.gov.mf.loan.admin.sys.service.SystemFileService;
 
 @Controller
 public class DbController {
+
+
+    @Value("${jdbc.username}")
+    private String username;
+
+    @Value("${jdbc.password}")
+    private String password;
+
+    @Value("${jdbc.url}")
+    private String dbName;
+
 
 	@Autowired
 	private SystemFileService systemFileService;
@@ -52,12 +68,13 @@ public class DbController {
     
     
   //Save the uploaded file to this folder
-    private static String UPLOADED_FOLDER = "c://temp//";
+  private static String UPLOADED_FOLDER =  SystemUtils.IS_OS_LINUX ? "/home/eridan/" : "c://temp//";
         
 
     @RequestMapping(value = { "/db/backup/" }, method = RequestMethod.GET)
     public String dbBackupAction(ModelMap model) {
-        
+        String database=((dbName.split("/"))[3].split("[?]"))[0];
+
     	Process p = null;
         try {
         	
@@ -69,21 +86,31 @@ public class DbController {
             System.out.println(dateText);
         	
             Runtime runtime = Runtime.getRuntime();
-            
-            
-            String username = "root";
-            String password = "nbuser";
-            String database = "mfloan";
-            String fileName = "mfloan_"+dateText;
+
+
+//            File f1 = new File(UPLOADED_FOLDER);
+//            f1.mkdir();
+            String savePath = UPLOADED_FOLDER + database+"_"+dateText+".sql";
+//            String username = "root";
+//            String password = "nbuser";
+//            String database = "mfloan";
+            String fileName = database+"_"+dateText;
             
             
 //            String executeCmd = "mysqldump -u " + username + " -p" + password + " --add-drop-database -B " + database + " -r c:\\temp\\mfloan.sql";
-            String executeCmd = "mysqldump --user=root --password=nbuser mfloan > c:\\temp\\"+fileName+".sql";
+            String executeCmd = "mysqldump -u "+username+"  -p"+password+"  "+database+" -r "+savePath;
+
+            System.out.println(executeCmd);
 
             
             
-            p = Runtime.getRuntime().exec(new String[] { "cmd.exe", "/c", executeCmd });
-            
+//            p = Runtime.getRuntime().exec(executeCmd);
+//            String[] arguments = new String[] {"/bin/bash","-c",executeCmd, password};
+//            String[] arguments = new String[] {executeCmd, password};
+//            p = Runtime.getRuntime().exec(new String[] { "/bin/bash","-c ", executeCmd,"eridan123!@#" });
+            p = Runtime.getRuntime().exec(executeCmd);
+//            p = new ProcessBuilder(arguments).start();
+
             int processComplete = p.waitFor();
 
             if (processComplete == 0) {
