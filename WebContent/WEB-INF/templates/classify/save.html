@@ -125,6 +125,7 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     var cTables = /*[[${tables}]]*/ [];
+    var ccL = /*[[${classificator}]]*/ [];
     /*]]>*/
 </script>
 
@@ -168,10 +169,12 @@
                 entityField: entityField,
                 name : name,
                 query: query,
+                ccId: ccL.id,
                 ajax : 'true'
             }, function(data) {
                 if(data == 'success')
-                    window.location.replace("/classify/list");
+                    var url = '/classificator/' + ccL.id + '/classify/list';
+                    window.location.replace(url);
             });
 
             return false;

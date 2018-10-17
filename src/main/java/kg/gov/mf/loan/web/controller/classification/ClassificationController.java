@@ -21,6 +21,7 @@ import java.math.BigInteger;
 import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class ClassificationController {
@@ -42,6 +43,9 @@ public class ClassificationController {
 
     @Autowired
     ClassificationResultRepository crRepository;
+
+    @Autowired
+    ClassificatorRepository classificatorRepository;
 
     @RequestMapping(value = {"/classify/table/list" }, method = RequestMethod.GET)
     public String listClassifyTables(ModelMap model) {
@@ -236,17 +240,71 @@ public class ClassificationController {
         return "redirect:" + "/classify/table/{tableId}/field/list";
     }
 
-    @RequestMapping(value = { "/classify/list" }, method = RequestMethod.GET)
-    public String listClassifications(ModelMap model)
+    @RequestMapping(value = {"/classificator/list" }, method = RequestMethod.GET)
+    public String listClassificators(ModelMap model) {
+
+        model.addAttribute("classificators", classificatorRepository.findAll());
+        return "/classificator/list";
+    }
+
+    @RequestMapping(value="/classificator/{clId}/view", method=RequestMethod.GET)
+    public String viewClassificator(ModelMap model, @PathVariable("clId")Long clId)
     {
-        List<Classification> classificationList = classificationRepository.findAll();
+
+        Classificator cl = classificatorRepository.findById(clId);
+
+        model.addAttribute("classificator", cl);
+        model.addAttribute("action", "view");
+
+        return "/classificator/view";
+    }
+
+    @RequestMapping(value="/classificator/{clId}/save", method=RequestMethod.GET)
+    public String formClassificator(ModelMap model, @PathVariable("clId")Long clId)
+    {
+        if(clId == 0)
+        {
+            model.addAttribute("classificator", new Classificator());
+            model.addAttribute("action", "add");
+        }
+
+        if(clId > 0)
+        {
+            model.addAttribute("classificator", classificatorRepository.findById(clId));
+            model.addAttribute("action", "edit");
+        }
+
+        return "/classificator/view";
+    }
+
+    @RequestMapping(value="/classificator/save", method=RequestMethod.POST)
+    public String saveClassificator(Classificator classificator)
+    {
+        classificatorRepository.save(classificator);
+        return "redirect:" + "/classificator/list";
+    }
+
+    @RequestMapping(value="/classificator/{clId}/delete", method=RequestMethod.GET)
+    public String deleteClassificator(@PathVariable("clId")Long clId) {
+        if(clId > 0)
+            classificatorRepository.delete(classificatorRepository.findById(clId));
+        return "redirect:" + "/classificator/list";
+    }
+
+    @RequestMapping(value = { "/classificator/{ccId}/classify/list" }, method = RequestMethod.GET)
+    public String listClassifications(ModelMap model, @PathVariable("ccId")Long ccId)
+    {
+        Classificator cc = classificatorRepository.findById(ccId);
+        model.addAttribute("classificator",cc);
+        Set<Classification> classificationList = cc.getClassifications();
         model.addAttribute("classificationList",classificationList);
         return "/classify/list";
     }
 
-    @RequestMapping(value="/classify/{clId}/save", method=RequestMethod.GET)
-    public String formClassification(ModelMap model, @PathVariable("clId")Long clId)
+    @RequestMapping(value="/classificator/{ccId}/classify/{clId}/save", method=RequestMethod.GET)
+    public String formClassification(ModelMap model, @PathVariable("ccId")Long ccId, @PathVariable("clId")Long clId)
     {
+        model.put("classificator", classificatorRepository.findById(ccId));
         model.put("classificationForm", new ClassificationForm());
         model.put("tables", classificationTableRepository.findAll());
         return "/classify/save";
@@ -258,13 +316,15 @@ public class ClassificationController {
             @RequestParam(value = "entityType", required = true) String entityType,
             @RequestParam(value = "entityField", required = true) String entityField,
             @RequestParam(value = "name", required = true) String name,
-            @RequestParam(value = "query", required = true) String query) {
+            @RequestParam(value = "query", required = true) String query,
+            @RequestParam(value = "ccId", required = true) Long ccId) {
 
         Classification classification = new Classification();
         classification.setName(name);
         classification.setEntityType(entityType);
         classification.setEntityField(entityField);
         classification.setQuery(query);
+        classification.setClassificator(classificatorRepository.findById(ccId));
 
         classificationRepository.save(classification);
 
@@ -300,7 +360,7 @@ public class ClassificationController {
             }
         }
 
-        return "redirect:" + "/classify/list";
+        return "redirect:" + "/classificator/list";
     }
 
     @RequestMapping(value = "/classify/fieldsByTable", method = RequestMethod.GET)
