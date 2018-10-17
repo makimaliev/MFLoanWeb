@@ -54,6 +54,7 @@
 												<th>Entity field</th>
 												<th>Entity type</th>
 												<th>Query</th>
+												<th>Action</th>
 											</tr>
 											</thead>
 											<tbody>
@@ -62,6 +63,7 @@
 												<td th:text="${cl.entityField}"></td>
 												<td th:text="${cl.entityType}"></td>
                                                 <td th:text="${cl.query}"></td>
+                                                <td><a th:href="@{/classify/__${cl.id}__/delete}">Delete</a></td>
 											</tr>
 											</tbody>
 										</table>

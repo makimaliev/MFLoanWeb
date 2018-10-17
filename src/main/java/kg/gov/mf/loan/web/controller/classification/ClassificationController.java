@@ -271,6 +271,13 @@ public class ClassificationController {
         return "success";
     }
 
+    @RequestMapping(value="/classify/{clId}/delete", method=RequestMethod.GET)
+    public String deleteClassification(@PathVariable("clId")Long clId) {
+        if(clId > 0)
+            classificationRepository.delete(classificationRepository.findById(clId));
+        return "redirect:" + "/classify/list";
+    }
+
     @RequestMapping(value = { "/classify/run" }, method = RequestMethod.GET)
     public String runClassification()
     {
