@@ -338,6 +338,7 @@ public class ClassificationController {
         return "redirect:" + "/classify/list";
     }
 
+    /*
     @RequestMapping(value = { "/classify/run" }, method = RequestMethod.GET)
     public String runClassification()
     {
@@ -362,6 +363,7 @@ public class ClassificationController {
 
         return "redirect:" + "/classificator/list";
     }
+    */
 
     @RequestMapping(value = "/classify/fieldsByTable", method = RequestMethod.GET)
     public @ResponseBody
