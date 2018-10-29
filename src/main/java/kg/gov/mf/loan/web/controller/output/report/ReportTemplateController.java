@@ -264,6 +264,10 @@ public class ReportTemplateController {
 				generateReport(out,response,new ReportGeneratorCollateralItem(), reportTemplate);
 				break;
 
+			case "COLLATERAL_INSPECTION":
+				generateReport(out,response,new ReportGeneratorCollateralInspection(), reportTemplate);
+				break;
+
 			case "LOAN_SCHEDULE":
 				generateReport(out,response,new ReportGeneratorPaymentSchedule(), reportTemplate);
 				break;
