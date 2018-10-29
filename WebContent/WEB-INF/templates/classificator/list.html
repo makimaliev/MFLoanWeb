@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
-	<title th:text="#{label.classify.title}"></title>
+	<title>Classificators</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -27,13 +27,16 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.classifications}"></h3>
+								<h3 class="m-portlet__head-text">Classificators</h3>
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
 							<ul class="m-portlet__nav">
 								<li class="m-portlet__nav-item">
-									<a th:href="@{/classificator/__${classificator.id}__/classify/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.classification.add}"></a>
+									<a th:href="@{/classificator/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">Add classificator</a>
+								</li>
+								<li class="m-portlet__nav-item">
+									<a th:href="@{/classify/run}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">Run all classifications</a>
 								</li>
 							</ul>
 						</div>
@@ -47,20 +50,18 @@
 										<table class="table">
 											<thead class="thead-default">
 											<tr>
+												<th>View</th>
 												<th>Name</th>
-												<th>Entity field</th>
-												<th>Entity type</th>
-												<th>Query</th>
+												<th>Classifications</th>
 												<th>Action</th>
 											</tr>
 											</thead>
 											<tbody>
-											<tr th:each="cl : ${classificationList}">
-												<td th:text="${cl.name}"></td>
-												<td th:text="${cl.entityField}"></td>
-												<td th:text="${cl.entityType}"></td>
-                                                <td th:text="${cl.query}"></td>
-                                                <td><a th:href="@{/classify/__${cl.id}__/delete}">Delete</a></td>
+											<tr th:each="c : ${classificators}">
+												<td><a th:href="@{/classificator/__${c.id}__/view}">View</a></td>
+												<td th:text="${c.name}"></td>
+												<td><a th:href="@{/classificator/__${c.id}__/classify/list}">Show classifications</a></td>
+												<td><a th:href="@{/classificator/__${c.id}__/delete}">Delete</a></td>
 											</tr>
 											</tbody>
 										</table>

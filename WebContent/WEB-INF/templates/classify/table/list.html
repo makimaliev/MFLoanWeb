@@ -50,6 +50,7 @@
 												<th>View</th>
 												<th>Table actual name</th>
 												<th>Table output name</th>
+												<th>Primary field</th>
 												<th>Fields</th>
 												<th>Action</th>
 											</tr>
@@ -59,6 +60,7 @@
 												<td><a th:href="@{/classify/table/__${table.id}__/view}">View</a></td>
 												<td th:text="${table.tableActualName}"></td>
 												<td th:text="${table.tableOutputName}"></td>
+												<td th:text="${table.primaryField}"></td>
 												<td><a th:href="@{/classify/table/__${table.id}__/field/list}">Show Fields</a></td>
 												<td><a th:href="@{/classify/table/__${table.id}__/delete}">Delete</a></td>
 											</tr>

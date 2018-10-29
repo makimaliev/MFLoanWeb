@@ -1,0 +1,117 @@
+<form th:action="@{/loanView}" class="form-horizontal" method="get" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <div class="modal-header">
+        <h5 class="modal-title" ></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+
+        <div class="alert alert-danger alert-dismissible alert-hidden" role="alert">
+            <!--<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>-->
+            <span th:text="#{label.modal.error.name}"></span>
+        </div>
+        <div class="col-md-10 ml-auto">
+            <select multiple="multiple" id="choose_fields">
+                <option th:each="column:${variablesTranslated}" th:value="${column}" th:text="${column}" ></option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}"></button>
+        <button type="submit" id="submit_but" class="btn btn-primary" th:text="#{search}"></button>
+    </div>
+</form>
+<script th:inline="javascript">
+    var vari = [[${variables}]];
+    // console.log(vari)
+    var varit = [[${variablesTranslated}]];
+    // console.log(varit)
+</script>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        $("#choose_fields").multiSelect({
+
+            keepOrder: true,
+            selectableHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='search'>",
+            selectionHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='search'>",
+            afterInit: function(ms){
+                var that = this,
+                    $selectableSearch = that.$selectableUl.prev(),
+                    $selectionSearch = that.$selectionUl.prev(),
+                    selectableSearchString = '#'+that.$container.attr('id')+' .ms-elem-selectable:not(.ms-selected)',
+                    selectionSearchString = '#'+that.$container.attr('id')+' .ms-elem-selection.ms-selected';
+
+                that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+                    .on('keydown', function(e ){
+                        if (e.which === 40){
+                            that.$selectableUl.focus();
+                            return false;
+                        }
+                    });
+
+                that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+                    .on('keydown', function(e){
+                        if (e.which == 40){
+                            that.$selectionUl.focus();
+                            return false;
+                        }
+                    });
+            },
+            afterSelect: function(value){
+                console.log(value[0])
+                $.ajax({
+                    type:'post',
+                    data:
+                        {'fieldNames':value[0]},
+                    url:"/loanView/selectedFieldNames"
+                });
+                this.qs1.cache();
+                this.qs2.cache();
+            },
+            afterDeselect: function(value){
+                console.log(value[0])
+                $.ajax({
+                    type:'post',
+                    data:
+                        {'fieldNames':value[0]},
+                    url:"/loanView/selectedFieldNames/delete"
+                });
+                this.qs1.cache();
+                this.qs2.cache();
+            }
+        });
+        console.log(sds)
+        sds.forEach(function (value) {
+            // console.log(value)
+            $("#choose_fields > option").each(function () {
+                if (value==this.value) {
+                    $('#choose_fields').multiSelect('select', $(this).val());
+                }
+            });
+        });/*
+        sp.forEach(function (value) {
+            if(value.split("[").length==2){
+                if(value.split("]").length==2){
+                    value=value.slice(0,-1);
+                }
+                value=value.substring(1);
+
+            }
+            else if(value.split("]").length==2){
+                value=$.trim(value.slice(0,-1));
+            }
+            else{
+                value = $.trim(value);
+            }
+            $("#choose_fields > option").each(function () {
+                if (value==this.value) {
+                    $('#choose_fields').multiSelect('select', $(this).val());
+                }
+            });
+        });*/
+    });
+</script>

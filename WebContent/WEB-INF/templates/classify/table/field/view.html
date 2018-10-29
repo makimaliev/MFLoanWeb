@@ -82,9 +82,12 @@
                                     <label class="col-form-label col-lg-4 col-sm-12">
                                         <span>Lookup table name</span>
                                     </label>
-                                    <div class="col-lg-4 col-md-9 col-sm-12">
-                                        <input type="text" class="form-control m-input" id="lookupTableName" name="lookupTableName" th:value="${field.lookupTableName}">
-                                    </div>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<select class="form-control m-bootstrap-select m_selectpicker" id="lookupTableName" th:field="*{lookupTableName}">
+											<option value="0" th:text="#{label.select}"></option>
+											<option th:each="t : ${tableNames}" th:value="${{t}}" th:text="${t}"></option>
+										</select>
+									</div>
                                 </div>
 
 							</div>

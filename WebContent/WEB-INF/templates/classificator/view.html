@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
-	<title>View/Add/Modify table</title>
+	<title>View/Add/Modify classificator</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -26,7 +26,7 @@
 				<div class="d-flex align-items-center">
 					<div class="mr-auto">
 						<h3 class="m-subheader__title m-subheader__title--separator">
-							Table
+							Classificator
 						</h3>
 						<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
 							<li class="m-nav__item m-nav__item--home">
@@ -45,47 +45,26 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text">Table</h3>
+								<h3 class="m-portlet__head-text">Classificator</h3>
 							</div>
 						</div>
 					</div>
 
 					<!--begin::Form-->
-					<form th:action="@{/classify/table/save}" th:object="${table}" id="tableForm" method="post" class="m-form m-form--fit m-form--label-align-right">
-						<input hidden="true" type="text" id="id" name="id" th:value="${table.id}"/>
+					<form th:action="@{/classificator/save}" th:object="${classificator}" id="fieldForm" method="post" class="m-form m-form--fit m-form--label-align-right">
+						<input hidden="true" type="text" id="id" name="id" th:value="${classificator.id}"/>
+
 						<div class="m-portlet__body">
 							<div class="m-form__section">
 
-                                <div class="form-group m-form__group row">
-                                    <label class="col-form-label col-lg-4 col-sm-12">
-                                        Table
-                                    </label>
-                                    <div class="col-lg-4 col-md-9 col-sm-12">
-                                        <select class="form-control m-bootstrap-select m_selectpicker" th:field="*{tableActualName}" id="tableActualName">
-                                            <option value="0" th:text="#{label.select}"></option>
-                                            <option th:each="view : ${viewNames}" th:value="${{view}}" th:text="${view}"></option>
-                                        </select>
-                                    </div>
-                                </div>
-
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span>Output name</span>
+										<span>Name</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" id="tableOutputName" name="tableOutputName" th:value="${table.tableOutputName}">
+										<input type="text" class="form-control m-input" id="name" name="name" th:value="${classificator.name}">
 									</div>
 								</div>
-
-                                <div class="form-group m-form__group row">
-                                    <label class="col-form-label col-lg-4 col-sm-12">
-                                        Primary field
-                                    </label>
-                                    <div class="col-lg-4 col-md-9 col-sm-12">
-                                        <select class="form-control" th:field="*{primaryField}" id="primaryField">
-                                        </select>
-                                    </div>
-                                </div>
 
 							</div>
 						</div>
@@ -128,8 +107,6 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     var actionType = /*[[${action}]]*/ [];
-    var selectedPrimaryField = /*[[${table.primaryField}]]*/ [];
-    var fieldList = /*[[${fields}]]*/ [];
     /*]]>*/
 </script>
 
@@ -146,9 +123,6 @@
             disableInputs();
             $('#addButton').html('Редактировать');
             $('#addButton').attr('id', 'editButton');
-            addFieldsFromController();
-            $('#primaryField').val(selectedPrimaryField);
-            console.log(selectedPrimaryField);
         }
 
         if(action == "edit")
@@ -166,8 +140,6 @@
 
         $(document).on('click','#saveButton',function() {
             console.log('save');
-            var t = $('#tableActualName option:selected').text();
-            $('#tableActualName').val(t);
             processForm();
             return false;
         });
@@ -179,80 +151,21 @@
             return false;
         });
 
-        $('#tableActualName').change(
-            function() {
-                fieldNames = {};
-                $('#primaryField').empty();
-
-                var selectedItem = $(this).val();
-
-                console.log(selectedItem);
-
-                if(selectedItem.length > 0)
-                {
-                    $.getJSON("/classify/fieldNames", {
-                        viewName : $(this).val(),
-                        ajax : 'true'
-                    }, function(data) {
-                        for ( var i = 0; i < data.length; i++) {
-                            fieldNames[data[i]] = data[i];
-                        }
-                        console.log(fieldNames);
-                        addFields(fieldNames);
-
-                    });
-                }
-            });
-
     });
-
-    function addFields(list)
-    {
-        var temp = '<option value="">' + '--Select item--' + '</option>';
-
-        for (var t in list) {
-            temp = temp + '<option value="' + t + '">'+ t + '</option>';
-        }
-
-        var tt = $('#primaryField');
-
-        $(temp).appendTo(tt);
-    }
-
-    function addFieldsFromController()
-    {
-        var temp = '<option value="">' + '--Select item--' + '</option>';
-
-        for(i=0;i<fieldList.length;i++)
-        {
-            temp = temp + '<option value="' + fieldList[i] + '">'+ fieldList[i] + '</option>';
-        }
-
-        console.log(fieldList);
-
-        console.log(temp);
-
-        var tt = $('#primaryField');
-
-        $(temp).appendTo(tt);
-    }
 
     function disableInputs()
     {
-        $('#tableActualName').attr("disabled", "disabled");
-        $('#tableOutputName').attr("disabled", "disabled");
-        $('#primaryField').attr("disabled", "disabled");
+        $('#name').attr("disabled", "disabled");
     }
 
     function enableInputs()
     {
-        $('#tableOutputName').removeAttr("disabled");
-        $('#primaryField').removeAttr("disabled");
+        $('#name').removeAttr("disabled");
     }
 
     function processForm()
     {
-        var form = document.getElementById("tableForm");
+        var form = document.getElementById("fieldForm");
         console.log(form);
         form.submit();
     }

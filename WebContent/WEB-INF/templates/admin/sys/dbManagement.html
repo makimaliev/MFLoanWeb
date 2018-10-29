@@ -62,7 +62,6 @@
 									<th>ID</th>
 									<th th:text="#{label.db.name}"></th>
 									<th th:text="#{label.db.path}"></th>
-									<th th:text="#{label.db.restore}"></th>
 								</tr>
 								</thead>
 								<tbody>
@@ -70,11 +69,6 @@
 									<td th:text="${s.id}"></td>
 									<td th:text="${s.name}"></td>
 									<td th:text="${s.path}"></td>
-									<td th:text="${s.enabled}">
-										<form th:action="@{/db/restore/__${s.id}__}" method="get">
-											<button type="submit" class="btn btn-primary">Restore</button>
-										</form>
-									</td>
 								</tr>
 								</tbody>
 							</table>

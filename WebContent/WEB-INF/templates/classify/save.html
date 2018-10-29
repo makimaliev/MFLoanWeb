@@ -42,11 +42,8 @@
                                         Choose view:
                                         <select id="selectedView" th:field="*{viewName}">
                                             <option value="">--Select item--</option>
-                                            <option th:each="name : ${viewNames}" th:value="${{name}}" th:text="${name}"></option>
-                                            </option>
+                                            <option th:each="table : ${tables}" th:value="${{table}}" th:text="${table.tableOutputName}"></option>
                                         </select>
-                                    </div>
-                                    <div id="chooseField">
                                     </div>
                                     <div id="addContainer">
                                         <button type="button" id="addFilter">Add filter</button>
@@ -62,11 +59,9 @@
                                         Choose view:
                                         <select id="selectedView2" th:field="*{viewName}">
                                             <option value="">--Select item--</option>
-                                            <option th:each="name : ${viewNames}" th:value="${{name}}" th:text="${name}"></option>
+                                            <option th:each="table : ${tables}" th:value="${{table}}" th:text="${table.tableOutputName}"></option>
                                             </option>
                                         </select>
-                                    </div>
-                                    <div id="chooseField2_">
                                     </div>
                                     <div id="addContainer2_">
                                         <button type="button" id="addFilter2_">Add filter</button>
@@ -84,18 +79,28 @@
                                         <textarea rows="4" cols="50" id="queryText"></textarea>
                                     </div>
                                     <br>
-                                    <!--
-                                    <div>
-                                        <button type="button" id="calcPercentage">Calculate percentage</button>
-                                    </div>
-                                    <div>
-                                        <textarea rows="1" cols="50" id="outputPercentage"></textarea>
-                                    </div>
-                                    -->
                                 </div>
+
+                                <div>
+                                    Classification name:
+                                    <input type="text" id="classificationName">
+                                </div>
+
 
 							</div>
 						</div>
+                        <div class="m-portlet__foot m-portlet__foot--fit">
+                            <div class="m-form__actions m-form__actions">
+                                <div class="row">
+                                    <div class="col-lg-4"></div>
+                                    <div class="col-lg-6">
+                                        <button type="button" id="saveButton" class="btn btn-primary">
+                                            <span>Save</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </form>
 					<!--end::Form-->
 				</div>
@@ -116,22 +121,32 @@
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
 <!--end::Page Resources -->
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var cTables = /*[[${tables}]]*/ [];
+    var ccL = /*[[${classificator}]]*/ [];
+    /*]]>*/
+</script>
+
 <script type="text/javascript">
     $(document).ready(function(){
+
+        var selectedTable = null;
 
         var tags = {};
         var orButtonTags = {};
         var fieldNames = {};
         var inputDiv = $('#inputValues');
-        var chooseFieldDiv = $('#chooseField');
         var i = 1;
+
+        var selectedTable2 = null;
 
         $('#mainContainer2_').attr("hidden", true);
         var tags2 = {};
         var orButtonTags2 = {};
         var fieldNames2 = {};
         var inputDiv2 = $('#inputValues2_');
-        var chooseFieldDiv2 = $('#chooseField2_')
         var i2 = 1;
 
         var joinEnabled = false;
@@ -139,6 +154,31 @@
         //disable add filter button initially
         disableEnableAddFilter(fieldNames, tags);
         disableEnableAddFilter2(fieldNames2, tags2);
+
+        $(document).on('click','#saveButton',function() {
+
+            var entityType = selectedTable.tableActualName;
+            var entityField = selectedTable.primaryField;
+            var name = $('#classificationName').val();
+            var query = $('#queryText').val();
+            console.log(name);
+            console.log(query);
+
+            $.getJSON("/classify/save", {
+                entityType : entityType,
+                entityField: entityField,
+                name : name,
+                query: query,
+                ccId: ccL.id,
+                ajax : 'true'
+            }, function(data) {
+                if(data == 'success')
+                    var url = '/classificator/' + ccL.id + '/classify/list';
+                    window.location.replace(url);
+            });
+
+            return false;
+        });
 
         $('#selectedView').change(
             function() {
@@ -150,23 +190,24 @@
                 tags = {};
                 orButtonTags = {};
 
-                $('#selectedField').remove();
-
                 $('#addFilter').attr("hidden", true);
 
                 var selectedItem = $(this).val();
 
+                selectedTable = cTables.reduce(function(a, b){
+                    return (a.id==selectedItem && a) || (b.id == selectedItem && b)
+                });
+
                 if(selectedItem.length > 0)
                 {
-                    $.getJSON("/classify/fields", {
-                        viewName : $(this).val(),
+                    $.getJSON("/classify/fieldsByTable", {
+                        tableId : $(this).val(),
                         ajax : 'true'
                     }, function(data) {
                         for ( var i = 0; i < data.length; i++) {
-                            fieldNames[data[i].fieldName] = data[i].fieldType;
+                            fieldNames[data[i].id] = data[i];
                         }
-
-                        addChooseField(fieldNames, chooseFieldDiv);
+                        //console.log(fieldNames);
                         //enable add filter button
                         disableEnableAddFilter(fieldNames, tags);
                     });
@@ -183,23 +224,24 @@
                 tags2 = {};
                 orButtonTags2 = {};
 
-                $('#selectedField2_').remove();
-
                 $('#addFilter2_').attr("hidden", true);
 
                 var selectedItem = $(this).val();
 
+                selectedTable2 = cTables.reduce(function(a, b){
+                    return (a.id==selectedItem && a) || (b.id == selectedItem && b)
+                });
+
                 if(selectedItem.length > 0)
                 {
-                    $.getJSON("/classify/fields", {
-                        viewName : $(this).val(),
+                    $.getJSON("/classify/fieldsByTable", {
+                        tableId : $(this).val(),
                         ajax : 'true'
                     }, function(data) {
                         for ( var i = 0; i < data.length; i++) {
-                            fieldNames2[data[i].fieldName] = data[i].fieldType;
+                            fieldNames2[data[i].id] = data[i];
                         }
 
-                        addChooseField2(fieldNames2, chooseFieldDiv2);
                         //enable add filter button
                         disableEnableAddFilter2(fieldNames2, tags2);
                     });
@@ -222,8 +264,6 @@
                 tags2 = {};
                 orButtonTags2 = {};
 
-                $('#selectedField2_').remove();
-
                 $('#addFilter2_').attr("hidden", true);
 
             }
@@ -239,11 +279,12 @@
 
         $('#addFilter').on('click', function() {
 
-            var options = '';
+            var options = '<option value="">--Select item--</option>';
 
-            for (var item in fieldNames) {
-                options = options + '<option value="' + item + '">'+ item + '</option>';
-            }
+            $.each(fieldNames, function( key, value ) {
+                options = options + '<option value="' + value.id + '">'+ value.fieldOutputName + '</option>';
+                }
+            );
 
             var tag = '';
 
@@ -277,7 +318,7 @@
             createRemoveFunction(i, fieldNames, tags);
             createOnChangeFunction(i, fieldNames);
             createOrButtons(i, orButtonTags);
-            changeInputType(i, fieldNames);
+            //changeInputType(i, fieldNames);
             tags[i] = i;
             i++;
             return false;
@@ -285,11 +326,12 @@
 
         $('#addFilter2_').on('click', function() {
 
-            var options = '';
+            var options = '<option value="">--Select item--</option>';
 
-            for (var item in fieldNames2) {
-                options = options + '<option value="' + item + '">'+ item + '</option>';
-            }
+            $.each(fieldNames2, function( key, value ) {
+                    options = options + '<option value="' + value.id + '">'+ value.fieldOutputName + '</option>';
+                }
+            );
 
             var tag = '';
 
@@ -323,7 +365,7 @@
             createRemoveFunction2(i2, fieldNames2, tags2);
             createOnChangeFunction2(i2, fieldNames2);
             createOrButtons2(i2, orButtonTags2);
-            changeInputType2(i2, fieldNames2);
+            //changeInputType2(i2, fieldNames2);
             tags2[i2] = i2;
             i2++;
             return false;
@@ -334,24 +376,23 @@
             //console.log(tags);
             //console.log(fieldNames);
 
-            var sel1 = $('#selectedField option:selected').val();
-            var sel2 = $('#selectedField2_ option:selected').val();
+            var primaryField = selectedTable.primaryField;
+            var primaryTable = selectedTable.tableActualName;
 
-            var txt = 'SELECT DISTINCT ';
-            if(sel1.length > 1)
-                txt = txt + 't1.' + $('#selectedField option:selected').text();
-            else
-                txt = txt + 't2.' + $('#selectedField2_ option:selected').text();
+            var primaryTable2 = null;
 
-            txt = txt + ' FROM ' + $('#selectedView option:selected').text() + ' t1';
+            var txt = 'SELECT DISTINCT ' + primaryTable +'.' + primaryField;
+
+            txt = txt + ' FROM ' + primaryTable + ' ' + primaryTable;
 
             if(joinEnabled == true)
             {
-                txt = txt + ", "
-                txt = txt + $('#selectedView2 option:selected').text() + ' t2\n';
+                primaryTable2 = selectedTable2.tableActualName;
+                txt = txt + ', ';
+                txt = txt + primaryTable2 + ' ' + primaryTable2 + ' ';
             }
             else
-                txt = txt + "\n";
+                txt = txt + ' ';
 
             txt = txt + 'WHERE ';
 
@@ -365,9 +406,11 @@
                         txt = txt + ' AND ';
                 }
 
-                txt = txt + 't1.' + $('#fieldNames' + item + ' option:selected').text();
-                txt = txt + $('#operators' + item + ' option:selected').text();
-                txt = txt + wrapValue(item, fieldNames);
+                var selectedFieldItem = $('#fieldNames' + item + ' option:selected').val();
+
+                txt = txt + primaryTable + '.' + fieldNames[selectedFieldItem].fieldActualName;
+                var opr = $('#operators' + item + ' option:selected').text();
+                txt = txt + wrapValue(item, fieldNames, opr);
                 tagsCount++;
             }
 
@@ -385,31 +428,31 @@
                             txt = txt + ' AND ';
                     }
 
-                    txt = txt + 't2.' + $('#fieldNames2_' + item2 + ' option:selected').text();
-                    txt = txt + $('#operators2_' + item2 + ' option:selected').text();
-                    txt = txt + wrapValue2(item2, fieldNames2);
+                    var selectedFieldItem2 = $('#fieldNames2_' + item2 + ' option:selected').val();
+
+                    txt = txt + primaryTable2 + '.' + fieldNames2[selectedFieldItem2].fieldActualName;
+                    var opr2 = $('#operators2_' + item2 + ' option:selected').text();
+                    txt = txt + wrapValue2(item2, fieldNames2, opr2);
                     tagsCount2++;
                 }
+
+                getJoinText(primaryTable, primaryTable2);
             }
 
-            txt = txt + ';';
             $('#queryText').val(txt);
             return false;
         });
 
         $('#calcPercentage').on('click', function() {
 
-            var selectedField = $('#selectedField option:selected').text();
             var selectedView = $('#selectedView option:selected').text();
 
             var query = $('#queryText').val();
 
-            console.log(selectedField);
             console.log(selectedView);
             console.log(query);
 
             var calcValues = {};
-            calcValues['field'] = selectedField;
             calcValues['viewName'] = selectedView;
             calcValues['query'] = query;
 
@@ -424,36 +467,6 @@
         });
 
     });
-
-    function addChooseField(orig, divSelected)
-    {
-        var temp = '<option value="">' + '--Select item--' + '</option>';
-
-        for (var t in orig) {
-            temp = temp + '<option value="' + t + '">'+ t + '</option>';
-        }
-
-        var tTag = '<select id="selectedField">' +
-            temp +
-            '</select>';
-
-        $(tTag).appendTo(divSelected);
-    }
-
-    function addChooseField2(orig, divSelected)
-    {
-        var temp = '<option value="">' + '--Select item--' + '</option>';
-
-        for (var t in orig) {
-            temp = temp + '<option value="' + t + '">'+ t + '</option>';
-        }
-
-        var tTag = '<select id="selectedField2_">' +
-            temp +
-            '</select>';
-
-        $(tTag).appendTo(divSelected);
-    }
 
     function createRemoveFunction(i, orig, tags) {
         $(document).on('click','#checkFilter' + i,function() {
@@ -579,7 +592,8 @@
 
     function disableEnableAddFilter2(orig, tags) {
         var sizeOrig = Object.keys(orig).length;
-        var sizeTags = Object.keys(tags).length;
+
+        console.log(orig);
 
         if(sizeOrig == 0)
         {
@@ -594,20 +608,31 @@
 
     function changeInputType(i, orig)
     {
-        var optionText = $('#fieldNames' + i + ' option:selected').text();
-        var type = orig[optionText];
-        //console.log(type);
-        if(type == 'bigint(20)')
+        var optionVal = $('#fieldNames' + i + ' option:selected').val();
+
+        var lookupTableName = orig[optionVal].lookupTableName;
+
+        if(lookupTableName == '')
         {
-            $('#input' + i).attr("type", "text");
-        }
-        else if(type == 'date')
-        {
-            $('#input' + i).attr("type", "date");
+            var type = orig[optionVal].field_type;
+
+            if(type == 'bigint(20)')
+            {
+                $('#input' + i).attr("type", "text");
+            }
+            else if(type == 'date')
+            {
+                $('#input' + i).attr("type", "date");
+            }
+            else
+            {
+                $('#input' + i).attr("type", "text");
+            }
+
         }
         else
         {
-            $('#input' + i).attr("type", "text");
+            getObjectsFromLookupTable(lookupTableName, i);
         }
 
         return false;
@@ -615,77 +640,171 @@
 
     function changeInputType2(i, orig)
     {
-        var optionText = $('#fieldNames2_' + i + ' option:selected').text();
-        var type = orig[optionText];
-        //console.log(type);
-        if(type == 'bigint(20)')
-        {
-            $('#input2_' + i).attr("type", "text");
-        }
-        else if(type == 'date')
-        {
-            $('#input2_' + i).attr("type", "date");
+        var optionVal = $('#fieldNames2_' + i + ' option:selected').val();
+
+        var lookupTableName = orig[optionVal].lookupTableName;
+
+        if(lookupTableName == '') {
+            var type = orig[optionVal].field_type;
+
+            if (type == 'bigint(20)') {
+                $('#input2_' + i).attr("type", "text");
+            }
+            else if (type == 'date') {
+                $('#input2_' + i).attr("type", "date");
+            }
+            else {
+                $('#input2_' + i).attr("type", "text");
+            }
         }
         else
         {
-            $('#input2_' + i).attr("type", "text");
+            getObjectsFromLookupTable2(lookupTableName, i);
         }
 
         return false;
     }
 
-    function wrapValue(item, orig)
+    function getObjectsFromLookupTable(lookupTable, index)
     {
-        var result = '';
-        var optionText = $('#fieldNames' + item + ' option:selected').text();
-        var type = orig[optionText];
+        var fields = {};
+        $.getJSON("/classify/getObjectsFromLookupTable", {
+            tableName : lookupTable,
+            ajax : 'true'
+        }, function(data) {
+            for ( var i = 0; i < data.length; i++) {
+                fields[data[i].id] = data[i];
+            }
+
+            getOptions(fields, index);
+        });
+    }
+
+    function getObjectsFromLookupTable2(lookupTable, index)
+    {
+        var fields = {};
+        $.getJSON("/classify/getObjectsFromLookupTable", {
+            tableName : lookupTable,
+            ajax : 'true'
+        }, function(data) {
+            for ( var i = 0; i < data.length; i++) {
+                fields[data[i].id] = data[i];
+            }
+
+            getOptions2(fields, index);
+        });
+    }
+
+    function getOptions(data, i)
+    {
+        var options = '';
+
+        $.each(data, function( k, v ) {
+            options = options + '<option value="' + v.id + '">'+ v.name + '</option>';
+        });
+
+        $('#input' + i)
+            .replaceWith('<select multiple id="input'+i+'">'+
+                options +
+                '</select>');
+    }
+
+    function getOptions2(data, i)
+    {
+        var options = '';
+
+        $.each(data, function( k, v ) {
+            options = options + '<option value="' + v.id + '">'+ v.name + '</option>';
+        });
+
+        $('#input2_' + i)
+            .replaceWith('<select multiple id="input2_'+i+'">'+
+                options +
+                '</select>');
+    }
+
+    function wrapValue(item, orig, opr)
+    {
+        var wrappedValue = '';
+
+        var optionVal = $('#fieldNames' + item + ' option:selected').val();
+
+        var type = orig[optionVal].field_type;
+
         var inputVal=$('#input' + item).val();
 
         if(type == 'bigint(20)')
         {
-            result = inputVal;
+            wrappedValue = inputVal;
         }
         else if(type == 'date')
         {
-            result = '\'' + inputVal + '\'';
+            wrappedValue = '\'' + inputVal + '\'';
         }
         else if(type.match("^varchar"))
         {
-            result = '\'' + inputVal + '\'';
+            wrappedValue = '\'' + inputVal + '\'';
         }
         else
         {
-            result = inputVal;
+            wrappedValue = inputVal;
         }
 
-        return result;
+        if(wrappedValue.length > 1 && type == 'bigint(20)')
+            return ' IN (' + wrappedValue + ')';
+        else
+            return opr + wrappedValue;
     }
 
-    function wrapValue2(item, orig)
+    function wrapValue2(item, orig, opr)
     {
-        var result = '';
-        var optionText = $('#fieldNames2_' + item + ' option:selected').text();
-        var type = orig[optionText];
+        var wrappedValue = '';
+
+        var optionVal = $('#fieldNames2_' + item + ' option:selected').val();
+
+        var type = orig[optionVal].field_type;
+
         var inputVal=$('#input2_' + item).val();
 
         if(type == 'bigint(20)')
         {
-            result = inputVal;
+            wrappedValue = inputVal;
         }
         else if(type == 'date')
         {
-            result = '\'' + inputVal + '\'';
+            wrappedValue = '\'' + inputVal + '\'';
         }
         else if(type.match("^varchar"))
         {
-            result = '\'' + inputVal + '\'';
+            wrappedValue = '\'' + inputVal + '\'';
         }
         else
         {
-            result = inputVal;
+            wrappedValue = inputVal;
         }
 
-        return result;
+        if(wrappedValue.length > 1 && type == 'bigint(20)')
+            return ' IN (' + wrappedValue + ')';
+        else
+            return opr + wrappedValue;
+    }
+
+    function getJoinText(table1, table2)
+    {
+        $.getJSON("/classify/joinByTables", {
+            table1 : table1,
+            table2: table2,
+            ajax : 'true'
+        }, function(data) {
+            setJoinText(data);
+        });
+    }
+
+    function setJoinText(txt)
+    {
+        var query = $('#queryText').val();
+        query = query + ' AND ' + txt;
+        $('#queryText').val(query);
     }
 
 </script>

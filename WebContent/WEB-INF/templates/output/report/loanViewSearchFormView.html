@@ -1,0 +1,128 @@
+<div class="row" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="col-md-12">
+        <br>
+        <div class="container">
+            <input hidden="true" id="field_name" th:value="${fieldName}">
+            <select multiple="multiple"  id="search_select"  >
+                <option id="list_type" th:each="listType : ${listTypes}" th:value="${listType.id}" th:text="${listType.name}"></option>
+            </select>
+        </div>
+        <br>
+    </div>
+    <input hidden="hidden" id="selected_ones" th:value="${selecteds}" >
+    <input hidden="true" id="group_type_id" th:value="${groupTypeId}">
+    <input hidden="true" id="listTypeArray" th:value="${listTypeArray}">
+</div>
+<script>
+jQuery(document).ready(function () {
+
+    $("#search_select").multiSelect({
+        afterDeselect: function(values){
+            $('#search_select').multiSelect('deselect', values);
+        }
+    });
+    var sasa=$("#selected_ones").val();
+    if(!jQuery.isEmptyObject(sasa)){
+        var lisst=$("#listTypeArray").val().split(", ");
+        var splitedSasa=sasa.split("?");
+        for(i=0;i<splitedSasa.length;i++){
+            var ssSasa=splitedSasa[i].split("=");
+            if($("#field_name").val()==ssSasa[0]){
+                var triSasa=ssSasa[1].split(",");
+                for(j=0;j<triSasa.length;j++){
+                    for(o=0;o<lisst.length;o++){
+                        lisst[0]=" "+lisst[0].substring(1);
+                        lisst[lisst.length-1]=lisst[lisst.length-1].substring(0,3);
+                        if(triSasa[j]==lisst[o]) {
+                            $("#search_select > option").each(function () {
+                                if (lisst[o] == this.value) {
+                                    $('#search_select').multiSelect('select', $(this).val());
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        }}
+
+    $("#m_form_group_type_list").on("change",function () {
+        var data=[];
+        var $el=$("#search_select");
+        $el.find('option:selected').each(function(){
+            data.push($(this).val());
+        });
+        var jsonDataOfId = JSON.stringify(data);
+            $("#listTypeArray").val(jsonDataOfId);
+        console.log($("#field_name").val());
+            $.ajax({
+                type:'post',
+                data:
+                    {'fieldName':$("#field_name").val(),'listTypes':jsonDataOfId},
+                url:"/api/loanView/searchData"
+            });
+
+            $.ajax({
+                type:'post',
+                data:
+                    {'groupTypeId':$("#group_type_id").val(),'fieldName':$("#field_name").val(),'listTypes':jsonDataOfId},
+                url:"/loanView/selectedOnes"
+            });
+    });
+    $("#submit_button").on("click",function () {
+        var data=[];
+        var $el=$("#search_select");
+        $el.find('option:selected').each(function(){
+            data.push($(this).val());
+        });
+        var jsonData = JSON.stringify(data);
+        $.ajax({
+            type:'post',
+            data:
+                {'fieldName':$("#field_name").val(),'listTypes':jsonData},
+            url:"/api/loanView/searchData"
+        });
+        $.ajax({
+            type:'post',
+            data:
+                {"end":"end"},
+            url:"/loanView/selectedsClear"
+        });
+    });
+
+    $('#search_select').multiSelect({
+        selectableHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='search'>",
+        selectionHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='search'>",
+        afterInit: function(ms){
+            var that = this,
+                $selectableSearch = that.$selectableUl.prev(),
+                $selectionSearch = that.$selectionUl.prev(),
+                selectableSearchString = '#'+that.$container.attr('id')+' .ms-elem-selectable:not(.ms-selected)',
+                selectionSearchString = '#'+that.$container.attr('id')+' .ms-elem-selection.ms-selected';
+
+            that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+                .on('keydown', function(e){
+                    if (e.which === 40){
+                        that.$selectableUl.focus();
+                        return false;
+                    }
+                });
+
+            that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+                .on('keydown', function(e){
+                    if (e.which == 40){
+                        that.$selectionUl.focus();
+                        return false;
+                    }
+                });
+        },
+        afterSelect: function(){
+            this.qs1.cache();
+            this.qs2.cache();
+        },
+        afterDeselect: function(){
+            this.qs1.cache();
+            this.qs2.cache();
+        }
+    });
+});
+</script>
