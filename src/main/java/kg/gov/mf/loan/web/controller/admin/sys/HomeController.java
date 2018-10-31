@@ -7,6 +7,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import kg.gov.mf.loan.output.report.utils.MigrationTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,6 +108,14 @@ public class HomeController {
             //SecurityContextHolder.getContext().setAuthentication(null);
         }
         return "redirect:/login?logout";
+    }
+
+    @RequestMapping(value = "/startMigration", method = RequestMethod.GET)
+    public void startMigration()
+    {
+        MigrationTool migrationTool = new MigrationTool();
+        migrationTool.doMigrate();
+
     }
 	
 	
