@@ -94,7 +94,7 @@ public class RestLoanViewController {
         if(this.s.equals("start")){
 
             List<LoanView> loanViewList=loanViewService.findByParameter(parameter,perPage,offset,sortStr,sortField);
-            int loanViews=loanViewService.findByParamete(parameter);
+            long loanViews=loanViewService.getCount(parameter);
 
             BigInteger count=BigInteger.valueOf(loanViews);
 
@@ -110,7 +110,7 @@ public class RestLoanViewController {
         else{
             LinkedHashMap<String,List<String>> parameters=new LinkedHashMap<>();
             List<LoanView> loanViewList=loanViewService.findByParameter(parameter,perPage,offset,sortStr,sortField);
-            int loanViews=loanViewService.findByParamete(parameters);
+            long loanViews=loanViewService.getCount(parameters);
             BigInteger count=BigInteger.valueOf(loanViews);
 
 

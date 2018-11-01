@@ -165,7 +165,7 @@ public class OrganizationController {
 //		return "admin/org/organizationList";
 //	}
 
-	@RequestMapping(value = { "/organization/", "/organization/list" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/organization", "/organization/list" }, method = RequestMethod.GET)
 	public String listDebtors(@RequestParam("pageSize") Optional<Integer> pageSize, @RequestParam("page") Optional<Integer> page, ModelMap model) {
 
 		int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,9 @@ public class RestEntityDocumentViewController {
 
 
     @RequestMapping("/entityDocumentViews")
-    public EntityDocumentViewMetaModel getAllEntityDocumentViews(@RequestParam Map<String,String> datatable){
+    public List<EntityDocumentView> getAllEntityDocumentViews(@RequestParam Map<String,String> datatable){
+
+        LinkedHashMap<String,List<String>> parameter=new LinkedHashMap<>();
 
         String pageStr = datatable.get("datatable[pagination][page]");
         String perPageStr = datatable.get("datatable[pagination][perpage]");
@@ -35,18 +38,63 @@ public class RestEntityDocumentViewController {
         Integer perPage = Integer.parseInt(perPageStr);
         Integer offset = (page-1)*perPage;
 
-        LinkedHashMap<String,List<String>> parameter=new LinkedHashMap<>();
-        List<EntityDocumentView> entityDocumentViewList=entityDocumentViewService.findByParameter(parameter,perPage,offset,sortStr,sortField);
-        List<EntityDocumentView> entityDocumentViews=entityDocumentViewService.findByParameter(parameter);
 
-        BigInteger count=BigInteger.valueOf(entityDocumentViews.size());
-        EntityDocumentViewMetaModel entityDocumentViewMetaModel=new EntityDocumentViewMetaModel();
-        Meta meta= new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, sortStr, sortField);
+        boolean searchByEntityDocumnetName = datatable.containsKey("datatable[sort][entityDocumentName]");
+        if(searchByEntityDocumnetName){
+            List<String> searchWord= Arrays.asList(datatable.get("datatable[sort][entityDocumentName]"));
+            parameter.put("r=ycv_entity_document_name",searchWord);
+        }
 
-        entityDocumentViewMetaModel.setData(entityDocumentViewList);
-        entityDocumentViewMetaModel.setMeta(meta);
+        boolean searchByComplDesc= datatable.containsKey("datatable[sort][completedDesc]");
+        if(searchByComplDesc){
+            List<String> searchWord= Arrays.asList(datatable.get("datatable[sort][completedDesc]"));
+            parameter.put("r=ycv_entity_document_completedDescription",searchWord);
+        }
 
-        return entityDocumentViewMetaModel;
+        boolean getFromDate= datatable.containsKey("datatable[query][fromDater]");
+        if (getFromDate){
+            String fromDateStr = datatable.get("datatable[query][fromDater]");
+            List<String> froms=Arrays.asList(fromDateStr);
+            parameter.put("r=aov_entity_document_completedDate",froms);
+        }
+
+        boolean getToDate= datatable.containsKey("datatable[query][toDater]");
+        if (getToDate){
+            String toDateStr = datatable.get("datatable[query][toDater]");
+            List<String> tos=Arrays.asList(toDateStr);
+            parameter.put("r=bov_entity_document_completedDate",tos);
+        }
+
+        boolean searchByOwnerName= datatable.containsKey("datatable[sort][ownerName]");
+        if(searchByOwnerName){
+            List<String> searchWord= Arrays.asList(datatable.get("datatable[sort][ownerName]"));
+            parameter.put("r=ycv_owner_name",searchWord);
+        }
+
+        boolean searchByRegionId = datatable.containsKey("datatable[sort][regionId]");
+        if(searchByRegionId){
+            List<String> searchWord= Arrays.asList(datatable.get("datatable[sort][regionId]"));
+            parameter.put("r=inv_owner_region_id",searchWord);
+        }
+
+        boolean searchByDistrictId= datatable.containsKey("datatable[sort][districtId]");
+        if(searchByDistrictId){
+            List<String> searchWord= Arrays.asList(datatable.get("datatable[sort][districtId]"));
+            parameter.put("r=inv_owner_district_id",searchWord);
+        }
+
+
+        List<EntityDocumentView> all=entityDocumentViewService.findByParameter(parameter,perPage,offset,sortStr,sortField);
+//        List<EntityDocumentView> entityDocumentViews=entityDocumentViewService.findByParameter(parameter);
+
+//        BigInteger count=BigInteger.valueOf(entityDocumentViews.size());
+//        EntityDocumentViewMetaModel entityDocumentViewMetaModel=new EntityDocumentViewMetaModel();
+//        Meta meta= new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, sortStr, sortField);
+//
+//        entityDocumentViewMetaModel.setData(entityDocumentViewList);
+//        entityDocumentViewMetaModel.setMeta(meta);
+
+        return all;
 
     }
 }
