@@ -1962,7 +1962,9 @@ INSERT INTO mfloan.content_parameter (id, cellType, classificator_id, classifica
 INSERT INTO mfloan.content_parameter (id, cellType, classificator_id, classificator_value_id, col_from, col_to, constantDate, constant_int, constant_text, constant_value, contentType, field_name, name, position, rowType, row_from, row_to) VALUES (416, 'TEXT', 0, 0, 1, 7, null, 0, 'Информация по залогу', 0, 'CONSTANT', '', 'Предмет залога. Заголовок страницы. Строка 1. ', 1, 'PAGE_TITLE', 1, 1);
 INSERT INTO mfloan.content_parameter (id, cellType, classificator_id, classificator_value_id, col_from, col_to, constantDate, constant_int, constant_text, constant_value, contentType, field_name, name, position, rowType, row_from, row_to) VALUES (417, 'TEXT', 0, 0, 1, 7, null, 0, 'по состоянию на (=onDate=)', 0, 'CONSTANT', '', 'Предмет залога. Заголовок страницы. Строка 2.', 1, 'PAGE_TITLE', 2, 2);
 INSERT INTO mfloan.content_parameter (cellType, classificator_id, classificator_value_id, col_from, col_to, constantDate, constant_int, constant_text, constant_value, contentType, field_name, name, position, rowType, row_from, row_to) VALUES
-  ('TEXT', 0, 0, 0, 0, null, 4, 'loan_type', 0, 'LOAN_SUMMARY', 'v_loan_type_id', 'Задолженность. Разрез 4. Вид кредита', 4, 'TABLE_GROUP4', 0, 0);
+  ('TEXT', 0, 0, 0, 0, null, 4, 'loan_type', 0, 'LOAN_SUMMARY', 'loanType', 'Задолженность. Разрез 4. Вид кредита', 4, 'TABLE_GROUP4', 0, 0);
+INSERT INTO mfloan.content_parameter (cellType, classificator_id, classificator_value_id, col_from, col_to, constantDate, constant_int, constant_text, constant_value, contentType, field_name, name, position, rowType, row_from, row_to) VALUES
+  ('DOUBLE', 0, 0, 0, 0, null, 0, '', 0, 'LOAN_SUMMARY', 'RemainingDiff', 'Задолженность. Разрез 4. Курсовая разница', 18, 'TABLE_GROUP4', 0, 0);
 #reports
 INSERT INTO mfloan.report (id, name, reportType) VALUES (1, 'Отчет по оформлению', 'ENTITY_DOCUMENT');
 INSERT INTO mfloan.report (id, name, reportType) VALUES (2, 'Отчет по взысканию', 'COLLECTION_PHASE');
@@ -2346,6 +2348,7 @@ INSERT INTO mfloan.report_content_parameter (report_id, content_parameter_id) VA
 INSERT INTO mfloan.report_content_parameter (report_id, content_parameter_id) VALUES (3, 415);
 INSERT INTO mfloan.report_content_parameter (report_id, content_parameter_id) VALUES (6, 416);
 INSERT INTO mfloan.report_content_parameter (report_id, content_parameter_id) VALUES (6, 417);
+INSERT INTO mfloan.report_content_parameter (report_id, content_parameter_id) VALUES (3, 418);
 
 INSERT INTO mfloan.report_filter_parameter (report_id, filter_parameter_id) VALUES (2, 1);
 INSERT INTO mfloan.report_filter_parameter (report_id, filter_parameter_id) VALUES (3, 1);
@@ -2877,6 +2880,7 @@ INSERT INTO mfloan.report_template_content_parameter (report_template_id, conten
 INSERT INTO mfloan.report_template_content_parameter (report_template_id, content_parameter_id) VALUES (3, 415);
 INSERT INTO mfloan.report_template_content_parameter (report_template_id, content_parameter_id) VALUES (6, 416);
 INSERT INTO mfloan.report_template_content_parameter (report_template_id, content_parameter_id) VALUES (6, 417);
+INSERT INTO mfloan.report_template_content_parameter (report_template_id, content_parameter_id) VALUES (3, 418);
 
 INSERT INTO mfloan.report_template_filter_parameter (report_template_id, filter_parameter_id) VALUES (2, 1);
 INSERT INTO mfloan.report_template_filter_parameter (report_template_id, filter_parameter_id) VALUES (3, 1);
