@@ -41,6 +41,21 @@
 			</div>
 		</div>
 
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg-4 col-sm-12">
+				<span th:text="#{label.information.date2}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<div class="input-group date m_datetimepicker_6">
+					<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}"  th:field="*{additionalDate}"/>
+					<span class="input-group-addon">
+						<i class="la la-calendar glyphicon-th"></i>
+					</span>
+				</div>
+			</div>
+		</div>
+
 
 		<div class="form-group m-form__group row">
 			<label class="col-form-label col-lg-4 col-sm-12">
@@ -56,6 +71,10 @@
 							th:text="${groupType1InList.name}">groupType</option>
 				</select>
 			</div>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<input type="checkbox" id="showGroup1" name="showGroup1" th:field="*{showGroup1}">
+			</div>
+
 		</div>
 
 		<div class="form-group m-form__group row">
@@ -71,8 +90,13 @@
 							th:value="${{groupType2InList}}"
 							th:text="${groupType2InList.name}">groupType</option>
 				</select>
+
+			</div>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<input type="checkbox" id="showGroup2" name="showGroup2" th:field="*{showGroup2}">
 			</div>
 		</div>
+
 
 
 		<div class="form-group m-form__group row">
@@ -88,6 +112,9 @@
 							th:value="${{groupType3InList}}"
 							th:text="${groupType3InList.name}">groupType</option>
 				</select>
+			</div>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<input type="checkbox" id="showGroup3" name="showGroup3" th:field="*{showGroup3}">
 			</div>
 		</div>
 
@@ -106,6 +133,9 @@
 							th:text="${groupType4InList.name}">groupType</option>
 				</select>
 			</div>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<input type="checkbox" id="showGroup4" name="showGroup4" th:field="*{showGroup4}">
+			</div>
 		</div>
 
 
@@ -123,6 +153,9 @@
 							th:text="${groupType5InList.name}">groupType</option>
 				</select>
 			</div>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<input type="checkbox" id="showGroup5" name="showGroup5" th:field="*{showGroup5}">
+			</div>
 		</div>
 
 
@@ -139,6 +172,9 @@
 							th:value="${{groupType6InList}}"
 							th:text="${groupType6InList.name}">groupType</option>
 				</select>
+			</div>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<input type="checkbox" id="showGroup6" name="showGroup6" th:field="*{showGroup6}">
 			</div>
 		</div>
 

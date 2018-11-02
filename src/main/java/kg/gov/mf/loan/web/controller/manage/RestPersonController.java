@@ -36,7 +36,6 @@ public class RestPersonController {
         String sortStr = datatable.get("datatable[sort][sort]");
         String sortField = datatable.get("datatable[sort][field]");
         boolean searchByPerson = datatable.containsKey("datatable[query][generalSearch]");
-
         String personStr = searchByPerson?datatable.get("datatable[query][generalSearch]"):null;
 
         Integer page = Integer.parseInt(pageStr);

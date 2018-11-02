@@ -299,4 +299,16 @@ public class ReportTemplateController {
 	}
 
 
+
+	@RequestMapping("/reportTemplate/{id}/clone")
+	public String cloneByReportTemplate(@PathVariable("id") long id, HttpServletResponse response) {
+
+		ReportTemplate reportTemplate = this.reportTemplateService.findById(id);
+
+		reportTemplateService.clone(reportTemplate);
+
+		return "redirect:/report/list";
+	}
+
+
 }

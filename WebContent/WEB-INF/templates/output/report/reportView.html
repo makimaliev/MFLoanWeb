@@ -52,6 +52,14 @@
 																</form>
 															</span>
 														</a>
+														<a class="dropdown-item" href="#" sec:authorize="hasRole('ADMIN')">
+															<span>
+																<form th:action="@{/reportTemplate/__${reportTemplateInList.id}__/clone}" method="post">
+																	<input hidden="true" type="text" th:value="${reportTemplateInList.id}" />
+																	<button type="submit" class="btn btn-reset" th:text="#{label.table.clone}"></button>
+																</form>
+															</span>
+														</a>
 													</div>
 												</div>
 											</span>

@@ -6,7 +6,7 @@
 >
 <!-- begin::Head -->
 <head>
-    <title >MFLoan|EntityDocumentView</title>
+    <title >MFLoan|CollateralItemView</title>
 
     <div th:replace="fragments/header :: header-css"/>
     <link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
@@ -34,7 +34,7 @@
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
                         <h3 class="m-subheader__title m-subheader__title--separator">
-                            EntityDocumentViews
+                            CollateralItemView
                         </h3>
                         <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
                             <li class="m-nav__item m-nav__item--home">
@@ -46,7 +46,7 @@
                                 -
                             </li>
                             <li class="m-nav__item">
-                                <span class="m-nav__link-text">List of EntityDocumentViews</span>
+                                <span class="m-nav__link-text">List of CollateralItemViews</span>
                             </li>
                         </ul>
                     </div>
@@ -64,7 +64,7 @@
                                 <div class="form-group m-form__group row align-items-center" style="margin-left: 10px">
                                     <div class="col-md-3">
                                         <div class="m-input-icon m-input-icon--left">
-                                            <input type="text" class="form-control m-input m-input--solid" placeholder="v_entity_document_name..." id="entity_document_name">
+                                            <input type="text" class="form-control m-input m-input--solid" placeholder="debtor_name..." id="m_form_searchByDebtorName">
                                             <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -74,7 +74,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="m-input-icon m-input-icon--left">
-                                            <input type="text" class="form-control form-control-inline input-medium date-picker" placeholder="completed description..." id="completed_description">
+                                            <input type="text" class="form-control form-control-inline input-medium date-picker" placeholder="agreement number..." id="m_form_searchByAgreementNum">
                                             <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -97,8 +97,24 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="input-group" id="owner_name">
-                                            <input type="text" class="form-control input-sm" placeholder="owner name" name="owner name"/>
+                                            <div class="m-form__group m-form__group--inline">
+                                                <div class="m-form__label">
+                                                    <label>
+                                                        Item type:
+                                                    </label>
+                                                </div>
+                                                <div class="m-form__control">
+                                                    <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_item_type">
+                                                        <option value="">
+                                                            Все
+                                                        </option>
+                                                        <option th:each="itemType: ${itemTypes}" th:value="${itemType.id}" th:text="${itemType.name}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="d-md-none m--margin-bottom-10"></div>
+                                        <div class="input-group" id="item_name">
+                                            <input type="text" class="form-control input-sm" placeholder="item name" name="item"/>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -199,7 +215,7 @@
                     type: 'remote',
                     source: {
                         read: {
-                            url: '/api/entityDocumentViews'
+                            url: '/api/collateralItemViews'
                         }
                     },
                     pageSize: 100,
@@ -222,7 +238,7 @@
                 },
 
                 // column sorting
-                sortable: false,
+                sortable: true,
 
                 // column based filtering
                 filterable: false,
@@ -241,33 +257,33 @@
 
                     template: function (row) {
                         return '\
-						<a href="/'+row.id+'/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
+						<a href="/manage/debtor/'+row.v_debtor_id+'/collateralagreement/'+row.v_ca_id+'/collateralitem/'+row.v_ci_id+'/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
 					';
                     }
                 },  {
-                    field: "v_entity_document_id",
+                    field: "v_ci_id",
                     title: "#",
                     sortable: 'desc',
                     responsive: {hidden: 'xl'},
                 }, {
-                    field: "v_entity_document_completedDescription",
-                    title: "v_entity_document_completedDescription"
+                    field: "v_debtor_name",
+                    title: "debtor_name"
                 }, {
-                    field: "v_entity_document_name",
-                    title: "v_entity_document_name",
+                    field: "v_ca_agreementNumber",
+                    title: "v_agreement_number",
                     width:180
                 }, {
-                    field: "v_document_package_name",
-                    title: "v_document_package_name"
+                    field: "v_ci_name",
+                    title: "v_ci_name"
                 },{
-                    field: "v_ca_agreementDate",
-                    title: "agreement_date",
+                    field: "v_ca_arrestRegDate",
+                    title: "v_ca_arrestRegDate",
                     textAlign:'center',
                     template: function (row) {
-                        var date = moment("/Date("+row.v_ca_agreementDate+")/").format("DD.MM.YYYY");
+                        var date = moment("/Date("+row.v_ca_arrestRegDate+")/").format("DD.MM.YYYY");
                         return date;
                     }
-                },/* {
+                },/*{
                     field: "",
                     width: 110,
                     title: "",
@@ -308,16 +324,16 @@
                 }
             });
 
-            $('#m_form_region, #m_form_district').selectpicker();
+            $('#m_form_region, #m_form_district,#m_form_item_type').selectpicker();
 
             var query = datatable.getDataSourceQuery();
-            $('#entity_document_name').on('keyup', function () {
-                datatable.search($(this).val(), 'entityDocumentName');
-            }).val(typeof query.entityDocumentName!== 'undefined' ? query.entityDocumentName: '');
+            $('#m_form_searchByDebtorName').on('keyup', function () {
+                datatable.search($(this).val(), 'debtorName');
+            }).val(typeof query.debtorName !== 'undefined' ? query.debtorName: '');
 
-            $('#completed_description').on('keyup', function () {
-                datatable.search($(this).find("input").val(), 'completedDesc');
-            }).val(typeof query.completedDesc!== 'undefined' ? query.completedDesc: '');
+            $('#m_form_searchByAgreementNum').on('keyup', function () {
+                datatable.search($(this).val(), 'agreementNum');
+            }).val(typeof query.agreementNum !== 'undefined' ? query.agreementNum: '');
 
             $('#m_form_region').on('change', function () {
                 datatable.search($(this).val(), 'regionId');
@@ -335,9 +351,13 @@
                 datatable.search($(this).find("input").val(), 'toDater');
             }).val(typeof query.toDater!== 'undefined' ? query.toDater: '');
 
-            $('#owner_name').on('change', function () {
-                datatable.search($(this).find("input").val(), 'ownerName');
-            }).val(typeof query.ownerName!== 'undefined' ? query.ownerName: '');
+            $('#m_form_item_type').on('change', function () {
+                datatable.search($(this).val(), 'itemTypeId');
+            }).val(typeof query.itemTypeId!== 'undefined' ? query.itemTypeId: '');
+
+            $('#item_name').on('change', function () {
+                datatable.search($(this).find("input").val(), 'itemName');
+            }).val(typeof query.itemName!== 'undefined' ? query.itemName: '');
 
 
 

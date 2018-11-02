@@ -6,7 +6,7 @@
 >
 <!-- begin::Head -->
 <head>
-    <title >MFLoan|EntityDocumentView</title>
+    <title >MFLoan|PaymentSheduleViews</title>
 
     <div th:replace="fragments/header :: header-css"/>
     <link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
@@ -34,7 +34,7 @@
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
                         <h3 class="m-subheader__title m-subheader__title--separator">
-                            EntityDocumentViews
+                            PaymentSheduleViews
                         </h3>
                         <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
                             <li class="m-nav__item m-nav__item--home">
@@ -46,7 +46,7 @@
                                 -
                             </li>
                             <li class="m-nav__item">
-                                <span class="m-nav__link-text">List of EntityDocumentViews</span>
+                                <span class="m-nav__link-text">List of PaymentSheduleViews</span>
                             </li>
                         </ul>
                     </div>
@@ -64,7 +64,7 @@
                                 <div class="form-group m-form__group row align-items-center" style="margin-left: 10px">
                                     <div class="col-md-3">
                                         <div class="m-input-icon m-input-icon--left">
-                                            <input type="text" class="form-control m-input m-input--solid" placeholder="v_entity_document_name..." id="entity_document_name">
+                                            <input type="text" class="form-control m-input m-input--solid" placeholder="debtor name..." id="debtor_name">
                                             <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -72,15 +72,23 @@
 														</span>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="m-input-icon m-input-icon--left">
-                                            <input type="text" class="form-control form-control-inline input-medium date-picker" placeholder="completed description..." id="completed_description">
-                                            <span class="m-input-icon__icon m-input-icon__icon--left">
-															<span>
-																<i class="la la-search"></i>
-															</span>
-														</span>
+                                    <div class="col-md-5">
+                                        <div class="m-form__group m-form__group--inline">
+                                            <div class="m-form__label">
+                                                <label>
+                                                    credit_order:
+                                                </label>
+                                            </div>
+                                            <div class="m-form__control">
+                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="credit_order">
+                                                    <option value="">
+                                                        Все
+                                                    </option>
+                                                    <option th:each="credit: ${credit_orders}" th:value="${credit.id}" th:text="${credit.name}"></option>
+                                                </select>
+                                            </div>
                                         </div>
+                                        <div class="d-md-none m--margin-bottom-10"></div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="input-group date m_datetimepicker" id="from_datepicker">
@@ -94,11 +102,6 @@
                                             <span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="input-group" id="owner_name">
-                                            <input type="text" class="form-control input-sm" placeholder="owner name" name="owner name"/>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -120,7 +123,7 @@
                                         <div class="d-md-none m--margin-bottom-10"></div>
                                     </div>
 
-                                    <div class="col-md-3">
+                                    <div class="col-md-5">
                                         <div class="m-form__group m-form__group--inline">
                                             <div class="m-form__label">
                                                 <label>
@@ -184,7 +187,7 @@
         pickerPosition: 'bottom-left'
     });
 </script>
-<script type="text/javascript">
+<script type="text/javascript" >
     //== Class definition
 
     var DatatableJsonRemoteDemo = function () {
@@ -199,9 +202,10 @@
                     type: 'remote',
                     source: {
                         read: {
-                            url: '/api/entityDocumentViews'
+                            url: '/api/paymentScheduleViews'
                         }
                     },
+                    // source:'/api/paymentScheduleViews',
                     pageSize: 100,
                     saveState: {
                         cookie: false,
@@ -244,30 +248,64 @@
 						<a href="/'+row.id+'/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
 					';
                     }
+
+
                 },  {
-                    field: "v_entity_document_id",
+                    field: "v_ps_id",
                     title: "#",
                     sortable: 'desc',
                     responsive: {hidden: 'xl'},
-                }, {
-                    field: "v_entity_document_completedDescription",
-                    title: "v_entity_document_completedDescription"
-                }, {
-                    field: "v_entity_document_name",
-                    title: "v_entity_document_name",
-                    width:180
-                }, {
-                    field: "v_document_package_name",
-                    title: "v_document_package_name"
                 },{
-                    field: "v_ca_agreementDate",
-                    title: "agreement_date",
+                    field: "v_debtor_name",
+                    title: "v_debtor_name",
+                    textAlign:'left'
+                }, {
+                    field: "v_ps_collected_interest_payment",
+                    title: "v_ps_collected_interest_payment",
+                    textAlign:'right',
+                    template:function (row) {
+                        return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_ps_collected_interest_payment);
+                    }
+                }, {
+                    field: "v_ps_collected_penalty_payment",
+                    title: "v_ps_collected_penalty_payment",
+                    textAlign:'right',
+                    template:function (row) {
+                        return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_ps_collected_interest_payment);
+                    }
+                }, {
+                    field: "v_ps_disbursement",
+                    title: "v_ps_disbursement",
+                    textAlign:'right',
+                    template:function (row) {
+                        return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_ps_disbursement);
+                    }
+                }, {
+                    field: "v_ps_expected_date",
+                    title: "v_ps_expected_date",
                     textAlign:'center',
                     template: function (row) {
-                        var date = moment("/Date("+row.v_ca_agreementDate+")/").format("DD.MM.YYYY");
+                        var date = moment("/Date("+row.v_ps_expected_date+")/").format("DD.MM.YYYY");
                         return date;
                     }
-                },/* {
+                }, {
+                    field: "v_ps_interest_payment",
+                    title: "v_ps_interest_payment",
+                    textAlign:'right',
+                    template:function (row) {
+                        return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_ps_interest_payment);
+                    }
+                }, {
+                    field: "v_ps_principal_payment",
+                    title: "v_ps_principal_payment",
+                    textAlign:'right',
+                    template:function (row) {
+                        return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_ps_principal_payment);
+                    }
+                },/*{
+                    field: "v_ca_agreementDate",
+                    title: "agreement_date"
+                }, {
                     field: "",
                     width: 110,
                     title: "",
@@ -308,16 +346,16 @@
                 }
             });
 
-            $('#m_form_region, #m_form_district').selectpicker();
+            $('#m_form_region, #m_form_district,#credit_order').selectpicker();
 
             var query = datatable.getDataSourceQuery();
-            $('#entity_document_name').on('keyup', function () {
-                datatable.search($(this).val(), 'entityDocumentName');
-            }).val(typeof query.entityDocumentName!== 'undefined' ? query.entityDocumentName: '');
+            $('#debtor_name').on('keyup', function () {
+                datatable.search($(this).val(), 'debtorName');
+            }).val(typeof query.debtorName!== 'undefined' ? query.debtorName: '');
 
-            $('#completed_description').on('keyup', function () {
-                datatable.search($(this).find("input").val(), 'completedDesc');
-            }).val(typeof query.completedDesc!== 'undefined' ? query.completedDesc: '');
+            $('#credit_order').on('change', function () {
+                datatable.search($(this).val(), 'creditOrder');
+            }).val(typeof query.creditOrder!== 'undefined' ? query.creditOrder: '');
 
             $('#m_form_region').on('change', function () {
                 datatable.search($(this).val(), 'regionId');
@@ -329,15 +367,13 @@
 
             $('#from_datepicker').on('change', function () {
                 datatable.search($(this).find("input").val(), 'fromDater');
+                console.log($(this).find("input").val())
             }).val(typeof query.fromDater!== 'undefined' ? query.fromDater: '');
 
             $('#to_datepicker').on('change', function () {
                 datatable.search($(this).find("input").val(), 'toDater');
+                console.log($(this).find("input").val())
             }).val(typeof query.toDater!== 'undefined' ? query.toDater: '');
-
-            $('#owner_name').on('change', function () {
-                datatable.search($(this).find("input").val(), 'ownerName');
-            }).val(typeof query.ownerName!== 'undefined' ? query.ownerName: '');
 
 
 
