@@ -112,7 +112,7 @@ public class ArchiveController extends BaseController {
             archiveService.update(archive);
         }
         */
-        archiveService.save(archive);
+        archiveService.add(archive);
 
         return "redirect:/doc/archive/index";
     }

@@ -2,9 +2,7 @@ package kg.gov.mf.loan.web.controller.task;
 
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
-import kg.gov.mf.loan.task.model.Task;
-import kg.gov.mf.loan.task.model.TaskPriority;
-import kg.gov.mf.loan.task.model.TaskStatus;
+import kg.gov.mf.loan.task.model.*;
 import kg.gov.mf.loan.task.service.TaskService;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -26,30 +21,77 @@ import java.util.*;
 @Controller
 public class TaskController {
 
-    @Autowired
-    TaskService taskService;
+    private final static Map<String, String> operators = new LinkedHashMap<String, String>() {
+        {
+            put("=", "Равно");
+            put("<>", "Не Равно");
+            put(">", "Больше");
+            put("<", "Меньше");
+            put(">=", "Больше или Равно");
+            put("<=", "Меньше или Равно");
+            put("LIKE", "Like");
 
-    @Autowired
+            put("NOT", "Не");
+
+            put("ALL", "Все");
+            put("SOME", "Some");
+            put("ANY", "Any");
+            put("EXISTS", "Exists");
+
+            put("AND", "И");
+            put("OR", "Или");
+
+            put("IN", "Содержит");
+            put("BETWEEN", "Между");
+        }
+    };
+
+    TaskService taskService;
     UserService userService;
 
+    @Autowired
+    public TaskController(TaskService taskService, UserService userService) {
+        this.taskService = taskService;
+        this.userService = userService;
+    }
+
     @InitBinder
-    public void initBinder(WebDataBinder binder)
-    {
+    public void initBinder(WebDataBinder binder) {
         CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
         binder.registerCustomEditor(Date.class, editor);
     }
 
+    @RequestMapping(value = { "/task/edit" }, method = RequestMethod.GET)
+    public String edit(Model model) {
+
+        model.addAttribute("operators", operators);
+        model.addAttribute("taskObject", new TaskObject());
+        model.addAttribute("objectTypes", taskService.getEntities());
+
+        return "/task/edit";
+    }
+
+    @RequestMapping(value = { "/task/add" }, method = RequestMethod.POST)
+    public String addTask(@ModelAttribute("taskObject") TaskObject taskObject, Model model) {
+
+        //taskService.getData("from Document");
+        model.addAttribute("taskObject", taskObject);
+
+        return "/task/edit";
+    }
+
     @RequestMapping(value = { "/task/list" }, method = RequestMethod.GET)
-    public String listTasks(ModelMap model)
-    {
+    public String listTasks(ModelMap model) {
         List<Task> tasks = taskService.list();
         model.addAttribute("tasks", tasks);
         return "/task/list";
     }
 
     @RequestMapping(value = { "/tasks" }, method = RequestMethod.GET)
-    public String tasks(ModelMap model)
-    {
+    public String tasks(ModelMap model) {
+
+        if(getUser() == null) return "/login/login";
+
         String userId = String.valueOf(userService.findByUsername(Utils.getPrincipal()).getId());
         Map<String, String> vars = new HashMap<>();
         vars.put("assignedTo", userId);
@@ -79,16 +121,14 @@ public class TaskController {
     }
 
     @RequestMapping(value = { "/task/listByUserId/{userId}" }, method = RequestMethod.GET)
-    public String listTasksByUserId(ModelMap model, @PathVariable("userId")Long userId)
-    {
+    public String listTasksByUserId(ModelMap model, @PathVariable("userId")Long userId) {
         List<Task> tasks = taskService.getTasksByUserId(userId);
         model.addAttribute("tasks", tasks);
         return "/task/list";
     }
 
     @RequestMapping(value="/task/{taskId}/save", method=RequestMethod.GET)
-    public String formTask(ModelMap model, @PathVariable("taskId")Long taskId)
-    {
+    public String formTask(ModelMap model, @PathVariable("taskId")Long taskId) {
 
         model.addAttribute("users", userService.findAll());
         List<TaskStatus> statuses = Arrays.asList(TaskStatus.values());
@@ -111,8 +151,7 @@ public class TaskController {
     }
 
     @RequestMapping(value="/task/save", method=RequestMethod.POST)
-    public String saveTask(Task task)
-    {
+    public String saveTask(Task task) {
         if(task.getId() == 0)
         {
             task.setCreatedOn(new Date());
@@ -151,8 +190,7 @@ public class TaskController {
         return userName;
     }
 
-    public User getUser()
-    {
+    public User getUser() {
         String userName = getPrincipal();
         User user = userService.findByUsername(userName);
         return user;
@@ -161,5 +199,30 @@ public class TaskController {
     public List<Task> getUserTasks()
     {
         return taskService.getTasksByUserId(getUser().getId());
+    }
+
+
+    // *****************************************************************************************************************
+    // REST ************************************************************************************************************
+    // *****************************************************************************************************************
+    @RequestMapping(value = { "/task/operators" }, method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, String> getOperators()
+    {
+        return operators;
+    }
+
+    @RequestMapping(value = { "/task/to" },method = RequestMethod.GET)
+    @ResponseBody
+    public List<TaskObject> getTaskObject(@ModelAttribute("taskObject") TaskObject taskObject)
+    {
+        return taskService.queryBuilder(taskObject);
+    }
+
+    @RequestMapping("/task/op")
+    @ResponseBody
+    public Map<String, Object> getObjectProperties(@RequestParam String name)
+    {
+        return taskService.getFields(name);
     }
 }

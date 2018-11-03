@@ -1,7 +1,68 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 
+<div class="modal fade" id="chat_window" tabindex="-1" role="dialog" aria-labelledby="chat_window" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="chatModalTitle" th:text="${@userServiceJpaImpl.findByUsername(#authentication.name)?.staff?.name}">Chat</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body bg-light p-0" id="chat-page">
+
+                <!--*******************************-->
+
+                        <div class="row">
+                            <div class="col-5">
+                                <input type="text" id="usersearch" onkeyup="searchUser()" placeholder="Поиск..." style="width: 100%; height: 40px; padding-left: 20px; border: 1px solid transparent; ">
+                                <div class="pre-scrollable">
+                                    <table class="table table-hover" id="userlist" style="cursor: pointer">
+                                        <tr th:each="user : ${@userServiceJpaImpl.findAll()}"
+                                            th:if="${user.staff != null}">
+                                            <td th:id="${user.username}" th:text="${user.staff?.name}" height="40px" th:title="${user.username}"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-7">
+                                <!--div id="messageArea" class="m-3"></div-->
+                                <!-- Start -->
+                                <div class="chat">
+                                    <div class="chat-container">
+                                        <div class="conversation">
+                                            <div class="conversation-container pre-scrollable" id="messageArea">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End -->
+
+                            </div>
+                        </div>
+
+                <!--*******************************-->
+
+            </div>
+            <div class="modal-footer">
+                <div style="width: 100%">
+                    <form id="messageForm" name="messageForm">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
+                                <button type="submit" class="btn btn-primary">Send</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <header class="m-grid__item    m-header "  data-minimize-mobile="hide" data-minimize-offset="200" data-minimize-mobile-offset="200" data-minimize="minimize" >
-    <div class="m-container m-container--fluid m-container--full-height">
+
+<div class="m-container m-container--fluid m-container--full-height">
         <div class="m-stack m-stack--ver m-stack--desktop">
             <!-- BEGIN: Brand -->
             <div class="m-stack__item m-brand  m-brand--skin-dark ">
@@ -13,8 +74,7 @@
                     </div>
                     <div class="m-stack__item m-stack__item--middle m-brand__tools">
                         <!-- BEGIN: Left Aside Minimize Toggle -->
-                        <a href="javascript:;" id="m_aside_left_minimize_toggle" class="m-brand__icon m-brand__toggler m-brand__toggler--left m--visible-desktop-inline-block
-					 ">
+                        <a href="javascript:;" id="m_aside_left_minimize_toggle" class="m-brand__icon m-brand__toggler m-brand__toggler--left m--visible-desktop-inline-block">
                             <span></span>
                         </a>
                         <!-- END -->
@@ -127,6 +187,14 @@
                 <div id="m_header_topbar" class="m-topbar  m-stack m-stack--ver m-stack--general">
                     <div class="m-stack__item m-topbar__nav-wrapper">
                         <ul class="m-topbar__nav m-nav m-nav--inline">
+                            <li class="m-nav__item m-dropdown m-dropdown--large m-dropdown--arrow m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light  m-list-search m-list-search--skin-light"
+                                id="mchat" data-search-type="dropdown">
+                                <a href="#" class="m-nav__link" data-toggle="modal" data-target="#chat_window">
+                                    <span class="m-nav__link-icon">
+                                        <i class="flaticon-speech-bubble"></i>
+                                    </span>
+                                </a>
+                            </li>
                             <li class="m-nav__item m-dropdown m-dropdown--large m-dropdown--arrow m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light	m-list-search m-list-search--skin-light"
                                 data-dropdown-toggle="click" data-dropdown-persistent="true" id="m_quicksearch" data-search-type="dropdown">
                                 <a href="#" class="m-nav__link m-dropdown__toggle">
@@ -141,7 +209,7 @@
                                             <form  class="m-list-search__form">
                                                 <div class="m-list-search__form-wrapper">
                                                     <span class="m-list-search__form-input-wrapper">
-                                                        <input id="m_quicksearch_input" autocomplete="off" type="text" name="q" class="m-list-search__form-input" value="" placeholder="Search...">
+                                                        <input id="m_quicksearch_input" autocomplete="off" type="text" name="q" class="m-list-search__form-input" value="" placeholder="Изде...">
                                                     </span>
                                                     <span class="m-list-search__form-icon-close" id="m_quicksearch_close">
                                                         <i class="la la-remove"></i>
@@ -241,4 +309,5 @@
             </div>
         </div>
     </div>
+
 </header>

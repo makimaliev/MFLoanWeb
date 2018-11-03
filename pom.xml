@@ -27,6 +27,19 @@
 	<url>http://maven.apache.org</url>
 
 	<dependencies>
+		<!-- Chat -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-messaging</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-websocket</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<!---->
 		<dependency>
 			<groupId>MFLoan</groupId>
 			<artifactId>MFLoanManage</artifactId>

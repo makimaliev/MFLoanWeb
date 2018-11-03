@@ -18,7 +18,7 @@ public class AttachmentsController extends BaseController {
     @RequestMapping(value = "/download/{attachmentId}", method = RequestMethod.GET)
     public void download(HttpServletResponse response, @PathVariable("attachmentId") Long attachmentId) throws IOException {
 
-        Attachment attachment = attachmentService.findById(attachmentId);
+        Attachment attachment = attachmentService.getById(attachmentId);
 
         File file = new File(path + attachment.getInternalName());
         String mimeType= URLConnection.guessContentTypeFromName(file.getName());
@@ -38,10 +38,10 @@ public class AttachmentsController extends BaseController {
     @RequestMapping(value = "/delete/{attachmentId}", method = RequestMethod.GET)
     public void delete(@PathVariable("attachmentId") Long attachmentId) {
 
-        Attachment attachment = attachmentService.findById(attachmentId);
+        Attachment attachment = attachmentService.getById(attachmentId);
         File file = new File(path + attachment.getInternalName());
         file.delete();
 
-        attachmentService.deleteById(attachment);
+        attachmentService.remove(attachment);
     }
 }

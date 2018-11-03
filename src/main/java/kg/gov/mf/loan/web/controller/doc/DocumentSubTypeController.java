@@ -31,7 +31,7 @@ public class DocumentSubTypeController extends BaseController {
         if(getUser() == null)
             return "/login/login";
 
-        model.addAttribute("documentSubTypes", documentSubTypeService.findAll());
+        model.addAttribute("documentSubTypes", documentSubTypeService.list());
         return "/doc/documentSubType/list";
     }
 
@@ -41,7 +41,7 @@ public class DocumentSubTypeController extends BaseController {
         if(getUser() == null)
             return "/login/login";
 
-        model.addAttribute("documentTypes", documentTypeService.findAll());
+        model.addAttribute("documentTypes", documentTypeService.list());
         model.addAttribute("documentSubType", new DocumentSubType());
         return "/doc/documentSubType/edit";
     }
@@ -52,8 +52,8 @@ public class DocumentSubTypeController extends BaseController {
         if(getUser() == null)
             return "/login/login";
 
-        model.addAttribute("documentTypes", documentTypeService.findAll());
-        model.addAttribute("documentSubType", documentSubTypeService.findById(id));
+        model.addAttribute("documentTypes", documentTypeService.list());
+        model.addAttribute("documentSubType", documentSubTypeService.getById(id));
         return "/doc/documentSubType/edit";
     }
 
@@ -63,7 +63,7 @@ public class DocumentSubTypeController extends BaseController {
         if(getUser() == null)
             return "/login/login";
 
-        documentSubTypeService.deleteById(documentSubType);
+        documentSubTypeService.remove(documentSubType);
         return "redirect:/doc/documentSubType";
     }
 
@@ -72,7 +72,7 @@ public class DocumentSubTypeController extends BaseController {
 
         if(documentSubType.getId() == null)
         {
-            documentSubTypeService.save(documentSubType);
+            documentSubTypeService.add(documentSubType);
         }
         else
         {
