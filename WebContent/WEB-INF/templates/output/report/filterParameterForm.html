@@ -36,6 +36,7 @@
 			</div>
 		</div>
 
+
 		<div class="form-group ">
 			<label class="form-control-label">Object List<span class="required"> * </span></label>
 			<div class="row">
@@ -50,17 +51,63 @@
 		</div>
 
 		<!--<div class="form-group ">-->
-			<!--<label class="form-control-label">Content Params<span class="required"> * </span></label>-->
+			<!--<label class="form-control-label">Users<span class="required"> * </span></label>-->
 			<!--<div class="row">-->
 				<!--<div class="col-12">-->
-					<!--<select th:field="*{contentParameter}"  class="selectpicker">-->
-						<!--<option th:each="contentParameterInList : ${contentParameterList}"-->
-								<!--th:value="${{contentParameterInList}}"-->
-								<!--th:text="${contentParameterInList.name}">Region</option>-->
+					<!--<select th:field="*{users}"  class="selectpicker">-->
+						<!--<option th:each="userInList : ${userList}"-->
+								<!--th:value="${{userInList}}"-->
+								<!--th:text="${userInList?.staff?.name}">User</option>-->
 					<!--</select>-->
 				<!--</div>-->
 			<!--</div>-->
 		<!--</div>-->
+
+		<!--<div class="form-group ">-->
+			<!--<label class="form-control-label"><span th:text="#{label.reportTemplate.users}"></span></label>-->
+			<!--<div class="row">-->
+				<!--<div class="col-12">-->
+					<!--<select id="filterParameter.users" name="filterParameterUsersIds" class="form-control m-bootstrap-select m_selectpicker" multiple th:title="#{label.select}">-->
+						<!--<option th:each="userInList : ${userList}"-->
+								<!--th:value="${userInList.id}"-->
+								<!--th:text="${userInList?.staff?.name}"-->
+								<!--&gt;</option>-->
+					<!--</select>-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
+
+
+
+
+		<div class="form-group ">
+			<label class="form-control-label">Users<span class="required"> * </span></label>
+			<div class="row">
+				<div class="col-12">
+					<select th:field="*{users}" class="selectpicker" multiple>
+						<option th:each="userInList : ${userList}"
+								th:value="${{userInList}}"
+								th:text="${userInList.username}"
+						>Region</option>
+					</select>
+
+
+					<!--<select class="form-control m-bootstrap-select m_selectpicker" multiple th:title="#{label.select}">&ndash;&gt;-->
+						<!--<option th:each="userInList : ${userList}"-->
+								<!--th:value="${userInList.id}"-->
+								<!--th:text="${userInList?.staff?.name}"-->
+								<!--th:selected="${filterParameterUsers.contains(userInList)}"-->
+						<!--&gt;</option>-->
+					<!--</select>-->
+
+				</div>
+			</div>
+		</div>
+
+
+
+
+
 
 
 		<div class="form-group">
