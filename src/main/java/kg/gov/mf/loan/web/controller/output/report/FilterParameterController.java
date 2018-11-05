@@ -1,5 +1,6 @@
 package kg.gov.mf.loan.web.controller.output.report;
 
+import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.output.report.model.FilterParameter;
 import kg.gov.mf.loan.output.report.service.FilterParameterService;
 import kg.gov.mf.loan.output.report.service.ContentParameterService;
@@ -27,7 +28,8 @@ public class FilterParameterController {
 	@Autowired
 	private ContentParameterService contentParameterService;
 
-
+	@Autowired
+	private UserService userService;
 
 	@Autowired
     private ReportTemplateService reportTemplateService;
@@ -76,25 +78,44 @@ public class FilterParameterController {
 	@RequestMapping(value = "/filterParameter/add", method = RequestMethod.GET)
 	public String getFilterParameterAddForm(Model model) {
 
-		model.addAttribute("filterParameter", new FilterParameter());
+		FilterParameter filterParameter = new FilterParameter();
+
+		model.addAttribute("filterParameter", filterParameter);
 		model.addAttribute("objectListList", this.objectListService.findAll());
 		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
+
+		model.addAttribute("userList", this.userService.findAll());
+		model.addAttribute("filterParameterUsers", filterParameter.getUsers());
 
 		return "output/report/filterParameterForm";
 	}
 	
 	@RequestMapping("/filterParameter/{id}/edit")
 	public String getFilterParameterEditForm(@PathVariable("id") long id, Model model) {
+
+    	FilterParameter filterParameter = this.filterParameterService.findById(id);
+
 		model.addAttribute("filterParameter", this.filterParameterService.findById(id));
 		model.addAttribute("objectListList", this.objectListService.findAll());
 		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
+
+		model.addAttribute("filterParameterUsers", filterParameter.getUsers());
+
+		model.addAttribute("userList", this.userService.findAll());
 
 		return "output/report/filterParameterForm";
 
 	}
 
 	@RequestMapping(value = "/filterParameter/save", method = RequestMethod.POST)
-	public String saveFilterParameterAndRedirectToFilterParameterList(@Validated @ModelAttribute("filterParameter") FilterParameter filterParameter, BindingResult result) {
+	public String saveFilterParameterAndRedirectToFilterParameterList(@Validated @ModelAttribute("filterParameter") FilterParameter filterParameter, String[] filterParameterUsersIds,BindingResult result) {
+
+
+		if(filterParameterUsersIds!=null)
+			for (String id: filterParameterUsersIds)
+			{
+				filterParameter.getUsers().add(this.userService.findById(Long.valueOf(id)));
+			}
 
 		if (result.hasErrors()) {
 			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
@@ -116,8 +137,31 @@ public class FilterParameterController {
 		return "redirect:/filterParameter/list";
 	}
 
-     
 
-     
+	@RequestMapping("/filterParameter/{id}/addUser")
+	public String getFilterParameterUserAddForm(@PathVariable("id") long id, Model model) {
+
+		model.addAttribute("userList", this.userService.findAll());
+		model.addAttribute("filterParameterId", id);
+
+		return "output/report/filterParameterUserAddForm";
+
+	}
+
+	@RequestMapping("/filterParameter/{id}/user/{user_id}/save")
+	public String saveFilterParameterUserAdd(@PathVariable("id") long id, @PathVariable("id") long user_id,Model model) {
+
+
+    	System.out.println(" user added");
+
+		return "redirect:/filterParameter/list";
+
+	}
+
+
+
+
+
+
 
 }

@@ -2992,18 +2992,18 @@ INSERT INTO mfloan.report_template_output_parameter (report_template_id, output_
 
 
 
-#
-# INSERT INTO printout (id, name, printoutType) VALUES (1, 'Реестр погашений', 'PAYMENT_SUMMARY');
-# INSERT INTO printout (id, name, printoutType) VALUES (2, 'Детальный расчет', 'LOAN_DETAILED_SUMMARY');
-# INSERT INTO printout (id, name, printoutType) VALUES (3, 'Расчет', 'LOAN_SUMMARY');
-# INSERT INTO printout (id, name, printoutType) VALUES (4, 'Акт сверки', 'LOAN_SUMMARY');
-# INSERT INTO printout (id, name, printoutType) VALUES (5, 'Претензия', 'COLLECTION_SUMMARY');
-#
-# INSERT INTO printout_template (id, name, printout_id) VALUES (1, 'Реестр погашений', 1);
-# INSERT INTO printout_template (id, name, printout_id) VALUES (2, 'Детальный расчет', 2);
-# INSERT INTO printout_template (id, name, printout_id) VALUES (3, 'На исковое заявление', 3);
-# INSERT INTO printout_template (id, name, printout_id) VALUES (4, 'Акт сверки Пром', 4);
-# INSERT INTO printout_template (id, name, printout_id) VALUES (5, 'Претензия Пром', 5);
+
+INSERT INTO printout (id, name, printoutType) VALUES (1, 'Реестр погашений', 'PAYMENT_SUMMARY');
+INSERT INTO printout (id, name, printoutType) VALUES (2, 'Детальный расчет', 'LOAN_DETAILED_SUMMARY');
+INSERT INTO printout (id, name, printoutType) VALUES (3, 'Расчет', 'LOAN_SUMMARY');
+INSERT INTO printout (id, name, printoutType) VALUES (4, 'Акт сверки', 'LOAN_SUMMARY');
+INSERT INTO printout (id, name, printoutType) VALUES (5, 'Претензия', 'COLLECTION_SUMMARY');
+
+INSERT INTO printout_template (id, name, printout_id) VALUES (1, 'Реестр погашений', 1);
+INSERT INTO printout_template (id, name, printout_id) VALUES (2, 'Детальный расчет', 2);
+INSERT INTO printout_template (id, name, printout_id) VALUES (3, 'На исковое заявление', 3);
+INSERT INTO printout_template (id, name, printout_id) VALUES (4, 'Акт сверки Пром', 4);
+INSERT INTO printout_template (id, name, printout_id) VALUES (5, 'Претензия Пром', 5);
 
 
 
