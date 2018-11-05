@@ -27,7 +27,7 @@ public class DocumentTypeController extends BaseController {
         if(getUser() == null)
             return "/login/login";
 
-        model.addAttribute("documentTypes", documentTypeService.findAll());
+        model.addAttribute("documentTypes", documentTypeService.list());
         return "/doc/documentType/list";
     }
 
@@ -47,7 +47,7 @@ public class DocumentTypeController extends BaseController {
         if(getUser() == null)
             return "/login/login";
 
-        DocumentType documentType = documentTypeService.findById(id);
+        DocumentType documentType = documentTypeService.getById(id);
 
         model.addAttribute("documentType", documentType);
         return "/doc/documentType/edit";
@@ -55,7 +55,7 @@ public class DocumentTypeController extends BaseController {
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public String delete(@ModelAttribute("documentType") DocumentType documentType) {
-        documentTypeService.deleteById(documentType);
+        documentTypeService.remove(documentType);
         return "redirect:/doc/documentType";
     }
 
@@ -64,7 +64,7 @@ public class DocumentTypeController extends BaseController {
 
         if(documentType.getId() == null)
         {
-            documentTypeService.save(documentType);
+            documentTypeService.add(documentType);
         }
         else
         {

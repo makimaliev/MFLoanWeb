@@ -20,41 +20,42 @@ INSERT INTO cat_document_status(id, version, internalName, name, actionName) VAL
 INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(8, 1, 'done', 'Завершен', 'Завершить');
 INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(9, 1, 'send', 'Отправлен на исполнение', 'Отправить на исполнение');
 
-DROP TABLE IF EXISTS accounts;
+DROP TABLE IF EXISTS account;
 
-CREATE VIEW mfloan.accounts
+CREATE VIEW account
 AS
 SELECT
-  data.id AS id,
+  id,
   (SELECT UUID()) AS uuid,
   1 AS version,
-  data.internalName AS internalName,
-  data.name AS name
+  internalName,
+  name
 FROM (
 	SELECT
-		organization.id AS id,
-		organization.name AS name,
+		id,
+		name,
 		'organization' AS internalName
 	FROM organization
 	UNION ALL
 	SELECT
-		department.id AS id,
-		department.name AS name,
+		id,
+		name,
 		'department' AS internalName
 	FROM department
-	WHERE (department.organization_id = 1)
+	WHERE (organization_id = 1)
 	UNION ALL
 	SELECT
-		staff.id AS id,
-		staff.name AS name,
+		id,
+		name,
 		'staff' AS internalName
 	FROM staff
-	WHERE (staff.organization_id = 1)
+	WHERE (organization_id = 1)
 	UNION ALL
 	SELECT
-		person.id AS id,
-		person.name AS name,
+		id,
+		name,
 		'person' AS internalName
 	FROM person
+  WHERE name <> ''
   ) data
-ORDER BY data.id;
+ORDER BY id;

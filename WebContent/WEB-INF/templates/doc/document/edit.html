@@ -119,7 +119,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <select class="s2 form-control m-input" th:name="${document.documentState.ordinal() &lt; 5} ? 'reconciler' : 'executor'" style="width:100%" data-ajax--url="/data/staff" form="document_form" multiple>
+                <select class="s2 form-control m-input" th:name="${document.documentState.ordinal() &lt; 5} ? 'reconciler' : 'executor'" style="width:100%" data-ajax--url="/doc/data/staff" form="document_form" multiple>
                     <option value="">Select</option>
                 </select>
             </div>

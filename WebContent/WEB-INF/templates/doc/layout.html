@@ -54,7 +54,6 @@
                     format : 'dd-mm-yyyy hh:ii'
                 };
                 $('.dtp').datetimepicker(dt_settings);
-
                 $('.sdr').hide();
                 $('.rdr').hide();
 
@@ -120,9 +119,7 @@
 
                 $('.s2 ').select2(soption);
                 $('.s2s ').select2(ssoption);
-
-                $('#tabstages a').on('click', function (e)
-                {
+                $('#tabstages a').on('click', function (e) {
                     e.currentTarget.id == "nav-main-tab" ? $(".act").show() : $(".act").hide()
                 })
             });

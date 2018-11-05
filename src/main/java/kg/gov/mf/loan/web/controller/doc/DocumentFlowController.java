@@ -26,7 +26,16 @@ import java.util.*;
 @RequestMapping("/doc")
 public class DocumentFlowController extends BaseController {
 
-    private String data;
+    class Result {
+
+        public Long id;
+        public String text;
+
+        public Result(Long id, String text) {
+            this.id = id;
+            this.text = text;
+        }
+    }
 
     //region Dependencies
     private DocumentService documentService;
@@ -35,6 +44,7 @@ public class DocumentFlowController extends BaseController {
     private DocumentStatusService documentStatusService;
     private TaskService taskService;
     private RegisterService registerService;
+    private AccountService accountService;
 
     @Autowired
     public DocumentFlowController(DocumentService documentService,
@@ -42,7 +52,8 @@ public class DocumentFlowController extends BaseController {
                                   DocumentSubTypeService documentSubTypeService,
                                   DocumentStatusService documentStatusService,
                                   TaskService taskService,
-                                  RegisterService registerService)
+                                  RegisterService registerService,
+                                  AccountService accountService)
     {
         this.documentService = documentService;
         this.documentTypeService = documentTypeService;
@@ -50,47 +61,48 @@ public class DocumentFlowController extends BaseController {
         this.documentStatusService = documentStatusService;
         this.taskService = taskService;
         this.registerService = registerService;
+        this.accountService = accountService;
     }
     //endregion
     //region TYPE
     private Transition[][][] ACTIONS =
             {
-                {   // Internal
-                    { Transition.REQUEST, Transition.TORECONCILE },     // NEW
-                    { Transition.REQUEST, Transition.TORECONCILE },     // DRAFT
-                    { Transition.RECONCILE, Transition.REJECT },        // PENDING
-                    { Transition.APPROVE, Transition.REJECT },          // REQUESTED
-                    { Transition.REQUEST, Transition.TORECONCILE },     // RECONCILED
-                    { Transition.ACCEPT, Transition.REJECT },           // APPROVED
-                    {},                                                 // REJECTED
-                    {},                                                 // REGISTERED
-                    { Transition.SEND },                                // ACCEPTED
-                    { Transition.START, Transition.SEND },              // SENT
-                    { Transition.DONE }                                 // STARTED
-                },
-                {   // Incoming
-                    { Transition.REGISTER },                            // NEW
-                    { Transition.REGISTER },                            // DRAFT
-                    {},                                                 // PENDING
-                    {},                                                 // REQUESTED
-                    {},                                                 // RECONCILED
-                    {},                                                 // APPROVED
-                    {},                                                 // REJECTED
-                    { Transition.SEND },                                // REGISTERED
-                    {},                                                 // ACCEPTED
-                    { Transition.START, Transition.SEND },              // SENT
-                    { Transition.DONE }                                 // STARTED
-                },
-                {   // Outgoing
-                    { Transition.REQUEST, Transition.TORECONCILE },     // NEW
-                    { Transition.REQUEST, Transition.TORECONCILE },     // DRAFT
-                    { Transition.RECONCILE, Transition.REJECT },        // PENDING
-                    { Transition.APPROVE, Transition.REJECT },          // REQUESTED
-                    { Transition.REQUEST, Transition.TORECONCILE },     // RECONCILED
-                    { Transition.REGISTER },                            // APPROVED
-                    {},                                                 // REJECTED
-                    {}                                                  // REGISTERED
-                }
+                    {   // Internal
+                            { Transition.REQUEST, Transition.TORECONCILE },     // NEW
+                            { Transition.REQUEST, Transition.TORECONCILE },     // DRAFT
+                            { Transition.RECONCILE, Transition.REJECT },        // PENDING
+                            { Transition.APPROVE, Transition.REJECT },          // REQUESTED
+                            { Transition.REQUEST, Transition.TORECONCILE },     // RECONCILED
+                            { Transition.ACCEPT, Transition.REJECT },           // APPROVED
+                            {},                                                 // REJECTED
+                            {},                                                 // REGISTERED
+                            { Transition.SEND },                                // ACCEPTED
+                            { Transition.START, Transition.SEND },              // SENT
+                            { Transition.DONE }                                 // STARTED
+                    },
+                    {   // Incoming
+                            { Transition.REGISTER },                            // NEW
+                            { Transition.REGISTER },                            // DRAFT
+                            {},                                                 // PENDING
+                            {},                                                 // REQUESTED
+                            {},                                                 // RECONCILED
+                            {},                                                 // APPROVED
+                            {},                                                 // REJECTED
+                            { Transition.SEND },                                // REGISTERED
+                            {},                                                 // ACCEPTED
+                            { Transition.START, Transition.SEND },              // SENT
+                            { Transition.DONE }                                 // STARTED
+                    },
+                    {   // Outgoing
+                            { Transition.REQUEST, Transition.TORECONCILE },     // NEW
+                            { Transition.REQUEST, Transition.TORECONCILE },     // DRAFT
+                            { Transition.RECONCILE, Transition.REJECT },        // PENDING
+                            { Transition.APPROVE, Transition.REJECT },          // REQUESTED
+                            { Transition.REQUEST, Transition.TORECONCILE },     // RECONCILED
+                            { Transition.REGISTER },                            // APPROVED
+                            {},                                                 // REJECTED
+                            {}                                                  // REGISTERED
+                    }
             };
     //endregion
     private final static Map<Integer, String> responsible = new HashMap<Integer, String>() {
@@ -180,7 +192,7 @@ public class DocumentFlowController extends BaseController {
 
         if(getUser() == null) return "/login/login";
 
-        Document document = documentService.findById(id);
+        Document document = documentService.getById(id);
         //region XTRA
         // *************************************************************************************************************
         Map<String, String> vars = new HashMap<>();
@@ -230,11 +242,11 @@ public class DocumentFlowController extends BaseController {
                        @RequestParam("senderFiles") MultipartFile[] senderFiles,
                        @RequestParam("receiverFiles") MultipartFile[] receiverFiles) throws IOException {
 
-        String docType = documentTypeService.findById(document.getDocumentType().getId()).getInternalName();
+        String docType = documentTypeService.getById(document.getDocumentType().getId()).getInternalName();
 
         if(document.getId() != null)
         {
-            Document doc = documentService.findById(document.getId());
+            Document doc = documentService.getById(document.getId());
             document.setSenderAttachment(doc.getSenderAttachment());
             document.setReceiverAttachment(doc.getReceiverAttachment());
         }
@@ -301,7 +313,7 @@ public class DocumentFlowController extends BaseController {
 
         if(getUser() == null) return "/login/login";
 
-        Document document = documentService.findById(id);
+        Document document = documentService.getById(id);
 
         Map<String, String> vars = new HashMap<>();
         vars.put("objectId", document.getId().toString());
@@ -317,14 +329,14 @@ public class DocumentFlowController extends BaseController {
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public String delete(@PathVariable("id") Long id) {
 
-        Document document = documentService.findById(id);
+        Document document = documentService.getById(id);
 
         for(Task task : taskService.getTasksByObjectId(document.getId()))
         {
             taskService.remove(task);
         }
 
-        documentService.deleteById(document);
+        documentService.remove(document);
 
         return "redirect:/doc?type=" + document.getDocumentType().getInternalName();
     }
@@ -418,7 +430,7 @@ public class DocumentFlowController extends BaseController {
             document.getDispatchData().add(setDispatchData(State.DRAFT, ""));
             document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), ""));
 
-            documentService.save(document);
+            documentService.add(document);
 
             if(action.equals("REQUEST"))
             {
@@ -444,7 +456,7 @@ public class DocumentFlowController extends BaseController {
         //region Existing Document
         else
         {
-            Document doc = documentService.findById(document.getId());
+            Document doc = documentService.getById(document.getId());
 
             document.setUsers(doc.getUsers());
             document.setDocumentState(doc.getDocumentState());
@@ -666,7 +678,7 @@ public class DocumentFlowController extends BaseController {
                         + "<br>Дата : " + DATE_FORMAT.format(document.getReceiverRegisteredDate());
                 document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), description));
 
-                documentService.save(document);
+                documentService.add(document);
 
                 if (document.getReceiverResponsible().getResponsibleType() == 1)
                 {
@@ -691,7 +703,7 @@ public class DocumentFlowController extends BaseController {
         //region Existing Document
         else
         {
-            Document doc = documentService.findById(document.getId());
+            Document doc = documentService.getById(document.getId());
 
             document.setUsers(doc.getUsers());
             document.setDocumentState(doc.getDocumentState());
@@ -774,7 +786,7 @@ public class DocumentFlowController extends BaseController {
             document.getDispatchData().add(setDispatchData(State.DRAFT, ""));
             document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), ""));
 
-            documentService.save(document);
+            documentService.add(document);
 
             if(action.equals("REQUEST"))
             {
@@ -812,7 +824,7 @@ public class DocumentFlowController extends BaseController {
         //region Existing Document
         else
         {
-            Document doc = documentService.findById(document.getId());
+            Document doc = documentService.getById(document.getId());
 
             document.setUsers(doc.getUsers());
             document.setDocumentState(doc.getDocumentState());
@@ -942,5 +954,62 @@ public class DocumentFlowController extends BaseController {
             documentService.update(document);
         }
         //endregion
+    }
+
+    // *****************************************************************************************************************
+    // REST ************************************************************************************************************
+    // *****************************************************************************************************************
+    @RequestMapping("/data/documents")
+    @ResponseBody
+    public List<Document> documents(@RequestParam String name) {
+        List<Document> documents = new ArrayList<>();
+        for(Document document : documentService.getInvolvedDocuments(name, getUser().getId())) {
+            documents.add(document);
+        }
+        return documents;
+    }
+
+    @RequestMapping("/data/staff")
+    @ResponseBody
+    public List<Result> getStaff(@RequestParam String name) {
+        List<Result> data = new ArrayList<>();
+        for(Account account : accountService.getByName("staff", name))
+        {
+            data.add(new Result(account.getId(), account.getName()));
+        }
+
+        return data;
+    }
+
+    @RequestMapping("/data/department")
+    @ResponseBody
+    public List<Result> getDepartment(@RequestParam String name) {
+
+        List<Result> data = new ArrayList<>();
+        for(Account account : accountService.getByName("department", name)) {
+            data.add(new Result(account.getId(), account.getName()));
+        }
+        return data;
+    }
+
+    @RequestMapping("/data/organizations")
+    @ResponseBody
+    public List<Result> getOrganization(@RequestParam String name) {
+        List<Result> data = new ArrayList<>();
+        for(Account account : accountService.getByName("organization", name)) {
+            data.add(new Result(account.getId(), account.getName()));
+        }
+        return data;
+    }
+
+    @RequestMapping("/data/person")
+    @ResponseBody
+    public List<Result> getPerson(@RequestParam String name) {
+        List<Result> data = new ArrayList<>();
+        for(Account account : accountService.getByName("person", name))
+        {
+            data.add(new Result(account.getId(), account.getName()));
+        }
+        return data;
     }
 }
