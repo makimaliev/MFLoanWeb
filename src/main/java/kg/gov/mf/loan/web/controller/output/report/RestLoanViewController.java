@@ -75,11 +75,56 @@ public class RestLoanViewController {
         parameter.clear();
     }
     @PostMapping("/loanViews")
-    public LoanViewMetaModel getAllLoanViews(@RequestParam Map<String,String> datatable){
+    public List<LoanView> getAllLoanViews(@RequestParam Map<String,String> datatable){
+
+        LinkedHashMap<String,List<String>> parameters=new LinkedHashMap<>();
         String pageStr = datatable.get("datatable[pagination][page]");
         String perPageStr = datatable.get("datatable[pagination][perpage]");
         String sortStr = datatable.get("datatable[sort][sort]");
         String sortField = datatable.get("datatable[sort][field]");
+
+        boolean searchByDebtorName= datatable.containsKey("datatable[query][debtorName]");
+        if(searchByDebtorName){
+            String debtorName = datatable.get("datatable[query][debtorName]");
+            List<String> searchWord= Arrays.asList(debtorName);
+            parameters.put("r=ycv_debtor_name",searchWord);
+        }
+
+        boolean searchByRegNumber= datatable.containsKey("datatable[query][regNumber]");
+        if(searchByRegNumber){
+            String regNum = datatable.get("datatable[query][regNumber]");
+            List<String> searchWord= Arrays.asList(regNum);
+            parameters.put("r=ycv_loan_reg_number",searchWord);
+        }
+
+        boolean searchByDistrict = datatable.containsKey("datatable[query][districtId]");
+        if (searchByDistrict){
+            String districtStr = datatable.get("datatable[query][districtId]");
+            List<String> districtIds=Arrays.asList(districtStr);
+            parameters.put("r=inv_debtor_district_id",districtIds);
+        }
+
+        boolean searchByRegion = datatable.containsKey("datatable[query][regionId]");
+        if (searchByRegion){
+            String regionStr = datatable.get("datatable[query][regionId]");
+            List<String> regionIds=Arrays.asList(regionStr );
+            parameters.put("r=inv_debtor_region_id",regionIds);
+        }
+
+        boolean getFromDate= datatable.containsKey("datatable[query][fromDater]");
+        if (getFromDate){
+            String fromDateStr = datatable.get("datatable[query][fromDater]");
+            List<String> froms=Arrays.asList(fromDateStr);
+            parameters.put("r=aov_loan_reg_date",froms);
+        }
+
+        boolean getToDate= datatable.containsKey("datatable[query][toDater]");
+        if (getToDate){
+            String toDateStr = datatable.get("datatable[query][toDater]");
+            List<String> tos=Arrays.asList(toDateStr);
+            parameters.put("r=bov_loan_reg_date",tos);
+        }
+
 
         Integer page = Integer.parseInt(pageStr);
         Integer perPage = Integer.parseInt(perPageStr);
@@ -91,25 +136,24 @@ public class RestLoanViewController {
         System.out.println(parameter.values());
         System.out.println("==========================================================================================");
 
-        if(this.s.equals("start")){
+//        if(this.s.equals("start")){
 
-            List<LoanView> loanViewList=loanViewService.findByParameter(parameter,perPage,offset,sortStr,sortField);
-            long loanViews=loanViewService.getCount(parameter);
-
-            BigInteger count=BigInteger.valueOf(loanViews);
-
-
-            LoanViewMetaModel loanViewMetaModel=new LoanViewMetaModel();
-
-            Meta meta= new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, sortStr, sortField);
-
-            loanViewMetaModel.setMeta(meta);
-            loanViewMetaModel.setData(loanViewList);
-            return loanViewMetaModel;
-        }
-        else{
-            LinkedHashMap<String,List<String>> parameters=new LinkedHashMap<>();
-            List<LoanView> loanViewList=loanViewService.findByParameter(parameter,perPage,offset,sortStr,sortField);
+            List<LoanView> loanViewList=loanViewService.findByParameter(parameters,perPage,offset,sortStr,sortField);
+//            long loanViews=loanViewService.getCount(parameters);
+//
+//            BigInteger count=BigInteger.valueOf(loanViews);
+//
+//
+//            LoanViewMetaModel loanViewMetaModel=new LoanViewMetaModel();
+//
+//            Meta meta= new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, sortStr, sortField);
+//
+//            loanViewMetaModel.setMeta(meta);
+//            loanViewMetaModel.setData(loanViewList);
+            return loanViewList;
+//        }
+        /*else{
+            List<LoanView> loanViewList=loanViewService.findByParameter(parameters,perPage,offset,sortStr,sortField);
             long loanViews=loanViewService.getCount(parameters);
             BigInteger count=BigInteger.valueOf(loanViews);
 
@@ -121,7 +165,7 @@ public class RestLoanViewController {
             loanViewMetaModel.setMeta(meta);
             loanViewMetaModel.setData(loanViewList);
             return loanViewMetaModel;
-        }
+        }*/
 
 
 

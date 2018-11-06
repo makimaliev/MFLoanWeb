@@ -55,33 +55,108 @@
                 <!--Begin Portlet-->
                 <div class="m-portlet">
                     <div class="m-portlet__body">
-                            <a id="search_form" sec:authorize="hasRole('ADMIN')" data-remote="false"
-                               data-toggle="modal"
-                               data-target="#loanViewSearchFormModal"
-                               th:href="@{/loanView/search}"
-                               role="button"
-                               class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
-                                        <span>
-                                            <i class="la la-plus"></i>
-                                            <span>
-                                                Advanced search
-                                            </span>
-                                        </span>
-                            </a>
-                            <div class="m-separator m-separator--dashed d-xl-none"></div>
-                            <a id="colum_choose" sec:authorize="hasRole('ADMIN')" data-remote="false"
-                               data-toggle="modal"
-                               data-target="#loanViewColumnChooseFormModal"
-                               th:href="@{/loanView/columnChoose}"
-                               role="button"
-                               class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
-                                                    <span>
-                                                        <i class="la la-bars"></i>
-                                                        <span>
-                                                            Choose columns
-                                                        </span>
-                                                    </span>
-                            </a>
+                        <div class="row align-items-center">
+                            <div class="form-group m-form__group row align-items-center" style="margin-left: 10px">
+                                <div class="col-md-3">
+                                    <div class="m-input-icon m-input-icon--left">
+                                        <input type="text" class="form-control m-input m-input--solid" placeholder="debtor_name..." id="debtor_name">
+                                        <span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group date m_datetimepicker" id="from_datepicker">
+                                        <input  class="form-control m-input" th:placeholder="from_date" name="date" />
+                                        <span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
+                                    </div>
+                                    <div class="input-group date m_datetimepicker" id="to_datepicker">
+                                        <input  class="form-control m-input" th:placeholder="to_date" name="date" />
+                                        <span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="m-input-icon m-input-icon--left">
+                                        <input type="text" class="form-control m-input m-input--solid" placeholder="reg number..." id="reg_number">
+                                        <span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="m-form__group m-form__group--inline">
+                                        <div class="m-form__label">
+                                            <label>
+                                                Область:
+                                            </label>
+                                        </div>
+                                        <div class="m-form__control">
+                                            <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_region">
+                                                <option value="">
+                                                    Все
+                                                </option>
+                                                <option th:each="region: ${regions}" th:value="${region.id}" th:text="${region.name}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="m-form__group m-form__group--inline">
+                                        <div class="m-form__label">
+                                            <label>
+                                                Район:
+                                            </label>
+                                        </div>
+                                        <div class="m-form__control">
+                                            <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_district">
+                                                <option value="">
+                                                    Все
+                                                </option>
+                                                <option th:each="district : ${districts}" th:value="${district.id}" th:text="${district.name}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="d-md-none m--margin-bottom-10"></div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <!--<div class="col-md-5">-->
+                            <!--<a id="search_form" sec:authorize="hasRole('ADMIN')" data-remote="false"-->
+                               <!--data-toggle="modal"-->
+                               <!--data-target="#loanViewSearchFormModal"-->
+                               <!--th:href="@{/loanView/search}"-->
+                               <!--role="button"-->
+                               <!--class="m-portlet__nav-link btn btn-success m-btn m-btn&#45;&#45;air">-->
+                                        <!--<span>-->
+                                            <!--<i class="la la-plus"></i>-->
+                                            <!--<span>-->
+                                                <!--Advanced search-->
+                                            <!--</span>-->
+                                        <!--</span>-->
+                            <!--</a>-->
+                            <!--<div class="m-separator m-separator&#45;&#45;dashed d-xl-none"></div>-->
+                            <!--<a id="colum_choose" sec:authorize="hasRole('ADMIN')" data-remote="false"-->
+                               <!--data-toggle="modal"-->
+                               <!--data-target="#loanViewColumnChooseFormModal"-->
+                               <!--th:href="@{/loanView/columnChoose}"-->
+                               <!--role="button"-->
+                               <!--class="m-portlet__nav-link btn btn-success m-btn m-btn&#45;&#45;air">-->
+                                                    <!--<span>-->
+                                                        <!--<i class="la la-bars"></i>-->
+                                                        <!--<span>-->
+                                                            <!--Choose columns-->
+                                                        <!--</span>-->
+                                                    <!--</span>-->
+                            <!--</a>-->
+                        <!--</div>-->
 
                         <!--begin: Datatable -->
                         <div class="m_datatable" id="ajax_data"></div>
@@ -113,6 +188,26 @@
 </div>
 
 <div th:replace="fragments/footer :: footer-js"/>
+<script>
+    $('#from_datepicker').datetimepicker({
+        format: "dd.mm.yyyy",
+        todayHighlight: true,
+        autoclose: true,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        pickerPosition: 'bottom-left'
+    });
+    $('#to_datepicker').datetimepicker({
+        format: "dd.mm.yyyy",
+        todayHighlight: true,
+        autoclose: true,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        pickerPosition: 'bottom-left'
+    });
+</script>
 <script th:inline="javascript" >
     var sds=[[${selectedFieldsTranslated}]];
     var asaa=[[${selectedFieldNamesWithId}]];
@@ -162,6 +257,17 @@
                 };
                 columnes.push(stringOfFields);
             }
+            else if(lines.includes("date")){
+                // alert("1"+lines)
+                stringOfFields={field:lines,title:sds[counter++],
+                    textAlign:'center',
+                    template: function (row) {
+                        var date = moment("/Date("+row[lines]+")/").format("DD.MM.YYYY");
+                        // alert(row[lines])
+                        return date;
+                    }};
+                columnes.push(stringOfFields);
+            }
             else{
                 stringOfFields={field:lines,title:sds[counter++]};
                 columnes.push(stringOfFields);
@@ -173,7 +279,6 @@
                 stringOfFields={field:liness,title:sds[counter++],
                     template: function (row) {
                         t=asaa[$.trim(liness)];
-                        console.log(liness)
                         for(var key in t){
                             if(row[$.trim(liness)]==key){
                                 return t[key];
@@ -181,6 +286,17 @@
                         }
                     }
                 };
+                columnes.push(stringOfFields);
+            }
+            else if(liness.includes("date")){
+                // alert("2"+liness)
+                stringOfFields={field:liness,title:sds[counter++],
+                    textAlign:'center',
+                    template: function (row) {
+                        var date = moment("/Date("+row[liness]+")/").format("DD.MM.YYYY");
+                        // alert(row[liness])
+                        return date;
+                    }};
                 columnes.push(stringOfFields);
             }
             else{
@@ -226,7 +342,7 @@
                             url: '/api/loanViews/'
                         }
                     },
-                    pageSize: 10,
+                    pageSize: 100,
                     saveState: {
                         cookie: false,
                         webstorage: false
@@ -247,7 +363,7 @@
                 sortable: true,
                 // column based filtering
                 filterable: false,
-                pagination: true,
+                pagination: false,
                 // columns definition
                 columns: columnes,
                 translate: {
@@ -273,6 +389,31 @@
                     }
                 }
             });
+            $('#m_form_region, #m_form_district').selectpicker();
+            var query = datatable.getDataSourceQuery();
+            $('#debtor_name').on('keyup', function () {
+                datatable.search($(this).val(), 'debtorName');
+            }).val(typeof query.debtorName !== 'undefined' ? query.debtorName: '');
+
+            $('#m_form_region').on('change', function () {
+                datatable.search($(this).val(), 'regionId');
+            }).val(typeof query.regionId !== 'undefined' ? query.regionId : '');
+
+            $('#m_form_district').on('change', function () {
+                datatable.search($(this).val(), 'districtId');
+            }).val(typeof query.districtId !== 'undefined' ? query.districtId : '');
+
+            $('#from_datepicker').on('change', function () {
+                datatable.search($(this).find("input").val(), 'fromDater');
+            }).val(typeof query.fromDater!== 'undefined' ? query.fromDater: '');
+
+            $('#to_datepicker').on('change', function () {
+                datatable.search($(this).find("input").val(), 'toDater');
+            }).val(typeof query.toDater!== 'undefined' ? query.toDater: '');
+
+            $('#reg_number').on('change', function () {
+                datatable.search($(this).val(), 'regNumber');
+            }).val(typeof query.regNumber!== 'undefined' ? query.regNumber: '');
 
         };
         return {

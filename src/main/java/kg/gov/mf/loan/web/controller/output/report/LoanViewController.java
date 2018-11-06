@@ -1,6 +1,8 @@
 package kg.gov.mf.loan.web.controller.output.report;
 
 
+import kg.gov.mf.loan.admin.org.service.DistrictService;
+import kg.gov.mf.loan.admin.org.service.RegionService;
 import kg.gov.mf.loan.admin.sys.service.MessageResourceService;
 import kg.gov.mf.loan.output.report.model.GroupType;
 import kg.gov.mf.loan.output.report.model.LoanView;
@@ -37,6 +39,12 @@ public class LoanViewController {
 
     @Autowired
     ContentParameterService contentParameterService;
+
+    @Autowired
+    RegionService regionService;
+
+    @Autowired
+    DistrictService districtService;
 
 
     LinkedHashMap<String,String> selected=new LinkedHashMap<>();
@@ -101,23 +109,22 @@ public class LoanViewController {
             String a=messageByLocaleService.getMessage("v_debtor_name");
             selectedFieldNamesTranslated.add(a);
             selectedFieldNames.add("v_debtor_name");
-            a=messageByLocaleService.getMessage("v_loan_reg_date");
-            selectedFieldNames.add("v_loan_reg_date");
-            selectedFieldNamesTranslated.add(a);
             a=messageByLocaleService.getMessage("v_loan_amount");
             selectedFieldNames.add("v_loan_amount");
             selectedFieldNamesTranslated.add(a);
             a=messageByLocaleService.getMessage("v_loan_reg_number");
             selectedFieldNames.add("v_loan_reg_number");
             selectedFieldNamesTranslated.add(a);
-            a=messageByLocaleService.getMessage("v_loan_supervisor_id");
-            selectedFieldNames.add("v_loan_supervisor_id");
-            selectedFieldNamesWithId.add("v_loan_supervisor_id");
+            a=messageByLocaleService.getMessage("v_loan_reg_date");
+            selectedFieldNames.add("v_loan_reg_date");
             selectedFieldNamesTranslated.add(a);
         }
         model.addAttribute("selectedFields",selectedFieldNames);
         model.addAttribute("selectedFieldsTranslated",selectedFieldNamesTranslated);
         model.addAttribute("selectedFieldNamesWithId",resultListOfReferenceView);
+        model.addAttribute("regions",regionService.findAll());
+        model.addAttribute("districts",districtService.findAll());
+
         return "output/report/loanViewList";
     }
 
