@@ -277,6 +277,14 @@ public class ReportTemplateController {
 				generateReport(out,response,new ReportGeneratorPaymentSchedule(), reportTemplate);
 				break;
 
+			case "LOAN_PLAN":
+				generateReport(out,response,new ReportGeneratorSupervisorPlan(), reportTemplate);
+				break;
+
+			case "LOAN_DEBT_TRANSFER":
+				generateReport(out,response,new ReportGeneratorLoanDebtTransfer(), reportTemplate);
+				break;
+
 			case "COLLECTION_PHASE":
 				generateReport(out,response,new ReportGeneratorCollectionPhase(), reportTemplate);
 				break;
