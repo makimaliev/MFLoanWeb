@@ -1,24 +1,22 @@
 SET NAMES 'utf8';
 
-INSERT INTO cat_document_type (version, name, internalName) VALUES ('1', 'Внутренний', 'internal');
-INSERT INTO cat_document_type (version, name, internalName) VALUES ('1', 'Входяший', 'incoming');
-INSERT INTO cat_document_type (version, name, internalName) VALUES ('1', 'Исходяший', 'outgoing');
+INSERT INTO cat_document_type (version, name, internalName) VALUES ('1', 'Р’РЅСѓС‚СЂРµРЅРЅРёР№', 'internal');
+INSERT INTO cat_document_type (version, name, internalName) VALUES ('1', 'Р’С…РѕРґСЏС‰РёР№', 'incoming');
+INSERT INTO cat_document_type (version, name, internalName) VALUES ('1', 'РСЃС…РѕРґСЏС‰РёР№', 'outgoing');
 
-INSERT INTO cat_document_subtype (version, name, internalName, documentType_id) VALUES ('1', 'Служебная записка', 'zapiska', 1);
-INSERT INTO cat_document_subtype (version, name, internalName, documentType_id) VALUES ('1', 'Заявление', 'zayavleniye', 1);
-INSERT INTO cat_document_subtype (version, name, internalName, documentType_id) VALUES ('1', 'Приказ', 'prikaz', 1);
-INSERT INTO cat_document_subtype (version, name, internalName, documentType_id) VALUES ('1', 'Договор', 'dogovor', 2);
-INSERT INTO cat_document_subtype (version, name, internalName, documentType_id) VALUES ('1', 'Протокол', 'protocol', 3);
+INSERT INTO cat_document_subtype (version, name, internalName, documentType_id) VALUES ('1', 'РЎР»СѓР¶РµР±РЅР°СЏ Р·Р°РїРёСЃРєР°', 'zapiska', 1);
+INSERT INTO cat_document_subtype (version, name, internalName, documentType_id) VALUES ('1', 'Р—Р°СЏРІР»РµРЅРёРµ', 'zayavleniye', 1);
+INSERT INTO cat_document_subtype (version, name, internalName, documentType_id) VALUES ('1', 'РџСЂРёРєР°Р·', 'prikaz', 1);
 
-INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(1, 1, 'create', 'Создан', 'Создать');
-INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(2, 1, 'request', 'На рассмотрении', 'На рассмотрение');
-INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(3, 1, 'approve', 'Утвержден', 'Утвердить');
-INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(4, 1, 'reject', 'Отклонен', 'Отклонить');
-INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(5, 1, 'register', 'Зарегистрирован', 'Зарегистрировать');
-INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(6, 1, 'accept', 'Принят', 'Принять');
-INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(7, 1, 'start', 'Начат', 'Начать');
-INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(8, 1, 'done', 'Завершен', 'Завершить');
-INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(9, 1, 'send', 'Отправлен на исполнение', 'Отправить на исполнение');
+INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(1, 1, 'create', 'РЎРѕР·РґР°РЅ', 'РЎРѕР·РґР°С‚СЊ');
+INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(2, 1, 'request', 'РќР° СЂР°СЃСЃРјРѕС‚СЂРµРЅРёРё', 'РќР° СЂР°СЃСЃРјРѕС‚СЂРµРЅРёРµ');
+INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(3, 1, 'approve', 'РЈС‚РІРµСЂР¶РґРµРЅ', 'РЈС‚РІРµСЂРґРёС‚СЊ');
+INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(4, 1, 'reject', 'РћС‚РєР»РѕРЅРµРЅ', 'РћС‚РєР»РѕРЅРёС‚СЊ');
+INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(5, 1, 'register', 'Р—Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅ', 'Р—Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°С‚СЊ');
+INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(6, 1, 'accept', 'РџСЂРёРЅСЏС‚', 'РџСЂРёРЅСЏС‚СЊ');
+INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(7, 1, 'start', 'РРЅРёС†РёРёСЂРѕРІР°РЅ', 'РРЅРёС†РёРёСЂРѕРІР°С‚СЊ');
+INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(8, 1, 'done', 'Р—Р°РІРµСЂС€РµРЅ', 'Р—Р°РІРµСЂС€РёС‚СЊ');
+INSERT INTO cat_document_status(id, version, internalName, name, actionName) VALUES(9, 1, 'send', 'РћС‚РїСЂР°РІР»РµРЅ РЅР° РёСЃРїРѕР»РЅРµРЅРёРµ', 'РћС‚РїСЂР°РІРёС‚СЊ РЅР° РёСЃРїРѕР»РЅРµРЅРёРµ');
 
 DROP TABLE IF EXISTS account;
 
