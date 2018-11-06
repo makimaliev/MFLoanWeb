@@ -317,7 +317,16 @@ public class PersonController {
 	public String savePersonAndRedirectToPersonList(@Validated @ModelAttribute("person") Person person, BindingResult result) {
 
 
+
+		IdentityDocDetails identityDocDetails = person.getIdentityDoc().getIdentityDocDetails();
+
+		identityDocDetails.setFirstname(identityDocDetails.getFirstname().substring(0,identityDocDetails.getFirstname().indexOf(",")));
+		identityDocDetails.setLastname(identityDocDetails.getLastname().substring(0,identityDocDetails.getLastname().indexOf(",")));
+		identityDocDetails.setMidname(identityDocDetails.getMidname().substring(0,identityDocDetails.getMidname().indexOf(",")));
+
 		person.getIdentityDoc().getIdentityDocDetails().setFullname(person.getIdentityDoc().getIdentityDocDetails().getLastname() +" "+person.getIdentityDoc().getIdentityDocDetails().getFirstname()+" "+person.getIdentityDoc().getIdentityDocDetails().getMidname());
+
+
 		person.setName(person.getIdentityDoc().getIdentityDocDetails().getFullname());
 
 

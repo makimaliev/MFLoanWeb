@@ -249,7 +249,7 @@
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
 								<div class="input-group date m_datetimepicker_6">
-									<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:value="${person.identityDoc.date}"/>
+									<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" id="identityDoc.date" name="identityDoc.date" th:value="*{identityDoc.date}"/>
 									<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
