@@ -8,6 +8,13 @@ body{
 	font-size: 14px;
 }
 
+
+/*Font Colors*/
+.m--font-primary,
+.m--font-brand{
+    color: #00119a !important;
+}
+
 /*Buttons*/
 .btn,
 .form-control,
@@ -23,7 +30,7 @@ body{
 }
 .btn.btn-default,
 .btn.btn-secondary{
-	border-color: #333;
+	border-color: #ccc;
 }
 .btn-reset{
 	background: none;
@@ -87,7 +94,7 @@ body{
 	padding: 8px 12px;
 }
 .form-control[readonly], .form-control{
-	border-color: #333;
+	border-color: #ccc;
 }
 .m-form.m-form--fit .m-form__content,
 .m-form.m-form--fit .m-form__heading,
@@ -342,7 +349,9 @@ body{
 	font-size: 12px;
 	padding: 8px 12px;
 }
-
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link--active{
+	background: #1300ff;
+}
 
 /*Portlet*/
 .m-portlet{
@@ -351,7 +360,7 @@ body{
 .m-portlet .m-portlet__head{
 	padding: 0 8px;
 	height: 40px;
-	border-color: #333;
+	border-color: #ccc;
 }
 .m-portlet .m-portlet__head .m-portlet__head-caption .m-portlet__head-title .m-portlet__head-text{
 	font-size: 14px;
@@ -401,7 +410,7 @@ body{
 	padding: 6px 12px;
 	font-size: 10px;
 	text-transform: uppercase;
-	font-weight: 600;
+	font-weight: 700;
 }
 
 /*Tables*/
@@ -411,7 +420,7 @@ body{
 .table td,
 .table th{
 	vertical-align: middle;
-	border-color: #333;
+	border-color: #ccc;
 }
 .table th{
 	padding: 8px;
@@ -443,7 +452,7 @@ body{
 	margin-bottom: 8px;
 }
 .table.dataTable tr:last-child td{
-	border-bottom: 1px solid #333;
+	border-bottom: 1px solid #ccc;
 }
 .dataTables_wrapper .dataTables_paginate{
 	display: inline-block;
@@ -465,7 +474,7 @@ body{
 	width: 24px;
 	font-size: 12px;
 	font-weight: 500;
-	color: #716aca;
+	color: #00119a;
 	background: #edecf8;
 	margin-right: 8px;
 }
@@ -477,7 +486,7 @@ body{
 	line-height: 22px;
 }
 .dataTables_paginate .paginate_button.current{
-	background: #716aca;
+	background: #00119a;
 	color: #ffffff;
 }
 .dataTables_paginate .paginate_button i{
@@ -550,6 +559,9 @@ table.dataTable th.focus, table.dataTable td.focus{
 .m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__body,
 .m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__foot{
 	font-size: 12px;
+}
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link--first, .m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link--prev, .m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link--next, .m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link--last{
+    color: #00119a;
 }
 
 /*Widget*/
