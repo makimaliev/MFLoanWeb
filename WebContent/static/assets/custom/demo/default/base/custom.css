@@ -1,6 +1,7 @@
 /*General*/
 body{
 	font-family: 'Montserrat', sans-serif;
+    color: #000;
 }
 
 /*Icons*/
@@ -13,6 +14,11 @@ body{
 .m--font-primary,
 .m--font-brand{
     color: #00119a !important;
+}
+.m-subheader .m-subheader__title,
+.m-portlet .m-portlet__body,
+.m-portlet .m-portlet__head .m-portlet__head-text{
+    color: #000000;
 }
 
 /*Buttons*/
@@ -39,8 +45,8 @@ body{
 	color: #333;
 }
 .m-btn--icon.m-btn--icon-only{
-	width: 23px;
-	height: 23px;
+	width: 16px;
+	height: 16px;
 }
 .m-input-icon__icon{
 	cursor: pointer;
@@ -78,6 +84,10 @@ body{
 	-moz-box-shadow: none;
 	box-shadow: none;
 }
+.btn.m-btn--hover-accent:not(.btn-secondary):not(.btn-outline-light) i,
+.btn.m-btn--hover-danger:not(.btn-secondary):not(.btn-outline-light) i{
+    color: #000000;
+}
 
 /*Dropdown*/
 .dropdown-menu > li > a,
@@ -91,7 +101,7 @@ body{
 }
 .form-control{
 	line-height: 1.25;
-	padding: 8px 12px;
+	padding: 6px 12px;
 }
 .form-control[readonly], .form-control{
 	border-color: #ccc;
@@ -277,7 +287,7 @@ body{
 
 /*Content*/
 .m-subheader{
-	padding: 16px 16px 0 16px;
+	padding: 4px 16px 0 32px;
 }
 .m-subheader .m-subheader__title{
 	font-size: 14px;
@@ -294,7 +304,7 @@ body{
 }
 
 .m-body .m-content{
-	padding: 16px;
+	padding: 4px 16px;
 }
 
 
@@ -352,10 +362,15 @@ body{
 .m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link--active{
 	background: #1300ff;
 }
+.m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__head .m-datatable__row
+, .m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__body .m-datatable__row,
+.m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__foot .m-datatable__row{
+    height: 32px !important;
+}
 
 /*Portlet*/
 .m-portlet{
-	margin-bottom: 16px;
+	margin-bottom: 12px;
 }
 .m-portlet .m-portlet__head{
 	padding: 0 8px;
@@ -412,6 +427,12 @@ body{
 	text-transform: uppercase;
 	font-weight: 700;
 }
+.nav-tabs .nav-link.active, 
+.nav-tabs .nav-item.show .nav-link{
+    background: #00119a;
+    color: #ffffff !important;
+    border-color: #00119a;
+}
 
 /*Tables*/
 .table{
@@ -445,6 +466,10 @@ body{
 .table-actions .btn-reset{
 	font-size: 12px;
 	font-weight: 500;
+}
+.thead-default th{
+    background: #6cacff;
+    color: #ffffff;
 }
 
 /*DataTables*/
@@ -548,11 +573,11 @@ table.dataTable th.focus, table.dataTable td.focus{
 .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__head .m-datatable__row > .m-datatable__cell,
 .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__body .m-datatable__row > .m-datatable__cell,
 .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__foot .m-datatable__row > .m-datatable__cell{
-	padding: 8px;
+	padding: 4px 8px;
 	font-size: 12px;
 }
 .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__body .m-datatable__row > .m-datatable__cell > span{
-	color: #333;
+	color: #000;
 	font-weight: 400;
 }
 .m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__head,
@@ -562,6 +587,13 @@ table.dataTable th.focus, table.dataTable td.focus{
 }
 .m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link--first, .m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link--prev, .m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link--next, .m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link--last{
     color: #00119a;
+}
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__head .m-datatable__row > .m-datatable__cell, .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__foot .m-datatable__row > .m-datatable__cell{
+    background: #6cacff;
+}
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__head .m-datatable__row > .m-datatable__cell > span,
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__foot .m-datatable__row > .m-datatable__cell > span{
+    color: #ffffff;
 }
 
 /*Widget*/

@@ -4165,7 +4165,7 @@ jQuery.fn.extend({
             mobile: false,
             desktop: false
         }
-    }; 
+    };
 }(jQuery));
 (function($) {
 
@@ -5725,7 +5725,6 @@ jQuery.fn.extend({
 
     // default options
     $.fn.mToggle.defaults = {
-
         togglerState: '',
         targetState: ''
     }; 
