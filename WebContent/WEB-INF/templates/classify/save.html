@@ -609,12 +609,18 @@
     function changeInputType(i, orig)
     {
         var optionVal = $('#fieldNames' + i + ' option:selected').val();
+        console.log(optionVal);
+        console.log(orig);
 
         var lookupTableName = orig[optionVal].lookupTableName;
 
-        if(lookupTableName == '')
+        console.log(lookupTableName);
+
+        if(lookupTableName == '' || lookupTableName == 0)
         {
             var type = orig[optionVal].field_type;
+
+            console.log(type);
 
             if(type == 'bigint(20)')
             {
