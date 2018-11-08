@@ -60,7 +60,7 @@
     </div>
 </div>
 
-<header class="m-grid__item    m-header "  m-minimize-mobile="hide" m-minimize-offset="200" m-minimize-mobile-offset="200" m-minimize="minimize" >
+<header class="m-grid__item    m-header "  data-minimize-mobile="hide" data-minimize-offset="200" data-minimize-mobile-offset="200" data-minimize="minimize" >
 
 <div class="m-container m-container--fluid m-container--full-height">
         <div class="m-stack m-stack--ver m-stack--desktop">
@@ -101,7 +101,7 @@
                 <!-- BEGIN: Horizontal Menu -->
                 <div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-light m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-dark m-aside-header-menu-mobile--submenu-skin-dark "  >
                     <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
-                        <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  m-menu-submenu-toggle="click" aria-haspopup="true" th:switch="__${#locale}__">
+                        <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" aria-haspopup="true" th:switch="__${#locale}__">
                             <a href="#" class="m-menu__link m-menu__toggle">
                                 <span class="lang-img">
                                     <img  alt="" th:src="@{/assets/global/img/flags/} + ${#locale} + '.png'" />
