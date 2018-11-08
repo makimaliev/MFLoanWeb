@@ -15,7 +15,7 @@
 </head>
 <!-- end::Head -->
 <!-- end::Body -->
-<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
 <!-- begin:: Page -->
 <div class="m-grid m-grid--hor m-grid--root m-page">
 	<!-- BEGIN: Header -->
@@ -32,7 +32,7 @@
 			<div class="m-subheader ">
 				<div class="d-flex align-items-center">
 					<div class="mr-auto">
-						<h3 class="m-subheader__title m-subheader__title--separator">
+						<h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.organization}">
 							Organizations
 						</h3>
 						<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
@@ -46,14 +46,14 @@
 							</li>
 							<li class="m-nav__item ">
 								<a th:href="@{/organization/}" class="m-nav__link m-nav__link--icon">
-									<span class="m-nav__link-text">Lists of organizations</span>
+									<span class="m-nav__link-text" th:text="#{label.organizations}">Lists of organizations</span>
 								</a>
 							</li>
 							<li class="m-nav__separator">
 								-
 							</li>
 							<li class="m-nav__item">
-								<span class="m-nav__link-text">Details of organizations</span>
+								<span class="m-nav__link-text" th:text="#{label.details.organization}">Details of organizations</span>
 							</li>
 						</ul>
 					</div>
@@ -369,7 +369,7 @@
 														<div class="row m-row--no-padding align-items-center">
 															<div class="col">
 																<h3 class="m-widget1__title">Дата выдачи</h3>
-																<span class="m-widget1__desc m--font-brand" th:text="${organization?.identityDoc?.date}"></span>
+																<span class="m-widget1__desc m--font-brand" th:text="${#dates.format(organization?.identityDoc?.date, 'dd.MM.yyyy')}"></span>
 															</div>
 														</div>
 													</div>
@@ -401,7 +401,7 @@
 															<div class="m-widget1__item">
 																<div class="row m-row--no-padding align-items-center">
 																	<div class="col">
-																		<h3 class="m-widget1__title">Номер телефона</h3>
+																		<h3 class="m-widget1__title" th:text="#{label.tel.number}">Номер телефона</h3>
 
 																		<loop th:each="contactInList : ${organization.contact}">
 																			<span class="m-widget1__desc m--font-brand" th:text="${contactInList?.name}"></span>
@@ -512,7 +512,7 @@
 																	<ul class="m-portlet__nav">
 																		<li class="m-portlet__nav-item">
 																			<div class="m-input-icon m-input-icon--left">
-																				<input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
+																				<input type="text" class="form-control m-input" th:placeholder="#{label.search}" id="generalSearch">
 																				<span class="m-input-icon__icon m-input-icon__icon--left">
 																					<span><i class="la la-search"></i></span>
 																				</span>
@@ -526,8 +526,8 @@
 																	<thead class="thead-default">
 																	<tr>
 																		<th>ID</th>
-																		<th th:text="#{label.department.name}">Id</th>
-																		<th th:text="#{label.department.description}">Name</th>
+																		<th th:text="#{label.department.name}"></th>
+																		<th th:text="#{label.department.description}"></th>
 																		<th>&nbsp;</th>
 																	</tr>
 																	</thead>
@@ -605,23 +605,24 @@
 
 												</div>
 											</div>
+
 											<div class="tab-pane " id="tab_15_6">
 												<table
 														class="table table-hover table-condensed table-striped table-bordered compact condensed"
 														id="informationTable">
 													<thead>
 													<tr>
-														<th>Id</th>
-														<th>Name</th>
-														<th>Description</th>
-														<th>isTitle</th>
-														<th>Number</th>
-														<th>Date</th>
-														<th>ObjectTypeId</th>
-														<th>ObjectId</th>
-														<th>View</th>
-														<th>Edit</th>
-														<th>Delete</th>
+														<th th:text="#{label.organization.id}">Id</th>
+														<th th:text="#{label.organization.name}">Name</th>
+														<th th:text="#{label.organization.description}">Description</th>
+														<th th:text="#{label.organization.title}">isTitle</th>
+														<th th:text="#{label.organization.number}">Number</th>
+														<th th:text="#{label.organization.date}">Date</th>
+														<th th:text="#{label.organization.typeId}">ObjectTypeId</th>
+														<th th:text="#{label.organization.objectId}">ObjectId</th>
+														<th th:text="#{label.organization.view}">View</th>
+														<th th:text="#{label.organization.edit}">Edit</th>
+														<th th:text="#{label.organization.delete}">Delete</th>
 													</tr>
 													</thead>
 													<tbody>

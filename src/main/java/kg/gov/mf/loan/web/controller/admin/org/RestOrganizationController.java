@@ -67,7 +67,7 @@ public class RestOrganizationController {
 //        setBankDataOrganization(organizations);
         setStaffName(organizations);
         List<OrganizationModel> organizationModels=new ArrayList<>();
-        if(searchBy){
+        if(searchBy && searchStr!=null){
             organizationModels=searchFunction(organizations,searchStr);
         }
         else{
@@ -83,7 +83,7 @@ public class RestOrganizationController {
                 smallList.add(organizationModels.get(i));
             }
             catch (Exception e){
-                break;
+
             }
         }
         metaModel.setData(smallList);
@@ -161,9 +161,12 @@ public class RestOrganizationController {
         searchStr=searchStr.toLowerCase();
         List<OrganizationModel> smallList=new ArrayList<>();
         for(int i=0;i<organizations.size();i++){
-            if(organizations.get(i).getBigData().toLowerCase().contains(searchStr) || organizations.get(i).getDistrictName().toLowerCase().contains(searchStr)|| organizations.get(i).getOrganizationDescription().toLowerCase().contains(searchStr)|| organizations.get(i).getOrganizationName().toLowerCase().contains(searchStr)){
-                smallList.add(organizations.get(i));
+            try {
+                if(organizations.get(i).getBigData().toLowerCase().contains(searchStr) || organizations.get(i).getDistrictName().toLowerCase().contains(searchStr)|| organizations.get(i).getOrganizationDescription().toLowerCase().contains(searchStr)|| organizations.get(i).getOrganizationName().toLowerCase().contains(searchStr)){
+                    smallList.add(organizations.get(i));
+                }
             }
+            catch (Exception e){}
         }
 
         return smallList;

@@ -1,4 +1,5 @@
-<form th:action="@{/person/save}" class="form-horizontal" method="post" th:object="${person}">
+<form th:action="@{/person/save}" class="form-horizontal" method="post" th:object="${person}"
+	  xmlns:th="http://www.w3.org/1999/xhtml">
 	<div class="modal-header">
 		<h5 class="modal-title" th:text="#{label.add.person}"></h5>
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -107,7 +108,8 @@
 									<option th:each="regionInList : ${regionList}"
 											th:value="${regionInList.id}"
 											th:selected="(${regionInList.id} == *{address.region.id})"
-											th:text="${regionInList.name}"></option>
+											th:text="${regionInList.name}"
+											th:field="${person.address.region.id}"></option>
 								</select>
 							</div>
 						</div>
@@ -239,9 +241,6 @@
 								<input type="text" class="form-control" name="number" th:field="${person.identityDoc.number}"/>
 							</div>
 						</div>
-
-
-
 						<div class="form-group m-form__group row">
 							<label class="col-form-label col-lg-4 col-sm-12">
 								<span th:text="#{label.identityDoc.date}"></span>
@@ -249,7 +248,7 @@
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
 								<div class="input-group date m_datetimepicker_6">
-									<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" id="identityDoc.date" name="identityDoc.date" th:value="*{identityDoc.date}"/>
+									<input  class="form-control m-input" th:placeholder="#{label.select.date}" id="identityDoc.date" name="identityDoc.date" th:value="*{identityDoc.date}" th:field="${person.identityDoc.date}"/>
 									<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>

@@ -139,7 +139,7 @@
 								<span class="m--font-danger">*</span>
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
-								<input type="text" class="form-control" name="number" th:field="${organization.identityDoc.number}"/>
+								<input type="text" class="form-control" name="number" th:field="${organization.identityDoc.number}" th:value="${organization.identityDoc.number} "/>
 							</div>
 						</div>
 
@@ -152,7 +152,7 @@
 							</label>
 							<div class="col-lg-8 col-md-9 col-sm-12">
 								<div class="input-group date m_datetimepicker_6">
-									<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:value="${organization.identityDoc.date} "/>
+									<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:field="${organization.identityDoc.date}" th:value="${organization.identityDoc.date} "/>
 									<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -370,7 +370,7 @@
 	</div>
 	<div class="modal-footer">
 		<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.orgForm.button.cancel}"></button>
-		<button type="submit" class="btn btn-primary" th:text="#{label.button.save}"></button>
+		<button type="submit" class="btn btn-primary" th:text="#{label.button.save}" id="uwul"></button>
 	</div>
 </form>
 
@@ -464,7 +464,6 @@
         forceParse: 0,
         pickerPosition: 'bottom-left'
     });
-
 
 
 

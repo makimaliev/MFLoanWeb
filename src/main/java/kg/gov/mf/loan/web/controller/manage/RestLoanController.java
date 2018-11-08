@@ -26,9 +26,16 @@ public class RestLoanController {
         return loanRepository.findAll(pageable);
     }
 
+
+    private Long debtorId;
+
+    @PostMapping("/getDebtorId")
+    public void setDebtorId(@RequestParam(value = "q") Long q){
+        this.debtorId=q;
+    }
     @GetMapping("/loans/search")
-    public String[] getLoansByRegNumber(@RequestParam(value = "q") String q) {
-        List<Loan> loans = loanRepository.findByRegNumberContains(q);
+    public String[] getLoansByRegNumber( @RequestParam(value = "q") String q) {
+        List<Loan> loans = loanRepository.findByDebtorIdAndRegNumberContains(this.debtorId,q);
         String[] sLoans = new String[loans.size()];
         int i = 0;
         for (Loan loan:loans
@@ -41,7 +48,8 @@ public class RestLoanController {
 
     @GetMapping("/staffs/search")
     public String[] getStaffByName(@RequestParam(value = "q") String q) {
-        List<Staff> staffList = staffRepository.findByNameContains(q);
+//        List<Staff> staffList = staffRepository.findByNameContains(q);
+        List<Staff> staffList=staffRepository.findByOrganizationIdAndNameContains(1,q);
         String[] sStaffList = new String[staffList.size()];
         int i = 0;
         for (Staff staff:staffList

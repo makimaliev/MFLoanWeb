@@ -12,7 +12,7 @@
 </head>
 <!-- end::Head -->
 <!-- end::Body -->
-<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
 <!-- begin:: Page -->
 <div class="m-grid m-grid--hor m-grid--root m-page">
 	<!-- BEGIN: Header -->
@@ -50,7 +50,7 @@
 								-
 							</li>
 							<li class="m-nav__item">
-								<span class="m-nav__link-text">Details of person</span>
+								<span class="m-nav__link-text" th:text="#{label.details.of.person}">Details of person</span>
 							</li>
 						</ul>
 					</div>
@@ -259,7 +259,11 @@
 														<div class="row m-row--no-padding align-items-center">
 															<div class="col">
 																<h3 class="m-widget1__title">Дата выдачи</h3>
-																<span class="m-widget1__desc m--font-brand" th:text="${person?.identityDoc?.date}"></span>
+																<span class="m-widget1__desc m--font-brand" th:text="${#dates.format(person?.identityDoc?.date, 'dd.MM.yyyy')}"></span>
+
+
+
+
 															</div>
 														</div>
 													</div>

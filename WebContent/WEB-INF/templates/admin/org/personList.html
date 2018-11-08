@@ -2,14 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <!-- begin::Head -->
 <head>
-	<title>Физ.лицо</title>
+	<title th:text="#{label.persons}">Физ.лицо</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
 <!-- end::Head -->
 
 <!-- end::Body -->
-<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
 <!-- begin:: Page -->
 <div class="m-grid m-grid--hor m-grid--root m-page">
 	<!-- BEGIN: Header -->
@@ -25,7 +25,7 @@
 			<div class="m-subheader ">
 				<div class="d-flex align-items-center">
 					<div class="mr-auto">
-						<h3 class="m-subheader__title m-subheader__title--separator">
+						<h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.persons}">
 							Физ.лица
 						</h3>
 						<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
@@ -38,7 +38,7 @@
 								-
 							</li>
 							<li class="m-nav__item">
-								<span class="m-nav__link-text">Список физ.лиц</span>
+								<span class="m-nav__link-text" th:text="#{label.persons}">Список физ.лиц</span>
 							</li>
 						</ul>
 					</div>
@@ -56,7 +56,7 @@
 									<div class="form-group m-form__group row align-items-center">
 										<div class="col-md-4">
 											<div class="m-input-icon m-input-icon--left">
-												<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search">
+												<input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search">
 												<span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -67,13 +67,13 @@
 										<div class="col-md-4">
 											<div class="m-form__group m-form__group--inline">
 												<div class="m-form__label">
-													<label>
+													<label th:text="#{label.district}">
 														Район:
 													</label>
 												</div>
 												<div class="m-form__control">
 													<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_district">
-														<option value="">
+														<option value="" th:text="#{label.all}">
 															Все
 														</option>
 														<option th:each="district : ${districts}" th:value="${district.id}" th:text="${district.name}"></option>
@@ -92,7 +92,7 @@
 									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
 												<span>
 													<i class="la la-plus"></i>
-													<span>
+													<span th:text="#{label.add.person}">
 														Add new person
 													</span>
 												</span>
@@ -208,14 +208,35 @@
                     responsive: {hidden: 'xl'},
                 }, {
                     field: "personName",
-                    title: "Имя"
+                    title: "Имя",
+                    template: function (row) {
+                        var d=row.personName;
+                        if(d!=null){
+                            if (d.length>30){
+                                return d.substring(0,30)+"...";
+                            }
+                        }
+
+                        return d;
+                    }
                 }, {
                     field: "personDescription",
-                    title: "Примечание"
+                    title: "Примечание",
+					width:500,
+                    template: function (row) {
+                        var d=row.personDescription;
+                        if(d!=null){
+                            if (d.length>40){
+                                return d.substring(0,40)+"...";
+                            }
+                        }
+
+                        return d;
+                    }
                 }, {
                     field: "districtName",
                     title: "Район"
-                }, {
+                } /*{
                     field: "",
                     width: 110,
                     title: "",
@@ -232,7 +253,7 @@
 						</a>\
 					';
                     }
-                }],
+                }*/],
                 translate: {
                     records: {
                         processing: 'Подождите пожалуйста...',
@@ -250,7 +271,8 @@
                                     input: 'Номер страницы',
                                     select: 'Выбрать размер страницы'
                                 },
-                                info: 'Отображение {{start}} - {{end}} из {{total}} записей'
+                                info: " "
+                                // 'Отображение {{start}} - {{end}} из {{total}} записей'
                             }
                         }
                     }

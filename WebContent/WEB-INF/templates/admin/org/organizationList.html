@@ -6,7 +6,7 @@
 >
 <!-- begin::Head -->
 <head>
-	<title >Organizations</title>
+	<title th:text="#{label.organizations}">Organizations</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 	<link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
@@ -15,7 +15,7 @@
 </head>
 <!-- end::Head -->
 <!-- end::Body -->
-<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
 <!-- begin:: Page -->
 <div class="m-grid m-grid--hor m-grid--root m-page">
 	<!-- BEGIN: Header -->
@@ -33,7 +33,7 @@
 			<div class="m-subheader ">
 				<div class="d-flex align-items-center">
 					<div class="mr-auto">
-						<h3 class="m-subheader__title m-subheader__title--separator">
+						<h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.organizations}">
 							Organizations
 						</h3>
 						<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
@@ -46,7 +46,7 @@
 								-
 							</li>
 							<li class="m-nav__item">
-								<span class="m-nav__link-text">List of organizations</span>
+								<span class="m-nav__link-text" th:text="#{label.organizations}">List of organizations</span>
 							</li>
 						</ul>
 					</div>
@@ -64,7 +64,7 @@
 									<div class="form-group m-form__group row align-items-center">
 										<div class="col-md-4">
 											<div class="m-input-icon m-input-icon--left">
-												<input type="text" class="form-control m-input m-input--solid" placeholder="Search..." id="m_form_search">
+												<input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search">
 												<span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -75,13 +75,13 @@
 										<div class="col-md-4">
 											<div class="m-form__group m-form__group--inline">
 												<div class="m-form__label">
-													<label>
+													<label th:text="#{label.district}">
 														Район:
 													</label>
 												</div>
 												<div class="m-form__control">
 													<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_district">
-														<option value="">
+														<option value="" th:text="#{label.all}">
 															Все
 														</option>
 														<option th:each="district : ${districts}" th:value="${district.id}" th:text="${district.name}"></option>
@@ -94,7 +94,7 @@
 								<div class="col-xl-4 order-1 order-xl-2 m--align-right">
 									<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal" data-target="#organizationFormModal" th:href="@{/organization/add}" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" <span>
 													<i class="la la-plus"></i>
-													<span>
+													<span th:text="#{label.add.organization}">
 														Add new organization
 													</span>
 												</span>
@@ -267,10 +267,32 @@
                     responsive: {hidden: 'xl'},
                 }, {
                     field: "organizationName",
-                    title: "Наименование"
+                    title: "Наименование",
+                    width:300,
+                    template: function (row) {
+                        var d=row.organizationName;
+                        if(d!=null){
+                            if (d.length>30){
+                                return d.substring(0,30)+"...";
+                            }
+                        }
+
+                        return d;
+                    }
                 }, {
                     field: "organizationDescription",
-                    title: "Описание"
+                    title: "Описание",
+                    width:500,
+                    template: function (row) {
+                        var d=row.organizationDescription;
+                        if(d!=null){
+
+                            if (d.length>40){
+                                return d.substring(0,40)+"...";
+                            }
+                        }
+                        return d;
+                    }
                 }, {
                     field: "districtName",
                     title: "Район"
@@ -278,7 +300,7 @@
                     responsive: {hidden: 'xl'},
                     field: "bigData",
                     title: "big"
-                }, {
+                }/* {
                     field: "",
                     width: 110,
                     title: "",
@@ -295,7 +317,7 @@
 						</a>\
 					';
                     }
-                }],
+                }*/],
                 translate: {
                     records: {
                         processing: 'Подождите пожалуйста...',
@@ -313,7 +335,8 @@
                                     input: 'Номер страницы',
                                     select: 'Выбрать размер страницы'
                                 },
-                                info: 'Отображение {{start}} - {{end}} из {{total}} записей'
+                                info: " "
+                                // 'Отображение {{start}} - {{end}} из {{total}} записей'
                             }
                         }
                     }

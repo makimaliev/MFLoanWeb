@@ -9,7 +9,7 @@
 <!-- end::Head -->
 
 <!-- end::Body -->
-<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
 <!-- begin:: Page -->
 <div class="m-grid m-grid--hor m-grid--root m-page">
 	<!-- BEGIN: Header -->
@@ -83,6 +83,7 @@
 						<input hidden="true" type="text" id="parentLoanId" th:field="*{parent}" />
 						<input hidden="true" type="text" id="creditOrderId" th:field="*{creditOrder.id}" />
 						<input hidden="true" type="text" id="staffId" th:field="*{supervisorId}" />
+						<input  hidden="true" th:value="${debtorId}"  type="text" id="debtordunId">
 
 						<div class="m-portlet__body">
 							<div class="m-form__section">
@@ -222,10 +223,21 @@
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/typeahead.js}" type="text/javascript"></script>
 <!--end::Page Resources -->
+<script>
+
+</script>
 
 <script type="text/javascript">
+    var d = document.getElementById('debtordunId').value;
+    $.ajax({
+        type:'post',
+        data:{'q':d},
+        url:"/api/getDebtorId"
+    });
     function updateTLoan(sel)
     {
+
+
         var loan_text = document.getElementById("loan_typeahead").value;
         var loan_id = loan_text.match(/[^[\]]+(?=])/g);
         if(loan_id == null){
