@@ -60,7 +60,7 @@
     </div>
 </div>
 
-<header class="m-grid__item    m-header "  data-minimize-mobile="hide" data-minimize-offset="200" data-minimize-mobile-offset="200" data-minimize="minimize" >
+<header class="m-grid__item    m-header "  m-minimize-mobile="hide" m-minimize-offset="200" m-minimize-mobile-offset="200" m-minimize="minimize" >
 
 <div class="m-container m-container--fluid m-container--full-height">
         <div class="m-stack m-stack--ver m-stack--desktop">
@@ -101,7 +101,7 @@
                 <!-- BEGIN: Horizontal Menu -->
                 <div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-light m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-dark m-aside-header-menu-mobile--submenu-skin-dark "  >
                     <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
-                        <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" aria-haspopup="true" th:switch="__${#locale}__">
+                        <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  m-menu-submenu-toggle="click" aria-haspopup="true" th:switch="__${#locale}__">
                             <a href="#" class="m-menu__link m-menu__toggle">
                                 <span class="lang-img">
                                     <img  alt="" th:src="@{/assets/global/img/flags/} + ${#locale} + '.png'" />
@@ -188,7 +188,7 @@
                     <div class="m-stack__item m-topbar__nav-wrapper">
                         <ul class="m-topbar__nav m-nav m-nav--inline">
                             <li class="m-nav__item m-dropdown m-dropdown--large m-dropdown--arrow m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light  m-list-search m-list-search--skin-light"
-                                id="mchat" data-search-type="dropdown">
+                                id="mchat" m-search-type="dropdown">
                                 <a href="#" class="m-nav__link" data-toggle="modal" data-target="#chat_window">
                                     <span class="m-nav__link-icon">
                                         <i class="flaticon-speech-bubble"></i>
@@ -196,7 +196,7 @@
                                 </a>
                             </li>
                             <li class="m-nav__item m-dropdown m-dropdown--large m-dropdown--arrow m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light	m-list-search m-list-search--skin-light"
-                                data-dropdown-toggle="click" data-dropdown-persistent="true" id="m_quicksearch" data-search-type="dropdown">
+                                m-dropdown-toggle="click" m-dropdown-persistent="true" id="m_quicksearch" m-search-type="dropdown">
                                 <a href="#" class="m-nav__link m-dropdown__toggle">
                                     <span class="m-nav__link-icon">
                                         <i class="flaticon-search-1"></i>
@@ -225,7 +225,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="m-nav__item m-topbar__user-profile m-topbar__user-profile--img  m-dropdown m-dropdown--medium m-dropdown--arrow m-dropdown--header-bg-fill m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light" data-dropdown-toggle="click">
+                            <li class="m-nav__item m-topbar__user-profile m-topbar__user-profile--img  m-dropdown m-dropdown--medium m-dropdown--arrow m-dropdown--header-bg-fill m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light" m-dropdown-toggle="click">
                                 <a href="#" class="m-nav__link m-dropdown__toggle">
                                     <span class="m-topbar__userpic">
                                         <!--<img th:src="@{/assets/custom/app/media/img/users/user4.jpg}" class="m&#45;&#45;img-rounded m&#45;&#45;marginless m&#45;&#45;img-centered" alt=""/>-->
