@@ -12,8 +12,7 @@ var DatatableDataLocalTerms = function () {
 			// datasource definition
 			data: {
 				type: 'local',
-				source: dataJSONArray,
-				pageSize: 5
+				source: dataJSONArray
 			},
 
 			// layout definition
@@ -31,7 +30,7 @@ var DatatableDataLocalTerms = function () {
 			// column based filtering(refer to Kendo UI)
 			filterable: false,
 
-			pagination: true,
+			pagination: false,
 
 			// inline and bactch editing(cooming soon)
 			// editable: false,
@@ -48,13 +47,16 @@ var DatatableDataLocalTerms = function () {
 			},{
                 field: "interestRateValue",
                 title: "Проц. ставка",
-                width: 120,
+                width: 300,
                 template: function (row) {
                     var result = (row.interestRateValue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
 
                     if(row.floatingRateTypeName!= '--')
                         result = result + ' + ' + row.floatingRateTypeName;
 
+                    if(result.length>40){
+                        return result.substring(0,40)+"...";
+                    }
                     return result;
                 }
             }, /*{
@@ -63,13 +65,15 @@ var DatatableDataLocalTerms = function () {
             },*/ {
                 field: "penaltyOnPrincipleOverdueRateValue",
                 title: "Штраф по осн.с.",
-                width: 120,
+                width: 300,
                 template: function (row) {
                     var result = (row.penaltyOnPrincipleOverdueRateValue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
 
                     if(row.penaltyOnPrincipleOverdueRateTypeName!= '--')
                         result = result + ' + ' + row.penaltyOnPrincipleOverdueRateTypeName;
-
+                    if(result.length>40){
+                        return result.substring(0,40)+"...";
+                    }
                     return result;
                 }
             }, /*{
@@ -78,13 +82,15 @@ var DatatableDataLocalTerms = function () {
             }, */{
                 field: "penaltyOnInterestOverdueRateValue",
                 title: "Штраф по проц.",
-                width: 130,
+                width: 300,
                 template: function (row) {
                     var result = (row.penaltyOnInterestOverdueRateValue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
 
                     if(row.penaltyOnInterestOverdueRateTypeName!= '--')
                         result = result + ' + ' + row.penaltyOnInterestOverdueRateTypeName;
-
+                    if(result.length>40){
+                        return result.substring(0,40)+"...";
+                    }
                     return result;
 
                 }

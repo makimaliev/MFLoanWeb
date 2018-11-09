@@ -2,18 +2,15 @@
 
 var DatatableDataLocalDetailedSummaries = function () {
 	//== Private functions
-
 	// demo initializer
 	var mainTableInit = function () {
 
         var dataJSONArray = JSON.parse(jsonDetailedSummaries);
-
 		var datatable = $('#detailedSummariesTable').mDatatable({
 			// datasource definition
 			data: {
 				type: 'local',
-				source: dataJSONArray,
-				pageSize: 5
+				source: dataJSONArray
 			},
 
 			// layout definition
@@ -21,7 +18,7 @@ var DatatableDataLocalDetailedSummaries = function () {
 				theme: 'default', // datatable theme
 				class: '', // custom wrapper class
 				scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
-				height: 450, // datatable's body's fixed height
+				// height: 450, // datatable's body's fixed height
 				footer: false // display/hide footer
 			},
 
@@ -31,7 +28,7 @@ var DatatableDataLocalDetailedSummaries = function () {
 			// column based filtering(refer to Kendo UI)
 			filterable: false,
 
-			pagination: true,
+			pagination: false,
 
 			// inline and bactch editing(cooming soon)
 			// editable: false,

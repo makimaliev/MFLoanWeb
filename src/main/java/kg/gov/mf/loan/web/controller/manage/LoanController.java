@@ -17,7 +17,9 @@ import kg.gov.mf.loan.manage.model.process.LoanSummary;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.repository.order.CreditOrderRepository;
 import kg.gov.mf.loan.manage.repository.org.StaffRepository;
+import kg.gov.mf.loan.output.report.service.ReferenceViewService;
 import kg.gov.mf.loan.web.fetchModels.*;
+import org.hibernate.boot.model.relational.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,6 +118,8 @@ public class LoanController {
 
 		Loan loan = loanService.getById(loanId);
         model.addAttribute("loan", loan);
+        Staff staff=userService.findById(loan.getSupervisorId()).getStaff();
+        model.addAttribute("supervisorName",staff.getName());
 
         Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
         String jsonTerms = gson.toJson(getTermsByLoanId(loanId));
@@ -123,6 +127,9 @@ public class LoanController {
 
         String jsonChildList = gson.toJson(getChildrenByLoanId(loanId));
         model.addAttribute("children", jsonChildList);
+        if(jsonChildList.equals("[]")){
+            model.addAttribute("isEmptyChild","true");
+        }
 
         String jsonPaymentSchedules = gson.toJson(getPaymentSchedulesByLoanId(loanId));
         model.addAttribute("paymentSchedules", jsonPaymentSchedules);
@@ -417,8 +424,13 @@ public class LoanController {
 			result.add(model);
 		}
 
-		Collections.sort(result);
-
+//		Collections.sort(result);
+        Collections.sort(result, new Comparator<CreditTermModel>() {
+            @Override
+            public int compare(CreditTermModel o1, CreditTermModel o2) {
+                return o2.getStartDate().compareTo(o1.getStartDate());
+            }
+        });
 		return result;
 	}
 
@@ -446,8 +458,13 @@ public class LoanController {
             result.add(model);
         }
 
-        Collections.sort(result);
-
+//        Collections.sort(result);
+        Collections.sort(result, new Comparator<LoanModel>() {
+            @Override
+            public int compare(LoanModel o1, LoanModel o2) {
+                return o2.getRegDate().compareTo(o1.getRegDate());
+            }
+        });
         return result;
     }
 
@@ -471,7 +488,13 @@ public class LoanController {
             result.add(model);
         }
 
-        Collections.sort(result);
+//        Collections.sort(result);
+        Collections.sort(result, new Comparator<PaymentScheduleModel>() {
+            @Override
+            public int compare(PaymentScheduleModel o1, PaymentScheduleModel o2) {
+                return o2.getExpectedDate().compareTo(o1.getExpectedDate());
+            }
+        });
 
         return result;
     }
@@ -500,8 +523,13 @@ public class LoanController {
             result.add(model);
         }
 
-        Collections.sort(result);
-
+//        Collections.sort(result);
+        Collections.sort(result, new Comparator<PaymentModel>() {
+            @Override
+            public int compare(PaymentModel o1, PaymentModel o2) {
+                return o2.getPaymentDate().compareTo(o1.getPaymentDate());
+            }
+        });
         return result;
     }
 
@@ -524,8 +552,13 @@ public class LoanController {
             result.add(model);
         }
 
-        Collections.sort(result);
-
+//        Collections.sort(result);
+        Collections.sort(result, new Comparator<WriteOffModel>() {
+            @Override
+            public int compare(WriteOffModel o1, WriteOffModel o2) {
+                return o2.getDate().compareTo(o1.getDate());
+            }
+        });
         return result;
     }
 
@@ -550,8 +583,14 @@ public class LoanController {
             result.add(model);
         }
 
-        Collections.sort(result);
 
+//        Collections.sort(result);
+        Collections.sort(result, new Comparator<SupervisorPlanModel>() {
+            @Override
+            public int compare(SupervisorPlanModel o1, SupervisorPlanModel o2) {
+                return o2.getDate().compareTo(o1.getDate());
+            }
+        });
         return result;
     }
 
@@ -600,8 +639,13 @@ public class LoanController {
             result.add(model);
         }
 
-        Collections.sort(result);
-
+//        Collections.sort(result);
+        Collections.sort(result, new Comparator<LoanDetailedSummaryModel>() {
+            @Override
+            public int compare(LoanDetailedSummaryModel o1, LoanDetailedSummaryModel o2) {
+                return o1.getOnDate().compareTo(o2.getOnDate());
+            }
+        });
         return result;
     }
 
@@ -640,8 +684,13 @@ public class LoanController {
             result.add(model);
         }
 
-        Collections.sort(result);
-
+//        Collections.sort(result);
+        Collections.sort(result, new Comparator<LoanSummaryModel>() {
+            @Override
+            public int compare(LoanSummaryModel o1, LoanSummaryModel o2) {
+                return o2.getOnDate().compareTo(o1.getOnDate());
+            }
+        });
         return result;
     }
 
@@ -665,8 +714,13 @@ public class LoanController {
             result.add(model);
         }
 
-        Collections.sort(result);
-
+//        Collections.sort(result);
+        Collections.sort(result, new Comparator<AccrueModel>() {
+            @Override
+            public int compare(AccrueModel o1, AccrueModel o2) {
+                return o2.getFromDate().compareTo(o1.getFromDate());
+            }
+        });
         return result;
     }
 
@@ -710,8 +764,13 @@ public class LoanController {
             result.add(model);
         }
 
-        Collections.sort(result);
-
+//        Collections.sort(result);
+        Collections.sort(result, new Comparator<DebtTransferModel>() {
+            @Override
+            public int compare(DebtTransferModel o1, DebtTransferModel o2) {
+                return o2.getDate().compareTo(o1.getDate());
+            }
+        });
         return result;
     }
 
@@ -735,8 +794,13 @@ public class LoanController {
             result.add(model);
         }
 
-        Collections.sort(result);
-
+//        Collections.sort(result);
+        Collections.sort(result, new Comparator<TargetedUseModel>() {
+            @Override
+            public int compare(TargetedUseModel o1, TargetedUseModel o2) {
+                return o2.getApprovedDate().compareTo(o1.getApprovedDate());
+            }
+        });
         return result;
     }
 
@@ -754,8 +818,13 @@ public class LoanController {
             result.add(model);
         }
 
-        Collections.sort(result);
-
+//        Collections.sort(result);
+        Collections.sort(result, new Comparator<ReconstructedListModel>() {
+            @Override
+            public int compare(ReconstructedListModel o1, ReconstructedListModel o2) {
+                return o2.getOnDate().compareTo(o1.getOnDate());
+            }
+        });
         return result;
     }
 
@@ -773,8 +842,13 @@ public class LoanController {
             result.add(model);
         }
 
-        Collections.sort(result);
-
+//        Collections.sort(result);
+        Collections.sort(result, new Comparator<BankruptModel>() {
+            @Override
+            public int compare(BankruptModel o1, BankruptModel o2) {
+                return o2.getStartedOnDate().compareTo(o1.getStartedOnDate());
+            }
+        });
         return result;
     }
 
@@ -799,8 +873,13 @@ public class LoanController {
             result.add(model);
         }
 
-        Collections.sort(result);
-
+//        Collections.sort(result);
+        Collections.sort(result, new Comparator<CollectionPhaseModel>() {
+            @Override
+            public int compare(CollectionPhaseModel o1, CollectionPhaseModel o2) {
+                return o2.getStartDate().compareTo(o1.getStartDate());
+            }
+        });
         return result;
     }
 

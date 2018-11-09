@@ -12,8 +12,7 @@ var DatatableDataLocalSPs = function () {
 			// datasource definition
 			data: {
 				type: 'local',
-				source: dataJSONArray,
-				pageSize: 5
+				source: dataJSONArray
 			},
 
 			// layout definition
@@ -31,7 +30,7 @@ var DatatableDataLocalSPs = function () {
 			// column based filtering(refer to Kendo UI)
 			filterable: false,
 
-			pagination: true,
+			pagination: false,
 
 			// inline and bactch editing(cooming soon)
 			// editable: false,
@@ -76,7 +75,15 @@ var DatatableDataLocalSPs = function () {
                 }
             }, */{
                 field: "description",
-                title: "Примечание"
+                title: "Примечание",
+                width:300,
+                template: function (row) {
+                    var d=row.description;
+                    if(d.length>40){
+                        return d.substring(0,40)+"...";
+                    }
+                    return d;
+                }
             }, {
                 field: "action",
                 width: 110,

@@ -12,8 +12,7 @@ var DatatableDataLocalLoans = function () {
 			// datasource definition
 			data: {
 				type: 'local',
-				source: dataJSONArray,
-				pageSize: 5
+				source: dataJSONArray
 			},
 
 			// layout definition
@@ -31,7 +30,7 @@ var DatatableDataLocalLoans = function () {
 			// column based filtering(refer to Kendo UI)
 			filterable: false,
 
-			pagination: true,
+			pagination: false,
 
 			// inline and bactch editing(cooming soon)
 			// editable: false,

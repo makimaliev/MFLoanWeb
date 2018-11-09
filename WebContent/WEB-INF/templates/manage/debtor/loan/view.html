@@ -26,6 +26,8 @@
 			<div class="m-subheader ">
 				<div class="d-flex align-items-center">
 					<div class="mr-auto">
+
+						<input hidden="true" th:value="${isEmptyChild}" id="isEmptyChild">
 						<h3 class="m-subheader__title m-subheader__title--separator">
 							Кредит
 						</h3>
@@ -74,101 +76,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="${loan.regNumber}"></h3>
-							</div>
-						</div>
-					</div>
-					<div class="m-portlet__body m-portlet__body--no-padding">
-						<div class="row m-row--no-padding m-row--col-separator-xl">
-							<div class="col-md-12 col-lg-12 col-xl-4">
-								<!--begin:: Widgets/Stats2-1 -->
-								<div class="m-widget1">
-                                    <div class="m-widget1__item">
-                                        <div class="row m-row--no-padding align-items-center">
-                                            <div class="col">
-                                                <h3 class="m-widget1__title" th:text="#{label.loan.table.amount}"></h3>
-                                                <span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(loan.amount, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-									<div class="m-widget1__item">
-										<div class="row m-row--no-padding align-items-center">
-											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.loan.table.currency}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${loan.currency.name}"></span>
-											</div>
-										</div>
-									</div>
-									<div class="m-widget1__item">
-										<div class="row m-row--no-padding align-items-center">
-											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.loan.table.type}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${loan.loanType.name}"></span>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!--end:: Widgets/Stats2-1 -->
-							</div>
-							<div class="col-md-12 col-lg-12 col-xl-4">
-								<!--begin:: Widgets/Stats2-2 -->
-								<div class="m-widget1">
-									<div class="m-widget1__item">
-										<div class="row m-row--no-padding align-items-center">
-											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.loan.table.regDate}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${loan.regDate}"></span>
-											</div>
-										</div>
-									</div>
-									<div class="m-widget1__item">
-										<div class="row m-row--no-padding align-items-center">
-											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.loan.table.state}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${loan.loanState.name}"></span>
-											</div>
-										</div>
-									</div>
-									<div class="m-widget1__item">
-										<div class="row m-row--no-padding align-items-center">
-											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.loan.table.creditOrderId}"></h3>
-												<span class="m-widget1__desc m--font-brand"><a th:href="@{/manage/order/__${loan.creditOrder.id}__/view}" th:text="${loan.creditOrder.regNumber}"></a> </span>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!--begin:: Widgets/Stats2-2 -->
-							</div>
-							<div class="col-md-12 col-lg-12 col-xl-4">
-								<!--begin:: Widgets/Stats2-3 -->
-								<div class="m-widget1">
-                                    <div class="m-widget1__item">
-                                        <div class="row m-row--no-padding align-items-center">
-                                            <div class="col">
-                                                <h3 class="m-widget1__title" th:text="#{label.loan.table.superId}"></h3>
-                                                <span class="m-widget1__desc m--font-brand" th:text="${loan.supervisorId}"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-									<div class="m-widget1__item">
-										<div class="row m-row--no-padding align-items-center">
-											<div class="col">
-												<h3 class="m-widget1__title">ID</h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${loan.id}"></span>
-											</div>
-										</div>
-									</div>
-									<div class="m-widget1__item" th:if="${loan.parent != null}">
-										<div class="row m-row--no-padding align-items-center">
-											<div class="col">
-												<h3 class="m-widget1__title" th:text="#{label.loan.table.parent}"></h3>
-												<span class="m-widget1__desc m--font-brand"><a th:href="@{/manage/debtor/__${debtor.id}__/loan/__${loan.parent.id}__/view}" th:text="${loan.parent.regNumber}"></a></span>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!--begin:: Widgets/Stats2-3 -->
+								<h3 class="m-portlet__head-text" th:text="${loan.creditOrder.regNumber}+' '+${loan.regNumber}+' от '+${loan.regDate}+' ('+${#numbers.formatDecimal(loan.amount, 0, 'DEFAULT', 2, 'DEFAULT')}+' '+${loan.currency.name}+')'"></h3>
 							</div>
 						</div>
 					</div>
@@ -180,13 +88,10 @@
 					<div class="m-portlet__body">
 						<ul class="nav nav-tabs" role="tablist">
 							<li class="nav-item">
-								<a class="nav-link m--font-primary active" data-toggle="tab" href="#creditTerms" th:text="#{label.creditTerms}"></a>
+								<a class="nav-link m--font-primary active" data-toggle="tab" href="#main" th:text="#{label.credit}"></a>
 							</li>
-                            <li class="nav-item">
-                                <a class="nav-link m--font-primary" data-toggle="tab" href="#childList" th:text="#{label.childList}"></a>
-                            </li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#writeOffs" th:text="#{label.writeOffs}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanSummary" th:text="#{label.loanSummary}"></a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#paymentSchedules" th:text="#{label.paymentSchedules}"></a>
@@ -198,35 +103,114 @@
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#supervisorPlans" th:text="#{label.supervisorPlans}"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanGoods" th:text="#{label.loanGoods}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#writeOffs" th:text="#{label.writeOffs}"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#debtTransfers" th:text="#{label.debtTransfers}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#creditTerms" th:text="#{label.creditTerms}"></a>
 							</li>
-							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#targetedUses" th:text="#{label.targetedUses}"></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#reconstructedLists" th:text="#{label.reconstructedLists}"></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#bankrupts" th:text="#{label.bankrupts}"></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#collectionPhases" th:text="#{label.collectionPhases}"></a>
-							</li>
+                            <li class="nav-item" id="childListe">
+                                <a class="nav-link m--font-primary" data-toggle="tab" href="#childList" th:text="#{label.childList}"></a>
+                            </li>
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanDetailedSummary" th:text="#{label.loanDetailedSummary}"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanSummary" th:text="#{label.loanSummary}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#accrue" th:text="#{label.accrue}"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#accrue" th:text="#{label.accrue}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#additional" th:text="#{label.additional}"></a>
 							</li>
 						</ul>
 						<div class="tab-content">
-							<div class="tab-pane active" id="creditTerms" role="tabpanel">
+							<div class="tab-pane active" id="main" role="tabpanel">
+								<div class="m-portlet__body m-portlet__body--no-padding">
+									<div class="row m-row--no-padding m-row--col-separator-xl">
+										<div class="col-md-12 col-lg-12 col-xl-4">
+											<!--begin:: Widgets/Stats2-1 -->
+											<div class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.loan.table.amount}"></h3>
+															<span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(loan.amount, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
+														</div>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.loan.table.currency}"></h3>
+															<span class="m-widget1__desc m--font-brand" th:text="${loan.currency.name}"></span>
+														</div>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.loan.table.type}"></h3>
+															<span class="m-widget1__desc m--font-brand" th:text="${loan.loanType.name}"></span>
+														</div>
+													</div>
+												</div>
+											</div>
+											<!--end:: Widgets/Stats2-1 -->
+										</div>
+										<div class="col-md-12 col-lg-12 col-xl-4">
+											<!--begin:: Widgets/Stats2-2 -->
+											<div class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.loan.table.regDate}"></h3>
+															<span class="m-widget1__desc m--font-brand" th:text="${loan.regDate}"></span>
+														</div>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.loan.table.state}"></h3>
+															<span class="m-widget1__desc m--font-brand" th:text="${loan.loanState.name}"></span>
+														</div>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.loan.table.creditOrderId}"></h3>
+															<span class="m-widget1__desc m--font-brand"><a th:href="@{/manage/order/__${loan.creditOrder.id}__/view}" th:text="${loan.creditOrder.regNumber}"></a> </span>
+														</div>
+													</div>
+												</div>
+											</div>
+											<!--begin:: Widgets/Stats2-2 -->
+										</div>
+										<div class="col-md-12 col-lg-12 col-xl-4">
+											<!--begin:: Widgets/Stats2-3 -->
+											<div class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.loan.table.superId}"></h3>
+															<span class="m-widget1__desc m--font-brand" th:text="${supervisorName}"></span>
+														</div>
+													</div>
+												</div>
+												<div class="m-widget1__item" th:if="${loan.parent != null}">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.loan.table.parent}"></h3>
+															<span class="m-widget1__desc m--font-brand"><a th:href="@{/manage/debtor/__${debtor.id}__/loan/__${loan.parent.id}__/view}" th:text="${loan.parent.regNumber}"></a></span>
+														</div>
+													</div>
+												</div>
+											</div>
+											<!--begin:: Widgets/Stats2-3 -->
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane" id="creditTerms" role="tabpanel">
                                 <!--begin: Search Form -->
                                 <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                                     <div class="row align-items-center">
@@ -416,216 +400,6 @@
                                 <div class="m_datatable" id="SPsTable"></div>
                                 <!--end: Datatable -->
 							</div>
-							<div class="tab-pane" id="loanGoods" role="tabpanel">
-								<!--begin: Search Form -->
-								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-									<div class="row align-items-center">
-										<div class="col-xl-9 order-1 order-xl-1">
-											<div class="form-group m-form__group row align-items-center">
-												<div class="col-lg-6">
-													<div class="m-input-icon m-input-icon--left">
-														<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search9">
-														<span class="m-input-icon__icon m-input-icon__icon--left">
-															<span>
-																<i class="la la-search"></i>
-															</span>
-														</span>
-													</div>
-												</div>
-											</div>
-										</div>
-
-										<div class="col-xl-3 order-3 order-xl-3 m--align-right">
-											<a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/loangoods/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-												<span>
-													<i class="la la-plus"></i>
-													<span>
-														Добавить товар
-													</span>
-												</span>
-											</a>
-											<div class="m-separator m-separator--dashed d-xl-none"></div>
-										</div>
-									</div>
-								</div>
-								<!--end: Search Form -->
-								<!--begin: Datatable -->
-								<div class="m_datatable" id="goodsTable"></div>
-								<!--end: Datatable -->
-							</div>
-							<div class="tab-pane" id="debtTransfers" role="tabpanel">
-                                <!--begin: Search Form -->
-                                <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-                                    <div class="row align-items-center">
-                                        <div class="col-xl-9 order-1 order-xl-1">
-                                            <div class="form-group m-form__group row align-items-center">
-                                                <div class="col-lg-6">
-                                                    <div class="m-input-icon m-input-icon--left">
-                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search10">
-                                                        <span class="m-input-icon__icon m-input-icon__icon--left">
-															<span>
-																<i class="la la-search"></i>
-															</span>
-														</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-xl-3 order-3 order-xl-3 m--align-right">
-                                            <a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/debttransfer/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-												<span>
-													<i class="la la-plus"></i>
-													<span>
-														Добавить перевод долга
-													</span>
-												</span>
-                                            </a>
-                                            <div class="m-separator m-separator--dashed d-xl-none"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--end: Search Form -->
-                                <!--begin: Datatable -->
-                                <div class="m_datatable" id="DTsTable"></div>
-                                <!--end: Datatable -->
-							</div>
-							<div class="tab-pane" id="targetedUses" role="tabpanel">
-                                <!--begin: Search Form -->
-                                <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-                                    <div class="row align-items-center">
-                                        <div class="col-xl-9 order-1 order-xl-1">
-                                            <div class="form-group m-form__group row align-items-center">
-                                                <div class="col-lg-6">
-                                                    <div class="m-input-icon m-input-icon--left">
-                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search11">
-                                                        <span class="m-input-icon__icon m-input-icon__icon--left">
-															<span>
-																<i class="la la-search"></i>
-															</span>
-														</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-xl-3 order-3 order-xl-3 m--align-right">
-                                            <a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/targeteduse/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-												<span>
-													<i class="la la-plus"></i>
-													<span>
-														Добавить целевое использование
-													</span>
-												</span>
-                                            </a>
-                                            <div class="m-separator m-separator--dashed d-xl-none"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--end: Search Form -->
-                                <!--begin: Datatable -->
-                                <div class="m_datatable" id="TUsTable"></div>
-                                <!--end: Datatable -->
-							</div>
-							<div class="tab-pane" id="reconstructedLists" role="tabpanel">
-                                <!--begin: Search Form -->
-                                <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-                                    <div class="row align-items-center">
-                                        <div class="col-xl-9 order-1 order-xl-1">
-                                            <div class="form-group m-form__group row align-items-center">
-                                                <div class="col-lg-6">
-                                                    <div class="m-input-icon m-input-icon--left">
-                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search12">
-                                                        <span class="m-input-icon__icon m-input-icon__icon--left">
-															<span>
-																<i class="la la-search"></i>
-															</span>
-														</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-xl-3 order-3 order-xl-3 m--align-right">
-                                            <a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/reconstructedlist/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-												<span>
-													<i class="la la-plus"></i>
-													<span>
-														Добавить реструктуризацию
-													</span>
-												</span>
-                                            </a>
-                                            <div class="m-separator m-separator--dashed d-xl-none"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--end: Search Form -->
-                                <!--begin: Datatable -->
-                                <div class="m_datatable" id="RLsTable"></div>
-                                <!--end: Datatable -->
-							</div>
-							<div class="tab-pane" id="bankrupts" role="tabpanel">
-                                <!--begin: Search Form -->
-                                <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-                                    <div class="row align-items-center">
-                                        <div class="col-xl-9 order-1 order-xl-1">
-                                            <div class="form-group m-form__group row align-items-center">
-                                                <div class="col-lg-6">
-                                                    <div class="m-input-icon m-input-icon--left">
-                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search13">
-                                                        <span class="m-input-icon__icon m-input-icon__icon--left">
-															<span>
-																<i class="la la-search"></i>
-															</span>
-														</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-xl-3 order-3 order-xl-3 m--align-right">
-                                            <a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/bankrupt/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-												<span>
-													<i class="la la-plus"></i>
-													<span>
-														Добавить банкротство
-													</span>
-												</span>
-                                            </a>
-                                            <div class="m-separator m-separator--dashed d-xl-none"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--end: Search Form -->
-                                <!--begin: Datatable -->
-                                <div class="m_datatable" id="bankruptsTable"></div>
-                                <!--end: Datatable -->
-							</div>
-							<div class="tab-pane" id="collectionPhases" role="tabpanel">
-                                <!--begin: Search Form -->
-                                <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-                                    <div class="row align-items-center">
-                                        <div class="col-xl-9 order-1 order-xl-1">
-                                            <div class="form-group m-form__group row align-items-center">
-                                                <div class="col-lg-6">
-                                                    <div class="m-input-icon m-input-icon--left">
-                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search14">
-                                                        <span class="m-input-icon__icon m-input-icon__icon--left">
-															<span>
-																<i class="la la-search"></i>
-															</span>
-														</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--end: Search Form -->
-                                <!--begin: Datatable -->
-                                <div class="m_datatable" id="phasesTable"></div>
-                                <!--end: Datatable -->
-							</div>
 							<div class="tab-pane" id="loanDetailedSummary" role="tabpanel">
                                 <!--begin: Search Form -->
                                 <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
@@ -701,6 +475,241 @@
                                 <div class="m_datatable" id="accruesTable"></div>
                                 <!--end: Datatable -->
 							</div>
+							<div class="tab-pane" id="additional" role="tabpanel">
+								<ul class="nav nav-tabs" role="tablist">
+									<li class="nav-item">
+										<a class="nav-link m--font-primary active" data-toggle="tab" href="#loanGoods" th:text="#{label.loanGoods}"></a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link m--font-primary" data-toggle="tab" href="#debtTransfers" th:text="#{label.debtTransfers}"></a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link m--font-primary" data-toggle="tab" href="#targetedUses" th:text="#{label.targetedUses}"></a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link m--font-primary" data-toggle="tab" href="#reconstructedLists" th:text="#{label.reconstructedLists}"></a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link m--font-primary" data-toggle="tab" href="#bankrupts" th:text="#{label.bankrupts}"></a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link m--font-primary" data-toggle="tab" href="#collectionPhases" th:text="#{label.collectionPhases}"></a>
+									</li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane active" id="loanGoods" role="tabpanel">
+										<!--begin: Search Form -->
+										<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+											<div class="row align-items-center">
+												<div class="col-xl-9 order-1 order-xl-1">
+													<div class="form-group m-form__group row align-items-center">
+														<div class="col-lg-6">
+															<div class="m-input-icon m-input-icon--left">
+																<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search9">
+																<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-xl-3 order-3 order-xl-3 m--align-right">
+													<a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/loangoods/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span>
+													<i class="la la-plus"></i>
+													<span>
+														Добавить товар
+													</span>
+												</span>
+													</a>
+													<div class="m-separator m-separator--dashed d-xl-none"></div>
+												</div>
+											</div>
+										</div>
+										<!--end: Search Form -->
+										<!--begin: Datatable -->
+										<div class="m_datatable" id="goodsTable"></div>
+										<!--end: Datatable -->
+									</div>
+									<div class="tab-pane" id="debtTransfers" role="tabpanel">
+										<!--begin: Search Form -->
+										<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+											<div class="row align-items-center">
+												<div class="col-xl-9 order-1 order-xl-1">
+													<div class="form-group m-form__group row align-items-center">
+														<div class="col-lg-6">
+															<div class="m-input-icon m-input-icon--left">
+																<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search10">
+																<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-xl-3 order-3 order-xl-3 m--align-right">
+													<a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/debttransfer/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span>
+													<i class="la la-plus"></i>
+													<span>
+														Добавить перевод долга
+													</span>
+												</span>
+													</a>
+													<div class="m-separator m-separator--dashed d-xl-none"></div>
+												</div>
+											</div>
+										</div>
+										<!--end: Search Form -->
+										<!--begin: Datatable -->
+										<div class="m_datatable" id="DTsTable"></div>
+										<!--end: Datatable -->
+									</div>
+									<div class="tab-pane" id="targetedUses" role="tabpanel">
+										<!--begin: Search Form -->
+										<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+											<div class="row align-items-center">
+												<div class="col-xl-9 order-1 order-xl-1">
+													<div class="form-group m-form__group row align-items-center">
+														<div class="col-lg-6">
+															<div class="m-input-icon m-input-icon--left">
+																<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search11">
+																<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-xl-3 order-3 order-xl-3 m--align-right">
+													<a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/targeteduse/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span>
+													<i class="la la-plus"></i>
+													<span>
+														Добавить целевое использование
+													</span>
+												</span>
+													</a>
+													<div class="m-separator m-separator--dashed d-xl-none"></div>
+												</div>
+											</div>
+										</div>
+										<!--end: Search Form -->
+										<!--begin: Datatable -->
+										<div class="m_datatable" id="TUsTable"></div>
+										<!--end: Datatable -->
+									</div>
+									<div class="tab-pane" id="reconstructedLists" role="tabpanel">
+										<!--begin: Search Form -->
+										<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+											<div class="row align-items-center">
+												<div class="col-xl-9 order-1 order-xl-1">
+													<div class="form-group m-form__group row align-items-center">
+														<div class="col-lg-6">
+															<div class="m-input-icon m-input-icon--left">
+																<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search12">
+																<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-xl-3 order-3 order-xl-3 m--align-right">
+													<a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/reconstructedlist/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span>
+													<i class="la la-plus"></i>
+													<span>
+														Добавить реструктуризацию
+													</span>
+												</span>
+													</a>
+													<div class="m-separator m-separator--dashed d-xl-none"></div>
+												</div>
+											</div>
+										</div>
+										<!--end: Search Form -->
+										<!--begin: Datatable -->
+										<div class="m_datatable" id="RLsTable"></div>
+										<!--end: Datatable -->
+									</div>
+									<div class="tab-pane" id="bankrupts" role="tabpanel">
+										<!--begin: Search Form -->
+										<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+											<div class="row align-items-center">
+												<div class="col-xl-9 order-1 order-xl-1">
+													<div class="form-group m-form__group row align-items-center">
+														<div class="col-lg-6">
+															<div class="m-input-icon m-input-icon--left">
+																<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search13">
+																<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-xl-3 order-3 order-xl-3 m--align-right">
+													<a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/bankrupt/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span>
+													<i class="la la-plus"></i>
+													<span>
+														Добавить банкротство
+													</span>
+												</span>
+													</a>
+													<div class="m-separator m-separator--dashed d-xl-none"></div>
+												</div>
+											</div>
+										</div>
+										<!--end: Search Form -->
+										<!--begin: Datatable -->
+										<div class="m_datatable" id="bankruptsTable"></div>
+										<!--end: Datatable -->
+									</div>
+									<div class="tab-pane" id="collectionPhases" role="tabpanel">
+										<!--begin: Search Form -->
+										<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+											<div class="row align-items-center">
+												<div class="col-xl-9 order-1 order-xl-1">
+													<div class="form-group m-form__group row align-items-center">
+														<div class="col-lg-6">
+															<div class="m-input-icon m-input-icon--left">
+																<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search14">
+																<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!--end: Search Form -->
+										<!--begin: Datatable -->
+										<div class="m_datatable" id="phasesTable"></div>
+										<!--end: Datatable -->
+									</div>
+								</div>
+							</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -718,6 +727,12 @@
 <div th:replace="fragments/footer :: footer-js"/>
 
 <!--begin::Page Resources -->
+<script>
+    var d = document.getElementById('isEmptyChild').value;
+    if(d=="true"){
+        document.getElementById("childListe").style.display = 'none';
+	}
+</script>
 <script th:src="@{/js/data-debtor-loan-terms.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-children.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-paymentSchedules.js}" th:inline="javascript" type="text/javascript"></script>

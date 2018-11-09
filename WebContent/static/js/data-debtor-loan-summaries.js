@@ -12,8 +12,7 @@ var DatatableDataLocalSummaries = function () {
 			// datasource definition
 			data: {
 				type: 'local',
-				source: dataJSONArray,
-				pageSize: 5
+				source: dataJSONArray
 			},
 
 			// layout definition
@@ -31,7 +30,7 @@ var DatatableDataLocalSummaries = function () {
 			// column based filtering(refer to Kendo UI)
 			filterable: false,
 
-			pagination: true,
+			pagination: false,
 
 			// inline and bactch editing(cooming soon)
 			// editable: false,
@@ -41,7 +40,7 @@ var DatatableDataLocalSummaries = function () {
                 field: "id",
                 title: "#",
                 responsive: {hidden: 'xl'},
-            }, {
+            },  {
 				field: "onDate",
 				title: "На дату"
 			},/*{
@@ -56,7 +55,7 @@ var DatatableDataLocalSummaries = function () {
                 template: function (row) {
                     return (row.totalDisbursed).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
-            }, {
+            },{
                 field: "totalPaid",
                 title: "Всего погашено",
                 template: function (row) {
