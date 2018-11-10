@@ -144,8 +144,17 @@
 										<span th:text="#{label.debtTransfer.unitType}">Unit Type Id</span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" th:field="*{unitTypeId}">
+										<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_unitType">
+											<option value="" th:value="${dt.unitTypeId}" th:text="${thisUnit}">
+												Все
+											</option>
+											<option th:each="unitType : ${unitTypes}" th:value="${unitType.id}" th:text="${unitType.name}"></option>
+										</select>
+										<input hidden="hidden" type="text" class="form-control m-input" id="unitTypeId" th:field="*{unitTypeId}">
 									</div>
+									<!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+										<!--<input type="text" class="form-control m-input" th:field="*{unitTypeId}">-->
+									<!--</div>-->
 								</div>
 
 								<div class="form-group m-form__group row">
@@ -158,14 +167,14 @@
 									</div>
 								</div>
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.debtTransfer.transferPayment}">Transfer payment id</span><span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" th:field="*{transferPaymentId}">
-									</div>
-								</div>
+								<!--<div class="form-group m-form__group row">-->
+									<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+										<!--<span th:text="#{label.debtTransfer.transferPayment}">Transfer payment id</span><span class="m&#45;&#45;font-danger">*</span>-->
+									<!--</label>-->
+									<!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+										<!--<input type="text" class="form-control m-input" th:field="*{transferPaymentId}">-->
+									<!--</div>-->
+								<!--</div>-->
 
 								<!--
 								<div class="form-group m-form__group row">
@@ -189,16 +198,16 @@
 									</div>
 								</div>
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.debtTransfer.transferCredit}">
-										Work sector <span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select id="loanSelect" class="form-control m-bootstrap-select m_selectpicker" th:field="*{transferCreditId}" th:title="#{label.select}">
-											<option value="0" th:text="#{label.select}"></option>
-										</select>
-									</div>
-								</div>
+								<!--<div class="form-group m-form__group row">-->
+									<!--<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.debtTransfer.transferCredit}">-->
+										<!--Work sector <span class="m&#45;&#45;font-danger">*</span>-->
+									<!--</label>-->
+									<!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+										<!--<select id="loanSelect" class="form-control m-bootstrap-select m_selectpicker" th:field="*{transferCreditId}" th:title="#{label.select}">-->
+											<!--<option value=0 th:text="#{label.select}"></option>-->
+										<!--</select>-->
+									<!--</div>-->
+								<!--</div>-->
 
 								<!--
 								<div class="form-group m-form__group row">
@@ -217,8 +226,17 @@
 										<span th:text="#{label.debtTransfer.goodsType}">Goods type id</span><span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="goodsTypeId" th:value="${dt.goodsTypeId}">
+										<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_goodType">
+											<option value="" th:value="${dt.goodsTypeId}" th:text="${thisGoodType}">
+												Все
+											</option>
+											<option th:each="goodType : ${goodTypes}" th:value="${goodType.id}" th:text="${goodType.name}"></option>
+										</select>
+										<input hidden="hidden" type="text" class="form-control m-input" id="goodTypeId" th:field="*{goodsTypeId}">									</div>
 									</div>
+									<!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+										<!--<input type="text" class="form-control m-input" name="goodsTypeId" th:value="${dt.goodsTypeId}">-->
+									<!--</div>-->
 								</div>
 
 							</div>
@@ -259,46 +277,58 @@
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/typeahead.js}" type="text/javascript"></script>
 <!--end::Page Resources -->
-<script type="text/javascript">
-    $(document).ready(function(){
+<!--<script type="text/javascript">-->
+    <!--$(document).ready(function(){-->
 
-        $('#owner_typeahead').change(function () {
-            var owner_text = $(this).val();
-            var owner_id = owner_text.match(/[^[\]]+(?=])/g);
+        <!--$('#owner_typeahead').change(function () {-->
+            <!--var owner_text = $(this).val();-->
+            <!--var owner_id = owner_text.match(/[^[\]]+(?=])/g);-->
 
-            $.ajax({
-                url: '/api/getLoansByDebtor',
-                type: 'get',
-                data: {debtorId:owner_id[0]},
-                dataType: 'json',
-                success:function(response){
+            <!--$.ajax({-->
+                <!--url: '/api/getLoansByDebtor',-->
+                <!--type: 'get',-->
+                <!--data: {debtorId:owner_id[0]},-->
+                <!--dataType: 'json',-->
+                <!--success:function(response){-->
 
-                    var len = response.length;
+                    <!--var len = response.length;-->
 
-                    $('#loanSelect').empty();
-                    for( var i = 0; i<len; i++){
-                        var result = response[i];
-                        var loan_id = result.match(/[^[\]]+(?=])/g);
+                    <!--$('#loanSelect').empty();-->
+                    <!--for( var i = 0; i<len; i++){-->
+                        <!--var result = response[i];-->
+                        <!--var loan_id = result.match(/[^[\]]+(?=])/g);-->
 
-                        $('#loanSelect').append("<option value='"+loan_id+"'>"+result+"</option>");
+                        <!--$('#loanSelect').append("<option value='"+loan_id+"'>"+result+"</option>");-->
 
-                    }
-                    $('#loanSelect').selectpicker('refresh');
-                }
-            });
-        });
+                    <!--}-->
+                    <!--$('#loanSelect').selectpicker('refresh');-->
+                <!--}-->
+            <!--});-->
+        <!--});-->
+    <!--});-->
+<!--</script>-->
+
+<!--<script type="text/javascript">-->
+    <!--function updateTOwner(sel)-->
+    <!--{-->
+        <!--var owner_text = document.getElementById("owner_typeahead").value;-->
+        <!--var owner_id = owner_text.match(/[^[\]]+(?=])/g);-->
+        <!--$("#tpId").val(owner_id);-->
+    <!--}-->
+<!--</script>-->
+<script>
+    $("#m_form_unitType,#m_form_goodType").selectpicker();
+    // $("#unitTypeId").val($("#m_form_goodType").val());
+    // alert($("#unitTypeId").val());
+    $("#m_form_unitType").change(function () {
+        $("#unitTypeId").val($("#m_form_unitType").val());
+        // alert($("#unitTypeId").val())
+    });
+    $("#m_form_goodType").change(function () {
+        $("#goodTypeId").val($("#m_form_goodType").val());
+        // alert($("#unitTypeId").val())
     });
 </script>
-
-<script type="text/javascript">
-    function updateTOwner(sel)
-    {
-        var owner_text = document.getElementById("owner_typeahead").value;
-        var owner_id = owner_text.match(/[^[\]]+(?=])/g);
-        $("#tpId").val(owner_id);
-    }
-</script>
-
 </body>
 <!-- end::Body -->
 </html>

@@ -4,7 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import kg.gov.mf.loan.manage.repository.loan.DebtTransferRepository;
+import kg.gov.mf.loan.manage.service.collateral.QuantityTypeService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
+import kg.gov.mf.loan.manage.service.loan.GoodTypeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,12 @@ public class DebtTransferController {
 
 	@Autowired
 	DebtTransferRepository debtTransferRepository;
+
+	@Autowired
+	QuantityTypeService quantityTypeService;
+
+	@Autowired
+	GoodTypeService goodTypeService;
 	
 	static final Logger loggerDT = LoggerFactory.getLogger(DebtTransfer.class);
 
@@ -56,13 +64,19 @@ public class DebtTransferController {
 		if(dtId == 0)
 		{
 			model.addAttribute("dt", new DebtTransfer());
+			model.addAttribute("thisUnit","");
+			model.addAttribute("thisGoodType","");
 		}
 			
 		if(dtId > 0)
 		{
 			model.addAttribute("dt", dtService.getById(dtId));
+			model.addAttribute("thisUnit",quantityTypeService.getById(dtService.getById(dtId).getUnitTypeId()).getName());
+			model.addAttribute("thisGoodType",goodTypeService.getById(dtService.getById(dtId).getGoodsTypeId()).getName());
 		}
-		
+
+		model.addAttribute("unitTypes",quantityTypeService.list());
+		model.addAttribute("goodTypes",goodTypeService.list());
         model.addAttribute("debtorId", debtorId);
         model.addAttribute("debtor", debtorService.getById(debtorId));
         model.addAttribute("loanId", loanId);
@@ -76,6 +90,7 @@ public class DebtTransferController {
     {
 		Loan loan = loanService.getById(loanId);
 		dt.setLoan(loan);
+//		dt.setTransferCreditId(Long.valueOf(0));
 		
 		if(dt.getId() == 0)
 			dtService.add(dt);

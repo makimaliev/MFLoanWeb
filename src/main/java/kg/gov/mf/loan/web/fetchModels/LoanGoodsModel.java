@@ -11,9 +11,9 @@ public class LoanGoodsModel {
 
     private Double quantity;
 
-    private long unitTypeId;
+    private String unitType;
 
-    private long goodsTypeId;
+    private String goodsType;
 
     public Long getId() {
         return id;
@@ -31,19 +31,19 @@ public class LoanGoodsModel {
         this.quantity = quantity;
     }
 
-    public long getUnitTypeId() {
-        return unitTypeId;
+    public String getUnitType() {
+        return unitType;
     }
 
-    public void setUnitTypeId(long unitTypeId) {
-        this.unitTypeId = unitTypeId;
+    public void setUnitType(String unitType) {
+        this.unitType = unitType;
     }
 
-    public long getGoodsTypeId() {
-        return goodsTypeId;
+    public String getGoodsType() {
+        return goodsType;
     }
 
-    public void setGoodsTypeId(long goodsTypeId) {
-        this.goodsTypeId = goodsTypeId;
+    public void setGoodsType(String goodsType) {
+        this.goodsType = goodsType;
     }
 }

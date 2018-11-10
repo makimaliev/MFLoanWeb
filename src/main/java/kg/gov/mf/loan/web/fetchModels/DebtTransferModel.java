@@ -21,7 +21,7 @@ public class DebtTransferModel implements Comparable<DebtTransferModel>{
 
     private Double pricePerUnit;
 
-    private long unitTypeId;
+    private String unitType;
 
     private Double totalCost;
 
@@ -31,7 +31,7 @@ public class DebtTransferModel implements Comparable<DebtTransferModel>{
 
     private long transferPersonId;
 
-    private long goodsTypeId;
+    private String goodsType;
 
     @Override
     public int compareTo(DebtTransferModel model)
@@ -79,12 +79,12 @@ public class DebtTransferModel implements Comparable<DebtTransferModel>{
         this.pricePerUnit = pricePerUnit;
     }
 
-    public long getUnitTypeId() {
-        return unitTypeId;
+    public String getUnitType() {
+        return unitType;
     }
 
-    public void setUnitTypeId(long unitTypeId) {
-        this.unitTypeId = unitTypeId;
+    public void setUnitType(String unitType) {
+        this.unitType = unitType;
     }
 
     public Double getTotalCost() {
@@ -119,11 +119,11 @@ public class DebtTransferModel implements Comparable<DebtTransferModel>{
         this.transferPersonId = transferPersonId;
     }
 
-    public long getGoodsTypeId() {
-        return goodsTypeId;
+    public String getGoodsType() {
+        return goodsType;
     }
 
-    public void setGoodsTypeId(long goodsTypeId) {
-        this.goodsTypeId = goodsTypeId;
+    public void setGoodsType(String goodsType) {
+        this.goodsType = goodsType;
     }
 }

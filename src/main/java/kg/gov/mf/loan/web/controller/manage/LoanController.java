@@ -17,6 +17,8 @@ import kg.gov.mf.loan.manage.model.process.LoanSummary;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.repository.order.CreditOrderRepository;
 import kg.gov.mf.loan.manage.repository.org.StaffRepository;
+import kg.gov.mf.loan.manage.service.collateral.QuantityTypeService;
+import kg.gov.mf.loan.manage.service.loan.*;
 import kg.gov.mf.loan.output.report.service.ReferenceViewService;
 import kg.gov.mf.loan.web.fetchModels.*;
 import org.hibernate.boot.model.relational.Database;
@@ -37,11 +39,6 @@ import kg.gov.mf.loan.manage.model.orderterm.OrderTermRatePeriod;
 import kg.gov.mf.loan.manage.model.orderterm.OrderTermTransactionOrder;
 import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
-import kg.gov.mf.loan.manage.service.loan.InstallmentStateService;
-import kg.gov.mf.loan.manage.service.loan.LoanService;
-import kg.gov.mf.loan.manage.service.loan.LoanStateService;
-import kg.gov.mf.loan.manage.service.loan.LoanTypeService;
-import kg.gov.mf.loan.manage.service.loan.PaymentTypeService;
 import kg.gov.mf.loan.manage.service.order.CreditOrderService;
 import kg.gov.mf.loan.manage.service.orderterm.OrderTermCurrencyService;
 import kg.gov.mf.loan.manage.service.orderterm.OrderTermDaysMethodService;
@@ -104,7 +101,14 @@ public class LoanController {
 	@Autowired
 	StaffRepository staffRepository;
 
-	static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
+    @Autowired
+    QuantityTypeService quantityTypeService;
+
+    @Autowired
+    GoodTypeService goodTypeService;
+
+
+    static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -733,8 +737,21 @@ public class LoanController {
             LoanGoodsModel model = new LoanGoodsModel();
             model.setId(d.getId());
             model.setQuantity(d.getQuantity());
-            model.setUnitTypeId(d.getUnitTypeId());
-            model.setGoodsTypeId(d.getGoodsTypeId());
+            try{
+
+                model.setUnitType(quantityTypeService.getById(d.getUnitTypeId()).getName());
+            }
+            catch(Exception e){
+                model.setUnitType(" ");
+            }
+            try{
+
+                model.setGoodsType(goodTypeService.getById(d.getGoodsTypeId()).getName());
+            }
+            catch(Exception e){
+                model.setGoodsType(" ");
+            }
+//            model.setGoodsType(d.getGoodsTypeId());
 
             result.add(model);
         }
@@ -754,13 +771,26 @@ public class LoanController {
             model.setDate(d.getDate());
             model.setQuantity(d.getQuantity());
             model.setPricePerUnit(d.getPricePerUnit());
-            model.setUnitTypeId(d.getUnitTypeId());
+//            model.setUnitTypeId(d.getUnitTypeId());
+            try{
+
+                model.setUnitType(quantityTypeService.getById(d.getUnitTypeId()).getName());
+            }
+            catch(Exception e){
+                model.setUnitType(" ");
+            }
             model.setTotalCost(d.getTotalCost());
             model.setTransferPaymentId(d.getTransferPaymentId());
             model.setTransferCreditId(d.getTransferCreditId());
             model.setTransferPersonId(d.getTransferPersonId());
-            model.setGoodsTypeId(d.getGoodsTypeId());
+//            model.setGoodsTypeId(d.getGoodsTypeId());
+            try{
 
+                model.setGoodsType(goodTypeService.getById(d.getGoodsTypeId()).getName());
+            }
+            catch(Exception e){
+                model.setGoodsType(" ");
+            }
             result.add(model);
         }
 

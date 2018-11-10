@@ -110,8 +110,15 @@
 										<span th:text="#{label.loanGoods.unitType}">Unit Type Id</span>
 										<span class="m--font-danger">*</span>
 									</label>
+
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="unitTypeId" th:value="${lg.unitTypeId}">
+										<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_unitType">
+											<option value="" th:value="${lg.unitTypeId}" th:text="${thisUnit}">
+												Все
+											</option>
+											<option th:each="unitType : ${unitTypes}" th:value="${unitType.id}" th:text="${unitType.name}"></option>
+										</select>
+										<input hidden="hidden" type="text" class="form-control m-input" id="unitTypeId" th:field="*{lg.unitTypeId}">
 									</div>
 								</div>
 
@@ -121,8 +128,13 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="goodsTypeId" th:value="${lg.goodsTypeId}">
-									</div>
+										<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_goodType">
+											<option value="" th:value="${lg.goodsTypeId}" th:text="${thisGoodType}">
+												Все
+											</option>
+											<option th:each="goodType : ${goodTypes}" th:value="${goodType.id}" th:text="${goodType.name}"></option>
+										</select>
+										<input hidden="hidden" type="text" class="form-control m-input" id="goodTypeId" th:field="*{lg.goodsTypeId}">									</div>
 								</div>
 
 							</div>
@@ -162,7 +174,19 @@
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
 <!--end::Page Resources -->
-
+<script>
+	$("#m_form_unitType,#m_form_goodType").selectpicker();
+    // $("#unitTypeId").val($("#m_form_goodType").val());
+    // alert($("#unitTypeId").val());
+    $("#m_form_unitType").change(function () {
+        $("#unitTypeId").val($("#m_form_unitType").val());
+        // alert($("#unitTypeId").val())
+    });
+    $("#m_form_goodType").change(function () {
+        $("#goodTypeId").val($("#m_form_goodType").val());
+        // alert($("#goodTypeId").val())
+    });
+</script>
 </body>
 <!-- end::Body -->
 </html>

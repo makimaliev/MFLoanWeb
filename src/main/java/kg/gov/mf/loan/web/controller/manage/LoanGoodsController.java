@@ -1,7 +1,9 @@
 package kg.gov.mf.loan.web.controller.manage;
 
 import kg.gov.mf.loan.manage.repository.loan.LoanGoodsRepository;
+import kg.gov.mf.loan.manage.service.collateral.QuantityTypeService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
+import kg.gov.mf.loan.manage.service.loan.GoodTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -28,6 +30,12 @@ public class LoanGoodsController {
 
 	@Autowired
 	LoanGoodsRepository loanGoodsRepository;
+
+	@Autowired
+	QuantityTypeService quantityTypeService;
+
+	@Autowired
+	GoodTypeService goodTypeService;
 	
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/loangoods/{lgId}/save", method=RequestMethod.GET)
 	public String formCreditTerm(ModelMap model, 
@@ -39,13 +47,21 @@ public class LoanGoodsController {
 		if(lgId == 0)
 		{
 			model.addAttribute("lg", new LoanGoods());
+			model.addAttribute("thisUnit","");
+			model.addAttribute("thisGoodType","");
 		}
 			
 		if(lgId > 0)
 		{
 			model.addAttribute("lg", lgService.getById(lgId));
+			model.addAttribute("thisUnit",quantityTypeService.getById(lgService.getById(lgId).getUnitTypeId()).getName());
+			model.addAttribute("thisGoodType",goodTypeService.getById(lgService.getById(lgId).getGoodsTypeId()).getName());
 		}
-		
+
+
+
+		model.addAttribute("unitTypes",quantityTypeService.list());
+		model.addAttribute("goodTypes",goodTypeService.list());
         model.addAttribute("debtorId", debtorId);
         model.addAttribute("debtor", debtorService.getById(debtorId));
         model.addAttribute("loanId", loanId);
@@ -59,7 +75,7 @@ public class LoanGoodsController {
     {
 		Loan loan = loanService.getById(loanId);
 		lg.setLoan(loan);
-		
+
 		if(lg.getId() == 0)
 			lgService.add(lg);
 		else		

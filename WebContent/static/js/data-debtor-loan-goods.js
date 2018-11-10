@@ -44,10 +44,10 @@ var DatatableDataLocalGoods = function () {
 				field: "quantity",
 				title: "Кол-во"
 			},{
-                field: "unitTypeId",
+                field: "unitType",
                 title: "Ед. измерения"
             }, {
-                field: "goodsTypeId",
+                field: "goodsType",
                 title: "Вид"
             }, {
                 field: "action",
