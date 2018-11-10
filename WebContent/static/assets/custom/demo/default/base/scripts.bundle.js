@@ -4224,7 +4224,8 @@ jQuery.fn.extend({
              */
             build: function() {
                 // accordion mode
-                if (Plugin.getSubmenuMode() === 'accordion') {
+                // if (Plugin.getSubmenuMode() === 'accordion') {
+                if (Plugin.getSubmenuMode() === 'dropdown') {
                     element.on('click', '.m-menu__toggle', Plugin.handleSubmenuAccordion);
                 }
 
@@ -5725,6 +5726,7 @@ jQuery.fn.extend({
 
     // default options
     $.fn.mToggle.defaults = {
+
         togglerState: '',
         targetState: ''
     };
