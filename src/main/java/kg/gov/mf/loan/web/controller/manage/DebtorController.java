@@ -395,6 +395,7 @@ public class DebtorController {
 				"  AND loan.loanTypeId = type.id\n" +
 				"  AND loan.loanStateId = state.id\n" +
 				"  AND loan.debtorId =" + debtorId + "\n" +
+				"  AND  ISNULL(loan.parent_id) \n" +
                 "ORDER BY  loan.regDate DESC";
 
 		Query query = entityManager.createNativeQuery(baseQuery, LoanModel.class);
