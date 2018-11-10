@@ -1172,73 +1172,73 @@
                                             </span>
                                         </a>
                                     </li>
-                                    <!--
+
                                     <li class="m-menu__item " aria-haspopup="true" >
-                                        <a th:href="@{/manage/debtor/loan/list}" class="m-menu__link ">
+                                        <a th:href="@{/loanView/list}" class="m-menu__link ">
                                             <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                                 <span></span>
                                             </i>
                                             <span class="m-menu__link-text">
-                                                ***List loans
+                                                Список кредитов
                                             </span>
                                         </a>
                                     </li>
                                     <li class="m-menu__item " aria-haspopup="true" >
-                                        <a th:href="@{/manage/debtor/loan/payment/list}" class="m-menu__link ">
+                                        <a th:href="@{/paymentView/list}" class="m-menu__link ">
                                             <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                                 <span></span>
                                             </i>
                                             <span class="m-menu__link-text">
-                                                ***List payments
+                                                Список погашений
                                             </span>
                                         </a>
                                     </li>
                                     <li class="m-menu__item " aria-haspopup="true" >
-                                        <a th:href="@{/manage/debtor/loan/paymentschedule/list}" class="m-menu__link ">
+                                        <a th:href="@{/paymentScheduleView}" class="m-menu__link ">
                                             <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                                 <span></span>
                                             </i>
                                             <span class="m-menu__link-text">
-                                                ***List schedules
+                                                Список графиков
                                             </span>
                                         </a>
                                     </li>
                                     <li class="m-menu__item " aria-haspopup="true" >
-                                        <a th:href="@{/manage/debtor/loan/sp/list}" class="m-menu__link ">
+                                        <a th:href="@{/supervisorPlanView}" class="m-menu__link ">
                                             <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                                 <span></span>
                                             </i>
                                             <span class="m-menu__link-text">
-                                                ***List supervisor plans
+                                                Список плановых показателей
                                             </span>
                                         </a>
                                     </li>
-                                    <li class="m-menu__item " aria-haspopup="true" >
-                                        <a th:href="@{/manage/debtor/loan/term/list}" class="m-menu__link ">
-                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
-                                                <span></span>
-                                            </i>
-                                            <span class="m-menu__link-text">
-                                                ***List terms
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="m-menu__item " aria-haspopup="true" >
-                                        <a th:href="@{/manage/debtor/loan/wo/list}" class="m-menu__link ">
-                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
-                                                <span></span>
-                                            </i>
-                                            <span class="m-menu__link-text">
-                                                ***List writeOffs
-                                            </span>
-                                        </a>
-                                    </li>
-                                    -->
+                                    <!--<li class="m-menu__item " aria-haspopup="true" >-->
+                                        <!--<a th:href="@{/manage/debtor/loan/term/list}" class="m-menu__link ">-->
+                                            <!--<i class="m-menu__link-bullet m-menu__link-bullet&#45;&#45;dot">-->
+                                                <!--<span></span>-->
+                                            <!--</i>-->
+                                            <!--<span class="m-menu__link-text">-->
+                                                <!--Список кредитных условий-->
+                                            <!--</span>-->
+                                        <!--</a>-->
+                                    <!--</li>-->
+                                    <!--<li class="m-menu__item " aria-haspopup="true" >-->
+                                        <!--<a th:href="@{/manage/debtor/loan/wo/list}" class="m-menu__link ">-->
+                                            <!--<i class="m-menu__link-bullet m-menu__link-bullet&#45;&#45;dot">-->
+                                                <!--<span></span>-->
+                                            <!--</i>-->
+                                            <!--<span class="m-menu__link-text">-->
+                                                <!--Список списаний-->
+                                            <!--</span>-->
+                                        <!--</a>-->
+                                    <!--</li>-->
+
                                 </ul>
                             </div>
                         </li>
 
-                        <!--
+
                         <li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
                             <a  href="#" class="m-menu__link m-menu__toggle">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
@@ -1253,33 +1253,43 @@
                             <div class="m-menu__submenu">
                                 <span class="m-menu__arrow"></span>
                                 <ul class="m-menu__subnav">
+                                    <!--<li class="m-menu__item " aria-haspopup="true" >-->
+                                        <!--<a th:href="@{#}" class="m-menu__link ">-->
+                                            <!--<i class="m-menu__link-bullet m-menu__link-bullet&#45;&#45;dot">-->
+                                                <!--<span></span>-->
+                                            <!--</i>-->
+                                            <!--<span class="m-menu__link-text">-->
+                                                <!--Список договоров залога-->
+                                            <!--</span>-->
+                                        <!--</a>-->
+                                    <!--</li>-->
                                     <li class="m-menu__item " aria-haspopup="true" >
-                                        <a th:href="@{#}" class="m-menu__link ">
+                                        <a th:href="@{/manage/collateralItemViews/list}" class="m-menu__link ">
                                             <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                                 <span></span>
                                             </i>
                                             <span class="m-menu__link-text">
-                                                ***List collateral agreements
+                                                Список предметов залога
                                             </span>
                                         </a>
                                     </li>
                                     <li class="m-menu__item " aria-haspopup="true" >
-                                        <a th:href="@{#}" class="m-menu__link ">
+                                        <a th:href="@{/collateralInspectionView}" class="m-menu__link ">
                                             <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                                 <span></span>
                                             </i>
                                             <span class="m-menu__link-text">
-                                                ***List collateral items
+                                                Список актов обследования залога
                                             </span>
                                         </a>
                                     </li>
                                     <li class="m-menu__item " aria-haspopup="true" >
-                                        <a th:href="@{#}" class="m-menu__link ">
+                                        <a th:href="@{/collateralArrestFreeView}" class="m-menu__link ">
                                             <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                                 <span></span>
                                             </i>
                                             <span class="m-menu__link-text">
-                                                ***List collateral item inspections
+                                                Список снятий залога с ареста
                                             </span>
                                         </a>
                                     </li>
@@ -1297,44 +1307,44 @@
                                 </span>
                                 <i class="m-menu__ver-arrow la la-angle-right"></i>
                             </a>
-                            <!--
+
                             <div class="m-menu__submenu">
                                 <span class="m-menu__arrow"></span>
                                 <ul class="m-menu__subnav">
+                                    <!--<li class="m-menu__item " aria-haspopup="true" >-->
+                                        <!--<a th:href="@{#}" class="m-menu__link ">-->
+                                            <!--<i class="m-menu__link-bullet m-menu__link-bullet&#45;&#45;dot">-->
+                                                <!--<span></span>-->
+                                            <!--</i>-->
+                                            <!--<span class="m-menu__link-text">-->
+                                                <!--***List collection procedures-->
+                                            <!--</span>-->
+                                        <!--</a>-->
+                                    <!--</li>-->
                                     <li class="m-menu__item " aria-haspopup="true" >
-                                        <a th:href="@{#}" class="m-menu__link ">
+                                        <a th:href="@{/collectionPhaseViews}" class="m-menu__link ">
                                             <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                                 <span></span>
                                             </i>
                                             <span class="m-menu__link-text">
-                                                ***List collection procedures
+                                                Список стадий взыскания
                                             </span>
                                         </a>
                                     </li>
-                                    <li class="m-menu__item " aria-haspopup="true" >
-                                        <a th:href="@{#}" class="m-menu__link ">
-                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
-                                                <span></span>
-                                            </i>
-                                            <span class="m-menu__link-text">
-                                                ***List collection phases
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="m-menu__item " aria-haspopup="true" >
-                                        <a th:href="@{#}" class="m-menu__link ">
-                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
-                                                <span></span>
-                                            </i>
-                                            <span class="m-menu__link-text">
-                                                ***List collection events
-                                            </span>
-                                        </a>
-                                    </li>
+                                    <!--<li class="m-menu__item " aria-haspopup="true" >-->
+                                        <!--<a th:href="@{#}" class="m-menu__link ">-->
+                                            <!--<i class="m-menu__link-bullet m-menu__link-bullet&#45;&#45;dot">-->
+                                                <!--<span></span>-->
+                                            <!--</i>-->
+                                            <!--<span class="m-menu__link-text">-->
+                                                <!--***List collection events-->
+                                            <!--</span>-->
+                                        <!--</a>-->
+                                    <!--</li>-->
                                 </ul>
                             </div>
                         </li>
-                        -->
+
 
                     </ul>
                 </div>
@@ -1365,6 +1375,58 @@
                                 </i>
                                 <span class="m-menu__link-text">
                                     List jobs
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li sec:authorize="hasRole('ADMIN')" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
+                <a  href="#" class="m-menu__link m-menu__toggle">
+                    <i class="m-menu__link-icon la la-calendar"></i>
+                    <span class="m-menu__link-text">
+                        Классификация
+                    </span>
+                    <i class="m-menu__ver-arrow la la-angle-right"></i>
+                </a>
+                <div class="m-menu__submenu">
+                    <span class="m-menu__arrow"></span>
+                    <ul class="m-menu__subnav">
+                        <li sec:authorize="hasRole('ADMIN')" class="m-menu__item  m-menu__item--parent" aria-haspopup="true" >
+                            <a  href="#" class="m-menu__link ">
+                                <span class="m-menu__link-text">
+                                    Классификация
+                                </span>
+                            </a>
+                        </li>
+                        <li class="m-menu__item " aria-haspopup="true" >
+                            <a th:href="@{/classify/table/list}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">
+                                    Таблицы
+                                </span>
+                            </a>
+                        </li>
+                        <li class="m-menu__item " aria-haspopup="true" >
+                            <a th:href="@{/classify/join/list}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">
+                                    Настройка таблиц
+                                </span>
+                            </a>
+                        </li>
+                        <li class="m-menu__item " aria-haspopup="true" >
+                            <a th:href="@{/classificator/list}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">
+                                    Классификаторы
                                 </span>
                             </a>
                         </li>
