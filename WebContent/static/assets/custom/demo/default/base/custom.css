@@ -17,7 +17,9 @@ body{
 }
 .m-subheader .m-subheader__title,
 .m-portlet .m-portlet__body,
-.m-portlet .m-portlet__head .m-portlet__head-text{
+.m-portlet .m-portlet__head .m-portlet__head-text,
+.m-subheader .m-subheader__breadcrumbs.m-nav > .m-nav__item > .m-nav__link > .m-nav__link-text,
+.m-subheader .m-subheader__breadcrumbs.m-nav > .m-nav__item > .m-nav__link > .m-nav__link-icon{
     color: #000000;
 }
 
@@ -284,6 +286,13 @@ body{
 .m-aside-menu .m-menu__nav > .m-menu__item > .m-menu__link .m-menu__link-text{
 	font-size: 0.75rem;
 }
+
+
+/*Topbar*/
+.m-topbar .m-topbar__nav.m-nav > .m-nav__item > .m-nav__link .m-nav__link-icon > i{
+	font-size: 1.25rem;
+}
+
 
 /*Content*/
 .m-subheader{
@@ -662,6 +671,15 @@ table.dataTable th.focus, table.dataTable td.focus{
 
 /*MEDIA*/
 @media (min-width: 993px) {
+	.m-header {
+		height: 50px;
+	}
+	.m-brand .m-brand__logo, .m-brand .m-brand__tools{
+		height: 50px !important;
+	}
+	.m-header--fixed .m-body{
+		padding-top: 50px !important;
+	}
 	.m-aside-left--minimize .m-aside-menu .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav,
 	.m-aside-menu.m-aside-menu--dropdown .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav{
 		padding: 8px 0;
