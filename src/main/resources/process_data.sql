@@ -806,9 +806,9 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `calculateLoanDetailedSummaryUntilOnDate`(IN loan_id BIGINT, IN inDate DATE, IN includeToday TINYINT(1))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `calculateLoanDetailedSummaryUntilOnDate`(IN loan_id bigint, IN inDate date, IN includeToday tinyint(1))
 BEGIN
     DECLARE tempDate DATE;
     DECLARE prevDate DATE;
@@ -874,7 +874,7 @@ BEGIN
         collectedInterestPayment,
         penaltyPaid,
         collectedPenaltyPayment,
-        curRate
+        CASE curRate WHEN 0 THEN 1 ELSE curRate END AS curRate
       FROM
         (
 
@@ -1034,10 +1034,6 @@ BEGIN
       SET totalCollIntPayment = totalCollIntPayment + collIntPayment;
       SET totalIntPayment = totalIntPayment + intPayment;
       SET intOverdue = totalIntPayment - totalIntPaid;
-
-
-
-
 
       SET isAlreadyInserted = isLoanDetailedSummaryExistsForDate(loan_id, tempDate);
 
@@ -1818,4 +1814,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-11 17:35:34
+-- Dump completed on 2018-11-12 12:11:29
