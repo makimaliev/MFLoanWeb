@@ -119,6 +119,17 @@ public class StaffController {
 
 		Staff staff = this.staffService.findById(id);
 
+		if(staff.getEmploymentHistory()==null)
+		{
+			EmploymentHistory employmentHistory = new EmploymentHistory();
+			employmentHistory.setStaff(staff);
+			staff.setEmploymentHistory(employmentHistory);
+
+
+			staffService.edit(staff);
+			staff = this.staffService.findById(id);
+		}
+
 		model.addAttribute("staff", staff);
 
 		return "admin/org/staffDetails";

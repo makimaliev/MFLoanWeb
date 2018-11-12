@@ -109,7 +109,7 @@
 														<!--Information</a>-->
 
 													<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
-													data-target="#eventFormModal" th:href="@{/employmentHistory/__${staff.employmentHistory.id}__/employmentHistoryEvent/add}"
+													data-target="#eventFormModal" th:href="@{/employmentHistory/__${staff?.employmentHistory?.id}__/employmentHistoryEvent/add}"
 													role="button" class="btn btn-success" th:text="#{label.add.EmploymentHistoryEvent}"> Add
 													Information</a>
 
@@ -278,7 +278,7 @@
 											<div class="tab-pane" id="tab_15_4">
 
 												<div class="tab-content">
-													<div th:text="${staff.employmentHistory.number}" ></div>
+													<div th:text="${staff?.employmentHistory?.number}" ></div>
 														<table class="table" id="eventTable">
 															<thead class="thead-default">
 															<tr>
@@ -291,7 +291,7 @@
 
 															<tbody>
 
-															<tr th:each="eventInList : ${staff.employmentHistory.employmentHistoryEvent}">
+															<tr th:each="eventInList : ${staff?.employmentHistory?.employmentHistoryEvent}">
 
 																<td th:text="${eventInList?.employmentHistoryEventType?.name}">employmentHistory</td>
 																<td th:text="${eventInList?.date}">date</td>

@@ -272,6 +272,11 @@ public class ReportTemplateController {
 				generateReport(out,response,new ReportGeneratorCollateralArrestFree(), reportTemplate);
 				break;
 
+			case "STAFF":
+				generateReport(out,response,new ReportGeneratorStaffEvent(), reportTemplate);
+				break;
+
+
 
 			case "LOAN_SCHEDULE":
 				generateReport(out,response,new ReportGeneratorPaymentSchedule(), reportTemplate);
