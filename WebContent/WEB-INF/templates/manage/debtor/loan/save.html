@@ -184,6 +184,19 @@
 										</div>
 									</div>
 								</div>
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12">
+										<span th:text="#{label.loan.closeDate}"></span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<div class="input-group date m_datetimepicker_6">
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{closeDate}"/>
+											<span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
+										</div>
+									</div>
+								</div>
 
 							</div>
 						</div>
