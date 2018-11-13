@@ -1467,7 +1467,7 @@ BEGIN
 
       IF b_type = 'finish' OR b_type = 'close' THEN
         #Nullify overdue and outstanding fields on loanDetailedSummary(no action if negative) and loanSummary tables
-        update loandetailedsummary lds
+        update loanDetailedSummary lds
         set lds.interestOverdue = case when lds.interestOverdue >= 0 then 0 else lds.interestOverdue end,
             lds.interestOutstanding = case when lds.interestOutstanding >= 0 then 0 else lds.interestOutstanding end,
             lds.principalOverdue = case when lds.principalOverdue >= 0 then 0 else lds.principalOverdue end,
@@ -1477,7 +1477,7 @@ BEGIN
         where lds.loanId = b_loanId
         and lds.onDate >= b_onDate;
 
-        update loansummary ls
+        update loanSummary ls
         set ls.overduePrincipal = 0,
             ls.outstadingPrincipal = 0,
             ls.overdueInterest = 0,
@@ -1493,14 +1493,14 @@ BEGIN
 
       IF b_type = 'start' THEN
         #Nullify overdue fields loanDetailedSummary(no action if negative) and loanSummary tables
-        update loandetailedsummary lds
+        update loanDetailedSummary lds
         set lds.interestOverdue = case when lds.interestOverdue >= 0 then 0 else lds.interestOverdue end,
             lds.principalOverdue = case when lds.principalOverdue >= 0 then 0 else lds.principalOverdue end,
             lds.penaltyOverdue = case when lds.penaltyOverdue >= 0 then 0 else lds.penaltyOverdue end
         where lds.loanId = b_loanId
         and lds.onDate >= b_onDate;
 
-        update loansummary ls
+        update loanSummary ls
         set ls.overduePrincipal = 0,
             ls.overdueInterest = 0,
             ls.overduePenalty = 0,
@@ -1919,4 +1919,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-13 10:19:35
+-- Dump completed on 2018-11-13 17:15:43
