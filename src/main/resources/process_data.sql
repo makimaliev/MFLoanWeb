@@ -1276,6 +1276,8 @@ BEGIN
 
     CALL runUpdateRootLoans();
 
+    CALL updateBankruptInfo();
+
   END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1407,6 +1409,109 @@ BEGIN
 
     SELECT 'completed' as message;
 
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `updateBankruptInfo` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBankruptInfo`()
+BEGIN
+
+    DECLARE b_loanId BIGINT;
+    DECLARE b_type TEXT;
+    DECLARE b_onDate DATE;
+
+    DECLARE v_finished INTEGER DEFAULT 0;
+
+    DEClARE tCursor CURSOR FOR
+
+      select tt.type,
+       tt.onDate,
+       tt.loanId
+      from
+     (
+      select 'start' as type, bn.startedOnDate as onDate, bn.loanId
+      from bankrupt bn
+      union all
+      select 'finish' as type, bn.finishedOnDate as onDate, bn.loanId
+      from bankrupt bn
+      union all
+      select 'close' as type, loan.closeDate as onDate, id as loanId
+      from loan loan
+      where loan.closeDate is not null
+     ) tt;
+
+    DECLARE CONTINUE HANDLER
+    FOR NOT FOUND SET v_finished = 1;
+
+    OPEN tCursor;
+
+    get_data: LOOP
+
+      FETCH tCursor INTO b_type, b_onDate, b_loanId;
+
+      IF v_finished = 1 THEN
+        LEAVE get_data;
+      END IF;
+
+      IF b_type = 'finish' OR b_type = 'close' THEN
+        #Nullify overdue and outstanding fields on loanDetailedSummary(no action if negative) and loanSummary tables
+        update loandetailedsummary lds
+        set lds.interestOverdue = case when lds.interestOverdue >= 0 then 0 else lds.interestOverdue end,
+            lds.interestOutstanding = case when lds.interestOutstanding >= 0 then 0 else lds.interestOutstanding end,
+            lds.principalOverdue = case when lds.principalOverdue >= 0 then 0 else lds.principalOverdue end,
+            lds.principalOutstanding = case when lds.principalOutstanding >= 0 then 0 else lds.principalOutstanding end,
+            lds.penaltyOverdue = case when lds.penaltyOverdue >= 0 then 0 else lds.penaltyOverdue end,
+            lds.penaltyOutstanding = case when lds.penaltyOutstanding >= 0 then 0 else lds.penaltyOutstanding end
+        where lds.loanId = b_loanId
+        and lds.onDate >= b_onDate;
+
+        update loansummary ls
+        set ls.overduePrincipal = 0,
+            ls.outstadingPrincipal = 0,
+            ls.overdueInterest = 0,
+            ls.outstadingInterest = 0,
+            ls.overduePenalty = 0,
+            ls.outstadingPenalty = 0,
+            ls.overdueFee = 0,
+            ls.outstadingFee = 0
+        where ls.loanId = b_loanId
+        and ls.onDate >= b_onDate;
+
+      END IF;
+
+      IF b_type = 'start' THEN
+        #Nullify overdue fields loanDetailedSummary(no action if negative) and loanSummary tables
+        update loandetailedsummary lds
+        set lds.interestOverdue = case when lds.interestOverdue >= 0 then 0 else lds.interestOverdue end,
+            lds.principalOverdue = case when lds.principalOverdue >= 0 then 0 else lds.principalOverdue end,
+            lds.penaltyOverdue = case when lds.penaltyOverdue >= 0 then 0 else lds.penaltyOverdue end
+        where lds.loanId = b_loanId
+        and lds.onDate >= b_onDate;
+
+        update loansummary ls
+        set ls.overduePrincipal = 0,
+            ls.overdueInterest = 0,
+            ls.overduePenalty = 0,
+            ls.overdueFee = 0
+        where ls.loanId = b_loanId
+        and ls.onDate >= b_onDate;
+      END IF;
+
+    END LOOP get_data;
+
+    CLOSE tCursor;
   END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1814,4 +1919,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-12 12:11:29
+-- Dump completed on 2018-11-13 10:19:35
