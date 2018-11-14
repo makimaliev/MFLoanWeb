@@ -1340,7 +1340,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `runUpdateRootLoans`()
 BEGIN
@@ -1371,7 +1371,7 @@ BEGIN
       CALL updateRootLoanPayment(loanId);
       CALL updateRootLoanPaymentSchedule(loanId);
 
-      INSERT INTO loanSummary (version, loanAmount, loanSummaryType, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty, overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalFeePaid, totalInterestPaid, totalOutstanding, totalOverdue, totalPaid, totalPenaltyPaid, totalPrincipalPaid, loanId)
+      INSERT INTO loanSummary (version, loanAmount, loanSummaryType, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty, overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalFeePaid, totalInterestPaid, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalPenaltyPaid, totalPrincipalPaid, loanId)
         SELECT 1, p.loanAmount, p.loanSummaryType,
           p.onDate, p.outstadingFee,
           p.outstadingInterest,
@@ -1391,6 +1391,7 @@ BEGIN
           p.totalOutstanding,
           p.totalOverdue,
           p.totalPaid,
+          p.totalPaidKGS,
           p.totalPenaltyPaid,
           p.totalPrincipalPaid,
           loanId
@@ -1744,9 +1745,9 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRootLoanSummary`(IN loan_id BIGINT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRootLoanSummary`(IN loan_id bigint)
 BEGIN
 
     DECLARE v_finished INTEGER DEFAULT 0;
@@ -1774,6 +1775,7 @@ BEGIN
     DECLARE pTotalOutstanding DOUBLE;
     DECLARE pTotalOverdue DOUBLE;
     DECLARE pTotalPaid DOUBLE;
+    DECLARE pTotalPaidKGS DOUBLE;
     DECLARE pTotalPenaltyPaid DOUBLE;
     DECLARE pTotalPrincipalPaid DOUBLE;
 
@@ -1796,6 +1798,7 @@ BEGIN
     DECLARE prevPTotalOutstanding DOUBLE;
     DECLARE prevPTotalOverdue DOUBLE;
     DECLARE prevPTotalPaid DOUBLE;
+    DECLARE prevPTotalPaidKGS DOUBLE;
     DECLARE prevPTotalPenaltyPaid DOUBLE;
     DECLARE prevPTotalPrincipalPaid DOUBLE;
 
@@ -1822,6 +1825,7 @@ BEGIN
         p.totalOutstanding,
         p.totalOverdue,
         p.totalPaid,
+        p.totalPaidKGS,
         p.totalPenaltyPaid,
         p.totalPrincipalPaid
       FROM loanSummary p
@@ -1838,7 +1842,7 @@ BEGIN
       FETCH tCursor INTO pId, pLoanAmount, pOnDate, pOutstadingFee, pOutstadingInterest, pOutstadingPenalty,
         pOutstadingPrincipal, pOverdueFee, pOverdueInterest, pOverduePenalty,pOverduePrincipal, pPaidFee,
         pPaidInterest, pPaidPenalty, pPaidPrincipal, pTotalDisbursed, pTotalFeePaid, pTotalInterestPaid,
-        pTotalOutstanding, pTotalOverdue, pTotalPaid, pTotalPenaltyPaid, pTotalPrincipalPaid;
+        pTotalOutstanding, pTotalOverdue, pTotalPaid, pTotalPaidKGS, pTotalPenaltyPaid, pTotalPrincipalPaid;
 
       IF v_finished = 1 THEN
         LEAVE run_calculate;
@@ -1865,6 +1869,7 @@ BEGIN
           totalOutstanding = prevPTotalOutstanding + pTotalOutstanding,
           totalOverdue = prevPTotalOverdue + pTotalOverdue,
           totalPaid = prevPTotalPaid + pTotalPaid,
+          totalPaidKGS = prevPTotalPaidKGS + pTotalPaidKGS,
           totalPenaltyPaid = prevPTotalPenaltyPaid + pTotalPenaltyPaid,
           totalPrincipalPaid = prevPTotalPrincipalPaid + pTotalPrincipalPaid
         WHERE id = prevPId;
@@ -1896,6 +1901,7 @@ BEGIN
       SET prevPTotalOutstanding = pTotalOutstanding;
       SET prevPTotalOverdue = pTotalOverdue;
       SET prevPTotalPaid = pTotalPaid;
+      SET prevPTotalPaidKGS = pTotalPaidKGS;
       SET prevPTotalPenaltyPaid = pTotalPenaltyPaid;
       SET prevPTotalPrincipalPaid = pTotalPrincipalPaid;
 
@@ -1919,4 +1925,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-13 17:15:43
+-- Dump completed on 2018-11-14 16:26:06
