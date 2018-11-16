@@ -18,6 +18,47 @@
 --
 -- Dumping routines for database 'mfloan'
 --
+/*!50003 DROP FUNCTION IF EXISTS `calculateDays` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `calculateDays`(fromDate date, toDate date, method int) RETURNS int(11)
+BEGIN
+
+    DECLARE days INT DEFAULT 0;
+
+    IF method = 1 THEN
+      SET days = DATEDIFF(toDate, fromDate);
+    ELSE
+      IF DAY(fromDate) = 31 THEN
+        SET fromDate = fromDate - 1;
+      END IF;
+
+      IF DAY(toDate) = 31 THEN
+        SET toDate = toDate - 1;
+      END IF;
+
+      IF YEAR(fromDate) = YEAR(toDate) THEN
+        SET days = ((MONTH(toDate) - MONTH(fromDate))-1) * 30 + (30 + DATEDIFF(toDate, fromDate));
+      ELSE
+        SET days = (30 - DAY(fromDate)) + (12 - MONTH(fromDate)) * 30 + (MONTH(toDate)-1) * 30 + DAY(toDate) + ((YEAR(toDate) - YEAR(fromDate)-1)*360) ;
+      END IF;
+    END IF;
+
+    RETURN days;
+
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP FUNCTION IF EXISTS `calculateInterestAccrued` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -574,6 +615,35 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP FUNCTION IF EXISTS `getDIYMethod` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `getDIYMethod`(inDate date, loan_id bigint) RETURNS int(11)
+BEGIN
+
+    DECLARE dIYMethod INT DEFAULT 2;
+
+    SELECT term.daysInYearMethodId INTO dIYMethod
+    FROM creditTerm term
+    WHERE term.loanId = loan_id
+          AND term.startDate < inDate
+    ORDER BY term.startDate DESC LIMIT 1;
+
+    RETURN dIYMethod;
+
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP FUNCTION IF EXISTS `getLoanAmount` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -990,7 +1060,7 @@ BEGIN
       SET intPaid = intPaid/cur_rate;
       SET penPaid = penPaid/cur_rate;
 
-      SET daysInPer = DATEDIFF(tempDate, prevDate);
+      SET daysInPer = calculateDays(prevDate, tempDate, getDIYMethod(tempDate, loan_id));
 
       SET intAccrued = calculateInterestAccrued(princOutstanding, daysInPer, tempDate, loan_id);
 
@@ -1925,4 +1995,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-14 16:26:06
+-- Dump completed on 2018-11-16 10:10:33
