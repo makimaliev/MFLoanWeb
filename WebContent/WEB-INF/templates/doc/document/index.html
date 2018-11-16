@@ -71,13 +71,15 @@
                                             <div class="dropdown">
                                                 <a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown"><i class="la la-ellipsis-h"></i></a>
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item" th:href="@{/doc/view/__${document.id}__}">
+                                                    <a class="dropdown-item" th:href="@{/doc/view/__${document.id}__}" th:if="${tasks.?[objectId == __${document.id}__].isEmpty()}" id="linkView">
                                                         <span th:text="#{label.view}"></span>
                                                     </a>
-                                                    <a class="dropdown-item" th:href="@{/doc/edit/__${document.id}__}" th:if="${not tasks.?[objectId == __${document.id}__].isEmpty()}">
+
+                                                    <a class="dropdown-item" th:href="@{/doc/edit/__${document.id}__}" th:if="${not tasks.?[objectId == __${document.id}__].isEmpty()}" id="linkEdit">
                                                         <span th:text="#{label.open}"></span>
                                                     </a>
-                                                    <a class="dropdown-item" th:href="@{/doc/edit/__${document.id}__}" th:if="${document.documentState.toString() == 'DRAFT' and  document.owner == __${cu}__}">
+
+                                                    <a class="dropdown-item" th:href="@{/doc/edit/__${document.id}__}" th:if="${document.documentState.toString() == 'DRAFT' and  document.owner == __${cu}__}" id="linkEditCu">
                                                         <span th:text="#{label.open}"></span>
                                                     </a>
                                                     <!--a class="dropdown-item" th:href="@{/doc/delete/__${document.id}__}" th:if="${document.documentState.ordinal() < 2}">
@@ -93,7 +95,6 @@
 
                     </div>
                     <div class="m-portlet__foot">
-                        <button class="btn btn-primary"> Filter </button>
                         <span th:each="dst : ${documentSubTypes}">
                             <a th:href="@{/doc/new/__${dst.internalName}__}" class="btn btn-success" th:text="${dst.name}"> New Document </a>
                         </span>
@@ -148,7 +149,7 @@
                 title: 'Задача №: ' + (i + 1),
                 message: '<a href="/doc/edit/' + tasks[i].objectId + '" role="button" class="btn btn-link text-light" style="text-decoration: none;">' + tasks[i].description + '</a>'
             }, {
-                delay: 0,
+                delay: 3000,
                 type: "info",
                 template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
                 '<button type="button" aria-hidden="true" class="close" data-notify="dismiss"></button>' +

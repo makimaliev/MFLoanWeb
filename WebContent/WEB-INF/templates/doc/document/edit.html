@@ -63,9 +63,9 @@
                                                                     class="align-middle m-2"
                                                                     th:utext="${stage.text()}"></label></td>
                                                             <td><label
-                                                                    class="align-middle m-2"
-                                                                    th:utext="${stage.state().ordinal() &gt; document.documentState.ordinal()} ? '-' : 'Выполнен'"
-                                                                    th:classappend="${stage.state().ordinal() &gt; document.documentState.ordinal()} ? 'text-warning' : 'text-success'"></label></td>
+                                                                    class="align-middle m-2 text-success"
+                                                                    th:utext="${stage.state().ordinal() &gt; document.documentState.ordinal()} ? '-' : 'Выполнен'"></label>
+                                                            </td>
                                                         </tr>
                                                     </table>
                                                 </div>

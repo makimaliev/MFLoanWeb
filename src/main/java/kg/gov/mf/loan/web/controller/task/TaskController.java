@@ -2,7 +2,11 @@ package kg.gov.mf.loan.web.controller.task;
 
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
-import kg.gov.mf.loan.task.model.*;
+import kg.gov.mf.loan.core.service.LoggerService;
+import kg.gov.mf.loan.task.model.Task;
+import kg.gov.mf.loan.task.model.TaskObject;
+import kg.gov.mf.loan.task.model.TaskPriority;
+import kg.gov.mf.loan.task.model.TaskStatus;
 import kg.gov.mf.loan.task.service.TaskService;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,17 +52,26 @@ public class TaskController {
 
     TaskService taskService;
     UserService userService;
+    LoggerService loggerService;
 
     @Autowired
-    public TaskController(TaskService taskService, UserService userService) {
+    public TaskController(TaskService taskService, UserService userService, LoggerService loggerService) {
         this.taskService = taskService;
         this.userService = userService;
+        this.loggerService = loggerService;
     }
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
         binder.registerCustomEditor(Date.class, editor);
+    }
+
+    @RequestMapping(value = { "/log" }, method = RequestMethod.GET)
+    public String log(Model model) {
+
+        model.addAttribute("logs", loggerService.list());
+        return "/task/log";
     }
 
     @RequestMapping(value = { "/task/edit" }, method = RequestMethod.GET)
@@ -212,16 +225,16 @@ public class TaskController {
         return operators;
     }
 
-    @RequestMapping(value = { "/task/to" },method = RequestMethod.GET)
+    @RequestMapping(value = { "/task/to" }, method = RequestMethod.GET)
     @ResponseBody
     public List<TaskObject> getTaskObject(@ModelAttribute("taskObject") TaskObject taskObject)
     {
         return taskService.queryBuilder(taskObject);
     }
 
-    @RequestMapping("/task/op")
+    @RequestMapping(value = "/task/op")
     @ResponseBody
-    public Map<String, Object> getObjectProperties(@RequestParam String name)
+    public Map<String, Object> getObjectProperties(@RequestBody String name)
     {
         return taskService.getFields(name);
     }

@@ -1,7 +1,6 @@
 package kg.gov.mf.loan.web.controller.doc;
 
 import kg.gov.mf.loan.doc.model.DocumentSubType;
-import kg.gov.mf.loan.doc.model.DocumentType;
 import kg.gov.mf.loan.doc.service.DocumentSubTypeService;
 import kg.gov.mf.loan.doc.service.DocumentTypeService;
 import org.springframework.beans.factory.annotation.Autowired;

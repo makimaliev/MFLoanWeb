@@ -151,6 +151,10 @@
             $("#userlist tr").removeAttr("style");
             $("#userlist tr td").removeClass();
         });
+        $('#chat_window').on('show.bs.modal', function (e) {
+
+            connect();
+        });
 
         messageForm.addEventListener('submit', sendMessage, true);
         // Chat End
@@ -164,7 +168,6 @@
 
         $(document).ready(function() {
             changePageAndSize();
-            connect();
         });
 
 

@@ -26,15 +26,6 @@
                                 <h3 class="m-portlet__head-text" th:text="#{label.documentSubTypes.title}"></h3>
                             </div>
                         </div>
-                        <div class="m-portlet__head-tools">
-                            <ul class="m-portlet__nav">
-                                <li class="m-portlet__nav-item">
-                                    <a th:href="@{/doc/documentType/new}"
-                                       class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
-                                       th:text="#{label.documentType.add}"></a>
-                                </li>
-                            </ul>
-                        </div>
                     </div>
                     <div class="m-portlet__body">
 
@@ -57,9 +48,6 @@
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 <a class="dropdown-item"  th:href="@{/doc/documentType/edit/__${dt.id}__}">
                                                     <span th:text="#{label.edit}"></span>
-                                                </a>
-                                                <a class="dropdown-item"  th:href="@{/doc/documentType/delete/__${dt.id}__}">
-                                                    <span th:text="#{label.delete}"></span>
                                                 </a>
                                             </div>
                                         </div>

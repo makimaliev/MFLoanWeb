@@ -1,13 +1,12 @@
 package kg.gov.mf.loan.web.controller.doc;
 
+import com.google.common.collect.Lists;
 import kg.gov.mf.loan.admin.org.model.Department;
 import kg.gov.mf.loan.admin.org.model.Organization;
 import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.doc.model.*;
-import kg.gov.mf.loan.doc.service.DocumentStatusService;
 import kg.gov.mf.loan.doc.service.*;
-import kg.gov.mf.loan.doc.model.Transition;
 import kg.gov.mf.loan.task.model.Task;
 import kg.gov.mf.loan.task.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -71,8 +71,8 @@ public class DocumentFlowController extends BaseController {
                             { Transition.REQUEST, Transition.TORECONCILE },     // NEW
                             { Transition.REQUEST, Transition.TORECONCILE },     // DRAFT
                             { Transition.RECONCILE, Transition.REJECT },        // PENDING
-                            { Transition.APPROVE, Transition.REJECT },          // REQUESTED
                             { Transition.REQUEST, Transition.TORECONCILE },     // RECONCILED
+                            { Transition.APPROVE, Transition.REJECT },          // REQUESTED
                             { Transition.ACCEPT, Transition.REJECT },           // APPROVED
                             {},                                                 // REJECTED
                             {},                                                 // REGISTERED
@@ -193,6 +193,10 @@ public class DocumentFlowController extends BaseController {
         if(getUser() == null) return "/login/login";
 
         Document document = documentService.getById(id);
+
+        //?????????????????????????????????????????????
+        State curretState = document.getDocumentState();
+
         //region XTRA
         // *************************************************************************************************************
         Map<String, String> vars = new HashMap<>();
@@ -224,6 +228,9 @@ public class DocumentFlowController extends BaseController {
             hasReject = ACTIONS[row][col][1].equals(Transition.REJECT) ? true : false;
         }
 
+        //?????????????????????????????????????????????
+        document.setDocumentState(curretState);
+
         model.addAttribute("stages", getStages(currentView));
         model.addAttribute("hasReject", hasReject);
         model.addAttribute("tasks", taskService.getTasks(vars));
@@ -243,6 +250,8 @@ public class DocumentFlowController extends BaseController {
                        @RequestParam("receiverFiles") MultipartFile[] receiverFiles) throws IOException {
 
         String docType = documentTypeService.getById(document.getDocumentType().getId()).getInternalName();
+
+        document.setDocumentType(documentTypeService.getById(document.getDocumentType().getId()));
 
         if(document.getId() != null)
         {
@@ -330,13 +339,12 @@ public class DocumentFlowController extends BaseController {
     public String delete(@PathVariable("id") Long id) {
 
         Document document = documentService.getById(id);
+        documentService.remove(document);
 
-        for(Task task : taskService.getTasksByObjectId(document.getId()))
+        for(Task task : taskService.getTasksByObjectId(id))
         {
             taskService.remove(task);
         }
-
-        documentService.remove(document);
 
         return "redirect:/doc?type=" + document.getDocumentType().getInternalName();
     }
@@ -376,8 +384,6 @@ public class DocumentFlowController extends BaseController {
     }
     private DispatchData setDispatchData(State state, String description) {
 
-
-
         DispatchData dispatchData = new DispatchData();
 
         dispatchData.setDescription(description);
@@ -394,6 +400,7 @@ public class DocumentFlowController extends BaseController {
 
         task.setDescription(description);
         task.setSummary("");
+
         task.setObjectId(id);
         task.setObjectType(Document.class.getSimpleName());
         task.setCreatedBy(getUser());
@@ -402,7 +409,7 @@ public class DocumentFlowController extends BaseController {
 
         taskService.add(task);
     }
-    private void addTask(String description, Long id, User fromUser, User toUser,Date dueDate, State state) {
+    private void addTask(String description, Long id, User user, Date dueDate, User toUser, State state) {
 
         Task task = new Task();
 
@@ -411,13 +418,12 @@ public class DocumentFlowController extends BaseController {
         task.setProgress(state.toString());
         task.setObjectId(id);
         task.setObjectType(Document.class.getSimpleName());
-        task.setCreatedBy(fromUser);
+        task.setCreatedBy(user);
         task.setAssignedTo(toUser);
         task.setTargetResolutionDate(dueDate);
 
         taskService.add(task);
     }
-
     private void saveInternalDocument(Document document, String action) {
 
         String description = document.getComment();
@@ -429,25 +435,14 @@ public class DocumentFlowController extends BaseController {
             document.setDocumentState(Transition.valueOf(action.toUpperCase()).state());
             document.getDispatchData().add(setDispatchData(State.DRAFT, ""));
             document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), ""));
-
             documentService.add(document);
 
-            if(action.equals("REQUEST"))
+            if(action.equals("REQUEST") || action.equals("TORECONCILE"))
             {
-                for(Staff staff : document.getSenderResponsible().getStaff())
+                for(Staff staff : action.equals("REQUEST") ? Lists.newArrayList(document.getSenderResponsible().getStaff()) : document.getReconciler())
                 {
                     document.getUsers().add(getUser(staff));
-                    addTask(State.REQUESTED.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
-                }
-                documentService.update(document);
-            }
-
-            if(action.equals("TORECONCILE"))
-            {
-                for(Staff staff : document.getReconciler())
-                {
-                    document.getUsers().add(getUser(staff));
-                    addTask(State.PENDING.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
+                    addTask(action.equals("REQUEST") ? State.REQUESTED.text() : State.PENDING.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
                 }
                 documentService.update(document);
             }
@@ -470,47 +465,29 @@ public class DocumentFlowController extends BaseController {
                 taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
             }
 
+            if (action.equals("TORECONCILE") || action.equals("REQUEST"))
+            {
+                Map<String, String> vars = new HashMap<>();
+                vars.put("objectId", document.getId().toString());
+                vars.put("status", "OPEN");
+                Task task = taskService.getTask(getUser(), vars);
+
+                if(task != null && task.getProgress() != null && task.getCreatedBy() == null)
+                {
+                    taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
+                }
+            }
+
             // *********************************************************************************************************
             // *********************************** Add Tasks, Users and Description ************************************
             // *********************************************************************************************************
-            if (action.equals("TORECONCILE"))
+            if (action.equals("TORECONCILE") || action.equals("REQUEST"))
             {
-                Map<String, String> vars = new HashMap<>();
-                vars.put("objectId", document.getId().toString());
-                vars.put("status", "OPEN");
-                Task task = taskService.getTask(getUser(), vars);
-
-                if(task != null && task.getProgress() != null && task.getCreatedBy() == null)
-                {
-                    taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
-                }
-
                 //region [User, Task]
-                for(Staff staff : document.getReconciler())
+                for(Staff staff : action.equals("REQUEST") ? Lists.newArrayList(document.getSenderResponsible().getStaff()) : document.getReconciler())
                 {
                     document.getUsers().add(getUser(staff));
-                    addTask(State.PENDING.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
-                }
-                //endregion
-            }
-
-            if (action.equals("REQUEST"))
-            {
-                Map<String, String> vars = new HashMap<>();
-                vars.put("objectId", document.getId().toString());
-                vars.put("status", "OPEN");
-                Task task = taskService.getTask(getUser(), vars);
-
-                if(task != null && task.getProgress() != null && task.getCreatedBy() == null)
-                {
-                    taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
-                }
-
-                //region [User, Task]
-                for (Staff staff : document.getSenderResponsible().getStaff())
-                {
-                    document.getUsers().add(getUser(staff));
-                    addTask(State.REQUESTED.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
+                    addTask(action.equals("REQUEST") ? State.REQUESTED.text() : State.PENDING.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
                 }
                 //endregion
             }
@@ -519,11 +496,10 @@ public class DocumentFlowController extends BaseController {
             {
                 //region [Description, User, Task]
                 document.setSenderRegisteredNumber(registerService.generateRegistrationNumber(doc));
-
                 document.setSenderRegisteredDate(new Date());
                 description = "<strong>Зарегистрирован</strong>"
-                        + "<br>Исходящий № : " + document.getSenderRegisteredNumber()
-                        + "<br>Дата : " + DATE_FORMAT.format(document.getSenderRegisteredDate());
+                            + "<br>Исходящий № : " + document.getSenderRegisteredNumber()
+                            + "<br>Дата : " + DATE_FORMAT.format(document.getSenderRegisteredDate());
 
                 if (document.getReceiverResponsible().getResponsibleType() == 1)
                 {
@@ -547,22 +523,21 @@ public class DocumentFlowController extends BaseController {
             if (action.equals("ACCEPT"))
             {
                 //region [Description, User, AutoTask]
-                document.setSenderRegisteredNumber(registerService.generateRegistrationNumber(doc));
-
+                document.setReceiverRegisteredNumber(registerService.generateRegistrationNumber(doc));
                 document.setReceiverRegisteredDate(new Date());
                 description = "<strong>Зарегистрирован</strong>"
-                        + "<br>Входящий № : " + document.getReceiverRegisteredNumber()
-                        + "<br>Дата : " + DATE_FORMAT.format(document.getReceiverRegisteredDate());
+                            + "<br>Входящий № : " + document.getReceiverRegisteredNumber()
+                            + "<br>Дата : " + DATE_FORMAT.format(document.getReceiverRegisteredDate());
 
                 if (document.getReceiverResponsible().getResponsibleType() == 1) {
                     for (Staff staff : document.getReceiverResponsible().getStaff())
                     {
-                        addTask("Назначить исполнителя", document.getId(), null, getUser(staff), document.getDocumentDueDate(),State.ACCEPTED);
+                        addTask("Назначить исполнителя", document.getId(), null, document.getDocumentDueDate(), getUser(staff), State.ACCEPTED);
                     }
                 } else {
                     for (Department department : document.getReceiverResponsible().getDepartments())
                     {
-                        addTask("Назначить исполнителя", document.getId(), null, getUser(department), document.getDocumentDueDate(),State.ACCEPTED);
+                        addTask("Назначить исполнителя", document.getId(), null, document.getDocumentDueDate(), getUser(department), State.ACCEPTED);
                     }
                 }
                 //endregion
@@ -583,7 +558,7 @@ public class DocumentFlowController extends BaseController {
             {
                 //region [User, AutoTask]
                 document.getReceiverExecutor().getStaff().add(getUser().getStaff());
-                addTask("Завершить задачу", document.getId(),null, getUser(), document.getDocumentDueDate(), State.STARTED);
+                addTask("Завершить задачу", document.getId(),null, document.getDocumentDueDate(), getUser(), State.STARTED);
                 //endregion
             }
 
@@ -599,15 +574,11 @@ public class DocumentFlowController extends BaseController {
 
                 if (action.equals("RECONCILE") && taskCount == 0)
                 {
-                    addTask("Согласование завершено", document.getId(), null, getUser(document.getOwner()), document.getDocumentDueDate(), State.DRAFT);
-                }
-
-                if (action.equals("START") && taskCount == 0)
-                {
+                    addTask("Согласование завершено", document.getId(), null, document.getDocumentDueDate(), getUser(document.getOwner()), State.DRAFT);
                     document.setDocumentState(Transition.valueOf(action).state());
                 }
 
-                if (action.equals("DONE") && taskCount == 0)
+                if ((action.equals("START") || action.equals("DONE")) && taskCount == 0)
                 {
                     document.setDocumentState(Transition.valueOf(action).state());
                 }
@@ -616,12 +587,12 @@ public class DocumentFlowController extends BaseController {
                 {
                     if(document.getDocumentState() == State.PENDING && taskCount == 0)
                     {
-                        addTask("Согласование завершено", document.getId(), null, getUser(document.getOwner()), document.getDocumentDueDate(), State.DRAFT);
+                        addTask("Согласование завершено", document.getId(), null, document.getDocumentDueDate(), getUser(document.getOwner()), State.DRAFT);
                     }
 
                     if(document.getDocumentState() == State.REQUESTED)
                     {
-                        addTask("Доработать", document.getId(), null, getUser(document.getOwner()), document.getDocumentDueDate(), State.DRAFT);
+                        addTask("Доработать", document.getId(), null, document.getDocumentDueDate(), getUser(document.getOwner()), State.DRAFT);
                     }
 
                     if (document.getDocumentState() == State.APPROVED)
@@ -670,8 +641,7 @@ public class DocumentFlowController extends BaseController {
                 document.getDispatchData().add(setDispatchData(State.DRAFT, description));
 
                 // Register Incoming
-                document.setSenderRegisteredNumber(registerService.generateRegistrationNumber(document));
-
+                document.setReceiverRegisteredNumber(registerService.generateRegistrationNumber(document));
                 document.setReceiverRegisteredDate(new Date());
                 description = "<strong>Зарегистрирован</strong>"
                         + "<br>Входящий № : " + document.getReceiverRegisteredNumber()
@@ -736,7 +706,7 @@ public class DocumentFlowController extends BaseController {
             {
                 //region [User, AutoTask]
                 document.getReceiverExecutor().getStaff().add(getUser().getStaff());
-                addTask("Завершить задачу", document.getId(),null, getUser(), document.getDocumentDueDate(), State.STARTED);
+                addTask("Завершить задачу", document.getId(),null, document.getDocumentDueDate(), getUser(), State.STARTED);
                 //endregion
             }
 
@@ -750,12 +720,7 @@ public class DocumentFlowController extends BaseController {
                 vars.put("status", "OPEN");
                 int taskCount = taskService.getTasks(vars).size();
 
-                if (action.equals("START") && taskCount == 0)
-                {
-                    document.setDocumentState(Transition.valueOf(action).state());
-                }
-
-                if (action.equals("DONE") && taskCount == 0)
+                if ((action.equals("START") || action.equals("DONE")) && taskCount == 0)
                 {
                     document.setDocumentState(Transition.valueOf(action).state());
                 }
@@ -838,10 +803,7 @@ public class DocumentFlowController extends BaseController {
                 taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
             }
 
-            // *********************************************************************************************************
-            // *********************************** Add Tasks, Users and Description ************************************
-            // *********************************************************************************************************
-            if (action.equals("TORECONCILE"))
+            if (action.equals("TORECONCILE") || action.equals("REQUEST"))
             {
                 Map<String, String> vars = new HashMap<>();
                 vars.put("objectId", document.getId().toString());
@@ -852,7 +814,13 @@ public class DocumentFlowController extends BaseController {
                 {
                     taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
                 }
+            }
 
+            // *********************************************************************************************************
+            // *********************************** Add Tasks, Users and Description ************************************
+            // *********************************************************************************************************
+            if (action.equals("TORECONCILE"))
+            {
                 //region [User, Task]
                 for(Staff staff : document.getReconciler())
                 {
@@ -864,16 +832,6 @@ public class DocumentFlowController extends BaseController {
 
             if (action.equals("REQUEST"))
             {
-                Map<String, String> vars = new HashMap<>();
-                vars.put("objectId", document.getId().toString());
-                vars.put("status", "OPEN");
-                Task task = taskService.getTask(getUser(), vars);
-
-                if(task != null && task.getProgress() != null && task.getCreatedBy() == null)
-                {
-                    taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
-                }
-
                 //region [User, Task]
                 if (document.getSenderResponsible().getResponsibleType() == 1)
                 {
@@ -896,8 +854,10 @@ public class DocumentFlowController extends BaseController {
 
             if (action.equals("APPROVE"))
             {
+                //region [User, Task]
                 document.getUsers().add(getUser(staticUser));
-                addTask(Transition.REGISTER.text(), document.getId(), null, getUser(staticUser), document.getDocumentDueDate(), State.APPROVED);
+                addTask(Transition.REGISTER.text(), document.getId(), null, document.getDocumentDueDate(), getUser(staticUser), State.APPROVED);
+                //endregion
             }
 
             if (action.equals("REGISTER"))
@@ -921,19 +881,14 @@ public class DocumentFlowController extends BaseController {
                 vars.put("status", "OPEN");
                 int taskCount = taskService.getTasks(vars).size();
 
-                if (action.equals("RECONCILE") && taskCount == 0)
+                if ((action.equals("RECONCILE") || document.getDocumentState() == State.PENDING) && taskCount == 0)
                 {
-                    addTask("Согласование завершено", document.getId(), null, getUser(document.getOwner()), document.getDocumentDueDate(), State.DRAFT);
-                }
-
-                if(document.getDocumentState() == State.PENDING && taskCount == 0)
-                {
-                    addTask("Согласование завершено", document.getId(), null, getUser(document.getOwner()), document.getDocumentDueDate(), State.DRAFT);
+                    addTask("Согласование завершено", document.getId(), null, document.getDocumentDueDate(), getUser(document.getOwner()), State.DRAFT);
                 }
 
                 if(document.getDocumentState() == State.REQUESTED)
                 {
-                    addTask("Доработать : " + description, document.getId(), null, getUser(document.getOwner()), document.getDocumentDueDate(), State.DRAFT);
+                    addTask("Доработать : " + description, document.getId(), null, document.getDocumentDueDate(), getUser(document.getOwner()), State.DRAFT);
                 }
 
                 if(action.equals("REGISTER"))
