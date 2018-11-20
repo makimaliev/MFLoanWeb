@@ -486,9 +486,9 @@
 									<!--<li class="nav-item">-->
 										<!--<a class="nav-link m&#45;&#45;font-primary" data-toggle="tab" href="#targetedUses" th:text="#{label.targetedUses}"></a>-->
 									<!--</li>-->
-									<li class="nav-item">
-										<a class="nav-link m--font-primary" data-toggle="tab" href="#reconstructedLists" th:text="#{label.reconstructedLists}"></a>
-									</li>
+									<!--<li class="nav-item">-->
+										<!--<a class="nav-link m&#45;&#45;font-primary" data-toggle="tab" href="#reconstructedLists" th:text="#{label.reconstructedLists}"></a>-->
+									<!--</li>-->
 									<li class="nav-item">
 										<a class="nav-link m--font-primary" data-toggle="tab" href="#bankrupts" th:text="#{label.bankrupts}"></a>
 									</li>
@@ -719,12 +719,13 @@
 	</div>
 	<!-- end:: Body -->
 	<!-- begin::Footer -->
-	<div th:replace="layout/footer"/>
+
+<div th:replace="fragments/footer :: footer-js"/>
 	<!-- end::Footer -->
 </div>
 <!-- end:: Page -->
 
-<div th:replace="fragments/footer :: footer-js"/>
+
 
 <!--begin::Page Resources -->
 <script>
@@ -779,7 +780,7 @@
     var jsonAccrues = /*[[${accrues}]]*/ [];
     /*]]>*/
 </script>
-
+<!--<div th:replace="layout/footer"/>-->
 </body>
 <!-- end::Body -->
 </html>

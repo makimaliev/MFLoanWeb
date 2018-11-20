@@ -74,6 +74,9 @@ var DatatableDataLocalPhases = function () {
                         <a href="/printoutTemplate/5/objectId/'+ row.id + '/select" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Претензия">\
 							<i class="la la-exclamation-circle"></i>\
 						</a>\
+						<a href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + procId + '/collectionphase/' + row.id +'/changeStatus" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Изменить статус">\
+							<i class="la la-neuter"></i>\
+						</a>\
 						<a href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + procId + '/collectionphase/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-edit"></i>\
 						</a>\

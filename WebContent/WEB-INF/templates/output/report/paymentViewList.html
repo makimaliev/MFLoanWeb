@@ -60,10 +60,10 @@
                     <div class="m-portlet__body">
                         <!--Begin Search Form-->
                         <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-                            <div class="row align-items-center">
+                            <div >
                                     <div class="form-group m-form__group row align-items-center" style="margin-left: 10px">
                                         <div class="col-md-3">
-                                            <div class="m-input-icon m-input-icon--left">
+                                            <div class="m-input-icon m-input-icon--left" style="padding: 5px">
                                                 <input type="text" class="form-control m-input m-input--solid" placeholder="debtor_name..." id="m_form_searchByDebtorName">
                                                 <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
@@ -71,9 +71,7 @@
 															</span>
 														</span>
                                             </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="m-input-icon m-input-icon--left">
+                                            <div class="m-input-icon m-input-icon--left" style="padding: 5px">
                                                 <input type="text" class="form-control form-control-inline input-medium date-picker" placeholder="payment number..." id="m_form_searchByPaymentNum">
                                                 <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
@@ -82,14 +80,17 @@
 														</span>
                                             </div>
                                         </div>
+                                        <!--<div class="col-md-3">-->
+                                            <!---->
+                                        <!--</div>-->
                                         <div class="col-md-3">
-                                            <div class="input-group date m_datetimepicker" id="from_datepicker">
+                                            <div class="input-group date m_datetimepicker" id="from_datepicker" style="padding: 5px">
                                                 <input  class="form-control m-input" th:placeholder="from_date" name="date" />
                                                 <span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
                                             </div>
-                                            <div class="input-group date m_datetimepicker" id="to_datepicker">
+                                            <div class="input-group date m_datetimepicker" id="to_datepicker" style="padding: 5px">
                                                 <input  class="form-control m-input" th:placeholder="to_date" name="date" />
                                                 <span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
@@ -97,15 +98,20 @@
                                             </div>
                                         </div>
                                         <div class="col-md-3">
-                                            <div class="input-group" id="from_amount">
+                                            <div class="input-group" id="from_amount" style="padding: 5px">
                                                 <input type="text" class="form-control input-sm" placeholder="from amount" name="amount"/>
                                             </div>
-                                            <div class="input-group" id="to_amount">
+                                            <div class="input-group" id="to_amount" style="padding: 5px">
                                                 <input type="text" class="form-control input-sm" placeholder="to amount" name="amount"/>
                                             </div>
                                         </div>
+                                        <!--<div class="col-md-3">-->
+                                            <!---->
+                                            <!--<div class="d-md-none m&#45;&#45;margin-bottom-10"></div>-->
+                                        <!--</div>-->
+
                                         <div class="col-md-3">
-                                            <div class="m-form__group m-form__group--inline">
+                                            <div class="m-form__group m-form__group--inline" style="padding: 5px">
                                                 <div class="m-form__label">
                                                     <label>
                                                         Область:
@@ -120,11 +126,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="d-md-none m--margin-bottom-10"></div>
-                                        </div>
-
-                                        <div class="col-md-3">
-                                            <div class="m-form__group m-form__group--inline">
+                                            <div class="m-form__group m-form__group--inline" style="padding: 5px">
                                                 <div class="m-form__label">
                                                     <label>
                                                         Район:

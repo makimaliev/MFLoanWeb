@@ -72,7 +72,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="${proc.procedureType.name + ', '+ proc.procedureStatus.name + ', ' + #dates.format(proc.startDate,'dd.MM.yyyy') + (proc.closeDate!=null? ' - ' + #dates.format(proc.closeDate,'dd.MM.yyyy'):'')}"></h3>
+								<h3 class="m-portlet__head-text" th:text="${proc?.procedureType?.name + ', '+ proc?.procedureStatus?.name + ', ' + #dates.format(proc?.startDate,'dd.MM.yyyy') + (proc?.closeDate!=null? ' - ' + #dates.format(proc?.closeDate,'dd.MM.yyyy'):'')}"></h3>
 							</div>
 						</div>
 					</div>

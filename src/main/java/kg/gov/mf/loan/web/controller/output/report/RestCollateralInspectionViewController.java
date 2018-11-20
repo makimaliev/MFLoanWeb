@@ -36,6 +36,12 @@ public class RestCollateralInspectionViewController {
             List<String> searchWord= Arrays.asList(debtorName);
             parameters.put("r=ycv_debtor_name",searchWord);
         }
+        boolean searchByCiName= datatable.containsKey("datatable[query][ciName]");
+        if(searchByCiName){
+            String ciName = datatable.get("datatable[query][ciName]");
+            List<String> searchWord= Arrays.asList(ciName );
+            parameters.put("r=ycv_ci_name",searchWord);
+        }
 
         boolean searchByDistrict = datatable.containsKey("datatable[query][districtId]");
         if (searchByDistrict){
@@ -65,20 +71,13 @@ public class RestCollateralInspectionViewController {
             parameters.put("r=bov_cir_onDate",tos);
         }
 
-        boolean getFromAmount= datatable.containsKey("datatable[query][fromAmounter]");
-        if (getFromAmount){
-            String fromAmountStr = datatable.get("datatable[query][fromAmounter]");
-            List<String> froms=Arrays.asList(fromAmountStr);
-            parameters.put("r=gev_ci_collateralValue",froms);
+        boolean searchByResultType = datatable.containsKey("datatable[query][ins]");
+        if (searchByResultType){
+            String resultStr = datatable.get("datatable[query][ins]");
+            List<String> resultIds=Arrays.asList(resultStr );
+            parameters.put("r=inv_cir_inspectionResultTypeId",resultIds);
         }
 
-
-        boolean getToAmount= datatable.containsKey("datatable[query][toAmounter]");
-        if (getToAmount){
-            String toAmountStr = datatable.get("datatable[query][toAmounter]");
-            List<String> tos=Arrays.asList(toAmountStr);
-            parameters.put("r=lev_ci_collateralValue",tos);
-        }
 
         Integer page = Integer.parseInt(pageStr);
         Integer perPage = Integer.parseInt(perPageStr);

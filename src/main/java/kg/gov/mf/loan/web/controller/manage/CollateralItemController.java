@@ -9,7 +9,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
+import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.repository.collateral.CollateralItemArrestFreeRepository;
+import kg.gov.mf.loan.manage.service.debtor.OwnerService;
+import kg.gov.mf.loan.web.fetchModels.CollateralItemOwnerModel;
 import kg.gov.mf.loan.web.fetchModels.ItemArrestFreeModel;
 import kg.gov.mf.loan.web.fetchModels.ItemInspectionResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +82,9 @@ public class CollateralItemController {
 	@Autowired
 	UserService userService;
 
+	@Autowired
+	OwnerService ownerService;
+
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -132,10 +138,14 @@ public class CollateralItemController {
 			@PathVariable("agreementId")Long agreementId,
 			@PathVariable("itemId")Long itemId)
 	{
+//		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+
 		model.addAttribute("debtorId", debtorId);
 		model.addAttribute("debtor", debtorService.getById(debtorId));
 		model.addAttribute("agreementId", agreementId);
 		model.addAttribute("agreement", agreementService.getById(agreementId));
+//		String jsonOwners = gson.toJson(getCollateralItemOwners());
+//		model.addAttribute("owners", jsonOwners);
 		
 		if(itemId == 0)
 		{
@@ -228,7 +238,7 @@ public class CollateralItemController {
 			@PathVariable("itemId")Long itemId) {
 		
 		CollateralItem item = itemService.getById(itemId);
-		
+		item.setStatus(2);
 		if(af.getId() == 0)
 		{
 			User user = userService.findByUsername(Utils.getPrincipal());
@@ -528,4 +538,21 @@ public class CollateralItemController {
 
         return result;
     }
+
+//    private List<CollateralItemOwnerModel> getCollateralItemOwners(){
+//		List<CollateralItemOwnerModel> result=new ArrayList<>();
+//
+//		List<Owner> owners = ownerService.list();
+//
+//		for(Owner i :owners){
+//			CollateralItemOwnerModel model=new CollateralItemOwnerModel();
+//			model.setId(i.getId());
+//			model.setName(i.getName());
+//			result.add(model);
+//		}
+//
+//
+//
+//		return result;
+//	}
 }

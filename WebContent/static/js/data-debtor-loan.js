@@ -223,7 +223,7 @@ var DatatableDataLocalLoans = function () {
                     $.ajax({
                         type : 'POST',
                         url : "/manage/debtor/"+debtorId+"/initializephase",
-                        data: {selectedLoans:selectedLoans, initDate: initDate},
+                        data: {selectedLoans:selectedLoans, initDater: initDate},
                         success:function (data) {
                             phaseDetailsTableInit(data);
                             var divT = $('#phaseDetailsDiv');

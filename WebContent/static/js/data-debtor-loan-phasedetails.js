@@ -101,7 +101,14 @@ var phaseDetailsTableInit = function (jsonInput) {
 
     $('#initPhaseSaveBtn')
         .on('click', function () {
+            // var options = { year: 'numeric',month: 'long', day: 'numeric' };
             var initDate = $("#phaseInitDate").val();
+
+            $.ajax({
+                type:'post',
+                data:{initdate:initDate},
+                url:"/initializephasesave/initdate"
+            });
             var phaseDetailsModels = [];
             for (var i = 0; i < dataJSONArray.length; i++) {
                 var obj = dataJSONArray[i];
@@ -119,13 +126,12 @@ var phaseDetailsTableInit = function (jsonInput) {
                         PhaseDetailsModel['startInterest'] = parseFloat($(startIntInput).val());
                         PhaseDetailsModel['startPenalty'] = parseFloat($(startPenInput).val());
                         PhaseDetailsModel['startTotalAmount'] = parseFloat($(totalInput).val());
-                        PhaseDetailsModel['initDate'] = initDate;
+                        // PhaseDetailsModel['initDate'] = d;
                         phaseDetailsModels.push(PhaseDetailsModel);
                     }
                 });
             }
             console.log(phaseDetailsModels);
-            console.log(initDate);
             phaseDetailsModels = JSON.stringify({
                 'phaseDetailsModels' : phaseDetailsModels
             });

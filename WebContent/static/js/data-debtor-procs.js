@@ -94,7 +94,10 @@ var DatatableDataLocalProcs = function () {
 
                     result = result + '\
 						<a href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
-							<i class="la la-edit"></i>\
+						<i class="la la-edit"></i>\
+						</a>\
+						<a href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + row.id + '/collectionphase/' + row.phaseId +'/changeStatus" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Изменить статус">\
+						<i class="la la-neuter"></i>\
 						</a>\
 						<a href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
 							<i class="la la-trash"></i>\

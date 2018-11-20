@@ -5,7 +5,12 @@ import java.util.*;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import kg.gov.mf.loan.admin.org.service.DistrictService;
+import kg.gov.mf.loan.admin.org.model.Department;
+import kg.gov.mf.loan.admin.org.model.Organization;
+import kg.gov.mf.loan.admin.org.model.Person;
+import kg.gov.mf.loan.admin.org.model.Position;
+import kg.gov.mf.loan.admin.org.service.*;
+import kg.gov.mf.loan.admin.sys.service.InformationService;
 import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
 import kg.gov.mf.loan.manage.model.collateral.CollateralItem;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
@@ -29,8 +34,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import kg.gov.mf.loan.admin.org.service.OrganizationService;
-import kg.gov.mf.loan.admin.org.service.PersonService;
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
 import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
 import kg.gov.mf.loan.manage.service.collection.CollectionProcedureService;
@@ -112,6 +115,18 @@ public class DebtorController {
 	@Autowired
 	CollateralItemReposiory collateralItemReposiory;
 
+	@Autowired
+	OrganizationService organizationService;
+
+	@Autowired
+	PositionService positionService;
+
+	@Autowired
+	InformationService informationService;
+
+	@Autowired
+    StaffService staffService;
+
 	/** The entity manager. */
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -128,7 +143,30 @@ public class DebtorController {
 
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtor", debtor);
+		String isPerson="true";
+		if (debtor.getOwner().getOwnerType().name().equals("ORGANIZATION")){
 
+			isPerson="false";
+			Organization organization = this.organizationService.findById(debtor.getOwner().getId());
+            String staff="";
+			for (Department department:organization.getDepartment())
+			{
+				staff= staffService.findAllByDepartment(department).get(0).getName();
+				break;
+			}
+
+			model.addAttribute("organization", organization);
+			model.addAttribute("staff", staff);
+//			model.addAttribute("informationList", this.informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2, organization.getId()));
+		}
+		else{
+			Person person = this.personService.findById(debtor.getOwner().getId());
+
+			model.addAttribute("person", person);
+//			model.addAttribute("informationList", this.informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2, person.getId()));
+		}
+
+		model.addAttribute("isPerson",isPerson);
 		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
 		String jsonLoans = gson.toJson(getLoansByDebtorId(debtorId));
 		model.addAttribute("loans", jsonLoans);
@@ -504,7 +542,7 @@ public class DebtorController {
         for(CollectionProcedureModel model: models.values())
             result.add(model);
 
-        Collections.sort(result);
+//        Collections.sort(result);
         return result;
 	}
 

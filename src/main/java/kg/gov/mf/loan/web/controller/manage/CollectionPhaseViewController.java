@@ -2,6 +2,7 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import kg.gov.mf.loan.admin.org.service.DistrictService;
 import kg.gov.mf.loan.admin.org.service.RegionService;
+import kg.gov.mf.loan.manage.service.collection.PhaseStatusService;
 import kg.gov.mf.loan.manage.service.collection.PhaseTypeService;
 import kg.gov.mf.loan.manage.service.collection.ProcedureStatusService;
 import kg.gov.mf.loan.web.util.Utils;
@@ -23,14 +24,14 @@ public class CollectionPhaseViewController {
     PhaseTypeService phaseTypeService;
 
     @Autowired
-    ProcedureStatusService procedureStatusService;
+    PhaseStatusService phaseStatusService;
 
     @RequestMapping("/collectionPhaseViews")
     public String collectionPhaseViewList(ModelMap model){
         model.addAttribute("regions",regionService.findAll());
         model.addAttribute("districts",districtService.findAll());
         model.addAttribute("phaseTypes",phaseTypeService.list());
-        model.addAttribute("procedures",procedureStatusService.list());
+        model.addAttribute("procedures",phaseStatusService.list());
 
         model.addAttribute("loggedinuser", Utils.getPrincipal());
 

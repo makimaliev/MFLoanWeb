@@ -42,13 +42,6 @@ public class RestCollectionPhaseViewController {
             parameters.put("r=ycv_debtor_name",searchWord);
         }
 
-        boolean searchByCPhVersion= datatable.containsKey("datatable[query][cphVersion]");
-        if(searchByCPhVersion){
-            String version = datatable.get("datatable[query][cphVersion]");
-            List<String> searchWord=Arrays.asList(version  );
-            parameters.put("r=ycv_cph_version",searchWord);
-        }
-
         boolean searchByDistrict = datatable.containsKey("datatable[query][districtId]");
         if (searchByDistrict){
             String districtStr = datatable.get("datatable[query][districtId]");
@@ -88,7 +81,7 @@ public class RestCollectionPhaseViewController {
         if (searchByStatus){
             String statusStr = datatable.get("datatable[query][statusId]");
             List<String> statuses=Arrays.asList(statusStr  );
-            parameters.put("r=inv_cp_procedureStatusId",statuses);
+            parameters.put("r=inv_cph_phaseStatusId",statuses);
         }
 
         List<CollectionPhaseView> all=collectionPhaseViewService.findByParameter(parameters,offset,perPage,sortStr,sortField);

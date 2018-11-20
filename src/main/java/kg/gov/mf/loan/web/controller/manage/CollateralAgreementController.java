@@ -8,6 +8,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.manage.model.collateral.CollateralItem;
+import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import kg.gov.mf.loan.web.fetchModels.CollateralItemModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +87,13 @@ public class CollateralAgreementController {
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtorId", debtorId);
 		model.addAttribute("debtor", debtor);
-		model.addAttribute("tLoans", debtor.getLoans());
+		List<Loan> loans=new ArrayList<>();
+		for(Loan l:debtor.getLoans()){
+			if(l.getParent()==null){
+				loans.add(l);
+			}
+		}
+		model.addAttribute("tLoans", loans);
 		
 		if(agreementId == 0)
 		{
@@ -115,7 +122,7 @@ public class CollateralAgreementController {
     		ModelMap model)
     {
 		if(agreement.getId() == 0){
-			Owner owner = ownerRepository.findOne(agreement.getOwner().getId());
+			Owner owner=ownerRepository.findOne(debtorService.getById(debtorId).getOwner().getId());
 			agreement.setOwner(owner);
 			agreementService.add(agreement);
 		}
@@ -126,8 +133,8 @@ public class CollateralAgreementController {
 			agreement.setOwner(owner);
 			agreementService.update(agreement);
 		}
-		
-		return "redirect:" + "/manage/debtor/{debtorId}/view";
+
+		return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/"+agreement.getId()+"/view";
     }
 
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collateralagreement/delete"})
@@ -152,8 +159,18 @@ public class CollateralAgreementController {
 			model.setItemTypeId(item.getItemType().getId());
 			model.setItemTypeName(item.getItemType().getName());
 			model.setQuantity(item.getQuantity());
-			model.setRisk_rate(item.getRisk_rate());
-			model.setDemand_rate(item.getDemand_rate());
+			try{
+				model.setRisk_rate(item.getRisk_rate());
+			}
+			catch (Exception e){
+				model.setRisk_rate((0));
+			}
+			try{
+				model.setDemand_rate(item.getDemand_rate());
+			}
+			catch (Exception e){
+				model.setDemand_rate(Double.valueOf(0));
+			}
 			model.setQuantityTypeId(item.getQuantityType().getId());
 			model.setQuantityTypeName(item.getQuantityType().getName());
 			model.setCollateralValue(item.getCollateralValue());

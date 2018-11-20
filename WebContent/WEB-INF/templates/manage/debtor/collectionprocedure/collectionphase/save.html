@@ -103,25 +103,25 @@
 											<div class="input-group date m_datetimepicker_6">
 												<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{startDate}"/>
 												<span class="input-group-addon">
-														<i class="la la-calendar glyphicon-th"></i>
-													</span>
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
 											</div>
 										</div>
 									</div>
 
-									<div class="form-group m-form__group row">
-										<label class="col-form-label col-lg-4 col-sm-12">
-											<span th:text="#{label.collectionphase.closeDate}"></span>
-										</label>
-										<div class="col-lg-4 col-md-9 col-sm-12">
-											<div class="input-group date m_datetimepicker_6">
-												<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{closeDate}"/>
-												<span class="input-group-addon">
-														<i class="la la-calendar glyphicon-th"></i>
-													</span>
-											</div>
-										</div>
-									</div>
+									<!--<div class="form-group m-form__group row">-->
+										<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+											<!--<span th:text="#{label.collectionphase.closeDate}"></span>-->
+										<!--</label>-->
+										<!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+											<!--<div class="input-group date m_datetimepicker_6">-->
+												<!--<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{closeDate}"/>-->
+												<!--<span class="input-group-addon">-->
+													<!--<i class="la la-calendar glyphicon-th"></i>-->
+												<!--</span>-->
+											<!--</div>-->
+										<!--</div>-->
+									<!--</div>-->
 
 									<!--
 									<div class="form-group m-form__group row">
@@ -144,17 +144,17 @@
 										</div>
 									</div>
 									-->
-									<div class="form-group m-form__group row">
-										<label class="col-form-label col-lg-4 col-sm-12">
-											<span th:text="#{label.collectionPhase.phaseStatus}"></span>
-											<span class="m--font-danger">*</span>
-										</label>
-										<div class="col-lg-4 col-md-9 col-sm-12">
-											<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{phaseStatus}">
-												<option th:each="status : ${statuses}" th:value="${{status}}" th:text="${status.name}"></option>
-											</select>
-										</div>
-									</div>
+									<!--<div class="form-group m-form__group row">-->
+										<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+											<!--<span th:text="#{label.collectionPhase.phaseStatus}"></span>-->
+											<!--<span class="m&#45;&#45;font-danger">*</span>-->
+										<!--</label>-->
+										<!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+											<!--<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{phaseStatus}">-->
+												<!--<option th:each="status : ${statuses}" th:value="${{status}}" th:text="${status.name}"></option>-->
+											<!--</select>-->
+										<!--</div>-->
+									<!--</div>-->
 
 									<div class="form-group m-form__group row">
 										<label class="col-form-label col-lg-4 col-sm-12">
@@ -222,7 +222,17 @@
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/select2.js}" type="text/javascript"></script>
 <!--end::Page Resources -->
-
+<script>
+    $('.m_datetimepicker_6').datetimepicker({
+        format: "dd.mm.yyyy",
+        todayHighlight: true,
+        autoclose: true,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        pickerPosition: 'bottom-left'
+    });
+</script>
 </body>
 <!-- end::Body -->
 </html>

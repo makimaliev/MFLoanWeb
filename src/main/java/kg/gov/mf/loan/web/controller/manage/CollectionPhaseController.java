@@ -1,5 +1,7 @@
 package kg.gov.mf.loan.web.controller.manage;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -13,9 +15,7 @@ import kg.gov.mf.loan.manage.service.collection.*;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.process.LoanDetailedSummaryService;
 import kg.gov.mf.loan.process.service.JobItemService;
-import kg.gov.mf.loan.web.fetchModels.CollectionPhaseDetailsModel;
-import kg.gov.mf.loan.web.fetchModels.PhaseDetailsModel;
-import kg.gov.mf.loan.web.fetchModels.PhaseDetailsModelList;
+import kg.gov.mf.loan.web.fetchModels.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -71,6 +71,9 @@ public class CollectionPhaseController {
 	@Autowired
 	PhaseDetailsService phaseDetailsService;
 
+	@Autowired
+	PhaseStatusService phaseStatusService;
+
 	/** The entity manager. */
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -78,7 +81,7 @@ public class CollectionPhaseController {
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
-		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
+		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 	
@@ -106,8 +109,15 @@ public class CollectionPhaseController {
 
 	@RequestMapping(value="/manage/debtor/{debtorId}/initializephase", method=RequestMethod.POST)
 	@ResponseBody
-	public String initializePhaseForm(@PathVariable("debtorId")Long debtorId, @RequestParam Map<String, String> selectedLoans, @RequestParam Date initDate)
+	public String initializePhaseForm(@PathVariable("debtorId")Long debtorId, @RequestParam Map<String, String> selectedLoans, @RequestParam String initDater)
 	{
+		Date date1=null;
+		try {
+			date1=new SimpleDateFormat("dd.MM.yyyy").parse(initDater);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Date initDate=date1;
 		List<PhaseDetailsModel> result = new ArrayList<>();
 		int count = 0;
 		for (String value:selectedLoans.values()
@@ -133,6 +143,13 @@ public class CollectionPhaseController {
 		return jsonResult;
 	}
 
+	private String initeDate=null;
+	@PostMapping("/initializephasesave/initdate")
+	protected void setInitDate(@RequestParam(value = "initdate") String initdate){
+		this.initeDate=initdate;
+	}
+
+
 	@RequestMapping(value="/manage/debtor/{debtorId}/initializephasesave", method=RequestMethod.POST)
 	@ResponseBody
 	public String initializePhaseSave(@PathVariable("debtorId")Long debtorId, @RequestBody PhaseDetailsModelList phaseDetailsModels)
@@ -150,8 +167,12 @@ public class CollectionPhaseController {
                  ) {
                 Loan loan = loanRepository.findOne(model.getLoanId());
                 loans.add(loan);
-
-                startDate = model.getInitDate();
+				try {
+					startDate=new SimpleDateFormat("dd.MM.yyyy").parse(this.initeDate);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+//                startDate=model.getInitDate();
             }
 
             phase.setLoans(loans);
@@ -202,8 +223,10 @@ public class CollectionPhaseController {
 
 		if(phaseId == 0)
 		{
-			model.addAttribute("phase", new CollectionPhase());
-			model.addAttribute("tLoans", debtor.getLoans());
+			CollectionPhase collectionPhase=new CollectionPhase();
+			collectionPhase.setLoans(phaseService.getById(procService.getById(procId).getLastPhase()).getLoans());
+			model.addAttribute("phase", collectionPhase);
+			model.addAttribute("tLoans", phaseService.getById(procService.getById(procId).getLastPhase()).getLoans());
 		}
 
 		if(phaseId > 0)
@@ -218,7 +241,7 @@ public class CollectionPhaseController {
 
 		return "/manage/debtor/collectionprocedure/collectionphase/save";
 	}
-	
+
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/save"}, method=RequestMethod.POST)
     public String saveCollateralItem(CollectionPhase phase,
     		@PathVariable("debtorId")Long debtorId,
@@ -229,6 +252,7 @@ public class CollectionPhaseController {
 		phase.setCollectionProcedure(procedure);
 
 		if(phase.getId() == 0){
+			phase.setPhaseStatus(phaseStatusService.getById(Long.valueOf(1)));
 			phaseService.add(phase);
 			Set<Loan> loans = phase.getLoans();
 			for (Loan loan: loans)
@@ -261,6 +285,81 @@ public class CollectionPhaseController {
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/collectionprocedure/{procId}/view";
     }
+
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{collectionPhaseId}/changeStatus"}, method=RequestMethod.GET)
+	public String changeStatus(@PathVariable("debtorId")Long debtorId,
+							   @PathVariable("procId")Long procId,@PathVariable("collectionPhaseId") Long collectionPhaseId,ModelMap model){
+
+		CollectionPhase collectionPhase=phaseService.getById(collectionPhaseId);
+		Set<PhaseDetails> phaseDetails=collectionPhase.getPhaseDetails();
+
+
+		List<PhaseDetails> list=new ArrayList<>();
+		for(PhaseDetails p:phaseDetails){
+			list.add(p);
+		}
+
+		Debtor debtor=debtorService.getById(debtorId);
+
+		model.addAttribute("debtorId",debtorId);
+		model.addAttribute("procId",procId);
+		model.addAttribute("collectionPhaseId",collectionPhaseId);
+		model.addAttribute("debtor",debtor);
+		model.addAttribute("statuses",statusService.list());
+		model.addAttribute("proStatuses",procedureStatusService.list());
+		model.addAttribute("collectionPhase",collectionPhase);
+
+		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+		String jsonPhaseDetails= gson.toJson(getPhaseDetailsByCollectionPhaseId(collectionPhaseId));
+		model.addAttribute("phaseDetails",jsonPhaseDetails);
+
+		return "/manage/debtor/collectionprocedure/collectionphase/changeStatus";
+	}
+
+	@PostMapping("/collectionphase/{collectionPhaseId}/savePhaseDetailsChange")
+	public void savePhaseDetailsChanges(@PathVariable("collectionPhaseId")Long collectionPhaseId,@RequestBody CollectionPhaseDetailsModel1List list){
+		if(list.getCollectionPhaseDetailsModel1().size() > 0){
+			System.out.println("=======================================================================================");
+			System.out.println("=======================================================================================");
+			System.out.println("=======================================================================================");
+			System.out.println(list.getCollectionPhaseDetailsModel1().size());
+
+
+			CollectionPhase phase = phaseService.getById(collectionPhaseId);
+
+//			List<CollectionPhaseDetailsModel1> list = phaseDetailsModels.getCollectionPhaseDetailsModel1();
+			Set<PhaseDetails> phaseDetails= new HashSet<>();
+
+			for (CollectionPhaseDetailsModel1 model: list.getCollectionPhaseDetailsModel1())
+			{
+				PhaseDetails details = phaseDetailsService.getById(model.getId());
+				details.setClosePrincipal(model.getClosePrincipal());
+				details.setCloseInterest(model.getCloseInterest());
+				details.setClosePenalty(model.getClosePenalty());
+				details.setCloseTotalAmount(model.getCloseTotalAmount());
+				phaseDetailsService.update(details);
+			}
+
+		}
+	}
+
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{collectionPhaseId}/changeStatus"}, method=RequestMethod.POST)
+	public String saveChangedStatus(@PathVariable("debtorId")Long debtorId,
+									@PathVariable("procId")Long procId,@PathVariable("collectionPhaseId")Long collectionPhaseId, CollectionPhase collectionPhase){
+		CollectionPhase phase=phaseService.getById(collectionPhaseId);
+
+		System.out.println("==========================================================================================");
+		System.out.println();
+		phase.setPhaseStatus(collectionPhase.getPhaseStatus());
+		phase.setCloseDate(collectionPhase.getCloseDate());
+		phaseService.update(phase);
+		CollectionProcedure procedure=procService.getById(phase.getCollectionProcedure().getId());
+		procedure.setCloseDate(collectionPhase.getCollectionProcedure().getCloseDate());
+		procedure.setProcedureStatus(collectionPhase.getCollectionProcedure().getProcedureStatus());
+		procService.update(procedure);
+
+		return "redirect:" + "/manage/debtor/{debtorId}/collectionprocedure/{procId}/view";
+	}
 
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/delete"}, method=RequestMethod.POST)
     public String deleteCollateralItem(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("procId")Long procId)
@@ -410,5 +509,18 @@ public class CollectionPhaseController {
 
         return result;
     }
+
+    private List<CollectionPhaseDetailsModel1> getPhaseDetailsByCollectionPhaseId(long collectionPhaseId){
+
+		String baseQuery = "select p.id as id, IFNULL(p.closeInterest,p.startInterest) as closeInterest,IFNULL(p.closePenalty,p.startPenalty) as closePenalty,\n" +
+				"IFNULL(p.closePrincipal,p.startPrincipal) as closePrincipal,IFNULL(p.closeTotalAmount,p.startTotalAmount) as closeTotalAmount, IFNULL(p.startInterest,0) as startInterest,IFNULL(p.startPenalty,0) as startPenalty,\n" +
+                "IFNULL(p.startPrincipal,0) as startPrincipal,IFNULL(p.startTotalAmount,0) as startTotalAmount \n" +
+				"from phaseDetails p where p.collectionPhaseId="+String.valueOf(collectionPhaseId);
+		Query query = entityManager.createNativeQuery(baseQuery, CollectionPhaseDetailsModel1.class);
+		List<CollectionPhaseDetailsModel1> result = query.getResultList();
+
+		return result;
+	}
+
 	
 }
