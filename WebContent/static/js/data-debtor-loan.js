@@ -234,6 +234,24 @@ var DatatableDataLocalLoans = function () {
                     //$.post( "/manage/debtor/"+debtorId+"/initializephase", );
                 }
             });
+        $("#bnt_init_manualCalculator").on('click',function () {
+            if (!$("#phaseInitDate").val())
+            {
+
+                var alert = $('#m_form_2_msg');
+                alert.removeClass('m--hide').show();
+                mApp.scrollTo(alert, -200);
+            }
+            else
+            {
+                var initDate = $("#phaseInitDate").val();
+                $.ajax({
+                    type : 'POST',
+                    url : "/manage/debtor/"+debtorId+"/initializeManualCalculator",
+                    data: {selectedLoans:selectedLoans, initDater: initDate}
+                });
+            }
+        });
 	};
 
 	return {

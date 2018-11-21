@@ -69,15 +69,22 @@
 			<!-- END: Subheader -->
 			<div class="m-content">
 				<!--begin::Portlet-->
-				<div class="m-portlet m-portlet--full-height">
-					<div class="m-portlet__head">
-						<div class="m-portlet__head-caption">
-							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="${agreement.agreementNumber}"></h3>
-							</div>
-						</div>
-					</div>
-					<div class="m-portlet__body m-portlet__body--no-padding">
+
+                <div class="m-content">
+                    <!--begin::Portlet-->
+                    <div class="m-portlet m-portlet--full-height">
+                        <div class="m-portlet__head">
+                            <div class="m-portlet__head-caption">
+                                <div class="m-portlet__head-title">
+                                    <h3 class="m-portlet__head-text" th:text="${agreement.agreementNumber}"></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end::Portlet-->
+                    <!--begin::Portlet-->
+                    <div class="m-portlet m-portlet--mobile">
+					    <div class="m-portlet__body ">
 						<ul class="nav nav-tabs" role="tablist">
 							<li class="nav-item">
 								<a class="nav-link m--font-primary active" data-toggle="tab" href="#collateralAgreementInfo" th:text="#{label.collateralagreement.tab.info}"></a>
@@ -220,6 +227,7 @@
 						</div>
 
 					</div>
+                    </div>
 				</div>
 				<!--end::Portlet-->
 

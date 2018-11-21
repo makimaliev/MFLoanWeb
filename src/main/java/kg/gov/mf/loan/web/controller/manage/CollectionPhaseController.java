@@ -142,11 +142,25 @@ public class CollectionPhaseController {
 		String jsonResult = gson2.toJson(result);
 		return jsonResult;
 	}
-
-	private String initeDate=null;
-	@PostMapping("/initializephasesave/initdate")
-	protected void setInitDate(@RequestParam(value = "initdate") String initdate){
-		this.initeDate=initdate;
+	@PostMapping(value="/manage/debtor/{debtorId}/initializeManualCalculator")
+	@ResponseBody
+	public void initializeManualCalculator(@PathVariable("debtorId")Long debtorId, @RequestParam Map<String, String> selectedLoans, @RequestParam String initDater)
+	{
+		Date date1=null;
+		try {
+			date1=new SimpleDateFormat("dd.MM.yyyy").parse(initDater);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Date initDate=date1;
+		int count = 0;
+		for (String value:selectedLoans.values()
+		) {
+			if(count == selectedLoans.size()-1) continue;
+//			Loan loan = loanRepository.findOne(Long.parseLong(value));
+			this.jobItemService.runManualCalculateProcedure(Long.parseLong(value), initDate);
+			count++;
+		}
 	}
 
 
@@ -207,6 +221,12 @@ public class CollectionPhaseController {
         }
 
 		return "OK";
+	}
+
+	private String initeDate=null;
+	@PostMapping("/initializephasesave/initdate")
+	protected void setInitDate(@RequestParam(value = "initdate") String initdate){
+		this.initeDate=initdate;
 	}
 
 	@RequestMapping(value="/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/save", method=RequestMethod.GET)

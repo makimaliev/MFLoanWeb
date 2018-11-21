@@ -542,7 +542,7 @@ public class DebtorController {
         for(CollectionProcedureModel model: models.values())
             result.add(model);
 
-//        Collections.sort(result);
+        Collections.sort(result);
         return result;
 	}
 

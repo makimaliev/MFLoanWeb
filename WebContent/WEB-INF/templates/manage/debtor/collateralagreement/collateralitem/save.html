@@ -132,7 +132,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${item.itemType.id}" name="itemType"  id="itemType" th:title="#{label.select}">
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${item.itemType.id}" name="itemType"  id="itemType">
 											<option th:each="type : ${iTypes}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
 									</div>
@@ -352,6 +352,20 @@
 <script type="text/javascript">
     $(document).ready(function(){
 
+        var spanText1 = 'label.collateralItem.details1.type'+ $('#itemType').val()
+        $('#detailsLabel1').html(spanText1)
+        var spanText2 = 'label.collateralItem.details2.type'+ $('#itemType').val()
+        $('#detailsLabel2').html(spanText2)
+        var spanText3 = 'label.collateralItem.details3.type'+ $('#itemType').val()
+        $('#detailsLabel3').html(spanText3)
+        var spanText4 = 'label.collateralItem.details4.type'+ $('#itemType').val()
+        $('#detailsLabel4').html(spanText4)
+        var spanText5 = 'label.collateralItem.details5.type'+ $('#itemType').val()
+        $('#detailsLabel5').html(spanText5)
+        var spanText6 = 'label.collateralItem.details6.type'+ $('#itemType').val()
+        $('#detailsLabel6').html(spanText6)
+
+
         $('#itemType').change(function () {
 			var spanText1 = 'label.collateralItem.details1.type'+ this.value
             $('#detailsLabel1').html(spanText1)
@@ -367,6 +381,22 @@
             $('#detailsLabel6').html(spanText6)
         });
     });
+</script>
+<script type="text/javascript">
+    // body.onload(function () {
+    //     var spanText1 = 'label.collateralItem.details1.type'+ this.value
+    //     $('#detailsLabel1').html(spanText1)
+    //     var spanText2 = 'label.collateralItem.details2.type'+ this.value
+    //     $('#detailsLabel2').html(spanText2)
+    //     var spanText3 = 'label.collateralItem.details3.type'+ this.value
+    //     $('#detailsLabel3').html(spanText3)
+    //     var spanText4 = 'label.collateralItem.details4.type'+ this.value
+    //     $('#detailsLabel4').html(spanText4)
+    //     var spanText5 = 'label.collateralItem.details5.type'+ this.value
+    //     $('#detailsLabel5').html(spanText5)
+    //     var spanText6 = 'label.collateralItem.details6.type'+ this.value
+    //     $('#detailsLabel6').html(spanText6)
+    // });
 </script>
 <script type="text/javascript">
     function updateTOwner(sel)

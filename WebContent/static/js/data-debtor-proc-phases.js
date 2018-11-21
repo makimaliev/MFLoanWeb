@@ -12,8 +12,7 @@ var DatatableDataLocalPhases = function () {
 			// datasource definition
 			data: {
 				type: 'local',
-				source: dataJSONArray,
-				pageSize: 5
+				source: dataJSONArray
 			},
 
 			// layout definition
@@ -31,7 +30,7 @@ var DatatableDataLocalPhases = function () {
 			// column based filtering(refer to Kendo UI)
 			filterable: false,
 
-			pagination: true,
+			pagination: false,
 
 			// inline and bactch editing(cooming soon)
 			// editable: false,
@@ -70,10 +69,24 @@ var DatatableDataLocalPhases = function () {
 
                     var result = '';
 
-                    result = result + '\
-                        <a href="/printoutTemplate/5/objectId/'+ row.id + '/select" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Претензия">\
+                    if(row.phaseTypeId==1){
+                        result = result + '\
+						<a href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + procId + '/collectionphase/' + row.id +'/changeStatus" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Изменить статус">\
+							<i class="la la-neuter"></i>\
+						</a>\
+						<a href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + procId + '/collectionphase/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+							<i class="la la-edit"></i>\
+						</a>\
+						<a href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + procId + '/collectionphase/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
+							<i class="la la-trash"></i>\
+						</a>\
+						<a href="/printoutTemplate/5/objectId/'+ row.id + '/select" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Претензия">\
 							<i class="la la-exclamation-circle"></i>\
 						</a>\
+					';
+                    }
+                    else {
+                        result = result + '\
 						<a href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + procId + '/collectionphase/' + row.id +'/changeStatus" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Изменить статус">\
 							<i class="la la-neuter"></i>\
 						</a>\
@@ -84,6 +97,8 @@ var DatatableDataLocalPhases = function () {
 							<i class="la la-trash"></i>\
 						</a>\
 					';
+                    }
+
 
                     if(!hasRoleAdmin)
                         result = '';

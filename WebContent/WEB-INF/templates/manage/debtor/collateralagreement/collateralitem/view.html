@@ -77,29 +77,32 @@
                 </div>
             </div>
             <!-- END: Subheader -->
-			<div class="m-content">
+            <div class="m-content">
+			    <div class="m-content">
 				<!--begin::Portlet-->
-				<div class="m-portlet m-portlet--full-height">
-					<div class="m-portlet__head">
-						<div class="m-portlet__head-caption">
-							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="${item.name}"></h3>
-							</div>
-						</div>
-					</div>
-                    <div class="m-portlet__body m-portlet__body--no-padding">
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link m--font-primary active" data-toggle="tab" href="#tab1" th:text="#{label.collateralitem.tab.info}"></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link m--font-primary" data-toggle="tab" href="#tab2" th:text="#{label.collateralitem.tab.collateralInspection}"></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link m--font-primary" data-toggle="tab" href="#tab3" th:text="#{label.collateralitem.tab.collateralArrestFree}"></a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
+                    <div class="m-portlet m-portlet--full-height">
+                        <div class="m-portlet__head">
+                            <div class="m-portlet__head-caption">
+                                <div class="m-portlet__head-title">
+                                    <h3 class="m-portlet__head-text" th:text="${item.name}"></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-portlet m-portlet--mobile">
+                        <div class="m-portlet__body">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link m--font-primary active" data-toggle="tab" href="#tab1" th:text="#{label.collateralitem.tab.info}"></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link m--font-primary" data-toggle="tab" href="#tab2" th:text="#{label.collateralitem.tab.collateralInspection}"></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link m--font-primary" data-toggle="tab" href="#tab3" th:text="#{label.collateralitem.tab.collateralArrestFree}"></a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
                             <div class="tab-pane active" id="tab1" role="tabpanel">
                                 <div class="m-portlet__body m-portlet__body--no-padding">
                                     <div class="row m-row--no-padding m-row--col-separator-xl">
@@ -194,10 +197,10 @@
                                                             <div class="m-input-icon m-input-icon--left">
                                                                 <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search1">
                                                                 <span class="m-input-icon__icon m-input-icon__icon--left">
-															<span>
-																<i class="la la-search"></i>
-															</span>
-														</span>
+                                                            <span>
+                                                                <i class="la la-search"></i>
+                                                            </span>
+                                                        </span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -205,12 +208,12 @@
 
                                                 <div class="col-xl-3 order-3 order-xl-3 m--align-right">
                                                     <a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${item.id}__/insresult/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-												<span>
-													<i class="la la-plus"></i>
-													<span>
-														Добавить акт обследования
-													</span>
-												</span>
+                                                <span>
+                                                    <i class="la la-plus"></i>
+                                                    <span>
+                                                        Добавить акт обследования
+                                                    </span>
+                                                </span>
                                                     </a>
                                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                                 </div>
@@ -246,10 +249,10 @@
                                                             <div class="m-input-icon m-input-icon--left">
                                                                 <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search2">
                                                                 <span class="m-input-icon__icon m-input-icon__icon--left">
-															<span>
-																<i class="la la-search"></i>
-															</span>
-														</span>
+                                                            <span>
+                                                                <i class="la la-search"></i>
+                                                            </span>
+                                                        </span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -277,10 +280,10 @@
                                 <!--end::Portlet-->
                             </div>
                         </div>
-
+                        </div>
                     </div>
-				</div>
-			</div>
+			    </div>
+            </div>
 		</div>
 	</div>
 	<!-- end:: Body -->
