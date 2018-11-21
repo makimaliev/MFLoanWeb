@@ -41,7 +41,15 @@
 									</div>
 								</li>
 								<li class="m-portlet__nav-item">
-
+									<a data-remote="false"
+									   data-toggle="modal"
+									   data-target="#messageResourceFormModal"
+									   th:href="@{/messageResource/add}"
+									   role="button"
+									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+									   th:text="#{label.messageResource.button.addMessageResource}">
+										<span><i class="la la-plus"></i><span>Add messageResource</span></span>
+									</a>
 								</li>
 							</ul>
 						</div>
@@ -111,22 +119,6 @@
 					</div>
 				</div>
 				<!--end::Modal-->
-
-			</div>
-
-			<div class="row">
-				<div class="col-xl-12">
-					<a data-remote="false"
-					   data-toggle="modal"
-					   data-target="#messageResourceFormModal"
-					   th:href="@{/messageResource/add}"
-					   role="button"
-					   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
-					   th:text="#{label.messageResource.button.addMessageResource}">
-						<span><i class="la la-plus"></i><span>Add messageResource</span></span>
-					</a>
-
-				</div>
 
 			</div>
 			<div class="row">

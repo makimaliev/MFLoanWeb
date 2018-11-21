@@ -47,7 +47,48 @@
 									</div>
 								</li>
 								<li class="m-portlet__nav-item">
-
+									<a data-remote="false"
+									   data-toggle="modal"
+									   data-target="#objectTypeFormModal"
+									   th:href="@{/objectType/add}"
+									   role="button"
+									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+									   th:text="#{label.objectType.button.addObjectType}">
+										<span><i class="la la-plus"></i><span>Add Object Type</span></span>
+									</a>
+								</li>
+								<li class="m-portlet__nav-item">
+									<a data-remote="false"
+									   data-toggle="modal"
+									   data-target="#objectTypeFormModal"
+									   th:href="@{/objectField/add}"
+									   role="button"
+									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+									   th:text="#{label.objectType.button.addObjectField}">
+										<span><i class="la la-plus"></i><span>Add Object Field</span></span>
+									</a>
+								</li>
+								<li class="m-portlet__nav-item">
+									<a data-remote="false"
+									   data-toggle="modal"
+									   data-target="#objectTypeFormModal"
+									   th:href="@{/objectEvent/add}"
+									   role="button"
+									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+									   th:text="#{label.objectType.button.addObjectEvent}">
+										<span><i class="la la-plus"></i><span>Add Object Event</span></span>
+									</a>
+								</li>
+								<li class="m-portlet__nav-item">
+									<a data-remote="false"
+									   data-toggle="modal"
+									   data-target="#objectTypeFormModal"
+									   th:href="@{/fixTerm/add}"
+									   role="button"
+									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+									   th:text="#{label.objectType.button.addFixTerm}">
+										<span><i class="la la-plus"></i><span>Add Object FixTerm</span></span>
+									</a>
 								</li>
 							</ul>
 						</div>
@@ -111,54 +152,6 @@
 				<!--end::Modal-->
 
 			</div>
-
-			<div class="row">
-				<div class="col-xl-12">
-					<a data-remote="false"
-					   data-toggle="modal"
-					   data-target="#objectTypeFormModal"
-					   th:href="@{/objectType/add}"
-					   role="button"
-					   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
-					   th:text="#{label.objectType.button.addObjectType}">
-						<span><i class="la la-plus"></i><span>Add Object Type</span></span>
-					</a>
-
-
-					<a data-remote="false"
-					   data-toggle="modal"
-					   data-target="#objectTypeFormModal"
-					   th:href="@{/objectField/add}"
-					   role="button"
-					   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
-					   th:text="#{label.objectType.button.addObjectField}">
-						<span><i class="la la-plus"></i><span>Add Object Field</span></span>
-					</a>
-
-
-					<a data-remote="false"
-					   data-toggle="modal"
-					   data-target="#objectTypeFormModal"
-					   th:href="@{/objectEvent/add}"
-					   role="button"
-					   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
-					   th:text="#{label.objectType.button.addObjectEvent}">
-						<span><i class="la la-plus"></i><span>Add Object Event</span></span>
-					</a>
-
-					<a data-remote="false"
-					   data-toggle="modal"
-					   data-target="#objectTypeFormModal"
-					   th:href="@{/fixTerm/add}"
-					   role="button"
-					   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
-					   th:text="#{label.objectType.button.addFixTerm}">
-						<span><i class="la la-plus"></i><span>Add Object FixTerm</span></span>
-					</a>
-				</div>
-
-			</div>
-
 			<div class="row">
 				<div class="col-md-12">
 					<input hidden="true" type="text" id="objectType_id" name="objectType_id" />

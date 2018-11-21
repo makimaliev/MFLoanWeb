@@ -51,7 +51,15 @@
 									</div>
 								</li>
 								<li class="m-portlet__nav-item">
-
+									<a data-remote="false"
+									   data-toggle="modal"
+									   data-target="#employmentHistoryEventTypeFormModal"
+									   th:href="@{/employmentHistoryEventType/add}"
+									   role="button"
+									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+									   th:text="#{label.employmentHistoryEventType.button.addEmploymentHistoryEventType}">
+										<span><i class="la la-plus"></i><span>Add EmploymentHistoryEventType</span></span>
+									</a>
 								</li>
 							</ul>
 						</div>
@@ -109,28 +117,7 @@
 					</div>
 				</div>
 				<!--end::Modal-->
-
 			</div>
-
-			<div class="row">
-				<div class="col-xl-12">
-					<a data-remote="false"
-					   data-toggle="modal"
-					   data-target="#employmentHistoryEventTypeFormModal"
-					   th:href="@{/employmentHistoryEventType/add}"
-					   role="button"
-					   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
-					   th:text="#{label.employmentHistoryEventType.button.addEmploymentHistoryEventType}">
-						<span><i class="la la-plus"></i><span>Add EmploymentHistoryEventType</span></span>
-					</a>
-
-
-
-
-				</div>
-
-			</div>
-				
 			<div class="row">
 				<div class="col-md-12">
 					<input hidden="true" type="text" id="employmentHistoryEventType_id" name="employmentHistoryEventType_id" />

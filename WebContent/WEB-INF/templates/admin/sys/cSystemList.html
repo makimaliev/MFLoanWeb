@@ -48,8 +48,27 @@
 										</span>
 									</div>
 								</li>
-								<li class="m-portlet__nav-item">
-
+								<li class="m-portlet__nav-item" sec:authorize="hasRole('ADMIN')">
+									<a data-remote="false"
+									   data-toggle="modal"
+									   data-target="#cSystemFormModal"
+									   th:href="@{/cSystem/add}"
+									   role="button"
+									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+									   th:text="#{label.cSystem.button.addcSystem}">
+										<span><i class="la la-plus"></i><span>Add cSystem</span></span>
+									</a>
+								</li>
+								<li class="m-portlet__nav-item" sec:authorize="hasRole('ADMIN')">
+									<a data-remote="false"
+									   data-toggle="modal"
+									   data-target="#informationFormModal"
+									   th:href="@{/information/add}"
+									   role="button"
+									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+									   th:text="#{label.cSystem.button.addInformation}">
+										<span><i class="la la-plus"></i><span>Add Information</span></span>
+									</a>
 								</li>
 							</ul>
 						</div>
@@ -107,55 +126,6 @@
 						</table>
 					</div>
 				</div>
-
-
-				<div sec:authorize="hasRole('ADMIN')" class="m-portlet m-portlet--full-height">
-					<div class="m-portlet__head">
-						<div class="m-portlet__head-caption">
-							<div class="row">
-								<div class="col-md-12">
-									<!-- BEGIN BORDERED TABLE PORTLET-->
-									<div class="portlet portlet-fit ">
-										<div class="portlet-body">
-
-
-
-											<div class="row" sec:authorize="hasRole('ADMIN')" >
-												<div class="col-md-12">
-
-
-														<a data-remote="false"
-														   data-toggle="modal"
-														   data-target="#cSystemFormModal"
-														   th:href="@{/cSystem/add}"
-														   role="button"
-														   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
-														   th:text="#{label.cSystem.button.addcSystem}">
-															<span><i class="la la-plus"></i><span>Add cSystem</span></span>
-														</a>
-
-														<a data-remote="false"
-														   data-toggle="modal"
-														   data-target="#informationFormModal"
-														   th:href="@{/information/add}"
-														   role="button"
-														   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
-														   th:text="#{label.cSystem.button.addInformation}">
-															<span><i class="la la-plus"></i><span>Add Information</span></span>
-														</a>
-
-
-												</div>
-											</div>
-										</div>
-									</div>
-									<!-- END BORDERED TABLE PORTLET-->
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
 				<!--begin::Modal-->
 				<div class="modal fade" id="cSystemFormModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" th:object="${cSystem}">
 					<div class="modal-dialog" role="document">

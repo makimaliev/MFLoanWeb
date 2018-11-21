@@ -42,7 +42,15 @@
 									</div>
 								</li>
 								<li class="m-portlet__nav-item">
-
+									<a data-remote="false"
+									   data-toggle="modal"
+									   data-target="#orgFormFormModal"
+									   th:href="@{/orgForm/add}"
+									   role="button"
+									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+									   th:text="#{label.orgForm.button.add}">
+										<span><i class="la la-plus"></i><span>Add Region</span></span>
+									</a>
 								</li>
 							</ul>
 						</div>
@@ -91,23 +99,6 @@
 							</tbody>
 						</table>
 					</div>
-				</div>
-
-
-				<div class="row">
-					<div class="col-xl-12">
-						<a data-remote="false"
-						   data-toggle="modal"
-						   data-target="#orgFormFormModal"
-						   th:href="@{/orgForm/add}"
-						   role="button"
-						   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
-						   th:text="#{label.orgForm.button.add}">
-							<span><i class="la la-plus"></i><span>Add Region</span></span>
-						</a>
-
-					</div>
-
 				</div>
 				<!--begin::Modal-->
 				<div class="modal fade" id="orgFormFormModal" tabindex="-1" role="dialog" aria-labelledby="orgFormFormModalTitle" aria-hidden="true">

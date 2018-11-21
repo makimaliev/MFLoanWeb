@@ -73,7 +73,7 @@
 															<a class="dro pdown-item" href="#">
 																<span>
 																	<form th:action="@{/manage/debtor/type/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
-																		<input hidden="true" type="text" id="id" name="id" th:value="${s.id}" />
+																		<input hidden="true" type="text" id="id" name="id" th:value="${t.id}" />
 																		<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
 																	</form>
 																</span>

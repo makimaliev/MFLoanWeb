@@ -107,18 +107,19 @@
                 },
                 lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
             },
-            "info":     false,
+            "info": false,
             keys: {
                 focus: ':eq(0)'
             },
             "sDom": 'rtlip'
         });
-        $('#generalSearch').keyup(function(){
-            table.search($(this).val()).draw() ;
+        $('#generalSearch').keyup(function () {
+            table.search($(this).val()).draw();
         });
 
-        $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
+        $('.dataTables_length select').addClass('selectpicker').attr('data-width', '70px');
         $('.selectpicker').selectpicker('refresh');
+    });
 </script>
 </body>
 </html>

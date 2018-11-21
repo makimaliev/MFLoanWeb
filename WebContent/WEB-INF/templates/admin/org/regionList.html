@@ -40,6 +40,28 @@
 											</span>
 										</div>
 									</li>
+									<li class="m-portlet__nav-item">
+										<a data-remote="false"
+										   data-toggle="modal"
+										   data-target="#regionFormModal"
+										   th:href="@{/region/add}"
+										   role="button"
+										   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+										   th:text="#{label.region.button.addRegion}">
+											<span><i class="la la-plus"></i><span>Add Region</span></span>
+										</a>
+									</li>
+									<li class="m-portlet__nav-item">
+										<a data-remote="false"
+										   data-toggle="modal"
+										   data-target="#regionFormModal"
+										   th:href="@{/district/add}"
+										   role="button"
+										   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+										   th:text="#{label.region.button.addDistrict}">
+											<span><i class="la la-plus"></i><span>Add District</span></span>
+										</a>
+									</li>
 								</ul>
 							</div>
 						</div>
@@ -93,32 +115,6 @@
 							</table>
 						</div>
 					</div>
-					<!--begin::Buttons-->
-					<div class="row">
-						<div class="col-xl-12">
-							<a data-remote="false"
-							   data-toggle="modal"
-							   data-target="#regionFormModal"
-							   th:href="@{/region/add}"
-							   role="button"
-							   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
-							   th:text="#{label.region.button.addRegion}">
-								<span><i class="la la-plus"></i><span>Add Region</span></span>
-							</a>
-							<a data-remote="false"
-							   data-toggle="modal"
-							   data-target="#regionFormModal"
-							   th:href="@{/district/add}"
-							   role="button"
-							   class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill"
-							   th:text="#{label.region.button.addDistrict}">
-								<span><i class="la la-plus"></i><span>Add District</span></span>
-							</a>
-						</div>
-
-					</div>
-					<!--end::Buttons-->
-
 					<!--begin::Modal-->
 					<div class="modal fade" id="regionFormModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 						<div class="modal-dialog" role="document">
