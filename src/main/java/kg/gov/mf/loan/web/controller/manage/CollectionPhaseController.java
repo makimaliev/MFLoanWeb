@@ -110,7 +110,7 @@ public class CollectionPhaseController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/initializephase", method=RequestMethod.POST)
 	@ResponseBody
 	public String initializePhaseForm(@PathVariable("debtorId")Long debtorId, @RequestParam Map<String, String> selectedLoans, @RequestParam String initDater)
-	{
+    {
 		Date date1=null;
 		try {
 			date1=new SimpleDateFormat("dd.MM.yyyy").parse(initDater);
@@ -524,6 +524,7 @@ public class CollectionPhaseController {
             model.setPaidPenalty(temp.getPaidPenalty());
             model.setPaidFee(temp.getPaidFee());
             model.setLoan_id(temp.getLoan_id());
+            model.setRegNumber(loanService.getById(temp.getLoan_id()).getRegNumber());
             result.add(model);
         }
 

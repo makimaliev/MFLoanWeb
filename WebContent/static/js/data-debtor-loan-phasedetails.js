@@ -46,7 +46,7 @@ var phaseDetailsTableInit = function (jsonInput) {
             title: "По осн.с.",
             template: function (row) {
                 return '\
-						<input type="text" class="form-control m-input" id="startPrinc'+row.loanId+'" value="'+ row.startPrincipal + '">\
+						<input type="text" class="form-control m-input" id="startPrinc'+row.loanId+'" value="'+ row.startPrincipal.toLocaleString() + '">\
 					';
             }
         },{
@@ -54,7 +54,7 @@ var phaseDetailsTableInit = function (jsonInput) {
             title: "По проц.",
             template: function (row) {
                 return '\
-						<input type="text" class="form-control m-input" id="startInt'+row.loanId+'" value="'+ row.startInterest +'">\
+						<input type="text" class="form-control m-input" id="startInt'+row.loanId+'" value="'+ row.startInterest.toLocaleString() +'">\
 					';
             }
         },{
@@ -62,7 +62,7 @@ var phaseDetailsTableInit = function (jsonInput) {
             title: "По штр.",
             template: function (row) {
                 return '\
-						<input type="text" class="form-control m-input" id="startPen'+row.loanId+'" value="'+ row.startPenalty +'">\
+						<input type="text" class="form-control m-input" id="startPen'+row.loanId+'" value="'+ row.startPenalty.toLocaleString() +'">\
 					';
             }
         },{
@@ -176,8 +176,8 @@ var phaseDetailsTableInit = function (jsonInput) {
 
                 function updateTotal() {
                     var sum = 0.0;
-                    sum = parseFloat($(startPrincInput).val()) + parseFloat($(startIntInput).val()) + parseFloat($(startPenInput).val());
-                    $(totalInput).val(sum);
+                    sum = ((parseFloat($(startPrincInput).val()) + parseFloat($(startIntInput).val()) + parseFloat($(startPenInput).val())));
+                    $(totalInput).val(sum.toFixed(2));
                 }
             }
         });

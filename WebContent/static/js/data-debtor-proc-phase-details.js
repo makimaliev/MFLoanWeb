@@ -40,7 +40,19 @@ var DatatableDataLocalPhaseDetails = function () {
                 field: "id",
                 title: "#",
                 responsive: {hidden: 'xl'},
-            }, {
+            },
+                {
+                    field: "regNumber",
+                    title: "reg number",
+                    width:500,
+                    template: function (row) {
+                        var d=row.regNumber;
+                        if(d.length>50){
+                            return d.substring(0,50)+"...";
+                        }
+                        return d;
+                    }
+                },{
                 field: "startPrincipal",
                 title: "Основная сумма",
                 template: function (row) {

@@ -25,6 +25,15 @@ public class CollectionPhaseDetailsModel {
     private Double paidPenalty;
     private Double paidFee;
     private long loan_id;
+    private String regNumber;
+
+    public String getRegNumber() {
+        return regNumber;
+    }
+
+    public void setRegNumber(String regNumber) {
+        this.regNumber = regNumber;
+    }
 
     public Long getId() {
         return id;
