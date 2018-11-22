@@ -71,8 +71,8 @@ public class DebtTransferController {
 		if(dtId > 0)
 		{
 			model.addAttribute("dt", dtService.getById(dtId));
-			model.addAttribute("thisUnit",quantityTypeService.getById(dtService.getById(dtId).getUnitTypeId()).getName());
-			model.addAttribute("thisGoodType",goodTypeService.getById(dtService.getById(dtId).getGoodsTypeId()).getName());
+//			model.addAttribute("thisUnit",quantityTypeService.getById(dtService.getById(dtId).getUnitTypeId()).getName());
+//			model.addAttribute("thisGoodType",goodTypeService.getById(dtService.getById(dtId).getGoodsTypeId()).getName());
 		}
 
 		model.addAttribute("unitTypes",quantityTypeService.list());

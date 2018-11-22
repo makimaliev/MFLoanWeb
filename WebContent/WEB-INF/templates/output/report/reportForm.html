@@ -1,4 +1,4 @@
-<form th:action="@{/report/save}" class="form-horizontal" method="post">
+<form th:action="@{/report/save}" class="form-horizontal" method="post" th:object="${report}">
 	<div class="modal-header">
 		<h5 class="modal-title" th:text="#{label.add.report}"></h5>
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -31,7 +31,7 @@
 				<span class="m--font-danger">*</span>
 			</label>
 			<div class="col-lg-8 col-md-9 col-sm-12">
-				<select th:field="*{report.reportType}" class="form-control m-bootstrap-select m_selectpicker"  th:title="#{label.select}">
+				<select th:field="*{reportType}" class="form-control m-bootstrap-select m_selectpicker"  th:title="#{label.select}">
 					<option th:each="reportTypeInList : ${T(kg.gov.mf.loan.output.report.model.ReportType).values()}"
 							th:value="${reportTypeInList}"
 							th:text="${reportTypeInList}"></option>
@@ -100,6 +100,46 @@
 				</select>
 			</div>
 		</div>
+
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg-4 col-sm-12">
+				<span th:text="#{label.report.users}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<select th:field="*{users}" class="form-control m-bootstrap-select m_selectpicker" multiple th:title="#{label.select}">
+					<option th:each="userInList : ${userList}"
+							th:value="${{userInList}}"
+							th:text="${userInList.username}"
+					>Region</option>
+				</select>
+			</div>
+		</div>
+
+
+		<!--<div class="form-group ">-->
+			<!--<label class="form-control-label">Users<span class="required"> * </span></label>-->
+			<!--<div class="row">-->
+				<!--<div class="col-12">-->
+					<!--<select th:field="*{users}" class="selectpicker" multiple>-->
+						<!--<option th:each="userInList : ${userList}"-->
+								<!--th:value="${{userInList}}"-->
+								<!--th:text="${userInList.username}"-->
+						<!--&gt;Region</option>-->
+					<!--</select>-->
+
+
+					<!--&lt;!&ndash;<select class="form-control m-bootstrap-select m_selectpicker" multiple th:title="#{label.select}">&ndash;&gt;&ndash;&gt;-->
+					<!--&lt;!&ndash;<option th:each="userInList : ${userList}"&ndash;&gt;-->
+					<!--&lt;!&ndash;th:value="${userInList.id}"&ndash;&gt;-->
+					<!--&lt;!&ndash;th:text="${userInList?.staff?.name}"&ndash;&gt;-->
+					<!--&lt;!&ndash;th:selected="${filterParameterUsers.contains(userInList)}"&ndash;&gt;-->
+					<!--&lt;!&ndash;&gt;</option>&ndash;&gt;-->
+					<!--&lt;!&ndash;</select>&ndash;&gt;-->
+
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
 
 
 	</div>

@@ -1,6 +1,10 @@
 package kg.gov.mf.loan.web.controller.output.report;
 
+import kg.gov.mf.loan.admin.sys.model.User;
+import kg.gov.mf.loan.admin.sys.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,15 +19,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import kg.gov.mf.loan.output.report.model.*;
 import kg.gov.mf.loan.output.report.service.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Controller
 public class ReportController {
 	
 	@Autowired
     private ReportService reportService;
 
+
+	@Autowired
+	private ReportTemplateService reportTemplateService;
+
 	@Autowired
 	private FilterParameterService filterParameterService;
 
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	private ContentParameterService contentParameterService;
@@ -42,9 +57,15 @@ public class ReportController {
 	@RequestMapping(value = "/report/list", method = RequestMethod.GET)
 	public String listReports(Model model) {
 
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		String currentUserName = authentication.getName();
+
+		User currentUser = this.userService.findByUsername(currentUserName);
+
     	Report modelReport = new Report();
 		model.addAttribute("report", modelReport);
-		model.addAttribute("reportList", this.reportService.findAll());
+		model.addAttribute("reportList", this.reportService.findByUser(currentUser));
 
 //		model.addAttribute("groupTypeList", this.groupTypeService.findAll());
 //		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
@@ -61,7 +82,36 @@ public class ReportController {
 	@RequestMapping("report/{id}/view")
 	public String viewReportById(@PathVariable("id") long id, Model model) {
 
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		String currentUserName = authentication.getName();
+
+		User currentUser = this.userService.findByUsername(currentUserName);
+
+
 		Report report = this.reportService.findById(id);
+
+		List<ReportTemplate> reportTemplates = new ArrayList<>();
+
+		reportTemplates = this.reportTemplateService.findByUser(currentUser);
+
+		if(currentUser.getId()!=1)
+		{
+			Set<ReportTemplate> reportReportTemplates = new HashSet<>();
+
+			for (ReportTemplate reportTemplate: reportTemplates)
+			{
+				if(report.getReportTemplates().contains(reportTemplate))
+				{
+					reportReportTemplates.add(this.reportTemplateService.findById(reportTemplate.getId()));
+				}
+			}
+
+			report.setReportTemplates(reportReportTemplates);
+
+
+		}
 
 		model.addAttribute("report", report);
 
@@ -71,7 +121,27 @@ public class ReportController {
 	@RequestMapping("report/{id}/details")
 	public String viewReportDetailsById(@PathVariable("id") long id, Model model) {
 
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		String currentUserName = authentication.getName();
+
+		User currentUser = this.userService.findByUsername(currentUserName);
+
+
 		Report report = this.reportService.findById(id);
+
+		List<ReportTemplate> reportTemplates = new ArrayList<>();
+
+		reportTemplates = this.reportTemplateService.findByUser(currentUser);
+
+		for (ReportTemplate reportTemplate: reportTemplates)
+		{
+			if(currentUser.getId()!=1)
+				if(!report.getReportTemplates().contains(reportTemplate))
+				{
+					report.getReportTemplates().remove(reportTemplate);
+				}
+		}
 
 		model.addAttribute("report", report);
 
@@ -86,6 +156,8 @@ public class ReportController {
 		Report modelReport = new Report();
 		model.addAttribute("report", modelReport);
 		model.addAttribute("reportList", this.reportService.findAll());
+
+		model.addAttribute("userList", this.userService.findAll());
 
 		model.addAttribute("groupTypeList", this.groupTypeService.findAll());
 		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
@@ -109,6 +181,7 @@ public class ReportController {
 		model.addAttribute("report", modelReport);
 		model.addAttribute("reportList", this.reportService.findAll());
 
+		model.addAttribute("userList", this.userService.findAll());
 		model.addAttribute("groupTypeList", this.groupTypeService.findAll());
 		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
 		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
@@ -159,6 +232,15 @@ public class ReportController {
 				report.getOutputParameters().add(this.outputParameterService.findById(Long.valueOf(id)));
 			}
 
+
+			if(report.getUsers().size()==0)
+			{
+				Set<User> users = new HashSet<>();
+
+				users.add(userService.findByUsername("admin"));
+
+				report.setUsers(users);
+			}
 
 		if (result.hasErrors()) {
 			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());

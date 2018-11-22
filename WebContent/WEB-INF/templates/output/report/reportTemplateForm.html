@@ -240,6 +240,21 @@
 			</div>
 		</div>
 
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg-4 col-sm-12">
+				<span th:text="#{label.report.users}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<select th:field="*{users}" class="form-control m-bootstrap-select m_selectpicker" multiple th:title="#{label.select}">
+					<option th:each="userInList : ${userList}"
+							th:value="${{userInList}}"
+							th:text="${userInList.username}"
+					>Region</option>
+				</select>
+			</div>
+		</div>
+
 	</div>
 	<div class="modal-footer">
 		<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.orgForm.button.cancel}"></button>

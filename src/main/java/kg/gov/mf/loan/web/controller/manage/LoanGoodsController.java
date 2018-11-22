@@ -53,9 +53,11 @@ public class LoanGoodsController {
 			
 		if(lgId > 0)
 		{
-			model.addAttribute("lg", lgService.getById(lgId));
-			model.addAttribute("thisUnit",quantityTypeService.getById(lgService.getById(lgId).getUnitTypeId()).getName());
-			model.addAttribute("thisGoodType",goodTypeService.getById(lgService.getById(lgId).getGoodsTypeId()).getName());
+			LoanGoods lg = (LoanGoods) lgService.getById(lgId);
+
+			model.addAttribute("lg", lg);
+//			model.addAttribute("thisUnit",quantityTypeService.getById(lgService.getById(lgId).getUnitTypeId()).getName());
+//			model.addAttribute("thisGoodType",goodTypeService.getById(lgService.getById(lgId).getGoodsTypeId()).getName());
 		}
 
 

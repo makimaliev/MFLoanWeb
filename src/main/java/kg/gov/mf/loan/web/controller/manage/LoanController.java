@@ -739,14 +739,14 @@ public class LoanController {
             model.setQuantity(d.getQuantity());
             try{
 
-                model.setUnitType(quantityTypeService.getById(d.getUnitTypeId()).getName());
+                model.setUnitType(d.getQuantityType().getName());
             }
             catch(Exception e){
                 model.setUnitType(" ");
             }
             try{
 
-                model.setGoodsType(goodTypeService.getById(d.getGoodsTypeId()).getName());
+                model.setGoodsType(d.getGoodType().getName());
             }
             catch(Exception e){
                 model.setGoodsType(" ");
@@ -774,7 +774,7 @@ public class LoanController {
 //            model.setUnitTypeId(d.getUnitTypeId());
             try{
 
-                model.setUnitType(quantityTypeService.getById(d.getUnitTypeId()).getName());
+                model.setUnitType(d.getQuantityType().getName());
             }
             catch(Exception e){
                 model.setUnitType(" ");
@@ -786,7 +786,7 @@ public class LoanController {
 //            model.setGoodsTypeId(d.getGoodsTypeId());
             try{
 
-                model.setGoodsType(goodTypeService.getById(d.getGoodsTypeId()).getName());
+                model.setGoodsType(d.getGoodType().getName());
             }
             catch(Exception e){
                 model.setGoodsType(" ");

@@ -1,7 +1,11 @@
 package kg.gov.mf.loan.web.controller.output.report;
 
+import kg.gov.mf.loan.admin.sys.model.User;
+import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.output.report.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,6 +45,9 @@ public class ReportTemplateController {
     private ReportService reportService;
 
 	@Autowired
+	private UserService userService;
+
+	@Autowired
 	private GroupTypeService groupTypeService;
 	
      
@@ -51,8 +58,15 @@ public class ReportTemplateController {
 
 	@RequestMapping(value = "/reportTemplate/list", method = RequestMethod.GET)
 	public String listReportTemplates(Model model) {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		String currentUserName = authentication.getName();
+
+		User currentUser = this.userService.findByUsername(currentUserName);
+
 		model.addAttribute("reportTemplate", new ReportTemplate());
-		model.addAttribute("reportTemplateList", this.reportTemplateService.findAll());
+		model.addAttribute("reportTemplateList", this.reportTemplateService.findByUser(currentUser));
 //		model.addAttribute("generationParameterList", this.generationParameterService.findAll());
 //		model.addAttribute("filterParameterList", this.filterParameterService.findAll());
 //		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
@@ -92,7 +106,8 @@ public class ReportTemplateController {
 	public String getReportTemplateAddForm(Model model) {
 
 		ReportTemplate modelReportTemplate = new ReportTemplate();
-		
+
+		model.addAttribute("userList", this.userService.findAll());
 		modelReportTemplate.setReport(this.reportService.findById((long)1));
 		model.addAttribute("reportList", this.reportService.findAll());
 //		model.addAttribute("groupTypeList", this.groupTypeService.findAll());
@@ -125,6 +140,8 @@ public class ReportTemplateController {
 		model.addAttribute("filterParameterList", modelReport.getFilterParameters());
 		model.addAttribute("contentParameterList", modelReport.getContentParameters());
 		model.addAttribute("outputParameterList", modelReport.getOutputParameters());
+
+		model.addAttribute("userList", modelReport.getUsers());
 
 		model.addAttribute("reportTemplateGenerationParameters", modelReportTemplate.getGenerationParameters());
 		model.addAttribute("reportTemplateFilterParameters", modelReportTemplate.getFilterParameters());
@@ -164,6 +181,7 @@ public class ReportTemplateController {
 		model.addAttribute("filterParameterList", modelReport.getFilterParameters());
 		model.addAttribute("contentParameterList", modelReport.getContentParameters());
 		model.addAttribute("outputParameterList", modelReport.getOutputParameters());
+		model.addAttribute("userList", modelReport.getUsers());
 
 		model.addAttribute("reportTemplateGenerationParameters", modelReportTemplate.getGenerationParameters());
 		model.addAttribute("reportTemplateFilterParameters", modelReportTemplate.getFilterParameters());
@@ -276,6 +294,9 @@ public class ReportTemplateController {
 				generateReport(out,response,new ReportGeneratorStaffEvent(), reportTemplate);
 				break;
 
+			case "DOCUMENT":
+				generateReport(out,response,new ReportGeneratorDocument(), reportTemplate);
+				break;
 
 
 			case "LOAN_SCHEDULE":

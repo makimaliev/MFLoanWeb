@@ -76,7 +76,7 @@ public class UserController {
 		
 		model.addAttribute("user", new User());
 		model.addAttribute("userList", this.userService.findAll());
-		model.addAttribute("roleList", this.roleService.findAll());
+		//model.addAttribute("roleList", this.roleService.findAll());
 		return "admin/sys/userList";
 	}
 	

@@ -93,7 +93,7 @@ public class EmploymentHistoryEventController {
 		EmploymentHistoryEvent modelEmploymentHistoryEvent = new EmploymentHistoryEvent();
 		
 		modelEmploymentHistoryEvent.setEmploymentHistory(this.employmentHistoryService.findById(employmentHistoryId));
-		model.addAttribute("employmentHistoryList", this.employmentHistoryService.findAll());		
+//		model.addAttribute("employmentHistoryList", this.employmentHistoryService.findAll());
 		model.addAttribute("employmentHistoryEventTypeList", this.employmentHistoryEventTypeService.findAll());
 		
 		model.addAttribute("employmentHistoryEvent",modelEmploymentHistoryEvent);

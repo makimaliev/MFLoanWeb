@@ -151,13 +151,13 @@
 													</a>
 													<div class="dropdown-menu dropdown-menu-right">
 														<a class="dropdown-item"
-														   th:href="@{/contentParameter/__${contentParameterInList.id}__/edit}" role="button">
+														   th:href="@{/contentParameter/__${contentParameterInList?.id}__/edit}" role="button">
 															<span th:text="#{label.table.view}"></span>
 														</a>
 														<a class="dropdown-item"
 														   data-remote="false" data-toggle="modal"
 														   data-target="#reportTemplateFormModal"
-														   th:href="@{/filterParameter/__${filterParameterInList.id}__/edit}" role="button">
+														   th:href="@{/filterParameter/__${filterParameterInList?.id}__/edit}" role="button">
 															<span th:text="#{label.table.edit}"></span>
 														</a>
 														<a class="dropdown-item" href="#">
