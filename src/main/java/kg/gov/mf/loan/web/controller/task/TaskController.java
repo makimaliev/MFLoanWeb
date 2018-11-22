@@ -2,7 +2,7 @@ package kg.gov.mf.loan.web.controller.task;
 
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
-import kg.gov.mf.loan.core.service.LoggerService;
+import kg.gov.mf.loan.task.service.LoggerService;
 import kg.gov.mf.loan.task.model.Task;
 import kg.gov.mf.loan.task.model.TaskObject;
 import kg.gov.mf.loan.task.model.TaskPriority;
