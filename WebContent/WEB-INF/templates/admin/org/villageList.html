@@ -135,47 +135,44 @@
             lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
         },
 		"info":     false,
-		keys: {
-			focus: ':eq(0)'
-		},
         "sDom": 'rtlip'
     });
 	$('#generalSearch').keyup(function(){
 		table.search($(this).val()).draw();
 	});
 
-	$('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
+	// $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
 	$('.selectpicker').selectpicker('refresh');
 
-	table.on('key-focus', function(e, datatable, cell) {
-		var rowData = datatable.row(cell.index().row).data();
-
-		$("#village_id").val(rowData[0]);
-		var sUrl ="/MFCredit/village/" + rowData[0]+"/view";
-
-		$.get(sUrl, function(data) {
-			$('#content').html(data);
-		});
-
-		var row = datatable.row( cell.index().row );
-		  table.$('tr.info').removeClass('info');
-				$( row.node() ).addClass( "info" );
-				var rowData = row.data();
-				var colData = datatable.cell( { focused: true } ).data();
-		});
+	// table.on('key-focus', function(e, datatable, cell) {
+	// 	var rowData = datatable.row(cell.index().row).data();
+	//
+	// 	$("#village_id").val(rowData[0]);
+	// 	var sUrl ="/MFCredit/village/" + rowData[0]+"/view";
+	//
+	// 	$.get(sUrl, function(data) {
+	// 		$('#content').html(data);
+	// 	});
+	//
+	// 	var row = datatable.row( cell.index().row );
+	// 	  table.$('tr.info').removeClass('info');
+	// 			$( row.node() ).addClass( "info" );
+	// 			var rowData = row.data();
+	// 			var colData = datatable.cell( { focused: true } ).data();
+	// 	});
 
 	});
 </script>
            
-<script type="text/javascript">
-    $("#villageFormModal").on("show.bs.modal", function(e)
-    {
-        var link = $(e.relatedTarget);
-        var villageID = $("#village_id").val();
-        $(this).find(".modal-content").load(link.attr("href"));
-    });
+<!--<script type="text/javascript">-->
+    <!--$("#villageFormModal").on("show.bs.modal", function(e)-->
+    <!--{-->
+        <!--var link = $(e.relatedTarget);-->
+        <!--var villageID = $("#village_id").val();-->
+        <!--$(this).find(".modal-content").load(link.attr("href"));-->
+    <!--});-->
 
-</script>                 
+<!--</script>                 -->
 
 </body>
 </html>

@@ -160,21 +160,18 @@
                 lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
 			},
 			"info":     false,
-			keys: {
-				focus: ':eq(0)'
-			},
 			sDom: 'rtlip',
 		});
 
-		table.on('key-focus', function(e, datatable, cell) {
-			var rowData = datatable.row(cell.index().row).data();
-			$("#identityDocType_id").val(rowData[0]);
-			var sUrl ="/identityDocType/" + rowData[0]+"/view";
-			$.get(sUrl, function(data) {
-				$('#content').html(data);
-			});
-
-		});
+		// table.on('key-focus', function(e, datatable, cell) {
+		// 	var rowData = datatable.row(cell.index().row).data();
+		// 	$("#identityDocType_id").val(rowData[0]);
+		// 	var sUrl ="/identityDocType/" + rowData[0]+"/view";
+		// 	$.get(sUrl, function(data) {
+		// 		$('#content').html(data);
+		// 	});
+		//
+		// });
 
 		$('#generalSearch').keyup(function(){
 			table.search($(this).val()).draw() ;

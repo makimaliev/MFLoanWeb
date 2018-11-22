@@ -46,12 +46,12 @@
 										</span>
 									</div>
 								</li>
-								<li class="m-portlet__nav-item">
-									<a data-remote="false" data-toggle="modal"
-									   data-target="#objectFieldFormModal" th:href="@{/objectField/add}"
-									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
-										ObjectField</a>
-								</li>
+								<!--<li class="m-portlet__nav-item">-->
+									<!--<a data-remote="false" data-toggle="modal"-->
+									   <!--data-target="#objectFieldFormModal" th:href="@{/objectField/add}"-->
+									   <!--role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn&#45;&#45;air"> Add-->
+										<!--ObjectField</a>-->
+								<!--</li>-->
 							</ul>
 						</div>
 					</div>
@@ -80,20 +80,20 @@
 												</a>
 												<div class="dropdown-menu dropdown-menu-right">
 													<a class="dropdown-item"
-													   th:href="@{/objectField/__${districtInList.id}__/details}"
+													   th:href="@{/objectField/__${s.id}__/details}"
 													   role="button">
 														<span th:text="#{label.table.view}"></span>
 													</a>
 													<a class="dropdown-item"
-													   th:href="@{/objectField/__${districtInList.id}__/edit}"
+													   th:href="@{/objectField/__${s.id}__/edit}"
 													   data-toggle="modal"
 													   data-target="#objectFieldFormModal">
 														<span th:text="#{label.table.edit}"></span>
 													</a>
 													<a class="dropdown-item" href="#">
 														<span>
-															<form th:action="@{/objectField/__${districtInList.id}__/remove}" method="post">
-																<input hidden="true" type="text" id="id" name="id" th:value="${districtInList.id}" />
+															<form th:action="@{/objectField/__${s.id}__/remove}" method="post">
+																<input hidden="true" type="text" id="id" name="id" th:value="${s.id}" />
 																<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
 															</form>
 														</span>
@@ -120,12 +120,12 @@
 				<!--end::Modal-->
 			</div>
 
-			<div class="row">
-				<div class="col-md-12">
-					<input hidden="true" type="text" id="objectField_id" name="objectField_id" />
-					<div id="content"></div>
-				</div>
-			</div>
+			<!--<div class="row">-->
+				<!--<div class="col-md-12">-->
+					<!--<input hidden="true" type="text" id="objectField_id" name="objectField_id" />-->
+					<!--<div id="content"></div>-->
+				<!--</div>-->
+			<!--</div>-->
 
 		</div>
 	</div>

@@ -29,258 +29,192 @@
 		<!-- END: Left Aside -->
 		<div class="m-grid__item m-grid__item--fluid m-wrapper">
 			<div class="m-content">
-
-
-
-				<div class="m-portlet m-portlet--full-height">
+				<div class="m-portlet m-portlet--mobile">
+					<input hidden="true" type="text" id="information_id"
+						   name="information_id" th:value="${information.id}" />
+					<input hidden="true" type="text" id="parentInformation_id"
+						   name="parentInformation.id" th:value="${information.id}" />
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
 								<h3 class="m-portlet__head-text" th:text="${information.name}"></h3>
 							</div>
 						</div>
+						<div sec:authorize="hasRole('ADMIN')" class="m-portlet__head-tools">
+							<ul class="m-portlet__nav">
+								<li class="m-portlet__nav-item">
+									<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
+									   data-target="#informationFormModal"
+									   th:href="@{/information/add}" role="button"
+									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add child information </a>
+								</li>
+								<li  class="m-portlet__nav-item">
+									<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
+									   data-target="#informationFormModal"
+									   th:href="@{/attachment/add}" role="button"
+									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add Attachment </a>
+								</li>
+							</ul>
+						</div>
 					</div>
-				</div>
-
-				<input hidden="true" type="text" id="information_id"
-					   name="information_id" th:value="${information.id}" />
-				<input hidden="true" type="text" id="parentInformation_id"
-					   name="parentInformation.id" th:value="${information.id}" />
+					<div class="m-portlet__body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="tabbable-custom ">
 
 
+									<ul class="nav nav-tabs " role="tablist" id="organization_tabs">
+										<li class="nav-item" ><a class="nav-link m--font-primary active" href="#tab_15_1" data-toggle="tab">
+											Приложение </a></li>
+										<li class="nav-item" ><a class="nav-link m--font-primary" href="#tab_15_2" data-toggle="tab">
+											Основная информация</a></li>
 
 
-				<div sec:authorize="hasRole('ADMIN')" class="m-portlet m-portlet--full-height">
-					<div class="m-portlet__head">
-						<div class="m-portlet__head-caption">
-							<div class="row">
-								<div class="col-md-12">
-									<!-- BEGIN BORDERED TABLE PORTLET-->
-									<div class="portlet portlet-fit ">
-										<div class="portlet-body">
+									</ul>
+									<div class="tab-content">
 
-											<div class="col-md-12">
+										<!--ADDRESS TAB-->
+										<div class="tab-pane active" id="tab_15_1">
 
-												<div class="modal fade" id="informationFormModal" tabindex="-1"
-													 role="dialog" aria-labelledby="myModalLabel"
-													 aria-hidden="true">
-													<div class="modal-dialog">
-														<div class="modal-content">
-															<!--<div class="modal-header">-->
-															<!--<button type="button" class="close" data-dismiss="modal"-->
-															<!--aria-label="Close">-->
-															<!--<span aria-hidden="true">&times;</span>-->
-															<!--</button>-->
-															<!--<h4 class="modal-title" id="myModalLabel" >Добавить</h4>-->
-															<!--</div>-->
-															<div class="modal-body">...</div>
-															<!--<div class="modal-footer">-->
-															<!--<button type="button" class="btn btn-default"-->
-															<!--data-dismiss="modal">Close</button>-->
-															<!--<button type="button" class="btn btn-success">Save-->
-															<!--changes</button>-->
-															<!--</div>-->
-														</div>
-													</div>
-												</div>
+											<table class="table" id="attachmentTable">
+												<thead class="thead-default">
 
-											</div>
 
-											<div class="row" >
-												<div class="col-md-12">
+												<thead>
+												<tr>
+													<th>Id</th>
+													<th>Name</th>
+													<th>&nbsp;</th>
+												</tr>
+												</thead>
 
-													<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
-													   data-target="#informationFormModal"
-													   th:href="@{/information/add}" role="button"
-													   class="btn btn-large btn-primary"> Add child information </a>
+												<tbody>
 
-													<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
-													   data-target="#informationFormModal"
-													   th:href="@{/attachment/add}" role="button"
-													   class="btn btn-large btn-primary"> Add Attachment </a>
+												<tr th:each="s : ${information.attachment}">
+													<td th:text="${s?.id}">Id</td>
+													<td th:text="${s?.name}">Name</td>
+
+													<td class="table-actions text-right">
+														<span>
+															<div class="dropdown">
+																<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																	<i class="la la-ellipsis-h"></i>
+																</a>
+																<div class="dropdown-menu dropdown-menu-right">
+																	<a class="dropdown-item"
+																	   th:href="@{/attachment/__${s.id}__/details}"
+																	   role="button">
+																		<span th:text="#{label.table.view}"></span>
+																	</a>
 
 
 
-												</div>
-											</div>
+
+
+																	<a class="dropdown-item"
+																	   th:href="@{/attachment/__${s.id}__/edit}"
+																	   data-toggle="modal"
+																	   data-target="#informationFormModal">
+																		<span th:text="#{label.table.edit}"></span>
+																	</a>
+																	<a class="dropdown-item" href="#">
+																		<span>
+																			<form th:action="@{/attachment/__${s.id}__/remove}" method="post">
+																				<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																			</form>
+																		</span>
+																	</a>
+																</div>
+															</div>
+														</span>
+													</td>
+
+												</tr>
+												</tbody>
+
+											</table>
+
+
 										</div>
+
+										<div class="tab-pane" id="tab_15_2">
+											<table class="table" id="parentInformationTable">
+												<thead class="thead-default">
+
+
+												<thead>
+												<tr>
+													<th>Id</th>
+													<th>Name</th>
+													<th>&nbsp;</th>
+												</tr>
+												</thead>
+
+												<tbody>
+
+												<tr th:each="s : ${information.childInformation}">
+													<td th:text="${s?.id}">Id</td>
+													<td th:text="${s?.name}">Name</td>
+
+													<td class="table-actions text-right">
+														<span>
+															<div class="dropdown">
+																<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+																	<i class="la la-ellipsis-h"></i>
+																</a>
+																<div class="dropdown-menu dropdown-menu-right">
+																	<a class="dropdown-item"
+																	   th:href="@{/information/__${s?.id}__/details}"
+																	   role="button">
+																		<span th:text="#{label.table.view}"></span>
+																	</a>
+
+
+
+
+
+																	<a class="dropdown-item"
+																	   th:href="@{/information/__${s?.id}__/edit}"
+																	   data-toggle="modal"
+																	   data-target="#informationFormModal">
+																		<span th:text="#{label.table.edit}"></span>
+																	</a>
+																	<a class="dropdown-item" href="#">
+																		<span>
+																			<form th:action="@{/information/attachment/__${s?.id}__}" method="post">
+																				<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+																			</form>
+																		</span>
+																	</a>
+																</div>
+															</div>
+														</span>
+													</td>
+
+												</tr>
+												</tbody>
+
+
+
+
+
+
+
+
+
+											</table>
+										</div>
+
+
+
+
+
 									</div>
-									<!-- END BORDERED TABLE PORTLET-->
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-
-				<div class="m-portlet m-portlet--full-height">
-					<div class="m-portlet m-portlet--mobile">
-						<div class="m-portlet__body">
-
-							<div class="row">
-								<div class="col-md-12">
-									<div class="tabbable-custom ">
-
-
-										<ul class="nav nav-tabs " role="tablist" id="organization_tabs">
-											<li class="nav-item" ><a class="nav-link m--font-primary active" href="#tab_15_1" data-toggle="tab">
-												Приложение </a></li>
-											<li class="active nav-item" ><a class="nav-link m--font-primary" href="#tab_15_2" data-toggle="tab">
-												Основная информация</a></li>
-
-
-										</ul>
-										<div class="tab-content">
-
-											<!--ADDRESS TAB-->
-											<div class="tab-pane active" id="tab_15_1">
-
-												<table class="table" id="attachmentTable">
-													<thead class="thead-default">
-
-
-													<thead>
-													<tr>
-														<th>Id</th>
-														<th>Name</th>
-														<th>&nbsp;</th>
-													</tr>
-													</thead>
-
-													<tbody>
-
-													<tr th:each="s : ${information.attachment}">
-														<td th:text="${s?.id}">Id</td>
-														<td th:text="${s?.name}">Name</td>
-
-														<td class="table-actions text-right">
-															<span>
-																<div class="dropdown">
-																	<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
-																		<i class="la la-ellipsis-h"></i>
-																	</a>
-																	<div class="dropdown-menu dropdown-menu-right">
-																		<a class="dropdown-item"
-																		   th:href="@{/attachment/__${s.id}__/details}"
-																		   role="button">
-																			<span th:text="#{label.table.view}"></span>
-																		</a>
-
-
-
-
-
-																		<a class="dropdown-item"
-																		   th:href="@{/attachment/__${s.id}__/edit}"
-																		   data-toggle="modal"
-																		   data-target="#informationFormModal">
-																			<span th:text="#{label.table.edit}"></span>
-																		</a>
-																		<a class="dropdown-item" href="#">
-																			<span>
-																				<form th:action="@{/attachment/__${s.id}__/remove}" method="post">
-																					<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
-																				</form>
-																			</span>
-																		</a>
-																	</div>
-																</div>
-															</span>
-														</td>
-
-													</tr>
-													</tbody>
-
-												</table>
-
-
-											</div>
-
-											<div class="tab-pane" id="tab_15_2">
-												<table class="table" id="parentInformationTable">
-													<thead class="thead-default">
-
-
-													<thead>
-													<tr>
-														<th>Id</th>
-														<th>Name</th>
-														<th>&nbsp;</th>
-													</tr>
-													</thead>
-
-													<tbody>
-
-													<tr th:each="s : ${information.childInformation}">
-														<td th:text="${s?.id}">Id</td>
-														<td th:text="${s?.name}">Name</td>
-
-														<td class="table-actions text-right">
-															<span>
-																<div class="dropdown">
-																	<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
-																		<i class="la la-ellipsis-h"></i>
-																	</a>
-																	<div class="dropdown-menu dropdown-menu-right">
-																		<a class="dropdown-item"
-																		   th:href="@{/information/__${s?.id}__/details}"
-																		   role="button">
-																			<span th:text="#{label.table.view}"></span>
-																		</a>
-
-
-
-
-
-																		<a class="dropdown-item"
-																		   th:href="@{/information/__${s?.id}__/edit}"
-																		   data-toggle="modal"
-																		   data-target="#informationFormModal">
-																			<span th:text="#{label.table.edit}"></span>
-																		</a>
-																		<a class="dropdown-item" href="#">
-																			<span>
-																				<form th:action="@{/information/attachment/__${s?.id}__}" method="post">
-																					<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
-																				</form>
-																			</span>
-																		</a>
-																	</div>
-																</div>
-															</span>
-														</td>
-
-													</tr>
-													</tbody>
-
-
-
-
-
-
-
-
-
-												</table>
-											</div>
-
-
-
-
-
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div class="row">
-
-							</div>
-
-						</div>
-					</div>
-				</div>
-
-
 			</div>
 		</div>
 	</div>

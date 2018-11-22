@@ -201,8 +201,11 @@
         {
             var link = $(e.relatedTarget);
             var regionFormID = $("#region_id").val();
+            if(regionFormID==""){
+                regionFormID=1;
+            }
 
-            $(this).find(".modal-content").load(link.attr("href"));
+            // $(this).find(".modal-content").load(link.attr("href"));
 
 
 

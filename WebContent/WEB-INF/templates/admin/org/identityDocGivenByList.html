@@ -148,9 +148,6 @@
                 lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
 			},
 			"info":     false,
-			keys: {
-				focus: ':eq(0)'
-			},
 			"sDom": 'rtlip'
 		} );
 
@@ -158,19 +155,19 @@
 			table.search($(this).val()).draw() ;
 		});
 
-		$('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
+		// $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
 		$('.selectpicker').selectpicker('refresh');
 
-		table.on('key-focus', function(e, datatable, cell) {
-
-			var rowData = datatable.row(cell.index().row).data();
-			$("#identityDocGivenBy_id").val(rowData[0]);
-			var sUrl ="/MFCredit/identityDocGivenBy/" + rowData[0]+"/view";
-			$.get(sUrl, function(data) {
-				$('#content').html(data);
-			});
-
-		});
+		// table.on('key-focus', function(e, datatable, cell) {
+		//
+		// 	var rowData = datatable.row(cell.index().row).data();
+		// 	$("#identityDocGivenBy_id").val(rowData[0]);
+		// 	var sUrl ="/MFCredit/identityDocGivenBy/" + rowData[0]+"/view";
+		// 	$.get(sUrl, function(data) {
+		// 		$('#content').html(data);
+		// 	});
+		//
+		// });
 
         $("#identityDocGivenByFormModal").on("show.bs.modal", function(e)
         {

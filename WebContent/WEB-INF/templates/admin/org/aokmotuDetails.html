@@ -118,7 +118,9 @@
 			<div class="row">
 				<div class="col-md-12">
 					<input hidden="true" type="text" id="aokmotu_id" name="aokmotu_id" th:value="${aokmotu.id}" />
-					<div id="content"></div>
+					<div class="m-portlet__body">
+						<div id="content"></div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -165,7 +167,7 @@
 		table.on('key-focus', function(e, datatable, cell) {
 			var rowData = datatable.row(cell.index().row).data();
 			$("#aokmotu_id").val(rowData[0]);
-			var sUrl ="/MFCredit/aokmotu/" + rowData[0]+"/view";
+			var sUrl ="/aokmotu/" + rowData[0]+"/view";
 
 			$.get(sUrl, function(data) {
 				$('#content').html(data);

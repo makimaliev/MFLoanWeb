@@ -1,4 +1,5 @@
-<form th:action="@{/aokmotu/save}" th:object="${aokmotu}" class="form-horizontal" method="post">
+<form th:action="@{/aokmotu/save}" th:object="${aokmotu}" class="form-horizontal" method="post"
+	  xmlns:th="http://www.w3.org/1999/xhtml">
 	<div class="modal-header">
 		<h5 class="modal-title"  th:text="#{label.aokmotu.modal.title}"></h5>
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -14,7 +15,6 @@
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
 			<span th:text="#{label.aokmotu.modal.error.name}"></span>
 		</div>
-
 		<div class="form-group">
 			<label for="name" class="form-control-label" th:text="#{label.aokmotu.modal.name}">Name<span class="required"> * </span></label>
 			<input hidden="true" type="text" id="id" name="id" th:field="*{id}" />
@@ -31,7 +31,7 @@
 			<label for="name" class="form-control-label" th:text="#{label.aokmotu.modal.district}">District<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
-					<select th:value="${aokmotu.district}" class="selectpicker">
+					<select th:value="${aokmotu.district.id}" class="selectpicker" id="districtId">
 						<option th:each="districtInList : ${districtList}"
 								th:value="${districtInList.id}"
 								th:selected="(${districtInList.id} == *{district.id})"

@@ -60,7 +60,7 @@
 								<li class="m-portlet__nav-item">
 									<a data-remote="false"
 									   data-toggle="modal"
-									   data-target="#objectTypeFormModal"
+									   data-target="#objectFieldFormModal"
 									   th:href="@{/objectField/add}"
 									   role="button"
 									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
@@ -71,7 +71,7 @@
 								<li class="m-portlet__nav-item">
 									<a data-remote="false"
 									   data-toggle="modal"
-									   data-target="#objectTypeFormModal"
+									   data-target="#objectEventFormModal"
 									   th:href="@{/objectEvent/add}"
 									   role="button"
 									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
@@ -79,17 +79,17 @@
 										<span><i class="la la-plus"></i><span>Add Object Event</span></span>
 									</a>
 								</li>
-								<li class="m-portlet__nav-item">
-									<a data-remote="false"
-									   data-toggle="modal"
-									   data-target="#objectTypeFormModal"
-									   th:href="@{/fixTerm/add}"
-									   role="button"
-									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
-									   th:text="#{label.objectType.button.addFixTerm}">
-										<span><i class="la la-plus"></i><span>Add Object FixTerm</span></span>
-									</a>
-								</li>
+								<!--<li class="m-portlet__nav-item">-->
+									<!--<a data-remote="false"-->
+									   <!--data-toggle="modal"-->
+									   <!--data-target="#objectTypeFormModal"-->
+									   <!--th:href="@{/fixTerm/add}"-->
+									   <!--role="button"-->
+									   <!--class="m-portlet__nav-link btn btn-success m-btn m-btn&#45;&#45;air"-->
+									   <!--th:text="#{label.objectType.button.addFixTerm}">-->
+										<!--<span><i class="la la-plus"></i><span>Add Object FixTerm</span></span>-->
+									<!--</a>-->
+								<!--</li>-->
 							</ul>
 						</div>
 					</div>
@@ -150,7 +150,22 @@
 					</div>
 				</div>
 				<!--end::Modal-->
-
+				<!--begin::Modal-->
+				<div class="modal fade" id="objectFieldFormModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+						</div>
+					</div>
+				</div>
+				<!--end::Modal-->
+				<!--begin::Modal-->
+				<div class="modal fade" id="objectEventFormModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+						</div>
+					</div>
+				</div>
+				<!--end::Modal-->
 			</div>
 			<div class="row">
 				<div class="col-md-12">
@@ -221,6 +236,24 @@
         });
 	});
 </script>
-
+<script>
+    // /objectType/{objectTypeId}/objectEvent/add"
+    $("#objectEventFormModal").on("show.bs.modal", function(e) {
+        var link = $(e.relatedTarget);
+        var objectTypeID = $("#objectType_id").val();
+        if(link.attr("href")=="/objectEvent/add" && objectTypeID!=""){
+            $(this).find(".modal-content").load(link.attr("href").replace("/objectEvent/add","/objectType/"+objectTypeID+"/objectEvent/add"));
+        }
+    });
+    // "/objectType/{objectTypeId}/objectField/add"
+    $("#objectFieldFormModal").on("show.bs.modal", function(e) {
+        var link = $(e.relatedTarget);
+        var objectTypeID = $("#objectType_id").val();
+		// alert(objectTypeID)
+        if(link.attr("href")=="/objectField/add" && objectTypeID!=""){
+            $(this).find(".modal-content").load(link.attr("href").replace("/objectField/add","/objectType/"+objectTypeID+"/objectField/add"));
+        }
+    });
+</script>
 </body>
 </html>

@@ -70,7 +70,7 @@
 														</a>
 														<div class="dropdown-menu dropdown-menu-right">
 															<a th:href="@{/manage/debtor/type/__${t.id}__/save}" class="dropdown-item"><span th:text="#{label.table.edit}"></span></a>
-															<a class="dro pdown-item" href="#">
+															<a class="dropdown-item" href="#">
 																<span>
 																	<form th:action="@{/manage/debtor/type/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
 																		<input hidden="true" type="text" id="id" name="id" th:value="${t.id}" />

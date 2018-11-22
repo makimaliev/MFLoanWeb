@@ -18,7 +18,7 @@
 
 		<div class="form-group">
 			<label for="name" class="form-control-label" th:text="#{label.district.modal.name}">Name<span class="required"> * </span></label>
-			<input hidden="true" type="text" id="id" name="id" th:value="${id}" />
+			<input hidden="true" type="text" id="id" name="id" th:value="*{id}" />
 			<input hidden="true" type="text" id="region.id" name="region.id" th:value="*{region.id}" />
 			<input type="text" class="form-control" id="name" name="name" th:value="${district.name}">
 		</div>

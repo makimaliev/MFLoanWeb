@@ -1,42 +1,15 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
-<head>
-
-</head>
-
-
-
-<body>
-
-
-
-
-	<div class="tabbable-custom ">
-		<ul class="nav nav-tabs " id="district_tabs">
-			<li class="active">
-				<a href="#aokmotuListOfDistrict" data-toggle="tab">А.Округ</a>
-			</li>
-			<li>
-				<a href="#seloListOfDistrict" data-toggle="tab">Село</a>
-			</li>
-			<li>
-				<a href="#debtorListOfDistrict" data-toggle="tab">Заемщик</a>
-			</li>
-			<li>
-				<a href="#loanListOfDistrict" data-toggle="tab">Кредитный договор</a>
-			</li>
-		</ul>
-		
-		<div class="tab-content">
-
-			<div class="tab-pane active" id="aokmotuListOfDistrict">
-			
-			
-<table
-					class="table table-hover table-condensed table-striped table-bordered compact condensed"
-					id="aokmotuTable">
-					<thead>
+<div class="m-content">
+	<div class="m-portlet">
+		<div class="m-portlet__body">
+			<ul class="nav nav-tabs " id="district_tabs" role="tablist">
+				<li class="nav-item">
+					<a class="nav-link m--font-primary active" data-toggle="tab" href="#aokmotuListOfDistrict">А.Округ</a>
+				</li>
+			</ul>
+			<div class="tab-content">
+			<div class="tab-pane active" id="aokmotuListOfDistrict" role="tabpanel">
+				<table class="table" id="aokmotuTable">
+					<thead class="thead-default">
 						<tr>
 							<th>Id</th>
 							<th>Name</th>
@@ -71,36 +44,9 @@
 						</tr>
 					</tbody>
 
-				</table>			
-			
-			
-			
-			
-			
-			
-			</div>
-			<div class="tab-pane" id="seloListOfDistrict">
-			</div>
-			<div class="tab-pane" id="debtorListOfDistrict">
-			</div>
-			<div class="tab-pane" id="loanListOfDistrict">
+				</table>
 			</div>
 		</div>
+		</div>
 	</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</body>
-</html>
+</div>

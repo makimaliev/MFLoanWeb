@@ -4,8 +4,14 @@
 
 	<title th:text="#{label.aokmotu.page.title}">	MFLoan | Aokmotus</title>
 
-	<div  th:replace="fragments/header :: header-css"></div>
+	<div  th:replace="fragments/header :: header-css" />
 	<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
+	<style type="text/css">
+		table.KeyTable tr.focus {
+			outline: 3px solid #3366FF;
+			outline-offset: -3px;
+		}
+	</style>
 
 </head>
 <!-- end::Head -->
@@ -169,7 +175,7 @@
 			var rowData = datatable.row(cell.index().row).data();
 
 			$("#aokmotu_id").val(rowData[0]);
-			var sUrl ="/MFCredit/aokmotu/" + rowData[0]+"/view";
+			var sUrl ="/aokmotu/" + rowData[0]+"/view";
 
 			$.get(sUrl, function(data) {
 				$('#content').html(data);
@@ -189,7 +195,7 @@
     {
         var link = $(e.relatedTarget);
         var aokmotuID = $("#aokmotu_id").val();
-        $(this).find(".modal-content").load(link.attr("href"));
+        $(this).find(".modal-content").load(link.attr("href").replace("/village/add","/aokmotu/"+aokmotuID+"/village/add"));
     });
 </script>
 

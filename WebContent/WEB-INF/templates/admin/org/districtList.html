@@ -163,8 +163,9 @@
 
 		var rowData = datatable.row(cell.index().row).data();
 
+
 		$("#district_id").val(rowData[0]);
-		var sUrl ="/district/" + rowData[0]+"/view";
+        var sUrl ="/district/" + rowData[0]+"/view";
 
 		$.get(sUrl, function(data) {
 			$('#content').html(data);
@@ -183,8 +184,8 @@
     $("#districtFormModal").on("show.bs.modal", function(e)
     {
         var link = $(e.relatedTarget);
-        var regionFormID = $("#district_id").val();
-        $(this).find(".modal-content").load(link.attr("href"));
+        var districtFormID = $("#district_id").val();
+        $(this).find(".modal-content").load(link.attr("href").replace("/aokmotu/add","/district/"+districtFormID+"/aokmotu/add"));
     });
 </script>
 
