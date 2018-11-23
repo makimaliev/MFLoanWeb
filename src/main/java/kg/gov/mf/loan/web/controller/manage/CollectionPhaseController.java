@@ -123,20 +123,22 @@ public class CollectionPhaseController {
 		for (String value:selectedLoans.values()
 			 ) {
 			if(count == selectedLoans.size()-1) continue;
+			LoanModel1 loan=getLoanIdAndRegNumber(Long.parseLong(value));
+			if(loan!=null){
 			PhaseDetailsModel dTemp = new PhaseDetailsModel();
-			Loan loan = loanRepository.findOne(Long.parseLong(value));
+//			Loan loan = loanRepository.getOne(Long.parseLong(value));
 			dTemp.setLoanId(loan.getId());
 			dTemp.setLoanRegNumber(loan.getRegNumber());
+			dTemp.setLoanStateId(loan.getStateId());
 			this.jobItemService.runManualCalculateProcedure(loan.getId(), initDate);
 			LoanDetailedSummary summary = loanDetailedSummaryService.getByOnDateAndLoanId(initDate, loan.getId());
 			dTemp.setStartPrincipal(summary.getPrincipalOverdue());
 			dTemp.setStartInterest(summary.getInterestOverdue());
 			dTemp.setStartPenalty(summary.getPenaltyOverdue());
 			dTemp.setStartTotalAmount(summary.getPrincipalOverdue() + summary.getInterestOverdue() + summary.getPenaltyOverdue());
-			result.add(dTemp);
+			result.add(dTemp);}
 			count++;
 		}
-		System.out.println(initDate);
 
 		Gson gson2 = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 		String jsonResult = gson2.toJson(result);
@@ -541,6 +543,22 @@ public class CollectionPhaseController {
 		List<CollectionPhaseDetailsModel1> result = query.getResultList();
 
 		return result;
+	}
+
+	private LoanModel1 getLoanIdAndRegNumber(long loanId){
+		String baseQuery = "select l.id as id,l.regNumber as regNumber, l.loanStateId  stateId \n"+
+				"from loan l where l.loanStateId=2 and l.id="+String.valueOf(loanId);
+//		String baseQuery= "select loan.id as id, loan.regNumber as regNumber, loan.loanStateId as stateId from loan loan where loan.id="+ String.valueOf(loanId);
+		Query query=entityManager.createNativeQuery(baseQuery,LoanModel1.class);
+		try{
+
+			LoanModel1 result= (LoanModel1) query.getSingleResult();
+			return result;
+
+		}
+		catch (Exception e){
+			return null;
+		}
 	}
 
 	

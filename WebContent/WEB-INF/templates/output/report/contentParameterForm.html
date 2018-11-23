@@ -1,4 +1,5 @@
-<form th:action="@{/contentParameter/save}" id="form_sample_2"  th:object="${contentParameter}"	class="form-horizontal" method="post">
+<form th:action="@{/contentParameter/save}" id="form_sample_2" th:object="${contentParameter}" class="form-horizontal"
+	  method="post" xmlns:th="http://www.w3.org/1999/xhtml">
 
 	<div class="modal-header">
 		<h5 class="modal-title" th:text="#{label.contentParameter.modal.name}"></h5>
@@ -88,7 +89,7 @@
 			</label>
 			<div class="col-lg-8 col-md-9 col-sm-12">
 				<div class="input-group date m_datetimepicker_6">
-					<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:value="*{constantDate}"/>
+					<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date"  th:value="*{#dates.format(constantDate, 'dd.MM.yyyy')}"/>
 					<span class="input-group-addon">
 						<i class="la la-calendar glyphicon-th"></i>
 					</span>
@@ -138,7 +139,7 @@
     $('.selectpicker').selectpicker('refresh');
 
     $('.m_datetimepicker_6').datetimepicker({
-        format: "yyyy-mm-dd",
+        format: "dd.mm.yyyy",
         todayHighlight: true,
         autoclose: true,
         startView: 2,

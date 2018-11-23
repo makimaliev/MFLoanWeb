@@ -65,17 +65,17 @@
 													<i class="la la-ellipsis-h"></i>
 												</a>
 												<div class="dropdown-menu dropdown-menu-right">
-													<a th:href="@{/generationParameterType/__${s.id}__/details}"
+													<a th:href="@{/generationParameterType/__${generationParameterType.id}__/details}"
 													   role="button" class="dropdown-item"> <span th:text="#{label.table.view}"></span>
 													</a>
 													<a data-remote="false" data-toggle="modal"
 													   data-target="#generationParameterTypeFormModal"
-													   th:href="@{/generationParameterType/__${s.id}__/edit}" role="button"
+													   th:href="@{/generationParameterType/__${generationParameterType.id}__/edit}" role="button"
 													   class="dropdown-item"> <span th:text="#{label.table.edit}"></span>
 													</a>
 													<a class="dropdown-item" href="#">
 														<span>
-															<form th:action="@{/generationParameterType/__${s.id}__/remove}" method="post">
+															<form th:action="@{/generationParameterType/__${generationParameterType.id}__/remove}" method="post">
 																<button type="submit" class="btn btn-reset"th:text="#{label.user.button.delete}"></button>
 															</form>
 														</span>

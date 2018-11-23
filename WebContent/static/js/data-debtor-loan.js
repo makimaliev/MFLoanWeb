@@ -164,6 +164,9 @@ var DatatableDataLocalLoans = function () {
 
 		var query = datatable.getDataSourceQuery();
 
+		// make datatable rows checkbox active
+        // datatable.setActiveAll('active');
+
 		$('#m_form_search').on('keyup', function (e) {
 			datatable.search($(this).val().toLowerCase());
 		}).val(query.generalSearch);
@@ -200,12 +203,12 @@ var DatatableDataLocalLoans = function () {
                     delete selectedLoans[str[i]];
                 }
                 var count = datatable.setSelectedRecords().getSelectedRecords().length;
-                $('#m_datatable_selected_number').html(count);
-                if (count === 0) {
-                    $('#m_datatable_group_action_form').collapse('hide');
-                    $('#phaseDetailsDiv').collapse('hide');
-                    selectedItems = [];
-                }
+                // $('#m_datatable_selected_number').html(count);
+                // if (count === 0) {
+                //     $('#m_datatable_group_action_form').collapse('hide');
+                //     $('#phaseDetailsDiv').collapse('hide');
+                //     selectedItems = [];
+                // }
             });
 
         $('#bnt_init_phase')
@@ -226,9 +229,9 @@ var DatatableDataLocalLoans = function () {
                         data: {selectedLoans:selectedLoans, initDater: initDate},
                         success:function (data) {
                             phaseDetailsTableInit(data);
-                            var divT = $('#phaseDetailsDiv');
-                            divT.collapse('show');
-                            mApp.scrollTo(divT, -200);
+                            // var divT = $('#phaseDetailsDiv');
+                            // divT.collapse('show');
+                            // mApp.scrollTo(divT, -200);
                         }
                     });
                     //$.post( "/manage/debtor/"+debtorId+"/initializephase", );

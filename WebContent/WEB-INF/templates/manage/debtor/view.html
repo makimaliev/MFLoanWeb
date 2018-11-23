@@ -83,6 +83,9 @@
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#procedureListOfDebtor" th:text="#{label.debtor.tab.procedures}"></a>
 							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#initializaPhase" th:text="#{label.debtor.tab.initializaPhase}"></a>
+							</li>
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane active" id="loanInfo" role="tabpanel">
@@ -240,19 +243,6 @@
                                 </div>
 							</div>
 							<div class="tab-pane" id="loanListOfDebtor" role="tabpanel">
-								<div class="m-form__content">
-									<div class="m-alert m-alert--icon alert alert-danger m--hide" role="alert" id="m_form_2_msg">
-										<div class="m-alert__icon">
-											<i class="la la-warning"></i>
-										</div>
-										<div class="m-alert__text">
-											Выберите пожалуйста дату.
-										</div>
-										<div class="m-alert__close">
-											<button type="button" class="close" data-close="alert" aria-label="Close"></button>
-										</div>
-									</div>
-								</div>
 								<!--begin: Search Form -->
 								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
 									<div class="row align-items-center">
@@ -284,46 +274,6 @@
 									</div>
 								</div>
 								<!--end: Search Form -->
-								<!--begin: Selected Rows Group Action Form -->
-								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30 collapse" id="m_datatable_group_action_form">
-									<div class="row align-items-center">
-										<div class="col-xl-8 order-2 order-xl-1">
-											<div class="form-group m-form__group row align-items-center">
-												<div class="col-md-5">
-													<div class="m-form__group m-form__group--inline">
-														<div class="m-form__label">
-															<label class="m-label m-label--single">
-																Дата:
-															</label>
-														</div>
-														<div class="m-form__control">
-															<div class="input-group date m_datetimepicker_6">
-																<input type="text" class="form-control m-input" id="phaseInitDate"/>
-																<span class="input-group-addon">
-																<i class="la la-calendar glyphicon-th"></i>
-															</span>
-															</div>
-														</div>
-													</div>
-													<div class="d-md-none m--margin-bottom-10"></div>
-												</div>
-												<div class="col-md-4">
-													<button class="btn btn-sm btn-accent" type="button" id="bnt_init_phase">
-														Создать сводку
-													</button>
-													<button class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator">
-														Calculate manually
-													</button>
-												</div>
-											</div>
-											<div id="phaseDetailsDiv">
-												<div class="m_datatable" id="phaseDetailsTable"></div>
-												<button class="btn btn-sm btn-accent" type="button" id="initPhaseSaveBtn" th:text="#{label.save}"></button>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!--end: Selected Rows Group Action Form -->
 								<!--begin: Datatable -->
 								<div class="m_datatable" id="loansTable"></div>
 								<!--end: Datatable -->
@@ -390,6 +340,61 @@
 								<!--begin: Datatable -->
 								<div class="m_datatable" id="procsTable"></div>
 								<!--end: Datatable -->
+							</div>
+							<div class="tab-pane" id="initializaPhase" role="tabpanel">
+								<div class="m-form__content">
+									<div class="m-alert m-alert--icon alert alert-danger m--hide" role="alert" id="m_form_2_msg">
+										<div class="m-alert__icon">
+											<i class="la la-warning"></i>
+										</div>
+										<div class="m-alert__text">
+											Выберите пожалуйста дату.
+										</div>
+										<div class="m-alert__close">
+											<button type="button" class="close" data-close="alert" aria-label="Close"></button>
+										</div>
+									</div>
+								</div>
+								<!--begin: Selected Rows Group Action Form -->
+								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30" id="m_datatable_group_action_form">
+									<div class="row align-items-center">
+										<div class="col-xl-8 order-2 order-xl-1">
+											<div class="form-group m-form__group row align-items-center">
+												<div class="col-md-5">
+													<div class="m-form__group m-form__group--inline">
+														<div class="m-form__label">
+															<label class="m-label m-label--single">
+																Дата:
+															</label>
+														</div>
+														<div class="m-form__control">
+															<div class="input-group date m_datetimepicker_6">
+																<input type="text" class="form-control m-input" id="phaseInitDate"/>
+																<span class="input-group-addon">
+																<i class="la la-calendar glyphicon-th"></i>
+															</span>
+															</div>
+														</div>
+													</div>
+													<div class="d-md-none m--margin-bottom-10"></div>
+												</div>
+												<div class="col-md-4">
+													<button class="btn btn-sm btn-accent" type="button" id="bnt_init_phase">
+														Создать сводку
+													</button>
+													<button class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator">
+														Calculate manually
+													</button>
+												</div>
+											</div>
+											<div id="phaseDetailsDiv">
+												<div class="m_datatable" id="phaseDetailsTable"></div>
+												<button class="btn btn-sm btn-accent" type="button" id="initPhaseSaveBtn" th:text="#{label.save}"></button>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--end: Selected Rows Group Action Form -->
 							</div>
 						</div>
 					</div>

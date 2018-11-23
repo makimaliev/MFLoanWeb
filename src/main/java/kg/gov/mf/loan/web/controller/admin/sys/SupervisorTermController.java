@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import kg.gov.mf.loan.admin.org.model.Region;
+import kg.gov.mf.loan.admin.org.service.OrganizationService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorTypeService;
 import kg.gov.mf.loan.manage.service.debtor.OrganizationFormService;
 import kg.gov.mf.loan.manage.service.debtor.WorkSectorService;
@@ -93,6 +94,9 @@ public class SupervisorTermController {
 	@Autowired
 	OrganizationFormService organizationFormService;
 
+	@Autowired
+	OrganizationService organizationService;
+
 	@RequestMapping(value = "/supervisorTerm/list", method = RequestMethod.GET)
 	public String listSupervisorTerms(Model model) {
 		
@@ -140,7 +144,7 @@ public class SupervisorTermController {
 		model.addAttribute("regionList", this.regionService.findAll());
 		model.addAttribute("districtList", this.districtService.findByRegion(modelRegion));
 
-		model.addAttribute("departmentList", this.departmentService.findAll());
+		model.addAttribute("departmentList", departmentService.findAllByOrganization(organizationService.findById(Long.valueOf(1))));
 		model.addAttribute("organizationFormList", this.organizationFormService.list());
 		model.addAttribute("workSectorList", this.workSectorService.list());
 
@@ -173,7 +177,7 @@ public class SupervisorTermController {
 		model.addAttribute("regionList", this.regionService.findAll());
 		model.addAttribute("districtList", this.districtService.findByRegion(modelRegion));
 
-		model.addAttribute("departmentList", this.departmentService.findAll());
+		model.addAttribute("departmentList", this.departmentService.findAllByOrganization(organizationService.findById(Long.valueOf(1))));
 		model.addAttribute("organizationFormList", this.organizationFormService.list());
 		model.addAttribute("workSectorList", this.workSectorService.list());
 

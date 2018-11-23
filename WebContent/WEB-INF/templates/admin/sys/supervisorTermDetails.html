@@ -113,39 +113,40 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 
-		var table = $('#supervisorTermTable').DataTable({
-			stateSave: true,
-			language: {
-				paginate: {
-					previous: '<i class="la la-angle-left"></i>', // or '→'
-					next: '<i class="la la-angle-right"></i>' // or '←'
-				},
+        var table = $('#supervisorTermTable').DataTable({
+            stateSave: true,
+            language: {
+                paginate: {
+                    previous: '<i class="la la-angle-left"></i>', // or '→'
+                    next: '<i class="la la-angle-right"></i>' // or '←'
+                },
                 lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
-			},
-			"info":     false,
-			keys: {
-				focus: ':eq(0)'
-			},
-			"sDom": 'rtlip'
-		});
+            },
+            "info": false,
+            keys: {
+                focus: ':eq(0)'
+            },
+            "sDom": 'rtlip'
+        });
 
-		table.on('key-focus', function(e, datatable, cell) {
+        table.on('key-focus', function (e, datatable, cell) {
 
-		var rowData = datatable.row(cell.index().row).data();
-			$("#supervisorTerm_id").val(rowData[0]);
-			var sUrl ="/MFCredit/supervisorTerm/" + rowData[0]+"/view";
-			$.get(sUrl, function(data) {
-				$('#content').html(data);
-			});
-		});
-	);
+            var rowData = datatable.row(cell.index().row).data();
+            $("#supervisorTerm_id").val(rowData[0]);
+            var sUrl = "/MFCredit/supervisorTerm/" + rowData[0] + "/view";
+            $.get(sUrl, function (data) {
+                $('#content').html(data);
+            });
+        });
+        // );
 
-	$('#generalSearch').keyup(function(){
-		table.search($(this).val()).draw() ;
+        $('#generalSearch').keyup(function () {
+            table.search($(this).val()).draw();
+        });
+
+        $('.dataTables_length select').addClass('selectpicker').attr('data-width', '70px');
+        $('.selectpicker').selectpicker('refresh');
 	});
-
-	$('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
-	$('.selectpicker').selectpicker('refresh');
 </script>
 
 <script type="text/javascript">

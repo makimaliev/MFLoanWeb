@@ -5,6 +5,7 @@ import java.util.Date;
 public class PhaseDetailsModel {
     private Long loanId;
     private String loanRegNumber;
+    private Long loanStateId;
     private Double startTotalAmount;
     private Double startPrincipal;
     private Double startInterest;
@@ -164,5 +165,13 @@ public class PhaseDetailsModel {
 
     public void setInitDate(Date initDate) {
         this.initDate = initDate;
+    }
+
+    public Long getLoanStateId() {
+        return loanStateId;
+    }
+
+    public void setLoanStateId(Long loanStateId) {
+        this.loanStateId = loanStateId;
     }
 }
