@@ -200,7 +200,7 @@ public class DocumentFlowController extends BaseController {
         //region XTRA
         // *************************************************************************************************************
         Map<String, String> vars = new HashMap<>();
-        vars.put("objectId", document.getId().toString());
+        vars.put("objectId", String.valueOf(document.getId()));
         vars.put("status", "OPEN");
         Task task = taskService.getTask(getUser(), vars);
 
@@ -208,7 +208,7 @@ public class DocumentFlowController extends BaseController {
             document.setDocumentState(State.valueOf(task.getProgress()));
 
         vars.clear();
-        vars.put("objectId", document.getId().toString());
+        vars.put("objectId", String.valueOf(document.getId()));
         // *************************************************************************************************************
         //endregion
 
@@ -253,7 +253,7 @@ public class DocumentFlowController extends BaseController {
 
         document.setDocumentType(documentTypeService.getById(document.getDocumentType().getId()));
 
-        if(document.getId() != null)
+        if(document.getId() != 0)
         {
             Document doc = documentService.getById(document.getId());
             document.setSenderAttachment(doc.getSenderAttachment());
@@ -325,7 +325,7 @@ public class DocumentFlowController extends BaseController {
         Document document = documentService.getById(id);
 
         Map<String, String> vars = new HashMap<>();
-        vars.put("objectId", document.getId().toString());
+        vars.put("objectId", String.valueOf(document.getId()));
 
         model.addAttribute("tasks", taskService.getTasks(vars));
         model.addAttribute("stages", getStages(document.getDocumentType().getInternalName()));
@@ -429,7 +429,7 @@ public class DocumentFlowController extends BaseController {
         String description = document.getComment();
 
         //region New Document
-        if(document.getId() == null)
+        if(document.getId() == 0)
         {
             document.getUsers().add(getUser());
             document.setDocumentState(Transition.valueOf(action.toUpperCase()).state());
@@ -468,7 +468,7 @@ public class DocumentFlowController extends BaseController {
             if (action.equals("TORECONCILE") || action.equals("REQUEST"))
             {
                 Map<String, String> vars = new HashMap<>();
-                vars.put("objectId", document.getId().toString());
+                vars.put("objectId", String.valueOf(document.getId()));
                 vars.put("status", "OPEN");
                 Task task = taskService.getTask(getUser(), vars);
 
@@ -568,7 +568,7 @@ public class DocumentFlowController extends BaseController {
             if(action.equals("START") || action.equals("DONE") || action.equals("RECONCILE") || action.equals("REJECT"))
             {
                 Map<String, String> vars = new HashMap<>();
-                vars.put("objectId", document.getId().toString());
+                vars.put("objectId", String.valueOf(document.getId()));
                 vars.put("status", "OPEN");
                 int taskCount = taskService.getTasks(vars).size();
 
@@ -627,7 +627,7 @@ public class DocumentFlowController extends BaseController {
         String description = document.getComment();
 
         //region New Document
-        if(document.getId() == null)
+        if(document.getId() == 0)
         {
             document.getUsers().add(getUser());
             document.setDocumentState(Transition.valueOf(action).state());
@@ -716,7 +716,7 @@ public class DocumentFlowController extends BaseController {
             if(action.equals("START") || action.equals("DONE"))
             {
                 Map<String, String> vars = new HashMap<>();
-                vars.put("objectId", document.getId().toString());
+                vars.put("objectId", String.valueOf(document.getId()));
                 vars.put("status", "OPEN");
                 int taskCount = taskService.getTasks(vars).size();
 
@@ -744,7 +744,7 @@ public class DocumentFlowController extends BaseController {
         String description = document.getComment();
 
         //region New Document
-        if(document.getId() == null)
+        if(document.getId() == 0)
         {
             document.getUsers().add(getUser());
             document.setDocumentState(Transition.valueOf(action.toUpperCase()).state());
@@ -806,7 +806,7 @@ public class DocumentFlowController extends BaseController {
             if (action.equals("TORECONCILE") || action.equals("REQUEST"))
             {
                 Map<String, String> vars = new HashMap<>();
-                vars.put("objectId", document.getId().toString());
+                vars.put("objectId", String.valueOf(document.getId()));
                 vars.put("status", "OPEN");
                 Task task = taskService.getTask(getUser(), vars);
 
@@ -877,7 +877,7 @@ public class DocumentFlowController extends BaseController {
             if(action.equals("REJECT") || action.equals("RECONCILE") || action.equals("REGISTER"))
             {
                 Map<String, String> vars = new HashMap<>();
-                vars.put("objectId", document.getId().toString());
+                vars.put("objectId", String.valueOf(document.getId()));
                 vars.put("status", "OPEN");
                 int taskCount = taskService.getTasks(vars).size();
 

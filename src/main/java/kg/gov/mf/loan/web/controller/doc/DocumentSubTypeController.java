@@ -69,7 +69,7 @@ public class DocumentSubTypeController extends BaseController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(@ModelAttribute("documentSubType") DocumentSubType documentSubType) {
 
-        if(documentSubType.getId() == null)
+        if(documentSubType.getId() == 0)
         {
             documentSubTypeService.add(documentSubType);
         }

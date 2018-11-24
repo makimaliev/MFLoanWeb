@@ -60,7 +60,7 @@
                                     <tbody>
                                     <tr th:each="log : ${logs}">
                                         <td th:text="${log.id}"></td>
-                                        <td th:text="${log.createdDate}"></td>
+                                        <td th:text="${#dates.format(log.createdDate, 'dd-MM-yyyy - HH:mm:ss')}"></td>
                                         <td th:text="${log.createdBy}"></td>
                                         <td th:text="${log.action}"></td>
                                         <td th:text="${log.entity}"></td>
