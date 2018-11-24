@@ -477,9 +477,9 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `calculatePOIO`(interestOverdue DOUBLE, daysInPeriod INT, inDate DATE, loanId BIGINT) RETURNS double
+CREATE DEFINER=`root`@`localhost` FUNCTION `calculatePOIO`(interestOverdue double, daysInPeriod int, inDate date, loanId bigint) RETURNS double
 BEGIN
 
     DECLARE rate DOUBLE DEFAULT 0;
@@ -499,6 +499,10 @@ BEGIN
     IF dIYMethod != 1 THEN SET nOD = 360;
     END IF;
 
+    IF interestOverdue < 0 THEN
+      SET interestOverdue = 0;
+    END IF;
+
     RETURN (interestOverdue*rate/nOD)/100*daysInPeriod;
 
   END ;;
@@ -515,9 +519,9 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `calculatePOPO`(principalOverdue DOUBLE, daysInPeriod INT, inDate DATE, loanId BIGINT) RETURNS double
+CREATE DEFINER=`root`@`localhost` FUNCTION `calculatePOPO`(principalOverdue double, daysInPeriod int, inDate date, loanId bigint) RETURNS double
 BEGIN
 
     DECLARE rate DOUBLE DEFAULT 0;
@@ -535,6 +539,10 @@ BEGIN
     CLOSE cur;
 
     IF dIYMethod != 1 THEN SET nOD = 360;
+    END IF;
+
+    IF principalOverdue < 0 THEN
+      SET principalOverdue = 0;
     END IF;
 
     RETURN (principalOverdue*rate/nOD)/100*daysInPeriod;
@@ -925,6 +933,9 @@ BEGIN
     DECLARE total_paidKGS DOUBLE DEFAULT 0;
     DECLARE cur_rate DOUBLE;
 
+    DECLARE penalty_limit DOUBLE DEFAULT 0;
+    DECLARE penalty_limit_flag BOOLEAN DEFAULT FALSE;
+
     DECLARE v_finished INTEGER DEFAULT 0;
 
     DECLARE errno INT;
@@ -1030,6 +1041,8 @@ BEGIN
       VALUES (1,loan_id, inDate, msg);
     END;
 
+    select IFNULL(penaltyLimitPercent, 0) INTO penalty_limit from creditterm where loanId = loan_id;
+
     IF !isTermFound(loan_id, inDate) THEN
       SET v_finished = 1;
       INSERT INTO logCalculateLoanSummary(version, loanId, onDate, message)
@@ -1078,7 +1091,19 @@ BEGIN
                          + calculateLiborIO(intOverdue, prevDate, tempDate, loan_id);
       END IF;
 
+      IF penalty_limit_flag THEN
+        SET penAccrued = 0;
+      END IF;
+
       SET totalPenAccrued = totalPenAccrued + penAccrued;
+
+      IF NOT penalty_limit_flag THEN
+        IF penalty_limit > 0 AND totalPenAccrued > (totalDisb*penalty_limit/100) AND tempDate >= '2014-11-25' THEN
+          SET totalPenAccrued = totalDisb*penalty_limit/100;
+          SET penalty_limit_flag = TRUE;
+          UPDATE creditterm SET penaltyLimitEndDate = tempDate WHERE loanId = loan_id;
+        END IF;
+      END IF;
 
       SET totalDisb = totalDisb + disb;
       SET totalPrincPaid = totalPrincPaid + princPaid;
@@ -1155,6 +1180,7 @@ BEGIN
     END LOOP get_data;
 
     CLOSE tCursor;
+
   END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1997,4 +2023,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-22 20:22:10
+-- Dump completed on 2018-11-24 12:31:00
