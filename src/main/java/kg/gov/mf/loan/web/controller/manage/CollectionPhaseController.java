@@ -227,6 +227,7 @@ public class CollectionPhaseController {
 
 	private String initeDate=null;
 	@PostMapping("/initializephasesave/initdate")
+    @ResponseBody
 	protected void setInitDate(@RequestParam(value = "initdate") String initdate){
 		this.initeDate=initdate;
 	}

@@ -118,6 +118,9 @@
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#accrue" th:text="#{label.accrue}"></a>
 							</li>
 							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#initializaPhase" th:text="#{label.debtor.tab.initializaPhase}"></a>
+							</li>
+							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#additional" th:text="#{label.additional}"></a>
 							</li>
 						</ul>
@@ -475,6 +478,68 @@
                                 <div class="m_datatable" id="accruesTable"></div>
                                 <!--end: Datatable -->
 							</div>
+							<div class="tab-pane" id="initializaPhase" role="tabpanel">
+								<div class="m-form__content">
+									<div class="m-alert m-alert--icon alert alert-danger m--hide" role="alert" id="m_form_2_msg">
+										<div class="m-alert__icon">
+											<i class="la la-warning"></i>
+										</div>
+										<div class="m-alert__text">
+											Выберите пожалуйста дату.
+										</div>
+										<div class="m-alert__close">
+											<button type="button" class="close" data-close="alert" aria-label="Close"></button>
+										</div>
+									</div>
+								</div>
+								<!--begin: Selected Rows Group Action Form -->
+								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30" id="m_datatable_group_action_form">
+									<div class="row align-items-center">
+										<div class="col-xl-8 order-2 order-xl-1">
+											<div class="form-group m-form__group row align-items-center">
+												<div class="col-md-5">
+													<div class="m-form__group m-form__group--inline">
+														<div class="m-form__label">
+															<label class="m-label m-label--single">
+																Дата:
+															</label>
+														</div>
+														<div class="m-form__control">
+															<div class="input-group date m_datetimepicker_6">
+																<input type="text" class="form-control m-input" id="phaseInitDate"/>
+																<span class="input-group-addon">
+																<i class="la la-calendar glyphicon-th"></i>
+															</span>
+															</div>
+														</div>
+													</div>
+													<div class="d-md-none m--margin-bottom-10"></div>
+												</div>
+												<div class="col-md-4">
+													<button class="btn btn-sm btn-accent" type="button" id="bnt_init_phase">
+														Создать сводку
+													</button>
+													<button class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator">
+														Calculate manually
+													</button>
+                                                    <button class="btn btn-sm btn-accent" type="button" id="printGenerate">
+                                                        Print
+                                                    </button>
+													<!--<form th:action="@{/printoutTemplate/1/objectId/1/generate}" method="post">-->
+														<!--<button class="btn btn-sm btn-accent" type="submit" th:text="#{label.table.generate}"></button>-->
+													<!--</form>-->
+													<!--<button th:action="@{/printoutTemplate/1/objectId/1/generate}" class="btn btn-sm btn-accent" type="button" id="printGenerate" th:text="#{label.table.generate}"></button>-->
+												</div>
+											</div>
+											<div id="phaseDetailsDiv">
+												<div class="m_datatable" id="phaseDetailsTable"></div>
+												<button class="btn btn-sm btn-accent" type="button" id="initPhaseSaveBtn" th:text="#{label.save}"></button>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--end: Selected Rows Group Action Form -->
+							</div>
 							<div class="tab-pane" id="additional" role="tabpanel">
 								<ul class="nav nav-tabs" role="tablist">
 									<li class="nav-item">
@@ -749,6 +814,7 @@
 <script th:src="@{/js/data-debtor-loan-detailedSummaries.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-summaries.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-accrues.js}" th:inline="javascript" type="text/javascript"></script>
+<script th:src="@{/js/data-debtor-loan-phasedetails.js}" th:inline="javascript" type="text/javascript"></script>
 <!--end::Page Resources -->
 
 <div th:with="isAdmin = ${#authorization.expression('hasRole(''ADMIN'')')}">
@@ -779,6 +845,156 @@
     var jsonSummaries = /*[[${summaries}]]*/ [];
     var jsonAccrues = /*[[${accrues}]]*/ [];
     /*]]>*/
+</script>
+<script>
+	$("#printGenerate").on('click',function () {
+        var initDate = $("#phaseInitDate").val();
+        var loanIds=new Array();
+        loanIds.push(loanId);
+        loanIds = JSON.stringify({
+            'id' : loanIds
+        });
+        console.log(loanIds)
+        $.ajax({
+            type : 'GET',
+            url : "/printoutTemplate/1/objectId/1/generate",
+            data: {loanIds:loanIds,initDate: initDate}
+        });
+    });
+    $('#bnt_init_phase')
+        .on('click', function () {
+            if (!$("#phaseInitDate").val())
+            {
+                var alert = $('#m_form_2_msg');
+                alert.removeClass('m--hide').show();
+                mApp.scrollTo(alert, -200);
+            }
+            else
+            {
+                var initDate = $("#phaseInitDate").val();
+                $.ajax({
+                    type : 'POST',
+                    url : "/manage/debtor/"+debtorId+"/initializephase",
+                    data: {selectedLoans:loanId, initDater: initDate},
+                    success:function (data) {
+                        phaseDetailsTableInit(data);
+                        // var divT = $('#phaseDetailsDiv');
+                        // divT.collapse('show');
+                        // mApp.scrollTo(divT, -200);
+                    }
+                });
+                //$.post( "/manage/debtor/"+debtorId+"/initializephase", );
+            }
+        });
+    $("#bnt_init_manualCalculator").on('click',function () {
+        if (!$("#phaseInitDate").val())
+        {
+
+            var alert = $('#m_form_2_msg');
+            alert.removeClass('m--hide').show();
+            mApp.scrollTo(alert, -200);
+        }
+        else
+        {
+            var initDate = $("#phaseInitDate").val();
+            $.ajax({
+                type : 'POST',
+                url : "/manage/debtor/"+debtorId+"/initializeManualCalculator",
+                data: {selectedLoans:loanId, initDater: initDate}
+            });
+        }
+        var initDate = $("#phaseInitDate").val();
+        var loanIds=[];
+        loanIds.push(loanId);
+        loanIds = JSON.stringify({
+            "id" : loanIds
+        });
+        $.ajax({
+            type : 'GET',
+            url : "/printoutTemplate/4/objectId/1/generate",
+            data: {loanIds:loanIds,initDate: initDate}
+        });
+    });
+    $('#initPhaseSaveBtn')
+        .on('click', function () {
+            // var options = { year: 'numeric',month: 'long', day: 'numeric' };
+            var initDate = $("#phaseInitDate").val();
+
+            $.ajax({
+                type:'post',
+                data:{initdate:initDate},
+                url:"/initializephasesave/initdate"
+            });
+            var phaseDetailsModels = [];
+
+			var PhaseDetailsModel = {};
+			var startPrincInput ="#startPrinc";
+			var startIntInput ="#startInt";
+			var startPenInput ="#startPen";
+			var totalInput = "#total";
+
+			PhaseDetailsModel['loanId'] = loanId;
+			PhaseDetailsModel['startPrincipal'] = parseFloat($(startPrincInput).val());
+			PhaseDetailsModel['startInterest'] = parseFloat($(startIntInput).val());
+			PhaseDetailsModel['startPenalty'] = parseFloat($(startPenInput).val());
+			PhaseDetailsModel['startTotalAmount'] = parseFloat($(totalInput).val());
+			// PhaseDetailsModel['initDate'] = d;
+			phaseDetailsModels.push(PhaseDetailsModel);
+
+            console.log(phaseDetailsModels);
+            phaseDetailsModels = JSON.stringify({
+                'phaseDetailsModels' : phaseDetailsModels
+            });
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type : 'POST',
+                url : "/manage/debtor/"+debtorId+"/initializephasesave",
+                data: phaseDetailsModels,
+                dataType: 'json',
+                success:function (data) {
+                    if(data == 'OK')
+                        window.location.replace("/manage/debtor/"+debtorId+"/view");
+                }
+            });
+        });
+
+		var startPrincInput ="#startPrinc";
+		var startIntInput ="#startInt";
+		var startPenInput ="#startPen";
+		var totalInput = "#total";
+
+		$(startPrincInput).on('input', function () {
+			updateTotal();
+		});
+
+		$(startIntInput).on('input', function () {
+			updateTotal();
+		});
+
+		$(startPenInput).on('input', function () {
+			updateTotal();
+		});
+
+		function updateTotal() {
+			var sum = 0.0;
+			sum = ((parseFloat($(startPrincInput).val()) + parseFloat($(startIntInput).val()) + parseFloat($(startPenInput).val())));
+			$(totalInput).val(sum.toFixed(2));
+
+    }
+</script>
+<script>
+    $('.m_datetimepicker_6').datetimepicker({
+        format: "dd.mm.yyyy",
+        todayHighlight: true,
+        autoclose: true,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        pickerPosition: 'bottom-left'
+    });
 </script>
 <!--<div th:replace="layout/footer"/>-->
 </body>

@@ -8,19 +8,22 @@ import kg.gov.mf.loan.output.printout.model.Printout;
 import kg.gov.mf.loan.output.printout.model.PrintoutTemplate;
 import kg.gov.mf.loan.output.printout.service.*;
 import kg.gov.mf.loan.output.printout.utils.*;
+import org.apache.poi.ss.formula.ptg.MemAreaPtg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class PrintoutTemplateController {
@@ -31,8 +34,7 @@ public class PrintoutTemplateController {
 
 	@Autowired
     private PrintoutService printoutService;
-	
-     
+
     public void setPrintoutTemplateService(PrintoutTemplateService rs)
     {
         this.printoutTemplateService = rs;
@@ -47,7 +49,7 @@ public class PrintoutTemplateController {
 
 		return "output/printout/printoutTemplateList";
 	}
-	
+
 	@RequestMapping("printoutTemplate/{id}/view")
 	public String viewPrintoutTemplateById(@PathVariable("id") long id, Model model) {
 
@@ -163,9 +165,19 @@ public class PrintoutTemplateController {
 
 
 	@RequestMapping("/printoutTemplate/{id}/objectId/{object_id}/generate")
-	public void generatePrintoutByPrintoutTemplate(@PathVariable("id") long id, @PathVariable("object_id") long object_id, HttpServletResponse response) {
+	public void generatePrintoutByPrintoutTemplate(@PathVariable("id") long id, @PathVariable("object_id") long object_id,
+												   HttpServletResponse response, @RequestParam(value = "initDate") String initDate,
+												   @RequestParam List<String> loanIds) {
 
+    	Date date=new Date();
 
+		try {
+			date=new SimpleDateFormat("dd.MM.yyyy").parse(initDate);
+		} catch (ParseException e) {}
+
+		for(String i:loanIds){
+			System.out.println(i);
+		}
 
 
 		try
