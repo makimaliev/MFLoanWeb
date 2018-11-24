@@ -1199,6 +1199,20 @@ BEGIN
 
         END IF;
 
+      ELSE
+
+        IF tempDate <= inDate THEN
+
+          IF(isAlreadyInserted = FALSE) THEN
+
+            INSERT INTO loanSummary(version, loanAmount, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty,
+                                    overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalInterestPaid, totalPenaltyPaid, totalPrincipalPaid, totalFeePaid, loanId)
+            VALUES (1, loan_amount, tempDate, 0.0, intOutstanding, penOutstanding, princOutstanding, 0.0, intOverdue, penOverdue, princOverdue, 0.0, totalIntPaid, totalPrincPaid,
+                                                                                                                                                princPaid, totalDisb, total_outstanding, total_overdue, total_paid, total_paidKGS, totalIntPaid, totalPenPaid, totalPrincPaid, 0, loan_id);
+          END IF;
+
+        END IF;
+
       END IF;
 
       IF flag = FALSE THEN
