@@ -1041,6 +1041,8 @@ BEGIN
       VALUES (1,loan_id, inDate, msg);
     END;
 
+    START TRANSACTION;
+
     select IFNULL(penaltyLimitPercent, 0) INTO penalty_limit from creditterm where loanId = loan_id;
 
     IF !isTermFound(loan_id, inDate) THEN
@@ -1180,6 +1182,8 @@ BEGIN
     END LOOP get_data;
 
     CLOSE tCursor;
+
+    COMMIT;
 
   END ;;
 DELIMITER ;
@@ -2023,4 +2027,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-24 12:31:00
+-- Dump completed on 2018-11-24 13:38:30
