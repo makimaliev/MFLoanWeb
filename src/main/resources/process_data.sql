@@ -1043,6 +1043,7 @@ BEGIN
           FROM loan loan, paymentSchedule ps
           WHERE loan.id = ps.loanId
                 AND loan.id = loan_id
+                AND ps.expectedDate > inDate
         ) pp
       ORDER BY pp.onDate, pp.disbursement desc;
 
@@ -2067,4 +2068,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-24 17:22:40
+-- Dump completed on 2018-11-24 18:33:06
