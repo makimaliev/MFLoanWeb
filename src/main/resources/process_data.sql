@@ -45,7 +45,7 @@ BEGIN
       END IF;
 
       IF YEAR(fromDate) = YEAR(toDate) THEN
-        SET days = ((MONTH(toDate) - MONTH(fromDate))-1) * 30 + (30 + DATEDIFF(toDate, fromDate));
+        SET days = ((MONTH(toDate) - MONTH(fromDate))-1) * 30 + (30 + DAY(toDate) - DAY(fromDate));
       ELSE
         SET days = (30 - DAY(fromDate)) + (12 - MONTH(fromDate)) * 30 + (MONTH(toDate)-1) * 30 + DAY(toDate) + ((YEAR(toDate) - YEAR(fromDate)-1)*360) ;
       END IF;
@@ -2068,4 +2068,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-24 18:33:06
+-- Dump completed on 2018-11-24 20:15:33
