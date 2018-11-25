@@ -253,7 +253,7 @@
                     title: "Rate",
                     textAlign:'right',
                     template:function (row) {
-                        return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.r);
+                        return parseFloat(row.r).toFixed(5)
                     }
                 }, {
                     field: "t",

@@ -9,7 +9,7 @@ public class FloatingRateModel {
     @Id
     private long i;
     private String d;
-    private long r;
+    private double r;
     private String t;
 
     public long getI() {
@@ -28,11 +28,11 @@ public class FloatingRateModel {
         this.d = d;
     }
 
-    public long getR() {
+    public double getR() {
         return r;
     }
 
-    public void setR(long r) {
+    public void setR(double r) {
         this.r = r;
     }
 
