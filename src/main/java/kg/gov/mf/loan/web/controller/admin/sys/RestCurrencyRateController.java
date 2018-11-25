@@ -42,20 +42,22 @@ public class RestCurrencyRateController {
 
     @PostMapping("/fromDateFilter")
     public void setFromDateQuery(@RequestParam (value = "fromDate")String fromDate) {
-        if(fromDate.equals("")){
+        if(fromDate.equals("") &&fromDate.equals(" ")){
             this.fromDateQuery="";
         }
         else{
-            this.fromDateQuery="and c.date>=\""+fromDate+"\"\n";
+            String result=fromDate.substring(6,10)+"-"+fromDate.substring(3,5)+"-"+fromDate.substring(0,2);
+            this.fromDateQuery="and c.date>=\""+result+"\"\n";
         }
     }
     @PostMapping("/toDateFilter")
     public void setToDateQuery(@RequestParam (value = "toDate")String toDate) {
-        if(toDate.equals("")){
+        if(toDate.equals("") &&toDate.equals(" ")){
             this.fromDateQuery="";
         }
         else{
-            this.toDateQuery="and c.date<=\""+toDate+"\"\n";
+            String result=toDate.substring(6,10)+"-"+toDate.substring(3,5)+"-"+toDate.substring(0,2);
+            this.toDateQuery="and c.date<=\""+result+"\"\n";
         }
     }
     @PostMapping("/search")
@@ -81,10 +83,10 @@ public class RestCurrencyRateController {
                     return ;
                 }
                 else if(i!=splittedType.length-2){
-                    query=query+"(o.name=\""+splittedType[i]+"\") or";
+                    query=query+"(o.id=\""+splittedType[i]+"\") or";
                 }
                 else {
-                    query=query+"(o.name=\""+splittedType[i]+"\")";
+                    query=query+"(o.id=\""+splittedType[i]+"\")";
                 }
             }
             this.typeQuery="and ("+query+")\n";

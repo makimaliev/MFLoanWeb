@@ -915,6 +915,26 @@
                                 </span>
                             </a>
                         </li>
+                        <li sec:authorize="hasRole('ADMIN')" class="m-menu__item " aria-haspopup="true" >
+                            <a th:href="@{/floatingRate/list}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">
+                                    Плавающие ставки
+                                </span>
+                            </a>
+                        </li>
+                        <li sec:authorize="hasRole('ADMIN')" class="m-menu__item " aria-haspopup="true" >
+                            <a th:href="@{/currencyRate/list}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">
+                                    Процентные ставки
+                                </span>
+                            </a>
+                        </li>
                         <!--<li sec:authorize="hasRole('ADMIN')" class="m-menu__item " aria-haspopup="true" >-->
                             <!--<a th:href="@{/staff/list/}" class="m-menu__link ">-->
                                 <!--<i class="m-menu__link-bullet m-menu__link-bullet&#45;&#45;dot">-->

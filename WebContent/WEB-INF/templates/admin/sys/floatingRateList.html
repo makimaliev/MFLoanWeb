@@ -67,19 +67,20 @@
 														</span>
 											</div>
 										</div>
-										<div class="col-md-4">
-											<div class="input-group date " data-date-format="yyyy-mm-dd">
-												<input type="text" id="from_date" class="form-control">
-												<div class="input-group-addon">
-													<span class="glyphicon glyphicon-th"></span>
-												</div>
+										<div class="col-md-2">
+											<div class="input-group date m_datetimepicker" id="from_datepicker">
+												<input  class="form-control m-input" th:placeholder="from_date" name="date" />
+												<span class="input-group-addon">
+                                                    <i class="la la-calendar glyphicon-th"></i>
+                                                </span>
 											</div>
-											<div class="input-group date" data-date-format="yyyy-mm-dd">
-												<input type="text" id="to_date"  class="form-control">
-
-												<div class="input-group-addon">
-													<span class="glyphicon glyphicon-th"></span>
-												</div>
+										</div>
+										<div class="col-md-2">
+											<div class="input-group date m_datetimepicker" id="to_datepicker">
+												<input  class="form-control m-input" th:placeholder="to_date" name="date" />
+												<span class="input-group-addon">
+                                                    <i class="la la-calendar glyphicon-th"></i>
+                                                </span>
 											</div>
 										</div>
 										<div class="col-md-4">
@@ -92,8 +93,8 @@
 												<div class="m-form__control">
 													<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_type"
 															multiple="multiple">
-														<option selected value="" th:text="Все"></option>
-														<option th:each="type : ${types}" th:value="${type.name}" th:text="${type.name}"></option>
+														<!--<option selected value="" th:text="Все"></option>-->
+														<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
 													</select>
 												</div>
 											</div>
@@ -151,7 +152,26 @@
 <!--<script th:src="@{/assets/custom/demo/default/custom/components/datatables/base/data-json.js}" type="text/javascript"></script>-->
 <!--end::Page Resources -->
 
-
+<script>
+    $('#from_datepicker').datetimepicker({
+        format: "dd.mm.yyyy",
+        todayHighlight: true,
+        autoclose: true,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        pickerPosition: 'bottom-left'
+    });
+    $('#to_datepicker').datetimepicker({
+        format: "dd.mm.yyyy",
+        todayHighlight: true,
+        autoclose: true,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        pickerPosition: 'bottom-left'
+    });
+</script>
 <script type="text/javascript">
     //== Class definition
     var DatatableJsonRemoteDemo = function () {
@@ -196,7 +216,7 @@
                 pagination: true,
 
                 // columns definition
-                columns: [{
+                columns: [/*{
                     field: "View",
                     width: 80,
                     textAlign: 'center',
@@ -206,20 +226,35 @@
                     overflow: 'visible',
                     template: function (row) {
                         return '\
-						<a href="/floatingRate/list" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
+						<a href="/floatingRate/'+ row.i +'/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
 					';
                     }
-                },  {
+                },  */{
                     field: "i",
                     title: "#",
                     sortable: 'desc',
                     responsive: {hidden: 'xl'},
                 },{
                     field: "d",
-                    title: "Date"
+                    title: "Date",
+                    textAlign:'center',
+                    template: function (row) {
+                        var date =new Date(parseInt(row.d));
+                        // date = moment("/Date("+row.d+")/").format("DD.MM.YYYY");
+                        // var dates= +row.d.substr(4,6)+row.d.substr(0,4);
+
+                        var day=row.d.substr(8,10);
+                        var month=row.d.substring(5,7);
+                        var year=row.d.substring(0,4);
+                        return day+"."+month+"."+year;
+                    }
                 }, {
                     field: "r",
-                    title: "Rate"
+                    title: "Rate",
+                    textAlign:'right',
+                    template:function (row) {
+                        return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.r);
+                    }
                 }, {
                     field: "t",
                     title: "Type"
@@ -267,11 +302,12 @@
 
             // Fitering with from date
 
-            $("#from_date").on('keyup',function () {
+            $("#from_datepicker").on('change',function () {
+                // var date=$('#from_datepicker').find('input').val();
                 $.ajax({
                     type:'post',
                     data:
-                        {'fromDate':$('#from_date').val()},
+                        {'fromDate':$('#from_datepicker').find('input').val()},
                     url:"/api/fromFilter",
                     success:function(){
                         datatable.reload();
@@ -284,11 +320,11 @@
 
             // Filtering with to date
 
-            $("#to_date").on('keyup',function () {
+            $("#to_datepicker").on('change',function () {
                 $.ajax({
                     type:'post',
                     data:
-                        {'toDate':$('#to_date').val()},
+                        {'toDate':$('#to_datepicker').find('input').val()},
                     url:"/api/toFilter",
                     success:function(){
                         datatable.reload();

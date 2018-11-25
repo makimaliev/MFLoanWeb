@@ -13,8 +13,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.math.BigInteger;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api")
@@ -40,21 +41,23 @@ public class RestFloatingRateController {
     }
 
     @PostMapping("/fromFilter")
-    public void setFromDateQuery(@RequestParam (value = "fromDate")String fromDate) {
-        if(fromDate.equals("")){
+    public void setFromDateQuery(@RequestParam (value = "fromDate") String fromDate){
+        if(fromDate.equals("") &&fromDate.equals(" ")){
             this.fromDateQuery="";
         }
         else{
-            this.fromDateQuery="and f.date>=\""+fromDate+"\"\n";
+            String result=fromDate.substring(6,10)+"-"+fromDate.substring(3,5)+"-"+fromDate.substring(0,2);
+            this.fromDateQuery="and f.date>=\""+result+"\"\n";
         }
     }
     @PostMapping("/toFilter")
     public void setToDateQuery(@RequestParam (value = "toDate")String toDate) {
-        if(toDate.equals("")){
-            this.fromDateQuery="";
+        if(toDate.equals("")&&toDate.equals(" ")){
+            this.toDateQuery="";
         }
         else{
-            this.toDateQuery="and f.date<=\""+toDate+"\"\n";
+            String result=toDate.substring(6,10)+"-"+toDate.substring(3,5)+"-"+toDate.substring(0,2);
+            this.toDateQuery="and f.date<=\""+result+"\" \n";
         }
     }
     @PostMapping("/find")
@@ -80,10 +83,10 @@ public class RestFloatingRateController {
                     return ;
                 }
                 else if(i!=splittedType.length-2){
-                    query=query+"(o.name=\""+splittedType[i]+"\") or";
+                    query=query+"(o.id=\""+splittedType[i]+"\") or";
                 }
                 else {
-                    query=query+"(o.name=\""+splittedType[i]+"\")";
+                    query=query+"(o.id=\""+splittedType[i]+"\")";
                 }
             }
             this.typeQuery="and ("+query+")\n";
