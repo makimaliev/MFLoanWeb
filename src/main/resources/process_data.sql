@@ -1421,9 +1421,9 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `runCalculateLoanDetailedSummaryForSelectedLoans`(IN inDate DATE)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `runCalculateLoanDetailedSummaryForSelectedLoans`(IN inDate date)
 BEGIN
 
     DECLARE v_finished INTEGER DEFAULT 0;
@@ -1455,6 +1455,10 @@ BEGIN
 
     CLOSE tCursor;
 
+    CALL runUpdateRootLoans();
+
+    CALL updateBankruptInfo();
+
   END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1469,17 +1473,18 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `runUpdateRootLoans`()
 BEGIN
 
     DECLARE v_finished INTEGER DEFAULT 0;
     DECLARE loanId BIGINT;
+    DECLARE loan_class INT;
 
     DEClARE tCursor CURSOR FOR
 
-      SELECT loan.id
+      SELECT loan.id, loan.loan_class_id
       FROM loan loan
       WHERE loan.id IN (SELECT DISTINCT parent_id FROM loan WHERE parent_id IS NOT NULL)
       ORDER BY loan.id;
@@ -1491,10 +1496,16 @@ BEGIN
 
     run_calculate: LOOP
 
-      FETCH tCursor INTO loanId;
+      FETCH tCursor INTO loanId, loan_class;
 
       IF v_finished = 1 THEN
         LEAVE run_calculate;
+      END IF;
+
+      #update parent loan amount
+      IF loan_class = 2 THEN
+        UPDATE loan l, (select SUM(tLoan.amount) as ss FROM loan tLoan WHERE tLoan.parent_id = loanId) t
+        SET l.amount = t.ss WHERE l.id = loanId;
       END IF;
 
       CALL updateRootLoanPayment(loanId);
@@ -1536,8 +1547,6 @@ BEGIN
     END LOOP run_calculate;
 
     CLOSE tCursor;
-
-    SELECT 'completed' as message;
 
   END ;;
 DELIMITER ;
@@ -2056,4 +2065,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-25 12:18:50
+-- Dump completed on 2018-11-25 15:26:56
