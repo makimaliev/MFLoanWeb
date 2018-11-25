@@ -1158,8 +1158,16 @@ BEGIN
         SET pOPO = calculatePOPO(princOverdue, daysInPer, tempDate, loan_id);
         SET pOIO = calculatePOIO(intOverdue, daysInPer, tempDate, loan_id);
 
-        INSERT INTO accrue(version, daysInPeriod, fromDate, interestAccrued, lastInstPassed, penaltyAccrued, penaltyOnInterestOverdue, penaltyOnPrincipalOverdue, toDate, loanId)
-          VALUES (1, daysInPer, pDate, ROUND(intAccrued,2), FALSE , ROUND(penAccrued,2), ROUND(pOIO,2), ROUND(pOPO,2), tempDate, loan_id);
+        IF tempDate > inDate THEN
+          SET penAccrued = 0;
+          SET pOIO = 0;
+          SET pOPO = 0;
+        END IF;
+
+        IF intAccrued + penAccrued + pOIO + pOPO > 0 THEN
+          INSERT INTO accrue(version, daysInPeriod, fromDate, interestAccrued, lastInstPassed, penaltyAccrued, penaltyOnInterestOverdue, penaltyOnPrincipalOverdue, toDate, loanId)
+            VALUES (1, daysInPer, pDate, ROUND(intAccrued,2), FALSE , ROUND(penAccrued,2), ROUND(pOIO,2), ROUND(pOPO,2), tempDate, loan_id);
+        END IF;
 
         SET pDate = tempDate;
 
@@ -2048,4 +2056,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-25 12:07:44
+-- Dump completed on 2018-11-25 12:18:50
