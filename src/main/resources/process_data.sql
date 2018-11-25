@@ -425,10 +425,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `calculatePenaltyAccrued`(principalOverdue DOUBLE, interestOverdue DOUBLE, daysInPeriod INT, inDate DATE,
-                                                                     loanId           BIGINT) RETURNS double
+CREATE DEFINER=`root`@`localhost` FUNCTION `calculatePenaltyAccrued`(principalOverdue double, interestOverdue double, daysInPeriod int, inDate date,
+                                        loanId           bigint) RETURNS double
 BEGIN
 
     DECLARE pOIO DOUBLE DEFAULT 0;
@@ -439,7 +439,7 @@ BEGIN
     DECLARE result_pOIO DOUBLE DEFAULT 0;
 
     DECLARE cur CURSOR FOR
-      SELECT term.penaltyOnInterestOverdueRateValue, term.penaltyOnPrincipleOverdueRateValue
+      SELECT term.penaltyOnInterestOverdueRateValue, term.penaltyOnPrincipleOverdueRateValue, term.daysInYearMethodId
       FROM creditTerm term
       WHERE term.loanId = loanId
             AND term.startDate < inDate
@@ -453,7 +453,7 @@ BEGIN
     END;
 
     OPEN cur;
-    FETCH cur INTO pOIO, pOPO;
+    FETCH cur INTO pOIO, pOPO, dIYMethod;
     CLOSE cur;
 
     IF dIYMethod != 1 THEN SET nOD = 360;
@@ -649,31 +649,6 @@ BEGIN
     ORDER BY term.startDate DESC LIMIT 1;
 
     RETURN dIYMethod;
-
-  END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `getLoanAmount` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `getLoanAmount`(loanId BIGINT) RETURNS double
-BEGIN
-
-    DECLARE result DOUBLE DEFAULT 0;
-
-    SELECT loan.amount INTO result from loan where id = loanId;
-
-    RETURN result;
 
   END ;;
 DELIMITER ;
@@ -964,6 +939,8 @@ BEGIN
         (
 
           SELECT
+            'term' as type,
+            2 as orderType,
             term.startDate AS onDate,
             0              AS disbursement,
             0              AS principalPaid,
@@ -981,6 +958,8 @@ BEGIN
           UNION
 
           SELECT
+            'payment' as type,
+            3 as orderType,
             MIN(payment.paymentDate) AS onDate,
             0                   AS disbursement,
             SUM(payment.principal)   AS principalPaid,
@@ -999,6 +978,8 @@ BEGIN
           UNION
 
           SELECT
+            'payment schedule' as type,
+            1 as orderType,
             ps.expectedDate                  AS onDate,
             ps.disbursement                  AS disbursement,
             0                                AS principalPaid,
@@ -1016,6 +997,8 @@ BEGIN
           UNION
 
           SELECT
+            'dummy date' as type,
+            4 as orderType,
             inDate AS onDate,
             0            AS disbursement,
             0            AS principalPaid,
@@ -1031,6 +1014,8 @@ BEGIN
           UNION
 
           SELECT
+            'future payment' as type,
+            5 as orderType,
             ps.expectedDate AS onDate,
             0 AS disbursement,
             ps.principalPayment AS principalPaid,
@@ -1045,7 +1030,7 @@ BEGIN
                 AND loan.id = loan_id
                 AND ps.expectedDate > inDate
         ) pp
-      ORDER BY pp.onDate, pp.disbursement desc;
+      ORDER BY pp.onDate, pp.orderType, pp.disbursement desc;
 
     DECLARE CONTINUE HANDLER
     FOR NOT FOUND SET v_finished = 1;
@@ -1061,6 +1046,10 @@ BEGIN
 
     START TRANSACTION;
 
+    #get loan amount
+    SELECT amount INTO loan_amount from loan where id = loan_id;
+
+    #get penalty limit percent
     select IFNULL(penaltyLimitPercent, 0) INTO penalty_limit from creditterm where loanId = loan_id;
 
     IF !isTermFound(loan_id, inDate) THEN
@@ -1081,7 +1070,6 @@ BEGIN
 
       IF flag = FALSE THEN
         SET prevDate = tempDate;
-        SET loan_amount = getLoanAmount(loan_id);
         SET pDate = tempDate;
       END IF;
 
@@ -1154,10 +1142,6 @@ BEGIN
 
       IF tempDate <= inDate THEN
 
-        IF isAlreadyInserted THEN
-          DELETE FROM loandetailedsummary WHERE loanId = loan_id AND onDate = tempDate;
-        END IF;
-
         INSERT INTO loanDetailedSummary(version, collectedInterestDisbursed, collectedInterestPayment, collectedPenaltyDisbursed, collectedPenaltyPayment, daysInPeriod, disbursement, interestAccrued,
                                           interestOutstanding, interestOverdue, interestPaid, interestPayment, onDate, penaltyAccrued, penaltyOutstanding, penaltyOverdue, penaltyPaid, principalOutstanding,
                                           principalOverdue, principalPaid, principalPayment, principalWriteOff, totalCollectedInterestPayment, totalCollectedPenaltyPayment, totalDisbursement,
@@ -1173,10 +1157,6 @@ BEGIN
       IF flag = TRUE THEN
         SET pOPO = calculatePOPO(princOverdue, daysInPer, tempDate, loan_id);
         SET pOIO = calculatePOIO(intOverdue, daysInPer, tempDate, loan_id);
-
-        IF isAlreadyInserted THEN
-          DELETE FROM accrue WHERE loanId = loan_id AND fromDate = pDate AND toDate = tempDate;
-        END IF;
 
         INSERT INTO accrue(version, daysInPeriod, fromDate, interestAccrued, lastInstPassed, penaltyAccrued, penaltyOnInterestOverdue, penaltyOnPrincipalOverdue, toDate, loanId)
           VALUES (1, daysInPer, pDate, ROUND(intAccrued,2), FALSE , ROUND(penAccrued,2), ROUND(pOIO,2), ROUND(pOPO,2), tempDate, loan_id);
@@ -2068,4 +2048,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-24 20:15:33
+-- Dump completed on 2018-11-25 12:07:44
