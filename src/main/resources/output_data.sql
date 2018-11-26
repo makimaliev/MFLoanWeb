@@ -404,45 +404,59 @@ create view loan_write_off_view as
 
 #12
 DROP TABLE IF EXISTS `payment_schedule_view`;
-create view payment_schedule_view as
+CREATE VIEW payment_schedule_view AS
   SELECT
-    `lv`.`v_loan_id`                 AS `v_loan_id`,
-    `lv`.`v_loan_amount`             AS `v_loan_amount`,
-    `lv`.`v_loan_reg_date`           AS `v_loan_reg_date`,
-    `lv`.`v_loan_reg_number`         AS `v_loan_reg_number`,
-    `lv`.`v_loan_supervisor_id`      AS `v_loan_supervisor_id`,
-    `lv`.`v_loan_credit_order_id`    AS `v_loan_credit_order_id`,
-    `lv`.`v_loan_currency_id`        AS `v_loan_currency_id`,
-    `lv`.`v_loan_debtor_id`          AS `v_loan_debtor_id`,
-    `lv`.`v_loan_state_id`           AS `v_loan_state_id`,
-    `lv`.`v_loan_type_id`            AS `v_loan_type_id`,
-    `lv`.`v_debtor_id`               AS `v_debtor_id`,
-    `lv`.`v_debtor_type_id`          AS `v_debtor_type_id`,
-    `lv`.`v_debtor_org_form_id`      AS `v_debtor_org_form_id`,
-    `lv`.`v_debtor_work_sector_id`   AS `v_debtor_work_sector_id`,
-    `lv`.`v_debtor_name`             AS `v_debtor_name`,
-    `lv`.`v_debtor_entity_id`        AS `v_debtor_entity_id`,
-    `lv`.`v_debtor_owner_type`       AS `v_debtor_owner_type`,
-    `lv`.`v_debtor_region_id`        AS `v_debtor_region_id`,
-    `lv`.`v_debtor_district_id`      AS `v_debtor_district_id`,
-    `lv`.`v_debtor_aokmotu_id`       AS `v_debtor_aokmotu_id`,
-    `lv`.`v_debtor_village_id`       AS `v_debtor_village_id`,
-    `lv`.`v_credit_order_type_id`    AS `v_credit_order_type_id`,
-    `lv`.`v_credit_order_reg_number` AS `v_credit_order_reg_number`,
-    `lv`.`v_credit_order_reg_date`   AS `v_credit_order_reg_date`,
-    `ps`.`id`                        AS `v_ps_id`,
-    `ps`.`version`                   AS `v_ps_version`,
-    `ps`.`collectedInterestPayment`  AS `v_ps_collected_interest_payment`,
-    `ps`.`collectedPenaltyPayment`   AS `v_ps_collected_penalty_payment`,
-    `ps`.`disbursement`              AS `v_ps_disbursement`,
-    `ps`.`expectedDate`              AS `v_ps_expected_date`,
-    `ps`.`interestPayment`           AS `v_ps_interest_payment`,
-    `ps`.`principalPayment`          AS `v_ps_principal_payment`,
-    `ps`.`installmentStateId`        AS `v_ps_installment_state_id`,
-    `ps`.`loanId`                    AS `v_ps_loan_id`
+    `lv`.`v_loan_id`                  AS `v_loan_id`,
+    `lv`.`v_loan_amount`              AS `v_loan_amount`,
+    `lv`.`v_loan_reg_date`            AS `v_loan_reg_date`,
+    `lv`.`v_loan_reg_number`          AS `v_loan_reg_number`,
+    `lv`.`v_loan_supervisor_id`       AS `v_loan_supervisor_id`,
+    `lv`.`v_loan_credit_order_id`     AS `v_loan_credit_order_id`,
+    `lv`.`v_loan_currency_id`         AS `v_loan_currency_id`,
+    `lv`.`v_loan_debtor_id`           AS `v_loan_debtor_id`,
+    `lv`.`v_loan_state_id`            AS `v_loan_state_id`,
+    `lv`.`v_loan_type_id`             AS `v_loan_type_id`,
+    `lv`.`v_debtor_id`                AS `v_debtor_id`,
+    `lv`.`v_debtor_type_id`           AS `v_debtor_type_id`,
+    `lv`.`v_debtor_org_form_id`       AS `v_debtor_org_form_id`,
+    `lv`.`v_debtor_work_sector_id`    AS `v_debtor_work_sector_id`,
+    `lv`.`v_debtor_name`              AS `v_debtor_name`,
+    `lv`.`v_debtor_entity_id`         AS `v_debtor_entity_id`,
+    `lv`.`v_debtor_owner_type`        AS `v_debtor_owner_type`,
+    `lv`.`v_debtor_region_id`         AS `v_debtor_region_id`,
+    `lv`.`v_debtor_district_id`       AS `v_debtor_district_id`,
+    `lv`.`v_debtor_aokmotu_id`        AS `v_debtor_aokmotu_id`,
+    `lv`.`v_debtor_village_id`        AS `v_debtor_village_id`,
+    `lv`.`v_credit_order_type_id`     AS `v_credit_order_type_id`,
+    `lv`.`v_credit_order_reg_number`  AS `v_credit_order_reg_number`,
+    `lv`.`v_credit_order_reg_date`    AS `v_credit_order_reg_date`,
+    `ps`.`id`                         AS `v_ps_id`,
+    `ps`.`version`                    AS `v_ps_version`,
+    `ps`.`collectedInterestPayment`   AS `v_ps_collected_interest_payment`,
+    `ps`.`collectedPenaltyPayment`    AS `v_ps_collected_penalty_payment`,
+    `ps`.`disbursement`               AS `v_ps_disbursement`,
+    `ps`.`expectedDate`               AS `v_ps_expected_date`,
+    (CASE WHEN (`ps`.`interestPayment` = 10)
+      THEN (SELECT sum(`acc`.`interestAccrued`)
+            FROM `mfloan`.`accrue` `acc`
+            WHERE ((`acc`.`loanId` = `ps`.`loanId`) AND (`acc`.`fromDate` >= (SELECT `psch2`.`expectedDate`
+                                                                              FROM `mfloan`.`paymentSchedule` `psch2`
+                                                                              WHERE
+                                                                                ((`psch2`.`loanId` = `ps`.`loanId`) AND
+                                                                                 (`psch2`.`expectedDate` <
+                                                                                  `ps`.`expectedDate`))
+                                                                              ORDER BY `psch2`.`expectedDate` DESC
+                                                                              LIMIT 1)) AND
+                   (`acc`.`toDate` <= `ps`.`expectedDate`)))
+     ELSE `ps`.`interestPayment` END) AS `v_ps_interest_payment`,
+    `ps`.`principalPayment`           AS `v_ps_principal_payment`,
+    `ps`.`installmentStateId`         AS `v_ps_installment_state_id`,
+    `ps`.`loanId`                     AS `v_ps_loan_id`
   FROM (`mfloan`.`loan_view` `lv`
     JOIN `mfloan`.`paymentSchedule` `ps`)
   WHERE (`ps`.`loanId` = `lv`.`v_loan_id`);
+
+
 
 #13
 DROP TABLE IF EXISTS `payment_view`;

@@ -517,14 +517,11 @@
 												</div>
 												<div class="col-md-4">
 													<button class="btn btn-sm btn-accent" type="button" id="bnt_init_phase">
-														Создать сводку
+														Сохранить претензию
 													</button>
 													<button class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator">
-														Calculate manually
+														Сохпанить расчет
 													</button>
-                                                    <button class="btn btn-sm btn-accent" type="button" id="printGenerate">
-                                                        Print
-                                                    </button>
 													<!--<form th:action="@{/printoutTemplate/1/objectId/1/generate}" method="post">-->
 														<!--<button class="btn btn-sm btn-accent" type="submit" th:text="#{label.table.generate}"></button>-->
 													<!--</form>-->
@@ -903,17 +900,7 @@
                 data: {selectedLoans:loanId, initDater: initDate}
             });
         }
-        var initDate = $("#phaseInitDate").val();
-        var loanIds=[];
-        loanIds.push(loanId);
-        loanIds = JSON.stringify({
-            "id" : loanIds
-        });
-        $.ajax({
-            type : 'GET',
-            url : "/printoutTemplate/4/objectId/1/generate",
-            data: {loanIds:loanIds,initDate: initDate}
-        });
+
     });
     $('#initPhaseSaveBtn')
         .on('click', function () {

@@ -166,20 +166,7 @@ public class PrintoutTemplateController {
 
 	@RequestMapping("/printoutTemplate/{id}/objectId/{object_id}/generate")
 	public void generatePrintoutByPrintoutTemplate(@PathVariable("id") long id, @PathVariable("object_id") long object_id,
-												   HttpServletResponse response, @RequestParam(value = "initDate") String initDate,
-												   @RequestParam List<String> loanIds) {
-
-    	Date date=new Date();
-
-		try {
-			date=new SimpleDateFormat("dd.MM.yyyy").parse(initDate);
-		} catch (ParseException e) {}
-
-		for(String i:loanIds){
-			System.out.println(i);
-		}
-
-
+												   HttpServletResponse response) {
 		try
 		{
 
