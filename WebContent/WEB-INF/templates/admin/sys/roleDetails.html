@@ -73,13 +73,13 @@
 													   role="button">
 														<span th:text="#{label.table.view}"></span>
 													</a>
-													<a class="dropdown-item"
+													<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_ROLE')" class="dropdown-item"
 													   th:href="@{/role/__${role.id}__/edit}"
 													   data-toggle="modal"
 													   data-target="#roleFormModal">
 														<span th:text="#{label.table.edit}"></span>
 													</a>
-													<a class="dropdown-item" href="#">
+													<a hidden="hidden" class="dropdown-item" href="#">
 														<span>
 															<form th:action="@{/role/__${role.id}__/remove}" method="post">
 																<input hidden="true" type="text" id="id" name="id" th:value="${role.id}" />

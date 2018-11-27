@@ -39,7 +39,7 @@
 									</div>
 								</li>
 								<li class="m-portlet__nav-item">
-									<a th:href="@{/manage/order/entitylist/entity/documentpackage/entitydocument/state/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.order.entity.document.state.add}"></a>
+									<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_ENTITYDOCUMENTSTATE')" th:href="@{/manage/order/entitylist/entity/documentpackage/entitydocument/state/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.order.entity.document.state.add}"></a>
 								</li>
 							</ul>
 						</div>
@@ -69,8 +69,8 @@
 															<i class="la la-ellipsis-h"></i>
 														</a>
 														<div class="dropdown-menu dropdown-menu-right">
-															<a th:href="@{/manage/order/entitylist/entity/documentpackage/entitydocument/state/__${s.id}__/save}" class="dropdown-item"><span th:text="#{label.table.edit}"></span></a>
-															<a class="dropdown-item" href="#">
+															<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_ENTITYDOCUMENTSTATE')" th:href="@{/manage/order/entitylist/entity/documentpackage/entitydocument/state/__${s.id}__/save}" class="dropdown-item"><span th:text="#{label.table.edit}"></span></a>
+															<a hidden="hidden" class="dropdown-item" href="#">
 																<span>
 																	<form th:action="@{/manage/order/entitylist/entity/documentpackage/entitydocument/state/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
 																		<input hidden="true" type="text" id="id" name="id" th:value="${s.id}" />

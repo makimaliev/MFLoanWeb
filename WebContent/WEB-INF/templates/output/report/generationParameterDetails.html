@@ -37,7 +37,7 @@
 									</div>
 								</li>
 								<li class="m-portlet__nav-item">
-									<a data-remote="false" data-toggle="modal"
+									<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_GENERATIONPARAMETER')" data-remote="false" data-toggle="modal"
 									   data-target="#generationParameterFormModal" th:href="@{/generationParameter/add}"
 									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
 										GenerationParameter</a>
@@ -68,12 +68,12 @@
 													<a th:href="@{/generationParameter/__${generationParameter.id}__/details}"
 													   role="button" class="dropdown-item"> <span th:text="#{label.table.view}"></span>
 													</a>
-													<a data-remote="false" data-toggle="modal"
+													<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_GENERATIONPARAMETER')" data-remote="false" data-toggle="modal"
 													   data-target="#generationParameterFormModal"
 													   th:href="@{/generationParameter/__${generationParameter.id}__/edit}" role="button"
 													   class="dropdown-item"> <span th:text="#{label.table.edit}"></span>
 													</a>
-													<a class="dropdown-item" href="#">
+													<a hidden="hidden" class="dropdown-item" href="#">
 														<span>
 															<form th:action="@{/generationParameter/__${generationParameter.id}__/remove}" method="post">
 																<button type="submit" class="btn btn-reset"th:text="#{label.user.button.delete}"></button>

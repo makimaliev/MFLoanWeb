@@ -102,7 +102,7 @@
 									</div>
 								</div>
 								<div class="col-xl-4 order-1 order-xl-2 m--align-right">
-									<a sec:authorize="hasRole('ADMIN')" data-remote="false"
+									<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_FLOATINGRATE')" data-remote="false"
 									   data-toggle="modal"
 									   data-target="#floatingRateFormModal"
 									   th:href="@{/floatingRate/add}"
@@ -267,10 +267,10 @@
                         var dropup = (row.getDatatable().getPageSize() - row.getIndex()) <= 4 ? 'dropup' : '';
 
                         return '\
-						<a href="/floatingRate/'+ row.i +'/edit" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
-							<i class="la la-edit"></i>\
-						</a>\
-						<a href="/floatingRate/'+ row.i +'/remove" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
+						<a title="Редактировать" data-remote="false" data-toggle="modal" data-target="#floatingRateFormModal" href="/floatingRate/'+ row.i +'/edit" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill">\
+                            <i class="la la-edit"></i>\
+                           </a>\
+						<a hidden="hidden" href="/floatingRate/'+ row.i +'/remove" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
 							<i class="la la-trash"></i>\
 						</a>\
 					';
@@ -394,7 +394,6 @@
 <script>
 	$("#floatingRateFormModal").on("show.bs.modal", function (e) {
 		var link=$(e.relatedTarget);
-		$(this).find(".modal-title").html(link.attr("href"));
 		$(this).find(".modal-content").load(link.attr("href"));
     });
 </script>

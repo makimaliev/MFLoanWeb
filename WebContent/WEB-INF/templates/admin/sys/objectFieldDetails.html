@@ -32,7 +32,7 @@
 									<th>Name</th>
 									<th>View</th>
 									<th>Edit</th>
-									<th>Delete</th>
+									<th hidden="hidden">Delete</th>
 								</tr>
 								</thead>
 								<tbody>
@@ -40,12 +40,12 @@
 									<td th:text="${objectField.id}">Id</td>
 									<td th:text="${objectField.name}">Name</td>
 									<td><a th:href="@{/objectField/__${objectField.id}__/details}"
-										   objectField="button" class="btn btn-xs green-stripe"> View </a></td>
-									<td><a data-remote="false" data-toggle="modal"
+										   role="button" class="btn btn-xs green-stripe"> View </a></td>
+									<td sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_OBJECTFIELD')"><a data-remote="false" data-toggle="modal"
 										   data-target="#objectFieldFormModal"
 										   th:href="@{/objectField/__${objectField.id}__/edit}" objectField="button"
 										   class="btn btn-xs blue-stripe"> Edit </a></td>
-									<td>
+									<td hidden="hidden">
 										<form th:action="@{/objectField/__${objectField.id}__/remove}"
 											  method="post">
 											<button type="submit" class="btn btn-xs red-stripe">
@@ -141,18 +141,18 @@
 	<div th:replace="layout :: footer"></div>
 	<div th:replace="fragments/footer :: footer-js"></div>
 
-	<!--<script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>-->
-	<script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
+	<!--<script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>-->
 
 	<script type="text/javascript">
 		$(document).ready(function() {
 
 			var table = $('#objectFieldTable').DataTable({
 		    	stateSave: true,
-	    		"info":     false,
+	    		"info":     false/*,
 	    		keys: {
 	    	        focus: ':eq(0)'
-	    	    }
+	    	    }*/
 		    } );
 
 			// table.on('key-focus', function(e, datatable, cell) {

@@ -31,7 +31,7 @@
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
-							<ul class="m-portlet__nav">
+							<ul sec:authorize="hasAnyRole('ADMIN','PERM_ADD_CLASSIFICATIONTABLE')" class="m-portlet__nav">
 								<li class="m-portlet__nav-item">
 									<a th:href="@{/classify/table/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">Add table</a>
 								</li>
@@ -62,7 +62,7 @@
 												<td th:text="${table.tableOutputName}"></td>
 												<td th:text="${table.primaryField}"></td>
 												<td><a th:href="@{/classify/table/__${table.id}__/field/list}">Show Fields</a></td>
-												<td><a th:href="@{/classify/table/__${table.id}__/delete}">Delete</a></td>
+												<td hidden="hidden"><a th:href="@{/classify/table/__${table.id}__/delete}">Delete</a></td>
 											</tr>
 											</tbody>
 										</table>

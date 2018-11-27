@@ -93,10 +93,10 @@ var DatatableDataLocalPayments = function () {
                     var result = '';
 
                     result = result + '\
-						<a href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/payment/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+						<a sec:authorize="hasAnyRole(ADMIN,PERM_UPDATE_PAYMENT)" href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/payment/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-edit"></i>\
 						</a>\
-						<a href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/payment/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
+						<a hidden="hidden" href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/payment/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
 							<i class="la la-trash"></i>\
 						</a>\
 					';

@@ -231,15 +231,15 @@
 											<div class="row" >
 												<div class="col-md-12">
 
-													<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
+													<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_BANKDATA')" data-remote="false" data-toggle="modal"
 													   data-target="#bankDataFormModal" th:href="@{/bankData/add}"
 													   role="button" class="btn btn-success" th:text="#{label.add.bankData}"> Add
 														Bank Data</a>
-													<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
+													<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_DEPARTMENT')" data-remote="false" data-toggle="modal"
 													   data-target="#departmentFormModal" th:href="@{/department/add}"
 													   role="button" class="btn btn-success" th:text="#{label.add.department}"> Add
 														Department</a>
-													<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
+													<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_INFORMATION')" data-remote="false" data-toggle="modal"
 													   data-target="#informationFormModal" th:href="@{/information/add}"
 													   role="button" class="btn btn-success" th:text="#{label.add.information}"> Add
 														Information</a>
@@ -248,7 +248,7 @@
 													   <!--role="button" class="btn btn-success" th:text="#{label.add.staff}">Add-->
 														<!--Staff </a>-->
 
-													<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
+													<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_ORGANIZATION')" data-remote="false" data-toggle="modal"
 													   data-target="#organizationFormModal" th:href="@{/organization/__${organization.id}__/edit}"
 													   role="button" class="btn btn-outline-danger" th:text="#{label.table.edit}">Edit organization </a>
 
@@ -434,7 +434,7 @@
 																					<th>Примечание</th>
 																					<th>БИК</th>
 																					<th>Расчетный счет</th>
-																					<th sec:authorize="hasRole('ADMIN')">&nbsp;</th>
+																					<th>&nbsp;</th>
 																				</tr>
 																			</thead>
 																			<tbody>
@@ -453,11 +453,11 @@
 																							</a>
 																							<div class="dropdown-menu dropdown-menu-right">
 
-																								<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
+																								<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_BANKDATA')" data-remote="false" data-toggle="modal"
 																								   data-target="#organizationFormModal"
 																								   th:href="@{/bankData/__${bankDataInList.id}__/edit}" role="button"
 																								   class="dropdown-item"> Edit </a>
-																								<a sec:authorize="hasRole('ADMIN')" class="dropdown-item" href="#">
+																								<a hidden="hidden" sec:authorize="hasRole('ADMIN')" class="dropdown-item" href="#">
 																									<span>
 																										<form th:action="@{/organization/__${bankDataInList.getOrganization().getId()}__/bankData/__${bankDataInList.id}__/remove}"
 																											  method="post">
@@ -544,7 +544,7 @@
 																					</a>
 																					<div class="dropdown-menu dropdown-menu-right">
 
-																						<a class="dropdown-item"
+																						<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_DEPARTMENT')" class="dropdown-item"
 																						   th:href="@{/department/__${departmentInList.id}__/edit}"
 																						   data-toggle="modal"
 																						   data-target="#departmentFormModal">
@@ -552,7 +552,7 @@
 																						</a>
 
 
-																						<a class="dropdown-item" href="#">
+																						<a hidden="hidden" class="dropdown-item" href="#">
 																							<span>
 																								<form th:action="@{/department/__${departmentInList.id}__/remove}" method="post">
 																									<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
@@ -560,13 +560,13 @@
 																							</span>
 																						</a>
 
-																						<a class="dropdown-item"
+																						<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_POSITION')" class="dropdown-item"
 																						   th:href="@{/department/__${departmentInList.id}__/position/add}"
 																						   data-toggle="modal"
 																						   data-target="#positionFormModal">
 																							<span th:text="#{label.department.addPosition}"></span>
 																						</a>
-																						<a class="dropdown-item"
+																						<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_STAFF')" class="dropdown-item"
 																						   th:href="@{/staff/add}"
 																						   data-toggle="modal"
 																						   data-target="#staffFormModal">
@@ -620,8 +620,8 @@
 														<th th:text="#{label.organization.typeId}">ObjectTypeId</th>
 														<th th:text="#{label.organization.objectId}">ObjectId</th>
 														<th th:text="#{label.organization.view}">View</th>
-														<th th:text="#{label.organization.edit}">Edit</th>
-														<th th:text="#{label.organization.delete}">Delete</th>
+														<th sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_ORGANIZATION')" th:text="#{label.organization.edit}">Edit</th>
+														<th hidden="hidden" th:text="#{label.organization.delete}">Delete</th>
 													</tr>
 													</thead>
 													<tbody>
@@ -636,11 +636,11 @@
 														<td th:text="${s?.systemObjectId}">ObjectId</td>
 														<td><a th:href="@{/information/__${s.id}__/details}"
 															   role="button" class="btn btn-xs blue-stripe"> View </a></td>
-														<td><a data-remote="false" data-toggle="modal"
+														<td sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_ORGANIZATION')"><a data-remote="false" data-toggle="modal"
 															   data-target="#cSystemFormModal"
 															   th:href="@{/information/__${s.id}__/edit}" role="button"
 															   class="btn btn-xs blue-stripe"> Edit </a></td>
-														<td>
+														<td hidden="hidden">
 															<form th:action="@{/information/__${s.id}__/remove}"
 																  method="post">
 																<button type="submit" class="btn btn-xs red-stripe">Delete</button>

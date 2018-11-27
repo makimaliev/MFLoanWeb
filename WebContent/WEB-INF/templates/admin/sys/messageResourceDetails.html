@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title></title>
+
+<div th:replace="fragments/header :: header-css"></div>
+
+<link
+	th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}"
+	rel="stylesheet" type="text/css" />
+<link
+	th:href="@{/assets/global/plugins/datatables/datatables.min.css}"
+	rel="stylesheet" type="text/css" />
+<link
+	th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}"
+	rel="stylesheet" type="text/css" />
+
+</head>
+
+<body
+
+
+
+	<!DOCTYPE html>
+	<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="#{label.role.detail}"></title>
+
+		<div  th:replace="fragments/header :: header-css"/>
+		<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
+
+		<style type="text/css">
+			table.KeyTable tr.focus {
+				outline: 3px solid #3366FF;
+				outline-offset: -3px;
+			}
+		</style>
+	</head>
+	<!-- end::Head -->
+	<!-- end::Body -->
+	<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+	<!-- begin:: Page -->
+	<div class="m-grid m-grid--hor m-grid--root m-page">
+		<!-- BEGIN: Header -->
+		<div th:replace="layout/header"/>
+		<!-- END: Header -->
+		<!-- begin::Body -->
+		<div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+			<!-- BEGIN: Left Aside -->
+			<div th:replace="layout/sidebar"/>
+			<!-- END: Left Aside -->
+			<div class="m-grid__item m-grid__item--fluid m-wrapper">
+				<div class="m-content">
+					<div class="m-portlet m-portlet--mobile">
+						<div class="m-portlet__head">
+							<div class="m-portlet__head-caption">
+								<div class="m-portlet__head-title">
+									<h3 class="m-portlet__head-text" th:text="${messageResource.messageKey}"></h3>
+								</div>
+							</div>
+							<div class="m-portlet__head-tools">
+								<ul class="m-portlet__nav">
+									<li class="m-portlet__nav-item">
+										<div class="m-input-icon m-input-icon--left">
+											<input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
+											<span class="m-input-icon__icon m-input-icon__icon--left">
+											<span><i class="la la-search"></i></span>
+										</span>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="m-portlet__body">
+							<table class="table" id="roleTable">
+								<thead  class="thead-default">
+								<tr>
+									<th>Id</th>
+									<th>Key</th>
+									<th>ENG</th>
+									<th>RUS</th>
+									<th>KGZ</th>
+									<th>&nbsp;</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr >
+									<td th:text="${messageResource.id}">Id</td>
+									<td th:text="${messageResource.messageKey}">Name</td>
+									<td th:text="${messageResource.eng}">Name</td>
+									<td th:text="${messageResource.rus}">Name</td>
+									<td th:text="${messageResource.kgz}">Name</td>
+									<td class="table-actions text-right">
+										<span>
+											<div class="dropdown">
+												<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+													<i class="la la-ellipsis-h"></i>
+												</a>
+												<div class="dropdown-menu dropdown-menu-right">
+													<a class="dropdown-item"
+													   th:href="@{/messageResource/__${messageResource.id}__/details}"
+													   role="button">
+														<span th:text="#{label.table.view}"></span>
+													</a>
+													<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_ROLE')" class="dropdown-item"
+													   th:href="@{/messageResource/__${messageResource.id}__/edit}"
+													   data-toggle="modal"
+													   data-target="#messageResourceFormModal">
+														<span th:text="#{label.table.edit}"></span>
+													</a>
+													<a hidden="hidden" class="dropdown-item" href="#">
+														<span>
+															<form th:action="@{/messageResource/__${messageResource.id}__/remove}" method="post">
+																<input hidden="true" type="text" id="id" name="id" th:value="${messageResource.id}" />
+																<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+															</form>
+														</span>
+													</a>
+												</div>
+											</div>
+										</span>
+									</td>
+									<!--<td class="table-actions text-right">-->
+										<!--<span>-->
+											<!--<div class="dropdown">-->
+												<!--<div class="dropdown-menu dropdown-menu-right">-->
+													<!--<a th:href="@{/messageResource/__${messageResource.id}__/details}"-->
+													   <!--role="button" class="btn btn-xs green-stripe">-->
+													<!--<i class="la la-ellipsis-h"></i>-->
+												<!--</a>-->
+													<!--<a data-remote="false" data-toggle="modal"-->
+													   <!--data-target="#messageResourceFormModal"-->
+													   <!--th:href="@{/messageResource/__${messageResource.id}__/edit}" role="button"-->
+													   <!--class="btn btn-xs blue-stripe"> Edit-->
+														<!--<span th:text="#{label.table.view}"></span>-->
+													<!--</a>-->
+													<!--<a hidden="hidden" class="dropdown-item" href="#">-->
+														<!--<span>-->
+															<!--<form th:action="@{/messageResource/__${messageResource.id}__/remove}"-->
+																  <!--method="post">-->
+													<!--<button type="submit" class="btn btn-xs red-stripe">-->
+														<!--Delete</button>-->
+												<!--</form>-->
+														<!--</span>-->
+													<!--</a>-->
+												<!--</div>-->
+											<!--</div>-->
+										<!--</span>-->
+									<!--</td>-->
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<div class="modal fade" id="messageResourceFormModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<!-- END CONTENT BODY -->
+		<!-- begin::Footer -->
+		<div th:replace="layout/footer"/>
+		<!-- end::Footer -->
+	</div>
+	<!-- END CONTAINER -->
+	<div th:replace="layout :: footer"></div>
+	<div th:replace="fragments/footer :: footer-js"></div>
+
+
+	<script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
+	<script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>
+
+
+	<script type="text/javascript">
+        $(document).ready(function() {
+
+            var table = $('#messageResourceTable').DataTable({
+                stateSave: true,
+                "language": {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Russian.json"},
+                "info":     false,
+                keys: {
+                    focus: ':eq(0)'
+                }
+            } );
+
+            table.on('key-focus', function(e, datatable, cell) {
+
+
+                var rowData = datatable.row(cell.index().row).data();
+
+                $("#messageResource_id").val(rowData[0]);
+
+                var sUrl ="/MFCredit/messageResource/" + rowData[0]+"/view";
+
+                $.get(sUrl, function(data) {
+
+                    $('#content').html(data);
+                });
+
+            });
+
+        });
+	</script>
+
+	<script type="text/javascript">
+        $("#messageResourceFormModal").on("show.bs.modal", function(e) {
+
+            var link = $(e.relatedTarget);
+
+
+            $(this).find(".modal-content").load(link.attr("href"));
+
+        });
+
+
+
+
+	</script>
+
+
+	</body>
+	</html>
+
+
+
+
+
+	<!-- END PAGE LEVEL SCRIPTS -->
+</body>
+</html>

@@ -233,7 +233,7 @@
                                         </div>
 
                                         <div class="col-xl-3 order-3 order-xl-3 m--align-right">
-                                            <a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/term/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+                                            <a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_ORDERTERM')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/term/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
 													<span>
@@ -275,7 +275,7 @@
                                         </div>
 
                                         <div class="col-xl-3 order-3 order-xl-3 m--align-right">
-                                            <a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/wo/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+                                            <a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_WRITEOFF')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/wo/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
 													<span>
@@ -312,7 +312,7 @@
                                         </div>
 
                                         <div class="col-xl-3 order-3 order-xl-3 m--align-right">
-                                            <a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/paymentschedule/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+                                            <a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_PAYMENTSCHEDULE')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/paymentschedule/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
 													<span>
@@ -384,7 +384,7 @@
 												<!--</form>-->
 											<!--</div>-->
 
-											<a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/payment/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+											<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_PAYMENT')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/payment/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
 													<span>
@@ -421,7 +421,7 @@
                                         </div>
 
                                         <div class="col-xl-3 order-3 order-xl-3 m--align-right">
-                                            <a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+                                            <a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_SUPERVISORPLAN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
 													<span>
@@ -587,7 +587,7 @@
 													<div class="d-md-none m--margin-bottom-10"></div>
 												</div>
 												<div class="col-md-4">
-													<button class="btn btn-sm btn-accent" type="button" id="bnt_init_phase">
+													<button sec:authorize="hasAnyRole('ADMIN','PERM_ADD_COLLECTIONPHASE')" class="btn btn-sm btn-accent" type="button" id="bnt_init_phase">
 														Сохранить претензию
 													</button>
 
@@ -648,7 +648,7 @@
 												</div>
 
 												<div class="col-xl-3 order-3 order-xl-3 m--align-right">
-													<a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/loangoods/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+													<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_LOANGOODS')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/loangoods/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
 													<span>
@@ -685,7 +685,7 @@
 												</div>
 
 												<div class="col-xl-3 order-3 order-xl-3 m--align-right">
-													<a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/debttransfer/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+													<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_DEBTTRANSFER')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/debttransfer/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
 													<span>
@@ -722,7 +722,7 @@
 												</div>
 
 												<div class="col-xl-3 order-3 order-xl-3 m--align-right">
-													<a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/targeteduse/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+													<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_TARGETEDUSE')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/targeteduse/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
 													<span>
@@ -759,7 +759,7 @@
 												</div>
 
 												<div class="col-xl-3 order-3 order-xl-3 m--align-right">
-													<a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/reconstructedlist/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+													<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_RECONSTRUCTEDLIST')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/reconstructedlist/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
 													<span>
@@ -796,7 +796,7 @@
 												</div>
 
 												<div class="col-xl-3 order-3 order-xl-3 m--align-right">
-													<a sec:authorize="hasRole('ADMIN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/bankrupt/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+													<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_BANKRUPT')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/bankrupt/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
 													<span>

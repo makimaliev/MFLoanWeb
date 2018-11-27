@@ -39,7 +39,7 @@
 										</span>
 									</div>
 								</li>
-								<li class="m-portlet__nav-item">
+								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_GROUPTYPE')" class="m-portlet__nav-item">
 									<a data-remote="false" data-toggle="modal"
 									   data-target="#groupTypeFormModal" th:href="@{/groupType/add}"
 									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
@@ -71,12 +71,12 @@
 															<a th:href="@{/groupType/__${s.id}__/details}"
 															   role="button" class="dropdown-item"> <span th:text="#{label.table.view}"></span>
 															</a>
-															<a data-remote="false" data-toggle="modal"
+															<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_GROUPTYPE')" data-remote="false" data-toggle="modal"
 															   data-target="#groupTypeFormModal"
 															   th:href="@{/groupType/__${s.id}__/edit}" role="button"
 															   class="dropdown-item"> <span th:text="#{label.table.edit}"></span>
 															</a>
-															<a class="dropdown-item" href="#">
+															<a hidden="hidden" class="dropdown-item" href="#">
 																<span>
 																	<form th:action="@{/groupType/__${s.id}__/remove}" method="post">
 																		<button type="submit" class="btn btn-reset"th:text="#{label.user.button.delete}"></button>

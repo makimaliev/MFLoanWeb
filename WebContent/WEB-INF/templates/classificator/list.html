@@ -31,7 +31,7 @@
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
-							<ul class="m-portlet__nav">
+							<ul sec:authorize="hasAnyRole('ADMIN','PERM_ADD_CLASSIFICATOR')" class="m-portlet__nav">
 								<li class="m-portlet__nav-item">
 									<a th:href="@{/classificator/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">Add classificator</a>
 								</li>
@@ -55,7 +55,7 @@
 												<th>View</th>
 												<th>Name</th>
 												<th>Classifications</th>
-												<th>Action</th>
+												<th hidden="hidden">Action</th>
 											</tr>
 											</thead>
 											<tbody>
@@ -63,7 +63,7 @@
 												<td><a th:href="@{/classificator/__${c.id}__/view}">View</a></td>
 												<td th:text="${c.name}"></td>
 												<td><a th:href="@{/classificator/__${c.id}__/classify/list}">Show classifications</a></td>
-												<td><a th:href="@{/classificator/__${c.id}__/delete}">Delete</a></td>
+												<td hidden="hidden"><a th:href="@{/classificator/__${c.id}__/delete}">Delete</a></td>
 											</tr>
 											</tbody>
 										</table>

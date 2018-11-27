@@ -36,7 +36,7 @@
 							<th>Role</th>
 							<th>View</th>
 							<th>Edit</th>
-							<th>Delete</th>
+							<th hidden="hidden">Delete</th>
 						</tr>
 					</thead>
 
@@ -47,12 +47,12 @@
 							<td th:text="${roleInList.name}">Name</td>
 							<td><a th:href="@{/role/__${roleInList.id}__/details}"
 								role="button" class="btn btn-xs green-stripe"> View </a></td>
-							<td><a data-remote="false" data-toggle="modal"
+							<td sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_USER')"><a data-remote="false" data-toggle="modal"
 								data-target="#userFormModal"
 								th:href="@{/role/__${roleInList.id}__/edit}"
 								role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
 
-							<td>
+							<td hidden="hidden">
 								<form th:action="@{/role/__${roleInList.id}__/remove}"
 									method="post">
 									<button type="submit" class="btn btn-xs red-stripe">Delete</button>
@@ -84,7 +84,7 @@
 							<th>workSector</th>
 							<th>DebtorType</th>
 							<th>Edit</th>
-							<th>Delete</th>
+							<th hidden="hidden">Delete</th>
 						</tr>
 					</thead>
 
@@ -100,12 +100,12 @@
 							<td th:text="${supervisorTermInList?.debtor_type_id}">Name</td>
 							<td><a th:href="@{/supervisorTerm/__${supervisorTermInList.id}__/details}"
 								role="button" class="btn btn-xs green-stripe"> View </a></td>
-							<td><a data-remote="false" data-toggle="modal"
+							<td sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_SUPERVISORTERM')"><a data-remote="false" data-toggle="modal"
 								data-target="#userFormModal"
 								th:href="@{/supervisorTerm/__${supervisorTermInList.id}__/edit}"
 								role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
 
-							<td>
+							<td hidden="hidden">
 								<form th:action="@{/supervisorTerm/__${supervisorTermInList.id}__/remove}"
 									method="post">
 									<button type="submit" class="btn btn-xs red-stripe">Delete</button>

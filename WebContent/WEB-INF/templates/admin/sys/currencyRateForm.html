@@ -1,5 +1,6 @@
 <form th:action="@{/currencyRate/save}" th:object="${currencyRate}"
-	  class="form-horizontal" method="post" xmlns:th="http://www.w3.org/1999/xhtml">
+	  class="form-horizontal" method="post" xmlns:th="http://www.w3.org/1999/xhtml"
+	  xmlns:sec="http://www.w3.org/1999/xhtml">
 	<div class="modal-header">
 		<h5 class="modal-title" th:text="#{label.add.currencyRate}"></h5>
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -56,12 +57,12 @@
 		</div>
 	<div class="modal-footer">
 		<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.currencyRate.button.cancel}"></button>
-		<button type="submit" class="btn btn-primary" th:text="#{label.button.save}"></button>
+		<button sec:authorize="hasAnyRole('ADMIN','PERM_ADD_CURRENCYRATE','PERM_UPDATE_CURRENCYRATE')" type="submit" class="btn btn-primary" th:text="#{label.button.save}"></button>
 	</div>
 
 	</form>
 <script>
-    $('#currency').selectpicker('refresh');
+    $('#currency').selectpicker();
 
     $('.m_datetimepicker_6').datetimepicker({
         format: "dd.mm.yyyy",

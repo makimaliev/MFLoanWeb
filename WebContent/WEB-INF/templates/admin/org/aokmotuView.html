@@ -17,7 +17,7 @@
 							<th>Aokmotu</th>
 							<th>View</th>
 							<th>Edit</th>
-							<th>Delete</th>
+							<th hidden="hidden">Delete</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -29,12 +29,12 @@
 							<td th:text="${villageInList.aokmotu.name}">District</td>
 							<td><a th:href="@{/village/__${villageInList.id}__/details}"
 								role="button" class="btn btn-xs green-stripe"> View </a></td>
-							<td><a data-remote="false" data-toggle="modal"
+							<td sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_VILLAGE')"><a data-remote="false" data-toggle="modal"
 								data-target="#aokmotuFormModal"
 								th:href="@{/village/__${villageInList.id}__/edit}"
 								role="button" class="btn btn-xs blue-stripe"> Edit </a></td>
 
-							<td>
+							<td hidden="hidden">
 								<form th:action="@{/village/__${villageInList.id}__/remove}"
 									method="post">
 									<button type="submit" class="btn btn-xs red-stripe">Delete</button>

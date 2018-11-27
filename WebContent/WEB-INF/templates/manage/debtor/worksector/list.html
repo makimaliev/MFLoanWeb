@@ -36,7 +36,7 @@
 									</div>
 								</li>
 								<li class="m-portlet__nav-item">
-									<a th:href="@{/manage/debtor/worksector/0/save}" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">Add New Work Sector <i class="la la-plus"></i></a>
+									<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_WORKSECTOR')" th:href="@{/manage/debtor/worksector/0/save}" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">Add New Work Sector <i class="la la-plus"></i></a>
 								</li>
 							</ul>
 						</div>
@@ -66,8 +66,8 @@
 															<i class="la la-ellipsis-h"></i>
 														</a>
 														<div class="dropdown-menu dropdown-menu-right">
-															<a th:href="@{/manage/debtor/worksector/__${t.id}__/save}" class="dropdown-item"><span th:text="#{label.table.edit}"></span></a>
-															<a class="dropdown-item" href="#">
+															<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_WORKSECTOR')" th:href="@{/manage/debtor/worksector/__${t.id}__/save}" class="dropdown-item"><span th:text="#{label.table.edit}"></span></a>
+															<a hidden="hidden" class="dropdown-item" href="#">
 																<span>
 																	<form th:action="@{/manage/debtor/worksector/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
 																		<input hidden="true" type="text" id="id" name="id" th:value="${t.id}" />

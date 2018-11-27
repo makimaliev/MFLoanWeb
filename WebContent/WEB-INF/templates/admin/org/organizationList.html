@@ -92,7 +92,7 @@
 									</div>
 								</div>
 								<div class="col-xl-4 order-1 order-xl-2 m--align-right">
-									<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal" data-target="#organizationFormModal" th:href="@{/organization/add}" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" <span>
+									<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_ORGANIZATION')" data-remote="false" data-toggle="modal" data-target="#organizationFormModal" th:href="@{/organization/add}" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" <span>
 													<i class="la la-plus"></i>
 													<span th:text="#{label.add.organization}">
 														Add new organization

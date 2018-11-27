@@ -32,7 +32,7 @@
 						</div>
 						<div class="m-portlet__head-tools">
 							<ul class="m-portlet__nav">
-								<li class="m-portlet__nav-item">
+								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_OBJECTLIST')" class="m-portlet__nav-item">
 									<a data-remote="false" data-toggle="modal"
 									   data-target="#groupTypeFormModal" th:href="@{/__${groupType.id}__/objectList/add}"
 									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"

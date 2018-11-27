@@ -66,11 +66,11 @@
 													<a  th:href="@{/information/__${s.id}__/details}"
 														role="button" class="dropdown-item"> <span th:text="#{label.table.view}"></span>
 													</a>
-													<a data-remote="false" data-toggle="modal"
+													<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_INFORMATION')" data-remote="false" data-toggle="modal"
 													   data-target="#informationFormModal" th:href="@{/information/__${s.id}__/edit}"
 													   role="button" class="dropdown-item"> <span th:text="#{label.table.edit}"></span>
 													</a>
-													<a class="dropdown-item" href="#">
+													<a hidden="hidden" class="dropdown-item" href="#">
 														<span>
 															<form th:action="@{/information/__${s.id}__/remove}" method="post">
 																<button type="submit" class="btn btn-reset"  th:text="#{label.table.delete}"></button>

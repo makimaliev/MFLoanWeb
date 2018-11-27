@@ -92,13 +92,13 @@ var DatatableDataLocalProcs = function () {
                     var result = '';
                     if(row.phaseTypeId==1) {
                         result = result + '\
-                            <a href="/manage/debtor/' + debtorId + '/collectionprocedure/' + row.id + '/collectionphase/' + row.phaseId + '/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+                            <a sec:authorize="hasAnyRole(ADMIN,PERM_UPDATE_COLLECTIONPHASE)" href="/manage/debtor/' + debtorId + '/collectionprocedure/' + row.id + '/collectionphase/' + row.phaseId + '/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
                                 <i class="la la-edit"></i>\
                             </a>\
-                            <a href="/manage/debtor/' + debtorId + '/collectionprocedure/' + row.id + '/collectionphase/' + row.phaseId + '/changeStatus" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Изменить статус">\
+                            <a sec:authorize="hasAnyRole(ADMIN,PERM_UPDATE_COLLECTIONPHASE)" href="/manage/debtor/' + debtorId + '/collectionprocedure/' + row.id + '/collectionphase/' + row.phaseId + '/changeStatus" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Изменить статус">\
                             <i class="la la-neuter"></i>\
                             </a>\
-                            <a href="/manage/debtor/' + debtorId + '/collectionprocedure/' + row.id + '/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
+                            <a hidden="hidden" href="/manage/debtor/' + debtorId + '/collectionprocedure/' + row.id + '/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
                                 <i class="la la-trash"></i>\
                             </a>\
                              <a  href="/printoutTemplate/5/objectId/' + row.id + '/select" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Претензия">\
@@ -108,19 +108,17 @@ var DatatableDataLocalProcs = function () {
                     }
                     else{
                         result = result + '\
-                            <a href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + row.id + '/collectionphase/' + row.phaseId +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+                            <a sec:authorize="hasAnyRole(ADMIN,PERM_UPDATE_COLLECTIONPHASE)" href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + row.id + '/collectionphase/' + row.phaseId +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
                                 <i class="la la-edit"></i>\
                             </a>\
-                            <a href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + row.id + '/collectionphase/' + row.phaseId +'/changeStatus" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Изменить статус">\
+                            <a sec:authorize="hasAnyRole(ADMIN,PERM_UPDATE_COLLECTIONPHASE)" href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + row.id + '/collectionphase/' + row.phaseId +'/changeStatus" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Изменить статус">\
                             <i class="la la-neuter"></i>\
                             </a>\
-                            <a href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
+                            <a hidden="hidden" href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
                                 <i class="la la-trash"></i>\
                             </a>\
 					    ';
                     }
-                    if(!hasRoleAdmin)
-                        result = '';
 
                     return result;
                 }

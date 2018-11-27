@@ -103,7 +103,7 @@
 									</div>
 								</div>
 								<div class="col-xl-4 order-1 order-xl-2 m--align-right">
-									<a sec:authorize="hasRole('ADMIN')" data-remote="false"
+									<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_CURRENCYRATE')" data-remote="false"
 									   data-toggle="modal"
 									   data-target="#currencyRateFormModal"
 									   th:href="@{/currencyRate/add}"
@@ -268,11 +268,14 @@
                     template: function (row) {
                         var dropup = (row.getDatatable().getPageSize() - row.getIndex()) <= 4 ? 'dropup' : '';
 
+                    // <a sec:authorize="hasAnyRole(\'ADMIN\',\'PERM_UPDATE_CURRENCYRATE\')" href="/currencyRate/'+ row.i +'/edit" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+                    // <i class="la la-edit"></i>\
+                    // </a>\
                         return '\
-						<a href="/currencyRate/'+ row.i +'/edit" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+						<a title="Редактировать" data-remote="false" data-toggle="modal" data-target="#currencyRateFormModal" href="/currencyRate/'+ row.i +'/edit" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill">\
 							<i class="la la-edit"></i>\
-						</a>\
-						<a href="/currencyRate/'+ row.i +'/remove" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
+                        </a>\
+						<a hidden="hidden" href="/currencyRate/'+ row.i +'/remove" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
 							<i class="la la-trash"></i>\
 						</a>\
 					';
@@ -399,7 +402,7 @@
     $("#currencyRateFormModal").on("show.bs.modal", function(e) {
         var link = $(e.relatedTarget);
         var currencyRateID = $("#currencyRate_id").val();
-        console.log(link.attr("href"));
+        $(this).find(".modal-content").load(link.attr("href"));
         // if(link.attr("href").indexOf('district/add')>0)
         // {
         //     $(this).find(".modal-title").html(link.attr("href").replace("/district/add","/currencyRate/"+currencyRateID+"/district/add"));
@@ -407,8 +410,8 @@
         // }
         // else
         // {
-            $(this).find(".modal-title").html(link.attr("href"));
-            $(this).find(".modal-content").load(link.attr("href"));
+        //     $(this).find(".modal-title").html(link.attr("href"));
+        //     $(this).find(".modal-content").load(link.attr("href"));
         // }
     });
 </script>

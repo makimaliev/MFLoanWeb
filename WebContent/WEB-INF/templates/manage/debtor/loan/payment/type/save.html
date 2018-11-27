@@ -35,7 +35,7 @@
 										</span>
 									</div>
 								</li>
-								<li class="m-portlet__nav-item">
+								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_AOKMOTU')" class="m-portlet__nav-item">
 									<a data-remote="false" data-toggle="modal"
 									   data-target="#districtFormModal" th:href="@{/aokmotu/add}"
 									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
@@ -67,7 +67,7 @@
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
-								<button type="submit" class="btn green">Save</button>
+								<button sec:authorize="hasAnyRole('ADMIN','PERM_ADD_PAYMENTTYPE','PERM_UPDATE_PAYMENTTYPE')" type="submit" class="btn green">Save</button>
 							</div>
 						</form>
 					</div>

@@ -319,24 +319,7 @@
         //== Private functions
         // basic demovar
         var demo = function () {
-            columnes.push({
-                field: "",
-                width: 110,
-                title: "",
-                sortable: false,
-                template: function (row) {
-                    var dropup = (row.getDatatable().getPageSize() - row.getIndex()) <= 4 ? 'dropup' : '';
-
-                    return '\
-						<a href="/manage/debtor/'+ row.v_debtor_entity_id +'/loan/'+ row.v_loan_id+'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
-							<i class="la la-edit"></i>\
-						</a>\
-						<a href="/manage/debtor/'+ row.v_debtor_entity_id +'/loan/'+ row.v_loan_id+'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
-							<i class="la la-trash"></i>\
-						</a>\
-					';
-                }
-            });
+            // columnes.push();
             var datatable = $('.m_datatable').mDatatable({
                 // datasource definition
                 data: {

@@ -42,14 +42,14 @@
 						</div>
 						<div sec:authorize="hasRole('ADMIN')" class="m-portlet__head-tools">
 							<ul class="m-portlet__nav">
-								<li class="m-portlet__nav-item">
-									<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
+								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_INFORMATION')" class="m-portlet__nav-item">
+									<a data-remote="false" data-toggle="modal"
 									   data-target="#informationFormModal"
 									   th:href="@{/information/add}" role="button"
 									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add child information </a>
 								</li>
-								<li  class="m-portlet__nav-item">
-									<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
+								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_ATTACHMENT')" class="m-portlet__nav-item">
+									<a data-remote="false" data-toggle="modal"
 									   data-target="#informationFormModal"
 									   th:href="@{/attachment/add}" role="button"
 									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add Attachment </a>
@@ -106,18 +106,13 @@
 																	   role="button">
 																		<span th:text="#{label.table.view}"></span>
 																	</a>
-
-
-
-
-
-																	<a class="dropdown-item"
+																	<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_ATTACHMENT')" class="dropdown-item"
 																	   th:href="@{/attachment/__${s.id}__/edit}"
 																	   data-toggle="modal"
 																	   data-target="#informationFormModal">
 																		<span th:text="#{label.table.edit}"></span>
 																	</a>
-																	<a class="dropdown-item" href="#">
+																	<a hidden="hidden" class="dropdown-item" href="#">
 																		<span>
 																			<form th:action="@{/attachment/__${s.id}__/remove}" method="post">
 																				<button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>

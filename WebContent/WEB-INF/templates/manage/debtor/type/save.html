@@ -48,7 +48,7 @@
 								</div>
 							</div>
 							<div class="modal-footer">
-								<button type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
+								<button sec:authorize="hasAnyRole('ADMIN','PERM_ADD_DEBTORTYPE','PERM_UPDATE_DEBTORTYPE')" type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
 								<button type="submit" class="btn green">Save</button>
 							</div>
 						</form>

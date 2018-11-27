@@ -56,7 +56,7 @@
 											<th>Name</th>
 											<th>View</th>
 											<th>Edit</th>
-											<th>Delete</th>
+											<th hidden="hidden">Delete</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -65,11 +65,11 @@
 											<td th:text="${generationParameter.name}">Name</td>
 											<td><a th:href="@{/generationParameter/__${generationParameter.id}__/details}"
 												role="button" class="btn btn-xs green-stripe"> View </a></td>
-											<td><a data-remote="false" data-toggle="modal"
+											<td sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_GENERATIONPARAMETER')"><a data-remote="false" data-toggle="modal"
 												data-target="#generationParameterFormModal"
 												th:href="@{/generationParameter/__${generationParameter.id}__/edit}" role="button"
 												class="btn btn-xs blue-stripe"> Edit </a></td>
-											<td>
+											<td hidden="hidden">
 												<form th:action="@{/generationParameter/__${generationParameter.id}__/remove}"
 													method="post">
 													<button type="submit" class="btn btn-xs red-stripe">
@@ -108,7 +108,7 @@
 
 								<div class="row">
 									<div class="col-md-12">
-										<a data-remote="false" data-toggle="modal"
+										<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_GENERATIONPARAMETER')" data-remote="false" data-toggle="modal"
 											data-target="#generationParameterFormModal" th:href="@{/generationParameter/__${generationParameter.id}__/generationParameter/add}"
 											role="button" class="btn btn-large btn-primary"> Add
 											Generation Parameter</a>
