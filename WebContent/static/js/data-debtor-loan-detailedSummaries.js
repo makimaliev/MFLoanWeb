@@ -37,199 +37,253 @@ var DatatableDataLocalDetailedSummaries = function () {
 			columns: [{
                 field: "id",
                 title: "#",
-                responsive: {hidden: 'xl'},
+                responsive: {hidden: 'xl'}
             }, {
 				field: "onDate",
-				title: "На дату"
+				title: "На дату",
+                width: 65
 			},{
                 field: "disbursement",
                 title: "Освоение",
                 template: function (row) {
                     return (row.disbursement).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                },
+                width: 75
             }, {
                 field: "totalDisbursement",
                 title: "Всего освоено",
                 template: function (row) {
                     return (row.totalDisbursement).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, {
-                field: "principalPayment",
-                title: "По графику по осн.с.",
-                template: function (row) {
-                    return (row.principalPayment).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, {
-                field: "totalPrincipalPayment",
-                title: "Всего по графику по осн.с.",
-                template: function (row) {
-                    return (row.totalPrincipalPayment).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, {
-                field: "principalPaid",
-                title: "Погашение по осн.с.",
-                template: function (row) {
-                    return (row.principalPaid).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, {
-                field: "totalPrincipalPaid",
-                title: "Всего погашено по осн.с.",
-                template: function (row) {
-                    return (row.totalPrincipalPaid).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, {
-                field: "principalWriteOff",
-                title: "Списание по осн.с.",
-                template: function (row) {
-                    return (row.principalWriteOff).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, {
-                field: "totalPrincipalWriteOff",
-                title: "Всего списано по осн.с.",
-                template: function (row) {
-                    return (row.totalPrincipalWriteOff).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                },
+                responsive: {hidden: 'xl'}
             }, {
                 field: "principalOutstanding",
                 title: "Ост. по осн.с.",
                 template: function (row) {
                     return (row.principalOutstanding).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                },
+                width: 75
+
+            },  {
+                field: "principalPaid",
+                title: "Погашение по осн.с.",
+                template: function (row) {
+                    return (row.principalPaid).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                },
+                width: 75
+
+            },  {
+                field: "totalPrincipalPaid",
+                title: "Всего погашено по осн.с.",
+                template: function (row) {
+                    return (row.totalPrincipalPaid).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                },
+                width: 75
+
+            },
+                {
+                field: "principalPayment",
+                title: "По графику по осн.с.",
+                template: function (row) {
+                    return (row.principalPayment).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                },
+                responsive: {hidden: 'xl'}
             }, {
+                field: "totalPrincipalPayment",
+                title: "Всего по графику по осн.с.",
+                template: function (row) {
+                    return (row.totalPrincipalPayment).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                },
+                    width: 75
+
+            },   {
+                field: "principalWriteOff",
+                title: "Списание по осн.с.",
+                template: function (row) {
+                    return (row.principalWriteOff).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                },
+                responsive: {hidden: 'xl'}
+            }, {
+                field: "totalPrincipalWriteOff",
+                title: "Всего списано по осн.с.",
+                template: function (row) {
+                    return (row.totalPrincipalWriteOff).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                },
+                responsive: {hidden: 'xl'}
+            },  {
                 field: "principalOverdue",
-                title: "Ост. по осн.с.",
+                title: "Прос. по осн.с.",
                 template: function (row) {
                     return (row.principalOverdue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                },
+                    width: 75
             }, {
                 field: "daysInPeriod",
-                title: "Кол-во дней"
+                title: "Кол-во дней",
+                    width: 40
+
             }, {
                 field: "interestAccrued",
                 title: "Начисление проц.",
                 template: function (row) {
                     return (row.interestAccrued).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                },
+                    width: 75
             }, {
+                    field: "interestPaid",
+                    title: "Погашение проц.",
+                    template: function (row) {
+                        return (row.interestPaid).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                    },
+                    width: 75
+                },
+
+                {
                 field: "totalInterestAccrued",
                 title: "Всего начислено проц.",
                 template: function (row) {
                     return (row.totalInterestAccrued).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                },
+                    responsive: {hidden: 'xl'}
+
             }, {
                 field: "totalInterestAccruedOnInterestPayment",
                 title: ",из них подлежит погашению",
                 template: function (row) {
                     return (row.totalInterestAccruedOnInterestPayment).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                },
+                    responsive: {hidden: 'xl'}
+
             }, {
                 field: "interestPayment",
                 title: "По графику по проц.",
                 template: function (row) {
                     return (row.interestPayment).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                },
+                    responsive: {hidden: 'xl'}
+
             }, {
                 field: "totalInterestPayment",
                 title: "Всего по графику по проц.",
                 template: function (row) {
                     return (row.totalInterestPayment).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                },
+                    width: 75
             }, {
                 field: "collectedInterestPayment",
                 title: "По графику нак.проц.",
                 template: function (row) {
                     return (row.collectedInterestPayment).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                },
+                    responsive: {hidden: 'xl'}
+
             }, {
                 field: "totalCollectedInterestPayment",
                 title: "Всего по графику нак.проц.",
                 template: function (row) {
                     return (row.totalCollectedInterestPayment).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                },
+                    width: 75
             }, {
                 field: "collectedInterestDisbursed",
                 title: "Всего нак. проц.",
                 template: function (row) {
                     return (row.collectedInterestDisbursed).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, {
-                field: "interestPaid",
-                title: "Погашение проц.",
-                template: function (row) {
-                    return (row.interestPaid).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, {
+                },
+                    responsive: {hidden: 'xl'}
+
+            },  {
                 field: "totalInterestPaid",
                 title: "Всего погашено проц.",
                 template: function (row) {
                     return (row.totalInterestPaid).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                },
+                    width: 75
+
             }, {
                 field: "interestOutstanding",
                 title: "Остаток по процентам",
                 template: function (row) {
                     return (row.interestOutstanding).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, {
+                },
+                    responsive: {hidden: 'xl'}
+
+
+                }, {
                 field: "interestOverdue",
                 title: "Проср. по проц.",
                 template: function (row) {
                     return (row.interestOverdue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                },
+                    width: 75
             }, {
                 field: "penaltyAccrued",
                 title: "Начисление штр.",
                 template: function (row) {
                     return (row.penaltyAccrued).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, {
-                field: "totalPenaltyAccrued",
-                title: "Всего начислено штр.",
-                template: function (row) {
-                    return (row.totalPenaltyAccrued).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, {
+                },
+                    width: 65
+            },  {
+                    field: "penaltyPaid",
+                    title: "Погашение штр.",
+                    template: function (row) {
+                        return (row.penaltyPaid).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                    },
+                    width: 65
+                },
+                {
+                    field: "totalPenaltyAccrued",
+                    title: "Всего начислено штр.",
+                    template: function (row) {
+                        return (row.totalPenaltyAccrued).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                    },
+                    width: 65
+                },
+                {
                 field: "collectedPenaltyPayment",
                 title: "По графику нак.штр.",
                 template: function (row) {
                     return (row.collectedPenaltyPayment).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                },
+                    width: 65,
+                    responsive: {hidden: 'xl'}
             }, {
                 field: "totalCollectedPenaltyPayment",
                 title: "Всего по графику нак.штр.",
                 template: function (row) {
                     return (row.totalCollectedPenaltyPayment).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                },
+                    width: 65
             }, {
                 field: "collectedPenaltyDisbursed",
                 title: "Всего нак.штр.",
                 template: function (row) {
                     return (row.collectedPenaltyDisbursed).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, {
-                field: "penaltyPaid",
-                title: "Погашение штр.",
-                template: function (row) {
-                    return (row.penaltyPaid).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
-            }, {
+                },
+                    width: 65,
+                    responsive: {hidden: 'xl'}
+            },  {
                 field: "totalPenaltyPaid",
                 title: "Всего погашено штр.",
                 template: function (row) {
                     return (row.totalPenaltyPaid).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                },
+                    width: 65
             }, {
                 field: "penaltyOutstanding",
                 title: "Остаток по штр.",
                 template: function (row) {
                     return (row.penaltyOutstanding).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                },
+                    width: 65,
+                    responsive: {hidden: 'xl'}
             }, {
                 field: "penaltyOverdue",
                 title: "Проср. по штр.",
                 template: function (row) {
                     return (row.penaltyOverdue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
+                },
+                    width: 65
             }],
             translate: {
                 records: {
