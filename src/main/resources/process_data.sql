@@ -863,7 +863,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `calculateLoanDetailedSummaryUntilOnDate`(IN loan_id bigint, IN inDate date, IN includeToday tinyint(1))
 BEGIN
@@ -1137,6 +1137,10 @@ BEGIN
       SET totalCollIntPayment = totalCollIntPayment + collIntPayment;
       SET totalIntPayment = totalIntPayment + intPayment;
       SET intOverdue = totalIntPayment - totalIntPaid;
+      SET total_outstanding = princOutstanding + intOutstanding + penOutstanding;
+      SET total_overdue = princOverdue + intOverdue + penOverdue;
+      SET total_paid = total_paid + princPaid + intPaid + penPaid;
+      SET total_paidKGS = total_paidKGS + princPaidKGS + intPaidKGS + penPaidKGS;
 
       SET isAlreadyInserted = isLoanDetailedSummaryExistsForDate(loan_id, tempDate);
 
@@ -1170,11 +1174,6 @@ BEGIN
         END IF;
 
         SET pDate = tempDate;
-
-        SET total_outstanding = princOutstanding + intOutstanding + penOutstanding;
-        SET total_overdue = princOverdue + intOverdue + penOverdue;
-        SET total_paid = total_paid + princPaid + intPaid + penPaid;
-        SET total_paidKGS = total_paidKGS + princPaidKGS + intPaidKGS + penPaidKGS;
 
         IF tempDate <= inDate THEN
 
@@ -2113,7 +2112,9 @@ BEGIN
                                    SUM(tSum.outstadingPrincipal) as tOut
                             FROM loanSummary tSum
                             WHERE tSum.loanId IN (SELECT id FROM loan WHERE parent_id = loan_id)) t
-        SET ls.totalDisbursed = t.tDisb, ls.totalOutstanding = ls.totalOutstanding - t.tOut, ls.outstadingPrincipal = t.tOut WHERE ls.loanId = loan_id;
+        SET ls.totalDisbursed = t.tDisb, ls.outstadingPrincipal = t.tOut,
+            ls.totalOutstanding = t.tOut + outstadingInterest + outstadingPenalty + outstadingFee
+        WHERE ls.loanId = loan_id;
 
   END ;;
 DELIMITER ;
@@ -2131,4 +2132,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-26 20:56:27
+-- Dump completed on 2018-11-27 10:52:25
