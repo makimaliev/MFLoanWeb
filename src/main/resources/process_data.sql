@@ -1050,7 +1050,7 @@ BEGIN
     SELECT amount INTO loan_amount from loan where id = loan_id;
 
     #get penalty limit percent
-    select IFNULL(penaltyLimitPercent, 0) INTO penalty_limit from creditterm where loanId = loan_id;
+    select IFNULL(penaltyLimitPercent, 0) INTO penalty_limit from creditTerm where loanId = loan_id;
 
     IF !isTermFound(loan_id, inDate) THEN
       SET v_finished = 1;
@@ -1131,7 +1131,15 @@ BEGIN
       SET totalPenPaid = totalPenPaid + penPaid;
       SET penOverdue = totalPenAccrued + totalCollPenPayment - totalPenPaid;
       SET collPenDisbursed = getCollectedPenDisbursed(loan_id);
+
       SET penOutstanding = totalPenAccrued + collPenDisbursed - totalPenPaid;
+
+      IF penalty_limit_flag THEN
+        IF penOutstanding > (totalDisb*penalty_limit/100) THEN
+          SET penOutstanding = totalDisb*penalty_limit/100;
+        END IF;
+      END IF;
+
       SET collIntDisbursed = getCollectedIntDisbursed(loan_id);
       SET intOutstanding = totalIntAccrued + collIntDisbursed - totalIntPaid;
       SET totalCollIntPayment = totalCollIntPayment + collIntPayment;
@@ -2132,4 +2140,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-27 11:02:59
+-- Dump completed on 2018-11-27 14:31:28
