@@ -627,6 +627,35 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP FUNCTION IF EXISTS `getDIMMethod` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `getDIMMethod`(inDate date, loan_id bigint) RETURNS int(11)
+BEGIN
+
+    DECLARE dIMMethod INT DEFAULT 2;
+
+    SELECT term.daysInMonthMethodId INTO dIMMethod
+    FROM creditTerm term
+    WHERE term.loanId = loan_id
+          AND term.startDate < inDate
+    ORDER BY term.startDate DESC LIMIT 1;
+
+    RETURN dIMMethod;
+
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP FUNCTION IF EXISTS `getDIYMethod` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -954,6 +983,7 @@ BEGIN
           WHERE loan.id = term.loanId
                 AND loan.id = loan_id
                 AND term.startDate <= inDate
+                AND term.record_status = 1
 
           UNION
 
@@ -973,6 +1003,7 @@ BEGIN
           WHERE loan.id = payment.loanId
                 AND loan.id = loan_id
                 AND payment.paymentDate <= inDate
+                AND payment.record_status = 1
           GROUP BY payment.paymentDate
 
           UNION
@@ -993,6 +1024,7 @@ BEGIN
           WHERE loan.id = ps.loanId
                 AND loan.id = loan_id
                 AND ps.expectedDate <= inDate
+                AND ps.record_status = 1
 
           UNION
 
@@ -1029,6 +1061,7 @@ BEGIN
           WHERE loan.id = ps.loanId
                 AND loan.id = loan_id
                 AND ps.expectedDate > inDate
+                AND ps.record_status = 1
         ) pp
       ORDER BY pp.onDate, pp.orderType, pp.disbursement desc;
 
@@ -1081,7 +1114,7 @@ BEGIN
       SET intPaid = intPaid/cur_rate;
       SET penPaid = penPaid/cur_rate;
 
-      SET daysInPer = calculateDays(prevDate, tempDate, getDIYMethod(tempDate, loan_id));
+      SET daysInPer = calculateDays(prevDate, tempDate, getDIMMethod(tempDate, loan_id));
 
       SET intAccrued = calculateInterestAccrued(princOutstanding, daysInPer, tempDate, loan_id);
 
@@ -1104,6 +1137,7 @@ BEGIN
       END IF;
 
       SET totalPenAccrued = totalPenAccrued + penAccrued;
+      SET totalDisb = totalDisb + disb;
 
       IF NOT penalty_limit_flag THEN
         IF penalty_limit > 0 AND totalPenAccrued > (totalDisb*penalty_limit/100) AND tempDate >= '2014-11-25' THEN
@@ -1113,7 +1147,6 @@ BEGIN
         END IF;
       END IF;
 
-      SET totalDisb = totalDisb + disb;
       SET totalPrincPaid = totalPrincPaid + princPaid;
       SET totalPrincPayment = totalPrincPayment + princPayment;
       SET prevDate = tempDate;
@@ -1134,7 +1167,7 @@ BEGIN
 
       SET penOutstanding = totalPenAccrued + collPenDisbursed - totalPenPaid;
 
-      IF penalty_limit_flag THEN
+      IF penalty_limit > 0 AND tempDate >= '2014-11-25' THEN
         IF penOutstanding > (totalDisb*penalty_limit/100) THEN
           SET penOutstanding = totalDisb*penalty_limit/100;
         END IF;
@@ -1148,7 +1181,7 @@ BEGIN
       SET intOutstanding = totalIntAccrued + collIntDisbursed - totalIntPaid;
       SET totalCollIntPayment = totalCollIntPayment + collIntPayment;
       SET totalIntPayment = totalIntPayment + intPayment;
-      SET intOverdue = totalIntPayment + collIntPayment - totalIntPaid;
+      SET intOverdue = totalIntPayment + totalCollIntPayment - totalIntPaid;
       SET total_outstanding = princOutstanding + intOutstanding + penOutstanding;
       SET total_overdue = princOverdue + intOverdue + penOverdue;
       SET total_paid = total_paid + princPaid + intPaid + penPaid;
@@ -2144,4 +2177,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-27 15:59:01
+-- Dump completed on 2018-11-27 19:57:41
