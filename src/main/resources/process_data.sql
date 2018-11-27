@@ -1109,7 +1109,7 @@ BEGIN
         IF penalty_limit > 0 AND totalPenAccrued > (totalDisb*penalty_limit/100) AND tempDate >= '2014-11-25' THEN
           SET totalPenAccrued = totalDisb*penalty_limit/100;
           SET penalty_limit_flag = TRUE;
-          UPDATE creditterm SET penaltyLimitEndDate = tempDate WHERE loanId = loan_id;
+          UPDATE creditTerm SET penaltyLimitEndDate = tempDate WHERE loanId = loan_id;
         END IF;
       END IF;
 
@@ -2132,4 +2132,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-27 10:52:25
+-- Dump completed on 2018-11-27 11:02:59
