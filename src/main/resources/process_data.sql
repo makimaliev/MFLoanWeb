@@ -1138,6 +1138,10 @@ BEGIN
         IF penOutstanding > (totalDisb*penalty_limit/100) THEN
           SET penOutstanding = totalDisb*penalty_limit/100;
         END IF;
+
+        IF penOverdue > (totalDisb*penalty_limit/100) THEN
+          SET penOverdue = totalDisb*penalty_limit/100;
+        END IF;
       END IF;
 
       SET collIntDisbursed = getCollectedIntDisbursed(loan_id);
@@ -2140,4 +2144,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-27 15:43:17
+-- Dump completed on 2018-11-27 15:59:01
