@@ -78,7 +78,7 @@
 						</div>
 					</div>
 					<!--begin::Form-->
-					<form th:action="@{/manage/debtor/__${debtorId}__/loan/save}" th:object="${loan}" method="post" class="m-form m-form--fit m-form--label-align-right">
+					<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${classId}__/save}" th:object="${loan}" method="post" class="m-form m-form--fit m-form--label-align-right">
 						<input hidden="true" type="text" id="id" name="id" th:field="*{id}"/>
 						<input hidden="true" type="text" id="parentLoanId" th:field="*{parent}" />
 						<input hidden="true" type="text" id="creditOrderId" th:field="*{creditOrder.id}" />

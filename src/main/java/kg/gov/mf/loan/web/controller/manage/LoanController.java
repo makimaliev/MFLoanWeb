@@ -197,21 +197,27 @@ public class LoanController {
         return "/manage/debtor/loan/view";
     }
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/save", method=RequestMethod.GET)
-	public String formLoan(ModelMap model, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId)
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{classId}/{loanId}/save", method=RequestMethod.GET)
+	public String formLoan(ModelMap model, @PathVariable("debtorId")Long debtorId, @PathVariable("classId")Integer classId, @PathVariable("loanId")Long loanId)
 	{
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtorId", debtorId);
 		model.addAttribute("debtor", debtor);
+        model.addAttribute("classId", classId);
 
 		if(loanId == 0)
 		{
-			model.addAttribute("loan", new NormalLoan());
+		    if(classId == 1)
+			    model.addAttribute("loan", new NormalLoan());
+		    else if(classId == 2)
+                model.addAttribute("loan", new TrancheeLoan());
+		    else
+                model.addAttribute("loan", new RestructuredLoan());
 			model.addAttribute("ownerText", "");
 			model.addAttribute("orderText", "");
 			model.addAttribute("pLoanText", "");
 		}
-			
+
 		if(loanId > 0)
 		{
 			Loan loan = loanService.getById(loanId);
@@ -236,32 +242,63 @@ public class LoanController {
 			}
 
 		}
-		
+
 		List<OrderTermCurrency> currs = currService.list();
         model.addAttribute("currencies", currs);
-		
+
 		List<LoanType> types = loanTypeService.list();
         model.addAttribute("types", types);
-        
+
         List<LoanState> states = loanStateService.list();
         model.addAttribute("states", states);
-			
+
 		return "/manage/debtor/loan/save";
 	}
 	
-	@RequestMapping(value="/manage/debtor/{debtorId}/loan/save", method=RequestMethod.POST)
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/1/save", method=RequestMethod.POST)
 	public String saveLoan(NormalLoan loan,
-			String[] agreementIdList,
-			@PathVariable("debtorId")Long debtorId, 
-			ModelMap model)
+			@PathVariable("debtorId")Long debtorId)
 	{
 		
 		Debtor debtor = debtorService.getById(debtorId);
 		loan.setDebtor(debtor);
 		
-		if(loan.getId() == null)
-		{
-		    if(loan.getParent().getId() != null)
+		saveLoanData(loan);
+			
+		return "redirect:" + "/manage/debtor/{debtorId}/view";
+	}
+
+    @RequestMapping(value="/manage/debtor/{debtorId}/loan/2/save", method=RequestMethod.POST)
+    public String saveTrancheLoan(TrancheeLoan loan,
+                           @PathVariable("debtorId")Long debtorId)
+    {
+
+        Debtor debtor = debtorService.getById(debtorId);
+        loan.setDebtor(debtor);
+
+        saveLoanData(loan);
+
+        return "redirect:" + "/manage/debtor/{debtorId}/view";
+    }
+
+    @RequestMapping(value="/manage/debtor/{debtorId}/loan/3/save", method=RequestMethod.POST)
+    public String saveRestructuredLoan(RestructuredLoan loan,
+                                  @PathVariable("debtorId")Long debtorId)
+    {
+
+        Debtor debtor = debtorService.getById(debtorId);
+        loan.setDebtor(debtor);
+
+        saveLoanData(loan);
+
+        return "redirect:" + "/manage/debtor/{debtorId}/view";
+    }
+
+    private void saveLoanData(Loan loan)
+    {
+        if(loan.getId() == null)
+        {
+            if(loan.getParent().getId() != null)
             {
                 Loan tLoan = loanRepository.findOne(loan.getParent().getId());
                 loan.setParent(tLoan);
@@ -277,32 +314,30 @@ public class LoanController {
 
             loan.setSupervisorId(user.getId());
 
-			loggerLoan.info("createLoan : {}", loan);
-			loanService.add(loan);
-		}
-		else
-		{
-			if(loan.getParent().getId() != null)
-			{
-				Loan tLoan = loanRepository.findOne(loan.getParent().getId());
-				loan.setParent(tLoan);
-			}
-			else
-				loan.setParent(null);
+            loggerLoan.info("createLoan : {}", loan);
+            loanService.add(loan);
+        }
+        else
+        {
+            if(loan.getParent().getId() != null)
+            {
+                Loan tLoan = loanRepository.findOne(loan.getParent().getId());
+                loan.setParent(tLoan);
+            }
+            else
+                loan.setParent(null);
 
-			CreditOrder creditOrder = creditOrderRepository.findOne(loan.getCreditOrder().getId());
-			loan.setCreditOrder(creditOrder);
+            CreditOrder creditOrder = creditOrderRepository.findOne(loan.getCreditOrder().getId());
+            loan.setCreditOrder(creditOrder);
 
-			Staff staff = staffRepository.findById(loan.getSupervisorId());
-			User user = userService.findByStaff(staff);
+            Staff staff = staffRepository.findById(loan.getSupervisorId());
+            User user = userService.findByStaff(staff);
 
-			loan.setSupervisorId(user.getId());
-			loggerLoan.info("updateLoan : {}", loan);
-			loanService.update(loan);
-		}
-			
-		return "redirect:" + "/manage/debtor/{debtorId}/view";
-	}
+            loan.setSupervisorId(user.getId());
+            loggerLoan.info("updateLoan : {}", loan);
+            loanService.update(loan);
+        }
+    }
 	
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/delete", method=RequestMethod.POST)
     public String deleteLoan(long id, @PathVariable("debtorId")Long debtorId) {
