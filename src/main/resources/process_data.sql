@@ -1144,7 +1144,7 @@ BEGIN
       SET intOutstanding = totalIntAccrued + collIntDisbursed - totalIntPaid;
       SET totalCollIntPayment = totalCollIntPayment + collIntPayment;
       SET totalIntPayment = totalIntPayment + intPayment;
-      SET intOverdue = totalIntPayment - totalIntPaid;
+      SET intOverdue = totalIntPayment + collIntPayment - totalIntPaid;
       SET total_outstanding = princOutstanding + intOutstanding + penOutstanding;
       SET total_overdue = princOverdue + intOverdue + penOverdue;
       SET total_paid = total_paid + princPaid + intPaid + penPaid;
@@ -2140,4 +2140,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-27 14:31:28
+-- Dump completed on 2018-11-27 15:43:17
