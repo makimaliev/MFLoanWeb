@@ -147,7 +147,7 @@ public class DebtorController {
 		if (debtor.getOwner().getOwnerType().name().equals("ORGANIZATION")){
 
 			isPerson="false";
-			Organization organization = this.organizationService.findById(debtor.getOwner().getId());
+			Organization organization = this.organizationService.findById(debtor.getOwner().getEntityId());
             String staff="";
 			for (Department department:organization.getDepartment())
 			{
