@@ -175,7 +175,7 @@ create view debtor_view as
 
 #6
 DROP TABLE IF EXISTS `loan_view`;
-create view loan_view as
+CREATE VIEW loan_view AS
   SELECT
     `l`.`id`                       AS `v_loan_id`,
     `l`.`amount`                   AS `v_loan_amount`,
@@ -202,7 +202,8 @@ create view loan_view as
     `dv`.`v_debtor_village_id`     AS `v_debtor_village_id`,
     `co`.`creditOrderTypeId`       AS `v_credit_order_type_id`,
     `co`.`regNumber`               AS `v_credit_order_reg_number`,
-    `co`.`regDate`                 AS `v_credit_order_reg_date`
+    `co`.`regDate`                 AS `v_credit_order_reg_date`,
+    `l`.`closeDate`                AS `v_loan_close_date`
   FROM ((`mfloan`.`loan` `l`
     JOIN `mfloan`.`debtor_view` `dv` ON ((`dv`.`v_debtor_id` = `l`.`debtorId`))) JOIN `mfloan`.`creditOrder` `co`
       ON ((`co`.`id` = `l`.`creditOrderId`)))
