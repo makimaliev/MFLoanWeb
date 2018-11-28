@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title></title>
+	<title th:text="#{label.objectList.detail.page.title}"></title>
 
 	<div  th:replace="fragments/header :: header-css" />
 	<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
@@ -40,7 +40,7 @@
 								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_OBJECTLIST')" class="m-portlet__nav-item">
 									<a data-remote="false" data-toggle="modal"
 									   data-target="#contentParameterFormModal" th:href="@{/objectList/__${objectList.id}__/objectList/add}"
-									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
+									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.objectList.add}"> Add
 										ObjectList</a>
 								</li>
 							</ul>
@@ -51,7 +51,7 @@
 							<thead class="thead-default">
 								<tr>
 									<th>Id</th>
-									<th>Name</th>
+									<th th:text="#{label.objectList.name}">Name</th>
 									<th>&nbsp;</th>
 								</tr>
 							</thead>

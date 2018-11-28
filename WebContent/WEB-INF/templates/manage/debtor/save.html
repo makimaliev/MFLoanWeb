@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
-	<title>Добавить/Редактировать заемщика</title>
+	<title th:text="#{label.title.add.edit.debtor}">Добавить/Редактировать заемщика</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -25,7 +25,7 @@
 			<div class="m-subheader ">
 				<div class="d-flex align-items-center">
 					<div class="mr-auto">
-						<h3 class="m-subheader__title m-subheader__title--separator">
+						<h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.debtor}">
 							Заемщик
 						</h3>
 						<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
@@ -39,7 +39,7 @@
 							</li>
 							<li class="m-nav__item">
 								<a th:href="@{/manage/debtor/list}" class="m-nav__link">
-											<span class="m-nav__link-text">
+											<span class="m-nav__link-text" th:text="#{label.debtors}">
 												Список заемщиков
 											</span>
 								</a>
@@ -48,7 +48,7 @@
 								-
 							</li>
 							<li class="m-nav__item">
-								<span class="m-nav__link-text">
+								<span class="m-nav__link-text" th:text="#{label.title.add.edit.debtor}">
 												Добавить/Редактировать заемщика
 											</span>
 							</li>
@@ -63,7 +63,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.add.debtor.title}"></h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.title.add.edit.debtor}"></h3>
 							</div>
 						</div>
 					</div>
@@ -76,18 +76,18 @@
 							<div class="m-form__section">
 
                                 <div class="form-group m-form__group row">
-                                    <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.add.debtor.owner}">
+                                    <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.debtor.add.owner}">
                                         Owner <span class="m--font-danger">*</span>
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
                                         <div class="m-typeahead">
-                                            <input class="form-control m-input" id="owner_typeahead" type="text" placeholder="Owners" th:value="${ownerText}">
+                                            <input class="form-control m-input" id="owner_typeahead" type="text" th:placeholder="#{label.debtor.owner}" th:value="${ownerText}">
                                         </div>
                                     </div>
                                 </div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.add.debtor.type}">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.debtor.type}">
 										Type <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -99,7 +99,7 @@
 								</div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.add.debtor.workSector}">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.workSector}">
 										Work sector <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -117,10 +117,10 @@
 								<div class="row">
 									<div class="col-lg-4"></div>
 									<div class="col-lg-6">
-										<button sec:authorize="hasAnyRole('ADMIN','PERM_ADD_DEBTOR','PERM_UPDATE_DEBTOR')" type="submit" class="btn btn-primary" onclick="updateTOwner()" th:text="#{label.add.debtor.save}">
+										<button sec:authorize="hasAnyRole('ADMIN','PERM_ADD_DEBTOR','PERM_UPDATE_DEBTOR')" type="submit" class="btn btn-primary" onclick="updateTOwner()" th:text="#{label.form.save}">
 											Save
 										</button>
-										<button onclick="window.history.back()" type="button" class="btn btn-secondary" th:text="#{label.add.debtor.cancel}">
+										<button onclick="window.history.back()" type="button" class="btn btn-secondary" th:text="#{label.form.cancel}">
 											Cancel
 										</button>
 									</div>

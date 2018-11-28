@@ -10,7 +10,7 @@
 	<div class="body">
 			<div class="form-group  margin-top-20">
 				<label class="col-form-label col-lg-4 col-sm-12">
-					<span th:text="Rate"></span>
+					<span th:text="#{label.currencyRate.rate}"></span>
 					<span class="m--font-danger">*</span>
 				</label>
 				<div class="col-md-4">
@@ -30,7 +30,7 @@
 
 			<div class="form-group">
 -				<label class="col-form-label col-lg-4 col-sm-12">
-				<span th:text="Currency"></span>
+				<span th:text="#{label.currencyRate.currency}"></span>
 				<span class="m--font-danger">*</span>
 			</label>
 				<div class="col-md-4">
@@ -42,7 +42,7 @@
 
 		<div class="form-group">
 			<label class="col-form-label col-lg-4 col-sm-12">
-				<span th:text="Date"></span>
+				<span th:text="#{label.currencyRate.date}"></span>
 				<span class="m--font-danger">*</span>
 			</label>
 			<div class="col-lg-8 col-md-9 col-sm-12">
@@ -56,7 +56,7 @@
 		</div>
 		</div>
 	<div class="modal-footer">
-		<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.currencyRate.button.cancel}"></button>
+		<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.button.cancel}"></button>
 		<button sec:authorize="hasAnyRole('ADMIN','PERM_ADD_CURRENCYRATE','PERM_UPDATE_CURRENCYRATE')" type="submit" class="btn btn-primary" th:text="#{label.button.save}"></button>
 	</div>
 

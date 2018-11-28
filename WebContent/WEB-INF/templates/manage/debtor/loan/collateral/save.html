@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <!-- begin::Head -->
 <head>
-	<title th:text="#{label.add.loan.collateral.title}"></title>
+	<title th:text="#{label.loan.title.add.edit.collateral}"></title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -27,7 +27,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.add.loan.collateral.title}"></h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.loan.title.add.edit.collateral}"></h3>
 							</div>
 						</div>
 					</div>
@@ -40,7 +40,7 @@
 							<div class="m-form__section">
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.name}">
 										Name
 										<span class="m--font-danger">*</span>
 									</label>

@@ -18,13 +18,13 @@
 		</div>
 
 		<div class="form-group">
-			<label for="name" class="form-control-label">Name<span class="required"> * </span></label>
+			<label for="name" class="form-control-label" th:text="#{label.filterParameter.name}">Name<span class="required"> * </span></label>
 			<input hidden="true" type="text" id="id" name="id" th:field="*{id}" />
 			<input type="text" class="form-control" id="name" name="name" th:value="*{name}">
 		</div>
 
 		<div class="form-group ">
-			<label class="form-control-label">FilterParameterType<span class="required"> * </span></label>
+			<label class="form-control-label" th:text="#{label.filterParameter.type}">FilterParameterType<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
 					<select th:field="*{filterParameterType}" class="selectpicker">
@@ -38,7 +38,7 @@
 
 
 		<div class="form-group ">
-			<label class="form-control-label">Object List<span class="required"> * </span></label>
+			<label class="form-control-label" th:text="#{label.objectList}">Object List<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
 					<select th:field="*{objectList}" class="selectpicker">
@@ -81,7 +81,7 @@
 
 
 		<div class="form-group ">
-			<label class="form-control-label">Users<span class="required"> * </span></label>
+			<label class="form-control-label" th:text="#{label.users}">Users<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
 					<select th:field="*{users}" class="selectpicker" multiple>
@@ -111,13 +111,13 @@
 
 
 		<div class="form-group">
-			<label for="fieldName" class="form-control-label">Field Name<span class="required"> * </span></label>
+			<label for="fieldName" class="form-control-label" th:text="#{label.objectField.name}">Field Name<span class="required"> * </span></label>
 			<input type="text" class="form-control" id="fieldName" name="fieldName" th:value="*{fieldName}">
 		</div>
 
 
 		<div class="form-group ">
-			<label class="form-control-label">Comparator<span class="required"> * </span></label>
+			<label class="form-control-label" th:text="#{label.filterParameter.comparator}">Comparator<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
 					<select th:field="*{comparator}"  class="selectpicker">
@@ -130,15 +130,15 @@
 		</div>
 
 		<div class="form-group">
-			<label class="form-control-label">Compared Value<span class="required"> * </span></label>
+			<label class="form-control-label" th:text="#{label.filterParameter.comparedValue}">Compared Value<span class="required"> * </span></label>
 			<input type="text" class="form-control" name="comparedValue" th:field="*{comparedValue}">
 		</div>
 
 	</div>
 
 	<div class="modal-footer">
-		<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-		<button type="submit" class="btn btn-primary">Submit</button>
+		<button th:text="#{label.form.cancel}" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+		<button th:text="#{label.form.save}" type="submit" class="btn btn-primary">Submit</button>
 	</div>
 
 </form>

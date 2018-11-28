@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
-	<title>Добавить/Редактировать снятие с залога</title>
+	<title th:text="#{label.collateral.add.edit.arrestFree}">Добавить/Редактировать снятие с залога</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -25,7 +25,7 @@
 			<div class="m-subheader ">
 				<div class="d-flex align-items-center">
 					<div class="mr-auto">
-						<h3 class="m-subheader__title m-subheader__title--separator">
+						<h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.collateral.arrestFree}">
                             Снятие с залога
 						</h3>
 						<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
@@ -39,7 +39,7 @@
 							</li>
 							<li class="m-nav__item">
 								<a th:href="@{/manage/debtor/list}" class="m-nav__link">
-											<span class="m-nav__link-text">
+											<span class="m-nav__link-text" th:text="#{label.debtors}">
 												Список заемщиков
 											</span>
 								</a>
@@ -78,7 +78,7 @@
 								-
 							</li>
 							<li class="m-nav__item">
-								<span class="m-nav__link-text">
+								<span class="m-nav__link-text"th:text="#{label.collateral.add.edit.arrestFree}">
 												Добавить/Редактировать снятие с залога
 											</span>
 							</li>
@@ -93,7 +93,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text">Снятие с залога</h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.collateral.arrestFree}">Снятие с залога</h3>
 							</div>
 						</div>
 					</div>

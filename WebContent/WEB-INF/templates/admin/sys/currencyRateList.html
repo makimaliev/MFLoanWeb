@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <!-- begin::Head -->
 <head>
-	<title>Currency Rate</title>
+	<title th:text="#{label.currencyRate.page.title}">Currency Rate</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 	<link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
@@ -28,7 +28,7 @@
 			<div class="m-subheader ">
 				<div class="d-flex align-items-center">
 					<div class="mr-auto">
-						<h3 class="m-subheader__title m-subheader__title--separator">
+						<h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.currencyRate.page.title}">
 							Currency Rate
 						</h3>
 						<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
@@ -41,7 +41,7 @@
 								-
 							</li>
 							<li class="m-nav__item">
-								<span class="m-nav__link-text">Currency Rate List</span>
+								<span class="m-nav__link-text" th:text="#{label.currencyRate.list}">Currency Rate List</span>
 							</li>
 						</ul>
 					</div>
@@ -61,7 +61,7 @@
 									<div class="form-group m-form__group row align-items-center">
 										<div class="col-md-4">
 											<div class="m-input-icon m-input-icon--left">
-												<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search">
+												<input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search">
 												<span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -89,7 +89,7 @@
 										<div class="col-md-4">
 											<div class="m-form__group m-form__group--inline">
 												<div class="m-form__label">
-													<label>
+													<label th:text="#{label.currencyRate.type}">
 														Type:
 													</label>
 												</div>
@@ -111,7 +111,7 @@
 									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
 												<span>
 													<i class="la la-plus"></i>
-													<span>
+													<span th:text="#{label.currencyRate.add}">
 														Add new currency rate
 													</span>
 												</span>

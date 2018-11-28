@@ -1,5 +1,5 @@
-<form th:action="@{/groupType/save}" id="form_sample_2"  th:object="${groupType}"
-	class="form-horizontal" method="post">
+<form th:action="@{/groupType/save}" id="form_sample_2" th:object="${groupType}"
+	  class="form-horizontal" method="post" xmlns:th="http://www.w3.org/1999/xhtml">
 
 	<div class="modal-header">
 		<h5 class="modal-title" th:text="#{label.groupType.modal.name}"></h5>
@@ -19,18 +19,18 @@
 
 
 		<div class="form-group">
-			<label for="name" class="form-control-label">Name2<span class="required"> * </span></label>
+			<label for="name" class="form-control-label" th:text="#{label.groupType.name}">Name2<span class="required"> * </span></label>
 			<input hidden="true" type="text" id="id" name="id" th:field="*{id}" />
 			<input type="text" class="form-control" id="name" name="name" th:value="*{name}">
 		</div>
 
 		<div class="form-group">
-			<label class="form-control-label">Field Name<span class="required"> * </span></label>
+			<label class="form-control-label" th:text="#{label.groupType.fieldName}">Field Name<span class="required"> * </span></label>
 			<input type="text" class="form-control"  name="field_name" th:field="*{field_name}">
 		</div>
 
 		<div class="form-group">
-			<label class="form-control-label">Row Name<span class="required"> * </span></label>
+			<label class="form-control-label" th:text="#{label.groupType.rowName}">Row Name<span class="required"> * </span></label>
 			<input type="text" class="form-control"  name="row_name" th:field="*{row_name}">
 		</div>
 	</div>
@@ -39,8 +39,8 @@
 
 
 	<div class="modal-footer">
-		<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-		<button type="submit" class="btn btn-primary">Submit</button>
+		<button th:text="#{label.form.cancel}" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+		<button th:text="#{label.form.save}" type="submit" class="btn btn-primary">Submit</button>
 	</div>
 
 </form>

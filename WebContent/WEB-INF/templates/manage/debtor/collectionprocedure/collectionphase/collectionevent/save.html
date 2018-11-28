@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>MFLoan | Credit Orders</title>
+<title th:text="#{label.title.collection.event}">MFLoan | Credit Orders</title>
 <div th:replace="fragments/header :: header-css" />
 <link th:href="@{/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css}" rel="stylesheet" type="text/css" />
 <link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
@@ -30,7 +30,7 @@
 								<div class="portlet-title">
 									<div class="caption">
 										<i class="icon-settings font-green"></i> 
-										<span class="caption-subject font-green sbold uppercase">Save Collection Event</span>
+										<span class="caption-subject font-green sbold uppercase" th:text="#{label.save.collection.event}">Save Collection Event</span>
 									</div>
 								</div>
 								
@@ -41,7 +41,7 @@
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">Start Date</label>
+	                                             <label class="control-label col-md-3" th:text="#{label.collection.event.startDate}">Start Date</label>
 	                                             <div class="col-md-4">
 	                                             	<input type="hidden" name="id" th:value="${event.id}"/>
 	                                                 <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
@@ -52,12 +52,12 @@
 	                                                         </button>
 	                                                     </span>
 	                                                 </div>
-	                                                 <span class="help-block"> select a date </span>
+	                                                 <span class="help-block" th:text="#{label.select.date}"> select a date </span>
 	                                             </div>
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">Close Date</label>
+	                                             <label class="control-label col-md-3" th:text="#{label.collection.event.closeDate}">Close Date</label>
 	                                             <div class="col-md-4">
 	                                                 <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
 	                                                     <input type="text" class="form-control" name="closeDate" th:value="${event.closeDate}"/>
@@ -67,12 +67,12 @@
 	                                                         </button>
 	                                                     </span>
 	                                                 </div>
-	                                                 <span class="help-block"> select a date </span>
+	                                                 <span class="help-block" th:text="#{label.select.date}"> select a date </span>
 	                                             </div>
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">Event Status
+	                                             <label class="control-label col-md-3" th:text="#{label.collection.event.status}">Event Status
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
@@ -84,7 +84,7 @@
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">Event Type
+	                                             <label class="control-label col-md-3" th:text="#{label.collection.event.type}">Event Type
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
@@ -109,7 +109,7 @@
 								<div class="portlet-title">
 									<div class="caption">
 										<i class="icon-settings font-green"></i> 
-										<span class="caption-subject font-green sbold uppercase">Event Details</span>
+										<span class="caption-subject font-green sbold uppercase" th:text="#{label.collection.event.details}">Event Details</span>
 									</div>
 								</div>
 								
@@ -120,7 +120,7 @@
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">startTotalAmount
+	                                             <label class="control-label col-md-3" th:text="#{label.collection.event.startTotalAmount}">startTotalAmount
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
@@ -133,7 +133,7 @@
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">startPrincipal
+	                                             <label class="control-label col-md-3" th:text="#{label.collection.event.startPrincipal}">startPrincipal
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
@@ -145,7 +145,7 @@
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">startInterest
+	                                             <label class="control-label col-md-3" th:text="#{label.collection.event.startInterest}">startInterest
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
@@ -157,7 +157,7 @@
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">startPenalty
+	                                             <label class="control-label col-md-3" th:text="#{label.collection.event.startPenalty}">startPenalty
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
@@ -169,7 +169,7 @@
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">startFee
+	                                             <label class="control-label col-md-3" th:text="#{label.collection.event.startFee}">startFee
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
@@ -181,7 +181,7 @@
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">closeTotalAmount
+	                                             <label class="control-label col-md-3" th:text="#{label.collection.event.closeTotalAmount}">closeTotalAmount
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
@@ -193,7 +193,7 @@
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">closePrincipal
+	                                             <label class="control-label col-md-3" th:text="#{label.collection.event.closePrincipal}">closePrincipal
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
@@ -205,7 +205,7 @@
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">closeInterest
+	                                             <label class="control-label col-md-3" th:text="#{label.collection.event.closeInterest}">closeInterest
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
@@ -217,7 +217,7 @@
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">closePenalty
+	                                             <label class="control-label col-md-3" th:text="#{label.collection.event.closePenalty}">closePenalty
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
@@ -229,7 +229,7 @@
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">closeFee
+	                                             <label class="control-label col-md-3" th:text="#{label.collection.event.closeFee}">closeFee
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
@@ -241,7 +241,7 @@
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">paidTotalAmount
+	                                             <label class="control-label col-md-3" th:text="#{label.collection.event.paidTotalAmount}">paidTotalAmount
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
@@ -253,7 +253,7 @@
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">paidPrincipal
+	                                             <label class="control-label col-md-3" th:text="#{label.collection.event.paidPrincipal}">paidPrincipal
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
@@ -265,7 +265,7 @@
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">paidInterest
+	                                             <label class="control-label col-md-3" th:text="#{label.collection.event.paidInterest}">paidInterest
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
@@ -277,7 +277,7 @@
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">paidPenalty
+	                                             <label class="control-label col-md-3" th:text="#{label.collection.event.paidPenalty}">paidPenalty
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
@@ -289,7 +289,7 @@
 	                                         </div>
 	                                         
 	                                         <div class="form-group">
-	                                             <label class="control-label col-md-3">paidFee
+	                                             <label class="control-label col-md-3" th:text="#{label.collection.event.paidFee}">paidFee
 	                                                 <span class="required"> * </span>
 	                                             </label>
 	                                             <div class="col-md-4">
@@ -303,8 +303,8 @@
 	                                     </div>
 	                             	</div>
 								<div class="modal-footer">
-									<button type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
-									<button type="submit" class="btn green">Save</button>
+									<button th:text="#{label.form.cancel}" type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
+									<button th:text="#{label.form.save}" type="submit" class="btn green">Save</button>
 								</div>
 							</div>
 						</form>

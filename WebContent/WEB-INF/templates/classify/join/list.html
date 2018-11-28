@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
-	<title>Joins</title>
+	<title th:text="#{label.join.page.title}">Joins</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -27,13 +27,13 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text">Joins</h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.joins}">Joins</h3>
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
 							<ul sec:authorize="hasAnyRole('ADMIN','PERM_ADD_CLASSIFICATIONJOIN')" class="m-portlet__nav">
 								<li class="m-portlet__nav-item">
-									<a th:href="@{/classify/join/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">Add join</a>
+									<a th:href="@{/classify/join/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.join.add}">Add join</a>
 								</li>
 							</ul>
 						</div>
@@ -47,10 +47,10 @@
 										<table class="table">
 											<thead class="thead-default">
 											<tr>
-												<th>View</th>
-												<th>Left table name</th>
-												<th>Right table name</th>
-												<th>Join text</th>
+												<th th:text="#{label.table.view}">View</th>
+												<th th:text="#{label.join.leftTableName}">Left table name</th>
+												<th th:text="#{label.join.rightTableName}">Right table name</th>
+												<th th:text="#{label.join.joinText}">Join text</th>
 												<th hidden="hidden">Action</th>
 											</tr>
 											</thead>

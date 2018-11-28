@@ -28,7 +28,7 @@
 					<div class="mr-auto">
 
 						<input hidden="true" th:value="${isEmptyChild}" id="isEmptyChild">
-						<h3 class="m-subheader__title m-subheader__title--separator">
+						<h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.loan}">
 							Кредит
 						</h3>
 						<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
@@ -42,7 +42,7 @@
 							</li>
 							<li class="m-nav__item">
 								<a th:href="@{/manage/debtor/list}" class="m-nav__link">
-											<span class="m-nav__link-text">
+											<span class="m-nav__link-text" th:text="#{label.debtors}">
 												Список заемщиков
 											</span>
 								</a>
@@ -61,7 +61,7 @@
 								-
 							</li>
 							<li class="m-nav__item">
-								<span class="m-nav__link-text">
+								<span class="m-nav__link-text" th:text="#{label.loan}">
 												Кредит
 											</span>
 							</li>
@@ -88,34 +88,34 @@
 					<div class="m-portlet__body">
 						<ul class="nav nav-tabs" role="tablist">
 							<li class="nav-item">
-								<a class="nav-link m--font-primary active" data-toggle="tab" href="#main" th:text="#{label.credit}"></a>
+								<a class="nav-link m--font-primary active" data-toggle="tab" href="#main" th:text="#{label.loan.credit}"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanSummary" th:text="#{label.loanSummary}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanSummary" th:text="#{label.loan.loanSummary}"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#paymentSchedules" th:text="#{label.paymentSchedules}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#paymentSchedules" th:text="#{label.loan.paymentSchedules}"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#payments" th:text="#{label.payments}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#payments" th:text="#{label.loan.payments}"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#supervisorPlans" th:text="#{label.supervisorPlans}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#supervisorPlans" th:text="#{label.loan.supervisorPlans}"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#writeOffs" th:text="#{label.writeOffs}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#writeOffs" th:text="#{label.loan.writeOffs}"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#creditTerms" th:text="#{label.creditTerms}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#creditTerms" th:text="#{label.loan.creditTerms}"></a>
 							</li>
                             <li class="nav-item" id="childListe">
-                                <a class="nav-link m--font-primary" data-toggle="tab" href="#childList" th:text="#{label.childList}"></a>
+                                <a class="nav-link m--font-primary" data-toggle="tab" href="#childList" th:text="#{label.loan.childList}"></a>
                             </li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanDetailedSummary" th:text="#{label.loanDetailedSummary}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanDetailedSummary" th:text="#{label.loan.loanDetailedSummary}"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#accrue" th:text="#{label.accrue}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#accrue" th:text="#{label.loan.accrue}"></a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#initializaPhase" th:text="#{label.debtor.tab.initializaPhase}"></a>
@@ -134,7 +134,7 @@
 												<div class="m-widget1__item">
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
-															<h3 class="m-widget1__title" th:text="#{label.loan.table.amount}"></h3>
+															<h3 class="m-widget1__title" th:text="#{label.loan.amount}"></h3>
 															<span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(loan.amount, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
 														</div>
 													</div>
@@ -142,7 +142,7 @@
 												<div class="m-widget1__item">
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
-															<h3 class="m-widget1__title" th:text="#{label.loan.table.currency}"></h3>
+															<h3 class="m-widget1__title" th:text="#{label.loan.currency}"></h3>
 															<span class="m-widget1__desc m--font-brand" th:text="${loan.currency.name}"></span>
 														</div>
 													</div>
@@ -150,7 +150,7 @@
 												<div class="m-widget1__item">
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
-															<h3 class="m-widget1__title" th:text="#{label.loan.table.type}"></h3>
+															<h3 class="m-widget1__title" th:text="#{label.loan.type}"></h3>
 															<span class="m-widget1__desc m--font-brand" th:text="${loan.loanType.name}"></span>
 														</div>
 													</div>
@@ -164,7 +164,7 @@
 												<div class="m-widget1__item">
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
-															<h3 class="m-widget1__title" th:text="#{label.loan.table.regDate}"></h3>
+															<h3 class="m-widget1__title" th:text="#{label.loan.regDate}"></h3>
 															<span class="m-widget1__desc m--font-brand" th:text="${loan.regDate}"></span>
 														</div>
 													</div>
@@ -172,7 +172,7 @@
 												<div class="m-widget1__item">
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
-															<h3 class="m-widget1__title" th:text="#{label.loan.table.state}"></h3>
+															<h3 class="m-widget1__title" th:text="#{label.loan.state}"></h3>
 															<span class="m-widget1__desc m--font-brand" th:text="${loan.loanState.name}"></span>
 														</div>
 													</div>
@@ -180,7 +180,7 @@
 												<div class="m-widget1__item">
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
-															<h3 class="m-widget1__title" th:text="#{label.loan.table.creditOrderId}"></h3>
+															<h3 class="m-widget1__title" th:text="#{label.loan.creditOrderId}"></h3>
 															<span class="m-widget1__desc m--font-brand"><a th:href="@{/manage/order/__${loan.creditOrder.id}__/view}" th:text="${loan.creditOrder.regNumber}"></a> </span>
 														</div>
 													</div>
@@ -194,7 +194,7 @@
 												<div class="m-widget1__item">
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
-															<h3 class="m-widget1__title" th:text="#{label.loan.table.superId}"></h3>
+															<h3 class="m-widget1__title" th:text="#{label.loan.superId}"></h3>
 															<span class="m-widget1__desc m--font-brand" th:text="${supervisorName}"></span>
 														</div>
 													</div>
@@ -202,7 +202,7 @@
 												<div class="m-widget1__item" th:if="${loan.parent != null}">
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
-															<h3 class="m-widget1__title" th:text="#{label.loan.table.parent}"></h3>
+															<h3 class="m-widget1__title" th:text="#{label.loan.parent}"></h3>
 															<span class="m-widget1__desc m--font-brand"><a th:href="@{/manage/debtor/__${debtor.id}__/loan/__${loan.parent.id}__/view}" th:text="${loan.parent.regNumber}"></a></span>
 														</div>
 													</div>
@@ -221,7 +221,7 @@
                                             <div class="form-group m-form__group row align-items-center">
                                                 <div class="col-lg-6">
                                                     <div class="m-input-icon m-input-icon--left">
-                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search1">
+                                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search1">
                                                         <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -236,7 +236,7 @@
                                             <a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_ORDERTERM')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/term/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
-													<span>
+													<span th:text="#{label.loan.add.supervisorTerm}">
 														Добавить условие кред-я
 													</span>
 												</span>
@@ -263,7 +263,7 @@
                                             <div class="form-group m-form__group row align-items-center">
                                                 <div class="col-lg-6">
                                                     <div class="m-input-icon m-input-icon--left">
-                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search7">
+                                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search7">
                                                         <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -278,7 +278,7 @@
                                             <a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_WRITEOFF')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/wo/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
-													<span>
+													<span th:text="#{label.loan.add.writeOff}">
 														Добавить списание
 													</span>
 												</span>
@@ -300,7 +300,7 @@
                                             <div class="form-group m-form__group row align-items-center">
                                                 <div class="col-lg-6">
                                                     <div class="m-input-icon m-input-icon--left">
-                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search2">
+                                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search2">
                                                         <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -315,7 +315,7 @@
                                             <a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_PAYMENTSCHEDULE')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/paymentschedule/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
-													<span>
+													<span th:text="#{label.loan.add.paymentSchedule}">
 														Добавить ср. обьязательство
 													</span>
 												</span>
@@ -337,7 +337,7 @@
                                             <div class="form-group m-form__group row align-items-center">
                                                 <div class="col-lg-6">
                                                     <div class="m-input-icon m-input-icon--left">
-                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search3">
+                                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search3">
                                                         <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -387,7 +387,7 @@
 											<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_PAYMENT')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/payment/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
-													<span>
+													<span th:text="#{label.loan.add.payment}">
 														Добавить погашение
 													</span>
 												</span>
@@ -409,7 +409,7 @@
                                             <div class="form-group m-form__group row align-items-center">
                                                 <div class="col-lg-6">
                                                     <div class="m-input-icon m-input-icon--left">
-                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search8">
+                                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search8">
                                                         <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -424,7 +424,7 @@
                                             <a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_SUPERVISORPLAN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
-													<span>
+													<span th:text="#{label.loan.add.supervisorPlan}">
 														Добавить план
 													</span>
 												</span>
@@ -446,7 +446,7 @@
                                             <div class="form-group m-form__group row align-items-center">
                                                 <div class="col-lg-6">
                                                     <div class="m-input-icon m-input-icon--left">
-                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search4">
+                                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search4">
                                                         <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -471,7 +471,7 @@
                                             <div class="form-group m-form__group row align-items-center">
                                                 <div class="col-lg-6">
                                                     <div class="m-input-icon m-input-icon--left">
-                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search5">
+                                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search5">
                                                         <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -507,7 +507,7 @@
 																<!--</span>-->
 															<!--</a>-->
 
-															<button class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator">
+															<button class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator" th:text="#{label.button.calculate.manual}">
 																Сохранить расчет
 															</button>
 														</div>
@@ -532,7 +532,7 @@
                                             <div class="form-group m-form__group row align-items-center">
                                                 <div class="col-lg-6">
                                                     <div class="m-input-icon m-input-icon--left">
-                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search6">
+                                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search6">
                                                         <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -555,7 +555,7 @@
 										<div class="m-alert__icon">
 											<i class="la la-warning"></i>
 										</div>
-										<div class="m-alert__text">
+										<div class="m-alert__text" th:text="#{label.select.date}">
 											Выберите пожалуйста дату.
 										</div>
 										<div class="m-alert__close">
@@ -571,7 +571,7 @@
 												<div class="col-md-5">
 													<div class="m-form__group m-form__group--inline">
 														<div class="m-form__label">
-															<label class="m-label m-label--single">
+															<label class="m-label m-label--single" th:text="#{label.date}">
 																Дата:
 															</label>
 														</div>
@@ -587,7 +587,7 @@
 													<div class="d-md-none m--margin-bottom-10"></div>
 												</div>
 												<div class="col-md-4">
-													<button sec:authorize="hasAnyRole('ADMIN','PERM_ADD_COLLECTIONPHASE')" class="btn btn-sm btn-accent" type="button" id="bnt_init_phase">
+													<button th:text="#{label.add.collection.phase}" sec:authorize="hasAnyRole('ADMIN','PERM_ADD_COLLECTIONPHASE')" class="btn btn-sm btn-accent" type="button" id="bnt_init_phase">
 														Сохранить претензию
 													</button>
 
@@ -599,7 +599,7 @@
 											</div>
 											<div id="phaseDetailsDiv">
 												<div class="m_datatable" id="phaseDetailsTable"></div>
-												<button class="btn btn-sm btn-accent" type="button" id="initPhaseSaveBtn" th:text="#{label.save}"></button>
+												<button class="btn btn-sm btn-accent" type="button" id="initPhaseSaveBtn" th:text="#{label.form.save}"></button>
 											</div>
 										</div>
 									</div>
@@ -609,10 +609,10 @@
 							<div class="tab-pane" id="additional" role="tabpanel">
 								<ul class="nav nav-tabs" role="tablist">
 									<li class="nav-item">
-										<a class="nav-link m--font-primary active" data-toggle="tab" href="#loanGoods" th:text="#{label.loanGoods}"></a>
+										<a class="nav-link m--font-primary active" data-toggle="tab" href="#loanGoods" th:text="#{label.loan.good}"></a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link m--font-primary" data-toggle="tab" href="#debtTransfers" th:text="#{label.debtTransfers}"></a>
+										<a class="nav-link m--font-primary" data-toggle="tab" href="#debtTransfers" th:text="#{label.loan.debtTransfer}"></a>
 									</li>
 									<!--<li class="nav-item">-->
 										<!--<a class="nav-link m&#45;&#45;font-primary" data-toggle="tab" href="#targetedUses" th:text="#{label.targetedUses}"></a>-->
@@ -621,7 +621,7 @@
 										<!--<a class="nav-link m&#45;&#45;font-primary" data-toggle="tab" href="#reconstructedLists" th:text="#{label.reconstructedLists}"></a>-->
 									<!--</li>-->
 									<li class="nav-item">
-										<a class="nav-link m--font-primary" data-toggle="tab" href="#bankrupts" th:text="#{label.bankrupts}"></a>
+										<a class="nav-link m--font-primary" data-toggle="tab" href="#bankrupts" th:text="#{label.loan.bankrupt}"></a>
 									</li>
 									<!--<li class="nav-item">-->
 										<!--<a class="nav-link m&#45;&#45;font-primary" data-toggle="tab" href="#collectionPhases" th:text="#{label.collectionPhases}"></a>-->
@@ -636,7 +636,7 @@
 													<div class="form-group m-form__group row align-items-center">
 														<div class="col-lg-6">
 															<div class="m-input-icon m-input-icon--left">
-																<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search9">
+																<input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search9">
 																<span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -651,7 +651,7 @@
 													<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_LOANGOODS')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/loangoods/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
-													<span>
+													<span th:text="#{label.loan.add.good}">
 														Добавить товар
 													</span>
 												</span>
@@ -673,7 +673,7 @@
 													<div class="form-group m-form__group row align-items-center">
 														<div class="col-lg-6">
 															<div class="m-input-icon m-input-icon--left">
-																<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search10">
+																<input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search10">
 																<span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -688,7 +688,7 @@
 													<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_DEBTTRANSFER')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/debttransfer/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
-													<span>
+													<span th:text="#{label.loan.debtTransfer}">
 														Добавить перевод долга
 													</span>
 												</span>
@@ -710,7 +710,7 @@
 													<div class="form-group m-form__group row align-items-center">
 														<div class="col-lg-6">
 															<div class="m-input-icon m-input-icon--left">
-																<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search11">
+																<input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search11">
 																<span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -725,7 +725,7 @@
 													<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_TARGETEDUSE')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/targeteduse/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
-													<span>
+													<span >
 														Добавить целевое использование
 													</span>
 												</span>
@@ -799,7 +799,7 @@
 													<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_BANKRUPT')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/bankrupt/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
-													<span>
+													<span th:text="#{label.loan.bankrupt}">
 														Добавить банкротство
 													</span>
 												</span>
@@ -821,7 +821,7 @@
 													<div class="form-group m-form__group row align-items-center">
 														<div class="col-lg-6">
 															<div class="m-input-icon m-input-icon--left">
-																<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search14">
+																<input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search14">
 																<span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>

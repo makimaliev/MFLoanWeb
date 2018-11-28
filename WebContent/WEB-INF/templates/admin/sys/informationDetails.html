@@ -46,13 +46,13 @@
 									<a data-remote="false" data-toggle="modal"
 									   data-target="#informationFormModal"
 									   th:href="@{/information/add}" role="button"
-									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add child information </a>
+									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.information.add.child}"> Add child information </a>
 								</li>
 								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_ATTACHMENT')" class="m-portlet__nav-item">
 									<a data-remote="false" data-toggle="modal"
 									   data-target="#informationFormModal"
 									   th:href="@{/attachment/add}" role="button"
-									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add Attachment </a>
+									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.information.add.attachment}"> Add Attachment </a>
 								</li>
 							</ul>
 						</div>
@@ -82,8 +82,8 @@
 
 												<thead>
 												<tr>
-													<th>Id</th>
-													<th>Name</th>
+													<th th:text="#{label.id}">Id</th>
+													<th th:text="#{label.name}">Name</th>
 													<th>&nbsp;</th>
 												</tr>
 												</thead>

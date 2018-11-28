@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
-	<title>Добавить/Редактировать план</title>
+	<title th:text="#{label.loan.title.add.edit.supervisorPlans}">Добавить/Редактировать план</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -25,7 +25,7 @@
 			<div class="m-subheader ">
 				<div class="d-flex align-items-center">
 					<div class="mr-auto">
-						<h3 class="m-subheader__title m-subheader__title--separator">
+						<h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.loan.supervisorPlan}">
 							План
 						</h3>
 						<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
@@ -39,7 +39,7 @@
 							</li>
 							<li class="m-nav__item">
 								<a th:href="@{/manage/debtor/list}" class="m-nav__link">
-											<span class="m-nav__link-text">
+											<span class="m-nav__link-text" th:text="#{label.debtors}">
 												Список заемщиков
 											</span>
 								</a>
@@ -68,7 +68,7 @@
 								-
 							</li>
 							<li class="m-nav__item">
-								<span class="m-nav__link-text">
+								<span class="m-nav__link-text" th:text="#{label.loan.title.add.edit.supervisorPlans}">
 												Добавить/Редактировать план
 											</span>
 							</li>
@@ -97,7 +97,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.supervisorPlan.date}"></span>
+										<span th:text="#{label.loan.supervisorPlan.date}"></span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
@@ -111,7 +111,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.supervisorPlan.amount}">Amount</span> <span class="m--font-danger">*</span>
+										<span th:text="#{label.loan.supervisorPlan.amount}">Amount</span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="amount" th:value="${sp.amount}">
@@ -120,7 +120,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.supervisorPlan.principal}"></span> <span class="m--font-danger">*</span>
+										<span th:text="#{label.loan.supervisorPlan.principal}"></span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="principal" th:value="${sp.principal}">
@@ -129,7 +129,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.supervisorPlan.interest}"></span> <span class="m--font-danger">*</span>
+										<span th:text="#{label.loan.supervisorPlan.interest}"></span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="interest" th:value="${sp.interest}">
@@ -138,7 +138,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.supervisorPlan.penalty}"></span> <span class="m--font-danger">*</span>
+										<span th:text="#{label.loan.supervisorPlan.penalty}"></span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" name="penalty" th:value="${sp.penalty}">
@@ -156,7 +156,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12" for="description">
-										<span th:text="#{label.supervisorPlan.description}"></span> <span class="m--font-danger">*</span>
+										<span th:text="#{label.loan.supervisorPlan.description}"></span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<textarea class="form-control m-input" id="description" rows="3" name="description" th:value="${sp.description}"></textarea>

@@ -3,7 +3,7 @@
 	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <!-- begin::Head -->
 <head>
-	<title>Добавить/Редактировать процедуру взыскания</title>
+	<title th:text="#{label.title.collection.add.edit.procedure}">Добавить/Редактировать процедуру взыскания</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -26,7 +26,7 @@
 			<div class="m-subheader ">
 				<div class="d-flex align-items-center">
 					<div class="mr-auto">
-						<h3 class="m-subheader__title m-subheader__title--separator">
+						<h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.collection.procedure}">
 							Процедура взыскания
 						</h3>
 						<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
@@ -40,7 +40,7 @@
 							</li>
 							<li class="m-nav__item">
 								<a th:href="@{/manage/debtor/list}" class="m-nav__link">
-											<span class="m-nav__link-text">
+											<span class="m-nav__link-text" th:text="#{label.debtors}">
 												Список заемщиков
 											</span>
 								</a>
@@ -59,7 +59,7 @@
 								-
 							</li>
 							<li class="m-nav__item">
-								<span class="m-nav__link-text">
+								<span class="m-nav__link-text" th:text="#{label.collection.add.edit.procedure}">
 												Добавить/Редактировать процедуру взыскания
 											</span>
 							</li>
@@ -74,7 +74,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text">Процедура взыскания</h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.collection.procedure}">Процедура взыскания</h3>
 							</div>
 						</div>
 					</div>
@@ -86,7 +86,7 @@
 							<div class="m-form__section">
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="label.collectionProcedure.startDate"></span>
+										<span th:text="#{label.collection.procedure.startDate}"></span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
@@ -99,7 +99,7 @@
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="label.collectionProcedure.closeDate"></span>
+										<span th:text="#{label.collection.procedure.closeDate}"></span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
@@ -112,7 +112,7 @@
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="label.collectionProcedure.lastPhase"></span>
+										<span th:text="#{label.collection.procedure.lastPhase}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -121,7 +121,7 @@
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="label.collectionProcedure.lastStatusId"></span>
+										<span th:text="#{label.collection.procedure.lastStatusId}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -130,7 +130,7 @@
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="label.collectionProcedure.status"></span>
+										<span th:text="#{label.collection.procedure.status}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -142,7 +142,7 @@
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="label.collectionProcedure.type"></span>
+										<span th:text="#{label.collection.procedure.type}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">

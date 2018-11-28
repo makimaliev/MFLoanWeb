@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
-	<title>Добавить/Редактировать списание</title>
+	<title th:text="#{label.loan.title.add.edit.writeOff}">Добавить/Редактировать списание</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -25,7 +25,7 @@
             <div class="m-subheader ">
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
-                        <h3 class="m-subheader__title m-subheader__title--separator">
+                        <h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.loan.writeOff}">
                             Списание
                         </h3>
                         <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
@@ -39,7 +39,7 @@
                             </li>
                             <li class="m-nav__item">
                                 <a th:href="@{/manage/debtor/list}" class="m-nav__link">
-											<span class="m-nav__link-text">
+											<span class="m-nav__link-text" th:text="#{label.debtors}">
 												Список заемщиков
 											</span>
                                 </a>
@@ -68,7 +68,7 @@
                                 -
                             </li>
                             <li class="m-nav__item">
-								<span class="m-nav__link-text">
+								<span class="m-nav__link-text" th:text="#{label.loan.title.add.edit.writeOff}">
 												Добавить/Редактировать списание
 											</span>
                             </li>
@@ -83,7 +83,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text">Списание</h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.loan.writeOff}">Списание</h3>
 							</div>
 						</div>
 					</div>
@@ -97,7 +97,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.writeOff.date}"></span>
+										<span th:text="#{label.loan.writeOff.date}"></span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
@@ -111,7 +111,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.writeOff.totalAmount}"></span>
+										<span th:text="#{label.loan.writeOff.totalAmount}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -121,7 +121,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.writeOff.principal}"></span>
+										<span th:text="#{label.loan.writeOff.principal}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -131,7 +131,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.writeOff.interest}"></span>
+										<span th:text="#{label.loan.writeOff.interest}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -141,7 +141,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.writeOff.penalty}"></span>
+										<span th:text="#{label.loan.writeOff.penalty}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -161,7 +161,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12" for="description">
-										<span th:text="#{label.writeOff.description}"></span>
+										<span th:text="#{label.loan.writeOff.description}"></span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">

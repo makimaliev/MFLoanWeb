@@ -18,13 +18,13 @@
 		</div>
 
 		<div class="form-group">
-			<label for="name" class="form-control-label">Name<span class="required"> * </span></label>
+			<label for="name" class="form-control-label" th:text="#{label.contentParameter.name}">Name<span class="required"> * </span></label>
 			<input hidden="true" type="text" id="id" name="id" th:field="*{id}" />
 			<input type="text" class="form-control" id="name" name="name" th:value="*{name}">
 		</div>
 
 		<div class="form-group ">
-			<label class="form-control-label">Row Type<span class="required"> * </span></label>
+			<label class="form-control-label" th:text="#{label.contentParameter.rowType}">Row Type<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
 					<select th:field="*{rowType}"  class="selectpicker">
@@ -36,7 +36,7 @@
 			</div>
 		</div>
 		<div class="form-group ">
-			<label class="form-control-label">Cell Type<span class="required"> * </span></label>
+			<label class="form-control-label" th:text="#{label.contentParameter.cellType}">Cell Type<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
 					<select th:field="*{cellType}"  class="selectpicker">
@@ -49,7 +49,7 @@
 		</div>
 
 		<div class="form-group ">
-			<label class="form-control-label">ContentType<span class="required"> * </span></label>
+			<label class="form-control-label" th:text="#{label.contentParameter.contentType}">ContentType<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
 					<select th:field="*{contentType}"  class="selectpicker">
@@ -62,23 +62,23 @@
 		</div>
 
 		<div class="form-group">
-			<label for="fieldName" class="form-control-label">Field Name<span class="required"> * </span></label>
+			<label for="fieldName" class="form-control-label" th:text="#{label.contentParameter.fieldName}">Field Name<span class="required"> * </span></label>
 			<input type="text" class="form-control" id="fieldName" name="fieldName" th:value="*{fieldName}">
 		</div>
 
 		<div class="form-group">
-			<label for="constantValue" class="form-control-label">Constant Value<span class="required"> * </span></label>
+			<label for="constantValue" class="form-control-label" th:text="#{label.contentParameter.constantValue}">Constant Value<span class="required"> * </span></label>
 			<input type="text" class="form-control" id="constantValue" name="constantValue" th:value="*{constantValue}">
 		</div>
 
 		<div class="form-group">
-			<label for="constantInt" class="form-control-label">Constant Int<span class="required"> * </span></label>
+			<label for="constantInt" class="form-control-label" th:text="#{label.contentParameter.constantInt}">Constant Int<span class="required"> * </span></label>
 			<input type="text" class="form-control" id="constantInt" name="constantInt" th:value="*{constantInt}">
 		</div>
 
 
 		<div class="form-group">
-			<label for="constantText" class="form-control-label">Constant Text<span class="required"> * </span></label>
+			<label for="constantText" class="form-control-label" th:text="#{label.contentParameter.constantText}">Constant Text<span class="required"> * </span></label>
 			<input type="text" class="form-control" id="constantText" name="constantText" th:value="*{constantText}">
 		</div>
 
@@ -98,29 +98,29 @@
 		</div>
 
 		<div class="form-group">
-			<label  class="form-control-label">Position<span class="required"> * </span></label>
+			<label  class="form-control-label" th:text="#{label.contentParameter.position}">Position<span class="required"> * </span></label>
 			<input type="text" class="form-control" th:field="*{position}">
 		</div>
 
 		<div class="form-group">
-			<label  class="form-control-label">Column from<span class="required"> * </span></label>
+			<label  class="form-control-label" th:text="#{label.contentParameter.columnFrom}">Column from<span class="required"> * </span></label>
 			<input type="text" class="form-control" th:field="*{col_from}">
 		</div>
 
 		<div class="form-group">
-			<label  class="form-control-label">Column to<span class="required"> * </span></label>
+			<label  class="form-control-label" th:text="#{label.contentParameter.columnTo}">Column to<span class="required"> * </span></label>
 			<input type="text" class="form-control" th:field="*{col_to}">
 		</div>
 
 
 		<div class="form-group">
-			<label  class="form-control-label">Row From<span class="required"> * </span></label>
+			<label  class="form-control-label" th:text="#{label.contentParameter.rowFrom}">Row From<span class="required"> * </span></label>
 			<input type="text" class="form-control" th:field="*{row_from}">
 		</div>
 
 
 		<div class="form-group">
-			<label  class="form-control-label">Row to<span class="required"> * </span></label>
+			<label  class="form-control-label" th:text="#{label.contentParameter.rowTo}">Row to<span class="required"> * </span></label>
 			<input type="text" class="form-control" th:field="*{row_to}">
 		</div>
 
@@ -129,8 +129,8 @@
 	</div>
 
 	<div class="modal-footer">
-		<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-		<button type="submit" class="btn btn-primary">Submit</button>
+		<button th:text="#{label.form.cancel}" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+		<button th:text="#{label.form.save}" type="submit" class="btn btn-primary">Submit</button>
 	</div>
 </form>
 

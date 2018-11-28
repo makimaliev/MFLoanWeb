@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>MFLoan | Credit Orders</title>
+	<title th:text="#{label.title.collection.phase.add.edit.type}">MFLoan | Credit Orders</title>
 	<div th:replace="fragments/header :: header-css" />
 </head>
 
@@ -23,7 +23,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text">Save Collection Phase Type</h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.save.collection.phase.type}">Save Collection Phase Type</h3>
 							</div>
 						</div>
 					</div>
@@ -36,7 +36,7 @@
 										<!--You have some form errors. Please check below.-->
 									<!--</div>-->
 									<div class="form-group  margin-top-20">
-										<label class="control-label col-md-3">Name <span class="required"> * </span>
+										<label class="control-label col-md-3" th:text="#{label.name}">Name <span class="required"> * </span>
 										</label>
 										<div class="col-md-4">
 											<input hidden="true" type="text" id="id" name="id" th:value="${type.id}"/>
@@ -49,8 +49,8 @@
 								</div>
 							</div>
 							<div class="modal-footer">
-								<button type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
-								<button type="submit" class="btn green">Save</button>
+								<button th:text="#{label.form.cancel}" type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
+								<button th:text="#{label.form.save}" type="submit" class="btn green">Save</button>
 							</div>
 						</form>
 					</div>

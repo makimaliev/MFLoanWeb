@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <!-- begin::Head -->
 <head>
-    <title th:text="#{label.writeOffs}"></title>
+    <title th:text="#{label.loan.title.writeOffs}"></title>
 
     <div th:replace="fragments/header :: header-css"/>
 </head>
@@ -27,7 +27,7 @@
                     <div class="m-portlet__head">
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">
-                                <h3 class="m-portlet__head-text" th:text="#{label.writeOffs}"></h3>
+                                <h3 class="m-portlet__head-text" th:text="#{label.loan.title.writeOffs}"></h3>
                             </div>
                         </div>
                     </div>
@@ -41,13 +41,13 @@
                                             <thead class="thead-default">
                                             <tr>
                                                 <th class="table-id">Id</th>
-                                                <th th:text="#{label.writeOff.date}"></th>
-                                                <th th:text="#{label.writeOff.totalAmount}"></th>
-                                                <th th:text="#{label.writeOff.principal}"></th>
-                                                <th th:text="#{label.writeOff.interest}"></th>
-                                                <th th:text="#{label.writeOff.penalty}"></th>
-                                                <th th:text="#{label.writeOff.fee}"></th>
-                                                <th th:text="#{label.writeOff.description}"></th>
+                                                <th th:text="#{label.loan.writeOff.date}"></th>
+                                                <th th:text="#{label.loan.writeOff.totalAmount}"></th>
+                                                <th th:text="#{label.loan.writeOff.principal}"></th>
+                                                <th th:text="#{label.loan.writeOff.interest}"></th>
+                                                <th th:text="#{label.loan.writeOff.penalty}"></th>
+                                                <th th:text="#{label.loan.writeOff.fee}"></th>
+                                                <th th:text="#{label.loan.writeOff.description}"></th>
                                                 <th>&nbsp;</th>
                                             </tr>
                                             </thead>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>MFLoan | Credit Orders</title>
+	<title th:text="#{label.title.credit.orders}">MFLoan | Credit Orders</title>
 	<div th:replace="fragments/header :: header-css" />
 </head>
 
@@ -22,21 +22,23 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text">Item Types</h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.collateralItem.type}">Item Types</h3>
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
 							<ul class="m-portlet__nav">
 								<li class="m-portlet__nav-item">
 									<div class="m-input-icon m-input-icon--left">
-										<input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
+										<input type="text" class="form-control m-input" th:placeholder="#{label.search}" id="generalSearch">
 										<span class="m-input-icon__icon m-input-icon__icon--left">
 											<span><i class="la la-search"></i></span>
 										</span>
 									</div>
 								</li>
 								<li class="m-portlet__nav-item">
-									<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_ITEMTYPE')" th:href="@{/manage/debtor/collateralagreement/collateralitem/itemtype/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">Add New Item Type <i class="la la-plus"></i></a>
+									<a th:text="#{label.add.collateral.item.type}" sec:authorize="hasAnyRole('ADMIN','PERM_ADD_ITEMTYPE')"
+									   th:href="@{/manage/debtor/collateralagreement/collateralitem/itemtype/0/save}"
+									   class="m-portlet__nav-link btn btn-success m-btn m-btn--air">Add New Item Type <i class="la la-plus"></i></a>
 								</li>
 							</ul>
 						</div>
@@ -45,7 +47,7 @@
 						<table class="table" id="table">
 							<thead class="thead-default">
 								<tr>
-									<th>Name</th>
+									<th th:text="#{label.name}">Name</th>
 									<th>&nbsp;</th>
 								</tr>
 							</thead>
@@ -65,7 +67,9 @@
 														<i class="la la-ellipsis-h"></i>
 													</a>
 													<div class="dropdown-menu dropdown-menu-right">
-														<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_ITEMTYPE')" th:href="@{/manage/debtor/collateralagreement/collateralitem/itemtype/__${t.id}__/save}" class="dropdown-item"><span th:text="#{label.table.edit}"></span></a>
+														<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_ITEMTYPE')"
+														   th:href="@{/manage/debtor/collateralagreement/collateralitem/itemtype/__${t.id}__/save}"
+														   class="dropdown-item"><span th:text="#{label.table.edit}"></span></a>
 														<a hidden="hidden" class="dropdown-item" href="#">
 															<span>
 																<form th:action="@{/manage/debtor/collateralagreement/collateralitem/itemtype/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">

@@ -49,7 +49,7 @@
 								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_ROLE')" class="m-portlet__nav-item">
 									<a data-remote="false" data-toggle="modal"
 									   data-target="#roleFormModal" th:href="@{/role/add}"
-									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
+									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.add.role}"> Add
 										Role</a>
 								</li>
 							</ul>

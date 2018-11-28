@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>MFLoan | Credit Orders</title>
+	<title th:text="#{label.loan.paymentSchedule.title.add.edit.installmentState}">MFLoan | Credit Orders</title>
 	<div th:replace="fragments/header :: header-css" />
 </head>
 <body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
@@ -21,7 +21,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text">Save PaymentSchedule Installment State</h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.loan.paymentSchedule.title.add.edit.installmentState}">Save PaymentSchedule Installment State</h3>
 							</div>
 						</div>
 					</div>
@@ -34,7 +34,7 @@
 										<!--You have some form errors. Please check below.-->
 									<!--</div>-->
 									<div class="form-group  margin-top-20">
-										<label class="control-label col-md-3">Name <span class="required"> * </span>
+										<label class="control-label col-md-3" th:text="#{label.name}">Name <span class="required"> * </span>
 										</label>
 										<div class="col-md-4">
 											<input hidden="true" type="text" id="id" name="id" th:value="${state.id}"/>
@@ -47,8 +47,8 @@
 								</div>
 							</div>
 							<div class="modal-footer">
-								<button type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
-								<button sec:authorize="hasAnyRole('ADMIN','PERM_ADD_INSTALLMENTSTATE','PERM_UPDATE_INSTALLMENTSTATE')" type="submit" class="btn green">Save</button>
+								<button th:text="#{label.form.cancel}" type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
+								<button th:text="#{label.form.save}" sec:authorize="hasAnyRole('ADMIN','PERM_ADD_INSTALLMENTSTATE','PERM_UPDATE_INSTALLMENTSTATE')" type="submit" class="btn green">Save</button>
 							</div>
 						</form>
 					</div>

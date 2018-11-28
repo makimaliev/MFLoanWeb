@@ -3,7 +3,7 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title></title>
+	<title th:text="#{label.filterParameter.page.title}"></title>
 	<div th:replace="fragments/header :: header-css"></div>
 	<div  th:replace="fragments/header :: header-css" />
 	<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
@@ -27,14 +27,14 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text"></h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.filterParameter.page.title}"></h3>
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
 							<ul class="m-portlet__nav">
 								<li class="m-portlet__nav-item">
 									<div class="m-input-icon m-input-icon--left">
-										<input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
+										<input type="text" class="form-control m-input" th:placeholder="#{label.search}" id="generalSearch">
 										<span class="m-input-icon__icon m-input-icon__icon--left">
 											<span><i class="la la-search"></i></span>
 										</span>
@@ -43,7 +43,7 @@
 								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_FILTERPARAMETER')" class="m-portlet__nav-item">
 									<a data-remote="false" data-toggle="modal"
 									   data-target="#filterParameterFormModal" th:href="@{/filterParameter/add}"
-									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
+									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.filterParameter.add}"> Add
 										FilterParameter</a>
 								</li>
 							</ul>
@@ -54,7 +54,7 @@
 							<thead class="thead-default">
 								<tr>
 									<th>Id</th>
-									<th>Name</th>
+									<th th:text="#{label.name}">Name</th>
 									<th>&nbsp;</th>
 								</tr>
 							</thead>

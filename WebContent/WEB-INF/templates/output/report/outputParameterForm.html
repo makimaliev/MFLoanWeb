@@ -1,7 +1,7 @@
 <form th:action="@{/outputParameter/save}" id="form_sample_2"  th:object="${outputParameter}"	class="form-horizontal" method="post">
 
 	<div class="modal-header">
-		<h5 class="modal-title" th:text="#{label.contentParameter.modal.name}"></h5>
+		<h5 class="modal-title" th:text="#{label.outputParameter.modal.name}"></h5>
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">
 				&times;
@@ -17,13 +17,13 @@
 		</div>
 
 		<div class="form-group">
-			<label for="name" class="form-control-label">Name<span class="required"> * </span></label>
+			<label for="name" class="form-control-label" th:text="#{label.outputParameter.name}">Name<span class="required"> * </span></label>
 			<input hidden="true" type="text" id="id" name="id" th:field="*{id}" />
 			<input type="text" class="form-control" id="name" name="name" th:value="*{name}">
 		</div>
 
 		<div class="form-group ">
-			<label class="form-control-label">Type<span class="required"> * </span></label>
+			<label class="form-control-label" th:text="#{label.outputParameter.type}">Type<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
 					<select th:field="*{outputParameterType}"  class="selectpicker">
@@ -36,17 +36,17 @@
 		</div>
 
 		<div class="form-group">
-			<label for="position" class="form-control-label">Position<span class="required"> * </span></label>
+			<label for="position" class="form-control-label" th:text="#{label.outputParameter.position}">Position<span class="required"> * </span></label>
 			<input type="text" class="form-control" id="position" name="position" th:value="*{position}">
 		</div>
 
 		<div class="form-group">
-			<label for="value" class="form-control-label">Value<span class="required"> * </span></label>
+			<label for="value" class="form-control-label" th:text="#{label.outputParameter.value}">Value<span class="required"> * </span></label>
 			<input type="text" class="form-control" id="value" name="value" th:value="*{value}">
 		</div>
 
 		<div class="form-group">
-			<label for="text" class="form-control-label">Text<span class="required"> * </span></label>
+			<label for="text" class="form-control-label" th:text="#{label.outputParameter.text}">Text<span class="required"> * </span></label>
 			<input type="text" class="form-control" id="text" name="text" th:value="*{text}">
 		</div>
 
@@ -54,8 +54,8 @@
 	</div>
 
 	<div class="modal-footer">
-		<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-		<button type="submit" class="btn btn-primary">Submit</button>
+		<button th:text="#{label.form.cancel}" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+		<button th:text="#{label.form.save}" type="submit" class="btn btn-primary">Submit</button>
 	</div>
 </form>
 

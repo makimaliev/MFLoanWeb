@@ -39,7 +39,7 @@
 							<ul class="m-portlet__nav">
 								<li class="m-portlet__nav-item">
 									<div class="m-input-icon m-input-icon--left">
-										<input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
+										<input type="text" class="form-control m-input" th:placeholder="#{label.search}" id="generalSearch">
 										<span class="m-input-icon__icon m-input-icon__icon--left">
 											<span><i class="la la-search"></i></span>
 										</span>
@@ -48,7 +48,7 @@
 								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_AOKMOTU')" class="m-portlet__nav-item">
 									<a data-remote="false" data-toggle="modal"
 									   data-target="#districtFormModal" th:href="@{/aokmotu/add}"
-									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
+									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.add.aokmotu}"> Add
 										Aokmotu</a>
 								</li>
 							</ul>
@@ -58,10 +58,10 @@
 						<table	class="table" id="objectTypeTable">
 							<thead class="thead-default">
 								<tr>
-									<th>Id</th>
-									<th>Name</th>
-									<th>View</th>
-									<th>Edit</th>
+									<th th:text="#{label.id}">Id</th>
+									<th th:text="#{label.name}">Name</th>
+									<th th:text="#{label.view}">View</th>
+									<th th:text="#{label.edit}">Edit</th>
 									<th hidden="hidden">Delete</th>
 								</tr>
 							</thead>

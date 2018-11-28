@@ -50,7 +50,7 @@
 								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_PERMISSION')" class="m-portlet__nav-item">
 									<a data-remote="false" data-toggle="modal"
 									   data-target="#permissionFormModal" th:href="@{/permission/add}"
-									   permission="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
+									   permission="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.add.permission}"> Add
 										Permission</a>
 								</li>
 							</ul>

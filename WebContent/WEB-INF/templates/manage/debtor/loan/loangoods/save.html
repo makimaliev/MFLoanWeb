@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
-	<title>Добавить/Редактировать товар</title>
+	<title th:text="#{label.loan.title.add.edit.good}">Добавить/Редактировать товар</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -39,7 +39,7 @@
 							</li>
 							<li class="m-nav__item">
 								<a th:href="@{/manage/debtor/list}" class="m-nav__link">
-											<span class="m-nav__link-text">
+											<span class="m-nav__link-text" th:text="#{label.debtors}">
 												Список заемщиков
 											</span>
 								</a>
@@ -68,7 +68,7 @@
 								-
 							</li>
 							<li class="m-nav__item">
-								<span class="m-nav__link-text">
+								<span class="m-nav__link-text" th:text="#{label.loan.title.add.edit.good}">
 												Добавить/Редактировать товар
 											</span>
 							</li>
@@ -83,7 +83,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text">Товар</h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.loan.good}">Товар</h3>
 							</div>
 						</div>
 					</div>
@@ -97,7 +97,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.loanGoods.quantity}">Quantity</span>
+										<span th:text="#{label.loan.good.quantity}">Quantity</span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -107,7 +107,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.loanGoods.unitType}">Unit Type Id</span>
+										<span th:text="#{label.loan.good.unitType}">Unit Type Id</span>
 										<span class="m--font-danger">*</span>
 									</label>
 
@@ -124,7 +124,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.loanGoods.goodType}">Good Typ eId</span>
+										<span th:text="#{label.loan.good.goodType}">Good Typ eId</span>
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">

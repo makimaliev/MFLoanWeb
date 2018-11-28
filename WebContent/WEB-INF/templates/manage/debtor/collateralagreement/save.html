@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
-	<title>Добавить/Редактировать договор залога</title>
+	<title th:text="#{label.collateral.add.edit.agreement}">Добавить/Редактировать договор залога</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -39,7 +39,7 @@
 							</li>
 							<li class="m-nav__item">
 								<a th:href="@{/manage/debtor/list}" class="m-nav__link">
-											<span class="m-nav__link-text">
+											<span class="m-nav__link-text" th:text="#{label.debtors}">
 												Список заемщиков
 											</span>
 								</a>
@@ -87,7 +87,7 @@
 							<div class="m-form__section">
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.number}">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.number">
 										Agreement number <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -96,7 +96,7 @@
 								</div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.date}">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.date}">
 										Agreement Date
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -110,7 +110,7 @@
 								</div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.collRegNumber}">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.collateralOfficeRegNumber}">
 										Collateral office registration number <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -119,7 +119,7 @@
 								</div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.collRegDate}">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.collateralOfficeRegDate}">
 										Collateral office registration date
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -133,7 +133,7 @@
 								</div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.notaryRegNumber}">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.notaryOfficeRegNumber}">
 										Notary office registration number <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -142,7 +142,7 @@
 								</div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.notaryRegDate}">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.notaryOfficeRegDate}">
 										Notary office registration date
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -156,7 +156,7 @@
 								</div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.arrestRegNumber}">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.arrestRegNumber}">
 										Arrest registration number <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -165,7 +165,7 @@
 								</div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.arrestRegDate}">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.arrestRegDate}">
 										Arrest registration date
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -179,7 +179,7 @@
 								</div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.loans}">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.loans}">
 										Loans <span class="m--font-danger">*</span>
 									</label>
 

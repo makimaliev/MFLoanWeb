@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>MFLoan | Credit Orders</title>
+	<title th:text="#{label.title.orgForm}">MFLoan | Credit Orders</title>
 	<div th:replace="fragments/header :: header-css" />
 </head>
 
@@ -22,21 +22,21 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text">Organization Forms</h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.title.orgForm}">Organization Forms</h3>
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
 							<ul class="m-portlet__nav">
 								<li class="m-portlet__nav-item">
 									<div class="m-input-icon m-input-icon--left">
-										<input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
+										<input type="text" class="form-control m-input" th:placeholder="#{label.search}" id="generalSearch">
 										<span class="m-input-icon__icon m-input-icon__icon--left">
 											<span><i class="la la-search"></i></span>
 										</span>
 									</div>
 								</li>
 								<li class="m-portlet__nav-item">
-									<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_ORGANIZATIONFORM')" th:href="@{/manage/debtor/orgform/0/save}" class="portlet__nav-link btn btn-success m-btn m-btn--air">Add New Organization Form <i class="fa fa-plus"></i></a>
+									<a th:text="#{label.add.orgForm}" sec:authorize="hasAnyRole('ADMIN','PERM_ADD_ORGANIZATIONFORM')" th:href="@{/manage/debtor/orgform/0/save}" class="portlet__nav-link btn btn-success m-btn m-btn--air">Add New Organization Form <i class="fa fa-plus"></i></a>
 								</li>
 							</ul>
 						</div>
@@ -46,14 +46,14 @@
 							<table class="table" id="dataTable">
 								<thead class="thead-default">
 									<tr>
-										<th>Name</th>
+										<th th:text="#{label.name}">Name</th>
 										<th>&nbsp;</th>
 									</tr>
 								</thead>
 								<tbody>
 									<statecheck th:if="${#lists.isEmpty(orgForms)}">
 										<tr class="no-records-found" style="text-align: center;">
-											<td colspan="8">No matching records found</td>
+											<td colspan="8" th:text="#{label.no.matching.records.found}">No matching records found</td>
 										</tr>
 									</statecheck>
 									<state th:each="t : ${orgForms}">

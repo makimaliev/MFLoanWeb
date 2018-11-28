@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
-	<title>View/Add/Modify classificator</title>
+	<title th:text="#{label.classificator.add.edit.page.title}">View/Add/Modify classificator</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -25,7 +25,7 @@
 			<div class="m-subheader ">
 				<div class="d-flex align-items-center">
 					<div class="mr-auto">
-						<h3 class="m-subheader__title m-subheader__title--separator">
+						<h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.classificator}">
 							Classificator
 						</h3>
 						<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
@@ -45,7 +45,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text">Classificator</h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.classificator}">Classificator</h3>
 							</div>
 						</div>
 					</div>
@@ -59,7 +59,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span>Name</span>
+										<span th:text="#{label.classificator.name}">Name</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<input type="text" class="form-control m-input" id="name" name="name" th:value="${classificator.name}">
@@ -74,7 +74,7 @@
 									<div class="col-lg-4"></div>
 									<div class="col-lg-6">
 										<button sec:authorize="hasAnyRole('ADMIN','PERM_ADD_CLASSIFICATOR','PERM_UPDATE_CLASSIFICATOR')" id="addButton" class="btn btn-primary">
-											<span>Добавить</span>
+											<span th:text="#{label.form.save}">Добавить</span>
 										</button>
 										<button onclick="window.history.back()" type="button" class="btn btn-secondary">
 											<span th:text="#{label.form.cancel}"></span>

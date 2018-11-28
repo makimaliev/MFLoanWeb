@@ -3,7 +3,7 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title></title>
+	<title th:text="#{label.groupType.page.title.name}"></title>
 	<div  th:replace="fragments/header :: header-css" />
 	<link th:href="@{/assets/global/plugins/datatables/keyTable.bootstrap.css}" rel="stylesheet" type="text/css" />
 </head>
@@ -33,7 +33,7 @@
 							<ul class="m-portlet__nav">
 								<li class="m-portlet__nav-item">
 									<div class="m-input-icon m-input-icon--left">
-										<input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
+										<input type="text" class="form-control m-input" th:placeholder="#{label.search}" id="generalSearch">
 										<span class="m-input-icon__icon m-input-icon__icon--left">
 											<span><i class="la la-search"></i></span>
 										</span>
@@ -42,7 +42,7 @@
 								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_GROUPTYPE')" class="m-portlet__nav-item">
 									<a data-remote="false" data-toggle="modal"
 									   data-target="#groupTypeFormModal" th:href="@{/groupType/add}"
-									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
+									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.outputParameter.add}"> Add
 										GroupoTypeType</a>
 								</li>
 							</ul>
@@ -53,7 +53,7 @@
 							<thead class="thead-default">
 										<tr>
 											<th>Id</th>
-											<th>Name</th>
+											<th th:text="#{label.outputParameter.name}">Name</th>
 											<th>&nbsp;</th>
 										</tr>
 									</thead>

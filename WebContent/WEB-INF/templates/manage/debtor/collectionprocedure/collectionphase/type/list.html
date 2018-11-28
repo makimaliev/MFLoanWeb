@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>MFLoan | Credit Orders</title>
+	<title th:text="#{label.title.collection.phase.type}">MFLoan | Credit Orders</title>
 	<div th:replace="fragments/header :: header-css" />
 </head>
 
@@ -23,7 +23,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text">Collection Phase Types</h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.collection.phase.type}">Collection Phase Types</h3>
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
@@ -37,7 +37,8 @@
 									</div>
 								</li>
 								<li class="m-portlet__nav-item">
-									<a th:href="@{/manage/debtor/collectionprocedure/collectionphase/type/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">Add Collection Phase Types <i class="la la-plus"></i></a>
+									<a th:text="#{label.add.collection.phase.type}" th:href="@{/manage/debtor/collectionprocedure/collectionphase/type/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
+										Add Collection Phase Types <i class="la la-plus"></i></a>
 								</li>
 							</ul>
 						</div>
@@ -46,14 +47,14 @@
 						<table class="table" id="table">
 							<thead class="thead-default">
 								<tr>
-									<th>Name</th>
+									<th th:text="#{label.name}">Name</th>
 									<th>&nbsp;</th>
 								</tr>
 							</thead>
 							<tbody>
 								<statecheck th:if="${#lists.isEmpty(types)}">
 									<tr class="no-records-found" style="text-align: center;">
-										<td colspan="3">No matching records found</td>
+										<td colspan="3" th:text="#{label.matching.records.found}">No matching records found</td>
 									</tr>
 								</statecheck>
 								<state th:each="t : ${types}">
@@ -67,7 +68,7 @@
 													</a>
 													<div class="dropdown-menu dropdown-menu-right">
 														<a th:href="@{/manage/debtor/collectionprocedure/collectionphase/type/__${t.id}__/save}" class="dropdown-item"><span th:text="#{label.table.edit}"></span></a>
-														<a class="dropdown-item" href="#">
+														<a hidden="hidden" class="dropdown-item" href="#">
 															<span>
 																<form th:action="@{/manage/debtor/collectionprocedure/collectionphase/type/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">
 																	<input hidden="true" type="text" id="id" name="id" th:value="${t.id}" />

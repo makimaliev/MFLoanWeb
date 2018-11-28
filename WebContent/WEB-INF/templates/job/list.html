@@ -69,19 +69,19 @@
 												<td th:text="${js.key.cronExpression}"></td>
 												<td th:text="${js.key.enabled}"></td>
 												<td>
-													<statecheck th:if="${js.value == true}">
+													<statecheck th:if="${js.value == true}" th:text="#{label.job.running}">
 														Running
 													</statecheck>
-													<statecheck th:unless="${js.value == true}">
+													<statecheck th:unless="${js.value == true}" th:text="#{label.job.stopped}">
 														Stopped
 													</statecheck>
 												</td>
 												<td sec:authorize="hasAnyRole('ADMIN')">
 													<statecheck th:if="${js.value == true}">
-														<a th:href="@{/job/__${js.key.id}__/stop}" class="btn btn-danger">Stop</a>
+														<a th:href="@{/job/__${js.key.id}__/stop}" class="btn btn-danger" th:text="#{label.job.stop}">Stop</a>
 													</statecheck>
 													<statecheck th:unless="${js.value == true}">
-														<a th:href="@{/job/__${js.key.id}__/start}" class="btn btn-primary">Start</a>
+														<a th:href="@{/job/__${js.key.id}__/start}" class="btn btn-primary" th:text="#{label.job.start}">Start</a>
 													</statecheck>
 												</td>
 												<td class="table-actions text-right">

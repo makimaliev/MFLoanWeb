@@ -6,7 +6,7 @@
 >
 <!-- begin::Head -->
 <head>
-    <title >MFLoan|PaymentView</title>
+    <title th:text="#{label.payment.view}">MFLoan|PaymentView</title>
 
     <div th:replace="fragments/header :: header-css"/>
     <link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
@@ -33,7 +33,7 @@
             <div class="m-subheader ">
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
-                        <h3 class="m-subheader__title m-subheader__title--separator">
+                        <h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.payments}">
                             PaymentViews
                         </h3>
                         <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
@@ -46,7 +46,7 @@
                                 -
                             </li>
                             <li class="m-nav__item">
-                                <span class="m-nav__link-text">List of paymentViews</span>
+                                <span class="m-nav__link-text" th:text="#{label.payments}">List of paymentViews</span>
                             </li>
                         </ul>
                     </div>
@@ -64,7 +64,7 @@
                                     <div class="form-group m-form__group row align-items-center" style="margin-left: 10px">
                                         <div class="col-md-3">
                                             <div class="m-input-icon m-input-icon--left" style="padding: 5px">
-                                                <input type="text" class="form-control m-input m-input--solid" placeholder="debtor_name..." id="m_form_searchByDebtorName">
+                                                <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.debtor.name}" id="m_form_searchByDebtorName">
                                                 <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -72,7 +72,7 @@
 														</span>
                                             </div>
                                             <div class="m-input-icon m-input-icon--left" style="padding: 5px">
-                                                <input type="text" class="form-control form-control-inline input-medium date-picker" placeholder="payment number..." id="m_form_searchByPaymentNum">
+                                                <input type="text" class="form-control form-control-inline input-medium date-picker" th:placeholder="#{label.payment.number}" id="m_form_searchByPaymentNum">
                                                 <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
@@ -85,13 +85,13 @@
                                         <!--</div>-->
                                         <div class="col-md-3">
                                             <div class="input-group date m_datetimepicker" id="from_datepicker" style="padding: 5px">
-                                                <input  class="form-control m-input" th:placeholder="from_date" name="date" />
+                                                <input  class="form-control m-input" th:placeholder=#{label.fromDate} name="date" />
                                                 <span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
                                             </div>
                                             <div class="input-group date m_datetimepicker" id="to_datepicker" style="padding: 5px">
-                                                <input  class="form-control m-input" th:placeholder="to_date" name="date" />
+                                                <input  class="form-control m-input" th:placeholder=#{label.fromDate} name="date" />
                                                 <span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -99,10 +99,10 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="input-group" id="from_amount" style="padding: 5px">
-                                                <input type="text" class="form-control input-sm" placeholder="from amount" name="amount"/>
+                                                <input type="text" class="form-control input-sm" th:placeholder=#{label.fromAmount} name="amount"/>
                                             </div>
                                             <div class="input-group" id="to_amount" style="padding: 5px">
-                                                <input type="text" class="form-control input-sm" placeholder="to amount" name="amount"/>
+                                                <input type="text" class="form-control input-sm" th:placeholder=#{label.toAmount} name="amount"/>
                                             </div>
                                         </div>
                                         <!--<div class="col-md-3">-->

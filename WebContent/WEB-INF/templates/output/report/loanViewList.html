@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <!-- begin::Head -->
 <head>
-    <title >Loan view</title>
+    <title th:text="label.loan.view">Loan view</title>
 
     <div th:replace="fragments/header :: header-css"/>
     <link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
@@ -44,7 +44,7 @@
                                 -
                             </li>
                             <li class="m-nav__item">
-                                <span class="m-nav__link-text">List of loans</span>
+                                <span class="m-nav__link-text" th:text="#{label.loans}">List of loans</span>
                             </li>
                         </ul>
                     </div>
@@ -59,7 +59,7 @@
                             <div class="form-group m-form__group row " style="margin-left: 10px">
                                 <div class="col-md-2">
                                     <div class="m-input-icon m-input-icon--left">
-                                        <input type="text" class="form-control m-input m-input--solid" placeholder="debtor_name..." id="debtor_name">
+                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder=#{label.debtor.name} id="debtor_name">
                                         <span class="m-input-icon__icon m-input-icon__icon--left">
                                                     <span>
                                                         <i class="la la-search"></i>
@@ -69,7 +69,7 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div class="m-input-icon m-input-icon--left">
-                                        <input type="text" class="form-control m-input m-input--solid" placeholder="reg number..." id="reg_number">
+                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder=#{label.reg.number} id="reg_number">
                                         <span class="m-input-icon__icon m-input-icon__icon--left">
                                                     <span>
                                                         <i class="la la-search"></i>
@@ -116,7 +116,7 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div class="input-group date m_datetimepicker" id="from_datepicker">
-                                        <input  class="form-control m-input" th:placeholder="from_date" name="date" />
+                                        <input  class="form-control m-input" th:placeholder=#{label.fromDate} name="date" />
                                         <span class="input-group-addon">
                                                     <i class="la la-calendar glyphicon-th"></i>
                                                 </span>
@@ -124,7 +124,7 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div class="input-group date m_datetimepicker" id="to_datepicker">
-                                        <input  class="form-control m-input" th:placeholder="to_date" name="date" />
+                                        <input  class="form-control m-input" th:placeholder=#{label.toDate} name="date" />
                                         <span class="input-group-addon">
                                                     <i class="la la-calendar glyphicon-th"></i>
                                                 </span>

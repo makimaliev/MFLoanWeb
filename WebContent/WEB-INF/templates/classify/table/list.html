@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
-	<title>Tables</title>
+	<title th:text="#{label.table.page.title}">Tables</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -27,13 +27,13 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text">Tables</h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.table.page.title}">Tables</h3>
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
 							<ul sec:authorize="hasAnyRole('ADMIN','PERM_ADD_CLASSIFICATIONTABLE')" class="m-portlet__nav">
 								<li class="m-portlet__nav-item">
-									<a th:href="@{/classify/table/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">Add table</a>
+									<a th:href="@{/classify/table/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.table.add}">Add table</a>
 								</li>
 							</ul>
 						</div>
@@ -47,12 +47,12 @@
 										<table class="table">
 											<thead class="thead-default">
 											<tr>
-												<th>View</th>
-												<th>Table actual name</th>
-												<th>Table output name</th>
-												<th>Primary field</th>
-												<th>Fields</th>
-												<th>Action</th>
+												<th th:text="#{label.table.view}">View</th>
+												<th th:text="#{label.table.actualName}">Table actual name</th>
+												<th th:text="#{label.table.outputName}">Table output name</th>
+												<th th:text="#{label.table.primaryField}">Primary field</th>
+												<th th:text="#{label.table.fields}">Fields</th>
+												<th th:text="#{label.table.action}">Action</th>
 											</tr>
 											</thead>
 											<tbody>

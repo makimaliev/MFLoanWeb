@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
-	<title>View/Add/Modify join</title>
+	<title th:text="#{label.join.add.edit.page.title}">View/Add/Modify join</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -25,7 +25,7 @@
 			<div class="m-subheader ">
 				<div class="d-flex align-items-center">
 					<div class="mr-auto">
-						<h3 class="m-subheader__title m-subheader__title--separator">
+						<h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.join.add.edit.page.title}">
 							Table
 						</h3>
 						<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
@@ -45,7 +45,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text">Join</h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.join}">Join</h3>
 							</div>
 						</div>
 					</div>
@@ -57,7 +57,7 @@
 							<div class="m-form__section">
 
                                 <div class="form-group m-form__group row">
-                                    <label class="col-form-label col-lg-4 col-sm-12">
+                                    <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.join.leftTableName}">
                                         Left table
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
@@ -69,7 +69,7 @@
                                 </div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.join.rightTableName}">
 										Right table
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -82,7 +82,7 @@
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span>Join text</span>
+										<span th:text="#{label.join.joinText}">Join text</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
                                         <textarea rows="4" cols="50" th:field="*{joinText}" id="joinText" name="joinText"></textarea>
@@ -96,8 +96,8 @@
 								<div class="row">
 									<div class="col-lg-4"></div>
 									<div class="col-lg-6">
-										<button sec:authorize="hasAnyRole('ADMIN','PERM_ADD_CLASSIFICATIONJOIN',,'PERM_UPDATE_CLASSIFICATIONJOIN')" id="addButton" class="btn btn-primary">
-											<span>Добавить</span>
+										<button sec:authorize="hasAnyRole('ADMIN','PERM_ADD_CLASSIFICATIONJOIN','PERM_UPDATE_CLASSIFICATIONJOIN')" id="addButton" class="btn btn-primary">
+											<span th:text="#{label.form.save}">Добавить</span>
 										</button>
 										<button onclick="window.history.back()" type="button" class="btn btn-secondary">
 											<span th:text="#{label.form.cancel}"></span>
