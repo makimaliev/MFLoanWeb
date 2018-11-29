@@ -1006,7 +1006,7 @@ BEGIN
                 AND term.startDate < inDate
                 AND term.record_status = 1
 
-          UNION
+          UNION ALL
 
           SELECT
             'payment' as type,
@@ -1027,7 +1027,7 @@ BEGIN
                 AND payment.record_status = 1
           GROUP BY payment.paymentDate
 
-          UNION
+          UNION ALL
 
           SELECT
             'payment schedule' as type,
@@ -1047,7 +1047,7 @@ BEGIN
                 AND ps.expectedDate < inDate
                 AND ps.record_status = 1
 
-          UNION
+          UNION ALL
 
           SELECT
             'dummy date' as type,
@@ -1064,7 +1064,7 @@ BEGIN
           FROM dual
           WHERE includeToday = 1
 
-          UNION
+          UNION ALL
 
           SELECT
             'future payment' as type,
@@ -2296,4 +2296,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-29 12:07:35
+-- Dump completed on 2018-11-29 12:39:22
