@@ -1552,7 +1552,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `runUpdateRootLoans`()
 BEGIN
 
     DECLARE v_finished INTEGER DEFAULT 0;
-    DECLARE loanId BIGINT;
+    DECLARE loan_id BIGINT;
     DECLARE loan_class INT;
 
     DEClARE tCursor CURSOR FOR
@@ -1565,11 +1565,13 @@ BEGIN
     DECLARE CONTINUE HANDLER
     FOR NOT FOUND SET v_finished = 1;
 
+    START TRANSACTION;
+
     OPEN tCursor;
 
     run_calculate: LOOP
 
-      FETCH tCursor INTO loanId, loan_class;
+      FETCH tCursor INTO loan_id, loan_class;
 
       IF v_finished = 1 THEN
         LEAVE run_calculate;
@@ -1577,53 +1579,59 @@ BEGIN
 
       #update parent loan amount
       IF loan_class = 2 THEN
-        UPDATE loan l, (select SUM(tLoan.amount) as ss FROM loan tLoan WHERE tLoan.parent_id = loanId) t
-        SET l.amount = t.ss WHERE l.id = loanId;
+        UPDATE loan l, (select SUM(tLoan.amount) as ss FROM loan tLoan WHERE tLoan.parent_id = loan_id) t
+        SET l.amount = t.ss WHERE l.id = loan_id;
       END IF;
 
-      CALL updateRootLoanPayment(loanId);
-      CALL updateRootLoanPaymentSchedule(loanId);
+      CALL updateRootLoanPayment(loan_id);
+      CALL updateRootLoanPaymentSchedule(loan_id);
 
       INSERT INTO loanSummary (version, loanAmount, loanSummaryType, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty, overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalFeePaid, totalInterestPaid, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalPenaltyPaid, totalPrincipalPaid, loanId)
-        SELECT 1, p.loanAmount, p.loanSummaryType,
-          p.onDate, p.outstadingFee,
-          p.outstadingInterest,
-          p.outstadingPenalty,
-          p.outstadingPrincipal,
-          p.overdueFee,
-          p.overdueInterest,
-          p.overduePenalty,
-          p.overduePrincipal,
-          p.paidFee,
-          p.paidInterest,
-          p.paidPenalty,
-          p.paidPrincipal,
-          p.totalDisbursed,
-          p.totalFeePaid,
-          p.totalInterestPaid,
-          p.totalOutstanding,
-          p.totalOverdue,
-          p.totalPaid,
-          p.totalPaidKGS,
-          p.totalPenaltyPaid,
-          p.totalPrincipalPaid,
-          loanId
+        SELECT 1,
+          SUM(p.loanAmount),
+          p.loanSummaryType,
+          p.onDate,
+          SUM(p.outstadingFee),
+          SUM(p.outstadingInterest),
+          SUM(p.outstadingPenalty),
+          SUM(p.outstadingPrincipal),
+          SUM(p.overdueFee),
+          SUM(p.overdueInterest),
+          SUM(p.overduePenalty),
+          SUM(p.overduePrincipal),
+          SUM(p.paidFee),
+          SUM(p.paidInterest),
+          SUM(p.paidPenalty),
+          SUM(p.paidPrincipal),
+          SUM(p.totalDisbursed),
+          SUM(p.totalFeePaid),
+          SUM(p.totalInterestPaid),
+          SUM(p.totalOutstanding),
+          SUM(p.totalOverdue),
+          SUM(p.totalPaid),
+          SUM(p.totalPaidKGS),
+          SUM(p.totalPenaltyPaid),
+          SUM(p.totalPrincipalPaid),
+          loan_id
         FROM loanSummary p
         WHERE p.loanId IN
               (SELECT id
                FROM loan
-               WHERE parent_id = loanId)
+               WHERE parent_id = loan_id)
+        GROUP BY p.onDate
         ORDER BY p.onDate;
 
-      CALL updateRootLoanSummary(loanId);
+      #CALL updateRootLoanSummary(loan_id);
 
       IF loan_class = 2 THEN
-        CALL updateTrancheeLoanData(loanId);
+        CALL updateTrancheeLoanData(loan_id);
       END IF;
 
     END LOOP run_calculate;
 
     CLOSE tCursor;
+
+    COMMIT;
 
   END ;;
 DELIMITER ;
@@ -2288,4 +2296,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-29 11:15:39
+-- Dump completed on 2018-11-29 12:07:35
