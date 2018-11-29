@@ -4,12 +4,14 @@ import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.output.report.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import kg.gov.mf.loan.output.report.model.*;
@@ -49,6 +51,13 @@ public class ReportTemplateController {
 
 	@Autowired
 	private GroupTypeService groupTypeService;
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder)
+	{
+		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
+		binder.registerCustomEditor(Date.class, editor);
+	}
 	
      
     public void setReportTemplateService(ReportTemplateService rs)
@@ -201,7 +210,6 @@ public class ReportTemplateController {
 																	String[] reportTemplateContentParametersIds,
 																	String[] reportTemplateOutputParametersIds,
 																	BindingResult result) {
-
 		Report report = this.reportService.findById(reportTemplate.getReport().getId());
 
 		if(reportTemplateGenerationParametersIds!=null)

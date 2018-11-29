@@ -1,4 +1,5 @@
-<form th:action="@{/reportTemplate/save}" class="form-horizontal" method="post" th:object="${reportTemplate}">
+<form th:action="@{/reportTemplate/save}" class="form-horizontal" method="post" th:object="${reportTemplate}"
+	  xmlns:th="http://www.w3.org/1999/xhtml">
 	<div class="modal-header">
 		<h5 class="modal-title" th:text="#{label.add.reportTemplate}"></h5>
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -15,6 +16,8 @@
 		<!--hidden-->
 		<input hidden="true" type="text" id="id" name="id" th:field="*{id}"/>
 		<input hidden="true" type="text" id="report.id" name="report.id" th:field="*{report.id}"/>
+		<input hidden="true" type="date" id="dates1" name="report.id" th:value="*{onDate}"/>
+		<input hidden="true" type="date" id="dates2" name="report.id" th:value="*{additionalDate}"/>
 
 		<div class="form-group m-form__group row">
 			<label class="col-form-label col-lg-4 col-sm-12">
@@ -31,12 +34,12 @@
 				<span th:text="#{label.information.date}"></span>
 				<span class="m--font-danger">*</span>
 			</label>
-			<div class="col-lg-8 col-md-9 col-sm-12">
+			<div class="col-lg-4 col-md-9 col-sm-12">
 				<div class="input-group date m_datetimepicker_6">
-					<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}"  th:field="*{onDate}"/>
+					<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:value="*{onDate}"  th:field="*{onDate}"/>
 					<span class="input-group-addon">
-						<i class="la la-calendar glyphicon-th"></i>
-					</span>
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
 				</div>
 			</div>
 		</div>
@@ -46,12 +49,12 @@
 				<span th:text="#{label.information.date2}"></span>
 				<span class="m--font-danger">*</span>
 			</label>
-			<div class="col-lg-8 col-md-9 col-sm-12">
+			<div class="col-lg-4 col-md-9 col-sm-12">
 				<div class="input-group date m_datetimepicker_6">
-					<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}"  th:field="*{additionalDate}"/>
+					<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:field="*{additionalDate}"/>
 					<span class="input-group-addon">
-						<i class="la la-calendar glyphicon-th"></i>
-					</span>
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
 				</div>
 			</div>
 		</div>
