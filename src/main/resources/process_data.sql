@@ -1203,8 +1203,13 @@ BEGIN
       SET totalCollIntPayment = totalCollIntPayment + collIntPayment;
       SET totalIntPayment = totalIntPayment + intPayment;
       SET intOverdue = totalIntPayment + totalCollIntPayment - totalIntPaid;
-      SET total_outstanding = princOutstanding + intOutstanding + penOutstanding;
-      SET total_overdue = princOverdue + intOverdue + penOverdue;
+      SET total_outstanding = (CASE WHEN princOutstanding >= 0 THEN princOutstanding ELSE 0 END) +
+                              (CASE WHEN intOutstanding >= 0 THEN intOutstanding ELSE 0 END) +
+                              (CASE WHEN penOutstanding >= 0 THEN penOutstanding ELSE 0 END);
+
+      SET total_overdue = (CASE WHEN princOverdue >= 0 THEN princOverdue ELSE 0 END) +
+                          (CASE WHEN intOverdue >= 0 THEN intOverdue ELSE 0 END) +
+                          (CASE WHEN penOverdue >= 0 THEN penOverdue ELSE 0 END);
       SET total_paid = total_paid + princPaid + intPaid + penPaid;
       SET total_paidKGS = total_paidKGS + princPaidKGS + intPaidKGS + penPaidKGS;
 
@@ -1634,7 +1639,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBankruptInfo`()
 BEGIN
@@ -1652,12 +1657,14 @@ BEGIN
        tt.loanId
       from
      (
+     /*
       select 'start' as type, bn.startedOnDate as onDate, bn.loanId
       from bankrupt bn
       union all
       select 'finish' as type, bn.finishedOnDate as onDate, bn.loanId
       from bankrupt bn
       union all
+      */
       select 'close' as type, loan.closeDate as onDate, id as loanId
       from loan loan
       where loan.closeDate is not null
@@ -1676,7 +1683,8 @@ BEGIN
         LEAVE get_data;
       END IF;
 
-      IF b_type = 'finish' OR b_type = 'close' THEN
+      #IF b_type = 'finish' OR b_type = 'close' THEN
+      IF b_type = 'close' THEN
         #Nullify overdue and outstanding fields on loanDetailedSummary(no action if negative) and loanSummary tables
         update loanDetailedSummary lds
         set lds.interestOverdue = case when lds.interestOverdue >= 0 then 0 else lds.interestOverdue end,
@@ -1704,6 +1712,7 @@ BEGIN
 
       END IF;
 
+      /*
       IF b_type = 'start' THEN
         #Nullify overdue fields loanDetailedSummary(no action if negative) and loanSummary tables
         update loanDetailedSummary lds
@@ -1721,10 +1730,88 @@ BEGIN
         where ls.loanId = b_loanId
         and ls.onDate >= b_onDate;
       END IF;
+      */
 
     END LOOP get_data;
 
     CLOSE tCursor;
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `updateLoanCloseRate` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateLoanCloseRate`()
+BEGIN
+
+    DECLARE b_onDate DATE;
+    DECLARE b_loanId BIGINT;
+    DECLARE b_curId INT;
+    DECLARE rRate DOUBLE;
+
+    DECLARE v_finished INTEGER DEFAULT 0;
+
+    DEClARE tCursor CURSOR FOR
+
+      select tt.onDate,
+       tt.loanId,
+       (select currencyId from loan where id = tt.loanId) as curId
+      from
+     (
+      select 1 as typeOrder, 'start' as type, bn.startedOnDate as onDate, bn.loanId
+      from bankrupt bn
+      union all
+      select 2 as typeOrder, 'close' as type, loan.closeDate as onDate, id as loanId
+      from loan loan
+      where loan.closeDate is not null
+     ) tt group by tt.loanId order by tt.loanId, tt.typeOrder;
+
+    DECLARE CONTINUE HANDLER
+    FOR NOT FOUND SET v_finished = 1;
+
+    START TRANSACTION;
+
+    OPEN tCursor;
+
+    get_data: LOOP
+
+      FETCH tCursor INTO b_onDate, b_loanId, b_curId;
+
+      IF v_finished = 1 THEN
+        LEAVE get_data;
+      END IF;
+
+      IF b_curId = 1 THEN
+        SET rRate = 1;
+      ELSE
+
+        IF EXISTS(SELECT rate FROM currency_rate WHERE currency_type_id = b_curId AND date = b_onDate) THEN
+          SELECT rate INTO rRate FROM currency_rate WHERE currency_type_id = b_curId AND date = b_onDate;
+        ELSE
+          SET rRate = 1;
+        END IF;
+
+      END IF;
+
+      UPDATE loan SET closeRate = rRate
+      WHERE id = b_loanId;
+
+    END LOOP get_data;
+
+    CLOSE tCursor;
+
+    COMMIT;
+
   END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2201,4 +2288,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-28 15:58:18
+-- Dump completed on 2018-11-29 10:35:31
