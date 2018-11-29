@@ -2276,13 +2276,19 @@ BEGIN
 
     IF flag THEN
 
-      UPDATE loanSummary ls, (select SUM(tSum.totalDisbursed) as tDisb,
-                                     SUM(tSum.outstadingPrincipal) as tOut
-                              FROM loanSummary tSum
-                              WHERE tSum.loanId IN (SELECT id FROM loan WHERE parent_id = loan_id)) t
-          SET ls.totalDisbursed = t.tDisb, ls.outstadingPrincipal = t.tOut,
-              ls.totalOutstanding = t.tOut + outstadingInterest + outstadingPenalty + outstadingFee
-          WHERE ls.loanId = loan_id;
+      UPDATE loansummary AS dest,
+          (
+             select tSum.onDate as tDate, SUM(tSum.totalDisbursed) as tDisb, SUM(tSum.outstadingPrincipal) as tOut FROM loanSummary tSum
+              WHERE tSum.loanId IN (SELECT id FROM loan WHERE parent_id = loan_id)
+              group by onDate
+          ) AS src
+      SET
+          dest.totalDisbursed = src.tDisb,
+          dest.outstadingPrincipal = src.tOut,
+          dest.totalOutstanding = src.tOut + outstadingInterest + outstadingPenalty + outstadingFee
+      WHERE
+          dest.onDate = src.tDate
+        AND dest.loanId = loan_id;
 
     END IF;
 
@@ -2302,4 +2308,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-29 14:45:42
+-- Dump completed on 2018-11-29 15:41:42
