@@ -720,7 +720,7 @@ BEGIN
     WHERE cTerm.loanId = loan_id
           AND cTerm.startDate <= inDate
           AND cTerm.record_status = 1
-    ORDER BY cTerm.startDate LIMIT 1
+    ORDER BY cTerm.startDate DESC LIMIT 1
     INTO rateTypeId;
 
     IF rateTypeId != 2 THEN SET result = TRUE;
@@ -973,6 +973,8 @@ BEGIN
     DECLARE flag BOOLEAN DEFAULT FALSE;
     DECLARE isAlreadyInserted BOOLEAN DEFAULT FALSE;
 
+    DECLARE paymentSumAfterSpecDate DOUBLE;
+
     DEClARE tCursor CURSOR FOR
 
       SELECT
@@ -1106,6 +1108,8 @@ BEGIN
     #get penalty limit percent
     select IFNULL(penaltyLimitPercent, 0) INTO penalty_limit from creditTerm where loanId = loan_id;
 
+    select SUM(penalty) INTO paymentSumAfterSpecDate from payment where loanId = loan_id and paymentDate >= '2014-11-25';
+
     IF !isTermFound(loan_id, inDate) THEN
       SET v_finished = 1;
       INSERT INTO logCalculateLoanSummary(version, loanId, onDate, message)
@@ -1161,8 +1165,8 @@ BEGIN
       SET totalDisb = totalDisb + disb;
 
       IF NOT penalty_limit_flag THEN
-        IF penalty_limit > 0 AND totalPenAccrued > (totalDisb*penalty_limit/100) AND tempDate >= '2014-11-25' THEN
-          SET totalPenAccrued = totalDisb*penalty_limit/100;
+        IF penalty_limit > 0 AND totalPenAccrued >= totalDisb*penalty_limit/100-paymentSumAfterSpecDate AND tempDate >= '2014-11-25' THEN
+          SET totalPenAccrued = totalDisb*penalty_limit/100-paymentSumAfterSpecDate;
           SET penalty_limit_flag = TRUE;
           UPDATE creditTerm SET penaltyLimitEndDate = tempDate WHERE loanId = loan_id;
         END IF;
@@ -1189,12 +1193,12 @@ BEGIN
       SET penOutstanding = totalPenAccrued + collPenDisbursed - totalPenPaid;
 
       IF penalty_limit > 0 AND tempDate >= '2014-11-25' THEN
-        IF penOutstanding > (totalDisb*penalty_limit/100) THEN
-          SET penOutstanding = totalDisb*penalty_limit/100;
+        IF penOutstanding > (totalDisb*penalty_limit/100)- paymentSumAfterSpecDate THEN
+          SET penOutstanding = totalDisb*penalty_limit/100 - paymentSumAfterSpecDate;
         END IF;
 
-        IF penOverdue > (totalDisb*penalty_limit/100) THEN
-          SET penOverdue = totalDisb*penalty_limit/100;
+        IF penOverdue > (totalDisb*penalty_limit/100) - paymentSumAfterSpecDate THEN
+          SET penOverdue = totalDisb*penalty_limit/100 - paymentSumAfterSpecDate;
         END IF;
       END IF;
 
@@ -2276,7 +2280,7 @@ BEGIN
 
     IF flag THEN
 
-      UPDATE loansummary AS dest,
+      UPDATE loanSummary AS dest,
           (
              select tSum.onDate as tDate, SUM(tSum.totalDisbursed) as tDisb, SUM(tSum.outstadingPrincipal) as tOut FROM loanSummary tSum
               WHERE tSum.loanId IN (SELECT id FROM loan WHERE parent_id = loan_id)
@@ -2308,4 +2312,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-29 15:41:42
+-- Dump completed on 2018-11-29 19:18:22
