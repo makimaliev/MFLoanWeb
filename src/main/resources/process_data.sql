@@ -1013,11 +1013,11 @@ BEGIN
             3 as orderType,
             MIN(payment.paymentDate) AS onDate,
             0                   AS disbursement,
-            SUM(payment.principal)   AS principalPaid,
+            SUM(CASE WHEN payment.in_loan_currency THEN payment.principal*payment.exchange_rate ELSE payment.principal END) AS principalPaid,
             0                   AS principalPayment,
-            SUM(payment.interest) as interestPaid,
+            SUM(CASE WHEN payment.in_loan_currency THEN payment.interest*payment.exchange_rate ELSE payment.interest END) as interestPaid,
             0 as collectedInterestPayment,
-            SUM(payment.penalty) as penaltyPaid,
+            SUM(CASE WHEN payment.in_loan_currency THEN payment.penalty*payment.exchange_rate ELSE payment.penalty END) as penaltyPaid,
             0 as collectedPenaltyPayment,
             MIN(payment.exchange_rate) as curRate
           FROM loan loan, payment payment
@@ -2302,4 +2302,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-29 14:13:45
+-- Dump completed on 2018-11-29 14:45:42
