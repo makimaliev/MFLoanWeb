@@ -2239,6 +2239,7 @@ BEGIN
     DECLARE child_loan_id BIGINT;
     DECLARE totalPrincPaymentSum DOUBLE;
     DECLARE totalDisbSum DOUBLE;
+    DECLARE flag BOOLEAN DEFAULT FALSE;
 
     DEClARE tCursor CURSOR FOR
 
@@ -2266,19 +2267,24 @@ BEGIN
       #totaldisbursement > 0 (1 of two)
       IF totalPrincPaymentSum = 0 AND totalDisbSum >= 0 THEN
         UPDATE loanSummary SET totalDisbursed = 0, totalOutstanding = totalOutstanding - outstadingPrincipal, outstadingPrincipal = 0 WHERE loanId = child_loan_id;
+        SET flag = TRUE;
       END IF;
 
     END LOOP loop1;
 
     CLOSE tCursor;
 
-    UPDATE loanSummary ls, (select SUM(tSum.totalDisbursed) as tDisb,
-                                   SUM(tSum.outstadingPrincipal) as tOut
-                            FROM loanSummary tSum
-                            WHERE tSum.loanId IN (SELECT id FROM loan WHERE parent_id = loan_id)) t
-        SET ls.totalDisbursed = t.tDisb, ls.outstadingPrincipal = t.tOut,
-            ls.totalOutstanding = t.tOut + outstadingInterest + outstadingPenalty + outstadingFee
-        WHERE ls.loanId = loan_id;
+    IF flag THEN
+
+      UPDATE loanSummary ls, (select SUM(tSum.totalDisbursed) as tDisb,
+                                     SUM(tSum.outstadingPrincipal) as tOut
+                              FROM loanSummary tSum
+                              WHERE tSum.loanId IN (SELECT id FROM loan WHERE parent_id = loan_id)) t
+          SET ls.totalDisbursed = t.tDisb, ls.outstadingPrincipal = t.tOut,
+              ls.totalOutstanding = t.tOut + outstadingInterest + outstadingPenalty + outstadingFee
+          WHERE ls.loanId = loan_id;
+
+    END IF;
 
   END ;;
 DELIMITER ;
@@ -2296,4 +2302,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-29 12:39:22
+-- Dump completed on 2018-11-29 14:13:45
