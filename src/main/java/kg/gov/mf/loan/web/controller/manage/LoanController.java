@@ -11,6 +11,7 @@ import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
 import kg.gov.mf.loan.manage.model.loan.*;
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
+import kg.gov.mf.loan.manage.model.orderterm.*;
 import kg.gov.mf.loan.manage.model.process.Accrue;
 import kg.gov.mf.loan.manage.model.process.LoanDetailedSummary;
 import kg.gov.mf.loan.manage.model.process.LoanSummary;
@@ -19,6 +20,7 @@ import kg.gov.mf.loan.manage.repository.order.CreditOrderRepository;
 import kg.gov.mf.loan.manage.repository.org.StaffRepository;
 import kg.gov.mf.loan.manage.service.collateral.QuantityTypeService;
 import kg.gov.mf.loan.manage.service.loan.*;
+import kg.gov.mf.loan.manage.service.orderterm.*;
 import kg.gov.mf.loan.output.report.service.ReferenceViewService;
 import kg.gov.mf.loan.web.fetchModels.*;
 import org.hibernate.boot.model.relational.Database;
@@ -32,19 +34,9 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
-import kg.gov.mf.loan.manage.model.orderterm.OrderTermCurrency;
-import kg.gov.mf.loan.manage.model.orderterm.OrderTermDaysMethod;
-import kg.gov.mf.loan.manage.model.orderterm.OrderTermFloatingRateType;
-import kg.gov.mf.loan.manage.model.orderterm.OrderTermRatePeriod;
-import kg.gov.mf.loan.manage.model.orderterm.OrderTermTransactionOrder;
 import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.order.CreditOrderService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermCurrencyService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermDaysMethodService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermFloatingRateTypeService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermRatePeriodService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermTransactionOrderService;
 import kg.gov.mf.loan.web.util.Utils;
 
 @Controller
@@ -107,6 +99,11 @@ public class LoanController {
     @Autowired
     GoodTypeService goodTypeService;
 
+    @Autowired
+    CurrencyRateService currencyRateService;
+
+    @Autowired
+    BankruptService bankruptService;
 
     static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
 	
@@ -262,6 +259,7 @@ public class LoanController {
 		
 		Debtor debtor = debtorService.getById(debtorId);
 		loan.setDebtor(debtor);
+		setBankruptData(loan);
 		
 		saveLoanData(loan);
 			
@@ -275,6 +273,7 @@ public class LoanController {
 
         Debtor debtor = debtorService.getById(debtorId);
         loan.setDebtor(debtor);
+        setBankruptData(loan);
 
         saveLoanData(loan);
 
@@ -288,10 +287,32 @@ public class LoanController {
 
         Debtor debtor = debtorService.getById(debtorId);
         loan.setDebtor(debtor);
+        setBankruptData(loan);
 
         saveLoanData(loan);
 
         return "redirect:" + "/manage/debtor/{debtorId}/view";
+    }
+
+    private void setBankruptData(Loan loan)
+    {
+        Set<Bankrupt> bankrupts = loan.getBankrupts();
+        CurrencyRate rate = null;
+        for (Bankrupt b:bankrupts){
+            if(b.getStartedOnDate() != null)
+            {
+                rate = currencyRateService.findByDateAndType(b.getStartedOnDate(), loan.getCurrency());
+                break;
+            }
+        }
+
+        if (rate == null)
+            rate = currencyRateService.findByDateAndType(loan.getCloseDate(), loan.getCurrency());
+
+        if (rate != null)
+            loan.setCloseRate(rate.getRate());
+        else
+            loan.setCloseRate(1.0);
     }
 
     private void saveLoanData(Loan loan)

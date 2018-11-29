@@ -3,8 +3,10 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import kg.gov.mf.loan.manage.model.orderterm.CurrencyRate;
 import kg.gov.mf.loan.manage.repository.loan.BankruptRepository;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
+import kg.gov.mf.loan.manage.service.orderterm.CurrencyRateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -34,6 +36,9 @@ public class BankruptController {
 
 	@Autowired
 	BankruptRepository bankruptRepository;
+
+	@Autowired
+	CurrencyRateService currencyRateService;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -76,8 +81,12 @@ public class BankruptController {
 		if(bankrupt.getId() == 0)
 			bankruptService.add(bankrupt);
 		else
+
 			bankruptService.update(bankrupt);
-		
+
+        CurrencyRate rate = currencyRateService.findByDateAndType(bankrupt.getStartedOnDate(), loan.getCurrency());
+        loan.setCloseRate(rate.getRate());
+
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	
