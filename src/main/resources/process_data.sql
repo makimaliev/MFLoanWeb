@@ -1795,8 +1795,8 @@ BEGIN
         SET rRate = 1;
       ELSE
 
-        IF EXISTS(SELECT rate FROM currency_rate WHERE currency_type_id = b_curId AND date = b_onDate) THEN
-          SELECT rate INTO rRate FROM currency_rate WHERE currency_type_id = b_curId AND date = b_onDate;
+        IF EXISTS(SELECT rate FROM currency_rate WHERE currency_type_id = b_curId AND date <= b_onDate ORDER BY date DESC LIMIT 1) THEN
+          SELECT rate INTO rRate FROM currency_rate WHERE currency_type_id = b_curId AND date <= b_onDate ORDER BY date DESC LIMIT 1;
         ELSE
           SET rRate = 1;
         END IF;
@@ -2288,4 +2288,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-29 10:35:31
+-- Dump completed on 2018-11-29 11:15:39
