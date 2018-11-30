@@ -202,6 +202,30 @@ public class PrintoutTemplateController {
 					}
 
 					break;
+				case "LOAN_NOTIFICATION":
+
+
+					try {
+
+						PrintoutGeneratorCreditNotification printoutGeneratorCreditNotification= new PrintoutGeneratorCreditNotification();
+
+						Document document = new Document(PageSize.A4, 10, 10, 10, 10);
+
+						PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
+
+						response.setContentType("application/pdf");
+						response.setHeader("Content-disposition","attachment; filename=xx.pdf");
+
+						printoutGeneratorCreditNotification.generatePrintoutByTemplate(printoutTemplate, null, object_id,document);
+
+
+
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+					break;
 
 				case "LOAN_DETAILED_SUMMARY":
 
@@ -221,6 +245,27 @@ public class PrintoutTemplateController {
 
 
 
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+					break;
+				case "LOAN_CLAIM":
+
+
+					try {
+
+						PrintoutGeneratorCreditClaim printoutGeneratorCreditClaim= new PrintoutGeneratorCreditClaim();
+
+						Document document = new Document(PageSize.A4.rotate(), 10, 10, 10, 10);
+
+						PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
+
+						response.setContentType("application/pdf");
+						response.setHeader("Content-disposition","attachment; filename=xx.pdf");
+
+						printoutGeneratorCreditClaim.generatePrintoutByTemplate(printoutTemplate, null, object_id,document);
 
 					} catch (Exception e) {
 						e.printStackTrace();
