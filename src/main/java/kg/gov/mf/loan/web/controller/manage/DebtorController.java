@@ -184,7 +184,7 @@ public class DebtorController {
 		return "/manage/debtor/view";
 	}
 
-	@RequestMapping(value = { "/manage/debtor/", "/manage/debtor/list" }, method = RequestMethod.GET)
+	@RequestMapping(value = {"/manage/debtor/list1" }, method = RequestMethod.GET)
 	public String listDebtors(ModelMap model) {
 
 

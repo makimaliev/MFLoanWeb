@@ -95,7 +95,7 @@ public class LoanViewController {
         this.selected.clear();
     }
 
-    @RequestMapping(value = {"/loanView","/loanView/list"},method = RequestMethod.GET)
+    @RequestMapping(value = {"/loanView","/loanView/list","/manage/debtor/list"},method = RequestMethod.GET)
     public String allLoanViews(Model model){
         for (String i:selectedFieldNamesWithId){
             String resultOfContentParameter=this.contentParameterService.findByFieldName(i);
