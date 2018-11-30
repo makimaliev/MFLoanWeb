@@ -203,6 +203,31 @@ public class PrintoutTemplateController {
 
 					break;
 
+				case "LOAN_DETAILED_SUMMARY":
+
+
+					try {
+
+						PrintoutGeneratorLoanDetailedSummary printoutGeneratorLoanDetailedSummary= new PrintoutGeneratorLoanDetailedSummary();
+
+						Document document = new Document(PageSize.A4, 10, 10, 10, 10);
+
+						PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
+
+						response.setContentType("application/pdf");
+						response.setHeader("Content-disposition","attachment; filename=xx.pdf");
+
+						printoutGeneratorLoanDetailedSummary.generatePrintoutByTemplate(printoutTemplate, null, object_id,document);
+
+
+
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+					break;
+
                 case "LOAN_SUMMARY":
 
 

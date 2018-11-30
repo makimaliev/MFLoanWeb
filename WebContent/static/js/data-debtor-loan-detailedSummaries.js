@@ -284,7 +284,17 @@ var DatatableDataLocalDetailedSummaries = function () {
                     return (row.penaltyOverdue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 },
                     width: 65
-            }],
+            },{
+                    field: "",
+                    title: "",
+                    // printoutTemplate/{id}/objectId/{object_id}/generate
+                    template: function (row) {
+                        return '\
+                        <a href="/printoutTemplate/2/objectId/'+ row.id+'/generate" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Print"><i class="la la-download"></i></a>\
+                            ';
+                    },
+                    width: 65
+                }],
             translate: {
                 records: {
                     processing: 'Подождите пожалуйста...',
