@@ -435,7 +435,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `calculatePenaltyAccrued`(principalOverdue double, interestOverdue double, daysInPeriod int, inDate date,
-                                        loanId           bigint) RETURNS double
+                                        loan_id          bigint) RETURNS double
 BEGIN
 
     DECLARE pOIO DOUBLE DEFAULT 0;
@@ -448,7 +448,7 @@ BEGIN
     DECLARE cur CURSOR FOR
       SELECT term.penaltyOnInterestOverdueRateValue, term.penaltyOnPrincipleOverdueRateValue, term.daysInYearMethodId
       FROM creditTerm term
-      WHERE term.loanId = loanId
+      WHERE term.loanId = loan_id
             AND term.startDate < inDate
             AND term.record_status = 1
       ORDER BY term.startDate DESC LIMIT 1;
@@ -770,12 +770,12 @@ BEGIN
     DECLARE rateTypeId BIGINT;
 
     SELECT cTerm.floatingRateTypeId
+    INTO rateTypeId
     FROM creditTerm cTerm
     WHERE cTerm.loanId = loan_id
           AND cTerm.startDate <= inDate
           AND cTerm.record_status = 1
-    ORDER BY cTerm.startDate DESC LIMIT 1
-    INTO rateTypeId;
+    ORDER BY cTerm.startDate DESC LIMIT 1;
 
     IF rateTypeId != 2 THEN SET result = TRUE;
     END IF;
@@ -1595,6 +1595,79 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `runPenaltyAccruedForAllLoans` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `runPenaltyAccruedForAllLoans`()
+BEGIN
+
+    DECLARE v_finished INTEGER DEFAULT 0;
+    DECLARE loan_id BIGINT;
+    DECLARE psLastDate DATE;
+
+    DEClARE tCursor CURSOR FOR
+
+      SELECT
+        loan.id
+      FROM loan loan
+      WHERE loan.id NOT IN (SELECT DISTINCT parent_id FROM loan WHERE parent_id IS NOT NULL)
+      ORDER BY loan.id;
+
+    DECLARE CONTINUE HANDLER
+    FOR NOT FOUND SET v_finished = 1;
+
+    OPEN tCursor;
+
+    run_calculate: LOOP
+
+      FETCH tCursor INTO loan_id;
+
+      IF v_finished = 1 THEN
+        LEAVE run_calculate;
+      END IF;
+
+      IF EXISTS(
+        SELECT ps.expectedDate
+        FROM paymentschedule ps
+        WHERE ps.loanId = loan_id
+          AND (ps.principalPayment > 0 OR ps.interestPayment > 0 OR ps.collectedInterestPayment > 0 OR
+               ps.collectedInterestPayment > 0)
+        ORDER BY expectedDate DESC
+        LIMIT 1) THEN
+
+        SELECT ps.expectedDate
+            INTO psLastDate
+            FROM paymentschedule ps
+            WHERE ps.loanId = loan_id
+              AND (ps.principalPayment > 0 OR ps.interestPayment > 0 OR ps.collectedInterestPayment > 0 OR
+                   ps.collectedInterestPayment > 0)
+            ORDER BY expectedDate DESC
+            LIMIT 1;
+
+        IF EXISTS(
+          SELECT 1 FROM loanDetailedSummary WHERE loanId = loan_id AND onDate > psLastDate
+        ) THEN
+          CALL updatePenaltyAccruedForLoan(loan_id, psLastDate);
+        END IF;
+      END IF;
+
+    END LOOP run_calculate;
+
+    CLOSE tCursor;
+
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `runUpdateRootLoans` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1920,6 +1993,142 @@ BEGIN
       UPDATE owner SET addressId = tAddressId WHERE id = tOwnerId;
 
     END LOOP run_update;
+
+    CLOSE tCursor;
+
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `updatePenaltyAccruedForLoan` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePenaltyAccruedForLoan`(IN loan_id bigint, IN psLastDate date)
+BEGIN
+
+    DECLARE v_finished INTEGER DEFAULT 0;
+    DECLARE penAccrued DOUBLE;
+    DECLARE intAccrued DOUBLE;
+    DECLARE prevPenAccrued DOUBLE;
+    DECLARE prevPenOverdue DOUBLE;
+    DECLARE intOverdue DOUBLE;
+    DECLARE princOverdue DOUBLE;
+    DECLARE prevIntOverdue DOUBLE;
+    DECLARE tDate DATE;
+    DECLARE dPeriod INT;
+
+    DECLARE penOutstanding DOUBLE;
+    DECLARE prevPenOutstanding DOUBLE;
+    DECLARE penOverdue DOUBLE;
+
+    DECLARE poio DOUBLE;
+    DECLARE popo DOUBLE;
+    DECLARE dIYMethod INT;
+    DECLARE nOD INT DEFAULT 365;
+
+    DECLARE rPOPO DOUBLE;
+
+    DECLARE result DOUBLE;
+
+    DECLARE flag BOOLEAN DEFAULT FALSE;
+
+    DEClARE tCursor CURSOR FOR
+
+      SELECT tt.penaltyAccrued, tt.interestOverdue, tt.penaltyOverdue,
+             tt.penaltyOutstanding, tt.principalOverdue, tt.interestAccrued,
+             tt.daysInPeriod, tt.onDate
+      FROM
+      (
+      SELECT ls.penaltyAccrued, ls.interestOverdue, ls.penaltyOverdue,
+             ls.penaltyOutstanding, ls.principalOverdue, ls.interestAccrued,
+             ls.daysInPeriod, ls.onDate
+      FROM loanDetailedSummary ls
+      WHERE ls.loanId = loan_id
+      AND ls.onDate > psLastDate
+
+      UNION ALL
+
+      (SELECT ls.penaltyAccrued, ls.interestOverdue, ls.penaltyOverdue,
+              ls.penaltyOutstanding, ls.principalOverdue, ls.interestAccrued,
+              ls.daysInPeriod, ls.onDate
+      FROM loandetailedsummary ls
+      WHERE ls.loanId = loan_id
+      AND ls.onDate <= psLastDate
+      ORDER BY ls.onDate DESC LIMIT 1)
+      )tt ORDER BY tt.onDate;
+
+    DECLARE CONTINUE HANDLER
+    FOR NOT FOUND SET v_finished = 1;
+
+    OPEN tCursor;
+
+    run_calculate: LOOP
+
+      FETCH tCursor INTO penAccrued, intOverdue, penOverdue, penOutstanding, princOverdue, intAccrued, dPeriod, tDate;
+
+      IF v_finished = 1 THEN
+        LEAVE run_calculate;
+      END IF;
+
+      IF NOT flag THEN
+        SET prevIntOverdue = intOverdue;
+        SET prevPenAccrued = penAccrued;
+        SET prevPenOverdue = penOverdue;
+        SET prevPenOutstanding = penOutstanding;
+        SET flag = TRUE;
+      ELSE
+        IF penAccrued > 0 THEN
+          SELECT IFNULL(term.penaltyOnInterestOverdueRateValue, 0),
+                 IFNULL(term.penaltyOnPrincipleOverdueRateValue,0),
+                 IFNULL(term.daysInYearMethodId, 2)
+          INTO poio, popo, dIYMethod
+          FROM creditTerm term
+          WHERE term.loanId = loan_id
+                AND term.startDate < tDate
+                AND term.record_status = 1
+          ORDER BY term.startDate DESC LIMIT 1;
+
+          IF dIYMethod != 1 THEN
+            SET nOD = 360;
+          END IF;
+
+          SELECT prevIntOverdue, intOverdue, princOverdue, popo, poio, dPeriod, nOD;
+
+          SET rPOPO = princOverdue*popo/100*dPeriod/nOD;
+
+          SET result = (prevIntOverdue + intAccrued*(dPeriod-1)/(2*dPeriod))*poio/100*dPeriod/nOD
+                       + rPOPO;
+
+          SELECT penOutstanding, penOverdue, penAccrued, intAccrued, result;
+
+          SET penOutstanding = penOutstanding-penAccrued+result;
+          SET penOverdue = penOverdue-penAccrued+result;
+
+          UPDATE loanDetailedSummary
+              SET penaltyAccrued = ROUND(result,2),
+                  penaltyOutstanding = ROUND(penOutstanding,2),
+                  penaltyOverdue = ROUND(penOverdue,2)
+          WHERE loanId = loan_id
+          AND onDate = tDate;
+
+          SET prevIntOverdue = intOverdue;
+          SET prevPenAccrued = penAccrued;
+          SET prevPenOverdue = penOverdue;
+          SET prevPenOutstanding = penOutstanding;
+
+        END IF;
+      END IF;
+
+    END LOOP run_calculate;
 
     CLOSE tCursor;
 
@@ -2365,4 +2574,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-30 14:15:03
+-- Dump completed on 2018-11-30 20:05:31
