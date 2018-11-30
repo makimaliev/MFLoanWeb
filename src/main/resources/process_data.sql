@@ -699,6 +699,60 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP FUNCTION IF EXISTS `getLoanAmount` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `getLoanAmount`(loanId BIGINT) RETURNS double
+BEGIN
+
+    DECLARE result DOUBLE DEFAULT 0;
+
+    SELECT loan.amount INTO result from loan where id = loanId;
+
+    RETURN result;
+
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP FUNCTION IF EXISTS `getPenaltyLimitPercent` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `getPenaltyLimitPercent`(inDate date, loan_id bigint) RETURNS int(11)
+BEGIN
+
+    DECLARE penalty_limit DOUBLE;
+
+    select IFNULL(penaltyLimitPercent, 0) INTO penalty_limit
+    from creditTerm
+    where loanId = loan_id
+    and startDate < inDate
+    order by startDate desc limit 1;
+
+    RETURN penalty_limit;
+
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP FUNCTION IF EXISTS `hasLiborType` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1105,10 +1159,7 @@ BEGIN
     #get loan amount
     SELECT amount INTO loan_amount from loan where id = loan_id;
 
-    #get penalty limit percent
-    select IFNULL(penaltyLimitPercent, 0) INTO penalty_limit from creditTerm where loanId = loan_id;
-
-    select SUM(penalty) INTO paymentSumAfterSpecDate from payment where loanId = loan_id and paymentDate >= '2014-11-25';
+    select IFNULL(SUM(penalty), 0) INTO paymentSumAfterSpecDate from payment where loanId = loan_id and paymentDate >= '2014-11-25';
 
     IF !isTermFound(loan_id, inDate) THEN
       SET v_finished = 1;
@@ -1125,6 +1176,8 @@ BEGIN
       IF v_finished = 1 THEN
         LEAVE get_data;
       END IF;
+
+      SET penalty_limit = getPenaltyLimitPercent(tempDate, loan_id);
 
       IF flag = FALSE THEN
         SET prevDate = tempDate;
@@ -2312,4 +2365,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-29 19:18:22
+-- Dump completed on 2018-11-30 14:15:03
