@@ -972,6 +972,7 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `calculateLoanDetailedSummaryUntilOnDate`(IN loan_id bigint, IN inDate date, IN includeToday tinyint(1))
 BEGIN
     DECLARE tempDate DATE;
+  DECLARE srokDate DATE;
     DECLARE prevDate DATE;
     DECLARE daysInPer INT DEFAULT 0;
     DECLARE disb DOUBLE;
@@ -1069,11 +1070,11 @@ BEGIN
             3 as orderType,
             MIN(payment.paymentDate) AS onDate,
             0                   AS disbursement,
-            SUM(CASE WHEN payment.in_loan_currency THEN payment.principal*payment.exchange_rate ELSE payment.principal END) AS principalPaid,
+            SUM(CASE WHEN payment.in_loan_currency and loan.currencyId > 1 THEN payment.principal*payment.exchange_rate ELSE payment.principal END) AS principalPaid,
             0                   AS principalPayment,
-            SUM(CASE WHEN payment.in_loan_currency THEN payment.interest*payment.exchange_rate ELSE payment.interest END) as interestPaid,
+            SUM(CASE WHEN payment.in_loan_currency and loan.currencyId > 1  THEN payment.interest*payment.exchange_rate ELSE payment.interest END) as interestPaid,
             0 as collectedInterestPayment,
-            SUM(CASE WHEN payment.in_loan_currency THEN payment.penalty*payment.exchange_rate ELSE payment.penalty END) as penaltyPaid,
+            SUM(CASE WHEN payment.in_loan_currency and loan.currencyId > 1  THEN payment.penalty*payment.exchange_rate ELSE payment.penalty END) as penaltyPaid,
             0 as collectedPenaltyPayment,
             MIN(payment.exchange_rate) as curRate
           FROM loan loan, payment payment
@@ -1203,6 +1204,24 @@ BEGIN
       SET totalIntAccrued = totalIntAccrued + intAccrued;
 
       SET penAccrued = calculatePenaltyAccrued(princOverdue, intOverdue, daysInPer, tempDate, loan_id);
+
+      IF srokDate is not null THEN
+        SET penAccrued = penAccrued
+                         + calculatePenaltyAccrued(0, (intAccrued*(daysInPer-1)/(2*daysInPer)), daysInPer, tempDate, loan_id);
+        IF hasLiborType(loan_id, tempDate) THEN
+          SET penAccrued = penAccrued
+                           + calculateLiborIO((intAccrued*(daysInPer-1)/(2*daysInPer)), prevDate, tempDate, loan_id);
+        END IF;
+
+        IF isPaymentScheduleLastPaymentDate(tempDate, loan_id) THEN
+          SET srokDate = tempDate;
+        ELSE SET srokDate = null;
+        END IF;
+
+
+      ELSE SET penAccrued = penAccrued;
+      END IF;
+
 
       IF hasLiborType(loan_id, tempDate) THEN
         SET penAccrued = penAccrued
@@ -1635,7 +1654,7 @@ BEGIN
 
       IF EXISTS(
         SELECT ps.expectedDate
-        FROM paymentschedule ps
+        FROM paymentSchedule ps
         WHERE ps.loanId = loan_id
           AND (ps.principalPayment > 0 OR ps.interestPayment > 0 OR ps.collectedInterestPayment > 0 OR
                ps.collectedInterestPayment > 0)
@@ -1644,7 +1663,7 @@ BEGIN
 
         SELECT ps.expectedDate
             INTO psLastDate
-            FROM paymentschedule ps
+            FROM paymentSchedule ps
             WHERE ps.loanId = loan_id
               AND (ps.principalPayment > 0 OR ps.interestPayment > 0 OR ps.collectedInterestPayment > 0 OR
                    ps.collectedInterestPayment > 0)
@@ -2060,7 +2079,7 @@ BEGIN
       (SELECT ls.penaltyAccrued, ls.interestOverdue, ls.penaltyOverdue,
               ls.penaltyOutstanding, ls.principalOverdue, ls.interestAccrued,
               ls.daysInPeriod, ls.onDate
-      FROM loandetailedsummary ls
+      FROM loanDetailedSummary ls
       WHERE ls.loanId = loan_id
       AND ls.onDate <= psLastDate
       ORDER BY ls.onDate DESC LIMIT 1)
