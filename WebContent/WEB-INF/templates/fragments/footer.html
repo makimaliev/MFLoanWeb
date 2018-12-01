@@ -54,13 +54,18 @@
             {
                 prevdate = new Date(message.date).toLocaleDateString("ru", {day:"2-digit", month:"2-digit", year:"2-digit"});
 
+                var dtContainer = document.createElement('div');
+                    dtContainer.classList.add('center');
+
                 var dt = document.createElement('span');
                     dt.classList.add('date-title');
 
                 var dttxt = document.createTextNode(prevdate);
                     dt.appendChild(dttxt);
 
-                messageArea.appendChild(dt);
+                    dtContainer.appendChild(dt);
+
+                messageArea.appendChild(dtContainer);
             }
 
             var mc = document.createElement('div');
@@ -69,7 +74,6 @@
                 mc.appendChild(mctxt);
 
             var s2 = document.createElement('span');
-                s2.classList.add('time');
             var d = new Date(message.date);
             var s2txt = document.createTextNode(d.toLocaleTimeString([], {hour12: false, hour: '2-digit', minute:'2-digit'}));
                 s2.appendChild(s2txt);
@@ -128,7 +132,9 @@
                 $("#" + receiver).removeClass();
                 receiver = this.id;
                 $("#" + receiver).addClass("bg-info text-white");
+
                 $("#userlist tr").removeAttr("style");
+                prevdate = null;
                 $.ajax({
                     type: "POST",
                     url: "/chat/messages",
@@ -147,6 +153,7 @@
 
             receiver = null;
             messageArea.innerHTML = "";
+            chatModalTitle.innerHTML = "";
 
             $("#userlist tr").removeAttr("style");
             $("#userlist tr td").removeClass();

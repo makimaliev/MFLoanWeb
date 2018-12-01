@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class BaseController {
 
     protected String path =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
-    protected long staticUser = 54;
+    protected long staticUser = 1;
     protected UserService userService;
     protected AttachmentService attachmentService;
 

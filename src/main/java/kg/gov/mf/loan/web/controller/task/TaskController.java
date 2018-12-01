@@ -2,11 +2,8 @@ package kg.gov.mf.loan.web.controller.task;
 
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
+import kg.gov.mf.loan.task.model.*;
 import kg.gov.mf.loan.task.service.LoggerService;
-import kg.gov.mf.loan.task.model.Task;
-import kg.gov.mf.loan.task.model.TaskObject;
-import kg.gov.mf.loan.task.model.TaskPriority;
-import kg.gov.mf.loan.task.model.TaskStatus;
 import kg.gov.mf.loan.task.service.TaskService;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,9 +74,13 @@ public class TaskController {
     @RequestMapping(value = { "/task/edit" }, method = RequestMethod.GET)
     public String edit(Model model) {
 
+        List<ObjectType> objectTypes = taskService.getEntities();
+
+        Collections.sort(objectTypes, Comparator.comparing(ObjectType::getObject));
+
         model.addAttribute("operators", operators);
         model.addAttribute("taskObject", new TaskObject());
-        model.addAttribute("objectTypes", taskService.getEntities());
+        model.addAttribute("objectTypes", objectTypes);
 
         return "/task/edit";
     }
@@ -87,10 +88,11 @@ public class TaskController {
     @RequestMapping(value = { "/task/add" }, method = RequestMethod.POST)
     public String addTask(@ModelAttribute("taskObject") TaskObject taskObject, Model model) {
 
-        //taskService.getData("from Document");
+        List list = taskService.queryBuilder(taskObject);
+
         model.addAttribute("taskObject", taskObject);
 
-        return "/task/edit";
+        return "/task/list";
     }
 
     @RequestMapping(value = { "/task/list" }, method = RequestMethod.GET)
@@ -165,6 +167,7 @@ public class TaskController {
 
     @RequestMapping(value="/task/save", method=RequestMethod.POST)
     public String saveTask(Task task) {
+
         if(task.getId() == 0)
         {
             task.setCreatedOn(new Date());
@@ -227,15 +230,21 @@ public class TaskController {
 
     @RequestMapping(value = { "/task/to" }, method = RequestMethod.GET)
     @ResponseBody
-    public List<TaskObject> getTaskObject(@ModelAttribute("taskObject") TaskObject taskObject)
-    {
+    public List<TaskObject> getTaskObject(@ModelAttribute("taskObject") TaskObject taskObject) {
         return taskService.queryBuilder(taskObject);
     }
 
     @RequestMapping(value = "/task/op")
     @ResponseBody
-    public Map<String, Object> getObjectProperties(@RequestBody String name)
-    {
-        return taskService.getFields(name);
+    public Map<String, Object> getObjectProperties(@RequestParam String name) {
+        Map<String, Object> result = new LinkedHashMap<>();
+
+        taskService.getFields(name)
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEachOrdered(x -> result.put(x.getKey(), x.getValue()));
+
+        return result;
     }
 }

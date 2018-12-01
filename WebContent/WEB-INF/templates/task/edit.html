@@ -40,8 +40,7 @@
 
                                         <div class="row">
                                             <div class="col-12">
-                                                <input type="hidden" th:field="*{table}">
-                                                <select class="s2s form-control m-input" id="entity" style="width: 100%">
+                                                <select class="form-control m-input" th:field="*{table}" style="width: 100%">
                                                     <option th:each="r :${objectTypes}"
                                                             th:value="${r.className}"
                                                             th:text="${r.object}"> Object </option>
@@ -49,29 +48,45 @@
                                             </div>
                                         </div>
                                         <hr>
-                                        <div data-repeater-list="properties">
-                                            <div data-repeater-item class="row">
+                                        <div data-repeater-list="properties" id="container">
+                                            <div data-repeater-item class="r-group row m--padding-bottom-10">
                                                 <div class="col-6">
-                                                    <input type="text" class="form-control m-input" name=".property">
+                                                    <select class="form-control m-input"
+                                                            style="width: 100%"
+                                                            onchange="setType(this)"
+                                                            id="properties_0_name"
+                                                            name="properties[0].property"
+                                                            data-pattern-name="properties[++].property"
+                                                            data-pattern-id="properties_++_property">
+                                                    </select>
                                                 </div>
                                                 <div class="col-3">
-                                                    <select class="s2s form-control m-input" name=".operator" data-minimum-results-for-search="-1">
+                                                    <select class="form-control m-input"
+                                                            id="properties_0_operator"
+                                                            name="properties[0].operator"
+                                                            data-pattern-name="properties[++].operator"
+                                                            data-pattern-id="properties_++_operator">
                                                         <option th:each="o : ${operators}"
                                                                 th:value="${o.getKey()}"
                                                                 th:text="${o.getValue()}"> Operator </option>
                                                     </select>
                                                 </div>
                                                 <div class="col-2">
-                                                    <input type="text" name=".value" class="form-control m-input"/>
+                                                    <input type="text"
+                                                           class="form-control m-input"
+                                                           id="properties_0_value"
+                                                           name="properties[0].value"
+                                                           data-pattern-name="properties[++].value"
+                                                           data-pattern-id="properties_++value"/>
                                                 </div>
                                                 <div class="col-1">
-                                                    <button data-repeater-delete type="button" class="btn btn-danger">Delete</button>
+                                                    <button data-repeater-delete type="button" class="r-btnRemove btn btn-danger">Delete</button>
                                                 </div>
                                             </div>
+                                            <button type="button" class="r-btnAdd btn btn-primary">Add</button>
                                         </div>
 
                                     </div>
-                                    <button data-repeater-create type="button" class="btn btn-primary" id="add-button">Add</button>
                                 </form>
                                 <!--*********************************************************************************-->
                             </div>
@@ -92,62 +107,53 @@
 </div>
 <div th:replace="fragments/footer :: footer-js"/>
 
-<script th:src="@{/assets/global/plugins/jquery-repeater/jquery.repeater.js}" type="text/javascript"></script>
+<script th:src="@{/assets/global/plugins/jquery-repeater/jquery.form-repeater.js}" type="text/javascript"></script>
 <script type="text/javascript" th:inline="javascript">
 
     $(document).ready(function() {
 
-        $('#document_form').repeater({
-            initEmpty: true,
-            isFirstItemUndeletable: true
+        $('#container').repeater({
+            btnAddClass: 'r-btnAdd',
+            btnRemoveClass: 'r-btnRemove',
+            groupClass: 'r-group',
+            minItems: 1,
+            maxItems: 0,
+            startingIndex: 0,
+            showMinItemsOnLoad: false,
+            reindexOnDelete: true,
+            repeatMode: 'insertAfterLast',
+            animation: null,
+            animationSpeed: 400,
+            animationEasing: 'swing',
+            clearValues: false,
+            afterAdd: function($doppleganger) {
+                $("select[name='properties[0].property'] option").clone().appendTo($($doppleganger).find('select')[0]);
+            }
         });
-        $('.s2s ').select2();
-        $("#add-button").click(function(){
-            setTimeout(function(){
-                $(".s2s").select2();
-            }, 100);
+        $("#table").change(function (){
+            $('[data-repeater-item]').slice(1).remove();
+            loadProps();
         });
-        $('.item').hide();
-        $("#" + $("#entity").val()).show();
-        $("#entity").change(function (){
-            $('#table').val($('#entity option:selected').text());
-        });
-
-        var x = 0;
-        var wrapper = $(".prop");
-        $(document).on('click', '.add-btn', function(){
-            x++;
-            $(wrapper).append(
-                  '<div class="row" id="id_' + x + '">'
-                + '<div class="col-12"></div>\n'
-                + '<div class="col-5"><input type="text" class="form-control m-input" name="properties[' + x + '].property"/></div>\n'
-                + '<select class="s2s form-control m-input" data-minimum-results-for-search="-1" th:field="*{properties[0].operator}">\n'
-                + '<option th:each="o : ${operators} th:value="${o.getKey()}" th:text="${o.getValue()}"> Operator </option>\n'
-                + '</select>'
-                + '<div class="col-3"><input type="text" class="form-control m-input" name="properties[' + x + '].operator"/></div>\n'
-                + '<div class="col-2"><input type="text" class="form-control m-input" name="properties[' + x + '].value"/></div>\n'
-                + '<div class="col-1"><button type="button" class="add-btn btn btn-primary float-right"> ADD </button></div>'
-                + '<div class="col-1"><button type="button" class="remove-btn btn btn-danger float-right"> REMOVE </button></div>'
-                + '</div>');
-        });
-        $(document).on('click', '.remove-btn', function(e){
-            e.preventDefault();
-            $(this).parent('div').parent('div').remove();
-            x--;
-        });
-
-        /*
-        $('#' + $(this).val()).find( "select" ).val('').trigger('change');
-        $('.item').hide();
-        $('#' + $(this).val()).show();
-        $('#table').val($(this).val());
-        */
-
+        loadProps();
     });
 
-    function setProp(e)
-    {
-        $("#prop").val($(e).val)
+    function loadProps() {
+
+        $.ajax({
+            type: "POST",
+            url: "/task/op?name=" + $('#table option:selected').val(),
+            success: function(data)
+            {
+                var $dropdown = $("select[name='properties[0].property']");
+                $dropdown.empty();
+                $.each(data, function(key, value) {
+                    $dropdown.append('<option data-type=' + value + ' value=' + key + '>' + key + '</option>');
+                });
+            }
+        });
+    }
+    function setType(o) {
+        //console.log($(o).find('option:selected').data('type'))
     }
 
 </script>

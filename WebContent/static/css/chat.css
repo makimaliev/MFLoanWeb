@@ -1,7 +1,3 @@
-*, *:before, *:after {
-    box-sizing: inherit;
-}
-
 /* Chat */
 
 .chat {
@@ -23,32 +19,25 @@
 .conversation .conversation-container {
     height: 100%;
     overflow-x: hidden;
-}
-
-.conversation .conversation-container:after {
-    content: "";
-    display: table;
-    clear: both;
+    overflow-y: scroll;
 }
 
 /* Messages */
 
+.center {
+    position: relative;
+    float: left;
+    clear: both;
+    text-align: center;
+    left: 50%;
+}
+
 .date-title {
     color: #000;
-    clear: both;
-    padding: 3px;
-    position: relative;
+    padding: 5px;
     background: #a2d9ff;
     border: 1px solid #c5bdbd;
     border-radius: 5px;
-    float: left;
-}
-
-.date-title:after {
-    position: absolute;
-    content: "";
-    width: 0;
-    height: 0;
 }
 
 .message {
@@ -56,35 +45,16 @@
     clear: both;
     line-height: 18px;
     padding: 8px;
-    position: relative;
     margin: 8px 0;
     max-width: 85%;
     word-wrap: break-word;
 }
 
-.message:after {
-    position: absolute;
-    content: "";
-    width: 0;
-    height: 0;
-}
-
-.metadata {
-    display: inline-block;
+.message.sent {
+    background: #e1ffc7;
+    border: 1px solid #8fd580;
+    border-radius: 5px;
     float: right;
-    padding: 0 0 0 7px;
-    position: relative;
-    bottom: -4px;
-}
-
-.metadata .time {
-    color: rgba(0, 0, 0, .45);
-    font-size: 11px;
-    display: inline-block;
-}
-
-.message:first-child {
-    margin: 16px 0 8px;
 }
 
 .message.received {
@@ -98,19 +68,11 @@
     padding: 0 0 0 16px;
 }
 
-.message.received:after {
-    top: 0;
-    left: -10px;
-}
-
-.message.sent {
-    background: #e1ffc7;
-    border: 1px solid #8fd580;
-    border-radius: 5px;
+.metadata {
+    display: inline-block;
+    font-size: 6pt;
     float: right;
-}
-
-.message.sent:after {
-    top: 0;
-    right: -10px;
+    padding: 0 0 0 7px;
+    position: relative;
+    bottom: -4px;
 }
