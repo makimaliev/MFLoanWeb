@@ -175,6 +175,7 @@ create view debtor_view as
 
 #6
 DROP TABLE IF EXISTS `loan_view`;
+DROP VIEW IF EXISTS `loan_view`;
 CREATE VIEW loan_view AS
   SELECT
     `l`.`id`                       AS `v_loan_id`,
@@ -203,7 +204,8 @@ CREATE VIEW loan_view AS
     `co`.`creditOrderTypeId`       AS `v_credit_order_type_id`,
     `co`.`regNumber`               AS `v_credit_order_reg_number`,
     `co`.`regDate`                 AS `v_credit_order_reg_date`,
-    `l`.`closeDate`                AS `v_loan_close_date`
+    `l`.`closeDate`                AS `v_loan_close_date`,
+    `l`.`closeRate`                AS `v_loan_close_rate`
   FROM ((`mfloan`.`loan` `l`
     JOIN `mfloan`.`debtor_view` `dv` ON ((`dv`.`v_debtor_id` = `l`.`debtorId`))) JOIN `mfloan`.`creditOrder` `co`
       ON ((`co`.`id` = `l`.`creditOrderId`)))
@@ -310,7 +312,8 @@ create view loan_debt_transfer_view as
 
 #10
 DROP TABLE IF EXISTS `loan_summary_view`;
-create view loan_summary_view as
+DROP VIEW IF EXISTS `loan_summary_view`;
+CREATE VIEW loan_summary_view AS
   SELECT
     `lv`.`v_loan_id`                 AS `v_loan_id`,
     `lv`.`v_loan_amount`             AS `v_loan_amount`,
@@ -357,7 +360,9 @@ create view loan_summary_view as
     `ls`.`totalPaid`                 AS `v_ls_total_paid`,
     `ls`.`totalPaidKGS`              AS `v_ls_total_paid_kgs`,
     `ls`.`loanId`                    AS `v_ls_loan_id`,
-    `ldv`.`last_date`                AS `v_last_date`
+    `ldv`.`last_date`                AS `v_last_date`,
+    `lv`.`v_loan_close_date`         AS `v_loan_close_date`,
+    `lv`.`v_loan_close_rate`         AS `v_loan_close_rate`
   FROM ((`mfloan`.`loan_view` `lv`
     JOIN `mfloan`.`loanSummary` `ls`) JOIN `mfloan`.`loan_last_date_view` `ldv`)
   WHERE ((`ls`.`loanId` = `lv`.`v_loan_id`) AND (`ls`.`loanId` = `ldv`.`v_loan_id`));

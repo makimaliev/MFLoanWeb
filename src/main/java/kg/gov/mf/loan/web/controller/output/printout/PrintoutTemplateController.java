@@ -234,7 +234,7 @@ public class PrintoutTemplateController {
 
 						PrintoutGeneratorLoanDetailedSummary printoutGeneratorLoanDetailedSummary= new PrintoutGeneratorLoanDetailedSummary();
 
-						Document document = new Document(PageSize.A4, 10, 10, 10, 10);
+						Document document = new Document(PageSize.A4.rotate(), 10, 10, 10, 10);
 
 						PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
 
