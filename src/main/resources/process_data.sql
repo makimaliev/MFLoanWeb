@@ -884,6 +884,7 @@ BEGIN
     DECLARE cur CURSOR FOR
       SELECT ps.expectedDate FROM paymentSchedule ps
       WHERE ps.loanId = loanId
+      AND ps.principalPayment > 0
       AND ps.record_status = 1
       ORDER BY ps.expectedDate DESC LIMIT 1;
 
@@ -1439,7 +1440,7 @@ BEGIN
       SET princOverdue = totalPrincPayment - totalPrincPaid;
       SET totalIntPaid = totalIntPaid + intPaid;
 
-      IF isPaymentSchedulePaymentDate(tempDate, loan_id) OR isPaymentScheduleLastPaymentDate(tempDate, loan_id) THEN
+      IF (isPaymentSchedulePaymentDate(tempDate, loan_id) OR isPaymentScheduleLastPaymentDate(tempDate, loan_id)) AND DATEDIFF(inDate,tempDate)>0 THEN
         SET intPayment = totalIntAccrued - totalIntAccruedOnIntPayment;
         SET totalIntAccruedOnIntPayment = totalIntAccrued;
       ELSE SET intPayment = 0;
