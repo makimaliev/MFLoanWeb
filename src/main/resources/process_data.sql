@@ -803,7 +803,7 @@ BEGIN
     INTO rateTypeId
     FROM creditTerm cTerm
     WHERE cTerm.loanId = loan_id
-          AND cTerm.startDate <= inDate
+          AND cTerm.startDate < inDate
           AND cTerm.record_status = 1
     ORDER BY cTerm.startDate DESC LIMIT 1;
 
@@ -2796,4 +2796,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-01 15:52:06
+-- Dump completed on 2018-12-01 17:09:19
