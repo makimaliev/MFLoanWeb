@@ -32,8 +32,8 @@ VIEW mfloan.account
 AS
 SELECT
   `data`.`id` AS `id`,
-  (SELECT
-      UUID()) AS `uuid`,
+  1 AS `record_status`,
+  (SELECT UUID()) AS `uuid`,
   1 AS `version`,
   `data`.`internalName` AS `internalName`,
   `data`.`name` AS `name`

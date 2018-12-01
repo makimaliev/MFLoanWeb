@@ -97,8 +97,8 @@ public class DocumentFlowController extends BaseController {
                             { Transition.REQUEST, Transition.TORECONCILE },     // NEW
                             { Transition.REQUEST, Transition.TORECONCILE },     // DRAFT
                             { Transition.RECONCILE, Transition.REJECT },        // PENDING
-                            { Transition.APPROVE, Transition.REJECT },          // REQUESTED
                             { Transition.REQUEST, Transition.TORECONCILE },     // RECONCILED
+                            { Transition.APPROVE, Transition.REJECT },          // REQUESTED
                             { Transition.REGISTER },                            // APPROVED
                             {},                                                 // REJECTED
                             {}                                                  // REGISTERED
@@ -394,28 +394,17 @@ public class DocumentFlowController extends BaseController {
         return dispatchData;
     }
 
-    private void addTask(String description, Long id, User user, Date dueDate) {
-
-        Task task = new Task();
-
-        task.setDescription(description);
-        task.setSummary("");
-
-        task.setObjectId(id);
-        task.setObjectType(Document.class.getSimpleName());
-        task.setCreatedBy(getUser());
-        task.setAssignedTo(user);
-        task.setTargetResolutionDate(dueDate);
-
-        taskService.add(task);
-    }
     private void addTask(String description, Long id, User user, Date dueDate, User toUser, State state) {
 
         Task task = new Task();
 
         task.setDescription(description);
         task.setSummary("");
-        task.setProgress(state.toString());
+
+        if(state != null) {
+            task.setProgress(state.toString());
+        }
+
         task.setObjectId(id);
         task.setObjectType(Document.class.getSimpleName());
         task.setCreatedBy(user);
@@ -442,7 +431,7 @@ public class DocumentFlowController extends BaseController {
                 for(Staff staff : action.equals("REQUEST") ? Lists.newArrayList(document.getSenderResponsible().getStaff()) : document.getReconciler())
                 {
                     document.getUsers().add(getUser(staff));
-                    addTask(action.equals("REQUEST") ? State.REQUESTED.text() : State.PENDING.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
+                    addTask(action.equals("REQUEST") ? State.REQUESTED.text() : State.PENDING.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
                 }
                 documentService.update(document);
             }
@@ -487,7 +476,7 @@ public class DocumentFlowController extends BaseController {
                 for(Staff staff : action.equals("REQUEST") ? Lists.newArrayList(document.getSenderResponsible().getStaff()) : document.getReconciler())
                 {
                     document.getUsers().add(getUser(staff));
-                    addTask(action.equals("REQUEST") ? State.REQUESTED.text() : State.PENDING.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
+                    addTask(action.equals("REQUEST") ? State.REQUESTED.text() : State.PENDING.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
                 }
                 //endregion
             }
@@ -506,7 +495,7 @@ public class DocumentFlowController extends BaseController {
                     for (Staff staff : document.getReceiverResponsible().getStaff())
                     {
                         document.getUsers().add(getUser(staff));
-                        addTask("Документ на обработку", document.getId(), getUser(staff), document.getDocumentDueDate());
+                        addTask("Документ на обработку", document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
                     }
                 }
                 else
@@ -514,7 +503,7 @@ public class DocumentFlowController extends BaseController {
                     for (Department department : document.getReceiverResponsible().getDepartments())
                     {
                         document.getUsers().add(getUser(department));
-                        addTask("Документ на обработку", document.getId(), getUser(department), document.getDocumentDueDate());
+                        addTask("Документ на обработку", document.getId(), getUser(), document.getDocumentDueDate(), getUser(department), null);
                     }
                 }
                 //endregion
@@ -549,7 +538,7 @@ public class DocumentFlowController extends BaseController {
                 for (Staff staff : document.getExecutor())
                 {
                     document.getUsers().add(getUser(staff));
-                    addTask("На исполнение", document.getId(), getUser(staff), document.getDocumentDueDate());
+                    addTask("На исполнение", document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
                 }
                 //endregion
             }
@@ -655,7 +644,7 @@ public class DocumentFlowController extends BaseController {
                     for (Staff staff : document.getReceiverResponsible().getStaff())
                     {
                         document.getUsers().add(getUser(staff));
-                        addTask("Назначить исполнителя", document.getId(), getUser(staff), document.getDocumentDueDate());
+                        addTask("Назначить исполнителя", document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
                     }
                 }
                 else
@@ -663,7 +652,7 @@ public class DocumentFlowController extends BaseController {
                     for (Organization organization : document.getReceiverResponsible().getOrganizations())
                     {
                         document.getUsers().add(getUser(organization));
-                        addTask("Назначить исполнителя", document.getId(), getUser(organization), document.getDocumentDueDate());
+                        addTask("Назначить исполнителя", document.getId(), getUser(), document.getDocumentDueDate(), getUser(organization), null);
                     }
                 }
                 documentService.update(document);
@@ -697,7 +686,7 @@ public class DocumentFlowController extends BaseController {
                 for (Staff staff : document.getExecutor())
                 {
                     document.getUsers().add(getUser(staff));
-                    addTask("На исполнение", document.getId(), getUser(staff), document.getDocumentDueDate());
+                    addTask("На исполнение", document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
                 }
                 //endregion
             }
@@ -760,7 +749,7 @@ public class DocumentFlowController extends BaseController {
                     for (Staff staff : document.getSenderResponsible().getStaff())
                     {
                         document.getUsers().add(getUser(staff));
-                        addTask(State.REQUESTED.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
+                        addTask(State.REQUESTED.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
                     }
                 }
                 else
@@ -768,7 +757,7 @@ public class DocumentFlowController extends BaseController {
                     for (Organization organization : document.getSenderResponsible().getOrganizations())
                     {
                         document.getUsers().add(getUser(organization));
-                        addTask(State.REQUESTED.text(), document.getId(), getUser(organization), document.getDocumentDueDate());
+                        addTask(State.REQUESTED.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(organization), null);
                     }
                 }
 
@@ -780,7 +769,7 @@ public class DocumentFlowController extends BaseController {
                 for(Staff staff : document.getReconciler())
                 {
                     document.getUsers().add(getUser(staff));
-                    addTask(State.PENDING.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
+                    addTask(State.PENDING.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
                 }
                 documentService.update(document);
             }
@@ -825,7 +814,7 @@ public class DocumentFlowController extends BaseController {
                 for(Staff staff : document.getReconciler())
                 {
                     document.getUsers().add(getUser(staff));
-                    addTask(State.PENDING.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
+                    addTask(State.PENDING.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
                 }
                 //endregion
             }
@@ -838,7 +827,7 @@ public class DocumentFlowController extends BaseController {
                     for (Staff staff : document.getSenderResponsible().getStaff())
                     {
                         document.getUsers().add(getUser(staff));
-                        addTask(State.REQUESTED.text(), document.getId(), getUser(staff), document.getDocumentDueDate());
+                        addTask(State.REQUESTED.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
                     }
                 }
                 else
@@ -846,7 +835,7 @@ public class DocumentFlowController extends BaseController {
                     for (Organization organization : document.getSenderResponsible().getOrganizations())
                     {
                         document.getUsers().add(getUser(organization));
-                        addTask(State.REQUESTED.text(), document.getId(), getUser(organization), document.getDocumentDueDate());
+                        addTask(State.REQUESTED.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(organization), null);
                     }
                 }
                 //endregion
@@ -917,6 +906,7 @@ public class DocumentFlowController extends BaseController {
     @RequestMapping("/data/documents")
     @ResponseBody
     public List<Document> documents(@RequestParam String name) {
+
         List<Document> documents = new ArrayList<>();
         for(Document document : documentService.getInvolvedDocuments(name, getUser().getId())) {
             documents.add(document);
@@ -927,6 +917,7 @@ public class DocumentFlowController extends BaseController {
     @RequestMapping("/data/staff")
     @ResponseBody
     public List<Result> getStaff(@RequestParam String name) {
+
         List<Result> data = new ArrayList<>();
         for(Account account : accountService.getByName("staff", name))
         {

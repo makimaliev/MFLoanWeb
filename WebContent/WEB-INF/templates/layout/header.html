@@ -4,7 +4,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="chatModalTitle" th:text="${@userServiceJpaImpl.findByUsername(#authentication.name)?.staff?.name}">Chat</h5>
+                <h5 class="modal-title" id="chatModalTitle">&nbsp;</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -13,33 +13,33 @@
 
                 <!--*******************************-->
 
-                        <div class="row">
-                            <div class="col-5">
-                                <input type="text" id="usersearch" onkeyup="searchUser()" placeholder="Поиск..." style="width: 100%; height: 40px; padding-left: 20px; border: 1px solid transparent; ">
-                                <div class="pre-scrollable">
-                                    <table class="table table-hover" id="userlist" style="cursor: pointer">
-                                        <tr th:each="user : ${@userServiceJpaImpl.findAll()}"
-                                            th:if="${user.staff != null}">
-                                            <td th:id="${user.username}" th:text="${user.staff?.name}" height="40px" th:title="${user.username}"></td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="col-7">
-                                <!--div id="messageArea" class="m-3"></div-->
-                                <!-- Start -->
-                                <div class="chat">
-                                    <div class="chat-container">
-                                        <div class="conversation">
-                                            <div class="conversation-container pre-scrollable" id="messageArea">
-                                            </div>
-                                        </div>
+                <div class="row m-0">
+                    <div class="col-5 p-0">
+                        <input type="text" id="usersearch" onkeyup="searchUser()" placeholder="Поиск..." style="width: 100%; height: 40px; padding-left: 20px; border: 1px solid transparent; ">
+                        <div class="pre-scrollable">
+                            <table class="table table-hover" id="userlist" style="cursor: pointer">
+                                <tr th:each="user : ${@userServiceJpaImpl.findAll()}"
+                                    th:if="${user.staff != null}">
+                                    <td th:id="${user.username}" th:text="${user.staff?.name}" height="40px" th:title="${user.username}"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-7 p-0">
+                        <!--div id="messageArea" class="m-3"></div-->
+                        <!-- Start -->
+                        <div class="chat">
+                            <div class="chat-container">
+                                <div class="conversation">
+                                    <div class="conversation-container p-3" id="messageArea">
                                     </div>
                                 </div>
-                                <!-- End -->
-
                             </div>
                         </div>
+                        <!-- End -->
+
+                    </div>
+                </div>
 
                 <!--*******************************-->
 
