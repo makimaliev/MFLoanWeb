@@ -1066,9 +1066,18 @@ BEGIN
     DECLARE paymentSumAfterSpecDate DOUBLE;
     DECLARE paymentSumBeforeSpecDate DOUBLE;
 
+    DECLARE pType VARCHAR(20);
+    DECLARE wo_princ DOUBLE;
+    DECLARE wo_int DOUBLE;
+    DECLARE wo_pen DOUBLE;
+    DECLARE total_wo_princ DOUBLE DEFAULT 0;
+    DECLARE total_wo_int DOUBLE DEFAULT 0;
+    DECLARE total_wo_pen DOUBLE DEFAULT 0;
+
     DEClARE tCursor CURSOR FOR
 
       SELECT
+        pp.type,
         pp.onDate,
         pp.disbursement,
         pp.principalPaid,
@@ -1126,6 +1135,27 @@ BEGIN
           UNION ALL
 
           SELECT
+            'write off' as type,
+            4 as orderType,
+            wo.date as onDate,
+            0,
+            wo.principal as principalPaid,
+            0,
+            wo.interest as interestPaid,
+            0,
+            wo.penalty as penaltyPaid,
+            0,
+            0,
+            1 as curRate
+          FROM loan loan, writeOff wo
+          WHERE loan.id = wo.loanId
+              AND loan.id = loan_id
+              AND wo.date < inDate
+              AND wo.record_status = 1
+
+          UNION ALL
+
+          SELECT
             'payment schedule' as type,
             1 as orderType,
             ps.expectedDate                  AS onDate,
@@ -1148,7 +1178,7 @@ BEGIN
 
           SELECT
             'dummy date' as type,
-            4 as orderType,
+            5 as orderType,
             inDate AS onDate,
             0            AS disbursement,
             0            AS principalPaid,
@@ -1166,7 +1196,7 @@ BEGIN
 
           SELECT
             'future payment' as type,
-            5 as orderType,
+            6 as orderType,
             ps.expectedDate AS onDate,
             0 AS disbursement,
             ps.principalPayment AS principalPaid,
@@ -1216,7 +1246,7 @@ BEGIN
 
     get_data: LOOP
 
-      FETCH tCursor INTO tempDate,disb, princPaid, princPayment,
+      FETCH tCursor INTO pType, tempDate,disb, princPaid, princPayment,
         intPaid, collIntPayment, penPaid,
         collPenPayment, paymentTotalAmount, cur_rate;
 
@@ -1229,6 +1259,16 @@ BEGIN
       IF flag = FALSE THEN
         SET prevDate = tempDate;
         SET pDate = tempDate;
+      END IF;
+
+      IF pType = 'write off' THEN
+        SET wo_princ = princPaid;
+        SET wo_int = intPaid;
+        SET wo_pen = penPaid;
+
+        SET total_wo_princ = total_wo_princ + wo_princ;
+        SET total_wo_int = total_wo_int + wo_int;
+        SET total_wo_pen = total_wo_pen + wo_pen;
       END IF;
 
       SET princPaidKGS = princPaid;
@@ -1382,22 +1422,13 @@ BEGIN
             SET paymentTotalDiff = 0;
           END IF;
 
-
-
-
         END IF;
 
-
       END IF;
-
 
       SET princPaidKGS = princPaid*cur_rate;
       SET intPaidKGS = intPaid*cur_rate;
       SET penPaidKGS = penPaid*cur_rate;
-
-
-
-
 
       SET daysInPer = calculateDays(prevDate, tempDate, getDIMMethod(tempDate, loan_id));
 
@@ -1450,8 +1481,15 @@ BEGIN
       SET totalPrincPaid = totalPrincPaid + princPaid;
       SET totalPrincPayment = totalPrincPayment + princPayment;
       SET prevDate = tempDate;
+
       SET princOutstanding = totalDisb - totalPrincPaid;
       SET princOverdue = totalPrincPayment - totalPrincPaid;
+
+      IF pType = 'write off' THEN
+        SET princOutstanding = princOutstanding - total_wo_princ;
+        SET princOverdue = princOverdue - total_wo_princ;
+      end if;
+
       SET totalIntPaid = totalIntPaid + intPaid;
 
       IF (isPaymentSchedulePaymentDate(tempDate, loan_id) OR isPaymentScheduleLastPaymentDate(tempDate, loan_id)) AND DATEDIFF(inDate,tempDate)>0 THEN
@@ -1466,6 +1504,11 @@ BEGIN
       SET collPenDisbursed = getCollectedPenDisbursed(loan_id);
 
       SET penOutstanding = totalPenAccrued + collPenDisbursed - totalPenPaid;
+
+      IF pType = 'write off' THEN
+        SET penOutstanding = penOutstanding - total_wo_pen;
+        SET penOverdue = penOverdue - total_wo_pen;
+      END IF;
 
       IF penalty_limit > 0 AND tempDate >= '2014-11-25' THEN
         IF penOutstanding + paymentSumBeforeSpecDate> (totalDisb*penalty_limit/100)- paymentSumAfterSpecDate THEN
@@ -1482,6 +1525,12 @@ BEGIN
       SET totalCollIntPayment = totalCollIntPayment + collIntPayment;
       SET totalIntPayment = totalIntPayment + intPayment;
       SET intOverdue = totalIntPayment + totalCollIntPayment - totalIntPaid;
+
+      IF pType = 'write off' THEN
+        SET intOutstanding = intOutstanding - total_wo_int;
+        SET intOverdue = intOverdue - total_wo_int;
+      END IF;
+
       SET total_outstanding = (CASE WHEN princOutstanding >= 0 THEN princOutstanding ELSE 0 END) +
                               (CASE WHEN intOutstanding >= 0 THEN intOutstanding ELSE 0 END) +
                               (CASE WHEN penOutstanding >= 0 THEN penOutstanding ELSE 0 END);
@@ -2796,4 +2845,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-01 17:09:19
+-- Dump completed on 2018-12-01 18:09:58
