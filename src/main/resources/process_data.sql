@@ -1213,13 +1213,14 @@ BEGIN
                            + calculateLiborIO((intAccrued*(daysInPer-1)/(2*daysInPer)), prevDate, tempDate, loan_id);
         END IF;
 
-        IF isPaymentScheduleLastPaymentDate(tempDate, loan_id) THEN
-          SET srokDate = tempDate;
-        ELSE SET srokDate = null;
-        END IF;
+
 
 
       ELSE SET penAccrued = penAccrued;
+      END IF;
+
+      IF isPaymentScheduleLastPaymentDate(tempDate, loan_id) THEN
+        SET srokDate = tempDate;
       END IF;
 
 
