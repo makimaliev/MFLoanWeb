@@ -694,6 +694,25 @@ BEGIN
     RETURN dIYMethod;
 
   END ;;
+
+
+/*!50003 DROP FUNCTION IF EXISTS `getTransactionOrder` */;
+CREATE DEFINER=`root`@`localhost` FUNCTION `getTransactionOrder`(inDate date, loan_id bigint) RETURNS int(11)
+  BEGIN
+
+    DECLARE transactionOrder INT DEFAULT 1;
+
+    SELECT term.transactionOrderId INTO transactionOrder
+    FROM creditTerm term
+    WHERE term.loanId = loan_id
+          AND term.startDate < inDate
+          AND term.record_status = 1
+    ORDER BY term.startDate DESC LIMIT 1;
+
+    RETURN transactionOrder;
+
+  END ;;
+
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1022,6 +1041,8 @@ BEGIN
 
     DECLARE paymentTotalAmount DOUBLE;
 
+    DECLARE paymentTotalDiff DOUBLE;
+
     DECLARE v_finished INTEGER DEFAULT 0;
 
     DECLARE errno INT;
@@ -1202,6 +1223,166 @@ BEGIN
       SET princPaid = princPaid/cur_rate;
       SET intPaid = intPaid/cur_rate;
       SET penPaid = penPaid/cur_rate;
+
+      SET paymentTotalAmount = paymentTotalAmount/cur_rate;
+
+      SET paymentTotalDiff = paymentTotalAmount - princPaid - intPaid - penPaid;
+
+      IF (paymentTotalDiff>1) THEN
+        IF (getTransactionOrder(inDate,loan_id)=1) THEN
+
+          IF ((princOverdue- princPaid) > 0 AND paymentTotalDiff > 0 ) THEN
+            IF ((princOverdue- princPaid) > paymentTotalDiff) THEN
+              SET princPaid = princPaid + paymentTotalDiff;
+              SET paymentTotalDiff = 0;
+            ELSE
+              SET princPaid = princPaid + (princOverdue- princPaid);
+              SET paymentTotalDiff = paymentTotalDiff - (princOverdue- princPaid);
+            END IF;
+          END IF;
+
+          IF ((intOverdue-intPaid) > 0 AND paymentTotalDiff > 0 ) THEN
+            IF ((intOverdue-intPaid) > paymentTotalDiff) THEN
+              SET intPaid = intPaid + paymentTotalDiff;
+              SET paymentTotalDiff = 0;
+            ELSE
+              SET intPaid = intPaid + (intOverdue-intPaid);
+              SET paymentTotalDiff = paymentTotalDiff - (intOverdue-intPaid);
+            END IF;
+          END IF;
+
+
+          IF ((penOverdue-penPaid) > 0 AND paymentTotalDiff > 0 ) THEN
+            IF ((penOverdue-penPaid) > paymentTotalDiff) THEN
+              SET penPaid = penPaid + paymentTotalDiff;
+              SET paymentTotalDiff = 0;
+            ELSE
+              SET penPaid = penPaid + (penOverdue-penPaid);
+              SET paymentTotalDiff = paymentTotalDiff - (penOverdue-penPaid);
+            END IF;
+          END IF;
+
+          IF ((princOutstanding-princPaid) > 0 AND paymentTotalDiff > 0 ) THEN
+            IF ((princOutstanding-princPaid) > paymentTotalDiff) THEN
+              SET princPaid = princPaid + paymentTotalDiff;
+              SET paymentTotalDiff = 0;
+            ELSE
+              SET princPaid = princPaid + (princOutstanding-princPaid);
+              SET paymentTotalDiff = paymentTotalDiff - (princOutstanding-princPaid);
+            END IF;
+          END IF;
+
+          IF ((intOutstanding-intPaid) > 0 AND paymentTotalDiff > 0 ) THEN
+            IF ((intOutstanding-intPaid) > paymentTotalDiff) THEN
+              SET intPaid = intPaid + paymentTotalDiff;
+              SET paymentTotalDiff = 0;
+            ELSE
+              SET intPaid = intPaid + (intOutstanding-intPaid);
+              SET paymentTotalDiff = paymentTotalDiff - (intOutstanding-intPaid);
+            END IF;
+          END IF;
+
+
+          IF ((penOutstanding-penPaid) > 0 AND paymentTotalDiff > 0 ) THEN
+            IF ((penOutstanding-penPaid) > paymentTotalDiff) THEN
+              SET penPaid = penPaid + paymentTotalDiff;
+              SET paymentTotalDiff = 0;
+            ELSE
+              SET penPaid = penPaid + (penOutstanding-penPaid);
+              SET paymentTotalDiff = paymentTotalDiff - (penOutstanding-penPaid);
+            END IF;
+          END IF;
+
+          IF (paymentTotalDiff > 0 ) THEN
+              SET penPaid = penPaid + paymentTotalDiff;
+              SET paymentTotalDiff = 0;
+          END IF;
+
+        ELSE
+
+          IF ((princOverdue- princPaid) > 0 AND paymentTotalDiff > 0 ) THEN
+            IF ((princOverdue- princPaid) > paymentTotalDiff) THEN
+              SET princPaid = princPaid + paymentTotalDiff;
+              SET paymentTotalDiff = 0;
+            ELSE
+              SET princPaid = princPaid + (princOverdue- princPaid);
+              SET paymentTotalDiff = paymentTotalDiff - (princOverdue- princPaid);
+            END IF;
+          END IF;
+
+          IF ((intOverdue-intPaid) > 0 AND paymentTotalDiff > 0 ) THEN
+            IF ((intOverdue-intPaid) > paymentTotalDiff) THEN
+              SET intPaid = intPaid + paymentTotalDiff;
+              SET paymentTotalDiff = 0;
+            ELSE
+              SET intPaid = intPaid + (intOverdue-intPaid);
+              SET paymentTotalDiff = paymentTotalDiff - (intOverdue-intPaid);
+            END IF;
+          END IF;
+
+
+          IF ((penOverdue-penPaid) > 0 AND paymentTotalDiff > 0 ) THEN
+            IF ((penOverdue-penPaid) > paymentTotalDiff) THEN
+              SET penPaid = penPaid + paymentTotalDiff;
+              SET paymentTotalDiff = 0;
+            ELSE
+              SET penPaid = penPaid + (penOverdue-penPaid);
+              SET paymentTotalDiff = paymentTotalDiff - (penOverdue-penPaid);
+            END IF;
+          END IF;
+
+          IF ((princOutstanding-princPaid) > 0 AND paymentTotalDiff > 0 ) THEN
+            IF ((princOutstanding-princPaid) > paymentTotalDiff) THEN
+              SET princPaid = princPaid + paymentTotalDiff;
+              SET paymentTotalDiff = 0;
+            ELSE
+              SET princPaid = princPaid + (princOutstanding-princPaid);
+              SET paymentTotalDiff = paymentTotalDiff - (princOutstanding-princPaid);
+            END IF;
+          END IF;
+
+          IF ((intOutstanding-intPaid) > 0 AND paymentTotalDiff > 0 ) THEN
+            IF ((intOutstanding-intPaid) > paymentTotalDiff) THEN
+              SET intPaid = intPaid + paymentTotalDiff;
+              SET paymentTotalDiff = 0;
+            ELSE
+              SET intPaid = intPaid + (intOutstanding-intPaid);
+              SET paymentTotalDiff = paymentTotalDiff - (intOutstanding-intPaid);
+            END IF;
+          END IF;
+
+
+          IF ((penOutstanding-penPaid) > 0 AND paymentTotalDiff > 0 ) THEN
+            IF ((penOutstanding-penPaid) > paymentTotalDiff) THEN
+              SET penPaid = penPaid + paymentTotalDiff;
+              SET paymentTotalDiff = 0;
+            ELSE
+              SET penPaid = penPaid + (penOutstanding-penPaid);
+              SET paymentTotalDiff = paymentTotalDiff - (penOutstanding-penPaid);
+            END IF;
+          END IF;
+
+          IF (paymentTotalDiff > 0 ) THEN
+            SET penPaid = penPaid + paymentTotalDiff;
+            SET paymentTotalDiff = 0;
+          END IF;
+
+
+
+
+        END IF;
+
+
+      END IF;
+
+
+      SET princPaidKGS = princPaid*cur_rate;
+      SET intPaidKGS = intPaid*cur_rate;
+      SET penPaidKGS = penPaid*cur_rate;
+
+
+
+
 
       SET daysInPer = calculateDays(prevDate, tempDate, getDIMMethod(tempDate, loan_id));
 
