@@ -972,7 +972,7 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `calculateLoanDetailedSummaryUntilOnDate`(IN loan_id bigint, IN inDate date, IN includeToday tinyint(1))
 BEGIN
     DECLARE tempDate DATE;
-  DECLARE srokDate DATE;
+    DECLARE srokDate DATE;
     DECLARE prevDate DATE;
     DECLARE daysInPer INT DEFAULT 0;
     DECLARE disb DOUBLE;
@@ -1020,6 +1020,8 @@ BEGIN
     DECLARE penalty_limit DOUBLE DEFAULT 0;
     DECLARE penalty_limit_flag BOOLEAN DEFAULT FALSE;
 
+    DECLARE paymentTotalAmount DOUBLE;
+
     DECLARE v_finished INTEGER DEFAULT 0;
 
     DECLARE errno INT;
@@ -1033,14 +1035,15 @@ BEGIN
     DEClARE tCursor CURSOR FOR
 
       SELECT
-        onDate,
-        disbursement,
-        principalPaid,
-        principalPayment,
-        interestPaid,
-        collectedInterestPayment,
-        penaltyPaid,
-        collectedPenaltyPayment,
+        pp.onDate,
+        pp.disbursement,
+        pp.principalPaid,
+        pp.principalPayment,
+        pp.interestPaid,
+        pp.collectedInterestPayment,
+        pp.penaltyPaid,
+        pp.collectedPenaltyPayment,
+        pp.pTotalAmount,
         CASE curRate WHEN 0 THEN 1 ELSE curRate END AS curRate
       FROM
         (
@@ -1056,6 +1059,7 @@ BEGIN
             0 as collectedInterestPayment,
             0 as penaltyPaid,
             0 as collectedPenaltyPayment,
+            0 as pTotalAmount,
             1 as curRate
           FROM loan loan, creditTerm term
           WHERE loan.id = term.loanId
@@ -1072,10 +1076,11 @@ BEGIN
             0                   AS disbursement,
             SUM(CASE WHEN payment.in_loan_currency and loan.currencyId > 1 THEN payment.principal*payment.exchange_rate ELSE payment.principal END) AS principalPaid,
             0                   AS principalPayment,
-            SUM(CASE WHEN payment.in_loan_currency and loan.currencyId > 1  THEN payment.interest*payment.exchange_rate ELSE payment.interest END) as interestPaid,
+            SUM(CASE WHEN payment.in_loan_currency and loan.currencyId > 1 THEN payment.interest*payment.exchange_rate ELSE payment.interest END) as interestPaid,
             0 as collectedInterestPayment,
-            SUM(CASE WHEN payment.in_loan_currency and loan.currencyId > 1  THEN payment.penalty*payment.exchange_rate ELSE payment.penalty END) as penaltyPaid,
+            SUM(CASE WHEN payment.in_loan_currency and loan.currencyId > 1 THEN payment.penalty*payment.exchange_rate ELSE payment.penalty END) as penaltyPaid,
             0 as collectedPenaltyPayment,
+            SUM(CASE WHEN payment.in_loan_currency and loan.currencyId > 1 THEN payment.totalAmount*payment.exchange_rate ELSE payment.totalAmount END) as pTotalAmount,
             MIN(payment.exchange_rate) as curRate
           FROM loan loan, payment payment
           WHERE loan.id = payment.loanId
@@ -1097,6 +1102,7 @@ BEGIN
             ps.collectedInterestPayment,
             0 as penaltyPaid,
             ps.collectedPenaltyPayment,
+            0 as pTotalAmount,
             1 as curRate
           FROM loan loan, paymentSchedule ps
           WHERE loan.id = ps.loanId
@@ -1117,6 +1123,7 @@ BEGIN
             0 as collectedInterestPayment,
             0 as penaltyPaid,
             0 as collectedPenaltyPayment,
+            0 as pTotalAmount,
             1 as curRate
           FROM dual
           WHERE includeToday = 1
@@ -1134,6 +1141,7 @@ BEGIN
             0,
             0 as penaltyPaid,
             0,
+            0 as pTotalAmount,
             1 as curRate
           FROM loan loan, paymentSchedule ps
           WHERE loan.id = ps.loanId
@@ -1172,7 +1180,9 @@ BEGIN
 
     get_data: LOOP
 
-      FETCH tCursor INTO tempDate,disb, princPaid, princPayment, intPaid, collIntPayment, penPaid, collPenPayment, cur_rate;
+      FETCH tCursor INTO tempDate,disb, princPaid, princPayment,
+        intPaid, collIntPayment, penPaid,
+        collPenPayment, paymentTotalAmount, cur_rate;
 
       IF v_finished = 1 THEN
         LEAVE get_data;
@@ -1213,16 +1223,15 @@ BEGIN
                            + calculateLiborIO((intAccrued*(daysInPer-1)/(2*daysInPer)), prevDate, tempDate, loan_id);
         END IF;
 
+        IF isPaymentScheduleLastPaymentDate(tempDate, loan_id) THEN
+          SET srokDate = tempDate;
+        ELSE
+          SET srokDate = null;
+        END IF;
 
-
-
-      ELSE SET penAccrued = penAccrued;
+      ELSE
+        SET penAccrued = penAccrued;
       END IF;
-
-      IF isPaymentScheduleLastPaymentDate(tempDate, loan_id) THEN
-        SET srokDate = tempDate;
-      END IF;
-
 
       IF hasLiborType(loan_id, tempDate) THEN
         SET penAccrued = penAccrued
@@ -2594,4 +2603,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-30 20:05:31
+-- Dump completed on 2018-12-01 11:55:56
