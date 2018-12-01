@@ -816,6 +816,76 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP FUNCTION IF EXISTS `hasLiborTypeIO` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `hasLiborTypeIO`(loan_id bigint, inDate date) RETURNS tinyint(1)
+BEGIN
+
+    DECLARE result BOOLEAN DEFAULT FALSE;
+    DECLARE rateTypeId BIGINT;
+
+    SELECT cTerm.penaltyOnInterestOverdueRateTypeId
+    INTO rateTypeId
+    FROM creditTerm cTerm
+    WHERE cTerm.loanId = loan_id
+          AND cTerm.startDate < inDate
+          AND cTerm.record_status = 1
+    ORDER BY cTerm.startDate DESC LIMIT 1;
+
+    IF rateTypeId != 2 THEN SET result = TRUE;
+    END IF;
+
+    RETURN result;
+
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP FUNCTION IF EXISTS `hasLiborTypePO` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `hasLiborTypePO`(loan_id bigint, inDate date) RETURNS tinyint(1)
+BEGIN
+
+    DECLARE result BOOLEAN DEFAULT FALSE;
+    DECLARE rateTypeId BIGINT;
+
+    SELECT cTerm.penaltyOnPrincipleOverdueRateTypeId
+    INTO rateTypeId
+    FROM creditTerm cTerm
+    WHERE cTerm.loanId = loan_id
+          AND cTerm.startDate < inDate
+          AND cTerm.record_status = 1
+    ORDER BY cTerm.startDate DESC LIMIT 1;
+
+    IF rateTypeId != 2 THEN SET result = TRUE;
+    END IF;
+
+    RETURN result;
+
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP FUNCTION IF EXISTS `isDateFirstDayOfMonth` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1443,7 +1513,7 @@ BEGIN
       IF srokDate is not null THEN
         SET penAccrued = penAccrued
                          + calculatePenaltyAccrued(0, (intAccrued*(daysInPer-1)/(2*daysInPer)), daysInPer, tempDate, loan_id);
-        IF hasLiborType(loan_id, tempDate) THEN
+        IF hasLiborTypeIO(loan_id, tempDate) THEN
           SET penAccrued = penAccrued
                            + calculateLiborIO((intAccrued*(daysInPer-1)/(2*daysInPer)), prevDate, tempDate, loan_id);
         END IF;
@@ -1455,10 +1525,12 @@ BEGIN
         SET srokDate = tempDate;
       END IF;
 
-      IF hasLiborType(loan_id, tempDate) THEN
-        SET penAccrued = penAccrued
-                         + calculateLiborPO(princOverdue, prevDate, tempDate, loan_id)
-                         + calculateLiborIO(intOverdue, prevDate, tempDate, loan_id);
+      IF hasLiborTypePO(loan_id, tempDate) THEN
+        SET penAccrued = penAccrued + calculateLiborPO(princOverdue, prevDate, tempDate, loan_id);
+      END IF;
+
+      IF hasLiborTypeIO(loan_id, tempDate) THEN
+        SET penAccrued = penAccrued + calculateLiborIO(intOverdue, prevDate, tempDate, loan_id);
       END IF;
 
       IF penalty_limit_flag THEN
@@ -2843,4 +2915,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-01 19:28:34
+-- Dump completed on 2018-12-01 20:53:23
