@@ -2867,7 +2867,7 @@ BEGIN
         LEAVE loop1;
       END IF;
 
-      SELECT SUM(totalPrincipalPayment) INTO totalPrincPaymentSum FROM loanDetailedSummary WHERE loanId = child_loan_id;
+      SELECT SUM(principalPayment) INTO totalPrincPaymentSum FROM paymentSchedule WHERE record_status = 1 AND loanId = child_loan_id;
       SELECT SUM(totalDisbursement) INTO totalDisbSum FROM loanDetailedSummary WHERE loanId = child_loan_id;
 
       #totalprincipalpayment = 0 (1 of two)
@@ -2915,4 +2915,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-01 20:53:23
+-- Dump completed on 2018-12-01 21:07:42
