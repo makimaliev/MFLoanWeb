@@ -1490,7 +1490,7 @@ BEGIN
 
       SET totalIntPaid = totalIntPaid + intPaid;
 
-      IF (isPaymentSchedulePaymentDate(tempDate, loan_id) OR isPaymentScheduleLastPaymentDate(tempDate, loan_id)) AND DATEDIFF(inDate,tempDate)>0 THEN
+      IF (isPaymentSchedulePaymentDate(tempDate, loan_id) OR isPaymentScheduleLastPaymentDate(tempDate, loan_id)) OR DATEDIFF(inDate,tempDate)>0 THEN
         SET intPayment = totalIntAccrued - totalIntAccruedOnIntPayment;
         SET totalIntAccruedOnIntPayment = totalIntAccrued;
       ELSE SET intPayment = 0;
@@ -2843,4 +2843,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-01 19:09:38
+-- Dump completed on 2018-12-01 19:28:34
