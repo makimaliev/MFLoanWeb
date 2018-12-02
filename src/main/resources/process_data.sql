@@ -230,6 +230,9 @@ BEGIN
     DECLARE nOD INT DEFAULT 365;
     DECLARE flag BOOLEAN DEFAULT TRUE;
 
+    DECLARE grace_int INT DEFAULT 0;
+    DECLARE d_period_int INT;
+
     DECLARE v_finished INTEGER DEFAULT 0;
 
     DECLARE tCursor CURSOR FOR
@@ -259,6 +262,22 @@ BEGIN
     DECLARE CONTINUE HANDLER
     FOR NOT FOUND SET v_finished = 1;
 
+    if exists(
+    select graceDaysInterest
+    from creditTerm
+    where record_status = 1
+      and startDate < toDate
+      and loanId = loan_id
+      order by startDate desc limit 1) THEN
+      select graceDaysInterest
+      into grace_int
+      from creditTerm
+      where record_status = 1
+        and startDate < toDate
+        and loanId = loan_id
+        order by startDate desc limit 1;
+    end if;
+
     OPEN tCursor;
 
     get_data: LOOP
@@ -282,7 +301,12 @@ BEGIN
 
       SET daysInPer = calculateDays(prevDate, curDate, dIYMethod);
 
-      SET total = total + val*prevRate*daysInPer/nOD/100;
+      set d_period_int = daysInPer - grace_int;
+      if d_period_int < 0 then
+        set d_period_int = 0;
+      end if;
+
+      SET total = total + val*prevRate*d_period_int/nOD/100;
 
       SET prevDate = curDate;
 
@@ -294,7 +318,12 @@ BEGIN
 
     SET daysInPer = calculateDays(prevDate, toDate, dIYMethod);
 
-    SET total = total + val*tRate*daysInPer/nOD/100;
+    set d_period_int = daysInPer - grace_int;
+      if d_period_int < 0 then
+        set d_period_int = 0;
+      end if;
+
+    SET total = total + val*tRate*d_period_int/nOD/100;
 
     IF val < 0 THEN
       SET total = 0;
@@ -336,6 +365,9 @@ BEGIN
     DECLARE nOD INT DEFAULT 365;
     DECLARE flag BOOLEAN DEFAULT TRUE;
 
+    DECLARE grace_princ INT DEFAULT 0;
+    DECLARE d_period_princ INT;
+
     DECLARE v_finished INTEGER DEFAULT 0;
 
     DECLARE tCursor CURSOR FOR
@@ -365,6 +397,22 @@ BEGIN
     DECLARE CONTINUE HANDLER
     FOR NOT FOUND SET v_finished = 1;
 
+    if exists(
+    select graceDaysPrincipal
+    from creditTerm
+    where record_status = 1
+      and startDate < toDate
+      and loanId = loan_id
+      order by startDate desc limit 1) THEN
+      select graceDaysPrincipal
+      into grace_princ
+      from creditTerm
+      where record_status = 1
+        and startDate < toDate
+        and loanId = loan_id
+        order by startDate desc limit 1;
+    end if;
+
     OPEN tCursor;
 
     get_data: LOOP
@@ -388,7 +436,12 @@ BEGIN
 
       SET daysInPer = calculateDays(prevDate, curDate, dIYMethod);
 
-      SET total = total + val*prevRate*daysInPer/nOD/100;
+      set d_period_princ = daysInPer - grace_princ;
+      if d_period_princ < 0 then
+        set d_period_princ = 0;
+      end if;
+
+      SET total = total + val*prevRate*d_period_princ/nOD/100;
 
       SET prevDate = curDate;
 
@@ -400,7 +453,12 @@ BEGIN
 
     SET daysInPer = calculateDays(prevDate, toDate, dIYMethod);
 
-    SET total = total + val*tRate*daysInPer/nOD/100;
+    set d_period_princ = daysInPer - grace_princ;
+      if d_period_princ < 0 then
+        set d_period_princ = 0;
+      end if;
+
+    SET total = total + val*tRate*d_period_princ/nOD/100;
 
     IF val < 0 THEN
       SET total = 0;
@@ -438,6 +496,10 @@ BEGIN
     DECLARE nOD INT DEFAULT 365;
     DECLARE result_pOPO DOUBLE DEFAULT 0;
     DECLARE result_pOIO DOUBLE DEFAULT 0;
+    DECLARE grace_princ INT DEFAULT 0;
+    DECLARE grace_int INT DEFAULT 0;
+    DECLARE d_period_princ INT;
+    DECLARE d_period_int INT;
 
     DECLARE cur CURSOR FOR
       SELECT term.penaltyOnInterestOverdueRateValue, term.penaltyOnPrincipleOverdueRateValue, term.daysInYearMethodId
@@ -454,6 +516,22 @@ BEGIN
       SET pOPO = 0;
     END;
 
+    if exists(
+    select graceDaysPrincipal, graceDaysInterest
+    from creditTerm
+    where record_status = 1
+      and startDate < inDate
+      and loanId = loan_id
+      order by startDate desc limit 1) THEN
+      select graceDaysPrincipal, graceDaysInterest
+      into grace_princ, grace_int
+      from creditTerm
+      where record_status = 1
+        and startDate < inDate
+        and loanId = loan_id
+        order by startDate desc limit 1;
+    end if;
+
     OPEN cur;
     FETCH cur INTO pOIO, pOPO, dIYMethod;
     CLOSE cur;
@@ -461,10 +539,20 @@ BEGIN
     IF dIYMethod != 1 THEN SET nOD = 360;
     END IF;
 
-    IF principalOverdue > 0 THEN SET result_pOPO = principalOverdue*pOPO/100*daysInPeriod/nOD;
+    set d_period_princ = daysInPeriod - grace_princ;
+    if d_period_princ < 0 then
+      set d_period_princ = 0;
+    end if;
+
+    IF principalOverdue > 0 THEN SET result_pOPO = principalOverdue*pOPO/100*d_period_princ/nOD;
     END IF;
 
-    IF interestOverdue > 0 THEN SET result_pOIO = interestOverdue*pOIO/100*daysInPeriod/nOD;
+    set d_period_int = daysInPeriod - grace_int;
+    if d_period_int < 0 then
+      set d_period_int = 0;
+    end if;
+
+    IF interestOverdue > 0 THEN SET result_pOIO = interestOverdue*pOIO/100*d_period_int/nOD;
     END IF;
 
     RETURN result_pOIO + result_pOPO;
@@ -2931,4 +3019,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-02 16:50:22
+-- Dump completed on 2018-12-02 17:41:28
