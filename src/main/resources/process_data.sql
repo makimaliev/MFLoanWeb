@@ -2034,10 +2034,11 @@ BEGIN
     DECLARE v_finished INTEGER DEFAULT 0;
     DECLARE loan_id BIGINT;
     DECLARE loan_class INT;
+    DECLARE loan_state INT;
 
     DEClARE tCursor CURSOR FOR
 
-      SELECT loan.id, loan.loan_class_id
+      SELECT loan.id, loan.loan_class_id, loan.loanStateId
       FROM loan loan
       WHERE loan.id IN (SELECT DISTINCT parent_id FROM loan WHERE parent_id IS NOT NULL)
       ORDER BY loan.id;
@@ -2051,7 +2052,7 @@ BEGIN
 
     run_calculate: LOOP
 
-      FETCH tCursor INTO loan_id, loan_class;
+      FETCH tCursor INTO loan_id, loan_class, loan_state;
 
       IF v_finished = 1 THEN
         LEAVE run_calculate;
@@ -2059,7 +2060,7 @@ BEGIN
 
       #update parent loan amount
       IF loan_class = 2 THEN
-        UPDATE loan l, (select SUM(tLoan.amount) as ss FROM loan tLoan WHERE tLoan.parent_id = loan_id) t
+        UPDATE loan l, (select SUM(tLoan.amount) as ss FROM loan tLoan WHERE tLoan.parent_id = loan_id AND tLoan.loanStateId != 3) t
         SET l.amount = t.ss WHERE l.id = loan_id;
       END IF;
 
@@ -2097,7 +2098,8 @@ BEGIN
         WHERE p.loanId IN
               (SELECT id
                FROM loan
-               WHERE parent_id = loan_id)
+               WHERE parent_id = loan_id
+              AND loanStateId != 3)
         GROUP BY p.onDate
         ORDER BY p.onDate;
 
@@ -2853,13 +2855,14 @@ BEGIN
 
     DECLARE v_finished INTEGER DEFAULT 0;
     DECLARE child_loan_id BIGINT;
+    DECLARE loan_state INT;
     DECLARE totalPrincPaymentSum DOUBLE;
     DECLARE totalDisbSum DOUBLE;
     DECLARE flag BOOLEAN DEFAULT FALSE;
 
     DEClARE tCursor CURSOR FOR
 
-      SELECT loan.id
+      SELECT loan.id, loan.loanStateId
       FROM loan loan
       WHERE loan.parent_id = loan_id;
 
@@ -2870,20 +2873,24 @@ BEGIN
 
     loop1: LOOP
 
-      FETCH tCursor INTO child_loan_id;
+      FETCH tCursor INTO child_loan_id, loan_state;
 
       IF v_finished = 1 THEN
         LEAVE loop1;
       END IF;
 
-      SELECT SUM(principalPayment) INTO totalPrincPaymentSum FROM paymentSchedule WHERE record_status = 1 AND loanId = child_loan_id;
-      SELECT SUM(totalDisbursement) INTO totalDisbSum FROM loanDetailedSummary WHERE loanId = child_loan_id;
+      IF loan_state != 3 THEN
 
-      #totalprincipalpayment = 0 (1 of two)
-      #totaldisbursement > 0 (1 of two)
-      IF totalPrincPaymentSum = 0 AND totalDisbSum >= 0 THEN
-        UPDATE loanSummary SET totalDisbursed = 0, totalOutstanding = totalOutstanding - outstadingPrincipal, outstadingPrincipal = 0 WHERE loanId = child_loan_id;
-        SET flag = TRUE;
+        SELECT SUM(principalPayment) INTO totalPrincPaymentSum FROM paymentSchedule WHERE record_status = 1 AND loanId = child_loan_id;
+        SELECT SUM(totalDisbursement) INTO totalDisbSum FROM loanDetailedSummary WHERE loanId = child_loan_id;
+
+        #totalprincipalpayment = 0 (1 of two)
+        #totaldisbursement > 0 (1 of two)
+        IF totalPrincPaymentSum = 0 AND totalDisbSum >= 0 THEN
+          UPDATE loanSummary SET totalDisbursed = 0, totalOutstanding = totalOutstanding - outstadingPrincipal, outstadingPrincipal = 0 WHERE loanId = child_loan_id;
+          SET flag = TRUE;
+        END IF;
+
       END IF;
 
     END LOOP loop1;
@@ -2895,7 +2902,7 @@ BEGIN
       UPDATE loanSummary AS dest,
           (
              select tSum.onDate as tDate, SUM(tSum.totalDisbursed) as tDisb, SUM(tSum.outstadingPrincipal) as tOut FROM loanSummary tSum
-              WHERE tSum.loanId IN (SELECT id FROM loan WHERE parent_id = loan_id)
+              WHERE tSum.loanId IN (SELECT id FROM loan WHERE parent_id = loan_id AND loanStateId != 3)
               group by onDate
           ) AS src
       SET
@@ -2924,4 +2931,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-01 21:07:42
+-- Dump completed on 2018-12-02 16:13:42
