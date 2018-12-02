@@ -1131,6 +1131,9 @@ BEGIN
     DECLARE flag BOOLEAN DEFAULT FALSE;
     DECLARE isAlreadyInserted BOOLEAN DEFAULT FALSE;
 
+    DECLARE afterSrokDate BOOLEAN DEFAULT FALSE;
+
+
     DECLARE paymentSumAfterSpecDate DOUBLE;
 
     DECLARE pType VARCHAR(20);
@@ -1532,6 +1535,7 @@ BEGIN
 
       IF isPaymentScheduleLastPaymentDate(tempDate, loan_id) THEN
         SET srokDate = tempDate;
+        SET afterSrokDate = true;
       END IF;
 
       IF hasLiborTypePO(loan_id, tempDate) THEN
@@ -1571,7 +1575,7 @@ BEGIN
 
       SET totalIntPaid = totalIntPaid + intPaid;
 
-      IF (isPaymentSchedulePaymentDate(tempDate, loan_id) OR isPaymentScheduleLastPaymentDate(tempDate, loan_id)) OR DATEDIFF(inDate,tempDate)>0 THEN
+      IF (isPaymentSchedulePaymentDate(tempDate, loan_id) OR isPaymentScheduleLastPaymentDate(tempDate, loan_id)) OR afterSrokDate THEN
         SET intPayment = totalIntAccrued - totalIntAccruedOnIntPayment;
         SET totalIntAccruedOnIntPayment = totalIntAccrued;
       ELSE SET intPayment = 0;
