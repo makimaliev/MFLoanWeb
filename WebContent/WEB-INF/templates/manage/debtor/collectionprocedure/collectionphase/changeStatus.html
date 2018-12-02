@@ -114,8 +114,7 @@
                                                 <span class="m--font-danger">*</span>
                                             </label>
                                             <div class="col-lg-4 col-md-9 col-sm-12">
-                                                <select class="form-control m-bootstrap-select m_selectpicker" th:field="*{phaseStatus}" th:title="#{label.select}">
-                                                    <option value="0" th:text="#{label.select}"></option>
+                                                <select class="form-control m-bootstrap-select m_selectpicker" th:field="*{phaseStatus.id}" th:title="#{label.select}">
                                                     <option th:each="status : ${statuses}" th:value="${status.id}" th:text="${status.name}"></option>
                                                 </select>
                                             </div>

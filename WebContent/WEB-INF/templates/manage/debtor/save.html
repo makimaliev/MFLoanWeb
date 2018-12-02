@@ -91,8 +91,8 @@
 										Type <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{debtorType}" th:title="#{label.select}">
-											<option th:each="type : ${types}" th:value="${{type}}" th:text="${type.name}"></option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{debtorType.id}" th:title="#{label.select}">
+											<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
 											</option>
 										</select>
 									</div>
@@ -103,8 +103,8 @@
 										Work sector <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{workSector}" th:title="#{label.select}">
-											<option th:each="sector : ${sectors}" th:value="${{sector}}" th:text="${sector.name}"></option>
+										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{workSector.id}" th:title="#{label.select}">
+											<option th:each="sector : ${sectors}" th:value="${sector.id}" th:text="${sector.name}"></option>
 											</option>
 										</select>
 									</div>

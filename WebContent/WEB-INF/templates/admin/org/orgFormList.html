@@ -83,7 +83,7 @@
 													   data-target="#orgFormFormModal">
 														<span th:text="#{label.table.edit}"></span>
 													</a>
-													<a class="dropdown-item" href="#">
+													<a hidden="hidden" class="dropdown-item" href="#">
 														<span>
 															<form th:action="@{/orgForm/__${s.id}__/remove}" method="post">
 																<input hidden="true" type="text" id="id" name="id" th:value="${s.id}" />

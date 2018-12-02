@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <!-- begin::Head -->
 <head>
-    <title th:text="label.loan.view">Loan view</title>
+    <title th:text="#{label.loan.view}">Loan view</title>
 
     <div th:replace="fragments/header :: header-css"/>
     <link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
@@ -31,7 +31,7 @@
             <div class="m-subheader ">
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
-                        <h3 class="m-subheader__title m-subheader__title--separator">
+                        <h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.loans}">
                             Loans
                         </h3>
                         <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">

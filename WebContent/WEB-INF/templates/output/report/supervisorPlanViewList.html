@@ -6,7 +6,7 @@
 >
 <!-- begin::Head -->
 <head>
-    <title th:text="label.supervisor.plans">MFLoan|Supervisor Plan View</title>
+    <title th:text="#{label.supervisor.plans}">MFLoan|Supervisor Plan View</title>
 
     <div th:replace="fragments/header :: header-css"/>
     <link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
@@ -33,7 +33,7 @@
             <div class="m-subheader ">
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
-                        <h3 class="m-subheader__title m-subheader__title--separator" th:text="label.supervisor.plans">
+                        <h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.supervisor.plans}">
                             Supervisor Plan View
                         </h3>
                         <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
@@ -46,7 +46,7 @@
                                 -
                             </li>
                             <li class="m-nav__item">
-                                <span class="m-nav__link-text" th:text="label.supervisor.plans">List of Supervisor Plan View</span>
+                                <span class="m-nav__link-text" th:text="#{label.supervisor.plans}">List of Supervisor Plan View</span>
                             </li>
                         </ul>
                     </div>

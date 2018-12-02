@@ -36,10 +36,10 @@
 									<a th:href="@{/job/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.job.add}"></a>
 								</li>
 								<li sec:authorize="hasAnyRole('ADMIN')" class="m-portlet__nav-item">
-									<a th:href="@{/job/startAll}" class="m-portlet__nav-link btn btn-primary m-btn m-btn--air" th:text="#{label.jobs.start}"></a>
+									<a th:href="@{/job/startAll}" class="m-portlet__nav-link btn btn-primary m-btn m-btn--air" th:text="#{label.job.start}"></a>
 								</li>
 								<li sec:authorize="hasAnyRole('ADMIN')" class="m-portlet__nav-item">
-									<a th:href="@{/job/stopAll}" class="m-portlet__nav-link btn btn-danger m-btn m-btn--air" th:text="#{label.jobs.stop}"></a>
+									<a th:href="@{/job/stopAll}" class="m-portlet__nav-link btn btn-danger m-btn m-btn--air" th:text="#{label.job.stop}"></a>
 								</li>
 							</ul>
 						</div>

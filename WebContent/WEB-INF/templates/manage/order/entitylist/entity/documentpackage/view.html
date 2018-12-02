@@ -271,7 +271,7 @@
                                         <label for="description" class="form-control-label">
                                             <span th:text="#{label.document.registeredDate}"></span>
                                         </label>
-                                        <input type='text' class="form-control" id="m_datepicker_1_modal" readonly placeholder="Select date"/>
+                                        <input type='text' class="form-control" id="m_datepicker_1_modal" readonly th:placeholder="#{label.select.date}"/>
                                     </div>
                                     <div class="form-group" id="modalRegBy">
                                         <label for="description" class="form-control-label">
@@ -283,17 +283,17 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="description" class="form-control-label">
+                                        <label for="description" class="form-control-label" th:text="#{label.description}">
                                             Description
                                         </label>
                                         <textarea class="form-control" id="description"></textarea>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.form.cancel}">
                                         Close
                                     </button>
-                                    <button type="button" class="btn btn-primary" id="btnSave">
+                                    <button type="button" class="btn btn-primary" id="btnSave" th:text="#{label.form.save}">
                                         Save changes
                                     </button>
                                 </div>
