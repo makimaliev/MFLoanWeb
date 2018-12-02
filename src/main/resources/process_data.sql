@@ -139,11 +139,7 @@ BEGIN
              AND term.floatingRateTypeId = fr.floating_rate_type_id
              AND fr.date >= fromDate
              AND fr.date <= toDate
-             AND term.record_status = 1
-             AND term.id =
-                 (SELECT tt.id from creditTerm tt
-                 WHERE tt.loanId = loan_id
-                  ORDER BY tt.startDate DESC LIMIT 1))
+             AND term.record_status = 1)
       UNION
       (SELECT fr.rate, fr.date, term.daysInYearMethodId
        FROM floating_rate fr, creditTerm term
@@ -2935,4 +2931,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-02 16:13:42
+-- Dump completed on 2018-12-02 16:50:22
