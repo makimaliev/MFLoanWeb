@@ -116,7 +116,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `calculateLibor`(val double, fromDate date, toDate date, loan_id bigint) RETURNS double
+CREATE DEFINER=`root`@`localhost` FUNCTION `calculateLibor`(val double, fromDate date, toDate date, term_rate_type int, term_diy_method int, loan_id bigint, grace_type int) RETURNS double
 BEGIN
 
     DECLARE total DOUBLE DEFAULT 0;
@@ -126,38 +126,72 @@ BEGIN
     DECLARE curDate DATE;
     DECLARE prevDate DATE;
     DECLARE daysInPer INT DEFAULT 0;
-    DECLARE dIYMethod INT;
     DECLARE nOD INT DEFAULT 365;
     DECLARE flag BOOLEAN DEFAULT TRUE;
+
+    DECLARE grace_princ INT DEFAULT 0;
+    DECLARE grace_int INT DEFAULT 0;
 
     DECLARE v_finished INTEGER DEFAULT 0;
 
     DECLARE tCursor CURSOR FOR
-      (SELECT fr.rate, fr.date, term.daysInYearMethodId
-       FROM floating_rate fr, creditTerm term
-       WHERE term.loanId = loan_id
-             AND term.floatingRateTypeId = fr.floating_rate_type_id
+      (SELECT fr.rate, fr.date
+       FROM floating_rate fr
+       WHERE fr.floating_rate_type_id = term_rate_type
              AND fr.date >= fromDate
-             AND fr.date <= toDate
-             AND term.record_status = 1)
+             AND fr.date <= toDate)
       UNION
-      (SELECT fr.rate, fr.date, term.daysInYearMethodId
-       FROM floating_rate fr, creditTerm term
-       WHERE term.loanId = loan_id
-             AND term.floatingRateTypeId = fr.floating_rate_type_id
+      (SELECT fr.rate, fr.date
+       FROM floating_rate fr
+       WHERE fr.floating_rate_type_id = term_rate_type
              AND fr.date <= fromDate
-             AND term.record_status = 1
        ORDER BY fr.date DESC LIMIT 1)
       ORDER BY date;
 
     DECLARE CONTINUE HANDLER
     FOR NOT FOUND SET v_finished = 1;
 
+    if grace_type = 1 then
+      if exists(
+      select graceDaysPrincipal
+      from creditTerm
+      where record_status = 1
+        and startDate < toDate
+        and loanId = loan_id
+        order by startDate desc limit 1) THEN
+        select graceDaysPrincipal
+        into grace_princ
+        from creditTerm
+        where record_status = 1
+          and startDate < toDate
+          and loanId = loan_id
+          order by startDate desc limit 1;
+      end if;
+    end if;
+
+    if grace_type = 2 then
+      if exists(
+        select graceDaysInterest
+        from creditTerm
+        where record_status = 1
+          and startDate < toDate
+          and loanId = loan_id
+          order by startDate desc limit 1) THEN
+          select graceDaysInterest
+          into grace_int
+          from creditTerm
+          where record_status = 1
+            and startDate < toDate
+            and loanId = loan_id
+            order by startDate desc limit 1;
+      end if;
+    end if;
+
     OPEN tCursor;
 
     get_data: LOOP
 
-      FETCH tCursor INTO tRate, tDate, dIYMethod;
+      FETCH tCursor INTO tRate, tDate;
 
       IF v_finished = 1 THEN
         LEAVE get_data;
@@ -171,10 +205,24 @@ BEGIN
         SET curDate = tDate;
       END IF;
 
-      IF dIYMethod != 1 THEN SET nOD = 360;
+      IF term_diy_method != 1 THEN SET nOD = 360;
       END IF;
 
-      SET daysInPer = calculateDays(prevDate, curDate, dIYMethod);
+      SET daysInPer = calculateDays(prevDate, curDate, term_diy_method);
+
+      if grace_type = 1 then
+        SET daysInPer = daysInPer - grace_princ;
+        if daysInPer < 0 then
+          set daysInPer = 0;
+        end if;
+      end if;
+
+      if grace_type = 2 then
+        SET daysInPer = daysInPer - grace_int;
+        if daysInPer < 0 then
+          set daysInPer = 0;
+        end if;
+      end if;
 
       SET total = total + val*prevRate*daysInPer/nOD/100;
 
@@ -186,7 +234,21 @@ BEGIN
 
     CLOSE tCursor;
 
-    SET daysInPer = calculateDays(prevDate, toDate, dIYMethod);
+    SET daysInPer = calculateDays(prevDate, toDate, term_diy_method);
+
+    if grace_type = 1 then
+      SET daysInPer = daysInPer - grace_princ;
+      if daysInPer < 0 then
+        set daysInPer = 0;
+      end if;
+    end if;
+
+    if grace_type = 2 then
+      SET daysInPer = daysInPer - grace_int;
+      if daysInPer < 0 then
+        set daysInPer = 0;
+      end if;
+    end if;
 
     SET total = total + val*tRate*daysInPer/nOD/100;
 
@@ -1228,6 +1290,14 @@ BEGIN
     DECLARE total_wo_int DOUBLE DEFAULT 0;
     DECLARE total_wo_pen DOUBLE DEFAULT 0;
 
+    DECLARE term_rate_type_id INT;
+    DECLARE term_rate_po_id INT;
+    DECLARE term_rate_io_id INT;
+    DECLARE term_diy_method_id INT;
+    DECLARE has_libor BOOLEAN;
+    DECLARE has_libor_po BOOLEAN;
+    DECLARE has_libor_io BOOLEAN;
+
     DEClARE tCursor CURSOR FOR
 
       SELECT
@@ -1407,6 +1477,81 @@ BEGIN
       END IF;
 
       SET penalty_limit = getPenaltyLimitPercent(tempDate, loan_id);
+
+      set has_libor = false;
+
+      IF EXISTS(
+        SELECT cTerm.floatingRateTypeId, cTerm.daysInYearMethodId
+        FROM creditTerm cTerm
+        WHERE cTerm.loanId = loan_id
+              AND cTerm.startDate < tempDate
+              AND cTerm.record_status = 1
+        ORDER BY cTerm.startDate DESC LIMIT 1
+        ) THEN
+        SELECT cTerm.floatingRateTypeId, cTerm.daysInYearMethodId
+            INTO term_rate_type_id, term_diy_method_id
+        FROM creditTerm cTerm
+        WHERE cTerm.loanId = loan_id
+              AND cTerm.startDate < tempDate
+              AND cTerm.record_status = 1
+        ORDER BY cTerm.startDate DESC LIMIT 1;
+      END IF;
+
+      if term_rate_type_id is not null then
+        if term_rate_type_id  != 2 then
+          set has_libor = true;
+        end if;
+      end if;
+
+      set has_libor_po = false;
+
+      IF EXISTS(
+        SELECT cTerm.penaltyOnPrincipleOverdueRateTypeId, cTerm.daysInYearMethodId
+        FROM creditTerm cTerm
+        WHERE cTerm.loanId = loan_id
+              AND cTerm.startDate < tempDate
+              AND cTerm.record_status = 1
+        ORDER BY cTerm.startDate DESC LIMIT 1
+        ) THEN
+        SELECT cTerm.penaltyOnPrincipleOverdueRateTypeId, cTerm.daysInYearMethodId
+            INTO term_rate_po_id, term_diy_method_id
+        FROM creditTerm cTerm
+        WHERE cTerm.loanId = loan_id
+              AND cTerm.startDate < tempDate
+              AND cTerm.record_status = 1
+        ORDER BY cTerm.startDate DESC LIMIT 1;
+      END IF;
+
+      if term_rate_po_id is not null then
+        if term_rate_po_id  != 2 then
+          set has_libor_po = true;
+        end if;
+      end if;
+
+      set has_libor_io = false;
+
+      IF EXISTS(
+        SELECT cTerm.penaltyOnInterestOverdueRateTypeId, cTerm.daysInYearMethodId
+        FROM creditTerm cTerm
+        WHERE cTerm.loanId = loan_id
+              AND cTerm.startDate < tempDate
+              AND cTerm.record_status = 1
+        ORDER BY cTerm.startDate DESC LIMIT 1
+        ) THEN
+        SELECT cTerm.penaltyOnInterestOverdueRateTypeId, cTerm.daysInYearMethodId
+            INTO term_rate_io_id, term_diy_method_id
+        FROM creditTerm cTerm
+        WHERE cTerm.loanId = loan_id
+              AND cTerm.startDate < tempDate
+              AND cTerm.record_status = 1
+        ORDER BY cTerm.startDate DESC LIMIT 1;
+      END IF;
+
+      if term_rate_io_id is not null then
+        if term_rate_io_id  != 2 then
+          set has_libor_io = true;
+        end if;
+      end if;
 
       IF flag = FALSE THEN
         SET prevDate = tempDate;
@@ -1598,8 +1743,8 @@ BEGIN
 
       SET intAccrued = calculateInterestAccrued(princOutstanding, daysInPer, tempDate, loan_id);
 
-      IF hasLiborType(loan_id, tempDate) THEN
-        SET intAccrued = intAccrued + calculateLibor(princOutstanding, prevDate, tempDate, loan_id);
+      IF has_libor THEN
+        SET intAccrued = intAccrued + calculateLibor(princOutstanding, prevDate, tempDate, term_rate_type_id, term_diy_method_id, loan_id, 0);
       END IF;
 
       SET totalIntAccrued = totalIntAccrued + intAccrued;
@@ -1609,9 +1754,9 @@ BEGIN
       IF srokDate is not null THEN
         SET penAccrued = penAccrued
                          + calculatePenaltyAccrued(0, (intAccrued*(daysInPer-1)/(2*daysInPer)), daysInPer, tempDate, loan_id);
-        IF hasLiborTypeIO(loan_id, tempDate) THEN
+        IF has_libor_io THEN
           SET penAccrued = penAccrued
-                           + calculateLiborIO((intAccrued*(daysInPer-1)/(2*daysInPer)), prevDate, tempDate, loan_id);
+                           + calculateLibor((intAccrued*(daysInPer-1)/(2*daysInPer)), prevDate, tempDate, term_rate_io_id, term_diy_method_id, loan_id, 2);
         END IF;
       ELSE
         SET penAccrued = penAccrued;
@@ -1622,12 +1767,12 @@ BEGIN
         SET afterSrokDate = true;
       END IF;
 
-      IF hasLiborTypePO(loan_id, tempDate) THEN
-        SET penAccrued = penAccrued + calculateLiborPO(princOverdue, prevDate, tempDate, loan_id);
+      IF has_libor_po THEN
+        SET penAccrued = penAccrued + calculateLibor(princOverdue, prevDate, tempDate, term_rate_po_id, term_diy_method_id, loan_id, 1);
       END IF;
 
-      IF hasLiborTypeIO(loan_id, tempDate) THEN
-        SET penAccrued = penAccrued + calculateLiborIO(intOverdue, prevDate, tempDate, loan_id);
+      IF has_libor_io THEN
+        SET penAccrued = penAccrued + calculateLibor(intOverdue, prevDate, tempDate, term_rate_io_id, term_diy_method_id, loan_id,2);
       END IF;
 
       IF penalty_limit_flag THEN
@@ -2022,6 +2167,71 @@ BEGIN
     END LOOP run_calculate;
 
     CLOSE tCursor;
+
+    CALL runUpdateRootLoans();
+
+    CALL updateBankruptInfo();
+
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `runCalculateLoanDetailedSummaryForSelectedLoansByRegionId` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `runCalculateLoanDetailedSummaryForSelectedLoansByRegionId`(IN inDate DATE, IN region_id BIGINT)
+BEGIN
+
+    DECLARE v_finished INTEGER DEFAULT 0;
+    DECLARE loanId BIGINT;
+    DECLARE countLoans INT DEFAULT 0;
+
+    DECLARE start_time bigint;
+    DECLARE end_time bigint;
+
+    DEClARE tCursor CURSOR FOR
+
+      SELECT
+        loan.id
+      FROM loan loan
+      WHERE loan.id IN ( select lv.v_loan_id from loan_view lv where lv.v_debtor_region_id = region_id)
+      ORDER BY loan.id;
+
+    DECLARE CONTINUE HANDLER
+    FOR NOT FOUND SET v_finished = 1;
+
+    SET start_time = (UNIX_TIMESTAMP(NOW()) * 1000000 + MICROSECOND(NOW(6)));
+
+    OPEN tCursor;
+
+    run_calculate: LOOP
+
+      FETCH tCursor INTO loanId;
+
+      IF v_finished = 1 THEN
+        LEAVE run_calculate;
+      END IF;
+
+      CALL calculateLoanDetailedSummaryUntilOnDate(loanId, inDate, 1);
+
+      SET countLoans = countLoans + 1;
+
+    END LOOP run_calculate;
+
+    CLOSE tCursor;
+
+    SET end_time = (UNIX_TIMESTAMP(NOW()) * 1000000 + MICROSECOND(NOW(6)));
+
+    select (end_time - start_time) / 1000 as runningTime, countLoans as numberOfLoans;
 
     CALL runUpdateRootLoans();
 
@@ -3019,57 +3229,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-02 17:41:28
-
-
-DROP PROCEDURE IF EXISTS `runCalculateLoanDetailedSummaryForSelectedLoansByRegionId`;
-CREATE PROCEDURE runCalculateLoanDetailedSummaryForSelectedLoansByRegionId(IN inDate DATE, IN region_id BIGINT)
-  BEGIN
-
-    DECLARE v_finished INTEGER DEFAULT 0;
-    DECLARE loanId BIGINT;
-    DECLARE countLoans INT DEFAULT 0;
-
-    DECLARE start_time bigint;
-    DECLARE end_time bigint;
-
-    DEClARE tCursor CURSOR FOR
-
-      SELECT
-        loan.id
-      FROM loan loan
-      WHERE loan.id IN ( select lv.v_loan_id from loan_view lv where lv.v_debtor_region_id = region_id)
-      ORDER BY loan.id;
-
-    DECLARE CONTINUE HANDLER
-    FOR NOT FOUND SET v_finished = 1;
-
-    SET start_time = (UNIX_TIMESTAMP(NOW()) * 1000000 + MICROSECOND(NOW(6)));
-
-    OPEN tCursor;
-
-    run_calculate: LOOP
-
-      FETCH tCursor INTO loanId;
-
-      IF v_finished = 1 THEN
-        LEAVE run_calculate;
-      END IF;
-
-      CALL calculateLoanDetailedSummaryUntilOnDate(loanId, inDate, 1);
-
-      SET countLoans = countLoans + 1;
-
-    END LOOP run_calculate;
-
-    CLOSE tCursor;
-
-    SET end_time = (UNIX_TIMESTAMP(NOW()) * 1000000 + MICROSECOND(NOW(6)));
-
-    select (end_time - start_time) / 1000 as runningTime, countLoans as numberOfLoans;
-
-    CALL runUpdateRootLoans();
-
-    CALL updateBankruptInfo();
-
-  END;
+-- Dump completed on 2018-12-03 11:29:09
