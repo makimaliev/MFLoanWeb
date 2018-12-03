@@ -3020,3 +3020,56 @@ DELIMITER ;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2018-12-02 17:41:28
+
+
+DROP PROCEDURE IF EXISTS `runCalculateLoanDetailedSummaryForSelectedLoansByRegionId`;
+CREATE PROCEDURE runCalculateLoanDetailedSummaryForSelectedLoansByRegionId(IN inDate DATE, IN region_id BIGINT)
+  BEGIN
+
+    DECLARE v_finished INTEGER DEFAULT 0;
+    DECLARE loanId BIGINT;
+    DECLARE countLoans INT DEFAULT 0;
+
+    DECLARE start_time bigint;
+    DECLARE end_time bigint;
+
+    DEClARE tCursor CURSOR FOR
+
+      SELECT
+        loan.id
+      FROM loan loan
+      WHERE loan.id IN ( select lv.v_loan_id from loan_view lv where lv.v_debtor_region_id = region_id)
+      ORDER BY loan.id;
+
+    DECLARE CONTINUE HANDLER
+    FOR NOT FOUND SET v_finished = 1;
+
+    SET start_time = (UNIX_TIMESTAMP(NOW()) * 1000000 + MICROSECOND(NOW(6)));
+
+    OPEN tCursor;
+
+    run_calculate: LOOP
+
+      FETCH tCursor INTO loanId;
+
+      IF v_finished = 1 THEN
+        LEAVE run_calculate;
+      END IF;
+
+      CALL calculateLoanDetailedSummaryUntilOnDate(loanId, inDate, 1);
+
+      SET countLoans = countLoans + 1;
+
+    END LOOP run_calculate;
+
+    CLOSE tCursor;
+
+    SET end_time = (UNIX_TIMESTAMP(NOW()) * 1000000 + MICROSECOND(NOW(6)));
+
+    select (end_time - start_time) / 1000 as runningTime, countLoans as numberOfLoans;
+
+    CALL runUpdateRootLoans();
+
+    CALL updateBankruptInfo();
+
+  END;
