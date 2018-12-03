@@ -14,6 +14,8 @@ public class LoanModel implements Comparable<LoanModel> {
     @Id
     private Long id;
 
+    private Integer loan_class_id;
+
     private String regNumber;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -43,6 +45,14 @@ public class LoanModel implements Comparable<LoanModel> {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getLoan_class_id() {
+        return loan_class_id;
+    }
+
+    public void setLoan_class_id(Integer loan_class_id) {
+        this.loan_class_id = loan_class_id;
     }
 
     public String getRegNumber() {

@@ -425,7 +425,7 @@ public class DebtorController {
 
 	private List<LoanModel> getLoansByDebtorId(long debtorId)
 	{
-		String baseQuery = "SELECT loan.id, loan.regNumber, loan.regDate, loan.amount, loan.currencyId, currency.name as currencyName,\n" +
+		String baseQuery = "SELECT loan.id, loan.loan_class_id, loan.regNumber, loan.regDate, loan.amount, loan.currencyId, currency.name as currencyName,\n" +
 				"  loan.loanTypeId, type.name as loanTypeName, loan.loanStateId, state.name as loanStateName,\n" +
 				"  loan.supervisorId, IFNULL(loan.parent_id, 0) as parentLoanId, loan.creditOrderId\n" +
 				"FROM loan loan, orderTermCurrency currency, loanType type, loanState state\n" +

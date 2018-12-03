@@ -114,7 +114,7 @@ var DatatableDataLocalLoans = function () {
                     var result = '';
 
                     result = result + '\
-						<a sec:authorize="hasAnyRole(ADMIN,PERM_UPDATE_LOAN)" href="/manage/debtor/'+ debtorId + '/loan/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+						<a sec:authorize="hasAnyRole(ADMIN,PERM_UPDATE_LOAN)" href="/manage/debtor/'+ debtorId + '/loan/' + row.loan_class_id + '/'+ row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-edit"></i>\
 						</a>\
 						<a hidden="hidden" href="/manage/debtor/'+ debtorId + '/loan/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
