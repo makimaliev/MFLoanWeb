@@ -2364,6 +2364,9 @@ BEGIN
 
       CALL updateRootLoanPayment(loan_id);
       CALL updateRootLoanPaymentSchedule(loan_id);
+      IF loan_class = 2 THEN
+        CALL updateTrancheeLoanData(loan_id);
+      END IF;
 
       INSERT INTO loanSummary (version, loanAmount, loanSummaryType, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty, overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalFeePaid, totalInterestPaid, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalPenaltyPaid, totalPrincipalPaid, loanId)
         SELECT 1,
@@ -2402,10 +2405,6 @@ BEGIN
         ORDER BY p.onDate;
 
       #CALL updateRootLoanSummary(loan_id);
-
-      IF loan_class = 2 THEN
-        CALL updateTrancheeLoanData(loan_id);
-      END IF;
 
     END LOOP run_calculate;
 
