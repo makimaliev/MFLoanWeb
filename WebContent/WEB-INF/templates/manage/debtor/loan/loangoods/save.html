@@ -112,13 +112,11 @@
 									</label>
 
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_unitType">
-											<option value="" th:value="${lg.unitTypeId}" th:text="${thisUnit}">
-												Все
-											</option>
+										<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_unitType" th:field="*{lg.quantityType.id}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="unitType : ${unitTypes}" th:value="${unitType.id}" th:text="${unitType.name}"></option>
 										</select>
-										<input hidden="hidden" type="text" class="form-control m-input" id="unitTypeId" th:field="*{lg.unitTypeId}">
+										<input hidden="hidden" type="text" class="form-control m-input" id="unitTypeId" >
 									</div>
 								</div>
 
@@ -128,13 +126,12 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_goodType">
-											<option value="" th:value="${lg.goodsTypeId}" th:text="${thisGoodType}">
-												Все
-											</option>
+										<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_goodType" th:field="*{lg.goodType.id}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="goodType : ${goodTypes}" th:value="${goodType.id}" th:text="${goodType.name}"></option>
 										</select>
-										<input hidden="hidden" type="text" class="form-control m-input" id="goodTypeId" th:field="*{lg.goodsTypeId}">									</div>
+										<!--<input hidden="hidden" type="text" class="form-control m-input" id="goodTypeId" th:field="*{lg.goodType}">									</div>-->
+								</div>
 								</div>
 
 							</div>
@@ -178,14 +175,14 @@
 	$("#m_form_unitType,#m_form_goodType").selectpicker();
     // $("#unitTypeId").val($("#m_form_goodType").val());
     // alert($("#unitTypeId").val());
-    $("#m_form_unitType").change(function () {
-        $("#unitTypeId").val($("#m_form_unitType").val());
-        // alert($("#unitTypeId").val())
-    });
-    $("#m_form_goodType").change(function () {
-        $("#goodTypeId").val($("#m_form_goodType").val());
-        // alert($("#goodTypeId").val())
-    });
+    // $("#m_form_unitType").change(function () {
+    //     $("#unitTypeId").val($("#m_form_unitType").val());
+    //     alert($("#unitTypeId").val())
+    // });
+    // $("#m_form_goodType").change(function () {
+    //     $("#goodTypeId").val($("#m_form_goodType").val());
+    //     alert($("#goodTypeId").val())
+    // });
 </script>
 </body>
 <!-- end::Body -->

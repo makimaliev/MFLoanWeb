@@ -132,8 +132,8 @@ public class RestLoanViewController {
 
 
         System.out.println("==========================================================================================");
-        System.out.println(parameter.keySet());
-        System.out.println(parameter.values());
+        System.out.println(parameters.keySet());
+        System.out.println(parameters.values());
         System.out.println("==========================================================================================");
 
 //        if(this.s.equals("start")){

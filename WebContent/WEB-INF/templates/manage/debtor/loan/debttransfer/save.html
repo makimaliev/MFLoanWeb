@@ -144,13 +144,11 @@
 										<span th:text="#{label.loan.debtTransfer.unitType}">Unit Type Id</span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_unitType">
-											<option value="" th:value="${dt.unitTypeId}" th:text="${thisUnit}">
-												Все
-											</option>
+										<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_unitType" th:field="*{quantityType.id}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="unitType : ${unitTypes}" th:value="${unitType.id}" th:text="${unitType.name}"></option>
 										</select>
-										<input hidden="hidden" type="text" class="form-control m-input" id="unitTypeId" th:field="*{unitTypeId}">
+										<!--<input hidden="hidden" type="text" class="form-control m-input" id="unitTypeId" >-->
 									</div>
 									<!--<div class="col-lg-4 col-md-9 col-sm-12">-->
 										<!--<input type="text" class="form-control m-input" th:field="*{unitTypeId}">-->
@@ -226,13 +224,12 @@
 										<span th:text="#{label.loan.debtTransfer.goodsType}">Goods type id</span><span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_goodType">
-											<option value="" th:value="${dt.goodsTypeId}" th:text="${thisGoodType}">
-												Все
-											</option>
+										<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_goodType" th:field="*{goodType.id}">
+											<option value="0" th:text="#{label.select}">Все</option>
 											<option th:each="goodType : ${goodTypes}" th:value="${goodType.id}" th:text="${goodType.name}"></option>
 										</select>
-										<input hidden="hidden" type="text" class="form-control m-input" id="goodTypeId" th:field="*{goodsTypeId}">									</div>
+										<!--<input hidden="hidden" type="text" class="form-control m-input" id="goodTypeId" >									-->
+									</div>
 									</div>
 									<!--<div class="col-lg-4 col-md-9 col-sm-12">-->
 										<!--<input type="text" class="form-control m-input" name="goodsTypeId" th:value="${dt.goodsTypeId}">-->
@@ -320,14 +317,14 @@
     $("#m_form_unitType,#m_form_goodType").selectpicker();
     // $("#unitTypeId").val($("#m_form_goodType").val());
     // alert($("#unitTypeId").val());
-    $("#m_form_unitType").change(function () {
-        $("#unitTypeId").val($("#m_form_unitType").val());
+    // $("#m_form_unitType").change(function () {
+    //     $("#unitTypeId").val($("#m_form_unitType").val());
+    //     // alert($("#unitTypeId").val())
+    // });
+    // $("#m_form_goodType").change(function () {
+    //     $("#goodTypeId").val($("#m_form_goodType").val());
         // alert($("#unitTypeId").val())
-    });
-    $("#m_form_goodType").change(function () {
-        $("#goodTypeId").val($("#m_form_goodType").val());
-        // alert($("#unitTypeId").val())
-    });
+    // });
 </script>
 </body>
 <!-- end::Body -->

@@ -69,7 +69,7 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div class="m-input-icon m-input-icon--left">
-                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder=#{label.reg.number} id="reg_number">
+                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.reg.number}" id="reg_number">
                                         <span class="m-input-icon__icon m-input-icon__icon--left">
                                                     <span>
                                                         <i class="la la-search"></i>
@@ -398,7 +398,7 @@
                 datatable.search($(this).find("input").val(), 'toDater');
             }).val(typeof query.toDater!== 'undefined' ? query.toDater: '');
 
-            $('#reg_number').on('change', function () {
+            $('#reg_number').on('keyup', function () {
                 datatable.search($(this).val(), 'regNumber');
             }).val(typeof query.regNumber!== 'undefined' ? query.regNumber: '');
 

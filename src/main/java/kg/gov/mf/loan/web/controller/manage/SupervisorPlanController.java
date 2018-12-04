@@ -42,7 +42,8 @@ public class SupervisorPlanController {
 		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
 	    binder.registerCustomEditor(Date.class, editor);
 	}
-	
+
+	private Date globalRegDate=new Date();
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/sp/{spId}/save", method=RequestMethod.GET)
 	public String formCreditTerm(ModelMap model, 
 			@PathVariable("debtorId")Long debtorId, 
@@ -57,7 +58,10 @@ public class SupervisorPlanController {
 			
 		if(spId > 0)
 		{
-			model.addAttribute("sp", spService.getById(spId));
+			SupervisorPlan sp=spService.getById(spId);
+			System.out.println(sp.getReg_date());
+			globalRegDate=sp.getReg_date();
+			model.addAttribute("sp", sp);
 		}
 		
         model.addAttribute("debtorId", debtorId);
@@ -80,6 +84,7 @@ public class SupervisorPlanController {
 			spService.add(sp);
 		}
 		else
+			sp.setReg_date(globalRegDate);
 			spService.update(sp);
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
