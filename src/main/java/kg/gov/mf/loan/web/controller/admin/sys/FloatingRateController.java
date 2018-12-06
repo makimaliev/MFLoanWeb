@@ -7,15 +7,16 @@ import kg.gov.mf.loan.manage.service.orderterm.FloatingRateService;
 import kg.gov.mf.loan.manage.service.orderterm.OrderTermCurrencyService;
 import kg.gov.mf.loan.manage.service.orderterm.OrderTermFloatingRateTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -31,6 +32,13 @@ public class FloatingRateController {
     {
         this.floatingRateService = rs;
     }
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder)
+	{
+		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
+		binder.registerCustomEditor(Date.class, editor);
+	}
 
 	@RequestMapping(value = "/floatingRate/list", method = RequestMethod.GET)
 	public String listFloatingRates(Model model) {

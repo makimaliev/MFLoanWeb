@@ -39,8 +39,14 @@ import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.order.CreditOrderService;
 import kg.gov.mf.loan.web.util.Utils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
 @Controller
 public class LoanController {
+
+    @Autowired
+    EntityManager entityManager;
 	
 	@Autowired
 	DebtorService debtorService;
@@ -123,26 +129,26 @@ public class LoanController {
         model.addAttribute("supervisorName",staff.getName());
 
         Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
-        String jsonTerms = gson.toJson(getTermsByLoanId(loanId));
-        model.addAttribute("terms", jsonTerms);
-
+//        String jsonTerms = gson.toJson(getTermsByLoanId(loanId));
+//        model.addAttribute("terms", jsonTerms);
+//
         String jsonChildList = gson.toJson(getChildrenByLoanId(loanId));
-        model.addAttribute("children", jsonChildList);
+//        model.addAttribute("children", jsonChildList);
         if(jsonChildList.equals("[]")){
             model.addAttribute("isEmptyChild","true");
         }
 
-        String jsonPaymentSchedules = gson.toJson(getPaymentSchedulesByLoanId(loanId));
-        model.addAttribute("paymentSchedules", jsonPaymentSchedules);
+//        String jsonPaymentSchedules = gson.toJson(getPaymentSchedulesByLoanId(loanId));
+//        model.addAttribute("paymentSchedules", jsonPaymentSchedules);
 
-        String jsonPayments = gson.toJson(getPaymentsByLoanId(loanId));
-        model.addAttribute("payments", jsonPayments);
+//        String jsonPayments = gson.toJson(getPaymentsByLoanId(loanId));
+//        model.addAttribute("payments", jsonPayments);
 
-        String jsonWriteOffs = gson.toJson(getWOsByLoanId(loanId));
-        model.addAttribute("WOs", jsonWriteOffs);
+//        String jsonWriteOffs = gson.toJson(getWOsByLoanId(loanId));
+//        model.addAttribute("WOs", jsonWriteOffs);
 
-        String jsonSupervisorPlans = gson.toJson(getSPsByLoanId(loanId));
-        model.addAttribute("SPs", jsonSupervisorPlans);
+//        String jsonSupervisorPlans = gson.toJson(getSPsByLoanId(loanId));
+//        model.addAttribute("SPs", jsonSupervisorPlans);
 
         List<OrderTermRatePeriod> ratePeriods = ratePeriodService.list();
         model.addAttribute("ratePeriods", ratePeriods);
@@ -181,11 +187,11 @@ public class LoanController {
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtor", debtor);
 
-        String jsonDetailedSummaries = gson.toJson(getDetailedSummariesByLoanId(loanId));
-        model.addAttribute("detailedSummaries", jsonDetailedSummaries);
+//        String jsonDetailedSummaries = gson.toJson(getDetailedSummariesByLoanId(loanId));
+//        model.addAttribute("detailedSummaries", jsonDetailedSummaries);
 
-        String jsonSummaries = gson.toJson(getSummariesByLoanId(loanId));
-        model.addAttribute("summaries", jsonSummaries);
+//        String jsonSummaries = gson.toJson(getSummariesByLoanId(loanId));
+//        model.addAttribute("summaries", jsonSummaries);
 
         String jsonAccrues = gson.toJson(getAccruesByLoanId(loanId));
         model.addAttribute("accrues", jsonAccrues);
@@ -528,6 +534,93 @@ public class LoanController {
         return result;
     }
 
+    @PostMapping("/paymentScheduleRequest/{loanId}")
+    @ResponseBody
+    public String getListOfPaymentSchedules(@PathVariable("loanId") Long loanId){
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String result = gson.toJson(getPaymentSchedulesByLoanId(loanId));
+        return result;
+    }
+    @PostMapping("/paymentRequest/{loanId}")
+    @ResponseBody
+    public String getListOfPayments(@PathVariable("loanId") Long loanId){
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String result = gson.toJson(getPaymentsByLoanId(loanId));
+        return result;
+    }
+
+    @PostMapping("/writeOffsRequest/{loanId}")
+    @ResponseBody
+    public String getListOfWriteOffs(@PathVariable("loanId") Long loanId){
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String jsonWriteOffs = gson.toJson(getWOsByLoanId(loanId));
+        return jsonWriteOffs;
+    }
+
+    @PostMapping("/loanSummaryRequest/{loanId}")
+    @ResponseBody
+    public String getListOfLoanSummaries(@PathVariable("loanId") Long loanId){
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String result = gson.toJson(getSummariesByLoanId(loanId));
+        return result;
+    }
+
+    @PostMapping("/detailedLoanSummaryRequest/{loanId}")
+    @ResponseBody
+    public String getListOfDetailedLoanSummaries(@PathVariable("loanId") Long loanId){
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+//        ,@RequestParam Map<String,String> datatable
+
+//        String pageStr = datatable.get("datatable[pagination][page]");
+//        String perPageStr = datatable.get("datatable[pagination][perpage]");
+
+        List<LoanDetailedSummaryModel> result = new ArrayList<>();
+        Loan loan = loanService.getById(loanId);
+//        LIMIT "+pageStr+","+perPageStr
+        String baseQuery="select * from loanDetailedSummary where loanId="+loanId+" ORDER BY onDate asc ";
+
+        Query query=entityManager.createNativeQuery(baseQuery,LoanDetailedSummaryModel.class);
+        result=query.getResultList();
+
+        String result1 = gson.toJson(result);
+
+        return result1;
+    }
+
+    @PostMapping("/accrueRequest/{loanId}")
+    @ResponseBody
+    public String getListOfAccrues(@PathVariable("loanId") Long loanId){
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String result = gson.toJson(getAccruesByLoanId(loanId));
+        return result;
+    }
+
+
+    @PostMapping("/supervisorPlanRequest/{loanId}")
+    @ResponseBody
+    public String getListOfSupervisorPlans(@PathVariable("loanId") Long loanId){
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String result = gson.toJson(getSPsByLoanId(loanId));
+        return result;
+    }
+
+    @PostMapping("/childrenRequest/{loanId}")
+    @ResponseBody
+    public String getListOfChildren(@PathVariable("loanId") Long loanId){
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String result = gson.toJson(getChildrenByLoanId(loanId));
+        return result;
+    }
+
+    @PostMapping("/creditTermRequest/{loanId}")
+    @ResponseBody
+    public String getListOfCreditTerms(@PathVariable("loanId") Long loanId){
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String result = gson.toJson(getTermsByLoanId(loanId));
+        return result;
+    }
+
+
     private List<PaymentScheduleModel> getPaymentSchedulesByLoanId(long loanId)
     {
         List<PaymentScheduleModel> result = new ArrayList<>();
@@ -558,6 +651,7 @@ public class LoanController {
 
         return result;
     }
+
 
     private List<PaymentModel> getPaymentsByLoanId(long loanId)
     {
@@ -593,6 +687,7 @@ public class LoanController {
         return result;
     }
 
+
     private List<WriteOffModel> getWOsByLoanId(long loanId)
     {
         List<WriteOffModel> result = new ArrayList<>();
@@ -619,6 +714,7 @@ public class LoanController {
                 return o2.getDate().compareTo(o1.getDate());
             }
         });
+
         return result;
     }
 
@@ -654,12 +750,16 @@ public class LoanController {
         return result;
     }
 
-    private List<LoanDetailedSummaryModel> getDetailedSummariesByLoanId(long loanId)
+    private List<LoanDetailedSummaryModel> getDetailedSummariesByLoanId(long loanId,Integer offset, Integer perpage)
     {
         List<LoanDetailedSummaryModel> result = new ArrayList<>();
         Loan loan = loanService.getById(loanId);
+
+
+
         for(LoanDetailedSummary d: loan.getLoanDetailedSummaries())
         {
+
             LoanDetailedSummaryModel model = new LoanDetailedSummaryModel();
             model.setId(d.getId());
             model.setOnDate(d.getOnDate());
@@ -697,7 +797,7 @@ public class LoanController {
             model.setPenaltyOverdue(d.getPenaltyOverdue());
 
             result.add(model);
-        }
+    }
 
 //        Collections.sort(result);
         Collections.sort(result, new Comparator<LoanDetailedSummaryModel>() {

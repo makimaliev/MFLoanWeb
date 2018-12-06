@@ -1,5 +1,6 @@
 <form th:action="@{/floatingRate/save}" th:object="${floatingRate}"
-	  class="form-horizontal" method="post" xmlns:sec="http://www.w3.org/1999/xhtml">
+	  class="form-horizontal" method="post" xmlns:sec="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.w3.org/1999/xhtml">
 	<div class="modal-header">
 		<h5 class="modal-title" th:text="#{label.add.floatingRate}"></h5>
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -39,10 +40,10 @@
 			</label>
 			<div class="col-lg-8 col-md-9 col-sm-12">
 				<div class="input-group date m_datetimepicker_6">
-					<input type="text" class="form-control m-input" th:placeholder="#{select.date}" th:vaue="${floatingRate.date}" name="date"/>
+					<input  class="form-control m-input" th:placeholder="#{label.date}" th:value="${#dates.format(floatingRate.date,'dd.MM.yyyy')}" name="date" />
 					<span class="input-group-addon">
-						<i class="la la-calendar glyphicon-th"></i>
-					</span>
+                                                    <i class="la la-calendar glyphicon-th"></i>
+                                                </span>
 				</div>
 			</div>
 		</div>
@@ -55,11 +56,7 @@
 </form>
 <script>
     $('#rateType').selectpicker('refresh');
-
-    $(".m_datetimepicker_6").on('keyup',function () {
-		console.log($(this).val());
-    })
-    $('.m_datetimepicker_6').datepicker({
+    $('.m_datetimepicker_6').datetimepicker({
         format: "dd.mm.yyyy",
         todayHighlight: true,
         autoclose: true,

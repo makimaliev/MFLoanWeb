@@ -108,7 +108,7 @@
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
 												<h3 class="m-widget1__title" th:text="#{label.entityList.listDate}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${entityList.listDate}"></span>
+												<span class="m-widget1__desc m--font-brand" th:text="${#dates.format(entityList.listDate,'dd.MM.yyyy')}"></span>
 											</div>
 										</div>
 									</div>

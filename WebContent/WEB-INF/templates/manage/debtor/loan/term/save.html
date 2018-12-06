@@ -208,7 +208,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="penaltyLimitEndDate" th:value="${term.penaltyLimitEndDate}"/>
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="penaltyLimitEndDate" th:value="${#dates.format(term.penaltyLimitEndDate,'dd.MM.yyyy')}"/>
 											<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>

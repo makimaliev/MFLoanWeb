@@ -340,13 +340,9 @@ public class CollectionPhaseController {
 	}
 
 	@PostMapping("/collectionphase/{collectionPhaseId}/savePhaseDetailsChange")
+	@ResponseBody
 	public void savePhaseDetailsChanges(@PathVariable("collectionPhaseId")Long collectionPhaseId,@RequestBody CollectionPhaseDetailsModel1List list){
 		if(list.getCollectionPhaseDetailsModel1().size() > 0){
-			System.out.println("=======================================================================================");
-			System.out.println("=======================================================================================");
-			System.out.println("=======================================================================================");
-			System.out.println(list.getCollectionPhaseDetailsModel1().size());
-
 
 			CollectionPhase phase = phaseService.getById(collectionPhaseId);
 

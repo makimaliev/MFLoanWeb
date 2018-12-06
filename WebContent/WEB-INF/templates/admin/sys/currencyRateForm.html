@@ -47,7 +47,7 @@
 			</label>
 			<div class="col-lg-8 col-md-9 col-sm-12">
 				<div class="input-group date m_datetimepicker_6">
-					<input type="text" class="form-control m-input" th:placeholder="#{select.date}" name="date"/>
+					<input type="text" class="form-control m-input" th:placeholder="#{select.date}" th:value="${#dates.format(currencyRate.date,'dd.MM.yyy')}" name="date"/>
 					<span class="input-group-addon">
 						<i class="la la-calendar glyphicon-th"></i>
 					</span>

@@ -91,31 +91,31 @@
 								<a class="nav-link m--font-primary active" data-toggle="tab" href="#main" th:text="#{label.loan.credit}"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanSummary" th:text="#{label.loan.loanSummary}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanSummary" th:text="#{label.loan.loanSummary}" id="loanSummaryFunction"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#paymentSchedules" th:text="#{label.loan.paymentSchedules}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#paymentSchedules" th:text="#{label.loan.paymentSchedules}" id="paymentScheduleFunction"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#payments" th:text="#{label.loan.payments}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#payments" th:text="#{label.loan.payments}" id="paymentFunction"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#supervisorPlans" th:text="#{label.loan.supervisorPlans}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#supervisorPlans" th:text="#{label.loan.supervisorPlans}" id="supervisorPlanFunction"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#writeOffs" th:text="#{label.loan.writeOffs}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#writeOffs" th:text="#{label.loan.writeOffs}" id="writeOffFunction"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#creditTerms" th:text="#{label.loan.creditTerms}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#creditTerms" th:text="#{label.loan.creditTerms}" id="creditTermFunction"></a>
 							</li>
                             <li class="nav-item" id="childListe">
-                                <a class="nav-link m--font-primary" data-toggle="tab" href="#childList" th:text="#{label.loan.childList}"></a>
+                                <a class="nav-link m--font-primary" data-toggle="tab" href="#childList" th:text="#{label.loan.childList}" type="childListFunction"></a>
                             </li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanDetailedSummary" th:text="#{label.loan.loanDetailedSummary}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanDetailedSummary" th:text="#{label.loan.loanDetailedSummary}" id="detailedLoanSummaryFunction"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#accrue" th:text="#{label.loan.accrue}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#accrue" th:text="#{label.loan.accrue}" id="accrueFunction"></a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#initializaPhase" th:text="#{label.debtor.tab.initializaPhase}"></a>
@@ -165,7 +165,7 @@
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
 															<h3 class="m-widget1__title" th:text="#{label.loan.regDate}"></h3>
-															<span class="m-widget1__desc m--font-brand" th:text="${loan.regDate}"></span>
+															<span class="m-widget1__desc m--font-brand" th:text="${#dates.format(loan.regDate,'dd.MM.yyyy')}"></span>
 														</div>
 													</div>
 												</div>
@@ -587,7 +587,7 @@
 													<div class="d-md-none m--margin-bottom-10"></div>
 												</div>
 												<div class="col-md-4">
-													<button th:text="#{label.add.collection.phase}" sec:authorize="hasAnyRole('ADMIN','PERM_ADD_COLLECTIONPHASE')" class="btn btn-sm btn-accent" type="button" id="bnt_init_phase">
+													<button th:text="#{label.add.collection.phase}" sec:authorize="hasAnyRole('ADMIN','PERM_ADD_COLLECTIONPHASE')" class="btn btn-sm btn-accent" type="button" data-toggle="collapse" data-target="#phaseDetailsDiv" id="bnt_init_phase">
 														Сохранить претензию
 													</button>
 
@@ -597,7 +597,7 @@
 													<!--<button th:action="@{/printoutTemplate/1/objectId/1/generate}" class="btn btn-sm btn-accent" type="button" id="printGenerate" th:text="#{label.table.generate}"></button>-->
 												</div>
 											</div>
-											<div id="phaseDetailsDiv">
+											<div id="phaseDetailsDiv" class="collapse">
 												<div class="m_datatable" id="phaseDetailsTable"></div>
 												<button class="btn btn-sm btn-accent" type="button" id="initPhaseSaveBtn" th:text="#{label.form.save}"></button>
 											</div>
@@ -865,21 +865,21 @@
         document.getElementById("childListe").style.display = 'none';
 	}
 </script>
-<script th:src="@{/js/data-debtor-loan-terms.js}" th:inline="javascript" type="text/javascript"></script>
-<script th:src="@{/js/data-debtor-loan-children.js}" th:inline="javascript" type="text/javascript"></script>
-<script th:src="@{/js/data-debtor-loan-paymentSchedules.js}" th:inline="javascript" type="text/javascript"></script>
-<script th:src="@{/js/data-debtor-loan-payments.js}" th:inline="javascript" type="text/javascript"></script>
-<script th:src="@{/js/data-debtor-loan-writeOffs.js}" th:inline="javascript" type="text/javascript"></script>
-<script th:src="@{/js/data-debtor-loan-supervisorPlans.js}" th:inline="javascript" type="text/javascript"></script>
+<!--<script th:src="@{/js/data-debtor-loan-terms.js}" th:inline="javascript" type="text/javascript"></script>-->
+<!--<script th:src="@{/js/data-debtor-loan-children.js}" th:inline="javascript" type="text/javascript"></script>-->
+<!--<script th:src="@{/js/data-debtor-loan-paymentSchedules.js}" th:inline="javascript" type="text/javascript"></script>-->
+<!--<script th:src="@{/js/data-debtor-loan-payments.js}" th:inline="javascript" type="text/javascript"></script>-->
+<!--<script th:src="@{/js/data-debtor-loan-writeOffs.js}" th:inline="javascript" type="text/javascript"></script>-->
+<!--<script th:src="@{/js/data-debtor-loan-supervisorPlans.js}" th:inline="javascript" type="text/javascript"></script>-->
 <script th:src="@{/js/data-debtor-loan-goods.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-debtTransfers.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-targetedUses.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-reconstructedLists.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-bankrupts.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-phases.js}" th:inline="javascript" type="text/javascript"></script>
-<script th:src="@{/js/data-debtor-loan-detailedSummaries.js}" th:inline="javascript" type="text/javascript"></script>
-<script th:src="@{/js/data-debtor-loan-summaries.js}" th:inline="javascript" type="text/javascript"></script>
-<script th:src="@{/js/data-debtor-loan-accrues.js}" th:inline="javascript" type="text/javascript"></script>
+<!--<script th:src="@{/js/data-debtor-loan-detailedSummaries.js}" th:inline="javascript" type="text/javascript"></script>-->
+<!--<script th:src="@{/js/data-debtor-loan-summaries.js}" th:inline="javascript" type="text/javascript"></script>-->
+<!--<script th:src="@{/js/data-debtor-loan-accrues.js}" th:inline="javascript" type="text/javascript"></script>-->
 <script th:src="@{/js/data-debtor-loan-phasedetails.js}" th:inline="javascript" type="text/javascript"></script>
 <!--end::Page Resources -->
 
@@ -895,21 +895,21 @@
     /*<![CDATA[*/
     var debtorId = /*[[${debtor.id}]]*/ [];
     var loanId = /*[[${loan.id}]]*/ [];
-    var jsonChildren = /*[[${children}]]*/ [];
-    var jsonTerms = /*[[${terms}]]*/ [];
-    var jsonPaymentSchedules = /*[[${paymentSchedules}]]*/ [];
-    var jsonPayments = /*[[${payments}]]*/ [];
-    var jsonWOs = /*[[${WOs}]]*/ [];
-    var jsonSPs = /*[[${SPs}]]*/ [];
+    // var jsonWOs = /*[[${WOs}]]*/ [];
+    // var jsonChildren = /*[[${children}]]*/ [];
+    // var jsonTerms = /*[[${terms}]]*/ [];
+    // var jsonPaymentSchedules = /*[[${paymentSchedules}]]*/ [];
+    // var jsonPayments = /*[[${payments}]]*/ [];
+    // var jsonSPs = /*[[${SPs}]]*/ [];
     var jsonGoods = /*[[${goods}]]*/ [];
     var jsonDTs = /*[[${DTs}]]*/ [];
     var jsonTUs = /*[[${TUs}]]*/ [];
     var jsonRLs = /*[[${RLs}]]*/ [];
     var jsonBankrupts = /*[[${bankrupts}]]*/ [];
     var jsonPhases = /*[[${phases}]]*/ [];
-    var jsonDetailedSummaries = /*[[${detailedSummaries}]]*/ [];
-    var jsonSummaries = /*[[${summaries}]]*/ [];
-    var jsonAccrues = /*[[${accrues}]]*/ [];
+    // var jsonDetailedSummaries = /*[[${detailedSummaries}]]*/ [];
+    // var jsonSummaries = /*[[${summaries}]]*/ [];
+    // var jsonAccrues = /*[[${accrues}]]*/ [];
     /*]]>*/
 </script>
 <script>
@@ -944,9 +944,9 @@
                     data: {selectedLoans:loanId, initDater: initDate},
                     success:function (data) {
                         phaseDetailsTableInit(data);
-                        // var divT = $('#phaseDetailsDiv');
-                        // divT.collapse('show');
-                        // mApp.scrollTo(divT, -200);
+                        var divT = $('#phaseDetailsDiv');
+                        divT.collapse('show');
+                        mApp.scrollTo(divT, -200);
                     }
                 });
                 //$.post( "/manage/debtor/"+debtorId+"/initializephase", );
@@ -1051,6 +1051,102 @@
     });
 </script>
 <!--<div th:replace="layout/footer"/>-->
+<script>
+	$("#writeOffFunction").on('click',function () {
+        $.ajax({
+			type:'post',
+            url: '/writeOffsRequest/'+loanId,
+            success:function (data) {
+				jsonWOs=data;
+                $.getScript("/js/data-debtor-loan-writeOffs.js");
+            }
+        });
+    });
+    $("#paymentScheduleFunction").on('click',function () {
+        $.ajax({
+            type:'post',
+            url: '/paymentScheduleRequest/'+loanId,
+            success:function (data) {
+                jsonPaymentSchedules=data;
+                $.getScript("/js/data-debtor-loan-paymentSchedules.js");
+            }
+        });
+    });
+    $("#paymentFunction").on('click',function () {
+        $.ajax({
+            type:'post',
+            url: '/paymentRequest/'+loanId,
+            success:function (data) {
+                jsonPayments=data;
+                $.getScript("/js/data-debtor-loan-payments.js");
+            }
+        });
+    });
+    $("#loanSummaryFunction").on('click',function () {
+        $.ajax({
+            type:'post',
+            url: '/loanSummaryRequest/'+loanId,
+            success:function (data) {
+                jsonSummaries=data;
+                $.getScript("/js/data-debtor-loan-summaries.js");
+            }
+        });
+    });
+    $("#detailedLoanSummaryFunction").on('click',function () {
+        $.ajax({
+            type:'post',
+            url: '/detailedLoanSummaryRequest/'+loanId,
+            success:function (data) {
+                jsonDetailedSummaries=data;
+                $.getScript("/js/data-debtor-loan-detailedSummaries.js");
+            }
+        });
+    });
+	$("#supervisorPlanFunction").on('click',function () {
+        $.ajax({
+            type:'post',
+            url: '/supervisorPlanRequest/'+loanId,
+            success:function (data) {
+                jsonSPs=data;
+                $.getScript("/js/data-debtor-loan-supervisorPlans.js");
+            }
+        });
+    });
+    $("#childListFunction").on('click',function () {
+        $.ajax({
+            type:'post',
+            url: '/childrenRequest/'+loanId,
+            success:function (data) {
+                jsonChildren=data;
+                $.getScript("/js/data-debtor-loan-children.js");
+            }
+        });
+    });
+    $("#creditTermFunction").on('click',function () {
+        $.ajax({
+            type:'post',
+            url: '/creditTermRequest/'+loanId,
+            success:function (data) {
+                jsonTerms=data;
+                $.getScript("/js/data-debtor-loan-terms.js");
+            }
+        });
+    });
+
+    $("#accrueFunction").on('click',function () {
+        $.ajax({
+            type:'post',
+            url: '/accrueRequest/'+loanId,
+            success:function (data) {
+                jsonAccrues=data;
+                $.getScript("/js/data-debtor-loan-accrues.js");
+            }
+        });
+    });
+
+
+
+</script>
 </body>
 <!-- end::Body -->
 </html>

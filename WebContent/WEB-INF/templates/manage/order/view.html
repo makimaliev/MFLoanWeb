@@ -120,7 +120,7 @@
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
 												<h3 class="m-widget1__title" th:text="#{label.order.registrationDate}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${order.regDate}"></span>
+												<span class="m-widget1__desc m--font-brand" th:text="${#dates.format(order.regDate,'dd.MM.yyyy')}"></span>
 											</div>
 										</div>
 									</div>

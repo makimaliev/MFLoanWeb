@@ -7,15 +7,19 @@ import kg.gov.mf.loan.manage.service.orderterm.OrderTermCurrencyService;
 import kg.gov.mf.loan.web.fetchModels.CurrencyRateModel;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -37,6 +41,14 @@ public class CurrencyRateController {
     {
         this.currencyRateService = rs;
     }
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder)
+	{
+		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
+		binder.registerCustomEditor(Date.class, editor);
+	}
+
 
 	@RequestMapping(value = "/currencyRate/list", method = RequestMethod.GET)
 	public String listCurrencyRates(Model model) {

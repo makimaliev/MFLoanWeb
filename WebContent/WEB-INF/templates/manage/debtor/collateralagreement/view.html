@@ -103,7 +103,7 @@
 												<div class="row m-row--no-padding align-items-center">
 													<div class="col">
 														<h3 class="m-widget1__title" th:text="#{label.agreement.date}"></h3>
-														<span class="m-widget1__desc m--font-brand" th:text="${agreement.agreementDate}"></span>
+														<span class="m-widget1__desc m--font-brand" th:text="${#dates.format(agreement.agreementDate,'dd.MM.yyyy')}"></span>
 													</div>
 												</div>
 											</div>
@@ -119,7 +119,7 @@
 												<div class="row m-row--no-padding align-items-center">
 													<div class="col">
 														<h3 class="m-widget1__title" th:text="#{label.agreement.collateralOfficeRegDate}"></h3>
-														<span class="m-widget1__desc m--font-brand" th:text="${agreement.collateralOfficeRegDate}"></span>
+														<span class="m-widget1__desc m--font-brand" th:text="${#dates.format(agreement.collateralOfficeRegDate,'dd.MM.yyyy')}"></span>
 													</div>
 												</div>
 											</div>
@@ -141,7 +141,7 @@
 												<div class="row m-row--no-padding align-items-center">
 													<div class="col">
 														<h3 class="m-widget1__title" th:text="#{label.agreement.notaryOfficeRegDate}"></h3>
-														<span class="m-widget1__desc m--font-brand" th:text="${agreement.notaryOfficeRegDate}"></span>
+														<span class="m-widget1__desc m--font-brand" th:text="${#dates.format(agreement.notaryOfficeRegDate,'dd.MM.yyyy')}"></span>
 													</div>
 												</div>
 											</div>
@@ -163,7 +163,7 @@
 												<div class="row m-row--no-padding align-items-center">
 													<div class="col">
 														<h3 class="m-widget1__title" th:text="#{label.agreement.arrestRegDate}"></h3>
-														<span class="m-widget1__desc m--font-brand" th:text="${agreement.arrestRegDate}"></span>
+														<span class="m-widget1__desc m--font-brand" th:text="${#dates.format(agreement.arrestRegDate,'dd.MM.yyyy')}"></span>
 													</div>
 												</div>
 											</div>
