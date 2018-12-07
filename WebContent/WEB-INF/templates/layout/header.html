@@ -20,7 +20,7 @@
                             <table class="table table-hover" id="userlist" style="cursor: pointer">
                                 <tr th:each="user : ${@userServiceJpaImpl.findAll()}"
                                     th:if="${user.staff != null}">
-                                    <td th:id="${user.username}" th:text="${user.staff?.name}" height="40px" th:title="${user.username}"></td>
+                                    <td th:id="${user.username}" th:text="${user.username}" height="40px" th:title="${user.username}"></td>
                                 </tr>
                             </table>
                         </div>
