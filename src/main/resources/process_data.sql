@@ -1281,7 +1281,6 @@ BEGIN
 
 
     DECLARE paymentSumAfterSpecDate DOUBLE;
-    DECLARE paymentSumBeforeSpecDate DOUBLE;
 
     DECLARE pType VARCHAR(20);
     DECLARE wo_princ DOUBLE;
@@ -1457,8 +1456,7 @@ BEGIN
     #get loan amount
     SELECT amount INTO loan_amount from loan where id = loan_id;
 
-    select IFNULL(SUM(CASE WHEN payment.in_loan_currency AND l.currencyId > 1 THEN payment.penalty*payment.exchange_rate ELSE payment.penalty END), 0) INTO paymentSumAfterSpecDate from payment,loan l where l.id = loan_id AND loanId = loan_id and paymentDate >= '2014-11-25';
-    select IFNULL(SUM(CASE WHEN payment.in_loan_currency AND l.currencyId > 1 THEN payment.penalty*payment.exchange_rate ELSE payment.penalty END), 0) INTO paymentSumBeforeSpecDate from payment,loan l where l.id = loan_id AND loanId = loan_id and paymentDate < '2014-11-25';
+    select IFNULL(SUM(CASE WHEN payment.in_loan_currency THEN payment.penalty*payment.exchange_rate ELSE payment.penalty END), 0) INTO paymentSumAfterSpecDate from payment where loanId = loan_id and paymentDate >= '2014-11-25';
 
     IF !isTermFound(loan_id, inDate) THEN
       SET v_finished = 1;
@@ -1568,12 +1566,6 @@ BEGIN
         SET total_wo_princ = total_wo_princ + wo_princ;
         SET total_wo_int = total_wo_int + wo_int;
         SET total_wo_pen = total_wo_pen + wo_pen;
-
-        SET princPaid = 0;
-        SET intPaid = 0;
-        SET penPaid = 0;
-
-
       END IF;
 
       SET princPaidKGS = princPaid;
@@ -1791,8 +1783,8 @@ BEGIN
       SET totalDisb = totalDisb + disb;
 
       IF NOT penalty_limit_flag THEN
-        IF penalty_limit > 0 AND totalPenAccrued + paymentSumBeforeSpecDate >= totalDisb*penalty_limit/100-paymentSumAfterSpecDate AND tempDate >= '2014-11-25' THEN
-          SET totalPenAccrued = totalDisb*penalty_limit/100-paymentSumAfterSpecDate + paymentSumBeforeSpecDate;
+        IF penalty_limit > 0 AND totalPenAccrued >= totalDisb*penalty_limit/100-paymentSumAfterSpecDate AND tempDate >= '2014-11-25' THEN
+          SET totalPenAccrued = totalDisb*penalty_limit/100-paymentSumAfterSpecDate;
           SET penalty_limit_flag = TRUE;
           UPDATE creditTerm SET penaltyLimitEndDate = tempDate WHERE loanId = loan_id;
         END IF;
@@ -1802,13 +1794,13 @@ BEGIN
       SET totalPrincPayment = totalPrincPayment + princPayment;
       SET prevDate = tempDate;
 
-      SET princOutstanding = totalDisb - totalPrincPaid - total_wo_princ ;
-      SET princOverdue = totalPrincPayment - totalPrincPaid - total_wo_princ;
+      SET princOutstanding = totalDisb - totalPrincPaid;
+      SET princOverdue = totalPrincPayment - totalPrincPaid;
 
-#       IF pType = 'write off' THEN
-#         SET princOutstanding = princOutstanding - total_wo_princ;
-#         SET princOverdue = princOverdue - total_wo_princ;
-#       end if;
+      IF pType = 'write off' THEN
+        SET princOutstanding = princOutstanding - total_wo_princ;
+        SET princOverdue = princOverdue - total_wo_princ;
+      end if;
 
       SET totalIntPaid = totalIntPaid + intPaid;
 
@@ -1820,15 +1812,15 @@ BEGIN
 
       SET totalCollPenPayment = totalCollPenPayment + collPenPayment;
       SET totalPenPaid = totalPenPaid + penPaid;
-      SET penOverdue = totalPenAccrued + totalCollPenPayment - totalPenPaid - total_wo_pen;
+      SET penOverdue = totalPenAccrued + totalCollPenPayment - totalPenPaid;
       SET collPenDisbursed = getCollectedPenDisbursed(loan_id);
 
-      SET penOutstanding = totalPenAccrued + collPenDisbursed - totalPenPaid - total_wo_pen;
+      SET penOutstanding = totalPenAccrued + collPenDisbursed - totalPenPaid;
 
-#       IF pType = 'write off' THEN
-#         SET penOutstanding = penOutstanding - total_wo_pen;
-#         SET penOverdue = penOverdue - total_wo_pen;
-#       END IF;
+      IF pType = 'write off' THEN
+        SET penOutstanding = penOutstanding - total_wo_pen;
+        SET penOverdue = penOverdue - total_wo_pen;
+      END IF;
 
       IF penalty_limit > 0 AND tempDate >= '2014-11-25' THEN
         IF penOutstanding > (totalDisb*penalty_limit/100)- paymentSumAfterSpecDate THEN
@@ -1841,15 +1833,15 @@ BEGIN
       END IF;
 
       SET collIntDisbursed = getCollectedIntDisbursed(loan_id);
-      SET intOutstanding = totalIntAccrued + collIntDisbursed - totalIntPaid - total_wo_int;
+      SET intOutstanding = totalIntAccrued + collIntDisbursed - totalIntPaid;
       SET totalCollIntPayment = totalCollIntPayment + collIntPayment;
       SET totalIntPayment = totalIntPayment + intPayment;
-      SET intOverdue = totalIntPayment + totalCollIntPayment - totalIntPaid - total_wo_int;
+      SET intOverdue = totalIntPayment + totalCollIntPayment - totalIntPaid;
 
-#       IF pType = 'write off' THEN
-#         SET intOutstanding = intOutstanding - total_wo_int;
-#         SET intOverdue = intOverdue - total_wo_int;
-#       END IF;
+      IF pType = 'write off' THEN
+        SET intOutstanding = intOutstanding - total_wo_int;
+        SET intOverdue = intOverdue - total_wo_int;
+      END IF;
 
       SET total_outstanding = (CASE WHEN princOutstanding >= 0 THEN princOutstanding ELSE 0 END) +
                               (CASE WHEN intOutstanding >= 0 THEN intOutstanding ELSE 0 END) +
@@ -1898,10 +1890,10 @@ BEGIN
 
           IF(isAlreadyInserted = FALSE) THEN
 
-            INSERT INTO loanSummary(version, loanAmount, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty,
-                                    overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalInterestPaid, totalPenaltyPaid, totalPrincipalPaid, totalFeePaid, loanId)
-            VALUES (1, loan_amount, tempDate, 0.0, intOutstanding, penOutstanding, princOutstanding, 0.0, intOverdue, penOverdue, princOverdue, 0.0, totalIntPaid, totalPrincPaid,
-                                                                                                                                                princPaid, totalDisb, total_outstanding, total_overdue, total_paid, total_paidKGS, totalIntPaid, totalPenPaid, totalPrincPaid, 0, loan_id);
+            INSERT INTO loanSummary(version, loanSummaryType, loanAmount, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty,
+                                    overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalInterestPaid, totalPenaltyPaid, totalPrincipalPaid, totalFeePaid, loanId, createDate)
+            VALUES (1, 'SYSTEM', loan_amount, tempDate, 0.0, intOutstanding, penOutstanding, princOutstanding, 0.0, intOverdue, penOverdue, princOverdue, 0.0, totalIntPaid, totalPrincPaid,
+                                                                                                                                                princPaid, totalDisb, total_outstanding, total_overdue, total_paid, total_paidKGS, totalIntPaid, totalPenPaid, totalPrincPaid, 0, loan_id, CURDATE());
           END IF;
 
         END IF;
@@ -2077,17 +2069,13 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `runCalculateLoanDetailedSummaryForAllLoans`(IN inDate date)
 BEGIN
 
     DECLARE v_finished INTEGER DEFAULT 0;
     DECLARE loanId BIGINT;
-    DECLARE countLoans INT DEFAULT 0;
-
-    DECLARE start_time bigint;
-    DECLARE end_time bigint;
 
     DEClARE tCursor CURSOR FOR
 
@@ -2100,7 +2088,8 @@ BEGIN
     DECLARE CONTINUE HANDLER
     FOR NOT FOUND SET v_finished = 1;
 
-    SET start_time = (UNIX_TIMESTAMP(NOW()) * 1000000 + MICROSECOND(NOW(6)));
+    DELETE FROM loanDetailedSummary;
+    DELETE FROM loanSummary WHERE loanSummaryType = 'SYSTEM';
 
     OPEN tCursor;
 
@@ -2114,15 +2103,9 @@ BEGIN
 
       CALL calculateLoanDetailedSummaryUntilOnDate(loanId, inDate, 1);
 
-      SET countLoans = countLoans + 1;
-
     END LOOP run_calculate;
 
     CLOSE tCursor;
-
-    SET end_time = (UNIX_TIMESTAMP(NOW()) * 1000000 + MICROSECOND(NOW(6)));
-
-    select (end_time - start_time) / 1000 as runningTime, countLoans as numberOfLoans;
 
     CALL runUpdateRootLoans();
 
@@ -2196,10 +2179,8 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-
-DROP PROCEDURE IF EXISTS `runCalculateLoanDetailedSummaryForSelectedLoansByRegionId`;
-CREATE PROCEDURE runCalculateLoanDetailedSummaryForSelectedLoansByRegionId(IN inDate DATE, IN region_id BIGINT)
-  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `runCalculateLoanDetailedSummaryForSelectedLoansByRegionId`(IN inDate DATE, IN region_id BIGINT)
+BEGIN
 
     DECLARE v_finished INTEGER DEFAULT 0;
     DECLARE loanId BIGINT;
@@ -2213,9 +2194,7 @@ CREATE PROCEDURE runCalculateLoanDetailedSummaryForSelectedLoansByRegionId(IN in
       SELECT
         loan.id
       FROM loan loan
-      WHERE loan.id NOT IN (SELECT DISTINCT parent_id FROM loan WHERE parent_id IS NOT NULL) AND
-            loan.debtorId in ( select debtor.id from debtor,owner,address where debtor.ownerId = owner.id and owner.addressId = address.id and address.region_id = region_id)
-
+      WHERE loan.id IN ( select lv.v_loan_id from loan_view lv where lv.v_debtor_region_id = region_id)
       ORDER BY loan.id;
 
     DECLARE CONTINUE HANDLER
@@ -2249,9 +2228,7 @@ CREATE PROCEDURE runCalculateLoanDetailedSummaryForSelectedLoansByRegionId(IN in
 
     CALL updateBankruptInfo();
 
-  END;
-
-
+  END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -3242,4 +3219,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-03 11:29:09
+-- Dump completed on 2018-12-07 19:25:56
