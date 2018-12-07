@@ -22,6 +22,7 @@ import kg.gov.mf.loan.manage.repository.collateral.CollateralItemReposiory;
 import kg.gov.mf.loan.manage.repository.debtor.DebtorRepository;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
+import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
 import kg.gov.mf.loan.process.service.JobItemService;
 import kg.gov.mf.loan.web.fetchModels.CollateralAgreementModel;
 import kg.gov.mf.loan.web.fetchModels.CollectionProcedureModel;
@@ -126,6 +127,12 @@ public class DebtorController {
 
 	@Autowired
     StaffService staffService;
+
+	@Autowired
+	CollectionPhaseService collectionPhaseService;
+
+	@Autowired
+	CollectionProcedureService collectionProcedureService;
 
 	/** The entity manager. */
 	@PersistenceContext
@@ -501,9 +508,11 @@ public class DebtorController {
 				) {
 
 			Set<CollectionPhase> phases = loan.getCollectionPhases();
-			for (CollectionPhase phase: phases
+			for (CollectionPhase phase1: phases
 					) {
-				CollectionProcedure proc = phase.getCollectionProcedure();
+				CollectionPhase phase=collectionPhaseService.getById(phase1.getId());
+				CollectionProcedure proc1 = phase.getCollectionProcedure();
+				CollectionProcedure proc=collectionProcedureService.getById(proc1.getId());
 
 				CollectionProcedureModel model = new CollectionProcedureModel();
 				model.setId(proc.getId());

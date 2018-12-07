@@ -62,6 +62,9 @@ public class LoanController {
 	
 	@Autowired
 	LoanService loanService;
+
+    @Autowired
+    PaymentService paymentService;
 	
 	@Autowired
 	CreditOrderService orderService;
@@ -111,6 +114,12 @@ public class LoanController {
     @Autowired
     BankruptService bankruptService;
 
+    @Autowired
+    PaymentScheduleService paymentScheduleService;
+
+    @Autowired
+    CreditTermService creditTermService;
+
     static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
 	
 	@InitBinder
@@ -125,6 +134,7 @@ public class LoanController {
 
 		Loan loan = loanService.getById(loanId);
         model.addAttribute("loan", loan);
+        model.addAttribute("creditOrder",loan.getCreditOrder());
         Staff staff=userService.findById(loan.getSupervisorId()).getStaff();
         model.addAttribute("supervisorName",staff.getName());
 
@@ -132,12 +142,11 @@ public class LoanController {
 //        String jsonTerms = gson.toJson(getTermsByLoanId(loanId));
 //        model.addAttribute("terms", jsonTerms);
 //
-        String jsonChildList = gson.toJson(getChildrenByLoanId(loanId));
+//        String jsonChildL = gson.toJson(getChildrenByLoanId(loanId));
 //        model.addAttribute("children", jsonChildList);
-        if(jsonChildList.equals("[]")){
+        if(loan.getChildren().isEmpty()){
             model.addAttribute("isEmptyChild","true");
         }
-
 //        String jsonPaymentSchedules = gson.toJson(getPaymentSchedulesByLoanId(loanId));
 //        model.addAttribute("paymentSchedules", jsonPaymentSchedules);
 
@@ -180,8 +189,8 @@ public class LoanController {
         String jsonBankrupts = gson.toJson(getBankruptsByLoanId(loanId));
         model.addAttribute("bankrupts", jsonBankrupts);
 
-        String jsonCollectionPhases = gson.toJson(getPhasesByLoanId(loanId));
-        model.addAttribute("phases", jsonCollectionPhases);
+//        String jsonCollectionPhases = gson.toJson(getPhasesByLoanId(loanId));
+//        model.addAttribute("phases", jsonCollectionPhases);
 
         model.addAttribute("debtorId", debtorId);
 		Debtor debtor = debtorService.getById(debtorId);
@@ -193,8 +202,8 @@ public class LoanController {
 //        String jsonSummaries = gson.toJson(getSummariesByLoanId(loanId));
 //        model.addAttribute("summaries", jsonSummaries);
 
-        String jsonAccrues = gson.toJson(getAccruesByLoanId(loanId));
-        model.addAttribute("accrues", jsonAccrues);
+//        String jsonAccrues = gson.toJson(getAccruesByLoanId(loanId));
+//        model.addAttribute("accrues", jsonAccrues);
 
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "/manage/debtor/loan/view";
@@ -459,81 +468,6 @@ public class LoanController {
 		return "redirect:" + "/manage/debtor/loan/type/list";
     }
 
-	private List<CreditTermModel> getTermsByLoanId(long loanId)
-	{
-		List<CreditTermModel> result = new ArrayList<>();
-		Loan loan = loanService.getById(loanId);
-		for(CreditTerm term: loan.getCreditTerms())
-		{
-            CreditTermModel model = new CreditTermModel();
-			model.setId(term.getId());
-			model.setStartDate(term.getStartDate());
-			model.setInterestRateValue(term.getInterestRateValue());
-			model.setRatePeriodId(term.getRatePeriod().getId());
-			model.setRatePeriodName(term.getRatePeriod().getName());
-			model.setFloatingRateTypeId(term.getFloatingRateType().getId());
-			model.setFloatingRateTypeName(term.getFloatingRateType().getName());
-			model.setPenaltyOnPrincipleOverdueRateValue(term.getPenaltyOnPrincipleOverdueRateValue());
-			model.setPenaltyOnPrincipleOverdueRateTypeId(term.getPenaltyOnPrincipleOverdueRateType().getId());
-			model.setPenaltyOnPrincipleOverdueRateTypeName(term.getPenaltyOnPrincipleOverdueRateType().getName());
-			model.setPenaltyOnInterestOverdueRateValue(term.getPenaltyOnInterestOverdueRateValue());
-			model.setPenaltyOnInterestOverdueRateTypeId(term.getPenaltyOnInterestOverdueRateType().getId());
-			model.setPenaltyOnInterestOverdueRateTypeName(term.getPenaltyOnInterestOverdueRateType().getName());
-			model.setPenaltyLimitPercent(term.getPenaltyLimitPercent());
-			model.setPenaltyLimitEndDate(term.getPenaltyLimitEndDate());
-			model.setTransactionOrderId(term.getTransactionOrder().getId());
-			model.setTransactionOrderName(term.getTransactionOrder().getName());
-			model.setDaysInMonthMethodId(term.getDaysInMonthMethod().getId());
-			model.setDaysInMonthMethodName(term.getDaysInMonthMethod().getName());
-			model.setDaysInYearMethodId(term.getDaysInYearMethod().getId());
-			model.setDaysInYearMethodName(term.getDaysInYearMethod().getName());
-			result.add(model);
-		}
-
-//		Collections.sort(result);
-        Collections.sort(result, new Comparator<CreditTermModel>() {
-            @Override
-            public int compare(CreditTermModel o1, CreditTermModel o2) {
-                return o2.getStartDate().compareTo(o1.getStartDate());
-            }
-        });
-		return result;
-	}
-
-    private List<LoanModel> getChildrenByLoanId(long loanId)
-    {
-        List<LoanModel> result = new ArrayList<>();
-        Loan loan = loanService.getById(loanId);
-        for(Loan child: loan.getChildren())
-        {
-            LoanModel model = new LoanModel();
-            model.setId(child.getId());
-            model.setRegNumber(child.getRegNumber());
-            model.setRegDate(child.getRegDate());
-            model.setAmount(child.getAmount());
-            model.setCurrencyId(child.getCurrency().getId());
-            model.setCurrencyName(child.getCurrency().getName());
-            model.setLoanTypeId(child.getLoanType().getId());
-            model.setLoanTypeName(child.getLoanType().getName());
-            model.setLoanStateId(child.getLoanState().getId());
-            model.setLoanStateName(child.getLoanState().getName());
-            model.setSupervisorId(child.getSupervisorId());
-            model.setParentLoanId(child.getParent().getId());
-            model.setCreditOrderId(child.getCreditOrder().getId());
-
-            result.add(model);
-        }
-
-//        Collections.sort(result);
-        Collections.sort(result, new Comparator<LoanModel>() {
-            @Override
-            public int compare(LoanModel o1, LoanModel o2) {
-                return o2.getRegDate().compareTo(o1.getRegDate());
-            }
-        });
-        return result;
-    }
-
     @PostMapping("/paymentScheduleRequest/{loanId}")
     @ResponseBody
     public String getListOfPaymentSchedules(@PathVariable("loanId") Long loanId){
@@ -541,6 +475,7 @@ public class LoanController {
         String result = gson.toJson(getPaymentSchedulesByLoanId(loanId));
         return result;
     }
+
     @PostMapping("/paymentRequest/{loanId}")
     @ResponseBody
     public String getListOfPayments(@PathVariable("loanId") Long loanId){
@@ -548,7 +483,6 @@ public class LoanController {
         String result = gson.toJson(getPaymentsByLoanId(loanId));
         return result;
     }
-
     @PostMapping("/writeOffsRequest/{loanId}")
     @ResponseBody
     public String getListOfWriteOffs(@PathVariable("loanId") Long loanId){
@@ -620,14 +554,95 @@ public class LoanController {
         return result;
     }
 
+    private List<CreditTermModel> getTermsByLoanId(long loanId)
+    {
+        List<CreditTermModel> result = new ArrayList<>();
+        Loan loan = loanService.getById(loanId);
+        for(CreditTerm termm: loan.getCreditTerms())
+        {
+            CreditTerm term=creditTermService.getById(termm.getId());
+
+
+            CreditTermModel model = new CreditTermModel();
+            model.setId(term.getId());
+            model.setStartDate(term.getStartDate());
+            model.setInterestRateValue(term.getInterestRateValue());
+            model.setRatePeriodId(term.getRatePeriod().getId());
+            model.setRatePeriodName(term.getRatePeriod().getName());
+            model.setFloatingRateTypeId(term.getFloatingRateType().getId());
+            model.setFloatingRateTypeName(term.getFloatingRateType().getName());
+            model.setPenaltyOnPrincipleOverdueRateValue(term.getPenaltyOnPrincipleOverdueRateValue());
+            model.setPenaltyOnPrincipleOverdueRateTypeId(term.getPenaltyOnPrincipleOverdueRateType().getId());
+            model.setPenaltyOnPrincipleOverdueRateTypeName(term.getPenaltyOnPrincipleOverdueRateType().getName());
+            model.setPenaltyOnInterestOverdueRateValue(term.getPenaltyOnInterestOverdueRateValue());
+            model.setPenaltyOnInterestOverdueRateTypeId(term.getPenaltyOnInterestOverdueRateType().getId());
+            model.setPenaltyOnInterestOverdueRateTypeName(term.getPenaltyOnInterestOverdueRateType().getName());
+            model.setPenaltyLimitPercent(term.getPenaltyLimitPercent());
+            model.setPenaltyLimitEndDate(term.getPenaltyLimitEndDate());
+            model.setTransactionOrderId(term.getTransactionOrder().getId());
+            model.setTransactionOrderName(term.getTransactionOrder().getName());
+            model.setDaysInMonthMethodId(term.getDaysInMonthMethod().getId());
+            model.setDaysInMonthMethodName(term.getDaysInMonthMethod().getName());
+            model.setDaysInYearMethodId(term.getDaysInYearMethod().getId());
+            model.setDaysInYearMethodName(term.getDaysInYearMethod().getName());
+            result.add(model);
+        }
+
+//		Collections.sort(result);
+        Collections.sort(result, new Comparator<CreditTermModel>() {
+            @Override
+            public int compare(CreditTermModel o1, CreditTermModel o2) {
+                return o2.getStartDate().compareTo(o1.getStartDate());
+            }
+        });
+        return result;
+    }
+
+    private List<LoanModel> getChildrenByLoanId(long loanId)
+    {
+        List<LoanModel> result = new ArrayList<>();
+        Loan loan = loanService.getById(loanId);
+        for(Loan childd: loan.getChildren())
+        {
+            Loan child=loanService.getById(childd.getId());
+            LoanModel model = new LoanModel();
+            model.setId(child.getId());
+            model.setRegNumber(child.getRegNumber());
+            model.setRegDate(child.getRegDate());
+            model.setAmount(child.getAmount());
+            model.setCurrencyId(child.getCurrency().getId());
+            model.setCurrencyName(child.getCurrency().getName());
+            model.setLoanTypeId(child.getLoanType().getId());
+            model.setLoanTypeName(child.getLoanType().getName());
+            model.setLoanStateId(child.getLoanState().getId());
+            model.setLoanStateName(child.getLoanState().getName());
+            model.setSupervisorId(child.getSupervisorId());
+            model.setParentLoanId(child.getParent().getId());
+            model.setCreditOrderId(child.getCreditOrder().getId());
+
+            result.add(model);
+        }
+
+//        Collections.sort(result);
+        Collections.sort(result, new Comparator<LoanModel>() {
+            @Override
+            public int compare(LoanModel o1, LoanModel o2) {
+                return o2.getRegDate().compareTo(o1.getRegDate());
+            }
+        });
+        return result;
+    }
+
 
     private List<PaymentScheduleModel> getPaymentSchedulesByLoanId(long loanId)
     {
         List<PaymentScheduleModel> result = new ArrayList<>();
         Loan loan = loanService.getById(loanId);
-        for(PaymentSchedule ps: loan.getPaymentSchedules())
+        for(PaymentSchedule pss: loan.getPaymentSchedules())
         {
+            PaymentSchedule ps=paymentScheduleService.getById(pss.getId());
             PaymentScheduleModel model = new PaymentScheduleModel();
+
             model.setId(ps.getId());
             model.setExpectedDate(ps.getExpectedDate());
             model.setDisbursement(ps.getDisbursement());
@@ -657,9 +672,12 @@ public class LoanController {
     {
         List<PaymentModel> result = new ArrayList<>();
         Loan loan = loanService.getById(loanId);
-        for(Payment p: loan.getPayments())
+        for(Payment pp: loan.getPayments())
         {
             PaymentModel model = new PaymentModel();
+
+            Payment p = this.paymentService.getById(pp.getId());
+
             model.setId(p.getId());
             model.setPaymentDate(p.getPaymentDate());
             model.setTotalAmount(p.getTotalAmount());
@@ -1050,10 +1068,10 @@ public class LoanController {
             model.setCloseDate(d.getCloseDate());
             model.setLastEvent(d.getLastEvent());
             model.setLastStatusId(d.getLastStatusId());
-            model.setPhaseStatusId(d.getPhaseStatus().getId());
-            model.setPhaseStatusName(d.getPhaseStatus().getName());
             model.setPhaseTypeId(d.getPhaseType().getId());
             model.setPhaseTypeName(d.getPhaseType().getName());
+            model.setPhaseStatusId(d.getPhaseStatus().getId());
+            model.setPhaseStatusName(d.getPhaseStatus().getName());
             model.setProcedureId(d.getCollectionProcedure().getId());
 
             result.add(model);

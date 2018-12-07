@@ -317,8 +317,10 @@ public class CollectionPhaseController {
 		Set<PhaseDetails> phaseDetails=collectionPhase.getPhaseDetails();
 
 
+
 		List<PhaseDetails> list=new ArrayList<>();
-		for(PhaseDetails p:phaseDetails){
+		for(PhaseDetails p1:phaseDetails){
+			PhaseDetails p=phaseDetailsService.getById(p1.getId());
 			list.add(p);
 		}
 

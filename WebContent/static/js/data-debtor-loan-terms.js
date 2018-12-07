@@ -30,7 +30,7 @@ var DatatableDataLocalTerms = function () {
 			// column based filtering(refer to Kendo UI)
 			filterable: false,
 
-			pagination: false,
+			pagination: true,
 
 			// inline and bactch editing(cooming soon)
 			// editable: false,

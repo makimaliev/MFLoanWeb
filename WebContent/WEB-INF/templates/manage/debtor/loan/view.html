@@ -76,7 +76,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="${loan.creditOrder.regNumber}+' '+${loan.regNumber}+' от '+${loan.regDate}+' ('+${#numbers.formatDecimal(loan.amount, 0, 'DEFAULT', 2, 'DEFAULT')}+' '+${loan.currency.name}+')'"></h3>
+								<h3 class="m-portlet__head-text" th:text="${creditOrder.regNumber}+' '+${loan.regNumber}+' от '+${loan.regDate}+' ('+${#numbers.formatDecimal(loan.amount, 0, 'DEFAULT', 2, 'DEFAULT')}+' '+${loan.currency.name}+')'"></h3>
 							</div>
 						</div>
 					</div>
@@ -944,9 +944,9 @@
                     data: {selectedLoans:loanId, initDater: initDate},
                     success:function (data) {
                         phaseDetailsTableInit(data);
-                        var divT = $('#phaseDetailsDiv');
-                        divT.collapse('show');
-                        mApp.scrollTo(divT, -200);
+                        // var divT = $('#phaseDetailsDiv');
+                        // divT.collapse('show');
+                        // mApp.scrollTo(divT, -200);
                     }
                 });
                 //$.post( "/manage/debtor/"+debtorId+"/initializephase", );

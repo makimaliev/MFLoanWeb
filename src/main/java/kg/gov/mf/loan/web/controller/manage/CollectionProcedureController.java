@@ -9,6 +9,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
+import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
 import kg.gov.mf.loan.web.fetchModels.CollectionPhaseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -43,6 +44,9 @@ public class CollectionProcedureController {
 	
 	@Autowired
 	ProcedureTypeService procTypeService;
+
+	@Autowired
+	CollectionPhaseService collectionPhaseService;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -205,8 +209,10 @@ public class CollectionProcedureController {
     {
         List<CollectionPhaseModel> result = new ArrayList<>();
         CollectionProcedure proc = procService.getById(procId);
-        for(CollectionPhase temp: proc.getCollectionPhases())
+        for(CollectionPhase tempp: proc.getCollectionPhases())
         {
+        	CollectionPhase temp=collectionPhaseService.getById(tempp.getId());
+
             CollectionPhaseModel model = new CollectionPhaseModel();
             model.setId(temp.getId());
             model.setStartDate(temp.getStartDate());
