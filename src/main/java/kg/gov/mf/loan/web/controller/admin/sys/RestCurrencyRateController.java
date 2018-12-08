@@ -42,7 +42,7 @@ public class RestCurrencyRateController {
 
     @PostMapping("/fromDateFilter")
     public void setFromDateQuery(@RequestParam (value = "fromDate")String fromDate) {
-        if(fromDate.equals("") &&fromDate.equals(" ")){
+        if(fromDate.equals("") ||fromDate.equals(" ")){
             this.fromDateQuery="";
         }
         else{
@@ -52,7 +52,7 @@ public class RestCurrencyRateController {
     }
     @PostMapping("/toDateFilter")
     public void setToDateQuery(@RequestParam (value = "toDate")String toDate) {
-        if(toDate.equals("") &&toDate.equals(" ")){
+        if(toDate.equals("") ||toDate.equals(" ")){
             this.fromDateQuery="";
         }
         else{
@@ -117,7 +117,7 @@ public class RestCurrencyRateController {
                 this.toDateQuery+
                 this.searchQuery+
                 this.typeQuery+
-                "order by " + sortField + " " + sortStr + " LIMIT " + offset + "," + perPage;
+                " order by " + sortField + " " + sortStr + " LIMIT " + offset + "," + perPage;
         String countQuery="Select count(1) \n" +
                 "from currency_rate c, orderTermCurrency o \n" +
                 "where c.currency_type_id=o.id\n" +

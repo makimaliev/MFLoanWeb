@@ -1008,7 +1008,7 @@
                                 </span>
                             </a>
                         </li>
-                        <li sec:authorize="hasRole('ADMIN')" class="m-menu__item " aria-haspopup="true" >
+                        <li hidden="hidden" sec:authorize="hasRole('ADMIN')" class="m-menu__item " aria-haspopup="true" >
                             <a th:href="@{/information/list/}" class="m-menu__link ">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>

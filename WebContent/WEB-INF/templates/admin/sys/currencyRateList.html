@@ -308,7 +308,6 @@
             // Fitering with from date
 
             $("#from_date").on('change',function () {
-                alert($('#from_date').val())
                 $.ajax({
                     type:'post',
                     data:
@@ -362,7 +361,6 @@
                 $("select option:selected").each(function () {
 					str+=$(this).val()+",";
                 });
-                console.log(str);
                 $.ajax({
                     type:'post',
                     data:
@@ -402,17 +400,17 @@
     $("#currencyRateFormModal").on("show.bs.modal", function(e) {
         var link = $(e.relatedTarget);
         var currencyRateID = $("#currencyRate_id").val();
-        $(this).find(".modal-content").load(link.attr("href"));
-        // if(link.attr("href").indexOf('district/add')>0)
-        // {
-        //     $(this).find(".modal-title").html(link.attr("href").replace("/district/add","/currencyRate/"+currencyRateID+"/district/add"));
-        //     $(this).find(".modal-body").load(link.attr("href").replace("/district/add","/currencyRate/"+currencyRateID+"/district/add"));
-        // }
-        // else
-        // {
-        //     $(this).find(".modal-title").html(link.attr("href"));
-        //     $(this).find(".modal-content").load(link.attr("href"));
-        // }
+        // $(this).find(".modal-content").load(link.attr("href"));
+        if(link.attr("href").indexOf('district/add')>0)
+        {
+            $(this).find(".modal-title").html(link.attr("href").replace("/district/add","/currencyRate/"+currencyRateID+"/district/add"));
+            $(this).find(".modal-body").load(link.attr("href").replace("/district/add","/currencyRate/"+currencyRateID+"/district/add"));
+        }
+        else
+        {
+            $(this).find(".modal-title").html(link.attr("href"));
+            $(this).find(".modal-content").load(link.attr("href"));
+        }
     });
 </script>
 

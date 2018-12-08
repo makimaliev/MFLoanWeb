@@ -191,7 +191,12 @@ public class CollectionPhaseController {
 //                startDate=model.getInitDate();
             }
 
-            phase.setLoans(loans);
+            Set<Loan> phaseLoans=new HashSet<>();
+			for (Loan l:loans) {
+				Loan l1=loanService.getById(l.getId());
+				phaseLoans.add(l1);
+			}
+            phase.setLoans(phaseLoans);
             phase.setPhaseStatus(statusService.getById(1L));
             phase.setPhaseType(typeService.getById(1L));
             phase.setStartDate(startDate);
@@ -545,8 +550,8 @@ public class CollectionPhaseController {
 	}
 
 	private LoanModel1 getLoanIdAndRegNumber(long loanId){
-		String baseQuery = "select l.id as id,l.regNumber as regNumber, l.loanStateId  stateId \n"+
-				"from loan l where l.loanStateId=2 and l.id="+String.valueOf(loanId);
+		String baseQuery = "select l.id as id,l.regNumber as regNumber, l.loanStateId as stateId \n"+
+				"from loan l where l.loanStateId=2 and l.id=\""+String.valueOf(loanId)+"\"";
 //		String baseQuery= "select loan.id as id, loan.regNumber as regNumber, loan.loanStateId as stateId from loan loan where loan.id="+ String.valueOf(loanId);
 		Query query=entityManager.createNativeQuery(baseQuery,LoanModel1.class);
 		try{

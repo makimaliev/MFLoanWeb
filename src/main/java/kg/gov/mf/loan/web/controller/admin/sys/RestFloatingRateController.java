@@ -42,7 +42,7 @@ public class RestFloatingRateController {
 
     @PostMapping("/fromFilter")
     public void setFromDateQuery(@RequestParam (value = "fromDate") String fromDate){
-        if(fromDate.equals("") &&fromDate.equals(" ")){
+        if(fromDate.equals("") ||fromDate.equals(" ")){
             this.fromDateQuery="";
         }
         else{
@@ -52,7 +52,7 @@ public class RestFloatingRateController {
     }
     @PostMapping("/toFilter")
     public void setToDateQuery(@RequestParam (value = "toDate")String toDate) {
-        if(toDate.equals("")&&toDate.equals(" ")){
+        if(toDate.equals("")||toDate.equals(" ")){
             this.toDateQuery="";
         }
         else{

@@ -40,7 +40,7 @@
 								<h3 class="m-portlet__head-text" th:text="${information.name}"></h3>
 							</div>
 						</div>
-						<div sec:authorize="hasRole('ADMIN')" class="m-portlet__head-tools">
+						<div hidden="hidden" sec:authorize="hasRole('ADMIN')" class="m-portlet__head-tools">
 							<ul class="m-portlet__nav">
 								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_INFORMATION')" class="m-portlet__nav-item">
 									<a data-remote="false" data-toggle="modal"

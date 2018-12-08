@@ -223,15 +223,16 @@ var DatatableDataLocalLoans = function () {
                 else
                 {
                     var initDate = $("#phaseInitDate").val();
+                    console.log(debtorId)
                     $.ajax({
                         type : 'POST',
                         url : "/manage/debtor/"+debtorId+"/initializephase",
                         data: {selectedLoans:selectedLoans, initDater: initDate},
                         success:function (data) {
                             phaseDetailsTableInit(data);
-                            // var divT = $('#phaseDetailsDiv');
-                            // divT.collapse('show');
-                            // mApp.scrollTo(divT, -200);
+                            var divT = $('#phaseDetailsDiv');
+                            divT.collapse('show');
+                            mApp.scrollTo(divT, -200);
                         }
                     });
                     //$.post( "/manage/debtor/"+debtorId+"/initializephase", );
