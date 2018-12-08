@@ -245,7 +245,7 @@
                     responsive: {hidden: 'xl'}
                 },*/{
                     field: "v_debtor_name",
-                    title: "v_debtor_name",
+                    title: "Наименование",
                     template: function (row) {
                         var d = row.v_debtor_name;
                         if(d.length>40){
@@ -255,7 +255,7 @@
                     }
                 },  {
                     field: "v_ci_name",
-                    title: "v_ci_name",
+                    title: "Наимен. залога",
                     width:500,
                     template: function (row) {
                         var d = row.v_ci_name;
@@ -266,7 +266,7 @@
                     }
                 },{
                     field: "v_ciaf_details",
-                    title: "v_ciaf_details",
+                    title: "Примечание",
                     width:500,
                     template: function (row) {
                         var d = row.v_ciaf_details;
@@ -277,7 +277,7 @@
                     }
                 }, {
                     field: "v_ciaf_onDate",
-                    title: "v_ciaf_onDate",
+                    title: "Дата",
                     width:100,
                     textAlign:'center',
                     template: function (row) {

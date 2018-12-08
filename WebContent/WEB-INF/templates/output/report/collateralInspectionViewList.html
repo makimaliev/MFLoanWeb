@@ -190,9 +190,10 @@
         pickerPosition: 'bottom-left'
     });
 </script>
-<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript">
     //== Class definition
 
+    var insTypes= /*[[${insTypes}]]*/ [];
     var DatatableJsonRemoteDemo = function () {
         //== Private functions
 
@@ -256,7 +257,7 @@
                     responsive: {hidden: 'xl'}
                 },{
                     field: "v_debtor_name",
-                    title: "v_debtor_name",
+                    title: "Наименование",
                     width:300,
                     template: function (row) {
                         var d = row.v_debtor_name;
@@ -267,7 +268,7 @@
                     }
                 },  {
                     field: "v_ci_name",
-                    title: "v_ci_name",
+                    title: "Наимен. залога",
                     width:500,
                     template: function (row) {
                         var d = row.v_ci_name;
@@ -278,7 +279,7 @@
                     }
                 },  {
                     field: "v_cir_onDate",
-                    title: "v_cir_onDate",
+                    title: "Дата",
                     textAlign:'center',
                     template: function (row) {
                         var date = moment("/Date("+row.v_cir_onDate+")/").format("DD.MM.YYYY");
@@ -286,7 +287,12 @@
                     }
                 }, {
                     field: "v_cir_inspectionResultTypeId",
-                    title: "v_cir_inspectionResultTypeId"
+                    title: "Рез. обследования",
+                    template:function (row) {
+
+                        return insTypes[parseInt(row.v_cir_inspectionResultTypeId)-1].name;
+                        // return parseInt(row.v_cir_inspectionResultTypeId);
+                    }
                 },/* {
                     field: "",
                     width: 110,

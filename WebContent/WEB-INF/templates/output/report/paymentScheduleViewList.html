@@ -259,32 +259,32 @@
                     responsive: {hidden: 'xl'},
                 },{
                     field: "v_debtor_name",
-                    title: "v_debtor_name",
+                    title: "Наименование",
                     textAlign:'left'
                 }, {
                     field: "v_ps_collected_interest_payment",
-                    title: "v_ps_collected_interest_payment",
+                    title: "Накопленный проц.",
                     textAlign:'right',
                     template:function (row) {
                         return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_ps_collected_interest_payment);
                     }
                 }, {
                     field: "v_ps_collected_penalty_payment",
-                    title: "v_ps_collected_penalty_payment",
+                    title: "Накопленные штрафы",
                     textAlign:'right',
                     template:function (row) {
                         return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_ps_collected_interest_payment);
                     }
                 }, {
                     field: "v_ps_disbursement",
-                    title: "v_ps_disbursement",
+                    title: "Освоение",
                     textAlign:'right',
                     template:function (row) {
                         return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_ps_disbursement);
                     }
                 }, {
                     field: "v_ps_expected_date",
-                    title: "v_ps_expected_date",
+                    title: "Дата",
                     textAlign:'center',
                     template: function (row) {
                         var date = moment("/Date("+row.v_ps_expected_date+")/").format("DD.MM.YYYY");
@@ -292,14 +292,14 @@
                     }
                 }, {
                     field: "v_ps_interest_payment",
-                    title: "v_ps_interest_payment",
+                    title: "Проценты",
                     textAlign:'right',
                     template:function (row) {
                         return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_ps_interest_payment);
                     }
                 }, {
                     field: "v_ps_principal_payment",
-                    title: "v_ps_principal_payment",
+                    title: "Осн. сумма",
                     textAlign:'right',
                     template:function (row) {
                         return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_ps_principal_payment);

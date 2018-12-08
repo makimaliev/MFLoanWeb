@@ -237,24 +237,24 @@
                     responsive: {hidden: 'xl'}
                 },{
                     field: "v_debtor_name",
-                    title: "v_debtor_name"
+                    title: "Наименование"
                 },  {
                     field: "v_sp_principal",
-                    title: "v_sp_principal",
+                    title: "Осн. сумма",
                     textAlign:'right',
                     template:function (row) {
                         return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_sp_principal);
                     }
                 }, {
                     field: "v_sp_amount",
-                    title: "v_sp_amount",
+                    title: "Сумма",
                     textAlign:'right',
                     template:function (row) {
                         return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_sp_amount);
                     }
                 }, {
                     field: "v_sp_date",
-                    title: "v_sp_date",
+                    title: "Дата",
                     textAlign:'center',
                     template: function (row) {
                         var date = moment("/Date("+row.v_sp_date+")/").format("DD.MM.YYYY");

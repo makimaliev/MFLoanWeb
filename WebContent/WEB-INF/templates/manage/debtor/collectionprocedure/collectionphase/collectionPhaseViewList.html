@@ -265,7 +265,7 @@
                     responsive: {hidden: 'xl'}
                 },{
                     field: "v_debtor_name",
-                    title: "v_debtor_name",
+                    title: "Наименование",
                     width:300,
                     template: function (row) {
                         var d = row.v_debtor_name;
@@ -276,7 +276,7 @@
                     }
                 }, {
                     field: "v_cph_startDate",
-                    title: "v_cph_startDate",
+                    title: "Начал. дата",
                     textAlign:'center',
                     template: function (row) {
                         var date = moment("/Date("+row.v_cph_startDate+")/").format("DD.MM.YYYY");
@@ -284,21 +284,21 @@
                     }
                 }, {
                     field: "v_cph_start_total_amount",
-                    title: "v_cph_start_total_amount",
+                    title: "Начал. сумма",
                     textAlign:'right',
                     template:function (row) {
                         return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_cph_start_total_amount);
                     }
                 },{
                     field: "v_cph_close_total_amount",
-                    title: "v_cph_close_total_amount",
+                    title: "Конеч. сумма",
                     textAlign:'right',
                     template:function (row) {
                         return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_cph_close_total_amount);
                     }
                 }, {
                     field: "v_cph_phaseTypeId",
-                    title: "v_cph_phaseTypeId",
+                    title: "Вид",
                     template:function (row) {
                         for(var i=0;i<types.length;i++){
                            if(row.v_cph_phaseTypeId==types[i].id){
@@ -308,7 +308,7 @@
                     }
                 }, {
                     field: "v_cph_phaseStatusId",
-                    title: "v_cph_phaseStatusId",
+                    title: "Статус",
                     template:function (row) {
                         for(var i=0;i<statuses.length;i++){
                             if(row.v_cph_phaseStatusId==statuses[i].id){
@@ -318,7 +318,7 @@
                     }
                 }, {
                     field: "v_cph_closeDate",
-                    title: "v_cph_closeDate",
+                    title: "Конеч. дата",
                     textAlign:'center',
                     template: function (row) {
                         if (row.v_cph_closeDate!=null){

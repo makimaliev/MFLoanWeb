@@ -105,6 +105,7 @@ public class LoanViewController {
             }
         }
         boolean b=(selectedFieldNames.size()==0);
+        selectedFieldNamesTranslated.clear();
         if(b){
             String a=messageByLocaleService.getMessage("v_debtor_name");
             selectedFieldNamesTranslated.add(a);
@@ -118,6 +119,14 @@ public class LoanViewController {
             a=messageByLocaleService.getMessage("v_loan_reg_date");
             selectedFieldNames.add("v_loan_reg_date");
             selectedFieldNamesTranslated.add(a);
+        }
+        else{
+            for (String s:selectedFieldNames) {
+                String asa=messageByLocaleService.getMessage(s);
+                if(!selectedFieldNamesTranslated.contains(asa)){
+                    selectedFieldNamesTranslated.add(asa);
+                }
+            }
         }
         model.addAttribute("selectedFields",selectedFieldNames);
         model.addAttribute("selectedFieldsTranslated",selectedFieldNamesTranslated);

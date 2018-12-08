@@ -257,22 +257,22 @@
                     responsive: {hidden: 'xl'},
                 }, {
                     field: "v_debtor_name",
-                    title: "debtor_name",
+                    title: "Наименование",
                     textAlign:'left'
                 }, {
                     field: "v_payment_number",
-                    title: "v_payment_number",
+                    title: "Номер",
                     textAlign:'left'
                 }, {
                     field: "v_loan_amount",
-                    title: "loan_amount",
+                    title: "Сумма",
                     textAlign:'right',
                     template:function (row) {
                         return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_loan_amount);
                     }
                 }, {
                     field: "v_payment_total_amount",
-                    title: "payment_total_amount",
+                    title: "Всего",
                     width:200,
                     textAlign:'right',
                     template:function (row) {
@@ -280,7 +280,7 @@
                     }
                 }, {
                     field: "v_payment_date",
-                    title: "payment_date",
+                    title: "Дата",
                     textAlign:'center',
                     template: function (row) {
                         var date = moment("/Date("+row.v_payment_date+")/").format("DD.MM.YYYY");
