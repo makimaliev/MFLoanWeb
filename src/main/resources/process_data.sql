@@ -1214,7 +1214,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `calculateLoanDetailedSummaryUntilOnDate`(IN loan_id bigint, IN inDate date, IN includeToday tinyint(1))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `calculateLoanDetailedSummaryUntilOnDate`(IN loan_id bigint, IN inDate date, IN includeToday tinyint(1), IN loan_summary_type VARCHAR(20))
 BEGIN
     DECLARE tempDate DATE;
     DECLARE srokDate DATE;
@@ -1436,6 +1436,7 @@ BEGIN
                 AND loan.id = loan_id
                 AND ps.expectedDate > inDate
                 AND ps.record_status = 1
+                AND loan_summary_type = 'SYSTEM'
         ) pp
       ORDER BY pp.onDate, pp.orderType, pp.disbursement desc;
 
@@ -1853,21 +1854,33 @@ BEGIN
       SET total_paid = total_paid + princPaid + intPaid + penPaid;
       SET total_paidKGS = total_paidKGS + princPaidKGS + intPaidKGS + penPaidKGS;
 
-      SET isAlreadyInserted = isLoanDetailedSummaryExistsForDate(loan_id, tempDate);
-
       IF tempDate <= inDate THEN
 
-        INSERT INTO loanDetailedSummary(version, collectedInterestDisbursed, collectedInterestPayment, collectedPenaltyDisbursed, collectedPenaltyPayment, daysInPeriod, disbursement, interestAccrued,
-                                          interestOutstanding, interestOverdue, interestPaid, interestPayment, onDate, penaltyAccrued, penaltyOutstanding, penaltyOverdue, penaltyPaid, principalOutstanding,
-                                          principalOverdue, principalPaid, principalPayment, principalWriteOff, totalCollectedInterestPayment, totalCollectedPenaltyPayment, totalDisbursement,
-                                          totalInterestAccrued, totalInterestAccruedOnInterestPayment, totalInterestPaid, totalInterestPayment, totalPenaltyAccrued, totalPenaltyPaid, totalPrincipalPaid,
-                                          totalPrincipalPayment, totalPrincipalWriteOff, loanId)
-          VALUES (1, ROUND(collIntDisbursed,2), ROUND(collIntPayment,2), ROUND(collPenDisbursed,2), ROUND(collPenPayment,2), daysInPer, ROUND(disb,2), ROUND(intAccrued,2), ROUND(intOutstanding,2),
-                     ROUND(intOverdue,2), ROUND(intPaid,2), ROUND(intPayment,2), ROUND(tempDate,2), ROUND(penAccrued,2), ROUND(penOutstanding,2), ROUND(penOverdue,2), ROUND(penPaid,2), ROUND(princOutstanding,2),
-                                                            ROUND(princOverdue,2), ROUND(princPaid,2), ROUND(princPayment,2), 0, ROUND(totalCollIntPayment,2), ROUND(totalCollPenPayment,2), ROUND(totalDisb,2), ROUND(totalIntAccrued,2), 0,
-                                                                                                                              ROUND(totalIntPaid,2), ROUND(totalIntPayment,2), ROUND(totalPenAccrued,2), ROUND(totalPenPaid,2), ROUND(totalPrincPaid,2), ROUND(totalPrincPayment,2), 0, loan_id);
+        if loan_summary_type = 'SYSTEM' or ((loan_summary_type = 'MANUAL' or loan_summary_type = 'FIXED') and tempDate = inDate) then
+
+          INSERT INTO loanDetailedSummary(version, collectedInterestDisbursed, collectedInterestPayment, collectedPenaltyDisbursed, collectedPenaltyPayment, daysInPeriod, disbursement, interestAccrued,
+                                            interestOutstanding, interestOverdue, interestPaid, interestPayment, onDate, penaltyAccrued, penaltyOutstanding, penaltyOverdue, penaltyPaid, principalOutstanding,
+                                            principalOverdue, principalPaid, principalPayment, principalWriteOff, totalCollectedInterestPayment, totalCollectedPenaltyPayment, totalDisbursement,
+                                            totalInterestAccrued, totalInterestAccruedOnInterestPayment, totalInterestPaid, totalInterestPayment, totalPenaltyAccrued, totalPenaltyPaid, totalPrincipalPaid,
+                                            totalPrincipalPayment, totalPrincipalWriteOff, loanId)
+            VALUES (1, ROUND(collIntDisbursed,2), ROUND(collIntPayment,2), ROUND(collPenDisbursed,2), ROUND(collPenPayment,2), daysInPer, ROUND(disb,2), ROUND(intAccrued,2), ROUND(intOutstanding,2),
+                       ROUND(intOverdue,2), ROUND(intPaid,2), ROUND(intPayment,2), ROUND(tempDate,2), ROUND(penAccrued,2), ROUND(penOutstanding,2), ROUND(penOverdue,2), ROUND(penPaid,2), ROUND(princOutstanding,2),
+                                                              ROUND(princOverdue,2), ROUND(princPaid,2), ROUND(princPayment,2), 0, ROUND(totalCollIntPayment,2), ROUND(totalCollPenPayment,2), ROUND(totalDisb,2), ROUND(totalIntAccrued,2), 0,
+                                                                                                                                ROUND(totalIntPaid,2), ROUND(totalIntPayment,2), ROUND(totalPenAccrued,2), ROUND(totalPenPaid,2), ROUND(totalPrincPaid,2), ROUND(totalPrincPayment,2), 0, loan_id);
+        end if;
 
       END IF;
+
+      if loan_summary_type = 'MANUAL' or loan_summary_type = 'FIXED' then
+
+        if exists(select 1 from loanSummary
+                  where loanId = loan_id
+                    and onDate = tempDate
+                    and (loanSummaryType = 'MANUAL' or loanSummaryType = 'FIXED')) then
+          set isAlreadyInserted = true;
+        end if;
+
+      end if;
 
       IF flag = TRUE THEN
         SET pOPO = calculatePOPO(princOverdue, daysInPer, tempDate, loan_id);
@@ -1880,36 +1893,42 @@ BEGIN
         END IF;
 
         IF intAccrued + penAccrued + pOIO + pOPO > 0 THEN
-          INSERT INTO accrue(version, daysInPeriod, fromDate, interestAccrued, lastInstPassed, penaltyAccrued, penaltyOnInterestOverdue, penaltyOnPrincipalOverdue, toDate, loanId)
-            VALUES (1, daysInPer, pDate, ROUND(intAccrued,2), FALSE , ROUND(penAccrued,2), ROUND(pOIO,2), ROUND(pOPO,2), tempDate, loan_id);
+          if loan_summary_type = 'SYSTEM' or ((loan_summary_type = 'MANUAL' or loan_summary_type = 'FIXED') and tempDate = inDate) then
+            INSERT INTO accrue(version, daysInPeriod, fromDate, interestAccrued, lastInstPassed, penaltyAccrued, penaltyOnInterestOverdue, penaltyOnPrincipalOverdue, toDate, loanId)
+              VALUES (1, daysInPer, pDate, ROUND(intAccrued,2), FALSE , ROUND(penAccrued,2), ROUND(pOIO,2), ROUND(pOPO,2), tempDate, loan_id);
+          end if;
         END IF;
 
         SET pDate = tempDate;
 
         IF tempDate <= inDate THEN
 
-          IF(isAlreadyInserted = FALSE) THEN
-
-            INSERT INTO loanSummary(version, loanSummaryType, loanAmount, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty,
-                                    overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalInterestPaid, totalPenaltyPaid, totalPrincipalPaid, totalFeePaid, loanId, createDate)
-            VALUES (1, 'SYSTEM', loan_amount, tempDate, 0.0, intOutstanding, penOutstanding, princOutstanding, 0.0, intOverdue, penOverdue, princOverdue, 0.0, totalIntPaid, totalPrincPaid,
-                                                                                                                                                princPaid, totalDisb, total_outstanding, total_overdue, total_paid, total_paidKGS, totalIntPaid, totalPenPaid, totalPrincPaid, 0, loan_id, CURDATE());
+          IF loan_summary_type = 'MANUAL' AND isAlreadyInserted THEN
+            UPDATE loanSummary SET record_status = 2 WHERE loanId = loan_id AND onDate = tempDate;
           END IF;
 
+          if loan_summary_type = 'SYSTEM' or (loan_summary_type = 'MANUAL' and tempDate = inDate) or (loan_summary_type = 'FIXED' and not isAlreadyInserted and tempDate = inDate) then
+            INSERT INTO loanSummary(version, loanSummaryType, loanAmount, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty,
+                                    overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalInterestPaid, totalPenaltyPaid, totalPrincipalPaid, totalFeePaid, loanId, createDate)
+            VALUES (1, loan_summary_type, loan_amount, tempDate, 0.0, intOutstanding, penOutstanding, princOutstanding, 0.0, intOverdue, penOverdue, princOverdue, 0.0, totalIntPaid, totalPrincPaid,
+                                                                                                                                                  princPaid, totalDisb, total_outstanding, total_overdue, total_paid, total_paidKGS, totalIntPaid, totalPenPaid, totalPrincPaid, 0, loan_id, CURDATE());
+          end if;
         END IF;
 
       ELSE
 
         IF tempDate <= inDate THEN
 
-          IF(isAlreadyInserted = FALSE) THEN
-
-            INSERT INTO loanSummary(version, loanAmount, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty,
-                                    overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalInterestPaid, totalPenaltyPaid, totalPrincipalPaid, totalFeePaid, loanId)
-            VALUES (1, loan_amount, tempDate, 0.0, intOutstanding, penOutstanding, princOutstanding, 0.0, intOverdue, penOverdue, princOverdue, 0.0, totalIntPaid, totalPrincPaid,
-                                                                                                                                                princPaid, totalDisb, total_outstanding, total_overdue, total_paid, total_paidKGS, totalIntPaid, totalPenPaid, totalPrincPaid, 0, loan_id);
+          IF loan_summary_type = 'MANUAL' AND isAlreadyInserted THEN
+            UPDATE loanSummary SET record_status = 2 WHERE loanId = loan_id AND onDate = tempDate;
           END IF;
 
+          if loan_summary_type = 'SYSTEM' or (loan_summary_type = 'MANUAL' and tempDate = inDate) or (loan_summary_type = 'FIXED' and not isAlreadyInserted and tempDate = inDate) then
+            INSERT INTO loanSummary(version, loanSummaryType, loanAmount, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty,
+                                    overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalInterestPaid, totalPenaltyPaid, totalPrincipalPaid, totalFeePaid, loanId, createDate)
+            VALUES (1, loan_summary_type, loan_amount, tempDate, 0.0, intOutstanding, penOutstanding, princOutstanding, 0.0, intOverdue, penOverdue, princOverdue, 0.0, totalIntPaid, totalPrincPaid,
+                                                                                                                                                  princPaid, totalDisb, total_outstanding, total_overdue, total_paid, total_paidKGS, totalIntPaid, totalPenPaid, totalPrincPaid, 0, loan_id, CURDATE());
+          end if;
         END IF;
 
       END IF;
@@ -2090,6 +2109,7 @@ BEGIN
 
     DELETE FROM loanDetailedSummary;
     DELETE FROM loanSummary WHERE loanSummaryType = 'SYSTEM';
+    DELETE FROM accrue;
 
     OPEN tCursor;
 
@@ -2101,7 +2121,7 @@ BEGIN
         LEAVE run_calculate;
       END IF;
 
-      CALL calculateLoanDetailedSummaryUntilOnDate(loanId, inDate, 1);
+      CALL calculateLoanDetailedSummaryUntilOnDate(loanId, inDate, 1, 'SYSTEM');
 
     END LOOP run_calculate;
 
@@ -3219,4 +3239,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-07 19:25:56
+-- Dump completed on 2018-12-08 12:46:02
