@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -32,6 +33,7 @@ public class DocumentFlowController extends BaseController {
         public String text;
 
         public Result(Long id, String text) {
+
             this.id = id;
             this.text = text;
         }
@@ -53,8 +55,8 @@ public class DocumentFlowController extends BaseController {
                                   DocumentStatusService documentStatusService,
                                   TaskService taskService,
                                   RegisterService registerService,
-                                  AccountService accountService)
-    {
+                                  AccountService accountService) {
+
         this.documentService = documentService;
         this.documentTypeService = documentTypeService;
         this.documentSubTypeService = documentSubTypeService;
@@ -321,6 +323,16 @@ public class DocumentFlowController extends BaseController {
     public String view(@PathVariable("id") Long id, Model model) {
 
         if(getUser() == null) return "/login/login";
+
+        Date date = new Date();
+        DecimalFormat dFormat= new DecimalFormat("00");
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        String day = dFormat.format(cal.get(Calendar.DAY_OF_MONTH));
+        String month = dFormat.format(cal.get(Calendar.MONTH) + 1);
+        String year = String.valueOf(cal.get(Calendar.YEAR));
 
         Document document = documentService.getById(id);
 

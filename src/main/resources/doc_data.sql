@@ -64,3 +64,19 @@ FROM (SELECT
   FROM `mfloan`.`person`
   WHERE (`mfloan`.`person`.`name` <> '')) `data`
 ORDER BY `data`.`id`;
+
+
+DROP TABLE IF EXISTS chat_users;
+
+CREATE
+DEFINER = 'root'@'localhost'
+VIEW mfloan.chat_users
+AS
+SELECT
+  `u`.`id` AS `id`,
+  `u`.`username` AS `username`,
+  `s`.`name` AS `name`
+FROM (`users` `u`
+  LEFT JOIN `staff` `s`
+    ON ((`u`.`staff_id` = `s`.`id`)))
+WHERE (`u`.`staff_id` IS NOT NULL);

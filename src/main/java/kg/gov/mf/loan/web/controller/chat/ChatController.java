@@ -3,6 +3,7 @@ package kg.gov.mf.loan.web.controller.chat;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.task.model.Chat;
 import kg.gov.mf.loan.task.service.ChatService;
+import kg.gov.mf.loan.task.service.ChatUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -22,20 +23,26 @@ public class ChatController {
 
     private UserService userService;
     private ChatService chatService;
+    private ChatUserService chatUserService;
 
     @Autowired
-    public ChatController(UserService userService, ChatService chatService)
+    public ChatController(UserService userService,
+                          ChatService chatService,
+                          ChatUserService chatUserService)
     {
         this.userService = userService;
         this.chatService = chatService;
+        this.chatUserService = chatUserService;
     }
 
     @MessageMapping("/chat.sendMessageTo")
     @SendToUser("/queue/public")
     public Chat sendMessageTo(@Payload Chat chatMessage, Principal principal) throws Exception
     {
+        /*
         chatMessage.setSenderfullname(userService.findByUsername(chatMessage.getSender()).getStaff().getName());
         chatMessage.setReceiverfullname(userService.findByUsername(chatMessage.getReceiver()).getStaff().getName());
+        */
         return chatMessage;
     }
 
@@ -44,8 +51,10 @@ public class ChatController {
     public Chat sendMessage(@Payload Chat chatMessage, Principal principal)
     {
         Object o = principal;
-        chatMessage.setSenderfullname(userService.findByUsername(chatMessage.getSender()).getStaff().getName());
+        /*
+        chatMessage.setSenderfullname( userService.findByUsername(chatMessage.getSender()).getStaff().getName());
         chatMessage.setReceiverfullname(userService.findByUsername(chatMessage.getReceiver()).getStaff().getName());
+        */
         chatService.add(chatMessage);
         return chatMessage;
     }

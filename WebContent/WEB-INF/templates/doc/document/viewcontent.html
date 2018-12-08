@@ -3,19 +3,19 @@
 
 <body>
 <th:block th:fragment="internal">
-    <!-- Sender Responsible -->
-    <div class="form-group m-form__group row">
-        <label class="col-3 col-form-label"> ОТ : </label>
-        <div class="col-9">
-            <label class="form-control" th:each="s : *{senderResponsible?.staff}" th:text="${s.name}"> Staff </label>
-        </div>
-    </div>
     <!-- Receiver Responsible -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label"> Кому : </label>
         <div class="col-9">
             <label class="form-control" th:each="s : *{receiverResponsible?.staff}" th:text="${s.name}"> Staff </label>
             <label class="form-control" th:each="s : *{receiverResponsible?.departments}" th:text="${s.name}"> Departments </label>
+        </div>
+    </div>
+    <!-- Sender Responsible -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label"> ОТ : </label>
+        <div class="col-9">
+            <label class="form-control" th:each="s : *{senderResponsible?.staff}" th:text="${s.name}"> Staff </label>
         </div>
     </div>
     <!-- TITLE -->
@@ -82,16 +82,6 @@
             <label class="form-control" th:text="*{#dates.format(senderRegisteredDate, 'dd-MM-yyyy')}"> Description </label>
         </div>
     </div>
-    <!-- Sender Responsible -->
-    <div class="form-group m-form__group row">
-        <label class="col-3 col-form-label">
-            <span> ОТ :  </span>
-        </label>
-        <div class="col-sm-9">
-            <label class="form-control" th:each="s : *{senderResponsible?.organizations}" th:text="${s.name}"> Staff </label>
-            <label class="form-control" th:each="s : *{senderResponsible?.person}" th:text="${s.name}"> Staff </label>
-        </div>
-    </div>
     <!-- Receiver Responsible -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
@@ -100,6 +90,16 @@
         <div class="col-9">
             <label class="form-control" th:each="s : *{receiverResponsible.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
             <label class="form-control" th:each="s : *{receiverResponsible.organizations}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+        </div>
+    </div>
+    <!-- Sender Responsible -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> ОТ :  </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:each="s : *{senderResponsible?.organizations}" th:text="${s.name}"> Staff </label>
+            <label class="form-control" th:each="s : *{senderResponsible?.person}" th:text="${s.name}"> Staff </label>
         </div>
     </div>
     <!-- TITLE -->
@@ -159,16 +159,6 @@
     </div>
 </th:block>
 <th:block th:fragment="outgoing">
-    <!-- Sender Responsible -->
-    <div class="form-group m-form__group row">
-        <label class="col-3 col-form-label">
-            <span> ОТ :  </span>
-        </label>
-        <div class="col-sm-9">
-            <label class="form-control" th:each="s : *{senderResponsible.staff}" th:text="${s.name}"> Staff </label>
-            <label class="form-control" th:each="s : *{senderResponsible.organizations}" th:text="${s.name}"> Staff </label>
-        </div>
-    </div>
     <!-- Receiver Responsible -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
@@ -177,6 +167,16 @@
         <div class="col-9">
             <label class="form-control" th:each="s : *{receiverResponsible.organizations}" th:text="${s.name}"> Staff </label>
             <label class="form-control" th:each="s : *{receiverResponsible.person}" th:text="${s.name}"> Staff </label>
+        </div>
+    </div>
+    <!-- Sender Responsible -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> ОТ :  </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:each="s : *{senderResponsible.staff}" th:text="${s.name}"> Staff </label>
+            <label class="form-control" th:each="s : *{senderResponsible.organizations}" th:text="${s.name}"> Staff </label>
         </div>
     </div>
     <!-- TITLE -->
