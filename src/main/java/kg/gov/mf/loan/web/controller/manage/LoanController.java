@@ -321,8 +321,8 @@ public class LoanController {
             }
         }
 
-        if (rate == null)
-            rate = currencyRateService.findByDateAndType(loan.getCloseDate(), loan.getCurrency());
+//        if (rate == null)
+//            rate = currencyRateService.findByDateAndType(loan.getCloseDate(), loan.getCurrency());
 
         if (rate != null)
             loan.setCloseRate(rate.getRate());
