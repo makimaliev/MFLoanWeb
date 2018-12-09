@@ -1856,7 +1856,7 @@ BEGIN
 
       IF tempDate <= inDate THEN
 
-        if loan_summary_type = 'SYSTEM' or ((loan_summary_type = 'MANUAL' or loan_summary_type = 'FIXED') and tempDate = inDate) then
+        if loan_summary_type = 'SYSTEM' then
 
           INSERT INTO loanDetailedSummary(version, collectedInterestDisbursed, collectedInterestPayment, collectedPenaltyDisbursed, collectedPenaltyPayment, daysInPeriod, disbursement, interestAccrued,
                                             interestOutstanding, interestOverdue, interestPaid, interestPayment, onDate, penaltyAccrued, penaltyOutstanding, penaltyOverdue, penaltyPaid, principalOutstanding,
@@ -2432,7 +2432,7 @@ BEGIN
         CALL updateTrancheeLoanData(loan_id);
       END IF;
 
-      INSERT INTO loanSummary (version, loanAmount, loanSummaryType, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty, overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalFeePaid, totalInterestPaid, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalPenaltyPaid, totalPrincipalPaid, loanId)
+      INSERT INTO loanSummary (version, loanAmount, loanSummaryType, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty, overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalFeePaid, totalInterestPaid, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalPenaltyPaid, totalPrincipalPaid, loanId, createDate)
         SELECT 1,
           SUM(p.loanAmount),
           p.loanSummaryType,
@@ -2458,7 +2458,8 @@ BEGIN
           SUM(p.totalPaidKGS),
           SUM(p.totalPenaltyPaid),
           SUM(p.totalPrincipalPaid),
-          loan_id
+          loan_id,
+          CURDATE()
         FROM loanSummary p
         WHERE p.loanId IN
               (SELECT id
@@ -3292,4 +3293,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-08 14:20:54
+-- Dump completed on 2018-12-09 17:02:45
