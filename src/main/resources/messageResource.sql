@@ -1,24 +1,244 @@
-insert into message_resource(kgz,rus,eng,messageKey) values ('Күнүн тандоо','Выберите дату','Select date','label.select.date');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Датасы','Дата','Date','label.date');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Баары','Все','All','label.all');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Тел. номер','Тел. номер','Phone number','label.tel.number');
+# ORGANIZATION
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Район','Район','District','label.district');
--- search
--- form
--- debtors
 insert into message_resource(kgz,rus,eng,messageKey) values ('Баары','Все','All','label.all');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Мекеме','Организация','Organization','label.organization');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Маалымат','Подробная информация','Organization Details','label.details.organization');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Аталышы','Наименование','Department Name','label.department.name');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Тушундурмосу','Примечание','Department Description','label.department.description');
+
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Банктын аталышы','Наименование банка','Bank name','label.bankData.name');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Тушундурмосу','Примечание','Bank Description','label.bankData.description');
+insert into message_resource(kgz,rus,eng,messageKey) values ('БИК','БИК','Bank BIK','label.bankData.bik');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Эсеп','Счет','Bank account number','label.bankData.accountNumber');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Статусу','Статус','Department Enabled','label.department.enabled');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Тузулушу','Организационная структура','Organization department','label.organization.department');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Ишкерлери','Сотрудники','Department staffs','label.staffs');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Аты-жону','Ф.И.О. сотрудника','Staff name','label.staff.name');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('кызмат Кошуу','Добавить должность','Department add position','label.department.addPosition');
+insert into message_resource(kgz,rus,eng,messageKey) values ('ишкер Кошуу','Добавить сотрудника','Department add staff','label.department.addStaff');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Аты-жону','Ф.И.О.','Staff person ','label.staff.person');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Мекемеси','Организация','Staff organization ','label.staff.organization');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Отдел','Отдел','Staff department ','label.staff.department');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Кызматы','Должность','Staff position ','label.staff.position');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Маалымат','Подробная информация','Person Details','label.details.of.person');
+
+# DEBTOR
+
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Заемщиктин аты-жону','Наименование или Ф.И.О. заемщика','Debtor name','label.debtor.owner');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Тармак','Отрасль','Work sector','label.workSector');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Заемщик кошуу','Добавить заемщика','Add debtor','label.add.debtor');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Аты-жону','Заемщик','debtor Owner','label.debtor.add.owner');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Заемщик түрү','Вид ','Debtor type','label.debtor.type');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Заемщикти кошуу/өзгөртүү','Добавить/Редактировать заемщика','Add/Edit debtor','label.title.add.edit.debtor');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Жалпы маалымат','Общая информация','Debtor general information','label.debtor.tab.loan.info');
+insert into message_resource(kgz,rus,eng,messageKey) values ('баштоо','Инициирование','Init','label.debtor.tab.initializaPhase');
+
+
+# LOAN
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Толонуп буткон датасы','Дата полного погашения','Loan Close date','label.loan.closeDate');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептер','Расчеты','Loan summary','label.loan.loanSummary');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Куратор','Куратор','Supervisor','label.loan.superId');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Кредит','Кредит','Loan','label.loan');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Жалпы маалымат','Общая информация','General information','label.loan.credit');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Кредит тизмеси','Список кредитов','Loan list','label.debtors');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Эсепти сактоо','Сохранить расчет','Calculate manual','label.button.calculate.manual');
+insert into message_resource(kgz,rus,eng,messageKey) values ('График','График','Payment schedules','label.loan.paymentSchedules');
+
+
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('График кошуу','Добавить график','Add payment schedule','label.loan.add.paymentSchedule');
+insert into message_resource(kgz,rus,eng,messageKey) values ('График','График','Payment schedule','label.loan.paymentSchedule');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Дата','Дата','Expected date','label.loan.paymentSchedule.expectedDate');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Алынганы','Освоение/снятие','Disbursement','label.loan.paymentSchedule.disbursement');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Негизги төлөм','Осн.сумма','Principal payment','label.loan.paymentSchedule.principalPayment');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Пайыздары','Проценты','Interest payment','label.loan.paymentSchedule.interestPayment');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Мурун топтолгон пайыздар','Нак. проценты','Collected interest payment','label.loan.paymentSchedule.collectedInterestPayment');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Мурун топтолгон штр.','Нак. штрафы','Collected penalty payment','label.loan.paymentSchedule.collectedPenaltyPayment');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Статусу','Статус','Installment state','label.loan.paymentSchedule.installmentState');
+
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөмдөр','Платежи','Payments','label.payments');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөмдөр','Платежи','Payments','label.loan.payments');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөм кошуу','Добавить платеж','Add payment','label.loan.add.payment');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөм','Платеж','Payment','label.loan.payment');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөм кошуу/өзгортуу','Добавить/Редактировать платеж','Add/Edit payment','label.loan.title.add.edit.payment');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Датасы','Дата','Payment date','label.loan.payment.paymentDate');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Жалпы суммасы','Общая сумма','Total amount','label.loan.payment.totalAmount');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Негизги суммасы','Осн. сумма','Principal','label.loan.payment.principal');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Пайызы','Проценты','Interest','label.loan.payment.interest');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Айып пул','Штрафы','Penalty','label.loan.payment.penalty');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Акы','Пени','Fee','label.loan.payment.fee');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Номери','Платежный номер','Payment number','label.loan.payment.number');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөм түрү','Вид платежа','Payment type','label.loan.payment.paymentType');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('План кошуу/өзгортүү','Добавить/Редактировать план','Add/Edit plan','label.loan.title.add.edit.supervisorPlans');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Пландар','План','Plans','label.loan.supervisorPlans');
+insert into message_resource(kgz,rus,eng,messageKey) values ('План кошуу','Добавить план','Add supervisor plan','label.loan.add.supervisorPlan');
+insert into message_resource(kgz,rus,eng,messageKey) values ('План','План','Plan','label.loan.supervisorPlan');
+insert into message_resource(kgz,rus,eng,messageKey) values ('План күнү','Дата','Plan date','label.loan.supervisorPlan.date');
+insert into message_resource(kgz,rus,eng,messageKey) values ('План суммасы','Всего сумма','Plan amount','label.loan.supervisorPlan.amount');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Негизги суммасы','Осн. сумма','Principal','label.loan.supervisorPlan.principal');
+insert into message_resource(kgz,rus,eng,messageKey) values ('План пайызы','Проценты','Interest','label.loan.supervisorPlan.interest');
+insert into message_resource(kgz,rus,eng,messageKey) values ('План айып пулу','Штрафы','Penalty','label.loan.supervisorPlan.penalty');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Акы','Пени','Fee','label.loan.supervisorPlan.fee');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Примечание','Примечание','Description','label.loan.supervisorPlan.description');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгарууну кошуу/өзгортүү','Добавить/Редактировать списание','Add/Edit write offs','label.loan.title.add.edit.writeOff');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгаруу','Списание','Write offs','label.loan.writeOffs');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгаруу кошуу','Добавить списание','Add write offs','label.loan.add.writeOff');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгаруу','Списание','Write off','label.loan.writeOff');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгаруу күнү','Дата','Write offs date','label.loan.writeOff.date');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгаруунун жалпы суммасы','Общая сумма','Write offs total amount','label.loan.writeOff.totalAmount');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгаруунун негизги суммасы','Осн. сумма','Write offs principal','label.loan.writeOff.principal');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгаруунун пайызы','Проценты','Write offs interest','label.loan.writeOff.interest');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгаруунун айып пулу','Штрафы','Write offs penalty','label.loan.writeOff.penalty');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгаруунун акысы','Пени','Write offs fee','label.loan.writeOff.fee');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Примечание','Примечание','Write offs description','label.loan.writeOff.description');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Кредиттин шартын кошуу/өзгөртүү','Добавить/Редактировать условия кредита','Credit term','label.loan.title.add.edit.creditTerm');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Кредит шарттарын кошуу','Добавить условия кредита','add Term','label.loan.add.supervisorTerm');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Кредиттин шарттары','Условия кредита','Credit terms','label.loan.creditTerms');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Кредиттин шарты','Условия кредита','Credit term','label.loan.creditTerm');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Башталышы','Начало действия','Start date','label.loan.creditTerm.startDate');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Пайыздык чен','Процентная ставка','Interest rate value','label.loan.creditTerm.interestRateValue');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөө мөнөтү','Период начисления','Rate period','label.loan.creditTerm.ratePeriod');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Туруксуз баа түрү','Вид плавающих ставок','Floating rate type','label.loan.creditTerm.floatingRateType');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өткөргөн күнүнүн негизги баасына карата айып пулу','Штраф за просрочку по осн.с.','Penalty on principal overdue rate value','label.loan.creditTerm.penaltyOnPrincipleOverdueRateValue');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өткөргөн күнүнүн негизги баасына карата айып пулу','Штраф за просрочку по осн.с.','Penalty on principal overdue rate value','label.loan.creditTerm.enaltyOnPrincipleOverdueRateValue');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өткөргөн күнүнүн негизги баасына карата айып пулунун түрү','Вид штрафа за просрочку по осн.с.','Penalty on principal overdue rate type','label.loan.creditTerm.penaltyOnPrincipleOverdueRateType');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өткөргөн күнүнүн пайыздык ченине карата айып пулу','Штраф за просрочку по процентам','Penalty on interest overdue rate value','label.loan.creditTerm.penaltyOnInterestOverdueRateValue');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өткөргөн күнүнүн пайыздык ченине карата айып пулунун түрү','Вид штрафа за просрочку по процентам','Penalty on interest overdue rate type','label.loan.creditTerm.penaltyOnInterestOverdueRateType');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Эң жогорку пайыздык чек','Предельный лимит начисления штрафов','Penalty limit percent','label.loan.creditTerm.penaltyLimitPercent');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Айып пулдун бүтүү керектиги болгон аякы күн','Дата предельного начисления штрафов','Penalty limit end date','label.loan.creditTerm.penaltyLimitEndDate');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Бүтүмдөр тартиби','Очередь погашения','Transaction order','label.loan.creditTerm.transactionOrder');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Күндөр','Метод расчета кол-ва дней в период','Days in method','label.loan.creditTerm.daysInMonthMethod');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Жылдар','Метод расчета кол0ва дней в год','Days in year method','label.loan.creditTerm.daysInYearMethod');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Төмөнкү кредиттер','Субкредиты','Sub loans','label.loan.childList');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Толук эсептөө','Дет. расчет','Loan detailed summary','label.loan.loanDetailedSummary');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Топтомдор','Начисление','Accrue','label.loan.accrue');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Датасы','Дата','Date','label.date');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү фазасын кошуу','Претензия','Add collection phase','label.add.collection.phase');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Кошумча','Дополнительно','Additional','label.additional');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Мүлк','Товар','Good','label.loan.good');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Мүлк кошуу','Добавить товар','Аdd good','label.loan.add.good');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Мүлк кошуу/өзгортүү','Добавить/Редактировать товар','Add/Edit good','label.loan.title.add.edit.good');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Саны','Количество','Quantity','label.loan.good.quantity');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өлчөм түрү','Ед. измерения','Unit type','label.loan.good.unitType');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Мүлк түрү','Вид товара','Good type','label.loan.good.goodType');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Карыздын которулушун кошуу/өзгортүү','Добавить/Редактировать перевод долга','Add/Edit debt transfer','label.loan.add.edit.debtTransfer');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Карыздын которулушу','Перевод долга','Debt transfer','label.loan.debtTransfer');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Карыздын которулушун кошуу','Добавить перевод долга','Add debt transfer','label.loan.add.debtTransfer');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Номер','Номер','Number','label.loan.debtTransfer.number');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Күнү','Дата','Date','label.loan.debtTransfer.date');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Саны','Количество','Quantity','label.loan.debtTransfer.quantity');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Данасынын баасы','Цена за единицу','Price per unit','label.loan.debtTransfer.pricePerUnit');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Данасынын түрү','Тип единицы','Unit type','label.loan.debtTransfer.unitType');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Жалпы баасы','Общая стоимость','Total cost','label.loan.debtTransfer.totalCost');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Которуучу','От кого','Transfer person','label.loan.debtTransfer.transferPerson');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Мүлктүн түрү','Вид товара','Good type','label.loan.debtTransfer.goodsType');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Ээси','Наименование','Item owner','label.item.owner');
+
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Банкрот кошуу/өзгортүү','Добавить/Редактировать банкротство','Add/Edit bankrupt','label.loan.title.add.edit.bankrupt');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Банкрот','Банкротство','Bankrupt','label.loan.bankrupt');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Башталышы','Дата банкротства','Started date','label.loan.bankrupt.startedOnDate');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Бутушу','Дата завер. проц.банк.','Finished date','label.loan.bankrupt.finishedOnDate');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Багкрот кошуу','Добавить банкротство','Add bankrupt','label.loan.add.bankrupt');
+
+
+# COLLATERAL
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөө келишими','Договор залога','Agreement','label.collateralagreement.tab.info');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөө','Предмет залога','Collateral item','label.collateralagreement.tab.collateralItem');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөө келишими','Договор залога','Collateral agreement','label.collateral.agreement');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөө','Предмет залога','Collateral item','label.collateral.item');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөөнү кошуу/өзгөртүү','Добавить/Редактировать залог','Add/Edit item','label.collateral.add.edit.item');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөө','Общая информация','Collateral item information','label.collateralitem.tab.info');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөөнү бошотуу','Снятие с ареста','Collateral item arrest free','label.collateralitem.tab.collateralArrestFree');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Акттар','Акты обследования','Collateral item inspection','label.collateralitem.tab.collateralInspection');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөө','Добавить предмет залога','Item','label.add.collateral.item');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөөнү алуу','Добавить снятие с ареста','Arrest free','label.add.collateral.arrestFree');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Текшерүүнү жыйынтыгы','Добавить акт обследования','Inspection result','label.add.collateral.inspection.result');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Деталдар','Детали','Details','label.collateralItem.details');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Текшерүүнүн жыйынтыгы','Акт обследования','Result of inspection','label.collateral.inspection.result');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Текшерүүнүн жыйынтгын кошуу','Добавить акт обследования','Add inspection result','label.add.inspection.result');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Деталдар','Примечание','Details','label.arrestFree.details');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөөнү алуу','Снятие с ареста','Arrest free','label.collateral.arrestFree');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөөнү кошуу/өзгөртүү','Добавить/Редактировать снятие с ареста','Add/Edit arrest free','label.collateral.add.edit.arrestFree');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөөнү кошуу/өзгөртүү','Добавить/Редактировать акт обследования','Add/Edit arrest free','label.inspection.add.edit.result');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Кочурмосун алуу','Создать копию','Clone','label.table.clone');
+
+# COLLECTION
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү фазасы','Фазы взыскания','Collection phases','label.collection.phases');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү фазасы','Фаза взыскания','Collection phase','label.collection.phase');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Бүтүшү','Дата результата','Closing date','label.collection.phase.closeDate');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Башталышы','Дата инициирования','Start','label.collection.phase.startDate');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Статусту өзгортүү','Изменить статус','Change status','label.title.collection.change.status');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү фазасынын түрү','Вид фазы','Type','label.collection.phase.type');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү фазасынын статусу','Статус фазы','Status','label.collection.phase.status');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү фазасын кошуу/өзгөтүү','Добавить/Редактировать фазу взыскания','Add/Edit collection phase','label.collection.add.edit.phase');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү фазасын кошуу/өзгөтүү','Добавить/Редактировать фазу взыскания','Add/Edit collection phase','label.title.collection.add.edit.phase');
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Кредиттер','Кредиты','Loans','label.agreement.loans');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасы','Процедура взыскания','Collection procedure','label.collection.procedure');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасын кошуу/өзгортүү','Добавить/Редактировать процедуру взыскание','Add/Edit collection procedure','label.title.collection.add.edit.procedure');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасын кошуу/өзгортүү','Добавить/Редактировать процедуру взыскание','Add/Edit collection procedure','label.collection.add.edit.procedure');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасын жаңыртуу','Обновить процедуру взыскание','Update collection phase procedure','label.update.collection.procedure');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Башталышы','Начало','Procedure start date','label.collection.procedure.startDate');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Аякташы','Завершение','Procedure close date','label.collection.procedure.closeDate');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасынын статусу','Статус процедуры','Procedure status','label.collection.procedure.status');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасын кошуу','Добавить статус процедуры','Add procedure status','label.add.collection.procedure.status');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасы сактоо','Сохранить статус процедуры','Save procedure status','label.save.collection.procedure.status');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Аякы өндүрүү процедурасы','Последняя фаза процедуры','Last phase of procedure','label.collection.procedure.lastPhase');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Аякы өндүрүү процедурасынын статусу','Последний статус','Last status','label.collection.procedure.lastStatusId');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасынын түрү','Вид процедуры','Procedure type','label.collection.procedure.type');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасын кошуу','Добавить вид процедуры','Add procedure type','label.add.collection.procedure.type');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасын сактоо','Сохранить вид процедуры','Save procedure type','label.save.collection.procedure.type');
+
+
+
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Күнүн тандоо','Выберите дату','Select date','label.select.date');
+
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Тел. номер','Тел. номер','Phone number','label.tel.number');
+
+
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Баары','Все','All','label.all');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Заемщики','Заемщики','Debtors','label.title.debtors');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Заемщики','Заемщики','Debtors','label.debtors');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Заемщик','Заемщик','Debtor','label.debtor');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Карыз ээси','Владелец долга','Debt owner','label.debtor.owner');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Карыз ээсин кошуу','Добавить владельца долга','Add debt owner','label.debtor.add.owner');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Заемщик кошуу','Добавить заемщика','Add debtor','label.add.debtor');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Заемщик түрү','Вид заемщика','Type of debtor','label.debtor.type');
+
+
+
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Кредит маалыматы','Информация о кредите','Information of credit','label.debtor.loan.info');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Заемщик маалматы','Информация о заемщике','Information of debtor','label.debtor.info');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөө келишими','Договор залога','Collateral agreement','label.debtor.agreement');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасы','Процедура вызыскание','Collection procedure','label.debtor.procedure');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасы','Процедура взыскание','Collection procedure','label.debtor.procedure');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү фазасы','Инициализация фазы вызыскании','Initializa collection phase','label.debtor.initializePhase');
 
 -- debtor organization
@@ -40,12 +260,12 @@ insert into message_resource(kgz,rus,eng,messageKey) values ('Тапшырма',
 insert into message_resource(kgz,rus,eng,messageKey) values ('Тапшырма','Задача','Jobs','label.jobs.title');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Дарек','Адрес','Address','label.person.address.line');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Тел. номер','Тел. номер','Phone number','label.tel.number');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү баштоо','Инициализация фазы вызыскании','eng','label.debtor.tab.initializaphase');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Кредит маалыматы','Информация о кредите','Information of credit','label.debtor.tab.loan.info');
-insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','Calculate manual','label.button.calculate.manual');
+
+
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Кредит','Кредит','Credit','label.credit');
 
-insert into message_resource(kgz,rus,eng,messageKey) values ('Кошумча','Дополнительно','Additional','label.additional');
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү баштоо','Инициализация фазы вызыскании','Initializa collection phase','label.debtor.tab.initializaPhase');
 
 insert into message_resource(kgz,rus,eng,messageKey) values ('Кредиттер','Кредиты','Credits','label.loans');
@@ -59,7 +279,7 @@ insert into message_resource(kgz,rus,eng,messageKey) values ('Сумма','Су�
 insert into message_resource(kgz,rus,eng,messageKey) values ('Катт. номери','Регистрационный номер','Registration number','label.v_loan_reg_number');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Катт. күнү','Дата регистрации','Registration date','label.v_loan_reg_date');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Көрүү','Просмотр','View','label.payment.view');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөө','Платежи','Payment','label.payments');
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөө номери','Номер платежа','Payment number','label.payment.number');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Суммадан','Oт суммы','From amount','label.fromAmount');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Суммага','Hа сумму','To the amount','label.toAmount');
@@ -73,22 +293,15 @@ insert into message_resource(kgz,rus,eng,messageKey) values ('Текшерүү �
 insert into message_resource(kgz,rus,eng,messageKey) values ('Текшерүү акты','Акт обследование','Collateral inspection name','label.collateral.inspection.name');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Текшерүү түрү','Вид обследование','Collateral inspection type','label.collateral.inspection.type');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөөну бошотуу','Снятие залога','Collateral arrest free','label.collateral.arrestFrees');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөө','Предмет залога','Collateral item information','label.collateralItem.tab.info');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөөнү бошотуу','Снятие залога','Collateral item arrest free','label.collateralItem.arrestFreeInfo');
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Деталдары','Детали','Details','label.details');
 
 
 -- collection phase
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү фазасы','Фазы вызыскание','Collection phases','label.collection.phases');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү фазасы','Фаза вызыскание','Collection phase','label.collection.phase');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Бүтүшү','Закрытие','Closing date','label.collection.phase.closeDate');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Башталышы','Начало','Start','label.collection.phase.startDate');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Статусту өзгортүү','Изменить статус','Change status','label.title.collection.change.status');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү фазасынын түрү','Вид фазы','Type','label.collection.phase.type');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү фазасынын статусу','Статус фазы','Status','label.collection.phase.status');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү фазасын кошуу/өзгөтүү','Добавить/Редактировать фазу вызыскание','Add/Edit collection phase','label.collection.add.edit.phase');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү фазасын кошуу/өзгөтүү','Добавить/Редактировать фазу вызыскание','Add/Edit collection phase','label.title.collection.add.edit.phase');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү фазасын кошуу','Добавить фазу вызыскание','Add collection phase','label.add.collection.phase');
+
+
+
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Статусту өзгөртүү','Изменить статус','Change status','label.collection.change.status');
 -- collection phase status
 insert into message_resource(kgz,rus,eng,messageKey) values ('Статусту кошуу/өзгөтүү','Добавить/Редактировать статус фазы','Add/Edit collection phase status','label.title.collection.phase.add.edit.status');
@@ -107,60 +320,12 @@ insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү ф�
 insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү фазасынын  башын сактоо','Сохранить инициализацию фазы','Save collection phase intitalization','label.save.collection.phase.initialize');
 
 -- collection procedure
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасы','Процедура вызыскание','Collection procedure','label.collection.procedure');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасын кошуу/өзгортүү','Добавить/Редактировать процедуру вызыскание','Add/Edit collection procedure','label.title.collection.add.edit.procedure');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасын кошуу/өзгортүү','Добавить/Редактировать процедуру вызыскание','Add/Edit collection procedure','label.collection.add.edit.procedure');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасын жаңыртуу','Обновить процедуру вызыскание','Update collection phase procedure','label.update.collection.procedure');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Башталышы','Начало','Procedure start date','label.collection.procedure.startDate');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Аякташы','Закрытие','Procedure close date','label.collection.procedure.closeDate');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасынын статусу','Статус процедуры','Procedure status','label.collection.procedure.status');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасын кошуу','Добавить статус процедуры','Add procedure status','label.add.collection.procedure.status');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасы сактоо','Сохранить статус процедуры','Save procedure status','label.save.collection.procedure.status');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Аякы өндүрүү процедурасы','Последняя фаза процедуры','Last phase of procedure','label.collection.procedure.lastPhase');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Аякы өндүрүү процедурасынын статусу','Последний статус','Last status','label.collection.procedure.lastStatusId');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасынын түрү','Вид процедуры','Procedure type','label.collection.procedure.type');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасын кошуу','Добавить вид процедуры','Add procedure type','label.add.collection.procedure.type');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өндүрүү процедурасын сактоо','Сохранить вид процедуры','Save procedure type','label.save.collection.procedure.type');
-
-
--- collection event
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.title.collection.event');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.save.collection.event');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.startDate');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.closeDate');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.status');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.type');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.details');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.startTotalAmount');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.startPrincipal');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.startInterest');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.startPenalty');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.startFee');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.closeTotalAmount');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.closePrincipal');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.closeInterest');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.closePenalty');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.closeFee');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.paidTotalAmount');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.paidPrincipal');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.paidInterest');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.paidPenalty');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.collection.event.paidFee');
--- collection event status
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.title.collection.event.add.edit.status');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.title.collection.event.status');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.add.collection.event.status');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.save.collection.event.status');
--- collection event type
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.title.collection.event.add.edit.type');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.title.collection.event.type');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.add.collection.event.type');
--- insert into message_resource(kgz,rus,eng,messageKey) values ('kgz','rus','eng','label.save.collection.event.type');
 
 
 
 
-insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөө','Предмет залога','Collateral item','label.collateral.item');
+
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Заемщик','Заемщики','Debtors','label.debtor.list');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Айыл өкмөт','Аильный округ','eng','label.add.aokmotu');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөөнүн түрү','Вид залога','Collateral item type','label.collateralItem.type');
@@ -169,13 +334,17 @@ insert into message_resource(kgz,rus,eng,messageKey) values ('Примечани
 insert into message_resource(kgz,rus,eng,messageKey) values ('Значение','Значение','Value','label.collateralItem.collateralValue');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Баасы','Расчетная стоимость','Estimated value','label.collateralItem.estimatedValue');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Акыбалы','Состояние','eng','label.collateralItem.conditionType');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Текшерүүнүн жыйынтыгы','Результат обследование','Result of inspection','label.collateral.inspection.result');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөөнү алуу','Снятие залога','Arrest free','label.collateralItem.arrestFreeInfo');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөөнү алуу','Снятие залога','Arrest free','label.collateral.arrestFree');
 
-insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөө келишими','Договор залога','Collateral agreement','label.collateral.agreement');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөө келишими','Договор залога','Agreement','label.collateralagreement.tab.info');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөө','Предмет залога','Collateral item','label.collateralagreement.tab.collateralItem');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөөнү алуу','Снятие залога','Arrest free','label.collateralItem.arrestFreeInfo');
+
+
+
+
+
+
+insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөөнү бошотуу','Снятие с ареста','Collateral item arrest free','label.collateralitem.tab.arrestFreeInfo');
+
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөө кошуу','Добавить предмет залога','Add collateral agreement','label.add.agreement');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Келишим куну','Дата договора','Agreement date','label.agreement.date');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Келишим номери','Номер договора','Agreement number','label.agreement.number');
@@ -188,24 +357,16 @@ insert into message_resource(kgz,rus,eng,messageKey) values ('Арестке а�
 insert into message_resource(kgz,rus,eng,messageKey) values ('Арестке алуу куну','Дата ареста','Arrest reg.date','label.agreement.arrestRegDate');
 insert into message_resource(kgz,rus,eng,messageKey) values ('№','№','Id','label.id');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Издөө','Искать','Search','label.search');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөө','Предмет залога','Item','label.add.collateral.item');
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөөнөн түрү','Вид залога','Item type','label.add.collateral.item.type');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөөнү алуу','Снятие ареста','Arrest free','label.add.collateral.arrestFree');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Текшерүүнү жыйынтыгы','Результат обследование','Inspection result','label.add.collateral.inspection.result');
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөөнү кошуу/өзгөртүү','Добавить/Редактировать снятие залога','Add/Edit arrest free','label.collateral.add.edit.arrestFree');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөөнөн алынган күнү','Дата снятие залога','Date ','label.arrestFree.onDate');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Деталдар','Детали','Details','label.arrestFree.details');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөөнү кошуу/өзгөртүү','Добавить/Редактировать залог','Add/Edit item','label.collateral.add.edit.item');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Ээси','Владелец','Item owner','label.item.owner');
+
+
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Аты','Наименование','Item name','label.collateralItem.name');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Тандоо','Выбирать','Select','label.select');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Деталдар','Детали','Details','label.collateralItem.details');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Деталдар1','Детали1','Details1','label.collateralItem.details1');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Деталдар2','Детали2','Details2','label.collateralItem.details2');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Деталдар3','Детали3','Details3','label.collateralItem.details3');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Деталдар4','Детали4','Details4','label.collateralItem.details4');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Деталдар5','Детали5','Details5','label.collateralItem.details5');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Деталдар6','Детали6','Details6','label.collateralItem.details6');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Күрөө документи','Документ залога','Document','label.collateralItem.document');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Себеби','Причина','Reason','label.collateralItem.incomplete_reason');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Товар түрү','Вид товара','Item good type','label.collateralItem.goods_type');
@@ -218,7 +379,7 @@ insert into message_resource(kgz,rus,eng,messageKey) values ('Аталышы','�
 insert into message_resource(kgz,rus,eng,messageKey) values ('Шарттардын түрүн кошуу/өзгөртүү','Добавить/Редатировать вид условий','Add/Edit condition type','label.condition.add.edit.type');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Аталышы','Имя','Name','label.condition.type.name');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Текшерүүнүн жыйынтгын кошуу/өзгөртүү','Добавить/Редактировать результат обследование','Add/Edit inspection result','label.title.inspection.add.edit.result');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Текшерүүнүн жыйынтгын кошуу','Добавить результат обследование','Add inspection result','label.add.inspection.result');
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Текшерүүнүн жыйынтгынын түрүн кошуу/өзгөртүү','Добавить вид результата обследование','Add inspection result type','label.add.inspection.result.type');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Күнү','Дата','Date','label.inspectionResult.onDate');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Деталдары','Детали','Details','label.inspectionResult.details');
@@ -236,11 +397,19 @@ insert into message_resource(kgz,rus,eng,messageKey) values ('Келишим к�
 insert into message_resource(kgz,rus,eng,messageKey) values ('Сактоо','Сохранить','Save','label.button.save');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Жокко чыгаруу','Отменить','Cancel','label.button.cancel');
 
+
 -- loan
+
+
+
+
+
+
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Кредитти кошуу/өзгортүү','Добавить/Редактировать кредит','Add/Edit loan','label.title.add.edit.loan');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Кредитти кошуу/өзгортүү','Добавить/Редактировать кредит','Add/Edit loan','label.add.edit.loan');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Кредиттер','Кредиты','Loans','label.loans');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Кредит','Кредит','Loan','label.loan');
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Кредит кошуу','Добавить кредит','Add loan','label.add.loan');
 insert into message_resource(kgz,rus,eng,messageKey) values ('№','№','Id','label.loan.id');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Катт. номери','Рег. номер','Reg. number','label.loan.regNUmber');
@@ -261,26 +430,23 @@ insert into message_resource(kgz,rus,eng,messageKey) values ('Кредит ст�
 insert into message_resource(kgz,rus,eng,messageKey) values ('Кредит статусун кошуу','Добавить статус кредита','Add loan state','label.loan.add.state');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Кредит статусун кошуу/өзгортүү','Добавить/Редактировать статус кредита','Add/Edit loan state','label.loan.title.add.edit.state');
 
-insert into message_resource(kgz,rus,eng,messageKey) values ('Негизги кредит','Основной кредит','Super','label.loan.superId');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Төмөнкү кредит','Под кредит','Sub loan','label.loan.hasSubLoan');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Негизги','Основной','Parent loan','label.loan.partentId');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Негизги','Основной','parent','label.loan.parent');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Кредит шарттары','Условия кредита','Credit order','label.loan.creditOrderId');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Жалпы маалымат','Общая информация','Credit','label.loan.credit');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Эсепөө','Расчет','Loan summary','label.loan.loanSummary');
+
+
 -- loan payment
+
+
+
+
+
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөм','Платежи','Payments','label.loan.title.payments');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөм','Платежи','Payments','label.loan.payments');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөм','Платеж','Payment','label.loan.payment');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөм датасы','Дата платежа','Payment date','label.loan.payment.paymentDate');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Жалпы суммасы','Общая сумма','Total amount','label.loan.payment.totalAmount');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Негизги суммасы','Основная сумма','Principal','label.loan.payment.principal');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Пайызы','Процент','Interest','label.loan.payment.interest');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Айып пул','Штраф','Penalty','label.loan.payment.penalty');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Акы','Взнос','Fee','label.loan.payment.fee');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Номер','Номер','Payment number','label.loan.payment.number');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөм түрү','Вид платежа','Payment type','label.loan.payment.paymentType');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөм кошуу/өзгортуу','Добавить/Редактировать платеж','Add/Edit payment','label.loan.title.add.edit.payment');
+
+
 -- loan payment type
 insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөм түрү','Вид платежа','Payment type','label.loan.payment.title.type');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөм түрүн кошуу/өзгортүү','Добавить/Редактировать вид платежа ','Add/Edit payment type','label.loan.payment.title.add.edit.type');
@@ -288,63 +454,33 @@ insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөм түр�
 insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөм түрүн кошуу','Добавить вид платежа','Add payment type','label.loan.payment.add.type');
 -- loan supervisorPlan
 insert into message_resource(kgz,rus,eng,messageKey) values ('План','Планы','Plans','label.loan.title.supervisorPlans');
-insert into message_resource(kgz,rus,eng,messageKey) values ('План кошуу/өзгортүү','Добавить/Редактировать план','Add/Edit plan','label.loan.title.add.edit.supervisorPlans');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Пландар','Планы','Plans','label.loan.supervisorPlans');
-insert into message_resource(kgz,rus,eng,messageKey) values ('План','План','Plan','label.loan.supervisorPlan');
-insert into message_resource(kgz,rus,eng,messageKey) values ('План күнү','Дата плана','Plan date','label.loan.supervisorPlan.date');
-insert into message_resource(kgz,rus,eng,messageKey) values ('План суммасы','Сумма плана','Plan amount','label.loan.supervisorPlan.amount');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Негизги суммасы','Основная сумма плана','Principal','label.loan.supervisorPlan.principal');
-insert into message_resource(kgz,rus,eng,messageKey) values ('План пайызы','Процент плана','Interest','label.loan.supervisorPlan.interest');
-insert into message_resource(kgz,rus,eng,messageKey) values ('План айып пулу','Штраф плана','Penalty','label.loan.supervisorPlan.penalty');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Акы','Взнос','Fee','label.loan.supervisorPlan.fee');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Примечание','Примечание','Description','label.loan.supervisorPlan.description');
+
+
+
+
+
+
+
+
+
 -- loan writeoffs
 insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгаруу','Списания','Write offs','label.loan.title.writeOffs');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгарууну кошуу/өзгортүү','Добавить/Редактировать списание','Add/Edit write offs','label.loan.title.add.edit.writeOff');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгаруу','Списания','Write offs','label.loan.writeOffs');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгаруу','Списание','Write off','label.loan.writeOff');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгаруу күнү','Дата списание','Write offs date','label.loan.writeOff.date');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгаруунун жалпы суммасы','Общая сумма списание','Write offs total amount','label.loan.writeOff.totalAmount');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгаруунун негизги суммасы','Основная сумма списание','Write offs principal','label.loan.writeOff.principal');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгаруунун пайызы','Процент списание','Write offs interest','label.loan.writeOff.interest');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгаруунун айып пулу','Штраф списание','Write offs penalty','label.loan.writeOff.penalty');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгаруунун акысы','Взнос','Write offs fee','label.loan.writeOff.fee');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Примечание','Примечание','Write offs description','label.loan.writeOff.description');
+
+
+
+
 -- loan credit terms
 insert into message_resource(kgz,rus,eng,messageKey) values ('Кредиттин шарты','Условия кредита','Credit term','label.loan.title.creditTerm');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Кредиттин шартын кошуу/өзгөртүү','Добавить/Редактировать условия кредита','Credit term','label.loan.title.add.edit.creditTerm');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Кредиттин шарттары','Условия кредита','Credit terms','label.loan.creditTerms');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Кредиттин шарты','Условия кредита','Credit term','label.loan.creditTerm');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Ачылышы','Начало','Start date','label.loan.creditTerm.startDate');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Пайыздык чен','Процентная ставка','Interest rate value','label.loan.creditTerm.interestRateValue');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөө мөнөтү','Период оплаты','Rate period','label.loan.creditTerm.ratePeriod');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Туруксуз баа түрү','Вид плавающих ставок','Floating rate type','label.loan.creditTerm.floatingRateType');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өткөргөн күнүнүн негизги баасына карата айып пулу','Штраф на стоимость основной просроченной ставки','Penalty on principal overdue rate value','label.loan.creditTerm.penaltyOnPrincipleOverdueRateValue');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өткөргөн күнүнүн негизги баасына карата айып пулунун түрү','Вид штрафа за основной просроченной ставки','Penalty on principal overdue rate type','label.loan.creditTerm.penaltyOnPrincipleOverdueRateType');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өткөргөн күнүнүн пайыздык ченине карата айып пулу','Штраф за просроченную процентную ставку','Penalty on interest overdue rate value','label.loan.creditTerm.penaltyOnInterestOverdueRateValue');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өткөргөн күнүнүн пайыздык ченине карата айып пулунун түрү','Вид штрафа за просроченный процент','Penalty on interest overdue rate type','label.loan.creditTerm.penaltyOnInterestOverdueRateType');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Эң жогорку пайыздык чек','Предельный лимит процента','Penalty limit percent','label.loan.creditTerm.penaltyLimitPercent');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Айып пулдун бүтүү керектиги болгон аякы күн','Предельная дата окончания штрафа','Penalty limit end date','label.loan.creditTerm.penaltyLimitEndDate');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Бүтүмдөр тартиби','Порядок транзакций','Transaction order','label.loan.creditTerm.transactionOrder');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Күндөр','Дни','Days in method','label.loan.creditTerm.daysInMonthMethod');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Жылдар','Годы','Days in year method','label.loan.creditTerm.daysInYearMethod');
 
-insert into message_resource(kgz,rus,eng,messageKey) values ('Төмөнкү кредиттер','Под кредиты','Sub loans','label.loan.childList');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Толук эсептөө','Детальный расчет','Loan detailed summary','label.loan.loanDetailedSummary');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Топтомдор','Накопленные','Accrue','label.loan.accrue');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Көзөмөлдөө шарттарын кошуу','Добавить условия кураторство','add supervisor term','label.loan.add.supervisorTerm');
+
+
+
 -- loan paymentSchedule
-insert into message_resource(kgz,rus,eng,messageKey) values ('Ыраттама кошуу','Добавить график','Add payment schedule','label.loan.add.paymentSchedule');
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Ыраттамалар','Графики','Payment schedules','label.loan.title.paymentSchedules');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Ыраттама','График','Payment schedules','label.loan.paymentSchedules');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Ыраттама','График','Payment schedule','label.loan.paymentSchedule');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Күтүлгөн күн','Ожидаемая дата','Expected date','label.loan.paymentSchedule.expectedDate');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөө','Выплаты','Disbursement','label.loan.paymentSchedule.disbursement');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Негизги төлөм','Основной платеж','Principal payment','label.loan.paymentSchedule.principalPayment');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Пайыздарды төлөө','Выплата процентов','Interest payment','label.loan.paymentSchedule.interestPayment');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Пайыздарды чогултуу','Сбор процентов','Collected interest payment','label.loan.paymentSchedule.collectedInterestPayment');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Айып пулдарда чогултуу','Собранный штраф','Collected penalty payment','label.loan.paymentSchedule.collectedPenaltyPayment');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Узартуу менен акы төлөөнүн абалы','Состояние рассрочки','Installment state','label.loan.paymentSchedule.installmentState');
+
+
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөм кошуу','Добавить выплату','Add disbursement','label.loan.title.add.edit.paymentSchedule');
 -- loan paymentSchedule installmentState
 insert into message_resource(kgz,rus,eng,messageKey) values ('Узартуу менен акы төлөөнүн абалы','Состояние рассрочки','Installment state','label.loan.paymentSchedule.title.installmentState');
@@ -353,41 +489,26 @@ insert into message_resource(kgz,rus,eng,messageKey) values ('Узартуу м�
 insert into message_resource(kgz,rus,eng,messageKey) values ('Узартуу менен акы төлөөнү кошуу','Добавить рассрочку','Add installment state','label.loan.paymentSchedule.add.installmentState');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөм абалын кошуу/өзгортүү','Добавить/Редактировать состояние платежа','Add/Edit installment state','label.loan.paymentSchedule.title.add.edit.installmentState');
 
-insert into message_resource(kgz,rus,eng,messageKey) values ('Эсептен чыгаруу кошуу','Добавить списание','Add write offs','label.loan.add.writeOff');
-insert into message_resource(kgz,rus,eng,messageKey) values ('План кошуу','Добавить план','Add supervisor plan','label.loan.add.supervisorPlan');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Төлөм кошуу','Добавить платеж','Add payment','label.loan.add.payment');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Мүлк','Товар','Good','label.loan.good');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Мүлк кошуу','Добавить товар','Аdd good','label.loan.add.good');
+
+
+
 -- loan debttransfer
 insert into message_resource(kgz,rus,eng,messageKey) values ('Карыздын которулушун кошуу/өзгортүү','Добавить/Редактировать перевод долга','Add/Edit debt transfer','label.loan.title.add.edit.debtTransfer');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Карыздын которулушун кошуу/өзгортүү','Добавить/Редактировать перевод долга','Add/Edit debt transfer','label.loan.add.edit.debtTransfer');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Карыздын которулушу','Перевод долга','Debt transfer','label.loan.debtTransfer');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Карыздын которулушун кошуу','Добавить перевод долга','Add debt transfer','label.loan.add.debtTransfer');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Номер','Номер','Number','label.loan.debtTransfer.number');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Күнү','Дата','Date','label.loan.debtTransfer.date');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Саны','Количество','Quantity','label.loan.debtTransfer.quantity');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Данасынын баасы','Цена за единицу','Price per unit','label.loan.debtTransfer.pricePerUnit');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Данасынын түрү','Тип единицы','Unit type','label.loan.debtTransfer.unitType');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Жалпы баасы','Общая стоимость','Total cost','label.loan.debtTransfer.totalCost');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Которуучу','Переводчик','Transfer person','label.loan.debtTransfer.transferPerson');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Мүлктүн түрү','Вид товара','Good type','label.loan.debtTransfer.goodsType');
+
 -- loan bankrupt
-insert into message_resource(kgz,rus,eng,messageKey) values ('Банкрот кошуу/өзгортүү','Добавить/Редактировать банкротство','Add/Edit bankrupt','label.loan.title.add.edit.bankrupt');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Банкрот','Банкротство','Bankrupt','label.loan.bankrupt');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Башталышы','Начало','Started date','label.loan.bankrupt.startedOnDate');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Бутушу','Конец','Finished date','label.loan.bankrupt.finishedOnDate');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Багкрот кошуу','Добавить банкротство','Add bankrupt','label.loan.add.bankrupt');
+
+
+
 -- loan collateral
 insert into message_resource(kgz,rus,eng,messageKey) values ('Кредиттик камсыздоо кошуу/өзгортүү','Добавить/Редактировать кредитное обеспечение','Add/Edit collateral','label.loan.title.add.edit.collateral');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Кредиттик камсыздоо','Обеспечение','Collateral','label.loan.collateral');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Кредиттик камсыздоо кошуу','Добавить обеспечение','Add collateral','label.loan.add.collateral');
 -- loan goods
-insert into message_resource(kgz,rus,eng,messageKey) values ('Мүлк кошуу/өзгортүү','Добавить/Редактировать товар','Add/Edit good','label.loan.title.add.edit.good');
+
+
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Мүлк','Товар','Good','label.loan.good');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Мүлк кошуу','Добавить товар','Add good','label.loan.add.good');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Саны','Количество','Quantity','label.loan.good.quantity');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Өлчөм түрү','Вид единицы','Unit type','label.loan.good.unitType');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Мүлк түрү','Вид товара','Good type','label.loan.good.goodType');
 
 -- organization form
 insert into message_resource(kgz,rus,eng,messageKey) values ('Уюмдун формасы','Форма организации','Organization form','label.title.orgForm');
@@ -404,7 +525,7 @@ insert into message_resource(kgz,rus,eng,messageKey) values ('Заемщик т�
 insert into message_resource(kgz,rus,eng,messageKey) values ('Тармак','Отрасль','Work sector','label.title.workSector');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Тармак кошуу/өзгөртүү','Добавить/Редактировать отрасль','Add/Edit work sector','label.title.add.edit.workSector');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Тармактар','Отрасли','Work sectors','label.workSectors');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Тармак','Отрасль','Work sector','label.workSector');
+
 insert into message_resource(kgz,rus,eng,messageKey) values ('Тармак кошуу','Добавить отрасль','Add work sector','label.add.workSector');
 
 insert into message_resource(kgz,rus,eng,messageKey) values ('Өзгөртүү','Редактировать','Edit','label.edit');

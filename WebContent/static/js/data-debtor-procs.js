@@ -101,7 +101,7 @@ var DatatableDataLocalProcs = function () {
                             <a hidden="hidden" href="/manage/debtor/' + debtorId + '/collectionprocedure/' + row.id + '/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
                                 <i class="la la-trash"></i>\
                             </a>\
-                             <a  href="/printoutTemplate/5/objectId/' + row.id + '/select" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Претензия">\
+                             <a  href="/printoutTemplate/5/objectId/' + row.phaseId + '/select" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Претензия">\
                                 <i class="la la-exclamation-circle"></i>\
                             </a>\
                         ';
