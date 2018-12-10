@@ -223,7 +223,7 @@
 								<div class="row">
 									<div class="col-lg-4"></div>
 									<div class="col-lg-6">
-										<button sec:authorize="hasPermission('ADMIN','PERM_ADD_COLLATERALAGREEMENTlOAN')" type="submit" class="btn btn-primary" onclick="updateTOwner()" th:text="#{label.button.save}">
+										<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLATERALAGREEMENT')" type="submit" class="btn btn-primary" onclick="updateTOwner()" th:text="#{label.button.save}">
 											Save
 										</button>
 										<button onclick="window.history.back()" type="button" class="btn btn-secondary" th:text="#{label.button.cancel}">
