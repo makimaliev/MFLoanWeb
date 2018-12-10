@@ -37,7 +37,7 @@
 										</span>
 									</div>
 								</li>
-								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_OBJECTLIST')" class="m-portlet__nav-item">
+								<li sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_OBJECTLIST')" class="m-portlet__nav-item">
 									<a data-remote="false" data-toggle="modal"
 									   data-target="#contentParameterFormModal" th:href="@{/objectList/__${objectList.id}__/objectList/add}"
 									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.objectList.add}"> Add
@@ -69,7 +69,7 @@
 													<a th:href="@{/objectList/__${objectList.id}__/details}"
 													   role="button" class="dropdown-item"> <span th:text="#{label.table.view}"></span>
 													</a>
-													<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_OBJECTLIST')" data-remote="false" data-toggle="modal"
+													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_OBJECTLIST')" data-remote="false" data-toggle="modal"
 													   data-target="#objectListFormModal"
 													   th:href="@{/objectList/__${objectList.id}__/edit}" role="button"
 													   class="dropdown-item"> <span th:text="#{label.table.edit}"></span>

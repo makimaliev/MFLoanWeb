@@ -49,7 +49,7 @@
 							</div>
 							<div class="modal-footer">
 								<button th:text="#{label.form.save}" type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
-								<button th:text="#{label.form.save}" sec:authorize="hasAnyRole('ADMIN','PERM_ADD_PROCEDURESTATUS','PERM_UPDATE_PROCEDURESTATUS')" type="submit" class="btn green">Save</button>
+								<button th:text="#{label.form.save}" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_PROCEDURESTATUS','PERM_UPDATE_PROCEDURESTATUS')" type="submit" class="btn green">Save</button>
 							</div>
 						</form>
 					</div>

@@ -30,7 +30,7 @@
 							<td th:text="${aokmotuInList.district.name}">District</td>
 							<td><a th:href="@{/aokmotu/__${aokmotuInList.id}__/details}"
 								role="button" class="btn btn-xs green-stripe"> View </a></td>
-							<td sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_AOKMOTU')"><a data-remote="false" data-toggle="modal"
+							<td sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_AOKMOTU')"><a data-remote="false" data-toggle="modal"
 								data-target="#districtFormModal"
 								th:href="@{/aokmotu/__${aokmotuInList.id}__/edit}"
 								role="button" class="btn btn-xs blue-stripe"> Edit </a></td>

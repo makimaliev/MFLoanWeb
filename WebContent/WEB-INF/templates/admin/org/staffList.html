@@ -45,7 +45,7 @@
 										</span>
 									</div>
 								</li>
-								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_STAFF')" class="m-portlet__nav-item">
+								<li sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_STAFF')" class="m-portlet__nav-item">
 									<a data-remote="false" data-toggle="modal"
 									   data-target="#staffFormModal"
 									   th:href="@{/staff/add}"
@@ -82,7 +82,7 @@
 													<i class="la la-ellipsis-h"></i>
 												</a>
 												<div class="dropdown-menu dropdown-menu-right">
-													<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_STAFF')" class="dropdown-item"
+													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_STAFF')" class="dropdown-item"
 													   data-remote="false" data-toggle="modal"
 													   data-target="#staffFormModal"
 													   th:href="@{/staff/__${s.id}__/edit}" role="button">

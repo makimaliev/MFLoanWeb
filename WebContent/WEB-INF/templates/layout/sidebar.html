@@ -23,7 +23,7 @@
                 </a>
             </li>
 
-            <li sec:authorize="hasAnyRole('ADMIN')" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
+            <li sec:authorize="hasAnyAuthority('ADMIN')" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
                 <a  href="#" class="m-menu__link m-menu__toggle">
                     <i class="m-menu__link-icon la la-wrench"></i>
                     <span class="m-menu__link-text">
@@ -231,7 +231,7 @@
                         </li>
 
 
-                        <li sec:authorize="hasAnyRole('ADMIN')" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
+                        <li sec:authorize="hasAnyAuthority('ADMIN')" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
                             <a  href="#" class="m-menu__link m-menu__toggle">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>
@@ -289,7 +289,7 @@
                             </div>
                         </li>
 
-                        <li sec:authorize="hasAnyRole('ADMIN')" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
+                        <li sec:authorize="hasAnyAuthority('ADMIN')" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
                             <a  href="#" class="m-menu__link m-menu__toggle">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>

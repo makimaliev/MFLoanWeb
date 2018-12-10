@@ -48,7 +48,7 @@
 										</span>
 									</div>
 								</li>
-								<li class="m-portlet__nav-item" sec:authorize="hasAnyRole('ADMIN','PERM_ADD_CSYSTEM')">
+								<li class="m-portlet__nav-item" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_CSYSTEM')">
 									<a  data-remote="false"
 									   data-toggle="modal"
 									   data-target="#cSystemFormModal"
@@ -59,7 +59,7 @@
 										<span><i class="la la-plus"></i><span>Add cSystem</span></span>
 									</a>
 								</li>
-								<li class="m-portlet__nav-item" sec:authorize="hasAnyRole('ADMIN','PERM_ADD_INFORMATION')">
+								<li class="m-portlet__nav-item" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_INFORMATION')">
 									<a data-remote="false"
 									   data-toggle="modal"
 									   data-target="#informationFormModal"
@@ -100,7 +100,7 @@
 													   role="button">
 														<span th:text="#{label.table.view}"></span>
 													</a>
-													<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_CSYSTEM')" class="dropdown-item"
+													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_CSYSTEM')" class="dropdown-item"
 													   th:href="@{/cSystem/__${s.id}__/edit}"
 													   data-toggle="modal"
 													   data-target="#cSystemFormModal">

@@ -71,10 +71,10 @@ var DatatableDataLocalPhases = function () {
 
                     if(row.phaseTypeId==1){
                         result = result + '\
-						<a sec:authorize="hasAnyRole(ADMIN,PERM_UPDATE_COLLECTIONPHASE)" href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + procId + '/collectionphase/' + row.id +'/changeStatus" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Изменить статус">\
+						<a sec:authorize="hasAnyAuthority(ADMIN,PERM_UPDATE_COLLECTIONPHASE)" href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + procId + '/collectionphase/' + row.id +'/changeStatus" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Изменить статус">\
 							<i class="la la-neuter"></i>\
 						</a>\
-						<a sec:authorize="hasAnyRole(ADMIN,PERM_UPDATE_COLLECTIONPROCEDURE)" href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + procId + '/collectionphase/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+						<a sec:authorize="hasAnyAuthority(ADMIN,PERM_UPDATE_COLLECTIONPROCEDURE)" href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + procId + '/collectionphase/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-edit"></i>\
 						</a>\
 						<a hidden="hidden" href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + procId + '/collectionphase/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
@@ -87,10 +87,10 @@ var DatatableDataLocalPhases = function () {
                     }
                     else {
                         result = result + '\
-						<a sec:authorize="hasAnyRole(ADMIN,PERM_UPDATE_COLLECTIONPHASE)" href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + procId + '/collectionphase/' + row.id +'/changeStatus" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Изменить статус">\
+						<a sec:authorize="hasAnyAuthority(ADMIN,PERM_UPDATE_COLLECTIONPHASE)" href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + procId + '/collectionphase/' + row.id +'/changeStatus" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Изменить статус">\
 							<i class="la la-neuter"></i>\
 						</a>\
-						<a sec:authorize="hasAnyRole(ADMIN,PERM_UPDATE_COLLECTIONPHASE)" href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + procId + '/collectionphase/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+						<a sec:authorize="hasAnyAuthority(ADMIN,PERM_UPDATE_COLLECTIONPHASE)" href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + procId + '/collectionphase/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-edit"></i>\
 						</a>\
 						<a hidden="hidden" href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + procId + '/collectionphase/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\

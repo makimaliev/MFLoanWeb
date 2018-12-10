@@ -103,7 +103,7 @@
 									</div>
 								</div>
 								<div class="col-xl-4 order-1 order-xl-2 m--align-right">
-									<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_CREDITORDER')" th:href="@{/manage/order/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
+									<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_CREDITORDER')" th:href="@{/manage/order/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
 										<span>
 											<i class="la la-plus"></i>
 												<span>

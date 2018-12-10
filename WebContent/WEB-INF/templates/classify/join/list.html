@@ -31,7 +31,7 @@
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
-							<ul sec:authorize="hasAnyRole('ADMIN','PERM_ADD_CLASSIFICATIONJOIN')" class="m-portlet__nav">
+							<ul sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_CLASSIFICATIONJOIN')" class="m-portlet__nav">
 								<li class="m-portlet__nav-item">
 									<a th:href="@{/classify/join/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.join.add}">Add join</a>
 								</li>

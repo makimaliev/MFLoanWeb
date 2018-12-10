@@ -48,7 +48,7 @@
 								</div>
 							</div>
 							<div class="modal-footer">
-								<button th:text="#{label.form.cancel}" sec:authorize="hasAnyRole('ADMIN','PERM_ADD_ORGANIZATIONFORM','PERM_UPDATE_ORGANIZATIONFORM')" type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
+								<button th:text="#{label.form.cancel}" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_ORGANIZATIONFORM','PERM_UPDATE_ORGANIZATIONFORM')" type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
 								<button th:text="#{label.form.submit}" type="submit" class="btn green">Save</button>
 							</div>
 						</form>

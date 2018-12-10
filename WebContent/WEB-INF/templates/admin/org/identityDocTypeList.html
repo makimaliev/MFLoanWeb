@@ -50,7 +50,7 @@
 									</div>
 								</li>
 								<li class="m-portlet__nav-item">
-									<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_IDENTITYDOCTYPE')" data-remote="false"
+									<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_IDENTITYDOCTYPE')" data-remote="false"
 									   data-toggle="modal"
 									   data-target="#identityDocTypeFormModal"
 									   th:href="@{/identityDocType/add}"
@@ -87,7 +87,7 @@
 													<i class="la la-ellipsis-h"></i>
 												</a>
 												<div class="dropdown-menu dropdown-menu-right">
-													<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_IDENTITYDOCTYPE')" class="dropdown-item"
+													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_IDENTITYDOCTYPE')" class="dropdown-item"
 													   th:href="@{/identityDocType/__${s.id}__/edit}"
 													   data-toggle="modal"
 													   data-target="#identityDocTypeFormModal">

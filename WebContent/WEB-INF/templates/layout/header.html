@@ -103,7 +103,7 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="dropdown">
-                                    <button sec:authorize="hasAnyRole('ADMIN','LOAN_SUPERVISOR','PERM_VIEW_LAON_MENU')" class="btn btn-primary dropdown-toggle m-lg-3" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button sec:authorize="hasAnyAuthority('ADMIN','LOAN_SUPERVISOR','PERM_VIEW_LAON_MENU')" class="btn btn-primary dropdown-toggle m-lg-3" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="m-menu__link-text">
                                             Кредитование
                                         </span>
@@ -146,7 +146,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="dropdown">
-                                    <button sec:authorize="hasAnyRole('ADMIN','COLLATERAL_SUPERVISOR','PERM_COLLATERAL_LAON_MENU')" class="btn btn-primary dropdown-toggle m-lg-3" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button sec:authorize="hasAnyAuthority('ADMIN','COLLATERAL_SUPERVISOR','PERM_COLLATERAL_LAON_MENU')" class="btn btn-primary dropdown-toggle m-lg-3" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="m-menu__link-text">
                                             Залоговое обеспечение
                                         </span>
@@ -181,7 +181,7 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="dropdown">
-                                    <button sec:authorize="hasAnyRole('ADMIN','COLLECTION_SUPERVISOR','PERM_VIEW_COLLECTION_MENU')" class="btn btn-primary dropdown-toggle m-lg-3" type="button"
+                                    <button sec:authorize="hasAnyAuthority('ADMIN','COLLECTION_SUPERVISOR','PERM_VIEW_COLLECTION_MENU')" class="btn btn-primary dropdown-toggle m-lg-3" type="button"
                                             id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="m-menu__link-text">
                                             Взыскание

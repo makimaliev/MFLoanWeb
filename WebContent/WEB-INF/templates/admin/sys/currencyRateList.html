@@ -103,7 +103,7 @@
 									</div>
 								</div>
 								<div class="col-xl-4 order-1 order-xl-2 m--align-right">
-									<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_CURRENCYRATE')" data-remote="false"
+									<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_CURRENCYRATE')" data-remote="false"
 									   data-toggle="modal"
 									   data-target="#currencyRateFormModal"
 									   th:href="@{/currencyRate/add}"
@@ -268,7 +268,7 @@
                     template: function (row) {
                         var dropup = (row.getDatatable().getPageSize() - row.getIndex()) <= 4 ? 'dropup' : '';
 
-                    // <a sec:authorize="hasAnyRole(\'ADMIN\',\'PERM_UPDATE_CURRENCYRATE\')" href="/currencyRate/'+ row.i +'/edit" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+                    // <a sec:authorize="hasAnyAuthority(\'ADMIN\',\'PERM_UPDATE_CURRENCYRATE\')" href="/currencyRate/'+ row.i +'/edit" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
                     // <i class="la la-edit"></i>\
                     // </a>\
                         return '\

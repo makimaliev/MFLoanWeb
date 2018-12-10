@@ -205,7 +205,7 @@
 								<div class="row">
 									<div class="col-lg-4"></div>
 									<div class="col-lg-6">
-										<button sec:authorize="hasAnyRole('ADMIN','PERM_ADD_LOAN','PERM_UPDATE_LOAN')" type="submit" class="btn btn-primary" onclick="updateTLoan()" th:text="#{label.add.loan.save}">
+										<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN','PERM_UPDATE_LOAN')" type="submit" class="btn btn-primary" onclick="updateTLoan()" th:text="#{label.add.loan.save}">
 											Save
 										</button>
 										<button onclick="window.history.back()" type="button" class="btn btn-secondary" th:text="#{label.add.loan.cancel}">

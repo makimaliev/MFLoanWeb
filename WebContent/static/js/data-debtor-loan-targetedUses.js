@@ -74,7 +74,7 @@ var DatatableDataLocalTargetedUses = function () {
                     var result = '';
 
                     result = result + '\
-						<a sec:authorize="hasAnyRole(ADMIN,PERM_UPDATE_TARGETEDUSE)" href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/targeteduse/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+						<a sec:authorize="hasAnyAuthority(ADMIN,PERM_UPDATE_TARGETEDUSE)" href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/targeteduse/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-edit"></i>\
 						</a>\
 						<a hidden="hidden" href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/targeteduse/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\

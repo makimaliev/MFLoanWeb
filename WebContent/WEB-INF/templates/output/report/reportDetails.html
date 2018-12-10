@@ -31,7 +31,7 @@
 							</div>
 						</div>
 						<div class="m-portlet__head-tools">
-							<ul sec:authorize="hasAnyRole('ADMIN','PERM_ADD_REPORTTEMPLATE')" class="m-portlet__nav">
+							<ul sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_REPORTTEMPLATE')" class="m-portlet__nav">
 								<li class="m-portlet__nav-item">
 									<a data-remote="false" data-toggle="modal"
 									   data-target="#reportFormModal" th:href="@{/report/__${report.id}__/reportTemplate/add}"

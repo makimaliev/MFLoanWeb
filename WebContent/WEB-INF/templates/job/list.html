@@ -32,13 +32,13 @@
 						</div>
 						<div class="m-portlet__head-tools">
 							<ul class="m-portlet__nav">
-								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_JOBITEM')" class="m-portlet__nav-item">
+								<li sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_JOBITEM')" class="m-portlet__nav-item">
 									<a th:href="@{/job/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.job.add}"></a>
 								</li>
-								<li sec:authorize="hasAnyRole('ADMIN')" class="m-portlet__nav-item">
+								<li sec:authorize="hasAnyAuthority('ADMIN')" class="m-portlet__nav-item">
 									<a th:href="@{/job/startAll}" class="m-portlet__nav-link btn btn-primary m-btn m-btn--air" th:text="#{label.job.start}"></a>
 								</li>
-								<li sec:authorize="hasAnyRole('ADMIN')" class="m-portlet__nav-item">
+								<li sec:authorize="hasAnyAuthority('ADMIN')" class="m-portlet__nav-item">
 									<a th:href="@{/job/stopAll}" class="m-portlet__nav-link btn btn-danger m-btn m-btn--air" th:text="#{label.job.stop}"></a>
 								</li>
 							</ul>
@@ -76,7 +76,7 @@
 														Stopped
 													</statecheck>
 												</td>
-												<td sec:authorize="hasAnyRole('ADMIN')">
+												<td sec:authorize="hasAnyAuthority('ADMIN')">
 													<statecheck th:if="${js.value == true}">
 														<a th:href="@{/job/__${js.key.id}__/stop}" class="btn btn-danger" th:text="#{label.job.stop}">Stop</a>
 													</statecheck>
@@ -94,7 +94,7 @@
 																<a class="dropdown-item" th:href="@{/job/__${js.key.id}__/view}">
 																	<span th:text="#{label.table.view}"></span>
 																</a>
-																<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_JOBITEM')" class="dropdown-item" th:href="@{/job/__${js.key.id}__/save}">
+																<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_JOBITEM')" class="dropdown-item" th:href="@{/job/__${js.key.id}__/save}">
 																	<span th:text="#{label.table.edit}"></span>
 																</a>
 																<a hidden="hidden" class="dropdown-item" th:href="@{/job/__${js.key.id}__/delete}">

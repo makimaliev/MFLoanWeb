@@ -78,7 +78,7 @@
 														<td th:text="${s.name}">Name</td>
 														<td><a th:href="@{/information/__${s.id}__/details}"
 															role="button" class="btn btn-xs blue-stripe"> View </a></td>
-														<td sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_INFORMATION')"><a data-remote="false" data-toggle="modal"
+														<td sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_INFORMATION')"><a data-remote="false" data-toggle="modal"
 															data-target="#informationFormModal"
 															th:href="@{/information/__${s.id}__/edit}" role="button"
 															class="btn btn-xs blue-stripe"> Edit </a></td>
@@ -129,7 +129,7 @@
 														<td th:text="${s.name}">Name</td>
 														<td><a th:href="@{/attachment/__${s.id}__/details}"
 															role="button" class="btn btn-xs blue-stripe"> View </a></td>
-														<td sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_ATTACHMENT')"><a data-remote="false" data-toggle="modal"
+														<td sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_ATTACHMENT')"><a data-remote="false" data-toggle="modal"
 															data-target="#informationFormModal"
 															th:href="@{/attachment/__${s.id}__/edit}" role="button"
 															class="btn btn-xs blue-stripe"> Edit </a></td>

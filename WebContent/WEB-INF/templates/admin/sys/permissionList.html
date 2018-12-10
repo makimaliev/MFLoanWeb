@@ -47,7 +47,7 @@
 										</span>
 									</div>
 								</li>
-								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_PERMISSION')" class="m-portlet__nav-item">
+								<li sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_PERMISSION')" class="m-portlet__nav-item">
 									<a data-remote="false" data-toggle="modal"
 									   data-target="#permissionFormModal" th:href="@{/permission/add}"
 									   permission="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.add.permission}"> Add
@@ -81,7 +81,7 @@
 													   role="button">
 														<span th:text="#{label.table.view}"></span>
 													</a>
-													<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_PERMISSION')" class="dropdown-item"
+													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_PERMISSION')" class="dropdown-item"
 													   th:href="@{/permission/__${s.id}__/edit}"
 													   data-toggle="modal"
 													   data-target="#permissionFormModal">

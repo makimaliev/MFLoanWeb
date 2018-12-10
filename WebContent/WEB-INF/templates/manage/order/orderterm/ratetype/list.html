@@ -39,7 +39,7 @@
                                     </div>
                                 </li>
                                 <li class="m-portlet__nav-item">
-                                    <a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_ORDERTERMRATETYPE')" th:href="@{/manage/order/orderterm/ratetype/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.order.term.ratetype.add}"></a>
+                                    <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_ORDERTERMRATETYPE')" th:href="@{/manage/order/orderterm/ratetype/0/save}" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.order.term.ratetype.add}"></a>
                                 </li>
                             </ul>
                         </div>
@@ -69,7 +69,7 @@
 															<i class="la la-ellipsis-h"></i>
 														</a>
 														<div class="dropdown-menu dropdown-menu-right">
-															<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_ORDERTERMRATETYPE')" th:href="@{/manage/order/orderterm/ratetype/__${e.id}__/save}" class="dropdown-item"><span th:text="#{label.table.edit}"></span></a>
+															<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_ORDERTERMRATETYPE')" th:href="@{/manage/order/orderterm/ratetype/__${e.id}__/save}" class="dropdown-item"><span th:text="#{label.table.edit}"></span></a>
 															<a hidden="hidden" class="dropdown-item" href="#">
 																<span>
 																	<form th:action="@{/manage/order/orderterm/ratetype/delete}" method="post" onsubmit="return confirm('Are you sure?') ? true : false;">

@@ -40,7 +40,7 @@
 										</span>
 									</div>
 								</li>
-								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_FILTERPARAMETER')" class="m-portlet__nav-item">
+								<li sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_FILTERPARAMETER')" class="m-portlet__nav-item">
 									<a data-remote="false" data-toggle="modal"
 									   data-target="#filterParameterFormModal" th:href="@{/filterParameter/add}"
 									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.filterParameter.add}"> Add
@@ -72,12 +72,12 @@
 													<a th:href="@{/filterParameter/__${s.id}__/details}"
 													   role="button" class="dropdown-item"> <span th:text="#{label.table.view}"></span>
 													</a>
-													<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_FILTERPARAMETER')" data-remote="false" data-toggle="modal"
+													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_FILTERPARAMETER')" data-remote="false" data-toggle="modal"
 													   data-target="#filterParameterFormModal"
 													   th:href="@{/filterParameter/__${s.id}__/edit}" role="button"
 													   class="dropdown-item"> <span th:text="#{label.table.edit}"></span>
 													</a>
-													<a sec:authorize="hasAnyRole('ADMIN','PERM_ADD_USER')" data-remote="false" data-toggle="modal"
+													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_USER')" data-remote="false" data-toggle="modal"
 													   data-target="#filterParameterFormModal"
 													   th:href="@{/filterParameter/__${s.id}__/addUser}" role="button"
 													   class="dropdown-item"> <span th:text="#{label.table.addUser}"></span>

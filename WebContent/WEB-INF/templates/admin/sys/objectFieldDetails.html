@@ -41,7 +41,7 @@
 									<td th:text="${objectField.name}">Name</td>
 									<td><a th:href="@{/objectField/__${objectField.id}__/details}"
 										   role="button" class="btn btn-xs green-stripe"> View </a></td>
-									<td sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_OBJECTFIELD')"><a data-remote="false" data-toggle="modal"
+									<td sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_OBJECTFIELD')"><a data-remote="false" data-toggle="modal"
 										   data-target="#objectFieldFormModal"
 										   th:href="@{/objectField/__${objectField.id}__/edit}" objectField="button"
 										   class="btn btn-xs blue-stripe"> Edit </a></td>

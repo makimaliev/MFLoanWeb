@@ -94,7 +94,7 @@
 								<div class="row">
 									<div class="col-lg-4"></div>
 									<div class="col-lg-6">
-										<button th:text="#{label.form.save}" sec:authorize="hasAnyRole('ADMIN','PERM_ADD_CLASSIFICATIONTABLE')" id="addButton" class="btn btn-primary">
+										<button th:text="#{label.form.save}" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_CLASSIFICATIONTABLE')" id="addButton" class="btn btn-primary">
 											<span>Добавить</span>
 										</button>
 										<button onclick="window.history.back()" type="button" class="btn btn-secondary">

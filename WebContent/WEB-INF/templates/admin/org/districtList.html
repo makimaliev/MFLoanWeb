@@ -45,7 +45,7 @@
 										</span>
 									</div>
 								</li>
-								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_AOKMOTU')" class="m-portlet__nav-item">
+								<li sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_AOKMOTU')" class="m-portlet__nav-item">
 									<a data-remote="false" data-toggle="modal"
 									   data-target="#districtFormModal" th:href="@{/aokmotu/add}"
 									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"> Add
@@ -83,7 +83,7 @@
 													   role="button">
 														<span th:text="#{label.table.view}"></span>
 													</a>
-													<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_DISTRICT')" class="dropdown-item"
+													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DISTRICT')" class="dropdown-item"
 													   th:href="@{/district/__${districtInList.id}__/edit}"
 													   data-remote="false"
 													   data-toggle="modal"

@@ -45,7 +45,7 @@
 										</span>
 									</div>
 								</li>
-								<li sec:authorize="hasAnyRole('ADMIN','PERM_ADD_AOKMOTU')" class="m-portlet__nav-item">
+								<li sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_AOKMOTU')" class="m-portlet__nav-item">
 									<a data-remote="false" data-toggle="modal"
 									   data-target="#districtFormModal" th:href="@{/aokmotu/add}"
 									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.add.aokmotu}"> Add
@@ -71,7 +71,7 @@
 									<td th:text="${objectType.name}">Name</td>
 									<td><a th:href="@{/objectType/__${objectType.id}__/details}"
 										objectType="button" class="btn btn-xs green-stripe"> View </a></td>
-									<td sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_OBJECTTYPE')"><a data-remote="false" data-toggle="modal"
+									<td sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_OBJECTTYPE')"><a data-remote="false" data-toggle="modal"
 										data-target="#objectTypeFormModal"
 										th:href="@{/objectType/__${objectType.id}__/edit}" objectType="button"
 										class="btn btn-xs blue-stripe"> Edit </a></td>

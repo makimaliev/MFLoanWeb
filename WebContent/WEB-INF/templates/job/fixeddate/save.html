@@ -60,7 +60,7 @@
 								<div class="row">
 									<div class="col-lg-4"></div>
 									<div class="col-lg-6">
-										<button sec:authorize="hasAnyRole('ADMIN')" type="submit" class="btn btn-primary">
+										<button sec:authorize="hasAnyAuthority('ADMIN')" type="submit" class="btn btn-primary">
 											<span th:text="#{label.form.save}"></span>
 										</button>
 										<button onclick="window.history.back()" type="button" class="btn btn-secondary">

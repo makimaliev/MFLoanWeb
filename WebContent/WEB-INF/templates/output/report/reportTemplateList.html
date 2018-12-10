@@ -67,7 +67,7 @@
 														   role="button">
 															<span th:text="#{label.table.view}"></span>
 														</a>
-														<a sec:authorize="hasAnyRole('ADMIN','PERM_UPDATE_REPORTTEMPLATE')" class="dropdown-item"
+														<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_REPORTTEMPLATE')" class="dropdown-item"
 														   data-remote="false" data-toggle="modal"
 														   data-target="#reportTemplateFormModal"
 														   th:href="@{/reportTemplate/__${s.id}__/edit}"

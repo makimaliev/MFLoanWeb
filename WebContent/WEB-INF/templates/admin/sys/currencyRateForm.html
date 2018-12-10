@@ -57,7 +57,7 @@
 		</div>
 	<div class="modal-footer">
 		<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.button.cancel}"></button>
-		<button sec:authorize="hasAnyRole('ADMIN','PERM_ADD_CURRENCYRATE','PERM_UPDATE_CURRENCYRATE')" type="submit" class="btn btn-primary" th:text="#{label.button.save}"></button>
+		<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_CURRENCYRATE','PERM_UPDATE_CURRENCYRATE')" type="submit" class="btn btn-primary" th:text="#{label.button.save}"></button>
 	</div>
 
 	</form>
