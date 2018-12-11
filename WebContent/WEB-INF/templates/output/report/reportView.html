@@ -52,7 +52,7 @@
 																</form>
 															</span>
 														</a>
-														<a class="dropdown-item" href="#">
+														<a sec:authorize="hasAnyAuthority('ADMIN')" class="dropdown-item" href="#">
 															<span>
 																<form th:action="@{/reportTemplate/__${reportTemplateInList.id}__/clone}" method="post">
 																	<input hidden="true" type="text" th:value="${reportTemplateInList.id}" />

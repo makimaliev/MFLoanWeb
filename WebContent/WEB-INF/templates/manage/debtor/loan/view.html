@@ -507,7 +507,7 @@
 																<!--</span>-->
 															<!--</a>-->
 
-															<button class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator" th:text="#{label.button.calculate.manual}">
+															<button sec:authorize="hasAnyRole('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator" th:text="#{label.button.calculate.manual}">
 																Сохранить расчет
 															</button>
 														</div>
