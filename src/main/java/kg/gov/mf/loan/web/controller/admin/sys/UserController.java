@@ -1,9 +1,8 @@
 package kg.gov.mf.loan.web.controller.admin.sys;
 
-import kg.gov.mf.loan.admin.org.model.Department;
-import kg.gov.mf.loan.admin.org.model.Organization;
-import kg.gov.mf.loan.admin.org.model.Staff;
+import kg.gov.mf.loan.admin.org.model.*;
 import kg.gov.mf.loan.admin.org.service.OrganizationService;
+import kg.gov.mf.loan.admin.org.service.PersonService;
 import kg.gov.mf.loan.admin.org.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,13 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import kg.gov.mf.loan.admin.org.model.District;
 import kg.gov.mf.loan.admin.sys.model.*;
 import kg.gov.mf.loan.admin.sys.service.*;
 
@@ -70,6 +65,9 @@ public class UserController {
 
     @Autowired
 	private StaffService staffService;
+
+    @Autowired
+	PersonService personService;
     
 	@RequestMapping(value = "/user/list", method = RequestMethod.GET)
 	public String listUsers(Model model) {
@@ -96,12 +94,36 @@ public class UserController {
 	public String viewUserDetailsById(@PathVariable("id") long id, Model model) {
 
 		User user = this.userService.findById(id);
+		Staff staff=staffService.findById(user.getStaff().getId());
+		Person person=personService.findById(staff.getPerson().getId());
+		model.addAttribute("id",user.getId());
+		model.addAttribute("staff", staff);
+		model.addAttribute("person", person);
 
-		model.addAttribute("user", user);
-		model.addAttribute("roleList", this.roleService.findAll());
+
 
 		return "admin/sys/userDetails";
-	}	
+	}
+
+	@RequestMapping("/user/{id}/changePassword")
+	public String changePassword(@PathVariable("id") Long id,Model model){
+
+		return "admin/sys/userChangePassword";
+	}
+
+	@PostMapping("/user/{id}/changePassword")
+	@ResponseBody
+	public String changeThePassword(@PathVariable("id") Long id,@RequestParam("oldPassword") String oldPassword,@RequestParam("newPassword") String newPassword){
+		User user=userService.findById(id);
+		if(user.getPassword().equals(oldPassword)){
+			user.setPassword(newPassword);
+			userService.edit(user);
+			return "OK";
+		}
+		else{
+			return "NO";
+		}
+	}
     
 	
 	@RequestMapping(value = "/user/add", method = RequestMethod.GET)
