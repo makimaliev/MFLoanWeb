@@ -349,39 +349,175 @@
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/typeahead.js}" type="text/javascript"></script>
 <!--end::Page Resources -->
-<script type="text/javascript">
+
+
+
+
+
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
     $(document).ready(function(){
 
-        var spanText1 = 'label.collateralItem.details1.type'+ $('#itemType').val()
-        $('#detailsLabel1').html(spanText1)
-        var spanText2 = 'label.collateralItem.details2.type'+ $('#itemType').val()
-        $('#detailsLabel2').html(spanText2)
-        var spanText3 = 'label.collateralItem.details3.type'+ $('#itemType').val()
-        $('#detailsLabel3').html(spanText3)
-        var spanText4 = 'label.collateralItem.details4.type'+ $('#itemType').val()
-        $('#detailsLabel4').html(spanText4)
-        var spanText5 = 'label.collateralItem.details5.type'+ $('#itemType').val()
-        $('#detailsLabel5').html(spanText5)
-        var spanText6 = 'label.collateralItem.details6.type'+ $('#itemType').val()
-        $('#detailsLabel6').html(spanText6)
 
+
+		function updateText()
+		{
+            var det1 = [];
+
+            var det11=/*[[#{label.collateralItem.details1.type1}]]*/ 'default';
+            var det12=/*[[#{label.collateralItem.details1.type2}]]*/ 'default';
+            var det13=/*[[#{label.collateralItem.details1.type3}]]*/ 'default';
+            var det14=/*[[#{label.collateralItem.details1.type4}]]*/ 'default';
+            var det15=/*[[#{label.collateralItem.details1.type5}]]*/ 'default';
+            var det16=/*[[#{label.collateralItem.details1.type6}]]*/ 'default';
+            var det17=/*[[#{label.collateralItem.details1.type7}]]*/ 'default';
+            var det18=/*[[#{label.collateralItem.details1.type8}]]*/ 'default';
+
+
+            det1.push(det11);
+            det1.push(det12);
+            det1.push(det13);
+            det1.push(det14);
+            det1.push(det15);
+            det1.push(det16);
+            det1.push(det17);
+            det1.push(det18);
+
+            var det2 = [];
+
+            var det21=/*[[#{label.collateralItem.details2.type1}]]*/ 'default';
+            var det22=/*[[#{label.collateralItem.details2.type2}]]*/ 'default';
+            var det23=/*[[#{label.collateralItem.details2.type3}]]*/ 'default';
+            var det24=/*[[#{label.collateralItem.details2.type4}]]*/ 'default';
+            var det25=/*[[#{label.collateralItem.details2.type5}]]*/ 'default';
+            var det26=/*[[#{label.collateralItem.details2.type6}]]*/ 'default';
+            var det27=/*[[#{label.collateralItem.details2.type7}]]*/ 'default';
+            var det28=/*[[#{label.collateralItem.details2.type8}]]*/ 'default';
+
+
+            det2.push(det21);
+            det2.push(det22);
+            det2.push(det23);
+            det2.push(det24);
+            det2.push(det25);
+            det2.push(det26);
+            det2.push(det27);
+            det2.push(det28);
+
+
+            var det3 = [];
+
+            var det31=/*[[#{label.collateralItem.details3.type1}]]*/ 'default';
+            var det32=/*[[#{label.collateralItem.details3.type2}]]*/ 'default';
+            var det33=/*[[#{label.collateralItem.details3.type3}]]*/ 'default';
+            var det34=/*[[#{label.collateralItem.details3.type4}]]*/ 'default';
+            var det35=/*[[#{label.collateralItem.details3.type5}]]*/ 'default';
+            var det36=/*[[#{label.collateralItem.details3.type6}]]*/ 'default';
+            var det37=/*[[#{label.collateralItem.details3.type7}]]*/ 'default';
+            var det38=/*[[#{label.collateralItem.details3.type8}]]*/ 'default';
+
+
+            det3.push(det31);
+            det3.push(det32);
+            det3.push(det33);
+            det3.push(det34);
+            det3.push(det35);
+            det3.push(det36);
+            det3.push(det37);
+            det3.push(det38);
+
+            var det4 = [];
+
+            var det41=/*[[#{label.collateralItem.details4.type1}]]*/ 'default';
+            var det42=/*[[#{label.collateralItem.details4.type2}]]*/ 'default';
+            var det43=/*[[#{label.collateralItem.details4.type3}]]*/ 'default';
+            var det44=/*[[#{label.collateralItem.details4.type4}]]*/ 'default';
+            var det45=/*[[#{label.collateralItem.details4.type5}]]*/ 'default';
+            var det46=/*[[#{label.collateralItem.details4.type6}]]*/ 'default';
+            var det47=/*[[#{label.collateralItem.details4.type7}]]*/ 'default';
+            var det48=/*[[#{label.collateralItem.details4.type8}]]*/ 'default';
+
+
+            det4.push(det41);
+            det4.push(det42);
+            det4.push(det43);
+            det4.push(det44);
+            det4.push(det45);
+            det4.push(det46);
+            det4.push(det47);
+            det4.push(det48);
+
+
+
+            var det5 = [];
+
+            var det51=/*[[#{label.collateralItem.details5.type1}]]*/ 'default';
+            var det52=/*[[#{label.collateralItem.details5.type2}]]*/ 'default';
+            var det53=/*[[#{label.collateralItem.details5.type3}]]*/ 'default';
+            var det54=/*[[#{label.collateralItem.details5.type4}]]*/ 'default';
+            var det55=/*[[#{label.collateralItem.details5.type5}]]*/ 'default';
+            var det56=/*[[#{label.collateralItem.details5.type6}]]*/ 'default';
+            var det57=/*[[#{label.collateralItem.details5.type7}]]*/ 'default';
+            var det58=/*[[#{label.collateralItem.details5.type8}]]*/ 'default';
+
+
+            det5.push(det51);
+            det5.push(det52);
+            det5.push(det53);
+            det5.push(det54);
+            det5.push(det55);
+            det5.push(det56);
+            det5.push(det57);
+            det5.push(det58);
+
+            var det6 = [];
+
+            var det61=/*[[#{label.collateralItem.details6.type1}]]*/ 'default';
+            var det62=/*[[#{label.collateralItem.details6.type2}]]*/ 'default';
+            var det63=/*[[#{label.collateralItem.details6.type3}]]*/ 'default';
+            var det64=/*[[#{label.collateralItem.details6.type4}]]*/ 'default';
+            var det65=/*[[#{label.collateralItem.details6.type5}]]*/ 'default';
+            var det66=/*[[#{label.collateralItem.details6.type6}]]*/ 'default';
+            var det67=/*[[#{label.collateralItem.details6.type7}]]*/ 'default';
+            var det68=/*[[#{label.collateralItem.details6.type8}]]*/ 'default';
+
+
+            det6.push(det61);
+            det6.push(det62);
+            det6.push(det63);
+            det6.push(det64);
+            det6.push(det65);
+            det6.push(det66);
+            det6.push(det67);
+            det6.push(det68);
+
+            var index = $('#itemType').val()-1;
+
+            $('#detailsLabel1').html(det1[index]);
+            $('#detailsLabel2').html(det2[index]);
+            $('#detailsLabel3').html(det3[index]);
+            $('#detailsLabel4').html(det4[index]);
+            $('#detailsLabel5').html(det5[index]);
+            $('#detailsLabel6').html(det6[index]);
+
+
+        }
+
+        updateText();
 
         $('#itemType').change(function () {
-			var spanText1 = 'label.collateralItem.details1.type'+ this.value
-            $('#detailsLabel1').html(spanText1)
-            var spanText2 = 'label.collateralItem.details2.type'+ this.value
-            $('#detailsLabel2').html(spanText2)
-            var spanText3 = 'label.collateralItem.details3.type'+ this.value
-            $('#detailsLabel3').html(spanText3)
-            var spanText4 = 'label.collateralItem.details4.type'+ this.value
-            $('#detailsLabel4').html(spanText4)
-            var spanText5 = 'label.collateralItem.details5.type'+ this.value
-            $('#detailsLabel5').html(spanText5)
-            var spanText6 = 'label.collateralItem.details6.type'+ this.value
-            $('#detailsLabel6').html(spanText6)
+
+				updateText();
         });
+
+
+
+
     });
+    /*]]>*/
 </script>
+
 <script type="text/javascript">
     // body.onload(function () {
     //     var spanText1 = 'label.collateralItem.details1.type'+ this.value
