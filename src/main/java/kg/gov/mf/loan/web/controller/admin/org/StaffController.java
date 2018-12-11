@@ -1,21 +1,21 @@
 package kg.gov.mf.loan.web.controller.admin.org;
 
 import kg.gov.mf.loan.admin.sys.service.UserService;
+import kg.gov.mf.loan.manage.repository.org.StaffRepository;
+import kg.gov.mf.loan.web.fetchModels.ContactListModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
+import org.springframework.web.bind.annotation.*;
 
 
 import kg.gov.mf.loan.admin.org.model.*;
 import kg.gov.mf.loan.admin.org.service.*;
 
+import javax.persistence.Query;
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +25,11 @@ public class StaffController {
 	@Autowired
     private StaffService staffService;
 
+	@Autowired
+	StaffRepository staffRepository;
 
+	@Autowired
+	EntityManager entityManager;
      
     public void setStaffService(StaffService rs)
     {
@@ -243,6 +247,60 @@ public class StaffController {
 
 		return "redirect:/staff/list";
 	}
+
+	class Result {
+
+		public Long id;
+		public String text;
+
+		public Result(Long id, String text) {
+			this.id = id;
+			this.text = text;
+		}
+	}
+
+
+	@GetMapping("/staffByName/list")
+	@ResponseBody
+	public List<Result> findByStaffName(@RequestParam(value = "name",required = true) String name){
+
+		List<Result> data = new ArrayList<>();
+		String baseQuery="select s.id,s.name as smallData from staff s where s.id not in (select u.staff_id from users u where u.staff_id is not null) \n" +
+				" and s.organization_id=1 and s.name like \"%"+name+"%\"";
+		Query query=entityManager.createNativeQuery(baseQuery, ContactListModel.class);
+		int counter=0;
+		List<ContactListModel> results=query.getResultList();
+		for(ContactListModel staff : results)
+		{
+			counter++;
+			data.add(new Result(staff.getId(),staff.getSmallData()));
+			if(counter>10) break;
+		}
+
+		return data;
+
+	}
+
+	@GetMapping("/roleByName/list")
+	@ResponseBody
+	public List<Result> findByRoleName(@RequestParam(value = "name",required = true) String name){
+
+		List<Result> data = new ArrayList<>();
+		String baseQuery="select id, name as smallData from role where name like \"%"+name+"%\"";
+		Query query=entityManager.createNativeQuery(baseQuery, ContactListModel.class);
+		int counter=0;
+		List<ContactListModel> results=query.getResultList();
+		for(ContactListModel role : results)
+		{
+			counter++;
+			data.add(new Result(role.getId(),role.getSmallData()));
+			if(counter>10) break;
+		}
+
+		return data;
+
+	}
+
 
      
 

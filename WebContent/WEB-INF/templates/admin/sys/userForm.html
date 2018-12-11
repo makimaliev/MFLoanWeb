@@ -1,4 +1,5 @@
-<form th:action="@{/user/save}" id="form_sample_2" class="form-horizontal" method="post" th:object="${user}">
+<form th:action="@{/user/save}" id="form_sample_2" class="form-horizontal" method="post" th:object="${user}"
+	  xmlns:th="http://www.w3.org/1999/xhtml">
 	<div class="modal-header">
 		<h5 class="modal-title" th:text="#{label.user.modal.title}"></h5>
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -8,24 +9,20 @@
 		</button>
 	</div>
 	<div class="modal-body">
-
 		<div class="alert alert-danger alert-dismissible alert-hidden" role="alert">
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
 			<span th:text="#{label.user.modal.error.name}"></span>
 		</div>
-
 		<div class="form-group">
 			<label class="form-control-label"th:text="#{label.user.modal.username}">Name<span class="required"> * </span></label>
 			<input hidden="true" type="text" id="id" name="id" th:field="*{id}" />
 			<input hidden="true" type="text" id="staff.id" name="staff.id" th:field="*{staff.id}" />
 			<input type="text" class="form-control"  th:field="*{username}">
 		</div>
-
 		<div class="form-group ">
 			<label for="password" class="form-control-label" th:text="#{label.user.modal.password}">Password<span class="required"> * </span></label>
 			<input type="text" class="form-control" id="password" name="password" th:value="*{password}">
 		</div>
-
 		<div class="form-group">
 			<label class="form-control-label" th:text="#{label.user.modal.enabled}"></label>
 			<div class="col-3">
@@ -44,9 +41,9 @@
 			<label class="form-control-label" th:text="#{label.user.modal.roles}">Roles<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
-					<select th:field="*{roles}" multiple="multiple" class="selectpicker">
+					<select th:field="*{roles}" multiple="multiple" class="form-control" id="roleSearch">
 						<option th:each="roleInList : ${roleList}"
-								th:value="${{roleInList}}"
+								th:value="${{roleInList.id}}"
 								th:text="${roleInList.name}"
 						>Role</option>
 					</select>
@@ -54,7 +51,7 @@
 			</div>
 		</div>
 
-		<div class="form-group ">
+		<div hidden="hidden" class="form-group ">
 			<label class="form-control-label" th:text="#{label.user.modal.supervisorterms}">Supervisor terms<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
@@ -72,9 +69,14 @@
 			<label class="form-control-label" th:text="#{label.user.modal.staff}">Staff<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
-					<select th:field="*{staff}" class="selectpicker">
+					<!--<select class="form-control" id="srs" th:field="*{person}" style="width: 100%" th:title="#{label.select}">-->
+						<!--<option th:each="personInList : ${personList}"-->
+								<!--th:value="${personInList.id}"-->
+								<!--th:text="${personInList.name}"></option>-->
+					<!--</select>-->
+					<select id="srs" th:field="*{staff}" class="form-control" th:title="#{label.select}">
 						<option th:each="staffInList : ${staffList}"
-								th:value="${{staffInList}}"
+								th:value="${{staffInList.id}}"
 								th:text="${staffInList.name}"
 						>Staff</option>
 					</select>
@@ -91,5 +93,69 @@
 </form>
 
 <script>
+    $('#srs').select2({
+        language: {
+            inputTooShort: function () {
+                return "Введите больше 2 символов";
+            },
+            "noMatches": function(){
+                return "Ничего не найдено!";
+            }
+        },
+        placeholder: /*[[#{label.select}]]*/ "Выбрать из списка",
+        tags: true,
+        minimumInputLength: 2,
+        ajax: {
+            url: '/staffByName/list',
+            data: function (params) {
+                console.log(params)
+                var query = {
+                    name: params.term
+                }
+                return query;
+            },
+            processResults: function (data) {
+
+                // alert(data.length);
+
+
+                return {
+                    results: data
+                };
+            }
+        }
+    });
+    $('#roleSearch').select2({
+        language: {
+            inputTooShort: function () {
+                return "Введите больше 2 символов";
+            },
+            "noMatches": function(){
+                return "Ничего не найдено!";
+            }
+        },
+        placeholder: /*[[#{label.select}]]*/ "Выбрать из списка",
+        tags: true,
+        minimumInputLength: 2,
+        ajax: {
+            url: '/roleByName/list',
+            data: function (params) {
+                console.log(params)
+                var query = {
+                    name: params.term
+                }
+                return query;
+            },
+            processResults: function (data) {
+
+                // alert(data.length);
+
+
+                return {
+                    results: data
+                };
+            }
+        }
+    });
     $('.selectpicker').selectpicker('refresh');
 </script>

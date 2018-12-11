@@ -1,4 +1,5 @@
-<form th:action="@{/staff/save}" class="form-horizontal" method="post" th:object="${staff}">
+<form th:action="@{/staff/save}" class="form-horizontal" method="post" th:object="${staff}"
+	  xmlns:th="http://www.w3.org/1999/xhtml">
 	<div class="modal-header">
 		<h5 class="modal-title" th:text="#{label.add.staff}"></h5>
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -52,7 +53,6 @@
 			</label>
 			<div class="col-lg-8 col-md-9 col-sm-12">
 				<span th:text="${organization.name}">
-
 				</span>
 			</div>
 		</div>
@@ -87,15 +87,23 @@
 	<div class="modal-footer">
 		<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.orgForm.button.cancel}"></button>
 		<button type="submit" class="btn btn-primary" th:text="#{label.button.save}"></button>
-	</div>
+	</div >
 </form>
-
 <script type="text/javascript" th:inline="javascript">
 
+
     $('#srs').select2({
+        language: {
+            inputTooShort: function () {
+                return "Введите больше 2 символов";
+            },
+            "noMatches": function(){
+                return "Ничего не найдено!";
+            }
+        },
         placeholder: /*[[#{label.select}]]*/ "1Выбрать из списка",
         tags: true,
-        minimumInputLength: 4,
+        minimumInputLength: 2,
         ajax: {
             url: '/personByName/list',
             data: function (params) {

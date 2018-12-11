@@ -132,35 +132,35 @@
                                 </div>
                             </div>
                         </div>
-                        <!--<div class="col-md-5">-->
-                            <!--<a id="search_form" sec:authorize="hasRole('ADMIN')" data-remote="false"-->
-                               <!--data-toggle="modal"-->
-                               <!--data-target="#loanViewSearchFormModal"-->
-                               <!--th:href="@{/loanView/search}"-->
-                               <!--role="button"-->
-                               <!--class="m-portlet__nav-link btn btn-success m-btn m-btn&#45;&#45;air">-->
-                                        <!--<span>-->
-                                            <!--<i class="la la-plus"></i>-->
-                                            <!--<span>-->
-                                                <!--Advanced search-->
-                                            <!--</span>-->
-                                        <!--</span>-->
-                            <!--</a>-->
-                            <!--<div class="m-separator m-separator&#45;&#45;dashed d-xl-none"></div>-->
-                            <!--<a id="colum_choose" sec:authorize="hasRole('ADMIN')" data-remote="false"-->
-                               <!--data-toggle="modal"-->
-                               <!--data-target="#loanViewColumnChooseFormModal"-->
-                               <!--th:href="@{/loanView/columnChoose}"-->
-                               <!--role="button"-->
-                               <!--class="m-portlet__nav-link btn btn-success m-btn m-btn&#45;&#45;air">-->
-                                                    <!--<span>-->
-                                                        <!--<i class="la la-bars"></i>-->
-                                                        <!--<span>-->
-                                                            <!--Choose columns-->
-                                                        <!--</span>-->
-                                                    <!--</span>-->
-                            <!--</a>-->
-                        <!--</div>-->
+                        <div hidden="hidden" class="col-md-5">
+                            <a id="search_form" sec:authorize="hasRole('ADMIN')" data-remote="false"
+                               data-toggle="modal"
+                               data-target="#loanViewSearchFormModal"
+                               th:href="@{/loanView/search}"
+                               role="button"
+                               class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
+                                        <span>
+                                            <i class="la la-plus"></i>
+                                            <span>
+                                                Advanced search
+                                            </span>
+                                        </span>
+                            </a>
+                            <div class="m-separator m-separator--dashed d-xl-none"></div>
+                            <a id="colum_choose" sec:authorize="hasRole('ADMIN')" data-remote="false"
+                               data-toggle="modal"
+                               data-target="#loanViewColumnChooseFormModal"
+                               th:href="@{/loanView/columnChoose}"
+                               role="button"
+                               class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
+                                                    <span>
+                                                        <i class="la la-bars"></i>
+                                                        <span>
+                                                            Choose columns
+                                                        </span>
+                                                    </span>
+                            </a>
+                        </div>
 
                         <!--begin: Datatable -->
                         <div class="m_datatable" id="ajax_data"></div>
