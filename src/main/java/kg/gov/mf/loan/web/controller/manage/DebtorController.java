@@ -167,7 +167,7 @@ public class DebtorController {
 //			model.addAttribute("informationList", this.informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2, organization.getId()));
 		}
 		else{
-			Person person = this.personService.findById(debtor.getOwner().getId());
+			Person person = this.personService.findById(debtor.getOwner().getEntityId());
 
 			model.addAttribute("person", person);
 //			model.addAttribute("informationList", this.informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2, person.getId()));
