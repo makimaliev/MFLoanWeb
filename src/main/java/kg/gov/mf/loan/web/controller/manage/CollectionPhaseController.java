@@ -10,10 +10,12 @@ import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.manage.model.collection.*;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.process.LoanDetailedSummary;
+import kg.gov.mf.loan.manage.model.process.LoanSummary;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.service.collection.*;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.process.LoanDetailedSummaryService;
+import kg.gov.mf.loan.manage.service.process.LoanSummaryService;
 import kg.gov.mf.loan.process.service.JobItemService;
 import kg.gov.mf.loan.web.fetchModels.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +76,9 @@ public class CollectionPhaseController {
 	@Autowired
 	PhaseStatusService phaseStatusService;
 
+	@Autowired
+	LoanSummaryService loanSummaryService;
+
 	/** The entity manager. */
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -131,11 +136,11 @@ public class CollectionPhaseController {
 			dTemp.setLoanRegNumber(loan.getRegNumber());
 			dTemp.setLoanStateId(loan.getStateId());
 			this.jobItemService.runManualCalculateProcedure(loan.getId(), initDate);
-			LoanDetailedSummary summary = loanDetailedSummaryService.getByOnDateAndLoanId(initDate, loan.getId());
-			dTemp.setStartPrincipal(summary.getPrincipalOverdue());
-			dTemp.setStartInterest(summary.getInterestOverdue());
-			dTemp.setStartPenalty(summary.getPenaltyOverdue());
-			dTemp.setStartTotalAmount(summary.getPrincipalOverdue() + summary.getInterestOverdue() + summary.getPenaltyOverdue());
+			LoanSummary summary = loanSummaryService.getByOnDateAndLoanId(initDate, loan.getId());
+			dTemp.setStartPrincipal(summary.getOverduePrincipal());
+			dTemp.setStartInterest(summary.getOverdueInterest());
+			dTemp.setStartPenalty(summary.getOverduePenalty());
+			dTemp.setStartTotalAmount(summary.getOverduePrincipal() + summary.getOverdueInterest()+ summary.getOverduePenalty());
 			result.add(dTemp);}
 			count++;
 		}
