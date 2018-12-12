@@ -256,6 +256,34 @@ public class CollectionPhaseController {
 
 		if(phaseId == 0)
 		{
+
+			CollectionProcedure procedure = procService.getById(procId);
+
+			if(procService.getById(procId).getLastPhase()==0)
+			{
+
+
+				Date lastDate = null;
+				for (CollectionPhase phase: procedure.getCollectionPhases())
+				{
+					if(lastDate==null) {
+						lastDate = phase.getStartDate();
+						procedure.setLastPhase(phase.getId());
+					}
+					else
+					{
+						if(!lastDate.before(phase.getStartDate()))
+						{
+							lastDate = phase.getStartDate();
+							procedure.setLastPhase(phase.getId());
+						}
+					}
+
+				}
+
+			}
+
+
 			CollectionPhase collectionPhase=new CollectionPhase();
 			collectionPhase.setLoans(phaseService.getById(procService.getById(procId).getLastPhase()).getLoans());
 			model.addAttribute("phase", collectionPhase);
