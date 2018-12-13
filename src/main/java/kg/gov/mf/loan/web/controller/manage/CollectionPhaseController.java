@@ -285,9 +285,9 @@ public class CollectionPhaseController {
 
 
 			CollectionPhase collectionPhase=new CollectionPhase();
-			collectionPhase.setLoans(phaseService.getById(procService.getById(procId).getLastPhase()).getLoans());
+			collectionPhase.setLoans(phaseService.getById(procedure.getLastPhase()).getLoans());
 			model.addAttribute("phase", collectionPhase);
-			model.addAttribute("tLoans", phaseService.getById(procService.getById(procId).getLastPhase()).getLoans());
+			model.addAttribute("tLoans", phaseService.getById(procedure.getLastPhase()).getLoans());
 		}
 
 		if(phaseId > 0)
