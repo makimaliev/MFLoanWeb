@@ -68,8 +68,8 @@ var DatatableDataLocalItemArrestFrees = function () {
 						</a>\
 					';
 
-                    if(!hasRoleAdmin)
-                        result = '';
+                    // if(!hasRoleAdmin)
+                    //     result = '';
 
                     return result;
                 }

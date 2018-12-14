@@ -67,8 +67,8 @@ var DatatableDataLocalItemInspections = function () {
 						</a>\
 					';
 
-                    if(!hasRoleAdmin)
-                        result = '';
+                    // if(!hasRoleAdmin)
+                    //     result = '';
 
                     return result;
                 }

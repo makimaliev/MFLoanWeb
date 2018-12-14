@@ -162,7 +162,7 @@ create view debtor_view as
     `d`.`orgFormId`            AS `v_debtor_org_form_id`,
     `d`.`ownerId`              AS `v_debtor_owner_id`,
     `d`.`workSectorId`         AS `v_debtor_work_sector_id`,
-    `ov`.`id`                  AS `v_debtor_entity_id`,
+    `ov`.`entityId`            AS `v_debtor_entity_id`,
     `ov`.`ownerType`           AS `v_debtor_owner_type`,
     `ov`.`v_owner_address_id`  AS `v_debtor_address_id`,
     `ov`.`v_owner_region_id`   AS `v_debtor_region_id`,
@@ -726,10 +726,7 @@ create view collateral_agreement_view as
     `dv`.`v_debtor_region_id`        AS `v_debtor_region_id`,
     `dv`.`v_debtor_district_id`      AS `v_debtor_district_id`,
     `dv`.`v_debtor_aokmotu_id`       AS `v_debtor_aokmotu_id`,
-    `dv`.`v_debtor_village_id`       AS `v_debtor_village_id`,
-    `r`.`name`                       AS `v_region_name`,
-    `d`.`name`                       AS `v_district_name`,
-    `ws`.`name`                      AS `v_work_sector_name`
+    `dv`.`v_debtor_village_id`       AS `v_debtor_village_id`
   FROM ((((((`mfloan`.`collateralAgreement` `ca`
     JOIN `mfloan`.`debtor_view` `dv`) JOIN `mfloan`.`owner` `o1`) JOIN `mfloan`.`owner` `o2`) JOIN
     `mfloan`.`region` `r`) JOIN `mfloan`.`district` `d`) JOIN `mfloan`.`workSector` `ws`)
@@ -766,9 +763,6 @@ create view collateral_item_view as
     `cav`.`v_debtor_district_id`           AS `v_debtor_district_id`,
     `cav`.`v_debtor_aokmotu_id`            AS `v_debtor_aokmotu_id`,
     `cav`.`v_debtor_village_id`            AS `v_debtor_village_id`,
-    `cav`.`v_region_name`                  AS `v_region_name`,
-    `cav`.`v_district_name`                AS `v_district_name`,
-    `cav`.`v_work_sector_name`             AS `v_work_sector_name`,
     `ci`.`id`                              AS `v_ci_id`,
     `ci`.`version`                         AS `v_ci_version`,
     `ci`.`collateralValue`                 AS `v_ci_collateralValue`,
@@ -791,7 +785,6 @@ DROP TABLE IF EXISTS `collateral_arrest_free_view`;
 create view collateral_arrest_free_view as
   SELECT
     `civ`.`v_ca_id`                        AS `v_ca_id`,
-    `civ`.`v_ca_version`                   AS `v_ca_version`,
     `civ`.`v_ca_agreementDate`             AS `v_ca_agreementDate`,
     `civ`.`v_ca_agreementNumber`           AS `v_ca_agreementNumber`,
     `civ`.`v_ca_arrestRegDate`             AS `v_ca_arrestRegDate`,
@@ -814,11 +807,7 @@ create view collateral_arrest_free_view as
     `civ`.`v_debtor_district_id`           AS `v_debtor_district_id`,
     `civ`.`v_debtor_aokmotu_id`            AS `v_debtor_aokmotu_id`,
     `civ`.`v_debtor_village_id`            AS `v_debtor_village_id`,
-    `civ`.`v_region_name`                  AS `v_region_name`,
-    `civ`.`v_district_name`                AS `v_district_name`,
-    `civ`.`v_work_sector_name`             AS `v_work_sector_name`,
     `civ`.`v_ci_id`                        AS `v_ci_id`,
-    `civ`.`v_ci_version`                   AS `v_ci_version`,
     `civ`.`v_ci_collateralValue`           AS `v_ci_collateralValue`,
     `civ`.`v_ci_demand_rate`               AS `v_ci_demand_rate`,
     `civ`.`v_ci_description`               AS `v_ci_description`,
@@ -844,7 +833,6 @@ DROP TABLE IF EXISTS `collateral_inspection_view`;
 create view collateral_inspection_view as
   SELECT
     `civ`.`v_ca_id`                        AS `v_ca_id`,
-    `civ`.`v_ca_version`                   AS `v_ca_version`,
     `civ`.`v_ca_agreementDate`             AS `v_ca_agreementDate`,
     `civ`.`v_ca_agreementNumber`           AS `v_ca_agreementNumber`,
     `civ`.`v_ca_arrestRegDate`             AS `v_ca_arrestRegDate`,
@@ -867,11 +855,7 @@ create view collateral_inspection_view as
     `civ`.`v_debtor_district_id`           AS `v_debtor_district_id`,
     `civ`.`v_debtor_aokmotu_id`            AS `v_debtor_aokmotu_id`,
     `civ`.`v_debtor_village_id`            AS `v_debtor_village_id`,
-    `civ`.`v_region_name`                  AS `v_region_name`,
-    `civ`.`v_district_name`                AS `v_district_name`,
-    `civ`.`v_work_sector_name`             AS `v_work_sector_name`,
     `civ`.`v_ci_id`                        AS `v_ci_id`,
-    `civ`.`v_ci_version`                   AS `v_ci_version`,
     `civ`.`v_ci_collateralValue`           AS `v_ci_collateralValue`,
     `civ`.`v_ci_demand_rate`               AS `v_ci_demand_rate`,
     `civ`.`v_ci_description`               AS `v_ci_description`,
@@ -900,7 +884,7 @@ create view collection_procedure_debtor_view as
   FROM ((((`mfloan`.`collectionProcedure` `pr`
     JOIN `mfloan`.`collectionPhase` `ph`) JOIN `mfloan`.`phaseDetails` `pd`) JOIN `mfloan`.`loan` `l`) JOIN
     `mfloan`.`debtor` `d`)
-  WHERE ((`ph`.`collectionProcedureId` = `pr`.`id`) AND (`ph`.`id` = `pd`.`id`) AND (`pd`.`loan_id` = `l`.`id`) AND
+  WHERE ((`ph`.`collectionProcedureId` = `pr`.`id`) AND (`ph`.`id` = `pd`.`collectionPhaseId`) AND (`pd`.`loan_id` = `l`.`id`) AND
          (`l`.`debtorId` = `d`.`id`));
 
 #23

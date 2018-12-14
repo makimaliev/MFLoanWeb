@@ -100,8 +100,8 @@ var DatatableDataLocalPhases = function () {
                     }
 
 
-                    if(!hasRoleAdmin)
-                        result = '';
+                    // if(!hasRoleAdmin)
+                    //     result = '';
 
                     return result;
                 }
