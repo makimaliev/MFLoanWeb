@@ -24,7 +24,7 @@ INSERT INTO cat_document_status(id, version, internalName, name, actionName, uui
 INSERT INTO cat_document_status(id, version, internalName, name, actionName, uuid) VALUES(12, 1, 'toreconcile', 'На согласование', 'На согласовании', '73d6a3bb-8e5d-11e8-8a03-b8975a79c95a');
 
 
-DROP TABLE IF EXISTS account;
+DROP VIEW IF EXISTS `account`;
 
 CREATE
 DEFINER = 'root'@'localhost'

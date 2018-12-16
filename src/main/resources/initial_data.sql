@@ -11,6 +11,7 @@ INSERT INTO `users` (`id`, `enabled`, `password`, `username`) VALUES (2, true, '
 
 /* ADD PERMISSIONS */
 
+INSERT INTO `permission` (`name`) VALUES ('ADMIN');
 INSERT INTO `permission` (`name`) VALUES ('PERM_ADD_USER');
 INSERT INTO `permission` (`name`) VALUES ('PERM_VIEW_USER');
 INSERT INTO `permission` (`name`) VALUES ('PERM_UPDATE_USER');
