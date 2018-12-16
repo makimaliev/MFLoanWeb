@@ -22,7 +22,7 @@
 
             $(document).ready(function() {
 
-                CKEDITOR.config.readOnly = [[${document.documentState.ordinal()}]] > 1;
+                CKEDITOR.config.readOnly = [[${document.documentState.ordinal()}]] > 0;
                 CKEDITOR.replace("description", {
                     language: 'ru',
                     uiColor: '#ffffff',

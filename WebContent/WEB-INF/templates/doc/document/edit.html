@@ -64,7 +64,7 @@
                                                                     th:utext="${stage.text()}"></label></td>
                                                             <td><label
                                                                     class="align-middle m-2 text-success"
-                                                                    th:utext="${document.documentState.ordinal()+1 >= stage.state().ordinal()} ? 'Выполнен' : '-'"></label>
+                                                                    th:utext="${document.documentState.ordinal() >= stage.state().ordinal()} ? 'Выполнен' : '-'"></label>
                                                             </td>
                                                         </tr>
                                                     </table>
