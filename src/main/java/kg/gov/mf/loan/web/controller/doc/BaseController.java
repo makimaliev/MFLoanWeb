@@ -23,9 +23,15 @@ public class BaseController {
         this.attachmentService = attachmentService;
     }
 
-    protected User getUser()
-    {
-        return userService.findByUsername(Utils.getPrincipal());
+    protected User getUser() {
+        String usr = Utils.getPrincipal();
+        if(usr.equals("anonymousUser")) {
+            return null;
+        }
+        else
+        {
+            return userService.findByUsername(usr);
+        }
     }
     protected User getUser(Long userId)
     {

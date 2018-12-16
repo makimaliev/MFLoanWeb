@@ -71,6 +71,7 @@
                                             <div class="dropdown">
                                                 <a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown"><i class="la la-ellipsis-h"></i></a>
                                                 <div class="dropdown-menu dropdown-menu-right">
+
                                                     <a class="dropdown-item" th:href="@{/doc/view/__${document.id}__}" th:if="${tasks.?[objectId == __${document.id}__].isEmpty()}" id="linkView">
                                                         <span th:text="#{label.view}"></span>
                                                     </a>
@@ -79,10 +80,10 @@
                                                         <span th:text="#{label.open}"></span>
                                                     </a>
 
-                                                    <a class="dropdown-item" th:href="@{/doc/edit/__${document.id}__}" th:if="${document.documentState.toString() == 'DRAFT' and  document.owner == __${cu}__}" id="linkEditCu">
+                                                    <!--a class="dropdown-item" th:href="@{/doc/edit/__${document.id}__}" th:if="${document.documentState.toString() == 'DRAFT' and  document.owner == __${cu}__}" id="linkEditCu">
                                                         <span th:text="#{label.open}"></span>
                                                     </a>
-                                                    <!--a class="dropdown-item" th:href="@{/doc/delete/__${document.id}__}" th:if="${document.documentState.ordinal() < 2}">
+                                                    <a class="dropdown-item" th:href="@{/doc/delete/__${document.id}__}" th:if="${document.documentState.ordinal() < 2}">
                                                         <span th:text="#{label.delete}"></span>
                                                     </a-->
                                                 </div>

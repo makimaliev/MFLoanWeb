@@ -7,6 +7,7 @@ import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.doc.model.*;
 import kg.gov.mf.loan.doc.service.*;
+import kg.gov.mf.loan.task.component.AuthenticationFacade;
 import kg.gov.mf.loan.task.model.Task;
 import kg.gov.mf.loan.task.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,8 @@ public class DocumentFlowController extends BaseController {
     private RegisterService registerService;
     private AccountService accountService;
 
+    private AuthenticationFacade authenticationFacade;
+
     @Autowired
     public DocumentFlowController(DocumentService documentService,
                                   DocumentTypeService documentTypeService,
@@ -55,7 +58,8 @@ public class DocumentFlowController extends BaseController {
                                   DocumentStatusService documentStatusService,
                                   TaskService taskService,
                                   RegisterService registerService,
-                                  AccountService accountService) {
+                                  AccountService accountService,
+                                  AuthenticationFacade authenticationFacade) {
 
         this.documentService = documentService;
         this.documentTypeService = documentTypeService;
@@ -64,6 +68,7 @@ public class DocumentFlowController extends BaseController {
         this.taskService = taskService;
         this.registerService = registerService;
         this.accountService = accountService;
+        this.authenticationFacade = authenticationFacade;
     }
     //endregion
     //region TYPE
@@ -83,7 +88,7 @@ public class DocumentFlowController extends BaseController {
                             { Transition.DONE }                                 // STARTED
                     },
                     {   // Incoming
-                            { Transition.REGISTER },                            // NEW
+                            { Transition.CREATE },                              // NEW
                             { Transition.REGISTER },                            // DRAFT
                             {},                                                 // PENDING
                             {},                                                 // REQUESTED
@@ -196,7 +201,7 @@ public class DocumentFlowController extends BaseController {
 
         Document document = documentService.getById(id);
 
-        //?????????????????????????????????????????????
+        // *************************************************************************************************************
         State curretState = document.getDocumentState();
 
         //region XTRA
@@ -230,7 +235,7 @@ public class DocumentFlowController extends BaseController {
             hasReject = ACTIONS[row][col][1].equals(Transition.REJECT) ? true : false;
         }
 
-        //?????????????????????????????????????????????
+        // *************************************************************************************************************
         document.setDocumentState(curretState);
 
         model.addAttribute("stages", getStages(currentView));
@@ -275,9 +280,11 @@ public class DocumentFlowController extends BaseController {
                     senderFile.transferTo(file);
 
                     Attachment attachment = new Attachment();
+
                     attachment.setName(senderFile.getOriginalFilename());
                     attachment.setInternalName(fsname);
                     attachment.setMimeType(senderFile.getContentType());
+
                     document.getSenderAttachment().add(attachment);
                 }
             }
@@ -377,6 +384,7 @@ public class DocumentFlowController extends BaseController {
 
         if(docType.equals("incoming"))
         {
+            stages.add(Transition.CREATE);
             stages.add(Transition.REGISTER);
             stages.add(Transition.SEND);
             stages.add(Transition.START);
@@ -633,23 +641,43 @@ public class DocumentFlowController extends BaseController {
             document.getUsers().add(getUser());
             document.setDocumentState(Transition.valueOf(action).state());
 
+            if(action.equals("CREATE"))
+            {
+                description = "№ : " + document.getSenderRegisteredNumber() + "<br>Дата : " + DATE_FORMAT.format(document.getSenderRegisteredDate());
+                document.getDispatchData().add(setDispatchData(State.DRAFT, description));
+                documentService.add(document);
+
+                addTask("Зарегистрировать", document.getId(), getUser(), document.getDocumentDueDate(), getUser(), null);
+            }
+        }
+        //endregion
+        //region Existing Document
+        else
+        {
+            Document doc = documentService.getById(document.getId());
+
+            document.setUsers(doc.getUsers());
+            document.setDocumentState(doc.getDocumentState());
+            document.setDispatchData(doc.getDispatchData());
+
+            // *********************************************************************************************************
+            // ******************************************** Complete Tasks *********************************************
+            // *********************************************************************************************************
+            if (action.equals("REGISTER") || action.equals("SEND") || action.equals("START") || action.equals("DONE"))
+            {
+                taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
+            }
+
+            // *********************************************************************************************************
+            // *********************************** Add Tasks, Users and Description ************************************
+            // *********************************************************************************************************
+
             if(action.equals("REGISTER"))
             {
-                // Register Outgoing
-                description = "<strong>Зарегистрирован</strong>"
-                        + "<br>Исходящий № : " + document.getSenderRegisteredNumber()
-                        + "<br>Дата : " + DATE_FORMAT.format(document.getSenderRegisteredDate());
-                document.getDispatchData().add(setDispatchData(State.DRAFT, description));
-
-                // Register Incoming
                 document.setReceiverRegisteredNumber(registerService.generateRegistrationNumber(document));
                 document.setReceiverRegisteredDate(new Date());
-                description = "<strong>Зарегистрирован</strong>"
-                        + "<br>Входящий № : " + document.getReceiverRegisteredNumber()
+                description = "Входящий № : " + document.getReceiverRegisteredNumber()
                         + "<br>Дата : " + DATE_FORMAT.format(document.getReceiverRegisteredDate());
-                document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), description));
-
-                documentService.add(document);
 
                 if (document.getReceiverResponsible().getResponsibleType() == 1)
                 {
@@ -667,30 +695,7 @@ public class DocumentFlowController extends BaseController {
                         addTask("Назначить исполнителя", document.getId(), getUser(), document.getDocumentDueDate(), getUser(organization), null);
                     }
                 }
-                documentService.update(document);
             }
-        }
-        //endregion
-        //region Existing Document
-        else
-        {
-            Document doc = documentService.getById(document.getId());
-
-            document.setUsers(doc.getUsers());
-            document.setDocumentState(doc.getDocumentState());
-            document.setDispatchData(doc.getDispatchData());
-
-            // *********************************************************************************************************
-            // ******************************************** Complete Tasks *********************************************
-            // *********************************************************************************************************
-            if (action.equals("SEND") || action.equals("START") || action.equals("DONE"))
-            {
-                taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
-            }
-
-            // *********************************************************************************************************
-            // *********************************** Add Tasks, Users and Description ************************************
-            // *********************************************************************************************************
 
             if (action.equals("SEND"))
             {

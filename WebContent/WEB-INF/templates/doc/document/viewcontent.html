@@ -88,8 +88,8 @@
             <span> Кому : </span>
         </label>
         <div class="col-9">
-            <label class="form-control" th:each="s : *{receiverResponsible.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
-            <label class="form-control" th:each="s : *{receiverResponsible.organizations}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+            <label class="form-control" th:each="s : *{receiverResponsible?.staff}" th:text="${s.name}"> Staff </label>
+            <label class="form-control" th:each="s : *{receiverResponsible?.organizations}" th:text="${s.name}"> Staff </label>
         </div>
     </div>
     <!-- Sender Responsible -->
