@@ -65,10 +65,20 @@
     </div>
 </th:block>
 <th:block th:fragment="incoming">
+    <!-- Sender Responsible -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> От Кого :  </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:each="s : *{senderResponsible?.organizations}" th:text="${s.name}"> Staff </label>
+            <label class="form-control" th:each="s : *{senderResponsible?.person}" th:text="${s.name}"> Staff </label>
+        </div>
+    </div>
     <!-- Sender Registration Data -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
-            <span> № Регистрации : </span>
+            <span> № Исходящего документа : </span>
         </label>
         <div class="col-sm-9">
             <label class="form-control" th:text="*{senderRegisteredNumber}"> Description </label>
@@ -76,30 +86,10 @@
     </div>
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
-            <span> Дата регистрации : </span>
+            <span> Дата : </span>
         </label>
         <div class="col-sm-9">
             <label class="form-control" th:text="*{#dates.format(senderRegisteredDate, 'dd-MM-yyyy')}"> Description </label>
-        </div>
-    </div>
-    <!-- Receiver Responsible -->
-    <div class="form-group m-form__group row">
-        <label class="col-3 col-form-label">
-            <span> Кому : </span>
-        </label>
-        <div class="col-9">
-            <label class="form-control" th:each="s : *{receiverResponsible?.staff}" th:text="${s.name}"> Staff </label>
-            <label class="form-control" th:each="s : *{receiverResponsible?.organizations}" th:text="${s.name}"> Staff </label>
-        </div>
-    </div>
-    <!-- Sender Responsible -->
-    <div class="form-group m-form__group row">
-        <label class="col-3 col-form-label">
-            <span> ОТ :  </span>
-        </label>
-        <div class="col-sm-9">
-            <label class="form-control" th:each="s : *{senderResponsible?.organizations}" th:text="${s.name}"> Staff </label>
-            <label class="form-control" th:each="s : *{senderResponsible?.person}" th:text="${s.name}"> Staff </label>
         </div>
     </div>
     <!-- TITLE -->
@@ -123,6 +113,24 @@
             </div>
         </div>
     </div>
+    <!-- Document Due Date -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Срок исполнения документа : </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{documentDueDate} != null ? *{#dates.format(documentDueDate, 'dd-MM-yyyy HH:mm')} : 'Срок не установлен'"> Title </label>
+        </div>
+    </div>
+    <!-- Receiver Responsible -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Кому на исполнение : </span>
+        </label>
+        <div class="col-9">
+            <label class="form-control" th:each="s : *{receiverResponsible?.staff}" th:text="${s.name}"> Staff </label>
+        </div>
+    </div>
     <!-- Sender and Receiver Attachment -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
@@ -139,15 +147,7 @@
             </table>
         </div>
     </div>
-    <!-- Document Due Date -->
-    <div class="form-group m-form__group row">
-        <label class="col-3 col-form-label">
-            <span> Срок : </span>
-        </label>
-        <div class="col-sm-9">
-            <label class="form-control" th:text="*{documentDueDate} != null ? *{#dates.format(documentDueDate, 'dd-MM-yyyy HH:mm')} : 'Срок не установлен'"> Title </label>
-        </div>
-    </div>
+
     <!-- Receiver Executor -->
     <div class="form-group m-form__group row" th:hidden="*{documentState.ordinal() < 11}">
         <label class="col-3 col-form-label">

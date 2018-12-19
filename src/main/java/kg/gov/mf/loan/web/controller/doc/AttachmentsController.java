@@ -71,7 +71,7 @@ public class AttachmentsController extends BaseController {
         Attachment attachment = attachmentService.getById(attachmentId);
 
         File file = new File(path + attachment.getInternalName());
-        String mimeType= URLConnection.guessContentTypeFromName(file.getName());
+        String mimeType = URLConnection.guessContentTypeFromName(file.getName());
 
         if(mimeType==null){
             mimeType = "application/octet-stream";

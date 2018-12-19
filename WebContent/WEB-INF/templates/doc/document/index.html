@@ -47,11 +47,11 @@
                             <tr>
                                 <th width="50px"></th>
                                 <th>№</th>
-                                <th th:text="#{label.document.title}">Заголовок</th>
+                                <th th:text="#{label.document.title}">Относительно</th>
                                 <th th:text="#{label.document.documentSubType}">Тип документа</th>
                                 <th th:text="#{label.document.generalStatus}">Состояние</th>
                                 <th th:text="#{label.document.sender}">Отправитель</th>
-                                <th th:text="#{label.document.receiver}">Получатель</th>
+                                <th th:text="#{label.document.receiver}" th:if="${!type.equals('incoming')}">Получатель</th>
                                 <th th:text="#{label.document.dueDate}" width="130px">Срок</th>
                                 <th width="30px"></th>
                             </tr>
@@ -59,12 +59,12 @@
                             <tbody>
                             <tr th:each="document : ${documents}">
                                 <td class="text-danger text-center"><span th:if="${document.documentDueDate}">K</span></td>
-                                <td th:text="${document.id}"></td>
+                                <td th:text="${document.receiverRegisteredNumber}"></td>
                                 <td th:text="${document.title}"></td>
                                 <td th:text="${document.documentSubType.name}"></td>
                                 <td th:text="${document.documentState.text()}"></td>
                                 <td th:text="${responsible[__${document.getSenderResponsible()?.responsibleType}__ ?: 0]}">None</td>
-                                <td th:text="${responsible[__${document.getReceiverResponsible()?.responsibleType}__ ?: 0]}">None</td>
+                                <td th:text="${responsible[__${document.getReceiverResponsible()?.responsibleType}__ ?: 0]}" th:if="${!type.equals('incoming')}">None</td>
                                 <td th:text="${document.documentDueDate} != null ? ${#dates.format(document.documentDueDate, 'dd-MM-yyyy')} : 'Не установлен'">None</td>
                                 <td class="table-actions text-right">
                                         <span>

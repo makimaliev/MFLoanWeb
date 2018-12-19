@@ -80,7 +80,7 @@ public class DocumentFlowController extends BaseController {
                             { Transition.RECONCILE, Transition.REJECT },        // PENDING
                             { Transition.REQUEST, Transition.TORECONCILE },     // RECONCILED
                             { Transition.APPROVE, Transition.REJECT },          // REQUESTED
-                            { Transition.ACCEPT, Transition.REJECT },           // APPROVED
+                            { Transition.ACCEPT },                              // APPROVED
                             {},                                                 // REJECTED
                             {},                                                 // REGISTERED
                             { Transition.SEND },                                // ACCEPTED
@@ -88,15 +88,15 @@ public class DocumentFlowController extends BaseController {
                             { Transition.DONE }                                 // STARTED
                     },
                     {   // Incoming
-                            { Transition.CREATE },                              // NEW
+                            { Transition.REGISTER },                            // NEW
                             { Transition.REGISTER },                            // DRAFT
                             {},                                                 // PENDING
                             {},                                                 // REQUESTED
                             {},                                                 // RECONCILED
                             {},                                                 // APPROVED
                             {},                                                 // REJECTED
-                            { Transition.SEND },                                // REGISTERED
-                            {},                                                 // ACCEPTED
+                            { Transition.APPROVE },                             // REGISTERED
+                            { Transition.SEND },                                // ACCEPTED
                             { Transition.START, Transition.SEND },              // SENT
                             { Transition.DONE }                                 // STARTED
                     },
@@ -469,13 +469,10 @@ public class DocumentFlowController extends BaseController {
             // *********************************************************************************************************
             // ******************************************** Complete Tasks *********************************************
             // *********************************************************************************************************
-            if (action.equals("RECONCILE") || action.equals("APPROVE") || action.equals("ACCEPT") || action.equals("SEND") || action.equals("START") || action.equals("DONE") || action.equals("REJECT"))
-            {
-                taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
-            }
-
             if (action.equals("TORECONCILE") || action.equals("REQUEST"))
             {
+                taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
+                /*
                 Map<String, String> vars = new HashMap<>();
                 vars.put("objectId", String.valueOf(document.getId()));
                 vars.put("status", "OPEN");
@@ -485,6 +482,17 @@ public class DocumentFlowController extends BaseController {
                 {
                     taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
                 }
+                */
+            }
+
+            if (action.equals("RECONCILE") || action.equals("APPROVE") || action.equals("ACCEPT") || action.equals("SEND") || action.equals("START") || action.equals("DONE"))
+            {
+                taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
+            }
+
+            if(action.equals("REJECT"))
+            {
+                taskService.completeTask(document.getId(), getUser(), State.REJECTED.text() + "<br>" + document.getComment());
             }
 
             // *********************************************************************************************************
@@ -571,6 +579,19 @@ public class DocumentFlowController extends BaseController {
                 //endregion
             }
 
+            if(action.equals("REJECT"))
+            {
+                if(document.getDocumentState() == State.PENDING)
+                {
+                    addTask("Доработать", document.getId(), getUser(), document.getDocumentDueDate(), getUser(document.getOwner()), State.DRAFT);
+                }
+
+                if(document.getDocumentState() == State.REQUESTED)
+                {
+                    addTask("Доработать", document.getId(), getUser(), document.getDocumentDueDate(), getUser(document.getOwner()), State.DRAFT);
+                }
+            }
+
             // *********************************************************************************************************
             // ************************************* Update Document State *********************************************
             // *********************************************************************************************************
@@ -590,31 +611,6 @@ public class DocumentFlowController extends BaseController {
                 if ((action.equals("START") || action.equals("DONE")) && taskCount == 0)
                 {
                     document.setDocumentState(Transition.valueOf(action).state());
-                }
-
-                if(action.equals("REJECT"))
-                {
-                    if(document.getDocumentState() == State.PENDING && taskCount == 0)
-                    {
-                        addTask("Согласование завершено", document.getId(), null, document.getDocumentDueDate(), getUser(document.getOwner()), State.DRAFT);
-                    }
-
-                    if(document.getDocumentState() == State.REQUESTED)
-                    {
-                        addTask("Доработать", document.getId(), null, document.getDocumentDueDate(), getUser(document.getOwner()), State.DRAFT);
-                    }
-
-                    if (document.getDocumentState() == State.APPROVED)
-                    {
-                        //region [Description]
-                        document.setReceiverRegisteredNumber(registerService.generateRegistrationNumber());
-                        document.setReceiverRegisteredDate(new Date());
-                        description = "<strong>Зарегистрирован</strong>"
-                                + "<br>Входящий № : " + document.getReceiverRegisteredNumber()
-                                + "<br>Дата : " + DATE_FORMAT.format(document.getReceiverRegisteredDate());
-                        //endregion
-                        document.setDocumentState(State.DONE);
-                    }
                 }
             }
             else
@@ -641,14 +637,18 @@ public class DocumentFlowController extends BaseController {
             document.getUsers().add(getUser());
             document.setDocumentState(Transition.valueOf(action).state());
 
-            if(action.equals("CREATE"))
-            {
-                description = "№ : " + document.getSenderRegisteredNumber() + "<br>Дата : " + DATE_FORMAT.format(document.getSenderRegisteredDate());
-                document.getDispatchData().add(setDispatchData(State.DRAFT, description));
-                documentService.add(document);
+            description = "№ Исходящего документа : " + document.getSenderRegisteredNumber()
+                    + "<br>Дата : " + DATE_FORMAT.format(document.getSenderRegisteredDate());
+            document.getDispatchData().add(setDispatchData(State.DRAFT, description));
 
-                addTask("Зарегистрировать", document.getId(), getUser(), document.getDocumentDueDate(), getUser(), null);
-            }
+            document.setReceiverRegisteredNumber(registerService.generateRegistrationNumber(document));
+            document.setReceiverRegisteredDate(new Date());
+            description = "№ Входящего документа : " + document.getReceiverRegisteredNumber()
+                    + "<br>Дата : " + DATE_FORMAT.format(document.getReceiverRegisteredDate());
+            document.getDispatchData().add(setDispatchData(State.REGISTERED, description));
+            documentService.add(document);
+
+            addTask("Отправить на исполнение", document.getId(), null, document.getDocumentDueDate(), getUser(), null);
         }
         //endregion
         //region Existing Document
@@ -663,7 +663,12 @@ public class DocumentFlowController extends BaseController {
             // *********************************************************************************************************
             // ******************************************** Complete Tasks *********************************************
             // *********************************************************************************************************
-            if (action.equals("REGISTER") || action.equals("SEND") || action.equals("START") || action.equals("DONE"))
+            if (action.equals("APPROVE"))
+            {
+                taskService.completeTask(document.getId(), getUser(), "Выполнен");
+            }
+
+            if (action.equals("SEND") || action.equals("START") || action.equals("DONE"))
             {
                 taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
             }
@@ -671,32 +676,6 @@ public class DocumentFlowController extends BaseController {
             // *********************************************************************************************************
             // *********************************** Add Tasks, Users and Description ************************************
             // *********************************************************************************************************
-
-            if(action.equals("REGISTER"))
-            {
-                document.setReceiverRegisteredNumber(registerService.generateRegistrationNumber(document));
-                document.setReceiverRegisteredDate(new Date());
-                description = "Входящий № : " + document.getReceiverRegisteredNumber()
-                        + "<br>Дата : " + DATE_FORMAT.format(document.getReceiverRegisteredDate());
-
-                if (document.getReceiverResponsible().getResponsibleType() == 1)
-                {
-                    for (Staff staff : document.getReceiverResponsible().getStaff())
-                    {
-                        document.getUsers().add(getUser(staff));
-                        addTask("Назначить исполнителя", document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
-                    }
-                }
-                else
-                {
-                    for (Organization organization : document.getReceiverResponsible().getOrganizations())
-                    {
-                        document.getUsers().add(getUser(organization));
-                        addTask("Назначить исполнителя", document.getId(), getUser(), document.getDocumentDueDate(), getUser(organization), null);
-                    }
-                }
-            }
-
             if (action.equals("SEND"))
             {
                 //region [User, Task]
@@ -731,6 +710,10 @@ public class DocumentFlowController extends BaseController {
                     document.setDocumentState(Transition.valueOf(action).state());
                 }
             }
+            else if(action.equals("APPROVE"))
+            {
+                document.setDocumentState(State.ACCEPTED);
+            }
             else
             {
                 document.setDocumentState(Transition.valueOf(action).state());
@@ -739,7 +722,20 @@ public class DocumentFlowController extends BaseController {
             // *********************************************************************************************************
             // *************************************** Add Dispatch Data ***********************************************
             // *********************************************************************************************************
-            document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), description));
+            if (action.equals("APPROVE"))
+            {
+                //region [User, Task]
+                for (Staff staff : document.getReceiverResponsible().getStaff())
+                {
+                    document.getUsers().add(getUser(staff));
+                    addTask("На исполнение", document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
+                }
+                //endregion
+            }
+            else
+            {
+                document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), description));
+            }
 
             documentService.update(document);
         }
