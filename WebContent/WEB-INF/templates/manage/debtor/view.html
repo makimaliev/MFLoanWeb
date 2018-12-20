@@ -466,6 +466,53 @@
     {
         window.location.href = debtorURL;
     }
+    $("#bnt_init_manualCalculator").on('click',function () {
+        var selectedLoans = {};
+        // on checkbox checked event
+        $('#loansTable')
+            .on('m-datatable--on-check', function (e, args) {
+                var str = args.toString().split(',')
+                for (var i = 0; i < str.length; i++) {
+                    selectedLoans[str[i]] = str[i];
+                }
+                var count = datatable.setSelectedRecords().getSelectedRecords().length;
+                $('#m_datatable_selected_number').html(count);
+                if (count > 0) {
+                    $('#m_datatable_group_action_form').collapse('show');
+                }
+            })
+            .on('m-datatable--on-uncheck m-datatable--on-layout-updated', function (e, args) {
+                var str = args.toString().split(',')
+                for (var i = 0; i < str.length; i++) {
+                    delete selectedLoans[str[i]];
+                }
+                var count = datatable.setSelectedRecords().getSelectedRecords().length;
+                // $('#m_datatable_selected_number').html(count);
+                // if (count === 0) {
+                //     $('#m_datatable_group_action_form').collapse('hide');
+                //     $('#phaseDetailsDiv').collapse('hide');
+                //     selectedItems = [];
+                // }
+            });
+        if (!$("#phaseInitDate").val())
+        {
+        }
+        else
+        {
+            var initDate = $("#phaseInitDate").val();
+            $.ajax({
+                type : 'POST',
+                url : "/manage/debtor/"+debtorId+"/initializeManualCalculator",
+                data: {selectedLoans:selectedLoans, initDater: initDate},
+                success:function () {
+                    location.reload();
+                }
+            });
+        }
+
+
+
+    });
 </script>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -518,9 +565,6 @@
 
     });
 </script>
-
-
-
 <script th:inline="javascript">
 
         $("#organizationFormModal").on("show.bs.modal", function (e) {

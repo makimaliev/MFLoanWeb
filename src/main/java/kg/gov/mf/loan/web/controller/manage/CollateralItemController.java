@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
+import kg.gov.mf.loan.manage.model.collateral.*;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.repository.collateral.CollateralItemArrestFreeRepository;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
@@ -25,15 +26,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
-import kg.gov.mf.loan.manage.model.collateral.CollateralItem;
-import kg.gov.mf.loan.manage.model.collateral.CollateralItemArrestFree;
-import kg.gov.mf.loan.manage.model.collateral.CollateralItemDetails;
-import kg.gov.mf.loan.manage.model.collateral.CollateralItemInspectionResult;
-import kg.gov.mf.loan.manage.model.collateral.ConditionType;
-import kg.gov.mf.loan.manage.model.collateral.InspectionResultType;
-import kg.gov.mf.loan.manage.model.collateral.ItemType;
-import kg.gov.mf.loan.manage.model.collateral.QuantityType;
 import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemArrestFreeService;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemDetailsService;
@@ -149,7 +141,11 @@ public class CollateralItemController {
 		
 		if(itemId == 0)
 		{
-			model.addAttribute("item", new CollateralItem());
+			CollateralItem collateralItem=new CollateralItem();
+			collateralItem.setQuantityType(qTypeService.getById(Long.valueOf(1)));
+			collateralItem.setQuantity(1.0);
+			collateralItem.setCollateralValue(0.0);
+			model.addAttribute("item", collateralItem);
 			model.addAttribute("itemDetails", new CollateralItemDetails());
 		}
 			
@@ -286,7 +282,10 @@ public class CollateralItemController {
 
 		if(insId == 0)
 		{
-			model.addAttribute("ins", new CollateralItemInspectionResult());
+			CollateralItemInspectionResult collateralItemInspectionResult=new CollateralItemInspectionResult();
+			collateralItemInspectionResult.setOnDate(new Date());
+			collateralItemInspectionResult.setInspectionResultType(insTypeService.getById(Long.valueOf(1)));
+			model.addAttribute("ins", collateralItemInspectionResult);
 		}
 
 		if(insId > 0)

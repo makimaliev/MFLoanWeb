@@ -120,6 +120,9 @@ public class LoanController {
     @Autowired
     CreditTermService creditTermService;
 
+    @Autowired
+    OrderTermCurrencyService orderTermCurrencyService;
+
     static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
 	
 	@InitBinder
@@ -219,13 +222,34 @@ public class LoanController {
 
 		if(loanId == 0)
 		{
-		    if(classId == 1)
-			    model.addAttribute("loan", new NormalLoan());
-		    else if(classId == 2)
-                model.addAttribute("loan", new TrancheeLoan());
-		    else
-                model.addAttribute("loan", new RestructuredLoan());
-			model.addAttribute("ownerText", "");
+		    if(classId == 1) {
+                NormalLoan normalLoan = new NormalLoan();
+                normalLoan.setAmount(0.0);
+                normalLoan.setRegDate(new Date());
+                normalLoan.setLoanState(loanStateService.getById(Long.valueOf(1)));
+                normalLoan.setLoanType(loanTypeService.getById(Long.valueOf(1)));
+                normalLoan.setCurrency(orderTermCurrencyService.getById(Long.valueOf(1)));
+                model.addAttribute("loan", normalLoan);
+            }
+		    else if(classId == 2){
+                TrancheeLoan trancheeLoan= new TrancheeLoan();
+                trancheeLoan.setAmount(0.0);
+                trancheeLoan.setRegDate(new Date());
+                trancheeLoan.setLoanState(loanStateService.getById(Long.valueOf(1)));
+                trancheeLoan.setLoanType(loanTypeService.getById(Long.valueOf(1)));
+                trancheeLoan.setCurrency(orderTermCurrencyService.getById(Long.valueOf(1)));
+                model.addAttribute("loan", trancheeLoan);
+            }
+		    else{
+                RestructuredLoan restructuredLoan=new RestructuredLoan();
+                restructuredLoan.setAmount(0.0);
+                restructuredLoan.setRegDate(new Date());
+                restructuredLoan.setLoanState(loanStateService.getById(Long.valueOf(1)));
+                restructuredLoan.setLoanType(loanTypeService.getById(Long.valueOf(1)));
+                restructuredLoan.setCurrency(orderTermCurrencyService.getById(Long.valueOf(1)));
+                model.addAttribute("loan", restructuredLoan);
+            }
+            model.addAttribute("ownerText", "");
 			model.addAttribute("orderText", "");
 			model.addAttribute("pLoanText", "");
 		}

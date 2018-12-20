@@ -137,10 +137,35 @@ public class CollectionPhaseController {
 			dTemp.setLoanStateId(loan.getStateId());
 			this.jobItemService.runManualCalculateProcedure(loan.getId(), initDate);
 			LoanSummary summary = loanSummaryService.getByOnDateAndLoanId(initDate, loan.getId());
-			dTemp.setStartPrincipal(summary.getOverduePrincipal());
-			dTemp.setStartInterest(summary.getOverdueInterest());
-			dTemp.setStartPenalty(summary.getOverduePenalty());
-			dTemp.setStartTotalAmount(summary.getOverduePrincipal() + summary.getOverdueInterest()+ summary.getOverduePenalty());
+			if(summary.getOverduePrincipal()==null){
+				dTemp.setStartPrincipal(0.0);
+			}
+			else{
+				dTemp.setStartPrincipal(summary.getOverduePrincipal());
+			}
+			if(summary.getOverdueInterest()==null){
+				dTemp.setStartInterest(0.0);
+			}
+			else{
+				dTemp.setStartInterest(summary.getOverdueInterest());
+			}
+			if(summary.getOverduePenalty()==null){
+				dTemp.setStartPenalty(0.0);
+			}
+			else{
+				dTemp.setStartPenalty(summary.getOverduePenalty());
+			}
+			Double totalAmount=0.0;
+			if(summary.getOverduePrincipal()!=null){
+				totalAmount=totalAmount+summary.getOverduePrincipal();
+			}
+			if (summary.getOverduePenalty()!=null){
+				totalAmount=totalAmount+summary.getOverduePenalty();
+			}
+				if (summary.getOverdueInterest()!=null){
+					totalAmount=totalAmount+summary.getOverdueInterest();
+				}
+			dTemp.setStartTotalAmount(totalAmount);
 			result.add(dTemp);}
 			count++;
 		}

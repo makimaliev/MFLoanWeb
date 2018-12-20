@@ -14,6 +14,8 @@ import kg.gov.mf.loan.admin.org.model.District;
 import kg.gov.mf.loan.output.report.model.*;
 import kg.gov.mf.loan.output.report.service.*;
 
+import java.util.Date;
+
 @Controller
 public class GenerationParameterController {
 	
@@ -67,7 +69,9 @@ public class GenerationParameterController {
 	@RequestMapping(value = "/generationParameter/add", method = RequestMethod.GET)
 	public String getGenerationParameterAddForm(Model model) {
 
-		model.addAttribute("generationParameter", new GenerationParameter());
+    	GenerationParameter generationParameter=new GenerationParameter();
+    	generationParameter.setDate(new Date());
+		model.addAttribute("generationParameter",generationParameter);
 		model.addAttribute("generationParameterTypeList", this.generationParameterTypeService.findAll());
 
 		return "output/report/generationParameterForm";

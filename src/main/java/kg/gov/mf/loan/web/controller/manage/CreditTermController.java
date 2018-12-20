@@ -55,6 +55,9 @@ public class CreditTermController {
 
 	@Autowired
 	CreditTermRepository termRepository;
+
+	@Autowired
+	OrderTermRatePeriodService orderTermRatePeriodService;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -72,7 +75,17 @@ public class CreditTermController {
 		
 		if(termId == 0)
 		{
-			model.addAttribute("term", new CreditTerm());
+			CreditTerm term=new CreditTerm();
+			term.setStartDate(new Date());
+			term.setInterestRateValue(Double.valueOf(20));
+			term.setPenaltyOnPrincipleOverdueRateValue(Double.valueOf(20));
+			term.setPenaltyOnInterestOverdueRateValue(Double.valueOf(20));
+			term.setPenaltyLimitPercent(Double.valueOf(20));
+			term.setRatePeriod(orderTermRatePeriodService.getById(Long.valueOf(1)));
+			term.setTransactionOrder(txOrderService.getById(Long.valueOf(1)));
+			term.setDaysInMonthMethod(daysMethodService.getById(Long.valueOf(1)));
+			term.setDaysInYearMethod(daysMethodService.getById(Long.valueOf(1)));
+			model.addAttribute("term", term);
 		}
 			
 		if(termId > 0)

@@ -57,7 +57,15 @@ public class PaymentScheduleController {
 		
 		if(psId == 0)
 		{
-			model.addAttribute("paymentSchedule", new PaymentSchedule());
+			PaymentSchedule paymentSchedule= new PaymentSchedule();
+			paymentSchedule.setExpectedDate(new Date());
+			paymentSchedule.setCollectedInterestPayment(0.0);
+			paymentSchedule.setCollectedPenaltyPayment(0.0);
+			paymentSchedule.setDisbursement(0.0);
+			paymentSchedule.setInterestPayment(0.0);
+			paymentSchedule.setPrincipalPayment(0.0);
+			paymentSchedule.setInstallmentState(installmentStateService.getById(Long.valueOf(1)));
+			model.addAttribute("paymentSchedule", paymentSchedule);
 		}
 			
 		if(psId > 0)

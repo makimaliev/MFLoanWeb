@@ -159,7 +159,7 @@
 										<span th:text="#{label.loan.supervisorPlan.description}"></span> <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<textarea class="form-control m-input" id="description" rows="3" name="description" th:value="${sp.description}"></textarea>
+										<textarea class="form-control m-input" id="description" rows="3" name="description" th:inline="text">[[${sp.description}]]</textarea>
 									</div>
 								</div>
 

@@ -98,6 +98,10 @@ public class CollateralAgreementController {
 		if(agreementId == 0)
 		{
 			CollateralAgreement agreement = new CollateralAgreement();
+			agreement.setAgreementDate(new Date());
+			agreement.setArrestRegDate(new Date());
+			agreement.setCollateralOfficeRegDate(new Date());
+			agreement.setNotaryOfficeRegDate(new Date());
 			model.addAttribute("agreement", agreement);
 			model.addAttribute("ownerText", "");
 		}

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.Date;
+
 @Controller
 public class ContentParameterController {
 	
@@ -61,7 +63,9 @@ public class ContentParameterController {
 	@RequestMapping(value = "/contentParameter/add", method = RequestMethod.GET)
 	public String getContentParameterAddForm(Model model) {
 
-		model.addAttribute("contentParameter", new ContentParameter());
+    	ContentParameter contentParameter=new ContentParameter();
+    	contentParameter.setConstantDate(new Date());
+		model.addAttribute("contentParameter", contentParameter);
 
 		return "output/report/contentParameterForm";
 	}

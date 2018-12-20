@@ -88,7 +88,7 @@
 					<div class="m-portlet__body">
 						<ul class="nav nav-tabs" role="tablist">
 							<li class="nav-item">
-								<a class="nav-link m--font-primary active" data-toggle="tab" href="#main" th:text="#{label.loan.credit}"></a>
+								<a class="nav-link m--font-primary active" data-toggle="tab" href="#main" th:text="#{label.loan.credit}" id="main1"></a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanSummary" th:text="#{label.loan.loanSummary}" id="loanSummaryFunction"></a>
@@ -962,7 +962,10 @@
             $.ajax({
                 type : 'POST',
                 url : "/manage/debtor/"+debtorId+"/initializeManualCalculator",
-                data: {selectedLoans:loanId, initDater: initDate}
+                data: {selectedLoans:loanId, initDater: initDate},
+				success:function () {
+                    location.reload();
+                }
             });
         }
 

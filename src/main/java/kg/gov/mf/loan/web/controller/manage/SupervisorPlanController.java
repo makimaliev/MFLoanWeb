@@ -53,7 +53,14 @@ public class SupervisorPlanController {
 		
 		if(spId == 0)
 		{
-			model.addAttribute("sp", new SupervisorPlan());
+			SupervisorPlan sp=new SupervisorPlan();
+			sp.setDate(new Date());
+			sp.setAmount(0.0);
+			sp.setInterest(0.0);
+			sp.setPenalty(0.0);
+			sp.setPrincipal(0.0);
+			sp.setDescription("-");
+			model.addAttribute("sp", sp);
 		}
 			
 		if(spId > 0)

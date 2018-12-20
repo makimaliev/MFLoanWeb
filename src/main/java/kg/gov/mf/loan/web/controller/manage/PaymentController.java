@@ -58,7 +58,15 @@ public class PaymentController {
 		
 		if(paymentId == 0)
 		{
-			model.addAttribute("payment", new Payment());
+			Payment payment=new Payment();
+			payment.setPaymentDate(new Date());
+			payment.setInterest(0.0);
+			payment.setTotalAmount(0.0);
+			payment.setPrincipal(0.0);
+			payment.setPenalty(0.0);
+			payment.setNumber("б/н");
+			payment.setPaymentType(pTypeService.getById(Long.valueOf(1)));
+			model.addAttribute("payment", payment);
 		}
 			
 		if(paymentId > 0)
