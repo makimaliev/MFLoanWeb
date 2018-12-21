@@ -162,7 +162,7 @@
 											<span class="m--font-danger">*</span>
 										</label>
 										<div class="col-lg-4 col-md-9 col-sm-12">
-											<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{phaseType.id}">
+											<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{phaseType}">
 												<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
 											</select>
 										</div>
@@ -181,6 +181,8 @@
 											</select>
 										</div>
 									</div>
+
+									<div id="phaseDetailsTable" class="m_datatable"></div>
 								</div>
 							</div>
 							<div class="m-portlet__foot m-portlet__foot--fit">
@@ -220,6 +222,7 @@
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/select2.js}" type="text/javascript"></script>
+<script th:src="@{/js/data-debtor-loan-phasedetails.js}" th:inline="javascript" type="text/javascript"></script>
 <!--end::Page Resources -->
 <script>
     $('.m_selectpicker').selectpicker();
@@ -231,6 +234,94 @@
         minView: 2,
         forceParse: 0,
         pickerPosition: 'bottom-left'
+    });
+</script>
+<script th:inline="javascript">
+    var selectedLoans = /*[[${loanIds}]]*/ [];
+    var debtorId = /*[[${debtorId}]]*/ [];
+    var procId = /*[[${procId}]]*/ [];
+    $.ajax({
+        type : 'POST',
+        url : "/collectionPhase/getPhaseDetails",
+        data: {selectedLoans:selectedLoans},
+        success:function (data) {
+            phaseDetailsTableInit(data);
+            var data = JSON.parse(data);
+            var saver=function(){
+                var phaseDetailsModels = [];
+                for (var i = 0; i < data.length; i++) {
+					var obj = data[i];
+					$.map(obj, function(val, key) {
+						if(key=='loanId')
+						{
+							var PhaseDetailsModel = {};
+							var startPrincInput ="#startPrinc" + val;
+							var startIntInput ="#startInt" + val;
+							var startPenInput ="#startPen" + val;
+							var totalInput = "#total" + val;
+
+							PhaseDetailsModel['loanId'] = val;
+							PhaseDetailsModel['startPrincipal'] = parseFloat($(startPrincInput).val());
+							PhaseDetailsModel['startInterest'] = parseFloat($(startIntInput).val());
+							PhaseDetailsModel['startPenalty'] = parseFloat($(startPenInput).val());
+							PhaseDetailsModel['startTotalAmount'] = parseFloat($(totalInput).val());
+							// PhaseDetailsModel['initDate'] = d;
+							phaseDetailsModels.push(PhaseDetailsModel);
+						}
+					});
+				}
+                console.log(phaseDetailsModels);
+                phaseDetailsModels = JSON.stringify({
+                    'phaseDetailsModels' : phaseDetailsModels
+                });
+                $.ajax({
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    type : 'POST',
+                    url : "/collectionPhase/savePhaseDetails",
+                    data: phaseDetailsModels,
+                    dataType: 'json'
+                });
+            }
+            for (var i = 0; i < data.length; i++) {
+                var obj = data[i];
+                $.map(obj, function(val, key) {
+
+                    if(key=="loanId"){
+                        // alert(key+" : "+val);
+                        var closePrincInput ="#startPrinc" + val;
+                        var closeIntInput ="#startInt" + val;
+                        var closePenInput ="#startPen" + val;
+                        var totalInput = "#total" + val;
+
+                        $(closePrincInput).on('input', function () {
+                            updateTotal();
+                        });
+
+                        $(closeIntInput).on('input', function () {
+                            updateTotal();
+                        });
+
+                        $(closePenInput).on('input', function () {
+                            updateTotal();
+                        });
+
+                        function updateTotal() {
+                            var sum = 0.0;
+                            sum = parseFloat($(closePrincInput).val()) + parseFloat($(closeIntInput).val()) + parseFloat($(closePenInput).val());
+                            $(totalInput).val(sum);
+                            // alert("here1")
+                            saver();
+                        }
+                    }
+                });
+            }
+            // var divT = $('#phaseDetailsDiv');
+            // divT.collapse('show');
+            // mApp.scrollTo(divT, -200);
+        }
     });
 </script>
 </body>

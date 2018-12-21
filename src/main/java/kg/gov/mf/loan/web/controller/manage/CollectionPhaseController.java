@@ -89,6 +89,8 @@ public class CollectionPhaseController {
 		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
 	    binder.registerCustomEditor(Date.class, editor);
 	}
+
+	private List<PhaseDetails> phaseDetailsList=new ArrayList<>();
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/view"})
     public String viewCollateralItem(ModelMap model, 
@@ -111,6 +113,33 @@ public class CollectionPhaseController {
 		return "/manage/debtor/collectionprocedure/collectionphase/view";
 
 	}
+
+    @RequestMapping(value="/collectionPhase/getPhaseDetails", method=RequestMethod.POST)
+    @ResponseBody
+    public String getPhaseDetailsTable(@RequestParam Map<String, String> selectedLoans){
+
+        List<PhaseDetailsModel> result = new ArrayList<>();
+        for (String value:selectedLoans.values()
+        ) {
+            LoanModel1 loan=getLoanIdAndRegNumber(Long.parseLong(value));
+            if(loan!=null){
+                PhaseDetailsModel dTemp = new PhaseDetailsModel();
+//			Loan loan = loanRepository.getOne(Long.parseLong(value));
+                dTemp.setLoanId(loan.getId());
+                dTemp.setLoanRegNumber(loan.getRegNumber());
+                dTemp.setLoanStateId(loan.getStateId());
+                dTemp.setStartPrincipal(0.0);
+                dTemp.setStartInterest(0.0);
+                dTemp.setStartPenalty(0.0);
+                dTemp.setStartTotalAmount(0.0);
+                result.add(dTemp);
+            }
+        }
+
+        Gson gson2 = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        String jsonResult = gson2.toJson(result);
+        return jsonResult;
+    }
 
 	@RequestMapping(value="/manage/debtor/{debtorId}/initializephase", method=RequestMethod.POST)
 	@ResponseBody
@@ -195,6 +224,24 @@ public class CollectionPhaseController {
 		}
 	}
 
+    @RequestMapping(value="/collectionPhase/savePhaseDetails", method=RequestMethod.POST)
+    @ResponseBody
+    public void savePhaseDetails( @RequestBody PhaseDetailsModelList phaseDetailsModels){
+
+	    this.phaseDetailsList.clear();
+        List<PhaseDetailsModel> list = phaseDetailsModels.getPhaseDetailsModels();
+        for (PhaseDetailsModel model: list
+        ) {
+            PhaseDetails details = new PhaseDetails();
+            details.setLoan_id(model.getLoanId());
+            details.setStartPrincipal(model.getStartPrincipal());
+            details.setStartInterest(model.getStartInterest());
+            details.setStartPenalty(model.getStartPenalty());
+            details.setStartTotalAmount(model.getStartTotalAmount());
+            this.phaseDetailsList.add(details);
+        }
+
+    }
 
 	@RequestMapping(value="/manage/debtor/{debtorId}/initializephasesave", method=RequestMethod.POST)
 	@ResponseBody
@@ -312,7 +359,14 @@ public class CollectionPhaseController {
 			CollectionPhase collectionPhase=new CollectionPhase();
 			collectionPhase.setLoans(phaseService.getById(procedure.getLastPhase()).getLoans());
 			model.addAttribute("phase", collectionPhase);
-			model.addAttribute("tLoans", phaseService.getById(procedure.getLastPhase()).getLoans());
+			List<Long> loanIds=new ArrayList<>();
+			List<Loan> loans=new ArrayList<>();
+            for (Loan l:phaseService.getById(procedure.getLastPhase()).getLoans()) {
+                loanIds.add(l.getId());
+                loans.add(loanService.getById(l.getId()));
+            }
+			model.addAttribute("tLoans", loans);
+			model.addAttribute("loanIds", loanIds);
 		}
 
 		if(phaseId > 0)
@@ -340,30 +394,39 @@ public class CollectionPhaseController {
 		if(phase.getId() == 0){
 			phase.setPhaseStatus(phaseStatusService.getById(Long.valueOf(1)));
 			phaseService.add(phase);
-			Set<Loan> loans = phase.getLoans();
-			for (Loan loan: loans)
-			{
-				PhaseDetails details = new PhaseDetails();
-				details.setLoan_id(loan.getId());
-				PhaseDetails latestDetails = phaseDetailsService.getById(getLatestDetailsByDate(loan.getId()));
-				if(latestDetails != null)
-				{
-					details.setStartPrincipal(latestDetails.getStartPrincipal());
-					details.setStartInterest(latestDetails.getStartInterest());
-					details.setStartPenalty(latestDetails.getStartPenalty());
-					details.setStartTotalAmount(latestDetails.getStartTotalAmount());
-				}
-				else
-				{
-					details.setStartPrincipal(0.0);
-					details.setStartInterest(0.0);
-					details.setStartPenalty(0.0);
-					details.setStartTotalAmount(0.0);
-				}
+			if(phaseDetailsList.isEmpty()){
+                Set<Loan> loans = phase.getLoans();
+                for (Loan loan: loans)
+                {
+                    PhaseDetails details = new PhaseDetails();
+                    details.setLoan_id(loan.getId());
+                    PhaseDetails latestDetails = phaseDetailsService.getById(getLatestDetailsByDate(loan.getId()));
+                    if(latestDetails != null)
+                    {
+                        details.setStartPrincipal(latestDetails.getStartPrincipal());
+                        details.setStartInterest(latestDetails.getStartInterest());
+                        details.setStartPenalty(latestDetails.getStartPenalty());
+                        details.setStartTotalAmount(latestDetails.getStartTotalAmount());
+                    }
+                    else
+                    {
+                        details.setStartPrincipal(0.0);
+                        details.setStartInterest(0.0);
+                        details.setStartPenalty(0.0);
+                        details.setStartTotalAmount(0.0);
+                    }
 
-				details.setCollectionPhase(phase);
-				phaseDetailsService.add(details);
+                    details.setCollectionPhase(phase);
+                    phaseDetailsService.add(details);
+                }
 			}
+			else{
+			    for(PhaseDetails phaseDetail:phaseDetailsList){
+			        phaseDetail.setCollectionPhase(phase);
+			        phaseDetailsService.add(phaseDetail);
+                }
+            }
+            phaseDetailsList.clear();
 		}
 
 		else
