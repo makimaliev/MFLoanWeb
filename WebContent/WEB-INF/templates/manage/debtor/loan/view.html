@@ -972,75 +972,75 @@
 
 
     });
-    $('#initPhaseSaveBtn')
-        .on('click', function () {
-            // var options = { year: 'numeric',month: 'long', day: 'numeric' };
-            var initDate = $("#phaseInitDate").val();
-
-            $.ajax({
-                type:'post',
-                data:{initdate:initDate},
-                url:"/initializephasesave/initdate"
-            });
-            var phaseDetailsModels = [];
-
-			var PhaseDetailsModel = {};
-			var startPrincInput ="#startPrinc";
-			var startIntInput ="#startInt";
-			var startPenInput ="#startPen";
-			var totalInput = "#total";
-
-			PhaseDetailsModel['loanId'] = loanId;
-			PhaseDetailsModel['startPrincipal'] = parseFloat($(startPrincInput).val());
-			PhaseDetailsModel['startInterest'] = parseFloat($(startIntInput).val());
-			PhaseDetailsModel['startPenalty'] = parseFloat($(startPenInput).val());
-			PhaseDetailsModel['startTotalAmount'] = parseFloat($(totalInput).val());
-			// PhaseDetailsModel['initDate'] = d;
-			phaseDetailsModels.push(PhaseDetailsModel);
-
-            console.log(phaseDetailsModels);
-            phaseDetailsModels = JSON.stringify({
-                'phaseDetailsModels' : phaseDetailsModels
-            });
-            $.ajax({
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                type : 'POST',
-                url : "/manage/debtor/"+debtorId+"/initializephasesave",
-                data: phaseDetailsModels,
-                dataType: 'json',
-                success:function (data) {
-                    if(data == 'OK')
-                        window.location.replace("/manage/debtor/"+debtorId+"/view");
-                }
-            });
-        });
-
-		var startPrincInput ="#startPrinc";
-		var startIntInput ="#startInt";
-		var startPenInput ="#startPen";
-		var totalInput = "#total";
-
-		$(startPrincInput).on('input', function () {
-			updateTotal();
-		});
-
-		$(startIntInput).on('input', function () {
-			updateTotal();
-		});
-
-		$(startPenInput).on('input', function () {
-			updateTotal();
-		});
-
-		function updateTotal() {
-			var sum = 0.0;
-			sum = ((parseFloat($(startPrincInput).val()) + parseFloat($(startIntInput).val()) + parseFloat($(startPenInput).val())));
-			$(totalInput).val(sum.toFixed(2));
-
-    }
+    // $('#initPhaseSaveBtn')
+    //     .on('click', function () {
+    //         // var options = { year: 'numeric',month: 'long', day: 'numeric' };
+    //         var initDate = $("#phaseInitDate").val();
+    //
+    //         $.ajax({
+    //             type:'post',
+    //             data:{initdate:initDate},
+    //             url:"/initializephasesave/initdate"
+    //         });
+    //         var phaseDetailsModels = [];
+    //
+		// 	var PhaseDetailsModel = {};
+		// 	var startPrincInput ="#startPrinc";
+		// 	var startIntInput ="#startInt";
+		// 	var startPenInput ="#startPen";
+		// 	var totalInput = "#total";
+    //
+		// 	PhaseDetailsModel['loanId'] = loanId;
+		// 	PhaseDetailsModel['startPrincipal'] = parseFloat($(startPrincInput).val());
+		// 	PhaseDetailsModel['startInterest'] = parseFloat($(startIntInput).val());
+		// 	PhaseDetailsModel['startPenalty'] = parseFloat($(startPenInput).val());
+		// 	PhaseDetailsModel['startTotalAmount'] = parseFloat($(totalInput).val());
+		// 	// PhaseDetailsModel['initDate'] = d;
+		// 	phaseDetailsModels.push(PhaseDetailsModel);
+    //
+    //         console.log(phaseDetailsModels);
+    //         phaseDetailsModels = JSON.stringify({
+    //             'phaseDetailsModels' : phaseDetailsModels
+    //         });
+    //         $.ajax({
+    //             headers: {
+    //                 'Accept': 'application/json',
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             type : 'POST',
+    //             url : "/manage/debtor/"+debtorId+"/initializephasesave",
+    //             data: phaseDetailsModels,
+    //             dataType: 'json',
+    //             success:function (data) {
+    //                 if(data == 'OK')
+    //                     window.location.replace("/manage/debtor/"+debtorId+"/view");
+    //             }
+    //         });
+    //     });
+    //
+		// var startPrincInput ="#startPrinc";
+		// var startIntInput ="#startInt";
+		// var startPenInput ="#startPen";
+		// var totalInput = "#total";
+    //
+		// $(startPrincInput).on('input', function () {
+		// 	updateTotal();
+		// });
+    //
+		// $(startIntInput).on('input', function () {
+		// 	updateTotal();
+		// });
+    //
+		// $(startPenInput).on('input', function () {
+		// 	updateTotal();
+		// });
+    //
+		// function updateTotal() {
+		// 	var sum = 0.0;
+		// 	sum = ((parseFloat($(startPrincInput).val()) + parseFloat($(startIntInput).val()) + parseFloat($(startPenInput).val())));
+		// 	$(totalInput).val(sum.toFixed(2));
+    //
+    // }
 </script>
 <script>
     $('.m_datetimepicker_6').datetimepicker({
