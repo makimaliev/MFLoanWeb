@@ -29,7 +29,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
@@ -129,6 +132,9 @@ public class LoanController {
     @Autowired
     DebtTransferService debtTransferService;
 
+    @Autowired
+    LoanFinGroupService loanFinGroupService;
+
     static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
 	
 	@InitBinder
@@ -217,7 +223,32 @@ public class LoanController {
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "/manage/debtor/loan/view";
     }
-	
+
+    @GetMapping("/loanFinGroup/{loanId}/save")
+    public String updateLoanFinGroup(Model model,@PathVariable(value = "loanId") Long loanId){
+	    Loan loan=loanService.getById(loanId);
+        model.addAttribute("loanFinGroup",loan.getLoanFinGroup());
+        model.addAttribute("loanId",loanId);
+        model.addAttribute("finGroupList",loanFinGroupService.list());
+        return "/manage/debtor/loan/loanFinGroupForm";
+    }
+    @PostMapping("/loanFinGroup/{loanId}/save")
+    public String updateFinGroup(@PathVariable(value = "loanId") Long loanId ,@Validated @ModelAttribute(value = "finGroup") LoanFinGroup finGroup, BindingResult result){
+
+        Long debtorId=null;
+	    if(result.hasErrors()){
+            System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+        }
+        else {
+            LoanFinGroup loanFinGroup=loanFinGroupService.getById(finGroup.getId());
+            Loan loan=loanService.getById(loanId);
+            debtorId=loan.getDebtor().getId();
+            loan.setLoanFinGroup(loanFinGroup);
+            loanService.update(loan);
+        }
+	    return "redirect:" + "/manage/debtor/"+debtorId+"/loan/{loanId}/view";
+    }
+
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{classId}/{loanId}/save", method=RequestMethod.GET)
 	public String formLoan(ModelMap model, @PathVariable("debtorId")Long debtorId, @PathVariable("classId")Integer classId, @PathVariable("loanId")Long loanId)
 	{
