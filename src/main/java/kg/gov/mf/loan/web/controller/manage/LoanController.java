@@ -123,6 +123,12 @@ public class LoanController {
     @Autowired
     OrderTermCurrencyService orderTermCurrencyService;
 
+    @Autowired
+    LoanGoodsService loanGoodsService;
+
+    @Autowired
+    DebtTransferService debtTransferService;
+
     static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
 	
 	@InitBinder
@@ -930,8 +936,9 @@ public class LoanController {
     {
         List<LoanGoodsModel> result = new ArrayList<>();
         Loan loan = loanService.getById(loanId);
-        for(LoanGoods d: loan.getLoanGoods())
+        for(LoanGoods dd: loan.getLoanGoods())
         {
+            LoanGoods d=loanGoodsService.getById(dd.getId());
             LoanGoodsModel model = new LoanGoodsModel();
             model.setId(d.getId());
             model.setQuantity(d.getQuantity());
@@ -961,8 +968,9 @@ public class LoanController {
     {
         List<DebtTransferModel> result = new ArrayList<>();
         Loan loan = loanService.getById(loanId);
-        for(DebtTransfer d: loan.getDebtTransfers())
+        for(DebtTransfer dd: loan.getDebtTransfers())
         {
+            DebtTransfer d=debtTransferService.getById(dd.getId());
             DebtTransferModel model = new DebtTransferModel();
             model.setId(d.getId());
             model.setNumber(d.getNumber());
