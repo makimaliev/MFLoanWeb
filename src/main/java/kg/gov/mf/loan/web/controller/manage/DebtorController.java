@@ -23,6 +23,7 @@ import kg.gov.mf.loan.manage.repository.debtor.DebtorRepository;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
+import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.process.service.JobItemService;
 import kg.gov.mf.loan.web.fetchModels.CollateralAgreementModel;
 import kg.gov.mf.loan.web.fetchModels.CollectionProcedureModel;
@@ -133,6 +134,12 @@ public class DebtorController {
 
 	@Autowired
 	CollectionProcedureService collectionProcedureService;
+
+	@Autowired
+	CollateralAgreementService collateralAgreementService;
+
+	@Autowired
+	LoanService loanService;
 
 	/** The entity manager. */
 	@PersistenceContext
@@ -453,8 +460,9 @@ public class DebtorController {
 	{
 	    Map<Long, CollateralAgreementModel> models = new HashMap<>();
 	    Debtor debtor = debtorService.getById(debtorId);
-	    for (Loan loan: debtor.getLoans())
+	    for (Loan loan1: debtor.getLoans())
         {
+        	Loan loan=loanService.getById(loan1.getId());
             Set<CollateralAgreement> agreements = loan.getCollateralAgreements();
             for(CollateralAgreement agreement: agreements)
             {
@@ -504,9 +512,10 @@ public class DebtorController {
 		Map<Long, CollectionProcedureModel> models = new HashMap<>();
 		Debtor debtor = debtorService.getById(debtorId);
 		Set<CollectionProcedure> procs = new HashSet<>();
-		for (Loan loan: debtor.getLoans()
+		for (Loan loan1: debtor.getLoans()
 				) {
 
+			Loan loan=loanService.getById(loan1.getId());
 			Set<CollectionPhase> phases = loan.getCollectionPhases();
 			for (CollectionPhase phase1: phases
 					) {
