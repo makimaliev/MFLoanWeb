@@ -1,8 +1,10 @@
 package kg.gov.mf.loan.web.controller.admin.org;
 
 import kg.gov.mf.loan.admin.org.repository.OrganizationRepository;
+import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.model.debtor.OwnerType;
+import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.web.util.Pager;
 import kg.gov.mf.loan.web.util.Utils;
@@ -138,6 +140,9 @@ public class OrganizationController {
 
 	@Autowired
 	OrganizationRepository organizationRepository;
+
+	@Autowired
+	DebtorService debtorService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -366,6 +371,12 @@ public class OrganizationController {
 
 		} else {
 			this.organizationService.edit(organization);
+			Owner owner=this.ownerService.getByEntityId(organization.getId());
+			owner.setName(organization.getName());
+			this.ownerService.update(owner);
+			Debtor debtor=debtorService.getByOwnerId(owner.getId());
+			debtor.setName(owner.getName());
+			debtorService.update(debtor);
 		}
 
 

@@ -58,6 +58,9 @@ public class CreditTermController {
 
 	@Autowired
 	OrderTermRatePeriodService orderTermRatePeriodService;
+
+	@Autowired
+	OrderTermFloatingRateTypeService orderTermFloatingRateTypeService;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -77,10 +80,13 @@ public class CreditTermController {
 		{
 			CreditTerm term=new CreditTerm();
 			term.setStartDate(new Date());
-			term.setInterestRateValue(Double.valueOf(20));
-			term.setPenaltyOnPrincipleOverdueRateValue(Double.valueOf(20));
-			term.setPenaltyOnInterestOverdueRateValue(Double.valueOf(20));
+			term.setInterestRateValue(Double.valueOf(0));
+			term.setPenaltyOnPrincipleOverdueRateValue(Double.valueOf(0));
+			term.setPenaltyOnInterestOverdueRateValue(Double.valueOf(0));
 			term.setPenaltyLimitPercent(Double.valueOf(20));
+			term.setFloatingRateType(orderTermFloatingRateTypeService.getById(Long.valueOf(1)));
+			term.setPenaltyOnInterestOverdueRateType(orderTermFloatingRateTypeService.getById(Long.valueOf(1)));
+			term.setPenaltyOnPrincipleOverdueRateType(orderTermFloatingRateTypeService.getById(Long.valueOf(1)));
 			term.setRatePeriod(orderTermRatePeriodService.getById(Long.valueOf(1)));
 			term.setTransactionOrder(txOrderService.getById(Long.valueOf(1)));
 			term.setDaysInMonthMethod(daysMethodService.getById(Long.valueOf(1)));
