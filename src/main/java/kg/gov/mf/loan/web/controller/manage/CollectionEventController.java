@@ -44,7 +44,7 @@ public class CollectionEventController {
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
-		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
+		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 	
@@ -61,17 +61,16 @@ public class CollectionEventController {
 		
 		if(eventId == 0)
 		{
-			model.addAttribute("event", new CollectionEvent());
-			model.addAttribute("eventDetails", new EventDetails());
+			CollectionEvent collectionEvent=new CollectionEvent();
+			collectionEvent.setStartDate(new Date());
+			model.addAttribute("event",collectionEvent );
 		}
 			
 		if(eventId > 0)
 		{
 			
 			CollectionEvent event = eventService.getById(eventId);
-			Set<EventDetails> eventDetails = event.getEventDetails();
 			model.addAttribute("event", event);
-			model.addAttribute("eventDetails", eventDetails);
 		}
 		
 		model.addAttribute("statuses", statusService.list());
@@ -81,8 +80,7 @@ public class CollectionEventController {
 	}
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/collectionevent/save"}, method=RequestMethod.POST)
-    public String saveCollectionEvent(CollectionEvent event, 
-    		Set<EventDetails> eventDetails,
+    public String saveCollectionEvent(CollectionEvent event,
     		@PathVariable("debtorId")Long debtorId,
     		@PathVariable("procId")Long procId,
     		@PathVariable("phaseId")Long phaseId,
@@ -93,13 +91,15 @@ public class CollectionEventController {
 		
 		if(event.getId() == 0)
 		{
-			event.setEventDetails(eventDetails);
 			eventService.add(event);
 		}
 		else
 		{
-			event.setEventDetails(eventDetails);
-			eventService.update(event);
+			CollectionEvent event1=eventService.getById(event.getId());
+			event1.setEventStatus(event.getEventStatus());
+			event1.setEventType(event.getEventType());
+			event1.setStartDate(event.getStartDate());
+			eventService.update(event1);
 		}
 			
 		

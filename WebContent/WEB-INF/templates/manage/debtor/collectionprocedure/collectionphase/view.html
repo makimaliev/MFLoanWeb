@@ -91,29 +91,97 @@
 				<!--begin::Portlet-->
 				<div class="m-portlet m-portlet--mobile">
 					<div class="m-portlet__body">
-                        <!--begin: Search Form -->
-                        <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-                            <div class="row align-items-center">
-                                <div class="col-xl-9 order-1 order-xl-1">
-                                    <div class="form-group m-form__group row align-items-center">
-                                        <div class="col-lg-6">
-                                            <div class="m-input-icon m-input-icon--left">
-                                                <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search1">
-                                                <span class="m-input-icon__icon m-input-icon__icon--left">
+						<ul class="nav nav-tabs" role="tablist">
+							<li class="nav-item">
+								<a class="nav-link m--font-primary active" data-toggle="tab" href="#main" th:text="#{label.collection.phase}"></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#collectionEvent" th:text="#{label.collection.event}"></a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane active" id="main" role="tabpanel">
+								<div class="m-portlet__body m-portlet__body--no-padding">
+									<!--begin: Search Form -->
+									<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+										<div class="row align-items-center">
+											<div class="col-xl-9 order-1 order-xl-1">
+												<div class="form-group m-form__group row align-items-center">
+													<div class="col-lg-6">
+														<div class="m-input-icon m-input-icon--left">
+															<input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search1">
+															<span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
 															</span>
 														</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--end: Search Form -->
-                        <!--begin: Datatable -->
-                        <div class="m_datatable" id="phaseDetailsTable"></div>
-                        <!--end: Datatable -->
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!--end: Search Form -->
+									<!--begin: Datatable -->
+									<div class="m_datatable" id="phaseDetailsTable"></div>
+									<!--end: Datatable -->
+								</div>
+							</div>
+							<div class="tab-pane" id="collectionEvent" role="tabpanel">
+								<div class="m-portlet__body m-portlet__body--no-padding">
+									<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+										<div class="row ml-2">
+											<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLECTIONPHASEEVENT')" th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phaseId}__/collectionevent/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+													<span>
+														<i class="la la-plus"></i>
+														<span th:text="#{label.add.collection.phase.event}">
+															Добавить фазу взыскания
+														</span>
+													</span>
+											</a>
+											<div class="m-separator m-separator--dashed d-xl-none"></div>
+										</div>
+									</div>
+										<table class="table" id="table">
+											<thead class="thead-default">
+											<tr>
+												<th th:text="#{label.date}">Name</th>
+												<th>Статус</th>
+												<th>Вид</th>
+												<th>&nbsp;</th>
+											</tr>
+											</thead>
+											<tbody>
+											<statecheck th:if="${#lists.isEmpty(events)}">
+												<tr class="no-records-found" style="text-align: center;">
+													<td colspan="3" th:text="#{label.no.matching.records.found}">No matching records found</td>
+												</tr>
+											</statecheck>
+											<state th:each="t : ${events}">
+												<tr>
+													<td th:text="${#dates.format(t.startDate,'dd.MM.yyyy')}">Name</td>
+													<td th:text="${t.eventStatus.name}">Name</td>
+													<td th:text="${t.eventType.name}">Name</td>
+													<td class="table-actions text-right">
+											<span>
+												<div class="dropdown">
+													<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+														<i class="la la-ellipsis-h"></i>
+													</a>
+													<div class="dropdown-menu dropdown-menu-right">
+														<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_EVENT')" th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phaseId}__/collectionevent/__${t.id}__/save}" class="dropdown-item"><span th:text="#{label.table.edit}"></span></a>
+													</div>
+												</div>
+											</span>
+													</td>
+												</tr>
+											</state>
+											</tbody>
+
+										</table>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 				<!--end::Portlet-->
@@ -148,7 +216,32 @@
     var procId = /*[[${procId}]]*/ [];
     /*]]>*/
 </script>
+<script type="text/javascript">
+    $(document).ready(function() {
 
+        var table = $('#table').DataTable({
+            stateSave: true,
+            language: {
+                paginate: {
+                    previous: '<i class="la la-angle-left"></i>', // or '→'
+                    next: '<i class="la la-angle-right"></i>' // or '←'
+                },
+                lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
+            },
+            "info":     false,
+            keys: {
+                focus: ':eq(0)'
+            },
+            "sDom": 'rtlip'
+        });
+        $('#generalSearch').keyup(function(){
+            table.search($(this).val()).draw() ;
+        });
+
+        $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
+        $('.selectpicker').selectpicker('refresh');
+    });
+</script>
 </body>
 <!-- end::Body -->
 </html>

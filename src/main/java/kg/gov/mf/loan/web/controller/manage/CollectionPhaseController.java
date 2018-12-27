@@ -92,6 +92,9 @@ public class CollectionPhaseController {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	@Autowired
+    CollectionEventService collectionEventService;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
@@ -114,6 +117,12 @@ public class CollectionPhaseController {
 
 		CollectionPhase phase = phaseService.getById(phaseId);
 		model.addAttribute("phase", phase);
+		Set<CollectionEvent> collectionEvents=new HashSet<CollectionEvent>();
+		for(CollectionEvent event1:phase.getCollectionEvents()){
+		    CollectionEvent event=collectionEventService.getById(event1.getId());
+		    collectionEvents.add(event);
+        }
+        model.addAttribute("events",collectionEvents);
 
         Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
         String jsonPhaseDetails = gson.toJson(getPhaseDetailsByPhaseId(phaseId));
