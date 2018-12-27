@@ -79,6 +79,15 @@ public class CollectionPhaseController {
 	@Autowired
 	LoanSummaryService loanSummaryService;
 
+	@Autowired
+	CollectionPhaseService collectionPhaseService;
+
+	@Autowired
+	CollectionPhaseGroupService collectionPhaseGroupService;
+
+	@Autowired
+	CollectionPhaseIndexService collectionPhaseIndexService;
+
 	/** The entity manager. */
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -434,6 +443,32 @@ public class CollectionPhaseController {
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/collectionprocedure/{procId}/view";
     }
+
+
+	@RequestMapping(value="/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/groupAndIndex/change", method=RequestMethod.GET)
+	public String  changeGroupAndIndex(ModelMap model,@PathVariable("debtorId") Long debtorId,@PathVariable("procId") Long procId,@PathVariable("phaseId") Long phaseId){
+
+		CollectionPhase collectionPhase=collectionPhaseService.getById(phaseId);
+		model.addAttribute("phase",collectionPhase);
+		model.addAttribute("debtorId",debtorId);
+		model.addAttribute("procId",procId);
+		model.addAttribute("groupList",collectionPhaseGroupService.list());
+		model.addAttribute("indexList",collectionPhaseIndexService.list());
+
+		return "/manage/debtor/collectionprocedure/collectionphase/changeGroupIndex";
+	}
+
+	@RequestMapping(value="/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/groupAndIndex/change", method=RequestMethod.POST)
+	public String groupIndexChange(@PathVariable("phaseId") Long phaseId,@PathVariable("debtorId") Long debtorId,@PathVariable("procId") Long procId, CollectionPhase collectionPhase){
+
+		CollectionPhase collectionPhase1=collectionPhaseService.getById(phaseId);
+		collectionPhase1.setCollectionPhaseGroup(collectionPhaseGroupService.getById(collectionPhase.getCollectionPhaseGroup().getId()));
+		collectionPhase1.setCollectionPhaseIndex(collectionPhaseIndexService.getById(collectionPhase.getCollectionPhaseIndex().getId()));
+		collectionPhaseService.update(collectionPhase1);
+
+		return "redirect:" + "/manage/debtor/{debtorId}/collectionprocedure/{procId}/view";
+	}
+
 
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{collectionPhaseId}/changeStatus"}, method=RequestMethod.GET)
 	public String changeStatus(@PathVariable("debtorId")Long debtorId,

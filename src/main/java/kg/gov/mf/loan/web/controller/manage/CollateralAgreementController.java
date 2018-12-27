@@ -7,9 +7,12 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.manage.model.collateral.AdditionalAgreement;
 import kg.gov.mf.loan.manage.model.collateral.CollateralItem;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
+import kg.gov.mf.loan.manage.service.collateral.AdditionalAgreementService;
+import kg.gov.mf.loan.web.fetchModels.AdditionalAgreementModel;
 import kg.gov.mf.loan.web.fetchModels.CollateralItemModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -53,6 +56,9 @@ public class CollateralAgreementController {
 
 	@Autowired
 	OwnerRepository ownerRepository;
+
+	@Autowired
+	AdditionalAgreementService additionalAgreementService;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -66,10 +72,14 @@ public class CollateralAgreementController {
 		
 		CollateralAgreement agreement = agreementService.getById(agreementId);
 		model.addAttribute("agreement", agreement);
+		model.addAttribute("agreementId", agreement.getId());
 
 		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
 		String jsonItems = gson.toJson(getItemsByAgreementId(agreementId));
 		model.addAttribute("items", jsonItems);
+
+		String jsonAdditionalAgreements=gson.toJson(getAdditionalsByAgreementId(agreementId));
+		model.addAttribute("additionalAgreements",jsonAdditionalAgreements);
 
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtorId", debtorId);
@@ -185,6 +195,24 @@ public class CollateralAgreementController {
                 model.setConditionTypeName(item.getConditionType().getName());
             }
 
+			result.add(model);
+		}
+
+		return result;
+	}
+
+	private List<AdditionalAgreementModel> getAdditionalsByAgreementId(long agreementId)
+	{
+		List<AdditionalAgreementModel> result = new ArrayList<>();
+		CollateralAgreement agreement = agreementService.getById(agreementId);
+		for(AdditionalAgreement item: agreement.getAdditionalAgreements())
+		{
+			AdditionalAgreement additionalAgreement=additionalAgreementService.getById(item.getId());
+			AdditionalAgreementModel model = new AdditionalAgreementModel();
+			model.setId(additionalAgreement.getId());
+			model.setDescription(additionalAgreement.getDescription());
+			model.setDate(additionalAgreement.getDate());
+			model.setNumber(additionalAgreement.getNumber());
 			result.add(model);
 		}
 
