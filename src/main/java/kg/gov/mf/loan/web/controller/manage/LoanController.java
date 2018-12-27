@@ -133,6 +133,9 @@ public class LoanController {
     DebtTransferService debtTransferService;
 
     @Autowired
+    OrderTermFundService fundService;
+
+    @Autowired
     LoanFinGroupService loanFinGroupService;
 
     static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
@@ -227,11 +230,17 @@ public class LoanController {
     @GetMapping("/loanFinGroup/{loanId}/save")
     public String updateLoanFinGroup(Model model,@PathVariable(value = "loanId") Long loanId){
 	    Loan loan=loanService.getById(loanId);
-        model.addAttribute("loanFinGroup",loan.getLoanFinGroup());
+	    if (loan.getLoanFinGroup()!=null){
+            model.addAttribute("loanFinGroup",loan.getLoanFinGroup());
+        }
+	    else{
+            model.addAttribute("loanFinGroup",loanFinGroupService.getById(Long.valueOf(1)));
+        }
         model.addAttribute("loanId",loanId);
         model.addAttribute("finGroupList",loanFinGroupService.list());
         return "/manage/debtor/loan/loanFinGroupForm";
     }
+
     @PostMapping("/loanFinGroup/{loanId}/save")
     public String updateFinGroup(@PathVariable(value = "loanId") Long loanId ,@Validated @ModelAttribute(value = "finGroup") LoanFinGroup finGroup, BindingResult result){
 
@@ -247,6 +256,37 @@ public class LoanController {
             loanService.update(loan);
         }
 	    return "redirect:" + "/manage/debtor/"+debtorId+"/loan/{loanId}/view";
+    }
+
+    @GetMapping("/loanFund/{loanId}/save")
+    public String updateLoanFund(Model model,@PathVariable(value = "loanId") Long loanId){
+        Loan loan=loanService.getById(loanId);
+        if (loan.getFund()!=null){
+            model.addAttribute("fund",loan.getFund());
+        }
+        else{
+            model.addAttribute("fund",fundService.getById(Long.valueOf(1)));
+        }
+        model.addAttribute("loanId",loanId);
+        model.addAttribute("fundList",fundService.list());
+        return "/manage/debtor/loan/loanFundForm";
+    }
+
+    @PostMapping("/loanFund/{loanId}/save")
+    public String updateFund(@PathVariable(value = "loanId") Long loanId ,@Validated @ModelAttribute(value = "fund") OrderTermFund fund, BindingResult result){
+
+        Long debtorId=null;
+        if(result.hasErrors()){
+            System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+        }
+        else {
+            OrderTermFund loanFund=fundService.getById(fund.getId());
+            Loan loan=loanService.getById(loanId);
+            debtorId=loan.getDebtor().getId();
+            loan.setFund(loanFund);
+            loanService.update(loan);
+        }
+        return "redirect:" + "/manage/debtor/"+debtorId+"/loan/{loanId}/view";
     }
 
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{classId}/{loanId}/save", method=RequestMethod.GET)

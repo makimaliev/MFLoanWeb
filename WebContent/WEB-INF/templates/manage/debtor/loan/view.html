@@ -159,11 +159,30 @@
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
 															<h3 class="m-widget1__title" th:text="#{label.loan.finGroup}"></h3>
-															<span class="m-widget1__desc m--font-brand" th:text="${loan.loanFinGroup.name}"></span>
+															<!--<span class="m-widget1__desc m&#45;&#45;font-brand" th:text="${loan.loanFinGroup.name}"></span>-->
+															<span class="m-widget1__desc m--font-brand" th:if="${loan.loanFinGroup!= null}" th:text="${loan.loanFinGroup.name}">someValue</span>
+															<span class="m-widget1__desc m--font-brand" th:unless="${loan.loanFinGroup!= null}" th:text="'?'">someValue</span>
 														</div>
 														<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal" data-target="#loanFinGroupModal" th:href="@{'/loanFinGroup/'+${loan.id}+'/save'}" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
 															<span>
 																<span th:text="#{label.change.loanFinGroup}">
+																Change Fin group
+																</span>
+															</span>
+														</a>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.loan.fund}"></h3>
+															<!--<span class="m-widget1__desc m&#45;&#45;font-brand" th:text="${loan.loanFinGroup.name}"></span>-->
+															<span class="m-widget1__desc m--font-brand" th:if="${loan.fund!= null}" th:text="${loan.fund.name}">someValue</span>
+															<span class="m-widget1__desc m--font-brand" th:unless="${loan.fund!= null}" th:text="'?'">someValue</span>
+														</div>
+														<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal" data-target="#loanFinGroupModal" th:href="@{'/loanFund/'+${loan.id}+'/save'}" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
+															<span>
+																<span th:text="#{label.change.loanFund}">
 																Change Fin group
 																</span>
 															</span>
