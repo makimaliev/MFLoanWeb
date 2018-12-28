@@ -1,10 +1,13 @@
 package kg.gov.mf.loan.web.controller.manage;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import kg.gov.mf.loan.manage.model.orderterm.CurrencyRate;
+import kg.gov.mf.loan.manage.model.orderterm.OrderTermCurrency;
 import kg.gov.mf.loan.manage.repository.loan.PaymentRepository;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.web.util.Pager;
@@ -24,6 +27,10 @@ import kg.gov.mf.loan.manage.service.loan.PaymentService;
 import kg.gov.mf.loan.manage.service.loan.PaymentTypeService;
 import kg.gov.mf.loan.web.util.Utils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 @Controller
 public class PaymentController {
 	
@@ -41,6 +48,12 @@ public class PaymentController {
 
 	@Autowired
 	PaymentRepository paymentRepository;
+
+//	@PersistenceContext
+//	private EntityManager entityManager;
+
+	@Autowired
+	EntityManager entityManager;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -53,11 +66,18 @@ public class PaymentController {
 	public String formCreditTerm(ModelMap model, 
 			@PathVariable("debtorId")Long debtorId, 
 			@PathVariable("loanId")Long loanId,
-			@PathVariable("paymentId")Long paymentId)
-	{
+			@PathVariable("paymentId")Long paymentId) throws ParseException {
 		
 		if(paymentId == 0)
 		{
+			Loan loan=loanService.getById(loanId);
+			OrderTermCurrency orderTermCurrency=loan.getCurrency();
+			SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+			Date today=new Date();
+			String currencyQuery="select c.id,c.rate,c.date,c.status,c.type_id,c.currency_type_id from currency_rate c where currency_type_id="+orderTermCurrency.getId()+" and date<='"+dt.format(today)+"' order by date desc";
+			Query query=entityManager.createNativeQuery(currencyQuery,CurrencyRate.class);
+			query.setMaxResults(1);
+			CurrencyRate currencyRate=(CurrencyRate) query.getSingleResult();
 			Payment payment=new Payment();
 			payment.setPaymentDate(new Date());
 			payment.setInterest(0.0);
@@ -65,6 +85,9 @@ public class PaymentController {
 			payment.setPrincipal(0.0);
 			payment.setPenalty(0.0);
 			payment.setNumber("б/н");
+			payment.setDetails(" ");
+			payment.setFee(Double.valueOf(0));
+			payment.setExchange_rate(currencyRate.getRate());
 			payment.setPaymentType(pTypeService.getById(Long.valueOf(1)));
 			model.addAttribute("payment", payment);
 		}
@@ -86,7 +109,7 @@ public class PaymentController {
 	}
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/payment/save"}, method=RequestMethod.POST)
-    public String savePayment(Payment payment, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, ModelMap model)
+    public String savePayment(Payment payment, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId)
     {
 		Loan loan = loanService.getById(loanId);
 		payment.setLoan(loan);

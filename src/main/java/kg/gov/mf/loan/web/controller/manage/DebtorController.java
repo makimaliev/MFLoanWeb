@@ -22,12 +22,11 @@ import kg.gov.mf.loan.manage.repository.collateral.CollateralItemReposiory;
 import kg.gov.mf.loan.manage.repository.debtor.DebtorRepository;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
+import kg.gov.mf.loan.manage.service.collateral.CollateralItemService;
 import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
 import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.process.service.JobItemService;
-import kg.gov.mf.loan.web.fetchModels.CollateralAgreementModel;
-import kg.gov.mf.loan.web.fetchModels.CollectionProcedureModel;
-import kg.gov.mf.loan.web.fetchModels.LoanModel;
+import kg.gov.mf.loan.web.fetchModels.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -137,6 +136,9 @@ public class DebtorController {
 
 	@Autowired
 	CollateralAgreementService collateralAgreementService;
+
+	@Autowired
+	CollateralItemService collateralItemService;
 
 	@Autowired
 	LoanService loanService;
@@ -464,11 +466,13 @@ public class DebtorController {
         {
         	Loan loan=loanService.getById(loan1.getId());
             Set<CollateralAgreement> agreements = loan.getCollateralAgreements();
-            for(CollateralAgreement agreement: agreements)
+            for(CollateralAgreement agreement1: agreements)
             {
+				CollateralAgreement agreement=collateralAgreementService.getById(agreement1.getId());
                 List<CollateralItem> items = collateralItemReposiory.findByCollateralAgreementId(agreement.getId());
-                for(CollateralItem item: items)
+                for(CollateralItem item1: items)
                 {
+					CollateralItem item=collateralItemService.getById(item1.getId());
                     CollateralAgreementModel model = new CollateralAgreementModel();
                     model.setId(agreement.getId());
                     model.setAgreementNumber(agreement.getAgreementNumber());
@@ -512,49 +516,85 @@ public class DebtorController {
 		Map<Long, CollectionProcedureModel> models = new HashMap<>();
 		Debtor debtor = debtorService.getById(debtorId);
 		Set<CollectionProcedure> procs = new HashSet<>();
-		for (Loan loan1: debtor.getLoans()
-				) {
+		String firstQuery="select cp.id as id,cph.id as phaseId,cphs.id as procedureStatusId,cps.name as procedureStatus,cpht.id as phaseTypeId,cpht.name as phaseType,cphs.id as phaseStatusId,cphs.name as phaseStatus,\n" +
+				"       cph.startDate as startDate,cph.closeDate as closeDate\n" +
+				"from collectionProcedure cp,collectionPhase cph,loan l,loanCollectionPhase lcph,procedureStatus cps,phaseType cpht,\n" +
+				"     phaseStatus cphs\n" +
+				"where lcph.loanId=l.id and cph.id=lcph.collectionPhaseId and cph.collectionProcedureId=cp.id\n" +
+				"and cps.id=cp.procedureStatusId and cpht.id=cph.phaseTypeId and cphs.id=cph.phaseStatusId and l.debtorId="+String.valueOf(debtorId)+" group by id,phaseId";
+		Query query1=entityManager.createNativeQuery(firstQuery, ProcedureModel.class);
+		List<ProcedureModel> procedureModelList=query1.getResultList();
+		for (ProcedureModel procedureModel:procedureModelList){
+			CollectionProcedureModel model = new CollectionProcedureModel();
+			model.setId(procedureModel.getId());
+			model.setProcedureStatusId(procedureModel.getProcedureStatusId());
+			model.setProcedureStatusName(procedureModel.getProcedureStatus());
+			model.setPhaseId(procedureModel.getPhaseId());
+			model.setPhaseTypeId(procedureModel.getPhaseTypeId());
+			model.setPhaseTypeName(procedureModel.getPhaseType());
+			model.setStartDate(procedureModel.getStartDate());
 
-			Loan loan=loanService.getById(loan1.getId());
-			Set<CollectionPhase> phases = loan.getCollectionPhases();
-			for (CollectionPhase phase1: phases
-					) {
-				CollectionPhase phase=collectionPhaseService.getById(phase1.getId());
-				CollectionProcedure proc1 = phase.getCollectionProcedure();
-				CollectionProcedure proc=collectionProcedureService.getById(proc1.getId());
+			String secondQuery="select sum(phd.startTotalAmount) as totalStartAmount,sum(phd.closeTotalAmount) as totalCloseAmount from phaseDetails phd where collectionPhaseId="+String.valueOf(procedureModel.getPhaseId());
+			Query query2=entityManager.createNativeQuery(secondQuery, ProcedurePhaseDetailsModel.class);
+			ProcedurePhaseDetailsModel procedurePhaseDetailsModel= (ProcedurePhaseDetailsModel) query2.getSingleResult();
 
-				CollectionProcedureModel model = new CollectionProcedureModel();
-				model.setId(proc.getId());
-				model.setProcedureStatusId(proc.getProcedureStatus().getId());
-				model.setProcedureStatusName(proc.getProcedureStatus().getName());
-				model.setPhaseId(phase.getId());
-				model.setPhaseTypeId(phase.getPhaseType().getId());
-				model.setPhaseTypeName(phase.getPhaseType().getName());
-				model.setStartDate(phase.getStartDate());
-				double totalStartAmount = 0.0;
-				for(PhaseDetails details: phase.getPhaseDetails())
-				{
-                    if(details.getStartTotalAmount()!=null)
-					totalStartAmount += details.getStartTotalAmount();
-				}
-				model.setStartTotalAmount(totalStartAmount);
+			model.setStartTotalAmount(procedurePhaseDetailsModel.getTotalStartAmount());
+			model.setPhaseStatusId(procedureModel.getPhaseStatusId());
+			model.setPhaseStatusName(procedureModel.getPhaseStatus());
+			model.setCloseDate(procedureModel.getCloseDate());
+			if(procedurePhaseDetailsModel.getTotalCloseAmount()!=null)
+			model.setCloseTotalAmount(procedurePhaseDetailsModel.getTotalCloseAmount());
+			else
+			model.setCloseTotalAmount(Double.valueOf(0));
 
-				model.setPhaseStatusId(phase.getPhaseStatus().getId());
-				model.setPhaseStatusName(phase.getPhaseStatus().getName());
 
-				model.setCloseDate(phase.getCloseDate());
-				double totalClosetAmount = 0.0;
-				for(PhaseDetails details: phase.getPhaseDetails())
-				{
-				    if(details.getCloseTotalAmount()!=null)
-					    totalClosetAmount += details.getCloseTotalAmount();
-				}
-				model.setCloseTotalAmount(totalClosetAmount);
+			if(!models.containsKey(model.getPhaseId()))
+				models.put(model.getPhaseId(), model);
 
-				if(!models.containsKey(model.getPhaseId()))
-					models.put(model.getPhaseId(), model);
-			}
 		}
+//		for (Loan loan1: debtor.getLoans()
+//				) {
+//
+//			Loan loan=loanService.getById(loan1.getId());
+//			Set<CollectionPhase> phases = loan.getCollectionPhases();
+//			for (CollectionPhase phase1: phases
+//					) {
+//				CollectionPhase phase=collectionPhaseService.getById(phase1.getId());
+//				CollectionProcedure proc1 = phase.getCollectionProcedure();
+//				CollectionProcedure proc=collectionProcedureService.getById(proc1.getId());
+//
+//				CollectionProcedureModel model = new CollectionProcedureModel();
+//				model.setId(proc.getId());
+//				model.setProcedureStatusId(proc.getProcedureStatus().getId());
+//				model.setProcedureStatusName(proc.getProcedureStatus().getName());
+//				model.setPhaseId(phase.getId());
+//				model.setPhaseTypeId(phase.getPhaseType().getId());
+//				model.setPhaseTypeName(phase.getPhaseType().getName());
+//				model.setStartDate(phase.getStartDate());
+//				double totalStartAmount = 0.0;
+//				for(PhaseDetails details: phase.getPhaseDetails())
+//				{
+//                    if(details.getStartTotalAmount()!=null)
+//					totalStartAmount += details.getStartTotalAmount();
+//				}
+//				model.setStartTotalAmount(totalStartAmount);
+//
+//				model.setPhaseStatusId(phase.getPhaseStatus().getId());
+//				model.setPhaseStatusName(phase.getPhaseStatus().getName());
+//
+//				model.setCloseDate(phase.getCloseDate());
+//				double totalClosetAmount = 0.0;
+//				for(PhaseDetails details: phase.getPhaseDetails())
+//				{
+//				    if(details.getCloseTotalAmount()!=null)
+//					    totalClosetAmount += details.getCloseTotalAmount();
+//				}
+//				model.setCloseTotalAmount(totalClosetAmount);
+//
+//				if(!models.containsKey(model.getPhaseId()))
+//					models.put(model.getPhaseId(), model);
+//			}
+//		}
 
         List<CollectionProcedureModel> result = new ArrayList<>();
         for(CollectionProcedureModel model: models.values())
