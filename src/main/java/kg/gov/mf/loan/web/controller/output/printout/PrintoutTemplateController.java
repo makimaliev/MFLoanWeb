@@ -178,6 +178,7 @@ public class PrintoutTemplateController {
 
 			switch(printoutTemplate.getPrintout().getPrintoutType().toString())
 			{
+				// Реестр погашений
 				case "PAYMENT_SUMMARY":
 
 
@@ -202,6 +203,8 @@ public class PrintoutTemplateController {
 					}
 
 					break;
+
+				// Уведомление
 				case "LOAN_NOTIFICATION":
 
 
@@ -227,6 +230,7 @@ public class PrintoutTemplateController {
 
 					break;
 
+					// Детальный расчет
 				case "LOAN_DETAILED_SUMMARY":
 
 
@@ -251,6 +255,8 @@ public class PrintoutTemplateController {
 					}
 
 					break;
+
+					// Претензия
 				case "LOAN_CLAIM":
 
 
@@ -273,6 +279,7 @@ public class PrintoutTemplateController {
 
 					break;
 
+					// Акт сверки
                 case "LOAN_SUMMARY":
 
 
@@ -294,6 +301,7 @@ public class PrintoutTemplateController {
                     }
 
                     break;
+
 
 				case "COLLECTION_SUMMARY":
 
@@ -334,4 +342,32 @@ public class PrintoutTemplateController {
 	}
 
 
+
+	@RequestMapping("/printoutType/{id}/objectId/{object_id}/generate")
+	public void generatePrintout(@PathVariable("id") long id, @PathVariable("object_id") long object_id,
+												   HttpServletResponse response) {
+		try {
+
+			PrintoutGeneratorCreditNotification printoutGeneratorCreditNotification= new PrintoutGeneratorCreditNotification();
+
+			Document document = new Document(PageSize.A4, 10, 10, 10, 10);
+
+			PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
+
+			response.setContentType("application/pdf");
+			response.setHeader("Content-disposition","attachment; filename=xx.pdf");
+
+			printoutGeneratorCreditNotification.generatePrintoutByTemplate(null, null, object_id,document);
+
+
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
+
+
+	}
 }
