@@ -433,7 +433,7 @@ insert into message_resource(kgz,rus,eng,messageKey) values ('Кредит ст�
 insert into message_resource(kgz,rus,eng,messageKey) values ('Төмөнкү кредит','Под кредит','Sub loan','label.loan.hasSubLoan');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Негизги','Основной','Parent loan','label.loan.partentId');
 insert into message_resource(kgz,rus,eng,messageKey) values ('Негизги','Основной','parent','label.loan.parent');
-insert into message_resource(kgz,rus,eng,messageKey) values ('Кредит шарттары','Условия кредита','Credit order','label.loan.creditOrderId');
+insert into message_resource(kgz,rus,eng,messageKey) values ('Кредит шарттары','Освнование выдачи кредита','Credit order','label.loan.creditOrderId');
 
 
 -- loan payment
