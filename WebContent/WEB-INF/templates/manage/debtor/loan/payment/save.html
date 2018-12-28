@@ -88,9 +88,12 @@
 						</div>
 					</div>
 					<!--begin::Form-->
-					<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/payment/save}" method="post" class="m-form m-form--fit m-form--label-align-right">
+					<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/payment/save}" method="post" th:object="${payment}" class="m-form m-form--fit m-form--label-align-right">
 
-						<input hidden="true" type="text" id="id" name="id" th:value="${payment.id}"/>
+						<input hidden="true" type="text" id="id" name="id" th:field="*{id}"/>
+						<input hidden="true" type="text" id="id" name="id" th:field="*{fee}"/>
+						<input hidden="true" type="text" id="id" name="id" th:field="*{exchange_rate}"/>
+						<input hidden="true" type="text" id="id" name="id" th:field="*{details}"/>
 
 						<div class="m-portlet__body">
 							<div class="m-form__section">

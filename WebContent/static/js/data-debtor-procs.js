@@ -69,7 +69,7 @@ var DatatableDataLocalProcs = function () {
                 field: "startTotalAmount",
                 title: "Сумма фазы",
                 template: function (row) {
-                    return (row.startTotalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                    return parseFloat(row.startTotalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
             }, {
                 field: "phaseStatusName",
@@ -81,7 +81,7 @@ var DatatableDataLocalProcs = function () {
                 field: "closeTotalAmount",
                 title: "Сумма завершения",
                 template: function (row) {
-                    return (row.closeTotalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                    return parseFloat(row.closeTotalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
             }, {
                 field: "action",

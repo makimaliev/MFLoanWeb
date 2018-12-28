@@ -190,6 +190,19 @@
 							</div>
 						</div>
 					</form>
+
+					<div class="container ">
+						<input class="input-sm" name="checkbox" id="checkbox" type="checkbox" th:text="#{label.upload.file?}">
+					</div>
+					<div class="container col-sm-2 m--hide" id="fileUpload">
+						<form class="dropzone" method="POST" th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/paymentschedule/uploadFile}" enctype="multipart/form-data" >
+							<!--<input type="file"  name="upload" id="upload" />-->
+							<div class="fallback">
+								<input name="file" type="file" />
+							</div>
+							<button class="btn blue start align-bottom" type="submit" th:text="#{label.save}">Submit</button>
+						</form>
+					</div>
 					<!--end::Form-->
 				</div>
 				<!--end::Portlet-->
@@ -212,4 +225,20 @@
 
 </body>
 <!-- end::Body -->
+<script>
+	var c=0;
+	$("#checkbox").on("change",function () {
+	    c++;
+        if (c%2==1){
+            var alert = $('#fileUpload');
+            alert.removeClass('m--hide').show();
+        }
+        else{
+
+			var alert = $('#fileUpload');
+			alert.addClass('m--hide').show();
+
+		}
+    });
+</script>
 </html>

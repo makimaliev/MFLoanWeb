@@ -345,8 +345,18 @@
                                             </div>
                                         </div>
 
+                                        <!--<div class="col-xl-3 order-3 order-xl-3 m&#45;&#45;align-right">-->
+											<!--<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_PAYMENTSCHEDULE')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/paymentschedule/upload}" class="btn btn-accent m-btn m-btn&#45;&#45;custom m-btn&#45;&#45;icon m-btn&#45;&#45;air m-btn&#45;&#45;pill">-->
+												<!--<span>-->
+													<!--<i class="la la-plus"></i>-->
+													<!--<span th:text="#{label.loan.add.paymentSchedule.upload}">-->
+														<!--Добавить ср. обьязательство-->
+													<!--</span>-->
+												<!--</span>-->
+											<!--</a>-->
+										<!--</div>-->
                                         <div class="col-xl-3 order-3 order-xl-3 m--align-right">
-                                            <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_PAYMENTSCHEDULE')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/paymentschedule/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+											<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_PAYMENTSCHEDULE')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/paymentschedule/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
 													<span th:text="#{label.loan.add.paymentSchedule}">
