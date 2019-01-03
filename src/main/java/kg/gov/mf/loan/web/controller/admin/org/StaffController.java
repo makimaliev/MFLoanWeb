@@ -85,14 +85,14 @@ public class StaffController {
 	public String listStaffs(Model model) {
 		model.addAttribute("staff", new Staff());
 
-		List<Staff> staffList = this.staffService.findAll();
-		for (Staff staffInList:staffList)
-		{
-			staffInList.setUser(userService.findByStaff(staffInList));
-		}
+//		List<Staff> staffList = this.staffService.findAll();
+//		for (Staff staffInList:staffList)
+//		{
+//			staffInList.setUser(userService.findByStaff(staffInList));
+//		}
 
 
-		model.addAttribute("staffList", staffList);
+//		model.addAttribute("staffList", staffList);
 		model.addAttribute("organizationList", this.organizationService.findAll());		
 
 		return "admin/org/staffList";
