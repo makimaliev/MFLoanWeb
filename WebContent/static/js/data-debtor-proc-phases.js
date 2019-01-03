@@ -83,7 +83,10 @@ var DatatableDataLocalPhases = function () {
 						<a hidden="hidden" href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + procId + '/collectionphase/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
 							<i class="la la-trash"></i>\
 						</a>\
-						<a href="/printoutTemplate/5/objectId/'+ row.id + '/select" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Претензия">\
+						<a href="/printoutType/2/objectId/'+ row.id + '/generate" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Претензия">\
+							<i class="la la-exclamation-circle"></i>\
+						</a>\
+						<a href="/printoutType/3/objectId/'+ row.id + '/generate" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Доо талап">\
 							<i class="la la-exclamation-circle"></i>\
 						</a>\
 					';

@@ -396,4 +396,60 @@ public class PrintoutTemplateController {
 
 
 	}
+
+    @RequestMapping("/printoutType/2/objectId/{object_id}/generate")
+    public void generatePrintoutByType2(@PathVariable("object_id") long object_id,
+                                        HttpServletResponse response) {
+        try {
+
+            PrintoutGeneratorPhaseSummary printoutGeneratorPhaseSummary= new PrintoutGeneratorPhaseSummary();
+
+            Document document = new Document(PageSize.A4.rotate(), 10, 10, 10, 10);
+
+            PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
+
+            response.setContentType("application/rtf");
+            response.setHeader("Content-disposition","attachment; filename=xx.rtf");
+
+            printoutGeneratorPhaseSummary.generatePrintoutByTemplate(null, null, object_id,document);
+
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+
+    }
+
+    @RequestMapping("/printoutType/3/objectId/{object_id}/generate")
+    public void generatePrintoutByType3(@PathVariable("object_id") long object_id,
+                                        HttpServletResponse response) {
+        try {
+
+            PrintoutGeneratorCreditClaim printoutGeneratorCreditClaim= new PrintoutGeneratorCreditClaim();
+
+            Document document = new Document(PageSize.A4.rotate(), 10, 10, 10, 10);
+
+            PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
+
+            response.setContentType("application/rtf");
+            response.setHeader("Content-disposition","attachment; filename=xx.rtf");
+
+            printoutGeneratorCreditClaim.generatePrintoutByTemplate(null, null, object_id,document);
+
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+
+    }
 }
