@@ -191,18 +191,34 @@
 						</div>
 					</form>
 
+					<!--<div class="container ">-->
+						<!--<input class="input-sm" name="checkbox" id="checkbox" type="checkbox" th:text="#{label.upload.file?}">-->
+					<!--</div>-->
+
 					<div class="container ">
-						<input class="input-sm" name="checkbox" id="checkbox" type="checkbox" th:text="#{label.upload.file?}">
-					</div>
-					<div class="container col-sm-2 m--hide" id="fileUpload">
-						<form class="dropzone" method="POST" th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/paymentschedule/uploadFile}" enctype="multipart/form-data" >
-							<!--<input type="file"  name="upload" id="upload" />-->
-							<div class="fallback">
-								<input name="file" type="file" />
+						<form method="POST" th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/paymentschedule/uploadFile}" enctype="multipart/form-data" >
+							<div class="input-icon right">
+								<input type="file" class="file"
+									   name="file"/>
+
 							</div>
-							<button class="btn blue start align-bottom" type="submit" th:text="#{label.save}">Submit</button>
+							<div>
+								<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_PAYMENTSCHEDULE','PERM_UPDATE_PAYMENTSCHEDULE')" type="submit" class="btn btn-primary">
+									<span th:text="#{label.form.save}"></span>
+								</button>
+							</div>
 						</form>
 					</div>
+
+					<!--<div class="container col-sm-2 m&#45;&#45;hide" id="fileUpload">-->
+						<!--<form class="dropzone" method="POST" th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/paymentschedule/uploadFile}" enctype="multipart/form-data" >-->
+							<!--&lt;!&ndash;<input type="file"  name="upload" id="upload" />&ndash;&gt;-->
+							<!--<div class="fallback">-->
+								<!--<input name="file" type="file" />-->
+							<!--</div>-->
+							<!--<button class="btn blue start align-bottom" type="submit" th:text="#{label.save}">Submit</button>-->
+						<!--</form>-->
+					<!--</div>-->
 					<!--end::Form-->
 				</div>
 				<!--end::Portlet-->
@@ -225,20 +241,20 @@
 
 </body>
 <!-- end::Body -->
-<script>
-	var c=0;
-	$("#checkbox").on("change",function () {
-	    c++;
-        if (c%2==1){
-            var alert = $('#fileUpload');
-            alert.removeClass('m--hide').show();
-        }
-        else{
+<!--<script>-->
+	<!--var c=0;-->
+	<!--$("#checkbox").on("change",function () {-->
+	    <!--c++;-->
+        <!--if (c%2==1){-->
+            <!--var alert = $('#fileUpload');-->
+            <!--alert.removeClass('m&#45;&#45;hide').show();-->
+        <!--}-->
+        <!--else{-->
 
-			var alert = $('#fileUpload');
-			alert.addClass('m--hide').show();
+			<!--var alert = $('#fileUpload');-->
+			<!--alert.addClass('m&#45;&#45;hide').show();-->
 
-		}
-    });
-</script>
+		<!--}-->
+    <!--});-->
+<!--</script>-->
 </html>
