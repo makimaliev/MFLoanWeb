@@ -327,8 +327,6 @@ public class PrintoutTemplateController {
 
 					break;
 
-
-
 			}
 
 		}
@@ -358,6 +356,34 @@ public class PrintoutTemplateController {
 			response.setHeader("Content-disposition","attachment; filename=xx.pdf");
 
 			printoutGeneratorCreditNotification.generatePrintoutByTemplate(null, null, object_id,document);
+
+
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
+
+
+	}
+
+	@RequestMapping("/printoutType/1/objectId/{object_id}/generate")
+	public void generatePrintoutByType1(@PathVariable("object_id") long object_id,
+								 HttpServletResponse response) {
+		try {
+
+			PrintoutGeneratorRevisionDoc printoutGeneratorRevisionDoc= new PrintoutGeneratorRevisionDoc();
+
+			Document document = new Document(PageSize.A4.rotate(), 10, 10, 10, 10);
+
+			PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
+
+			response.setContentType("application/pdf");
+			response.setHeader("Content-disposition","attachment; filename=xx.pdf");
+
+			printoutGeneratorRevisionDoc.generatePrintoutByTemplate(null, null, object_id,document);
 
 
 
