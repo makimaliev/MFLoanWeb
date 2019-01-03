@@ -87,128 +87,141 @@
 							</div>
 						</div>
 					</div>
-					<!--begin::Form-->
-					<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/paymentschedule/save}" method="post" class="m-form m-form--fit m-form--label-align-right">
+					<ul class="nav nav-tabs" role="tablist">
+						<li class="nav-item">
+							<a class="nav-link m--font-primary active" data-toggle="tab" href="#main" th:text="#{label.add.paymantSchedule}"></a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link m--font-primary" data-toggle="tab" href="#uploadFile" th:text="#{label.upload.file}"></a>
+						</li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="main" role="tabpanel">
+							<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/paymentschedule/save}" method="post" class="m-form m-form--fit m-form--label-align-right">
 
-						<input hidden="true" type="text" id="id" name="id" th:value="${paymentSchedule.id}"/>
+								<input hidden="true" type="text" id="id" name="id" th:value="${paymentSchedule.id}"/>
 
-						<div class="m-portlet__body">
-							<div class="m-form__section">
+								<div class="m-portlet__body">
+									<div class="m-form__section">
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.loan.paymentSchedule.expectedDate}"></span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="expectedDate" th:value="${#dates.format(paymentSchedule.expectedDate,'dd.MM.yyyy')}"/>
-											<span class="input-group-addon">
+										<div class="form-group m-form__group row">
+											<label class="col-form-label col-lg-4 col-sm-12">
+												<span th:text="#{label.loan.paymentSchedule.expectedDate}"></span>
+											</label>
+											<div class="col-lg-4 col-md-9 col-sm-12">
+												<div class="input-group date m_datetimepicker_6">
+													<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="expectedDate" th:value="${#dates.format(paymentSchedule.expectedDate,'dd.MM.yyyy')}"/>
+													<span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group m-form__group row">
+											<label class="col-form-label col-lg-4 col-sm-12">
+												<span th:text="#{label.loan.paymentSchedule.disbursement}"></span>
+												<span class="m--font-danger">*</span>
+											</label>
+											<div class="col-lg-4 col-md-9 col-sm-12">
+												<input type="text" class="form-control m-input" name="disbursement" th:value="${paymentSchedule.disbursement}">
+											</div>
+										</div>
+
+										<div class="form-group m-form__group row">
+											<label class="col-form-label col-lg-4 col-sm-12">
+												<span th:text="#{label.loan.paymentSchedule.principalPayment}"></span>
+												<span class="m--font-danger">*</span>
+											</label>
+											<div class="col-lg-4 col-md-9 col-sm-12">
+												<input type="text" class="form-control m-input" name="principalPayment" th:value="${paymentSchedule.principalPayment}">
+											</div>
+										</div>
+
+										<div class="form-group m-form__group row">
+											<label class="col-form-label col-lg-4 col-sm-12">
+												<span th:text="#{label.loan.paymentSchedule.interestPayment}"></span>
+												<span class="m--font-danger">*</span>
+											</label>
+											<div class="col-lg-4 col-md-9 col-sm-12">
+												<input type="text" class="form-control m-input" name="interestPayment" th:value="${paymentSchedule.interestPayment}">
+											</div>
+										</div>
+
+										<div class="form-group m-form__group row">
+											<label class="col-form-label col-lg-4 col-sm-12">
+												<span th:text="#{label.loan.paymentSchedule.collectedInterestPayment}"></span>
+												<span class="m--font-danger">*</span>
+											</label>
+											<div class="col-lg-4 col-md-9 col-sm-12">
+												<input type="text" class="form-control m-input" name="collectedInterestPayment" th:value="${paymentSchedule.collectedInterestPayment}">
+											</div>
+										</div>
+
+										<div class="form-group m-form__group row">
+											<label class="col-form-label col-lg-4 col-sm-12">
+												<span th:text="#{label.loan.paymentSchedule.collectedPenaltyPayment}"></span>
+												<span class="m--font-danger">*</span>
+											</label>
+											<div class="col-lg-4 col-md-9 col-sm-12">
+												<input type="text" class="form-control m-input" name="collectedPenaltyPayment" th:value="${paymentSchedule.collectedPenaltyPayment}">
+											</div>
+										</div>
+
+										<div class="form-group m-form__group row">
+											<label class="col-form-label col-lg-4 col-sm-12">
+												<span th:text="#{label.loan.paymentSchedule.installmentState}"></span>
+												<span class="m--font-danger">*</span>
+											</label>
+											<div class="col-lg-4 col-md-9 col-sm-12">
+												<select class="form-control m-bootstrap-select m_selectpicker" th:field="${paymentSchedule.installmentState.id}"  id="installmentState" th:title="#{label.select}">
+													<option value="0" th:text="#{label.select}"></option>
+													<option th:each="state : ${iStates}" th:value="${state.id}" th:text="${state.name}"></option>
+												</select>
+											</div>
+										</div>
+
+									</div>
+								</div>
+								<div class="m-portlet__foot m-portlet__foot--fit">
+									<div class="m-form__actions m-form__actions">
+										<div class="row">
+											<div class="col-lg-4"></div>
+											<div class="col-lg-6">
+												<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_PAYMENTSCHEDULE','PERM_UPDATE_PAYMENTSCHEDULE')" type="submit" class="btn btn-primary">
+													<span th:text="#{label.form.save}"></span>
+												</button>
+												<button onclick="window.history.back()" type="button" class="btn btn-secondary">
+													<span th:text="#{label.form.cancel}"></span>
+												</button>
+											</div>
 										</div>
 									</div>
 								</div>
-
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.loan.paymentSchedule.disbursement}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="disbursement" th:value="${paymentSchedule.disbursement}">
-									</div>
-								</div>
-
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.loan.paymentSchedule.principalPayment}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="principalPayment" th:value="${paymentSchedule.principalPayment}">
-									</div>
-								</div>
-
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.loan.paymentSchedule.interestPayment}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="interestPayment" th:value="${paymentSchedule.interestPayment}">
-									</div>
-								</div>
-
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.loan.paymentSchedule.collectedInterestPayment}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="collectedInterestPayment" th:value="${paymentSchedule.collectedInterestPayment}">
-									</div>
-								</div>
-
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.loan.paymentSchedule.collectedPenaltyPayment}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="collectedPenaltyPayment" th:value="${paymentSchedule.collectedPenaltyPayment}">
-									</div>
-								</div>
-
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.loan.paymentSchedule.installmentState}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${paymentSchedule.installmentState.id}"  id="installmentState" th:title="#{label.select}">
-											<option value="0" th:text="#{label.select}"></option>
-											<option th:each="state : ${iStates}" th:value="${state.id}" th:text="${state.name}"></option>
-										</select>
-									</div>
-								</div>
-
-							</div>
+							</form>
 						</div>
-						<div class="m-portlet__foot m-portlet__foot--fit">
-							<div class="m-form__actions m-form__actions">
-								<div class="row">
-									<div class="col-lg-4"></div>
-									<div class="col-lg-6">
+						<div class="tab-pane" id="uploadFile" role="tabpanel">
+							<div class="container ">
+								<form method="POST" th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/paymentschedule/uploadFile}" enctype="multipart/form-data" >
+									<div class="input-icon right">
+										<input type="file" class="file"
+											   name="file"/>
+
+									</div>
+									<div>
 										<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_PAYMENTSCHEDULE','PERM_UPDATE_PAYMENTSCHEDULE')" type="submit" class="btn btn-primary">
 											<span th:text="#{label.form.save}"></span>
 										</button>
-										<button onclick="window.history.back()" type="button" class="btn btn-secondary">
-											<span th:text="#{label.form.cancel}"></span>
-										</button>
 									</div>
-								</div>
+								</form>
 							</div>
 						</div>
-					</form>
+					</div>
+					<!--begin::Form-->
 
 					<!--<div class="container ">-->
 						<!--<input class="input-sm" name="checkbox" id="checkbox" type="checkbox" th:text="#{label.upload.file?}">-->
 					<!--</div>-->
-
-					<div class="container ">
-						<form method="POST" th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/paymentschedule/uploadFile}" enctype="multipart/form-data" >
-							<div class="input-icon right">
-								<input type="file" class="file"
-									   name="file"/>
-
-							</div>
-							<div>
-								<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_PAYMENTSCHEDULE','PERM_UPDATE_PAYMENTSCHEDULE')" type="submit" class="btn btn-primary">
-									<span th:text="#{label.form.save}"></span>
-								</button>
-							</div>
-						</form>
-					</div>
 
 					<!--<div class="container col-sm-2 m&#45;&#45;hide" id="fileUpload">-->
 						<!--<form class="dropzone" method="POST" th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/paymentschedule/uploadFile}" enctype="multipart/form-data" >-->
