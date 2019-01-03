@@ -371,12 +371,17 @@ public class OrganizationController {
 
 		} else {
 			this.organizationService.edit(organization);
-			Owner owner=this.ownerService.getByEntityId(organization.getId());
+			Owner owner=this.ownerService.getByEntityId(organization.getId(),"ORGANIZATION");
 			owner.setName(organization.getName());
 			this.ownerService.update(owner);
-			Debtor debtor=debtorService.getByOwnerId(owner.getId());
-			debtor.setName(owner.getName());
-			debtorService.update(debtor);
+			try{
+				Debtor debtor=debtorService.getByOwnerId(owner.getId());
+				debtor.setName(owner.getName());
+				debtorService.update(debtor);
+			}
+			catch (Exception e){
+				System.out.println(e);
+			}
 		}
 
 

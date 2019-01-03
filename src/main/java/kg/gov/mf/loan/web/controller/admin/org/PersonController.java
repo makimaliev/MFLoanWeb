@@ -358,12 +358,17 @@ public class PersonController {
 
 		} else {
 			this.personService.edit(person);
-			Owner owner=this.ownerService.getByEntityId(person.getId());
+			Owner owner=this.ownerService.getByEntityId(person.getId(),"PERSON");
 			owner.setName(person.getName());
 			this.ownerService.update(owner);
-			Debtor debtor=debtorService.getByOwnerId(owner.getId());
-			debtor.setName(owner.getName());
-			debtorService.update(debtor);
+			try{
+				Debtor debtor=debtorService.getByOwnerId(owner.getId());
+				debtor.setName(owner.getName());
+				debtorService.update(debtor);
+			}
+			catch (Exception e){
+				System.out.println(e);
+			}
 
 		}
 
