@@ -392,6 +392,13 @@ public class CollectionPhaseController {
 			CollectionPhase phase = phaseService.getById(phaseId);
 			model.addAttribute("phase", phase);
 			model.addAttribute("tLoans", phase.getLoans());
+
+			List<Long> loanIds=new ArrayList<>();
+
+			for (Loan l:phase.getLoans()) {
+				loanIds.add(l.getId());
+			}
+			model.addAttribute("loanIds", loanIds);
 		}
 
 		model.addAttribute("statuses", statusService.list());
@@ -448,7 +455,22 @@ public class CollectionPhaseController {
 		}
 
 		else
+		{
+			CollectionPhase oldPhase = phaseService.getById(phase.getId());
+
+			phase.setPhaseStatus(oldPhase.getPhaseStatus());
+
+			if(phaseDetailsList.isEmpty()){
+				System.out.println("asdf");
+			}
+			else
+			{
+				System.out.println("qwer");
+			}
+
 			phaseService.update(phase);
+		}
+
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/collectionprocedure/{procId}/view";
     }
