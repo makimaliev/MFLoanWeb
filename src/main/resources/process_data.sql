@@ -1420,11 +1420,11 @@ BEGIN
             4 as orderType,
             wo.date as onDate,
             0,
-            wo.principal as principalPaid,
+            IFNULL(wo.principal, 0) as principalPaid,
             0,
-            wo.interest as interestPaid,
+            IFNULL(wo.interest, 0) as interestPaid,
             0,
-            wo.penalty as penaltyPaid,
+            IFNULL(wo.penalty, 0) as penaltyPaid,
             0,
             0,
             1 as curRate
@@ -1620,6 +1620,9 @@ BEGIN
         SET wo_princ = princPaid;
         SET wo_int = intPaid;
         SET wo_pen = penPaid;
+        SET princPaid = 0;
+        SET intPaid = 0;
+        SET penPaid = 0;
 
         SET total_wo_princ = total_wo_princ + wo_princ;
         SET total_wo_int = total_wo_int + wo_int;
@@ -1862,11 +1865,15 @@ BEGIN
 
       SET totalIntPaid = totalIntPaid + intPaid;
 
-      IF (isPaymentSchedulePaymentDate(tempDate, loan_id) OR isPaymentScheduleLastPaymentDate(tempDate, loan_id)) OR afterSrokDate THEN
-        SET intPayment = totalIntAccrued - totalIntAccruedOnIntPayment;
-        SET totalIntAccruedOnIntPayment = totalIntAccrued;
-      ELSE SET intPayment = 0;
+      IF (tempDate != inDate) THEN
+        IF (isPaymentSchedulePaymentDate(tempDate, loan_id) OR isPaymentScheduleLastPaymentDate(tempDate, loan_id)) OR afterSrokDate THEN
+          SET intPayment = totalIntAccrued - totalIntAccruedOnIntPayment;
+          SET totalIntAccruedOnIntPayment = totalIntAccrued;
+        ELSE
+          SET intPayment = 0;
+        END IF;
       END IF;
+
 
       SET totalCollPenPayment = totalCollPenPayment + collPenPayment;
       SET totalPenPaid = totalPenPaid + penPaid;
@@ -3350,4 +3357,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-05 12:56:48
+-- Dump completed on 2019-01-05 13:13:55
