@@ -1841,11 +1841,17 @@ BEGIN
       END IF;
 
       SET totalPenAccrued = totalPenAccrued + penAccrued;
+      IF totalPenAccrued < 0 THEN
+        SET totalPenAccrued = 0;
+      END IF;
       SET totalDisb = totalDisb + disb;
 
       IF NOT penalty_limit_flag THEN
         IF penalty_limit > 0 AND totalPenAccrued >= totalDisb*penalty_limit/100-paymentSumAfterSpecDate AND tempDate >= '2014-11-25' THEN
           SET totalPenAccrued = totalDisb*penalty_limit/100-paymentSumAfterSpecDate;
+          IF totalPenAccrued < 0 THEN
+            SET totalPenAccrued = 0;
+          END IF;
           SET penalty_limit_flag = TRUE;
           UPDATE creditTerm SET penaltyLimitEndDate = tempDate WHERE loanId = loan_id;
         END IF;
@@ -1872,8 +1878,9 @@ BEGIN
         ELSE
           SET intPayment = 0;
         END IF;
+      ELSEIF (tempDate = inDate) THEN
+        SET intPayment = 0;
       END IF;
-
 
       SET totalCollPenPayment = totalCollPenPayment + collPenPayment;
       SET totalPenPaid = totalPenPaid + penPaid;
@@ -3357,4 +3364,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-05 13:13:55
+-- Dump completed on 2019-01-05 16:06:51
