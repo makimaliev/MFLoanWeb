@@ -404,9 +404,11 @@ public class PrintoutTemplateController {
 
             PrintoutGeneratorPhaseSummary printoutGeneratorPhaseSummary= new PrintoutGeneratorPhaseSummary();
 
-            Document document = new Document(PageSize.A4.rotate(), 10, 10, 10, 10);
+            Document document = new Document(PageSize.A4, 10, 10, 10, 10);
 
-            PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
+//            PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
+
+			RtfWriter2 rtfWriter2 = RtfWriter2.getInstance(document,response.getOutputStream());
 
             response.setContentType("application/rtf");
             response.setHeader("Content-disposition","attachment; filename=xx.rtf");
@@ -432,9 +434,9 @@ public class PrintoutTemplateController {
 
             PrintoutGeneratorCreditClaim printoutGeneratorCreditClaim= new PrintoutGeneratorCreditClaim();
 
-            Document document = new Document(PageSize.A4.rotate(), 10, 10, 10, 10);
+            Document document = new Document(PageSize.A4, 10, 10, 10, 10);
 
-            PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
+			RtfWriter2 rtfWriter2 = RtfWriter2.getInstance(document,response.getOutputStream());
 
             response.setContentType("application/rtf");
             response.setHeader("Content-disposition","attachment; filename=xx.rtf");
