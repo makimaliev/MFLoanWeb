@@ -67,7 +67,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `calculateInterestAccrued`(principalOutstanding double, daysInPeriod int, inDate date, loanId bigint) RETURNS double
 BEGIN
@@ -114,7 +114,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `calculateLibor`(val double, fromDate date, toDate date, term_rate_type int, term_diy_method int, loan_id bigint, grace_type int) RETURNS double
 BEGIN
@@ -276,7 +276,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `calculateLiborIO`(val double, fromDate date, toDate date, loan_id bigint) RETURNS double
 BEGIN
@@ -411,7 +411,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `calculateLiborPO`(val double, fromDate date, toDate date, loan_id bigint) RETURNS double
 BEGIN
@@ -562,6 +562,9 @@ BEGIN
     DECLARE grace_int INT DEFAULT 0;
     DECLARE d_period_princ INT;
     DECLARE d_period_int INT;
+    DECLARE temp_princ_date DATE;
+    DECLARE temp_int_date DATE;
+    DECLARE temp_days_in_period int;
 
     DECLARE cur CURSOR FOR
       SELECT term.penaltyOnInterestOverdueRateValue, term.penaltyOnPrincipleOverdueRateValue, term.daysInYearMethodId
@@ -578,21 +581,13 @@ BEGIN
       SET pOPO = 0;
     END;
 
-    if exists(
     select graceDaysPrincipal, graceDaysInterest
-    from creditTerm
-    where record_status = 1
-      and startDate < inDate
-      and loanId = loan_id
-      order by startDate desc limit 1) THEN
-      select graceDaysPrincipal, graceDaysInterest
       into grace_princ, grace_int
       from creditTerm
       where record_status = 1
         and startDate < inDate
         and loanId = loan_id
         order by startDate desc limit 1;
-    end if;
 
     OPEN cur;
     FETCH cur INTO pOIO, pOPO, dIYMethod;
@@ -601,6 +596,33 @@ BEGIN
     IF dIYMethod != 1 THEN SET nOD = 360;
     END IF;
 
+    set temp_days_in_period = daysInPeriod;
+
+    #calculate days_in_period for principal
+    #get last principal payment date where principal payment > 0
+    if grace_princ > 0 then
+      if exists(
+        select expectedDate
+        from paymentSchedule
+        where loanId = loan_id
+          and principalPayment > 0
+          and record_status = 1
+          and expectedDate <= inDate
+        order by expectedDate desc
+        limit 1
+      ) then
+        select expectedDate into temp_princ_date
+          from paymentSchedule
+          where loanId = loan_id
+            and principalPayment > 0
+            and record_status = 1
+            and expectedDate <= inDate
+          order by expectedDate desc
+          limit 1;
+        set daysInPeriod = calculateDays(temp_princ_date, inDate, dIYMethod);
+      end if;
+    end if;
+
     set d_period_princ = daysInPeriod - grace_princ;
     if d_period_princ < 0 then
       set d_period_princ = 0;
@@ -608,6 +630,33 @@ BEGIN
 
     IF principalOverdue > 0 THEN SET result_pOPO = principalOverdue*pOPO/100*d_period_princ/nOD;
     END IF;
+
+    set daysInPeriod = temp_days_in_period;
+
+    #calculate days_in_period for interest
+    #get last interest payment where date interest payment > 0
+    if grace_int > 0 then
+      if exists(
+        select expectedDate
+        from paymentSchedule
+        where loanId = loan_id
+          and interestPayment > 0
+          and record_status = 1
+          and expectedDate <= inDate
+        order by expectedDate desc
+        limit 1
+      ) then
+        select expectedDate into temp_int_date
+          from paymentSchedule
+          where loanId = loan_id
+            and interestPayment > 0
+            and record_status = 1
+            and expectedDate <= inDate
+          order by expectedDate desc
+          limit 1;
+        set daysInPeriod = calculateDays(temp_int_date, inDate, dIYMethod);
+      end if;
+    end if;
 
     set d_period_int = daysInPeriod - grace_int;
     if d_period_int < 0 then
@@ -653,7 +702,10 @@ BEGIN
     FETCH cur INTO rate, dIYMethod;
     CLOSE cur;
 
-    IF dIYMethod != 1 THEN SET nOD = 360;
+    IF dIYMethod = 1 THEN
+      SET nOD = 360;
+    ELSEIF dIYMethod = 3 THEN
+      SET nOD = 366;
     END IF;
 
     IF interestOverdue < 0 THEN
@@ -696,7 +748,10 @@ BEGIN
     FETCH cur INTO rate, dIYMethod;
     CLOSE cur;
 
-    IF dIYMethod != 1 THEN SET nOD = 360;
+    IF dIYMethod = 1 THEN
+      SET nOD = 360;
+    ELSEIF dIYMethod = 3 THEN
+      SET nOD = 366;
     END IF;
 
     IF principalOverdue < 0 THEN
@@ -719,7 +774,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `getCollectedIntDisbursed`(loanId bigint) RETURNS double
 BEGIN
@@ -755,7 +810,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `getCollectedPenDisbursed`(loanId bigint) RETURNS double
 BEGIN
@@ -791,7 +846,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `getDIMMethod`(inDate date, loan_id bigint) RETURNS int(11)
 BEGIN
@@ -821,7 +876,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `getDIYMethod`(inDate date, loan_id bigint) RETURNS int(11)
 BEGIN
@@ -876,7 +931,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `getPenaltyLimitPercent`(inDate date, loan_id bigint) RETURNS int(11)
 BEGIN
@@ -905,7 +960,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `getTransactionOrder`(inDate date, loan_id bigint) RETURNS int(11)
 BEGIN
@@ -935,7 +990,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `hasLiborType`(loan_id bigint, inDate date) RETURNS tinyint(1)
 BEGIN
@@ -970,7 +1025,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `hasLiborTypeIO`(loan_id bigint, inDate date) RETURNS tinyint(1)
 BEGIN
@@ -1005,7 +1060,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `hasLiborTypePO`(loan_id bigint, inDate date) RETURNS tinyint(1)
 BEGIN
@@ -1109,7 +1164,7 @@ BEGIN
     DECLARE cur CURSOR FOR
       SELECT ps.expectedDate FROM paymentSchedule ps
       WHERE ps.loanId = loanId
-      AND ps.principalPayment > 0
+      AND (ps.principalPayment > 0 OR ps.interestPayment > 0)
       AND ps.record_status = 1
       ORDER BY ps.expectedDate DESC LIMIT 1;
 
@@ -1139,7 +1194,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `isPaymentSchedulePaymentDate`(inDate date, loanId bigint) RETURNS tinyint(1)
 BEGIN
@@ -1179,7 +1234,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `isTermFound`(loan_id bigint, inDate date) RETURNS tinyint(1)
 BEGIN
@@ -1214,7 +1269,9 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `calculateLoanDetailedSummaryUntilOnDate`(IN loan_id bigint, IN inDate date, IN includeToday tinyint(1), IN loan_summary_type VARCHAR(20))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `calculateLoanDetailedSummaryUntilOnDate`(IN loan_id           bigint, IN inDate date,
+                                                         IN includeToday      tinyint(1),
+                                                         IN loan_summary_type varchar(20))
 BEGIN
     DECLARE tempDate DATE;
     DECLARE srokDate DATE;
@@ -1363,11 +1420,11 @@ BEGIN
             4 as orderType,
             wo.date as onDate,
             0,
-            wo.principal as principalPaid,
+            IFNULL(wo.principal, 0) as principalPaid,
             0,
-            wo.interest as interestPaid,
+            IFNULL(wo.interest, 0) as interestPaid,
             0,
-            wo.penalty as penaltyPaid,
+            IFNULL(wo.penalty, 0) as penaltyPaid,
             0,
             0,
             1 as curRate
@@ -1563,6 +1620,9 @@ BEGIN
         SET wo_princ = princPaid;
         SET wo_int = intPaid;
         SET wo_pen = penPaid;
+        SET princPaid = 0;
+        SET intPaid = 0;
+        SET penPaid = 0;
 
         SET total_wo_princ = total_wo_princ + wo_princ;
         SET total_wo_int = total_wo_int + wo_int;
@@ -1805,11 +1865,15 @@ BEGIN
 
       SET totalIntPaid = totalIntPaid + intPaid;
 
-      IF (isPaymentSchedulePaymentDate(tempDate, loan_id) OR isPaymentScheduleLastPaymentDate(tempDate, loan_id)) OR afterSrokDate THEN
-        SET intPayment = totalIntAccrued - totalIntAccruedOnIntPayment;
-        SET totalIntAccruedOnIntPayment = totalIntAccrued;
-      ELSE SET intPayment = 0;
+      IF (tempDate != inDate) THEN
+        IF (isPaymentSchedulePaymentDate(tempDate, loan_id) OR isPaymentScheduleLastPaymentDate(tempDate, loan_id)) OR afterSrokDate THEN
+          SET intPayment = totalIntAccrued - totalIntAccruedOnIntPayment;
+          SET totalIntAccruedOnIntPayment = totalIntAccrued;
+        ELSE
+          SET intPayment = 0;
+        END IF;
       END IF;
+
 
       SET totalCollPenPayment = totalCollPenPayment + collPenPayment;
       SET totalPenPaid = totalPenPaid + penPaid;
@@ -1957,7 +2021,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `fillLoansToEvaluateTable`(IN inDate date)
 BEGIN
@@ -2088,7 +2152,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `runCalculateLoanDetailedSummaryForAllLoans`(IN inDate date)
 BEGIN
@@ -2145,7 +2209,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `runCalculateLoanDetailedSummaryForAllLoansFixed`(IN inDate date)
 BEGIN
@@ -2250,7 +2314,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `runCalculateLoanDetailedSummaryForSelectedLoansByRegionId`(IN inDate DATE, IN region_id BIGINT)
 BEGIN
@@ -2315,7 +2379,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `runPenaltyAccruedForAllLoans`()
 BEGIN
@@ -2388,7 +2452,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `runUpdateRootLoans`()
 BEGIN
@@ -2491,7 +2555,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBankruptInfo`()
 BEGIN
@@ -2601,7 +2665,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateLoanCloseRate`()
 BEGIN
@@ -2724,7 +2788,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePenaltyAccruedForLoan`(IN loan_id bigint, IN psLastDate date)
 BEGIN
@@ -3210,7 +3274,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateTrancheeLoanData`(IN loan_id bigint)
 BEGIN
@@ -3293,4 +3357,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-09 17:02:45
+-- Dump completed on 2019-01-05 13:13:55
