@@ -1336,8 +1336,13 @@ BEGIN
 
     DECLARE afterSrokDate BOOLEAN DEFAULT FALSE;
 
+    DECLARE intOverdueOnSrokDate DOUBLE DEFAULT 0;
 
-    DECLARE paymentSumAfterSpecDate DOUBLE;
+    DECLARE paymentSumAfterSpecDate DOUBLE DEFAULT 0;
+
+    DECLARE paymentSumBeforeSpecDate DOUBLE DEFAULT 0;
+
+    DECLARE limitDate DATE;
 
     DECLARE pType VARCHAR(20);
     DECLARE wo_princ DOUBLE;
@@ -1514,7 +1519,7 @@ BEGIN
     #get loan amount
     SELECT amount INTO loan_amount from loan where id = loan_id;
 
-    select IFNULL(SUM(CASE WHEN payment.in_loan_currency THEN payment.penalty*payment.exchange_rate ELSE payment.penalty END), 0) INTO paymentSumAfterSpecDate from payment where loanId = loan_id and paymentDate >= '2014-11-25';
+#     select IFNULL(SUM(CASE WHEN payment.in_loan_currency THEN payment.penalty*payment.exchange_rate ELSE payment.penalty END), 0) INTO paymentSumAfterSpecDate from payment where loanId = loan_id and paymentDate >= '2014-11-25';
 
     IF !isTermFound(loan_id, inDate) THEN
       SET v_finished = 1;
@@ -1844,12 +1849,21 @@ BEGIN
       SET totalDisb = totalDisb + disb;
 
       IF NOT penalty_limit_flag THEN
-        IF penalty_limit > 0 AND totalPenAccrued >= totalDisb*penalty_limit/100-paymentSumAfterSpecDate AND tempDate >= '2014-11-25' THEN
-          SET totalPenAccrued = totalDisb*penalty_limit/100-paymentSumAfterSpecDate;
+        IF penalty_limit > 0 AND totalPenAccrued >= totalDisb*penalty_limit/100+paymentSumBeforeSpecDate AND tempDate >= '2014-11-25' THEN
+          SET totalPenAccrued = totalDisb*penalty_limit/100+paymentSumBeforeSpecDate;
           SET penalty_limit_flag = TRUE;
           UPDATE creditTerm SET penaltyLimitEndDate = tempDate WHERE loanId = loan_id;
+          SET limitDate = tempDate;
         END IF;
       END IF;
+
+#       IF NOT penalty_limit_flag THEN
+#         IF penalty_limit > 0 AND totalPenAccrued >= totalDisb*penalty_limit/100-paymentSumAfterSpecDate AND tempDate >= '2014-11-25' THEN
+#           SET totalPenAccrued = totalDisb*penalty_limit/100-paymentSumAfterSpecDate;
+#           SET penalty_limit_flag = TRUE;
+#           UPDATE creditTerm SET penaltyLimitEndDate = tempDate WHERE loanId = loan_id;
+#         END IF;
+#       END IF;
 
       SET totalPrincPaid = totalPrincPaid + princPaid;
       SET totalPrincPayment = totalPrincPayment + princPayment;
@@ -1865,7 +1879,7 @@ BEGIN
 
       SET totalIntPaid = totalIntPaid + intPaid;
 
-      IF (tempDate != inDate) THEN
+      IF (tempDate != inDate OR afterSrokDate) THEN
         IF (isPaymentSchedulePaymentDate(tempDate, loan_id) OR isPaymentScheduleLastPaymentDate(tempDate, loan_id)) OR afterSrokDate THEN
           SET intPayment = totalIntAccrued - totalIntAccruedOnIntPayment;
           SET totalIntAccruedOnIntPayment = totalIntAccrued;
@@ -1878,6 +1892,19 @@ BEGIN
 
       SET totalCollPenPayment = totalCollPenPayment + collPenPayment;
       SET totalPenPaid = totalPenPaid + penPaid;
+
+
+      IF penalty_limit > 0 AND tempDate < '2014-11-25' AND penPaid > 0 THEN
+        SET paymentSumBeforeSpecDate=paymentSumBeforeSpecDate+penPaid;
+      END IF;
+
+      IF penalty_limit > 0 AND tempDate >= '2014-11-25' AND penPaid > 0 THEN
+        SET paymentSumAfterSpecDate=paymentSumAfterSpecDate+penPaid;
+      END IF;
+
+
+
+
       SET penOverdue = totalPenAccrued + totalCollPenPayment - totalPenPaid;
       SET collPenDisbursed = getCollectedPenDisbursed(loan_id);
 
@@ -1889,11 +1916,12 @@ BEGIN
       END IF;
 
       IF penalty_limit > 0 AND tempDate >= '2014-11-25' THEN
-        IF penOutstanding > (totalDisb*penalty_limit/100)- paymentSumAfterSpecDate THEN
-          SET penOutstanding = totalDisb*penalty_limit/100 - paymentSumAfterSpecDate;
+        IF penOutstanding > (totalDisb*penalty_limit/100) - paymentSumAfterSpecDate THEN
+#           SET penOutstanding = totalDisb*penalty_limit/100 + paymentSumBeforeSpecDate - paymentSumAfterSpecDate;
+          SET penOutstanding = totalDisb*penalty_limit/100  - paymentSumAfterSpecDate;
         END IF;
 
-        IF penOverdue > (totalDisb*penalty_limit/100) - paymentSumAfterSpecDate THEN
+        IF penOverdue > (totalDisb*penalty_limit/100)  - paymentSumAfterSpecDate THEN
           SET penOverdue = totalDisb*penalty_limit/100 - paymentSumAfterSpecDate;
         END IF;
       END IF;
