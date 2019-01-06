@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <title>	JsTree</title>
+
+    <div  th:replace="fragments/header :: header-css" />
+    <link th:href="@{/assets/global/plugins/jstree/dist/themes/default/style.min.css}" rel="stylesheet" type="text/css" />
+</head>
+<!-- end::Head -->
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <div class="m-content">
+                <div class="m-portlet m-portlet--mobile">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text">JsTree</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-portlet__body">
+                        <button type="button" class="btn m-btn--square  btn-primary" id="submitBtn">SUBMIT</button>
+                        <div id="jsTree1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END CONTENT BODY -->
+    <!-- begin::Footer -->
+    <div th:replace="layout/footer"/>
+    <!-- end::Footer -->
+</div>
+<div class="m-scroll-top m-scroll-top--skin-top" data-toggle="m-scroll-top" data-scroll-offset="500" data-scroll-speed="300">
+    <i class="la la-arrow-up"></i>
+</div>
+<div th:replace="fragments/footer :: footer-js"/>
+
+
+<script th:src="@{/assets/global/plugins/jstree/dist/jstree.min.js}" type="text/javascript"></script>
+<script th:src="@{/assets/global/plugins/jstree/dist/jstree.js}" type="text/javascript"></script>
+<!--<script th:src="@{/assets/global/plugins/jstree/dist/libs/jquery.js}" type="text/javascript"></script>-->
+</body>
+</html>
+
+
+<script th:inline="javascript">
+    var jsonJsTree = /*[[${jsonJsTree}]]*/ [];
+    var id = /*[[${id}]]*/ [];
+    var selecteds=[];
+    // $('#jsTree1').jstree({ 'core' : {
+    //         'data' :jsonJsTree
+    //     } });
+
+    $(function() {
+        // $("#jsTree1").jstree({
+        //     "plugins" : [ "checkbox" ]});
+
+        $('#jsTree1').jstree({
+            'core' : {
+                'data': {
+                    "url": "/api/jsTree/",
+                    'data':{'id':id},
+                    "dataType": "json" // needed only if you do not supply JSON headers
+                },
+            },
+            "checkbox" : {
+                "tie_selection" : false
+            },
+            "plugins" : [ "checkbox"]
+
+        });
+        $('#jsTree1').on('click',function () {
+            selecteds=($("#jsTree1").jstree("get_checked"));
+            // console.log(selecteds);
+        });
+
+        $("#submitBtn").on('click',function () {
+
+            console.log(selecteds)
+            $.ajax({
+                type:'post',
+                data:{"selecteds":selecteds.toString()},
+                url:"/api/report/"+id+"/filterParameter",
+                success(data){
+                    // alert(data)
+                    // var rr="/reportTemplate/"+data+"/generate";
+                    // window.location=rr;
+                    $.ajax({
+                        type:'GET',
+                        data:{},
+                        url:"/reportTemplate/"+data+"/generate",
+                        success(){
+                            $.ajax({
+                                type:'POST',
+                                data:{},
+                                url:"/report/reportTemplate/"+data+"/delete",
+                                success(data){
+                                    if (data="OK"){
+                                        var reportList="/report/list";
+                                        window.location=reportList;
+                                    }
+                                }
+                            });
+                        }
+                    });
+            }
+        });
+
+
+
+        });
+    });
+</script>

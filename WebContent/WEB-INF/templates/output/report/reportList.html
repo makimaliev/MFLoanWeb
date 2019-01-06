@@ -4,6 +4,7 @@
 <!-- begin::Head -->
 <head>
 	<title th:text="#{label.reports}"></title>
+	<link th:href="@{/assets/global/plugins/jquery-multi-select/css/multi-select.css}" media="screen" rel="stylesheet" type="text/css">
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -76,6 +77,11 @@
 														   role="button" sec:authorize="hasRole('ADMIN')">
 															<span th:text="#{label.table.view}"></span>
 														</a>
+                                                        <a class="dropdown-item"
+                                                           th:href="@{/report/__${s.id}__/customView}"
+                                                           role="button">
+															<span th:text="#{label.report.customView}"></span>
+														</a>
 														<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_REPORT')" class="dropdown-item"
 														   data-remote="false" data-toggle="modal"
 														   data-target="#reportFormModal"
@@ -102,8 +108,8 @@
 				</div>
 
 				<!--begin::Modal-->
-				<div class="modal fade" id="reportFormModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-					<div class="modal-dialog" role="document">
+				<div class="modal fade bs-modal-lg" id="reportFormModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-lg" role="document">
 						<div class="modal-content">
 						</div>
 					</div>
@@ -127,6 +133,8 @@
 <div th:replace="fragments/footer :: footer-js"/>
 <script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
 <script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>
+<script th:src="@{/assets/global/plugins/jquery-multi-select/js/jquery.multi-select.js}" type="text/javascript"></script>
+<script th:src="@{/assets/global/plugins/quicksearch/jquery.quicksearch.js}" type="text/javascript"></script>
 
 
 <script type="text/javascript">
