@@ -94,6 +94,9 @@ BEGIN
     IF dIYMethod != 1 THEN SET nOD = 360;
     END IF;
 
+  IF dIYMethod = 3 THEN SET nOD = 365;
+  END IF;
+
     IF principalOutstanding < 0 THEN
       SET principalOutstanding = 0;
     END IF;
@@ -1818,12 +1821,29 @@ BEGIN
       SET penAccrued = calculatePenaltyAccrued(princOverdue, intOverdue, daysInPer, tempDate, loan_id);
 
       IF srokDate is not null THEN
-        SET penAccrued = penAccrued
-                         + calculatePenaltyAccrued(0, (intAccrued*(daysInPer-1)/(2*daysInPer)), daysInPer, tempDate, loan_id);
-        IF has_libor_io THEN
-          SET penAccrued = penAccrued
-                           + calculateLibor((intAccrued*(daysInPer-1)/(2*daysInPer)), prevDate, tempDate, term_rate_io_id, term_diy_method_id, loan_id, 2);
+
+        IF tempDate < '2010-04-02' THEN
+          SET penAccrued = calculatePenaltyAccrued(princOverdue, ((intOverdueOnSrokDate-totalIntPaid+intOverdue+intAccrued-intPaid)/2), daysInPer, tempDate, loan_id);
+
+#           SET penAccrued = princOverdue;
+          IF has_libor_io THEN
+            SET penAccrued = penAccrued
+                             + calculateLibor(((intOverdueOnSrokDate-totalIntPaid+intOverdue+intAccrued-intPaid)/2), prevDate, tempDate, term_rate_io_id, term_diy_method_id, loan_id, 2);
+          END IF;
+
+
+
+          ELSE
+            SET penAccrued = penAccrued
+                             + calculatePenaltyAccrued(0, (intAccrued*(daysInPer-1)/(2*daysInPer)), daysInPer, tempDate, loan_id);
+            IF has_libor_io THEN
+              SET penAccrued = penAccrued
+                               + calculateLibor((intAccrued*(daysInPer-1)/(2*daysInPer)), prevDate, tempDate, term_rate_io_id, term_diy_method_id, loan_id, 2);
+            END IF;
+
         END IF;
+
+
       ELSE
         SET penAccrued = penAccrued;
       END IF;
@@ -1869,13 +1889,14 @@ BEGIN
       SET totalPrincPayment = totalPrincPayment + princPayment;
       SET prevDate = tempDate;
 
-      SET princOutstanding = totalDisb - totalPrincPaid;
-      SET princOverdue = totalPrincPayment - totalPrincPaid;
+      SET princOutstanding = totalDisb - totalPrincPaid - total_wo_princ;
+      SET princOverdue = totalPrincPayment - totalPrincPaid - total_wo_princ;
 
-      IF pType = 'write off' THEN
-        SET princOutstanding = princOutstanding - total_wo_princ;
-        SET princOverdue = princOverdue - total_wo_princ;
-      end if;
+#       IF pType = 'write off' THEN
+#         SET princOutstanding = princOutstanding - total_wo_princ;
+#         SET princOverdue = princOverdue - total_wo_princ;
+# #         SET princOverdue = princOverdue - total_wo_princ;
+#       end if;
 
       SET totalIntPaid = totalIntPaid + intPaid;
 
@@ -1905,15 +1926,15 @@ BEGIN
 
 
 
-      SET penOverdue = totalPenAccrued + totalCollPenPayment - totalPenPaid;
+      SET penOverdue = totalPenAccrued + totalCollPenPayment - totalPenPaid - total_wo_pen;
       SET collPenDisbursed = getCollectedPenDisbursed(loan_id);
 
-      SET penOutstanding = totalPenAccrued + collPenDisbursed - totalPenPaid;
+      SET penOutstanding = totalPenAccrued + collPenDisbursed - totalPenPaid - total_wo_pen;
 
-      IF pType = 'write off' THEN
-        SET penOutstanding = penOutstanding - total_wo_pen;
-        SET penOverdue = penOverdue - total_wo_pen;
-      END IF;
+#       IF pType = 'write off' THEN
+#         SET penOutstanding = penOutstanding - total_wo_pen;
+#         SET penOverdue = penOverdue - total_wo_pen;
+#       END IF;
 
       IF penalty_limit > 0 AND tempDate >= '2014-11-25' THEN
         IF penOutstanding > (totalDisb*penalty_limit/100) - paymentSumAfterSpecDate THEN
@@ -1927,15 +1948,26 @@ BEGIN
       END IF;
 
       SET collIntDisbursed = getCollectedIntDisbursed(loan_id);
-      SET intOutstanding = totalIntAccrued + collIntDisbursed - totalIntPaid;
+      SET intOutstanding = totalIntAccrued + collIntDisbursed - totalIntPaid - total_wo_int;
       SET totalCollIntPayment = totalCollIntPayment + collIntPayment;
       SET totalIntPayment = totalIntPayment + intPayment;
-      SET intOverdue = totalIntPayment + totalCollIntPayment - totalIntPaid;
+      SET intOverdue = totalIntPayment + totalCollIntPayment - totalIntPaid - total_wo_int;
 
-      IF pType = 'write off' THEN
-        SET intOutstanding = intOutstanding - total_wo_int;
-        SET intOverdue = intOverdue - total_wo_int;
+
+#       SET penOverdue = intPaid;
+
+      IF isPaymentSchedulePaymentDate(tempDate, loan_id) THEN
+        SET intOverdueOnSrokDate = intOverdue+totalIntPaid;
+#         SET penOverdue = intPaid;
+
       END IF;
+
+
+
+#       IF pType = 'write off' THEN
+#         SET intOutstanding = intOutstanding - total_wo_int;
+#         SET intOverdue = intOverdue - total_wo_int;
+#       END IF;
 
       SET total_outstanding = (CASE WHEN princOutstanding >= 0 THEN princOutstanding ELSE 0 END) +
                               (CASE WHEN intOutstanding >= 0 THEN intOutstanding ELSE 0 END) +
