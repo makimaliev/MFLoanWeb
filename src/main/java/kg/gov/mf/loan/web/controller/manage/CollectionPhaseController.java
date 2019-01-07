@@ -132,24 +132,35 @@ public class CollectionPhaseController {
 
 	}
 
-    @RequestMapping(value="/collectionPhase/getPhaseDetails", method=RequestMethod.POST)
+    @RequestMapping(value="/collectionPhase/{id}/getPhaseDetails", method=RequestMethod.POST)
     @ResponseBody
-    public String getPhaseDetailsTable(@RequestParam Map<String, String> selectedLoans){
+    public String getPhaseDetailsTable(@RequestParam Map<String, String> selectedLoans,@PathVariable(value = "id") Long id){
 
         List<PhaseDetailsModel> result = new ArrayList<>();
         for (String value:selectedLoans.values()
         ) {
             LoanModel1 loan=getLoanIdAndRegNumber(Long.parseLong(value));
             if(loan!=null){
-                PhaseDetailsModel dTemp = new PhaseDetailsModel();
-//			Loan loan = loanRepository.getOne(Long.parseLong(value));
-                dTemp.setLoanId(loan.getId());
-                dTemp.setLoanRegNumber(loan.getRegNumber());
-                dTemp.setLoanStateId(loan.getStateId());
-                dTemp.setStartPrincipal(0.0);
-                dTemp.setStartInterest(0.0);
-                dTemp.setStartPenalty(0.0);
-                dTemp.setStartTotalAmount(0.0);
+				PhaseDetailsModel dTemp = new PhaseDetailsModel();
+				dTemp.setLoanId(loan.getId());
+				dTemp.setLoanRegNumber(loan.getRegNumber());
+				dTemp.setLoanStateId(loan.getStateId());
+            	try{
+					CollectionPhase phase=phaseService.getById(id);
+					for (PhaseDetails phaseDetails1:phase.getPhaseDetails()){
+						PhaseDetails phaseDetails=phaseDetailsService.getById(phaseDetails1.getId());
+						dTemp.setStartPrincipal(phaseDetails.getStartPrincipal());
+						dTemp.setStartInterest(phaseDetails.getStartInterest());
+						dTemp.setStartPenalty(phaseDetails.getStartPenalty());
+						dTemp.setStartTotalAmount(phaseDetails.getStartTotalAmount());
+					}
+				}
+            	catch(Exception e){
+					dTemp.setStartPrincipal(0.0);
+					dTemp.setStartInterest(0.0);
+					dTemp.setStartPenalty(0.0);
+					dTemp.setStartTotalAmount(0.0);
+				}
                 result.add(dTemp);
             }
         }
@@ -341,6 +352,7 @@ public class CollectionPhaseController {
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtorId", debtorId);
 		model.addAttribute("debtor", debtor);
+		model.addAttribute("phaseId", phaseId);
 		model.addAttribute("procId", procId);
 		model.addAttribute("proc", procService.getById(procId));
 
@@ -465,7 +477,10 @@ public class CollectionPhaseController {
 			}
 			else
 			{
-				System.out.println("qwer");
+				for(PhaseDetails phaseDetail:phaseDetailsList){
+					phaseDetail.setCollectionPhase(phase);
+					phaseDetailsService.add(phaseDetail);
+				}
 			}
 
 			phaseService.update(phase);

@@ -240,9 +240,10 @@
     var selectedLoans = /*[[${loanIds}]]*/ [];
     var debtorId = /*[[${debtorId}]]*/ [];
     var procId = /*[[${procId}]]*/ [];
+    var phaseId = /*[[${phaseId}]]*/ [];
     $.ajax({
         type : 'POST',
-        url : "/collectionPhase/getPhaseDetails",
+        url : "/collectionPhase/"+phaseId+"/getPhaseDetails",
         data: {selectedLoans:selectedLoans},
         success:function (data) {
             phaseDetailsTableInit(data);
