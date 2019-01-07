@@ -94,7 +94,7 @@ BEGIN
     IF dIYMethod != 1 THEN SET nOD = 360;
     END IF;
 
-  IF dIYMethod = 3 THEN SET nOD = 365;
+  IF dIYMethod = 3 THEN SET nOD = 366;
   END IF;
 
     IF principalOutstanding < 0 THEN
@@ -364,6 +364,9 @@ BEGIN
       IF dIYMethod != 1 THEN SET nOD = 360;
       END IF;
 
+      IF dIYMethod = 3 THEN SET nOD = 366;
+      END IF;
+
       SET daysInPer = calculateDays(prevDate, curDate, dIYMethod);
 
       set d_period_int = daysInPer - grace_int;
@@ -499,6 +502,9 @@ BEGIN
       IF dIYMethod != 1 THEN SET nOD = 360;
       END IF;
 
+      IF dIYMethod = 3 THEN SET nOD = 366;
+      END IF;
+
       SET daysInPer = calculateDays(prevDate, curDate, dIYMethod);
 
       set d_period_princ = daysInPer - grace_princ;
@@ -596,8 +602,11 @@ BEGIN
     FETCH cur INTO pOIO, pOPO, dIYMethod;
     CLOSE cur;
 
-    IF dIYMethod != 1 THEN SET nOD = 360;
-    END IF;
+  IF dIYMethod != 1 THEN SET nOD = 360;
+  END IF;
+
+  IF dIYMethod = 3 THEN SET nOD = 366;
+  END IF;
 
     set temp_days_in_period = daysInPeriod;
 
@@ -2936,8 +2945,10 @@ BEGIN
                 AND term.record_status = 1
           ORDER BY term.startDate DESC LIMIT 1;
 
-          IF dIYMethod != 1 THEN
-            SET nOD = 360;
+          IF dIYMethod != 1 THEN SET nOD = 360;
+          END IF;
+
+          IF dIYMethod = 3 THEN SET nOD = 366;
           END IF;
 
           SELECT prevIntOverdue, intOverdue, princOverdue, popo, poio, dPeriod, nOD;
