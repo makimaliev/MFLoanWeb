@@ -1364,6 +1364,13 @@ BEGIN
     DECLARE total_wo_int DOUBLE DEFAULT 0;
     DECLARE total_wo_pen DOUBLE DEFAULT 0;
 
+    DECLARE judge_princ DOUBLE;
+    DECLARE judge_int DOUBLE;
+    DECLARE judge_pen DOUBLE;
+    DECLARE total_judge_princ DOUBLE DEFAULT 0;
+    DECLARE total_judge_int DOUBLE DEFAULT 0;
+    DECLARE total_judge_pen DOUBLE DEFAULT 0;
+
     DECLARE term_rate_type_id INT;
     DECLARE term_rate_po_id INT;
     DECLARE term_rate_io_id INT;
@@ -1450,6 +1457,27 @@ BEGIN
               AND loan.id = loan_id
               AND wo.date < inDate
               AND wo.record_status = 1
+
+          UNION ALL
+
+          SELECT
+            'judgement' as type,
+            5 as orderType,
+            jd.date as onDate,
+            0,
+            IFNULL(jd.principal, 0) as principalPaid,
+            0,
+            IFNULL(jd.interest, 0) as interestPaid,
+            0,
+            IFNULL(jd.penalty, 0) as penaltyPaid,
+            0,
+            0,
+            1 as curRate
+          FROM loan loan, judgement jd
+          WHERE loan.id = jd.loanId
+              AND loan.id = loan_id
+              AND jd.date <= inDate
+              AND jd.record_status = 1
 
           UNION ALL
 
@@ -1646,6 +1674,19 @@ BEGIN
         SET total_wo_pen = total_wo_pen + wo_pen;
       END IF;
 
+      IF pType = 'judgement' THEN
+        SET judge_princ = princPaid;
+        SET judge_int = intPaid;
+        SET judge_pen = penPaid;
+        SET princPaid = 0;
+        SET intPaid = 0;
+        SET penPaid = 0;
+
+        SET total_judge_princ = total_judge_princ + judge_princ;
+        SET total_judge_int = total_judge_int + judge_int;
+        SET total_judge_pen = total_judge_pen + judge_pen;
+      END IF;
+
       SET princPaidKGS = princPaid;
       SET intPaidKGS = intPaid;
       SET penPaidKGS = penPaid;
@@ -1827,17 +1868,17 @@ BEGIN
 
       SET totalIntAccrued = totalIntAccrued + intAccrued;
 
-      SET penAccrued = calculatePenaltyAccrued(princOverdue, intOverdue, daysInPer, tempDate, loan_id);
+      SET penAccrued = calculatePenaltyAccrued(princOverdue-total_judge_princ, intOverdue-total_judge_int, daysInPer, tempDate, loan_id);
 
       IF srokDate is not null THEN
 
         IF tempDate < '2010-04-02' THEN
-          SET penAccrued = calculatePenaltyAccrued(princOverdue, ((intOverdueOnSrokDate-totalIntPaid+intOverdue+intAccrued-intPaid)/2), daysInPer, tempDate, loan_id);
+          SET penAccrued = calculatePenaltyAccrued(princOverdue-total_judge_princ, ((intOverdueOnSrokDate-totalIntPaid+intOverdue-total_judge_int+intAccrued-intPaid)/2), daysInPer, tempDate, loan_id);
 
 #           SET penAccrued = princOverdue;
           IF has_libor_io THEN
             SET penAccrued = penAccrued
-                             + calculateLibor(((intOverdueOnSrokDate-totalIntPaid+intOverdue+intAccrued-intPaid)/2), prevDate, tempDate, term_rate_io_id, term_diy_method_id, loan_id, 2);
+                             + calculateLibor(((intOverdueOnSrokDate-totalIntPaid+intOverdue-total_judge_int+intAccrued-intPaid)/2), prevDate, tempDate, term_rate_io_id, term_diy_method_id, loan_id, 2);
           END IF;
 
 
@@ -1863,11 +1904,11 @@ BEGIN
       END IF;
 
       IF has_libor_po THEN
-        SET penAccrued = penAccrued + calculateLibor(princOverdue, prevDate, tempDate, term_rate_po_id, term_diy_method_id, loan_id, 1);
+        SET penAccrued = penAccrued + calculateLibor(princOverdue-total_judge_princ, prevDate, tempDate, term_rate_po_id, term_diy_method_id, loan_id, 1);
       END IF;
 
       IF has_libor_io THEN
-        SET penAccrued = penAccrued + calculateLibor(intOverdue, prevDate, tempDate, term_rate_io_id, term_diy_method_id, loan_id,2);
+        SET penAccrued = penAccrued + calculateLibor(intOverdue-total_judge_int, prevDate, tempDate, term_rate_io_id, term_diy_method_id, loan_id,2);
       END IF;
 
       IF penalty_limit_flag THEN
@@ -1895,6 +1936,14 @@ BEGIN
 #       END IF;
 
       SET totalPrincPaid = totalPrincPaid + princPaid;
+
+      IF total_judge_princ > 0 THEN
+        SET total_judge_princ = total_judge_princ - princPaid;
+        IF total_judge_princ < 0 THEN
+          SET total_judge_princ = 0;
+        END IF;
+      END IF;
+
       SET totalPrincPayment = totalPrincPayment + princPayment;
       SET prevDate = tempDate;
 
@@ -1908,6 +1957,13 @@ BEGIN
 #       end if;
 
       SET totalIntPaid = totalIntPaid + intPaid;
+
+      IF total_judge_int > 0 THEN
+        SET total_judge_int = total_judge_int - intPaid;
+        IF total_judge_int < 0 THEN
+          SET total_judge_int = 0;
+        END IF;
+      END IF;
 
       IF (tempDate != inDate OR afterSrokDate) THEN
         IF (isPaymentSchedulePaymentDate(tempDate, loan_id) OR isPaymentScheduleLastPaymentDate(tempDate, loan_id)) OR afterSrokDate THEN
@@ -2017,8 +2073,8 @@ BEGIN
       end if;
 
       IF flag = TRUE THEN
-        SET pOPO = calculatePOPO(princOverdue, daysInPer, tempDate, loan_id);
-        SET pOIO = calculatePOIO(intOverdue, daysInPer, tempDate, loan_id);
+        SET pOPO = calculatePOPO(princOverdue-total_judge_princ, daysInPer, tempDate, loan_id);
+        SET pOIO = calculatePOIO(intOverdue-total_judge_int, daysInPer, tempDate, loan_id);
 
         IF tempDate > inDate THEN
           SET penAccrued = 0;
@@ -3429,4 +3485,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-05 16:53:19
+-- Dump completed on 2019-01-07 17:44:52
