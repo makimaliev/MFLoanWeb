@@ -63,7 +63,10 @@ public class DebtTransferController {
 		
 		if(dtId == 0)
 		{
-			model.addAttribute("dt", new DebtTransfer());
+			DebtTransfer debtTransfer=new DebtTransfer();
+			debtTransfer.setDate(new Date());
+			debtTransfer.setQuantityType(quantityTypeService.getById(Long.valueOf(1)));
+			model.addAttribute("dt", debtTransfer);
 			model.addAttribute("thisUnit","");
 			model.addAttribute("thisGoodType","");
 		}

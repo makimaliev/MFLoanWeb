@@ -145,14 +145,17 @@ public class CollateralItemController {
 			collateralItem.setQuantityType(qTypeService.getById(Long.valueOf(1)));
 			collateralItem.setQuantity(1.0);
 			collateralItem.setCollateralValue(0.0);
+			CollateralItemDetails collateralItemDetails=new CollateralItemDetails();
+//			collateralItem.setCollateralItemDetails(collateralItemDetails);
+//			collateralItemDetails.setCollateralItem(collateralItem);
 			model.addAttribute("item", collateralItem);
-			model.addAttribute("itemDetails", new CollateralItemDetails());
+			model.addAttribute("itemDetails", collateralItemDetails);
 		}
 			
 		if(itemId > 0)
 		{
 			CollateralItem tItem = itemService.getById(itemId);
-			CollateralItemDetails tDetails = tItem.getCollateralItemDetails();
+			CollateralItemDetails tDetails = itemDetailsService.getById(tItem.getCollateralItemDetails().getId());
 			model.addAttribute("item", tItem);
 			model.addAttribute("itemDetails", tDetails);
 		}
@@ -179,6 +182,7 @@ public class CollateralItemController {
 			item.setCollateralItemDetails(itemDetails);
 			itemDetails.setCollateralItem(item);
 			itemService.add(item);
+			itemDetailsService.add(itemDetails);
 		}
 		else
 		{
@@ -216,7 +220,9 @@ public class CollateralItemController {
 
 		if(afId == 0)
 		{
-			model.addAttribute("af", new CollateralItemArrestFree());
+			CollateralItemArrestFree collateralItemArrestFree=new CollateralItemArrestFree();
+			collateralItemArrestFree.setOnDate(new Date());
+			model.addAttribute("af", collateralItemArrestFree);
 		}
 
 		if(afId > 0)

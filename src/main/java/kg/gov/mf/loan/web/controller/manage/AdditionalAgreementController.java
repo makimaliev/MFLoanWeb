@@ -48,6 +48,7 @@ public class AdditionalAgreementController {
         if(addId==0){
             AdditionalAgreement additionalAgreement=new AdditionalAgreement();
             additionalAgreement.setDate(new Date());
+            additionalAgreement.setCollateralAgreement(collateralAgreementService.getById(agreementId));
             model.addAttribute("additionalAgreement",additionalAgreement);
 
         }

@@ -1,0 +1,12 @@
+insert into message_resource(kgz,rus,eng,messageKey) values ('','','','label.change.finGroup');
+insert into message_resource(kgz,rus,eng,messageKey) values ('','','','label.change.loanFinGroup');
+insert into message_resource(kgz,rus,eng,messageKey) values ('','','','label.change.fund');
+insert into message_resource(kgz,rus,eng,messageKey) values ('','','','label.change.loanFund');
+insert into message_resource(kgz,rus,eng,messageKey) values ('','','','label.collection.event');
+insert into message_resource(kgz,rus,eng,messageKey) values ('','','','label.add.collection.event');
+insert into message_resource(kgz,rus,eng,messageKey) values ('','','','label.add.collateral.additionalAgreement');
+insert into message_resource(kgz,rus,eng,messageKey) values ('','','','label.collateralagreement.tab.additionalAgreement');
+insert into message_resource(kgz,rus,eng,messageKey) values ('','','','label.agreement.description');
+insert into message_resource(kgz,rus,eng,messageKey) values ('','','','label.report.customView');
+insert into message_resource(kgz,rus,eng,messageKey) values ('','','','label.table.addUser');
+insert into message_resource(kgz,rus,eng,messageKey) values ('','','','label.id');

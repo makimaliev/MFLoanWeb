@@ -88,10 +88,10 @@
 						</div>
 					</div>
 					<!--begin::Form-->
-					<form th:action="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/save}" method="post" class="m-form m-form--fit m-form--label-align-right">
+					<form th:action="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/save}" th:object="${item}" method="post" class="m-form m-form--fit m-form--label-align-right">
 
-						<input type="hidden" name="id" th:value="${item.id}"/>
-						<input type="hidden" name="id" th:field="${item.owner.id}" id="ownerId"/>
+						<input type="hidden" name="id" th:value="*{id}"/>
+						<input type="hidden" name="id" th:field="*{owner.id}" id="ownerId"/>
 
 						<div class="m-portlet__body">
 							<div class="m-form__section">

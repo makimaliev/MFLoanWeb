@@ -52,7 +52,15 @@ public class WriteOffController {
 		
 		if(woId == 0)
 		{
-			model.addAttribute("wo", new WriteOff());
+			WriteOff writeOff=new WriteOff();
+			writeOff.setDate(new Date());
+			writeOff.setFee(0.0);
+			writeOff.setInterest(0.0);
+			writeOff.setPenalty(0.0);
+			writeOff.setTotalAmount(0.0);
+			writeOff.setPrincipal(0.0);
+			writeOff.setDescription("-");
+			model.addAttribute("wo",writeOff );
 		}
 			
 		if(woId > 0)

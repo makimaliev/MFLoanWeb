@@ -12,6 +12,7 @@ import kg.gov.mf.loan.manage.model.collateral.CollateralItem;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import kg.gov.mf.loan.manage.service.collateral.AdditionalAgreementService;
+import kg.gov.mf.loan.manage.service.collateral.CollateralItemService;
 import kg.gov.mf.loan.web.fetchModels.AdditionalAgreementModel;
 import kg.gov.mf.loan.web.fetchModels.CollateralItemModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,9 @@ public class CollateralAgreementController {
 
 	@Autowired
 	AdditionalAgreementService additionalAgreementService;
+
+	@Autowired
+	CollateralItemService collateralItemService;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -164,8 +168,9 @@ public class CollateralAgreementController {
 	{
 		List<CollateralItemModel> result = new ArrayList<>();
 		CollateralAgreement agreement = agreementService.getById(agreementId);
-		for(CollateralItem item: agreement.getCollateralItems())
+		for(CollateralItem item1: agreement.getCollateralItems())
 		{
+			CollateralItem item=collateralItemService.getById(item1.getId());
 			CollateralItemModel model = new CollateralItemModel();
 			model.setId(item.getId());
 			model.setName(item.getName());

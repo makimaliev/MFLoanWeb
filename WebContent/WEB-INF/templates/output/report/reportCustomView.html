@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
 
-    <title>	JsTree</title>
+    <title>	Отчет</title>
 
     <div  th:replace="fragments/header :: header-css" />
     <link th:href="@{/assets/global/plugins/jstree/dist/themes/default/style.min.css}" rel="stylesheet" type="text/css" />
@@ -26,12 +26,12 @@
                     <div class="m-portlet__head">
                         <div class="m-portlet__head-caption">
                             <div class="m-portlet__head-title">
-                                <h3 class="m-portlet__head-text">JsTree</h3>
+                                <h3 class="m-portlet__head-text">Отчет</h3>
                             </div>
                         </div>
                     </div>
                     <div class="m-portlet__body">
-                        <button type="button" class="btn m-btn--square  btn-primary" id="submitBtn">SUBMIT</button>
+                        <button type="button" class="btn m-btn--square  btn-primary" id="submitBtn" th:text="#{label.save}">SUBMIT</button>
                         <div id="jsTree1"></div>
                     </div>
                 </div>
@@ -89,7 +89,7 @@
 
         $("#submitBtn").on('click',function () {
 
-            console.log(selecteds)
+            // console.log(selecteds)
             $.ajax({
                 type:'post',
                 data:{"selecteds":selecteds.toString()},

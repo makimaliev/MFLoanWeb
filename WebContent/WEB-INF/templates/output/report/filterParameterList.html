@@ -77,7 +77,7 @@
 													   th:href="@{/filterParameter/__${s.id}__/edit}" role="button"
 													   class="dropdown-item"> <span th:text="#{label.table.edit}"></span>
 													</a>
-													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_USER')" data-remote="false" data-toggle="modal"
+													<a hidden="hidden" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_USER')" data-remote="false" data-toggle="modal"
 													   data-target="#filterParameterFormModal"
 													   th:href="@{/filterParameter/__${s.id}__/addUser}" role="button"
 													   class="dropdown-item"> <span th:text="#{label.table.addUser}"></span>

@@ -48,7 +48,7 @@
 									<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_USER')" data-remote="false" data-toggle="modal"
 									   data-target="#userFormModal" th:href="@{/user/add}"
 									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.user.button.addUser}"> Add User</a>
-									<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_SUPERVISORTERM')" data-remote="false" data-toggle="modal"
+									<a hidden="hidden" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_SUPERVISORTERM')" data-remote="false" data-toggle="modal"
 									   data-target="#userFormModal" th:href="@{/supervisorTerm/add}"
 									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.user.button.addSupervisorTerm}"> Add
 										Supervisor Term</a>
@@ -85,7 +85,7 @@
 													   data-target="#userFormModal" th:href="@{/user/__${s.id}__/edit}"
 													   role="button" class="dropdown-item"> <span th:text="#{label.table.edit}"></span>
 													</a>
-													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_SUPERVISORTERM')" data-remote="false" data-toggle="modal"
+													<a hidden="hidden" sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_SUPERVISORTERM')" data-remote="false" data-toggle="modal"
 													   data-target="#supervisorTermFormModal" th:href="@{/user/__${s.id}__/supervisorTerm/add}"
 													   role="button" class="dropdown-item"> <span th:text="#{label.user.button.addSupervisorTerm}"></span>
 													</a>
