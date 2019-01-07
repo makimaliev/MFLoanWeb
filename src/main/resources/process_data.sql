@@ -117,9 +117,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `calculateLibor`(val double, fromDate date, toDate date, term_rate_type int, term_diy_method int, loan_id bigint, grace_type int) RETURNS double
+CREATE DEFINER=`root`@`localhost` FUNCTION `calculateLibor`(val             double, fromDate date, toDate date, term_rate_type int,
+                               term_diy_method int, term_dim_method int, loan_id bigint, grace_type int) RETURNS double
 BEGIN
 
     DECLARE total DOUBLE DEFAULT 0;
@@ -211,7 +212,7 @@ BEGIN
       IF term_diy_method != 1 THEN SET nOD = 360;
       END IF;
 
-      SET daysInPer = calculateDays(prevDate, curDate, term_diy_method);
+      SET daysInPer = calculateDays(prevDate, curDate, term_dim_method);
 
       if grace_type = 1 then
         SET daysInPer = daysInPer - grace_princ;
@@ -237,7 +238,7 @@ BEGIN
 
     CLOSE tCursor;
 
-    SET daysInPer = calculateDays(prevDate, toDate, term_diy_method);
+    SET daysInPer = calculateDays(prevDate, toDate, term_dim_method);
 
     if grace_type = 1 then
       SET daysInPer = daysInPer - grace_princ;
@@ -1375,6 +1376,11 @@ BEGIN
     DECLARE term_rate_po_id INT;
     DECLARE term_rate_io_id INT;
     DECLARE term_diy_method_id INT;
+    DECLARE term_diy_method_popo_id INT;
+    DECLARE term_diy_method_poio_id INT;
+    DECLARE term_dim_method_id INT;
+    DECLARE term_dim_method_popo_id INT;
+    DECLARE term_dim_method_poio_id INT;
     DECLARE has_libor BOOLEAN;
     DECLARE has_libor_po BOOLEAN;
     DECLARE has_libor_io BOOLEAN;
@@ -1584,15 +1590,15 @@ BEGIN
       set has_libor = false;
 
       IF EXISTS(
-        SELECT cTerm.floatingRateTypeId, cTerm.daysInYearMethodId
+        SELECT cTerm.floatingRateTypeId, cTerm.daysInYearMethodId, cTerm.daysInMonthMethodId
         FROM creditTerm cTerm
         WHERE cTerm.loanId = loan_id
               AND cTerm.startDate < tempDate
               AND cTerm.record_status = 1
         ORDER BY cTerm.startDate DESC LIMIT 1
         ) THEN
-        SELECT cTerm.floatingRateTypeId, cTerm.daysInYearMethodId
-            INTO term_rate_type_id, term_diy_method_id
+        SELECT cTerm.floatingRateTypeId, cTerm.daysInYearMethodId, cTerm.daysInMonthMethodId
+            INTO term_rate_type_id, term_diy_method_id, term_dim_method_id
         FROM creditTerm cTerm
         WHERE cTerm.loanId = loan_id
               AND cTerm.startDate < tempDate
@@ -1609,15 +1615,15 @@ BEGIN
       set has_libor_po = false;
 
       IF EXISTS(
-        SELECT cTerm.penaltyOnPrincipleOverdueRateTypeId, cTerm.daysInYearMethodId
+        SELECT cTerm.penaltyOnPrincipleOverdueRateTypeId, cTerm.daysInYearMethodId, cTerm.daysInMonthMethodId
         FROM creditTerm cTerm
         WHERE cTerm.loanId = loan_id
               AND cTerm.startDate < tempDate
               AND cTerm.record_status = 1
         ORDER BY cTerm.startDate DESC LIMIT 1
         ) THEN
-        SELECT cTerm.penaltyOnPrincipleOverdueRateTypeId, cTerm.daysInYearMethodId
-            INTO term_rate_po_id, term_diy_method_id
+        SELECT cTerm.penaltyOnPrincipleOverdueRateTypeId, cTerm.daysInYearMethodId, cTerm.daysInMonthMethodId
+            INTO term_rate_po_id, term_diy_method_popo_id, term_dim_method_popo_id
         FROM creditTerm cTerm
         WHERE cTerm.loanId = loan_id
               AND cTerm.startDate < tempDate
@@ -1634,15 +1640,15 @@ BEGIN
       set has_libor_io = false;
 
       IF EXISTS(
-        SELECT cTerm.penaltyOnInterestOverdueRateTypeId, cTerm.daysInYearMethodId
+        SELECT cTerm.penaltyOnInterestOverdueRateTypeId, cTerm.daysInYearMethodId, cTerm.daysInMonthMethodId
         FROM creditTerm cTerm
         WHERE cTerm.loanId = loan_id
               AND cTerm.startDate < tempDate
               AND cTerm.record_status = 1
         ORDER BY cTerm.startDate DESC LIMIT 1
         ) THEN
-        SELECT cTerm.penaltyOnInterestOverdueRateTypeId, cTerm.daysInYearMethodId
-            INTO term_rate_io_id, term_diy_method_id
+        SELECT cTerm.penaltyOnInterestOverdueRateTypeId, cTerm.daysInYearMethodId, cTerm.daysInMonthMethodId
+            INTO term_rate_io_id, term_diy_method_poio_id, term_dim_method_poio_id
         FROM creditTerm cTerm
         WHERE cTerm.loanId = loan_id
               AND cTerm.startDate < tempDate
@@ -1863,7 +1869,7 @@ BEGIN
       SET intAccrued = calculateInterestAccrued(princOutstanding, daysInPer, tempDate, loan_id);
 
       IF has_libor THEN
-        SET intAccrued = intAccrued + calculateLibor(princOutstanding, prevDate, tempDate, term_rate_type_id, term_diy_method_id, loan_id, 0);
+        SET intAccrued = intAccrued + calculateLibor(princOutstanding, prevDate, tempDate, term_rate_type_id, term_diy_method_id, term_dim_method_id, loan_id, 0);
       END IF;
 
       SET totalIntAccrued = totalIntAccrued + intAccrued;
@@ -1878,7 +1884,7 @@ BEGIN
 #           SET penAccrued = princOverdue;
           IF has_libor_io THEN
             SET penAccrued = penAccrued
-                             + calculateLibor(((intOverdueOnSrokDate-totalIntPaid+intOverdue-total_judge_int+intAccrued-intPaid)/2), prevDate, tempDate, term_rate_io_id, term_diy_method_id, loan_id, 2);
+                             + calculateLibor(((intOverdueOnSrokDate-totalIntPaid+intOverdue-total_judge_int+intAccrued-intPaid)/2), prevDate, tempDate, term_rate_io_id, term_diy_method_id, term_dim_method_id, loan_id, 2);
           END IF;
 
 
@@ -1888,7 +1894,7 @@ BEGIN
                              + calculatePenaltyAccrued(0, (intAccrued*(daysInPer-1)/(2*daysInPer)), daysInPer, tempDate, loan_id);
             IF has_libor_io THEN
               SET penAccrued = penAccrued
-                               + calculateLibor((intAccrued*(daysInPer-1)/(2*daysInPer)), prevDate, tempDate, term_rate_io_id, term_diy_method_id, loan_id, 2);
+                               + calculateLibor((intAccrued*(daysInPer-1)/(2*daysInPer)), prevDate, tempDate, term_rate_io_id, term_diy_method_id, term_dim_method_id, loan_id, 2);
             END IF;
 
         END IF;
@@ -1904,11 +1910,11 @@ BEGIN
       END IF;
 
       IF has_libor_po THEN
-        SET penAccrued = penAccrued + calculateLibor(princOverdue-total_judge_princ, prevDate, tempDate, term_rate_po_id, term_diy_method_id, loan_id, 1);
+        SET penAccrued = penAccrued + calculateLibor(princOverdue-total_judge_princ, prevDate, tempDate, term_rate_po_id, term_diy_method_id, term_dim_method_id, loan_id, 1);
       END IF;
 
       IF has_libor_io THEN
-        SET penAccrued = penAccrued + calculateLibor(intOverdue-total_judge_int, prevDate, tempDate, term_rate_io_id, term_diy_method_id, loan_id,2);
+        SET penAccrued = penAccrued + calculateLibor(intOverdue-total_judge_int, prevDate, tempDate, term_rate_io_id, term_diy_method_id, term_dim_method_id, loan_id,2);
       END IF;
 
       IF penalty_limit_flag THEN
@@ -3485,4 +3491,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-07 17:44:52
+-- Dump completed on 2019-01-07 20:39:38
