@@ -30,7 +30,7 @@
                         <div class="m-portlet__head">
                             <div class="m-portlet__head-caption">
                                 <div class="m-portlet__head-title">
-                                    <h3 class="m-portlet__head-text" th:text="*{id != null} ? 'Детали документа № ' + *{id} : 'Новый ' + *{documentType.name} + ' документ'"></h3>
+                                    <h3 class="m-portlet__head-text" th:text="*{id == 0} ? 'Новый ' + *{documentType.name} + ' документ' : *{documentType.name} + ' документ №' + *{id}"></h3>
                                 </div>
                             </div>
                         </div>
@@ -60,6 +60,8 @@
                                                 <div class="form-group m-form__group">
                                                     <table class="table table-striped table-bordered">
                                                         <tr th:each="stage : ${stages}">
+                                                            <!--td><label th:utext="${'Stage : ' + stage.state().ordinal()}"></label></td>
+                                                            <td><label th:utext="${'State : ' + document.documentState.ordinal()}"></label></td-->
                                                             <td><label
                                                                     class="align-middle m-2"
                                                                     th:utext="${stage.text()}"></label></td>
@@ -89,6 +91,7 @@
                             <th:block th:replace="doc/layout::documentActions"/>
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -114,7 +117,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Список сотрудников</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -126,11 +129,104 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                <button class="btn btn-primary" name="action" th:value="${document.documentState.ordinal() &lt; 5} ? 'TORECONCILE' : 'SEND'" type="submit" form="document_form" onclick="davay()">ОК</button>
+                <button class="btn btn-primary" name="action" th:value="${document.documentState.ordinal() &lt; 5} ? 'TORECONCILE' : 'SEND'" type="submit" form="document_form" onclick="hide()">ОК</button>
             </div>
         </div>
     </div>
 </div>
+<div class="modal fade" id="attachment" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Прикрепление</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/doc/attachments/upload" class="dropzone" id="dz"></form>
+            </div>
+            <div class="modal-footer">
+                <button type="reset" class="btn btn-secondary" form="dz" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    Dropzone.autoDiscover = false;
+    var myDropzone = new Dropzone("#dz",
+        {
+            createImageThumbnails: false,
+            dictDefaultMessage: "Добавить",
+            previewTemplate:
+            '<div class="row p-2">' +
+            '   <div class="col-7"><span data-dz-name></span></div>' +
+            '   <div class="col-3" data-dz-size></div>' +
+            '</div>',
+            init: function() {
+                /*
+                this.on("removedfile", function(file) {
+                    $.ajax({
+                        url: "/doc/attachments/delete/" + file.previewElement.id,
+                        success: function(result){
+                            $("#tr" + file.previewElement.id).remove();
+                            $("#a" + file.previewElement.id).remove();
+                        }
+                    });
+                });
+                */
+                /*
+                this.on("complete", function(file) {
+                    myDropzone.removeFile(file);
+                });
+                */
+            },
+            success: function (file, response) {
+                file.previewElement.classList.add("dz-success");
+                file.previewElement.id = response.id;
+                attachmentHandler(response);
+                addFile(response);
+            },
+            error: function (file, response) {
+                file.previewElement.classList.add("dz-error");
+            }
+        });
+
+    function attachmentHandler(file)
+    {
+        var a = document.createElement("input");
+        a.setAttribute("type", "hidden");
+        a.setAttribute("id", "a" + file.id);
+        a.setAttribute("name", "files");
+        a.setAttribute("value", file.id);
+        document.getElementById("attachmentList").appendChild(a);
+    }
+
+    function addFile(file) {
+
+        var tr = document.createElement("tr");
+            tr.setAttribute("id", "tr" + file.id);
+        var td = document.createElement("td");
+        var a = document.createElement("a");
+            a.setAttribute("href", "/doc/attachments/download/" + file.id)
+        var info = document.createElement("label");
+            info.innerHTML = file.name;
+
+            tr.appendChild(td);
+            td.appendChild(a);
+            a.appendChild(info)
+
+        var da = document.getElementById("documentAttachments");
+            da.appendChild(tr);
+    }
+
+    $('#attachment').on('hidden.bs.modal', function (e) {
+        myDropzone.removeAllFiles();
+    })
+
+</script>
 
 </body>
 </html>

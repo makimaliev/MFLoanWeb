@@ -1,5 +1,6 @@
 package kg.gov.mf.loan.web.controller.doc;
 
+import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.doc.model.Attachment;
 import kg.gov.mf.loan.doc.service.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -24,16 +26,19 @@ import java.util.UUID;
 public class AttachmentsController extends BaseController {
 
     private AttachmentService attachmentService;
+    private UserService userService;
 
     @Autowired
-    public AttachmentsController(AttachmentService attachmentService) {
+    public AttachmentsController(AttachmentService attachmentService, UserService userService) {
         this.attachmentService = attachmentService;
+        this.userService = userService;
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public ResponseEntity upload(MultipartHttpServletRequest request) {
 
         Attachment attachment = new Attachment();
+        //User user = userService.findById(getUser().getId());
 
         try {
             Iterator<String> itr = request.getFileNames();
@@ -54,6 +59,7 @@ public class AttachmentsController extends BaseController {
                 attachment.setName(filename);
                 attachment.setInternalName(fsname);
                 attachment.setMimeType(mimeType);
+                //attachment.setAuthor(user);
 
                 attachmentService.add(attachment);
             }
@@ -85,13 +91,15 @@ public class AttachmentsController extends BaseController {
         FileCopyUtils.copy(inputStream, response.getOutputStream());
     }
 
-    @RequestMapping(value = "/delete/{attachmentId}")
-    public void delete(@PathVariable("attachmentId") Long attachmentId) {
+    @RequestMapping(value = "/delete/{attachmentId}", method = RequestMethod.GET)
+    @ResponseBody
+    public String delete(@PathVariable("attachmentId") Long attachmentId) {
 
         Attachment attachment = attachmentService.getById(attachmentId);
         File file = new File(path + attachment.getInternalName());
         file.delete();
 
         attachmentService.remove(attachment);
+        return "OK";
     }
 }

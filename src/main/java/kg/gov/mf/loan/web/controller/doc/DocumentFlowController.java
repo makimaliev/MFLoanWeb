@@ -1,14 +1,15 @@
 package kg.gov.mf.loan.web.controller.doc;
 
-import com.google.common.collect.Lists;
 import kg.gov.mf.loan.admin.org.model.Department;
-import kg.gov.mf.loan.admin.org.model.Organization;
 import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.doc.model.*;
 import kg.gov.mf.loan.doc.service.*;
-import kg.gov.mf.loan.task.component.AuthenticationFacade;
+import kg.gov.mf.loan.task.model.ChatUser;
+import kg.gov.mf.loan.task.model.SystemConstant;
 import kg.gov.mf.loan.task.model.Task;
+import kg.gov.mf.loan.task.service.ChatUserService;
+import kg.gov.mf.loan.task.service.SystemConstantService;
 import kg.gov.mf.loan.task.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -16,10 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -46,10 +44,10 @@ public class DocumentFlowController extends BaseController {
     private DocumentSubTypeService documentSubTypeService;
     private DocumentStatusService documentStatusService;
     private TaskService taskService;
-    private RegisterService registerService;
+    private CounterService registerService;
     private AccountService accountService;
-
-    private AuthenticationFacade authenticationFacade;
+    private SystemConstantService systemConstantService;
+    private ChatUserService chatUserService;
 
     @Autowired
     public DocumentFlowController(DocumentService documentService,
@@ -57,9 +55,10 @@ public class DocumentFlowController extends BaseController {
                                   DocumentSubTypeService documentSubTypeService,
                                   DocumentStatusService documentStatusService,
                                   TaskService taskService,
-                                  RegisterService registerService,
+                                  CounterService registerService,
                                   AccountService accountService,
-                                  AuthenticationFacade authenticationFacade) {
+                                  SystemConstantService systemConstantService,
+                                  ChatUserService chatUserService) {
 
         this.documentService = documentService;
         this.documentTypeService = documentTypeService;
@@ -68,48 +67,47 @@ public class DocumentFlowController extends BaseController {
         this.taskService = taskService;
         this.registerService = registerService;
         this.accountService = accountService;
-        this.authenticationFacade = authenticationFacade;
+        this.systemConstantService = systemConstantService;
+        this.chatUserService = chatUserService;
     }
     //endregion
     //region TYPE
     private Transition[][][] ACTIONS =
             {
-                    {   // Internal
-                            { Transition.REQUEST, Transition.TORECONCILE },     // NEW
-                            { Transition.REQUEST, Transition.TORECONCILE },     // DRAFT
-                            { Transition.RECONCILE, Transition.REJECT },        // PENDING
-                            { Transition.REQUEST, Transition.TORECONCILE },     // RECONCILED
-                            { Transition.APPROVE, Transition.REJECT },          // REQUESTED
-                            { Transition.ACCEPT },                              // APPROVED
-                            {},                                                 // REJECTED
-                            {},                                                 // REGISTERED
-                            { Transition.SEND },                                // ACCEPTED
-                            { Transition.START, Transition.SEND },              // SENT
-                            { Transition.DONE }                                 // STARTED
-                    },
-                    {   // Incoming
-                            { Transition.REGISTER },                            // NEW
-                            { Transition.REGISTER },                            // DRAFT
-                            {},                                                 // PENDING
-                            {},                                                 // REQUESTED
-                            {},                                                 // RECONCILED
-                            {},                                                 // APPROVED
-                            {},                                                 // REJECTED
-                            { Transition.APPROVE },                             // REGISTERED
-                            { Transition.SEND },                                // ACCEPTED
-                            { Transition.START, Transition.SEND },              // SENT
-                            { Transition.DONE }                                 // STARTED
-                    },
-                    {   // Outgoing
-                            { Transition.REQUEST, Transition.TORECONCILE },     // NEW
-                            { Transition.REQUEST, Transition.TORECONCILE },     // DRAFT
-                            { Transition.RECONCILE, Transition.REJECT },        // PENDING
-                            { Transition.REQUEST, Transition.TORECONCILE },     // RECONCILED
-                            { Transition.APPROVE, Transition.REJECT },          // REQUESTED
-                            { Transition.REGISTER },                            // APPROVED
-                            {},                                                 // REJECTED
-                            {}                                                  // REGISTERED
-                    }
+                {   // Internal
+                    { Transition.REQUEST, Transition.TORECONCILE },     // NEW
+                    { Transition.REQUEST, Transition.TORECONCILE },     // DRAFT
+                    { Transition.RECONCILE, Transition.REJECT },        // PENDING
+                    { Transition.REQUEST, Transition.TORECONCILE },     // RECONCILED
+                    { Transition.APPROVE, Transition.REJECT },          // REQUESTED
+                    { Transition.ACCEPT },                              // APPROVED
+                    {},                                                 // REJECTED
+                    {},                                                 // REGISTERED
+                    { Transition.SEND },                                // ACCEPTED
+                    { Transition.START, Transition.SEND },              // SENT
+                    { Transition.DONE }                                 // STARTED
+                },
+                {   // Incoming
+                    { Transition.REGISTER },                            // NEW
+                    { Transition.REGISTER },                            // DRAFT
+                    {},                                                 // PENDING
+                    {},                                                 // REQUESTED
+                    {},                                                 // RECONCILED
+                    {},                                                 // APPROVED
+                    {},                                                 // REJECTED
+                    { Transition.APPROVE },                             // REGISTERED
+                    { Transition.SEND },                                // ACCEPTED
+                    { Transition.START, Transition.SEND },              // SENT
+                    { Transition.DONE }                                 // STARTED
+                },
+                {   // Outgoing
+                    { Transition.REQUEST, Transition.TORECONCILE },     // NEW
+                    { Transition.REQUEST, Transition.TORECONCILE },     // DRAFT
+                    { Transition.RECONCILE, Transition.REJECT },        // PENDING
+                    { Transition.REQUEST, Transition.TORECONCILE },     // RECONCILED
+                    { Transition.APPROVE, Transition.REJECT },          // REQUESTED
+                    { Transition.REGISTER }                             // APPROVED
+                }
             };
     //endregion
     private final static Map<Integer, String> responsible = new HashMap<Integer, String>() {
@@ -166,6 +164,10 @@ public class DocumentFlowController extends BaseController {
         document.setOwner(getUser().getId());
         document.setDocumentType(documentSubTypeService.getByInternalName(subType).getDocumentType());
         document.setDocumentSubType(documentSubTypeService.getByInternalName(subType));
+        if(document.getDocumentType().getInternalName() == "incoming")
+        {
+            document.getReceiverResponsible().setResponsibleType(1);
+        }
         //**************************************************************************************************************
 
         String currentView = document.getDocumentType().getInternalName();
@@ -201,11 +203,9 @@ public class DocumentFlowController extends BaseController {
 
         Document document = documentService.getById(id);
 
-        // *************************************************************************************************************
         State curretState = document.getDocumentState();
 
         //region XTRA
-        // *************************************************************************************************************
         Map<String, String> vars = new HashMap<>();
         vars.put("objectId", String.valueOf(document.getId()));
         vars.put("status", "OPEN");
@@ -216,7 +216,6 @@ public class DocumentFlowController extends BaseController {
 
         vars.clear();
         vars.put("objectId", String.valueOf(document.getId()));
-        // *************************************************************************************************************
         //endregion
 
         String currentView = document.getDocumentType().getInternalName();
@@ -238,6 +237,7 @@ public class DocumentFlowController extends BaseController {
         // *************************************************************************************************************
         document.setDocumentState(curretState);
 
+        model.addAttribute("cu", getUser().getUsername());
         model.addAttribute("stages", getStages(currentView));
         model.addAttribute("hasReject", hasReject);
         model.addAttribute("tasks", taskService.getTasks(vars));
@@ -247,14 +247,14 @@ public class DocumentFlowController extends BaseController {
         model.addAttribute("documentState", document.getDocumentState().toString());
 
         return "/doc/document/edit";
-        //return "/doc/document/" + currentView + "/" + currentView;
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(@ModelAttribute("document") Document document,
                        @RequestParam("action") String action,
-                       @RequestParam("senderFiles") MultipartFile[] senderFiles,
-                       @RequestParam("receiverFiles") MultipartFile[] receiverFiles) throws IOException {
+                       @RequestParam("files") long files[]) {
+
+        if(getUser() == null) return "/login/login";
 
         String docType = documentTypeService.getById(document.getDocumentType().getId()).getInternalName();
 
@@ -263,52 +263,17 @@ public class DocumentFlowController extends BaseController {
         if(document.getId() != 0)
         {
             Document doc = documentService.getById(document.getId());
-            document.setSenderAttachment(doc.getSenderAttachment());
-            document.setReceiverAttachment(doc.getReceiverAttachment());
+            document.setAttachments(doc.getAttachments());
         }
 
-        //region ATTACHMENTS
-        if(senderFiles.length != 0) {
-            for (MultipartFile senderFile : senderFiles) {
-                String fileName = senderFile.getOriginalFilename();
-                if(fileName.length() > 1) {
-
-                    String uuid = UUID.randomUUID().toString();
-                    String fsname = uuid + ".atach";
-
-                    File file = new File(path + fsname);
-                    senderFile.transferTo(file);
-
-                    Attachment attachment = new Attachment();
-
-                    attachment.setName(senderFile.getOriginalFilename());
-                    attachment.setInternalName(fsname);
-                    attachment.setMimeType(senderFile.getContentType());
-
-                    document.getSenderAttachment().add(attachment);
-                }
+        if(files.length != 0)
+        {
+            for(long file : files)
+            {
+                if(file != 0)
+                    document.getAttachments().add(attachmentService.getById(file));
             }
         }
-
-        if(receiverFiles.length != 0) {
-            for (MultipartFile receiverFile : receiverFiles) {
-                String fileName = receiverFile.getOriginalFilename();
-                if(fileName.length() > 1) {
-                    String uuid = UUID.randomUUID().toString();
-                    String fsname = uuid + ".atach";
-
-                    File file = new File(path + fsname);
-                    receiverFile.transferTo(file);
-
-                    Attachment attachment = new Attachment();
-                    attachment.setName(receiverFile.getOriginalFilename());
-                    attachment.setInternalName(fsname);
-                    attachment.setMimeType(receiverFile.getContentType());
-                    document.getReceiverAttachment().add(attachment);
-                }
-            }
-        }
-        //endregion
 
         if(docType.equals("internal"))
         {
@@ -386,7 +351,6 @@ public class DocumentFlowController extends BaseController {
         {
             stages.add(Transition.CREATE);
             stages.add(Transition.REGISTER);
-            stages.add(Transition.SEND);
             stages.add(Transition.START);
             stages.add(Transition.DONE);
         }
@@ -417,7 +381,6 @@ public class DocumentFlowController extends BaseController {
     private void addTask(String description, Long id, User user, Date dueDate, User toUser, State state) {
 
         Task task = new Task();
-
         task.setDescription(description);
         task.setSummary("");
 
@@ -448,7 +411,7 @@ public class DocumentFlowController extends BaseController {
 
             if(action.equals("REQUEST") || action.equals("TORECONCILE"))
             {
-                for(Staff staff : action.equals("REQUEST") ? Lists.newArrayList(document.getSenderResponsible().getStaff()) : document.getReconciler())
+                for(Staff staff : action.equals("REQUEST") ? document.getSenderResponsible().getStaff() : document.getReconciler())
                 {
                     document.getUsers().add(getUser(staff));
                     addTask(action.equals("REQUEST") ? State.REQUESTED.text() : State.PENDING.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
@@ -501,7 +464,7 @@ public class DocumentFlowController extends BaseController {
             if (action.equals("TORECONCILE") || action.equals("REQUEST"))
             {
                 //region [User, Task]
-                for(Staff staff : action.equals("REQUEST") ? Lists.newArrayList(document.getSenderResponsible().getStaff()) : document.getReconciler())
+                for(Staff staff : action.equals("REQUEST") ? document.getSenderResponsible().getStaff() : document.getReconciler())
                 {
                     document.getUsers().add(getUser(staff));
                     addTask(action.equals("REQUEST") ? State.REQUESTED.text() : State.PENDING.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
@@ -562,34 +525,31 @@ public class DocumentFlowController extends BaseController {
 
             if (action.equals("SEND"))
             {
-                //region [User, Task]
+                //region [User, Task, Executor]
+                Executor executor = new Executor();
+                executor.setExecutorType(1);
+                Set<Staff> staffSet = new HashSet<>();
+
                 for (Staff staff : document.getExecutor())
                 {
+                    staffSet.add(staff);
                     document.getUsers().add(getUser(staff));
                     addTask("На исполнение", document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
                 }
+
+                executor.setStaff(staffSet);
+                document.setReceiverExecutor(executor);
                 //endregion
             }
 
             if (action.equals("START"))
             {
-                //region [User, AutoTask]
-                document.getReceiverExecutor().getStaff().add(getUser().getStaff());
                 addTask("Завершить задачу", document.getId(),null, document.getDocumentDueDate(), getUser(), State.STARTED);
-                //endregion
             }
 
             if(action.equals("REJECT"))
             {
-                if(document.getDocumentState() == State.PENDING)
-                {
-                    addTask("Доработать", document.getId(), getUser(), document.getDocumentDueDate(), getUser(document.getOwner()), State.DRAFT);
-                }
-
-                if(document.getDocumentState() == State.REQUESTED)
-                {
-                    addTask("Доработать", document.getId(), getUser(), document.getDocumentDueDate(), getUser(document.getOwner()), State.DRAFT);
-                }
+                addTask("Доработать", document.getId(), getUser(), document.getDocumentDueDate(), getUser(document.getOwner()), State.DRAFT);
             }
 
             // *********************************************************************************************************
@@ -648,7 +608,7 @@ public class DocumentFlowController extends BaseController {
             document.getDispatchData().add(setDispatchData(State.REGISTERED, description));
             documentService.add(document);
 
-            addTask("Отправить на исполнение", document.getId(), null, document.getDocumentDueDate(), getUser(), null);
+            addTask("Отправить ответственным", document.getId(), null, document.getDocumentDueDate(), getUser(), null);
         }
         //endregion
         //region Existing Document
@@ -660,9 +620,7 @@ public class DocumentFlowController extends BaseController {
             document.setDocumentState(doc.getDocumentState());
             document.setDispatchData(doc.getDispatchData());
 
-            // *********************************************************************************************************
             // ******************************************** Complete Tasks *********************************************
-            // *********************************************************************************************************
             if (action.equals("APPROVE"))
             {
                 taskService.completeTask(document.getId(), getUser(), "Выполнен");
@@ -673,14 +631,25 @@ public class DocumentFlowController extends BaseController {
                 taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
             }
 
-            // *********************************************************************************************************
             // *********************************** Add Tasks, Users and Description ************************************
-            // *********************************************************************************************************
             if (action.equals("SEND"))
             {
+                Executor executor = new Executor();
+                executor.setExecutorType(1);
+
+                if(doc.getReceiverExecutor() != null)
+                {
+                    document.setReceiverExecutor(doc.getReceiverExecutor());
+                }
+                else
+                {
+                    document.setReceiverExecutor(executor);
+                }
+
                 //region [User, Task]
                 for (Staff staff : document.getExecutor())
                 {
+                    document.getReceiverExecutor().getStaff().add(staff);
                     document.getUsers().add(getUser(staff));
                     addTask("На исполнение", document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
                 }
@@ -695,9 +664,7 @@ public class DocumentFlowController extends BaseController {
                 //endregion
             }
 
-            // *********************************************************************************************************
             // ************************************* Update Document State *********************************************
-            // *********************************************************************************************************
             if(action.equals("START") || action.equals("DONE"))
             {
                 Map<String, String> vars = new HashMap<>();
@@ -714,14 +681,29 @@ public class DocumentFlowController extends BaseController {
             {
                 document.setDocumentState(State.ACCEPTED);
             }
+            else if(action.equals("SEND"))
+            {
+                int count = 0;
+                for(Staff staff : document.getReceiverResponsible().getStaff())
+                {
+                    Map<String, String> vars = new HashMap<>();
+                    vars.put("objectId", String.valueOf(document.getId()));
+                    vars.put("assignedTo", String.valueOf(staff.getUser().getId()));
+                    vars.put("status", "OPEN");
+                    count = taskService.getTask(staff.getUser(), vars) != null ? ++count : count;
+                }
+
+                if (count == 0)
+                {
+                    document.setDocumentState(Transition.valueOf(action).state());
+                }
+            }
             else
             {
                 document.setDocumentState(Transition.valueOf(action).state());
             }
 
-            // *********************************************************************************************************
             // *************************************** Add Dispatch Data ***********************************************
-            // *********************************************************************************************************
             if (action.equals("APPROVE"))
             {
                 //region [User, Task]
@@ -749,33 +731,8 @@ public class DocumentFlowController extends BaseController {
         if(document.getId() == 0)
         {
             document.getUsers().add(getUser());
-            document.setDocumentState(Transition.valueOf(action.toUpperCase()).state());
             document.getDispatchData().add(setDispatchData(State.DRAFT, ""));
-            document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), ""));
-
             documentService.add(document);
-
-            if(action.equals("REQUEST"))
-            {
-                if (document.getSenderResponsible().getResponsibleType() == 1)
-                {
-                    for (Staff staff : document.getSenderResponsible().getStaff())
-                    {
-                        document.getUsers().add(getUser(staff));
-                        addTask(State.REQUESTED.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
-                    }
-                }
-                else
-                {
-                    for (Organization organization : document.getSenderResponsible().getOrganizations())
-                    {
-                        document.getUsers().add(getUser(organization));
-                        addTask(State.REQUESTED.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(organization), null);
-                    }
-                }
-
-                documentService.update(document);
-            }
 
             if(action.equals("TORECONCILE"))
             {
@@ -784,6 +741,20 @@ public class DocumentFlowController extends BaseController {
                     document.getUsers().add(getUser(staff));
                     addTask(State.PENDING.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
                 }
+                document.getDispatchData().add(setDispatchData(State.PENDING, ""));
+                document.setDocumentState(State.PENDING);
+                documentService.update(document);
+            }
+
+            if(action.equals("REQUEST"))
+            {
+                for (Staff staff : document.getSenderResponsible().getStaff())
+                {
+                    document.getUsers().add(getUser(staff));
+                    addTask(State.REQUESTED.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
+                }
+                document.getDispatchData().add(setDispatchData(State.REQUESTED, ""));
+                document.setDocumentState(State.REQUESTED);
                 documentService.update(document);
             }
         }
@@ -797,33 +768,11 @@ public class DocumentFlowController extends BaseController {
             document.setDocumentState(doc.getDocumentState());
             document.setDispatchData(doc.getDispatchData());
 
-            // *********************************************************************************************************
-            // ******************************************** Complete Tasks *********************************************
-            // *********************************************************************************************************
-            if (action.equals("RECONCILE") || action.equals("APPROVE") || action.equals("REGISTER") || action.equals("REJECT"))
-            {
-                taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
-            }
-
-            if (action.equals("TORECONCILE") || action.equals("REQUEST"))
-            {
-                Map<String, String> vars = new HashMap<>();
-                vars.put("objectId", String.valueOf(document.getId()));
-                vars.put("status", "OPEN");
-                Task task = taskService.getTask(getUser(), vars);
-
-                if(task != null && task.getProgress() != null && task.getCreatedBy() == null)
-                {
-                    taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
-                }
-            }
-
-            // *********************************************************************************************************
-            // *********************************** Add Tasks, Users and Description ************************************
-            // *********************************************************************************************************
             if (action.equals("TORECONCILE"))
             {
-                //region [User, Task]
+                //region Description
+                taskService.completeTask(document.getId(), getUser(), "Завершен");
+
                 for(Staff staff : document.getReconciler())
                 {
                     document.getUsers().add(getUser(staff));
@@ -834,22 +783,33 @@ public class DocumentFlowController extends BaseController {
 
             if (action.equals("REQUEST"))
             {
-                //region [User, Task]
-                if (document.getSenderResponsible().getResponsibleType() == 1)
+                //region Description
+                taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
+
+                for (Staff staff : document.getSenderResponsible().getStaff())
                 {
-                    for (Staff staff : document.getSenderResponsible().getStaff())
-                    {
-                        document.getUsers().add(getUser(staff));
-                        addTask(State.REQUESTED.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
-                    }
+                    document.getUsers().add(getUser(staff));
+                    addTask(State.REQUESTED.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
                 }
-                else
+
+                document.setDocumentState(State.REQUESTED);
+                //endregion
+            }
+
+            if (action.equals("RECONCILE"))
+            {
+                //region Description
+                taskService.completeTask(document.getId(), getUser(), State.RECONCILED.text());
+                document.getDispatchData().add(setDispatchData(State.RECONCILED, description));
+
+                Map<String, String> vars = new HashMap<>();
+                vars.put("objectId", String.valueOf(document.getId()));
+                vars.put("status", "OPEN");
+
+                if (taskService.getTasks(vars).size() == 0)
                 {
-                    for (Organization organization : document.getSenderResponsible().getOrganizations())
-                    {
-                        document.getUsers().add(getUser(organization));
-                        addTask(State.REQUESTED.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(organization), null);
-                    }
+                    addTask("Продолжить обработку документа", document.getId(), null, document.getDocumentDueDate(), getUser(document.getOwner()), State.DRAFT);
+                    document.setDocumentState(State.RECONCILED);
                 }
                 //endregion
             }
@@ -857,8 +817,38 @@ public class DocumentFlowController extends BaseController {
             if (action.equals("APPROVE"))
             {
                 //region [User, Task]
-                document.getUsers().add(getUser(staticUser));
-                addTask(Transition.REGISTER.text(), document.getId(), null, document.getDocumentDueDate(), getUser(staticUser), State.APPROVED);
+                taskService.completeTask(document.getId(), getUser(), State.APPROVED.text());
+                document.getDispatchData().add(setDispatchData(State.APPROVED, description));
+
+                Map<String, String> vars = new HashMap<>();
+                vars.put("objectId", String.valueOf(document.getId()));
+                vars.put("status", "OPEN");
+
+                if(taskService.getTasks(vars).size() == 0)
+                {
+                    for (long user : staticUser)
+                    {
+                        document.getUsers().add(getUser(user));
+                        addTask(Transition.REGISTER.text(), document.getId(), null, document.getDocumentDueDate(), getUser(user), State.APPROVED);
+                    }
+                }
+                //endregion
+            }
+
+            if (action.equals("REJECT"))
+            {
+                //region Description
+                taskService.completeTask(document.getId(), getUser(), "Отклонен : " + description);
+
+                Map<String, String> vars = new HashMap<>();
+                vars.put("objectId", String.valueOf(document.getId()));
+                vars.put("status", "OPEN");
+
+                if (taskService.getTasks(vars).size() == 0)
+                {
+                    addTask("Доработать документ", document.getId(), null, document.getDocumentDueDate(), getUser(document.getOwner()), State.DRAFT);
+                    document.setDocumentState(State.REJECTED);
+                }
                 //endregion
             }
 
@@ -867,50 +857,60 @@ public class DocumentFlowController extends BaseController {
                 //region [Description, User, AutoTask]
                 document.setSenderRegisteredNumber(registerService.generateRegistrationNumber(document));
                 document.setSenderRegisteredDate(new Date());
-                description = "<strong>Зарегистрирован</strong>"
-                        + "<br>Исходящий № : " + document.getSenderRegisteredNumber()
+                description = "Исходящий № : " + document.getSenderRegisteredNumber()
                         + "<br>Дата : " + DATE_FORMAT.format(document.getSenderRegisteredDate());
+
+                document.getDispatchData().add(setDispatchData(State.REGISTERED, description));
+                document.getDispatchData().add(setDispatchData(State.DONE, ""));
+                document.setDocumentState(State.DONE);
+
+                for (long user : staticUser)
+                {
+                    taskService.completeTask(document.getId(), getUser(user), "Завершен");
+                }
                 //endregion
+
             }
-
-            // *********************************************************************************************************
-            // ************************************* Update Document State *********************************************
-            // *********************************************************************************************************
-            if(action.equals("REJECT") || action.equals("RECONCILE") || action.equals("REGISTER"))
-            {
-                Map<String, String> vars = new HashMap<>();
-                vars.put("objectId", String.valueOf(document.getId()));
-                vars.put("status", "OPEN");
-                int taskCount = taskService.getTasks(vars).size();
-
-                if ((action.equals("RECONCILE") || document.getDocumentState() == State.PENDING) && taskCount == 0)
-                {
-                    addTask("Согласование завершено", document.getId(), null, document.getDocumentDueDate(), getUser(document.getOwner()), State.DRAFT);
-                }
-
-                if(document.getDocumentState() == State.REQUESTED)
-                {
-                    addTask("Доработать : " + description, document.getId(), null, document.getDocumentDueDate(), getUser(document.getOwner()), State.DRAFT);
-                }
-
-                if(action.equals("REGISTER"))
-                {
-                    document.setDocumentState(State.DONE);
-                }
-            }
-            else
-            {
-                document.setDocumentState(Transition.valueOf(action).state());
-            }
-
-            // *********************************************************************************************************
-            // *************************************** Add Dispatch Data ***********************************************
-            // *********************************************************************************************************
-            document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), description));
 
             documentService.update(document);
         }
         //endregion
+    }
+
+    // *****************************************************************************************************************
+    @RequestMapping(value = "/constants", method = RequestMethod.GET)
+    public String constants(Model model) {
+
+        if(getUser() == null)
+            return "/login/login";
+
+        SystemConstant systemConstant = systemConstantService.list().isEmpty()
+                ? new SystemConstant()
+                : systemConstantService.list().get(0);
+
+        model.addAttribute("systemConstant", systemConstant);
+
+        return "/doc/document/constants";
+    }
+
+    @RequestMapping(value = "/save/constants", method = RequestMethod.POST)
+    public String saveConstants(@ModelAttribute("systemConstant") SystemConstant systemConstant, Model model) {
+
+        if(getUser() == null)
+            return "/login/login";
+
+        if(systemConstant.getId() == 0)
+        {
+            systemConstantService.add(systemConstant);
+        }
+        else
+        {
+            systemConstantService.update(systemConstant);
+        }
+
+        model.addAttribute("systemConstant", systemConstant);
+
+        return "/doc/document/constants";
     }
 
     // *****************************************************************************************************************
@@ -968,6 +968,18 @@ public class DocumentFlowController extends BaseController {
         for(Account account : accountService.getByName("person", name))
         {
             data.add(new Result(account.getId(), account.getName()));
+        }
+        return data;
+    }
+
+    @RequestMapping("/data/user")
+    @ResponseBody
+    public List<Result> getUser(@RequestParam String name) {
+        List<Result> data = new ArrayList<>();
+
+        for(ChatUser chatUser : chatUserService.getAllByName(name))
+        {
+            data.add(new Result(chatUser.getId(), chatUser.getName()));
         }
         return data;
     }

@@ -52,7 +52,7 @@ public class ArchiveController extends BaseController {
 
         Archive archive = new Archive();
         archive.setRegisteredDate(new Date());
-        archive.setRegisteredNumber(registerService.generateRegistrationNumber());
+        //archive.setRegisteredNumber(registerService.generateRegistrationNumber());
         model.addAttribute("archive", archive);
 
         return "/doc/archive/edit";

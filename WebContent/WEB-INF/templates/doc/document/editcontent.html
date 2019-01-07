@@ -3,6 +3,7 @@
 
 <body>
 <th:block th:fragment="internal">
+    <!-- Internal -->
     <!-- Sender Registration and Registration Data -->
     <input type="hidden" th:field="*{senderRegisteredNumber}"/>
     <input type="hidden" th:field="*{senderRegisteredDate}"/>
@@ -12,7 +13,7 @@
     <!-- Receiver Responsible -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label"> Кому : </label>
-        <div th:class="*{documentState.ordinal() > 4} ? 'col-0' : 'col-3'" th:hidden="*{documentState.ordinal() > 4}">
+        <div th:class="*{documentState.ordinal() > 4} or ${cu == #authentication.name} ? 'col-0' : 'col-3'" th:hidden="*{documentState.ordinal() > 4}">
             <select class="s2s form-control" id="rrt_select" th:field="*{receiverResponsible.responsibleType}" style="width:100%">
                 <option value="1">Сотрудник</option>
                 <option value="2">Отдел</option>
@@ -40,7 +41,7 @@
     <!-- Sender Responsible -->
     <div class="form-group m-form__group row">
         <input type="hidden" id="senderResponsible.responsibleType" name="senderResponsible.responsibleType" value="1">
-        <label class="col-3 col-form-label"> ОТ : </label>
+        <label class="col-3 col-form-label"> ОТ КОГО : </label>
         <div class="col-9">
             <div th:hidden="*{documentState.ordinal() > 4}">
                 <select class="s2 form-control m-input" th:field="*{senderResponsible.staff}" multiple="multiple" data-ajax--url="/doc/data/staff" style="width:100%" required>
@@ -62,22 +63,20 @@
     </div>
     <!-- DESCRIPTION -->
     <div class="form-group m-form__group row">
-        <label class="col-3 col-form-label"> Описание : </label>
+        <label class="col-3 col-form-label"> Краткое содержание : </label>
         <div class="col-9">
             <textarea th:field="*{description}" required></textarea>
         </div>
     </div>
-    <!-- Sender Attachment -->
+    <!-- Attachment -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label"> Приложения : </label>
-        <div class="col-9">
-            <input type="file" id="senderFiles" name="senderFiles" multiple style="display:none" onchange="handleFiles(this.files, 'senderFilesList')">
-            <a class="btn" role="button" href="javascript:doClick('senderFiles')" th:if="*{documentState.ordinal() > 5}"> Добавить приложения </a>
-            <table id="senderFilesList" class="form-control">
-                <tr th:if="*{#lists.isEmpty(senderAttachment)}">
-                    <td><label>Нет приложений</label></td>
-                </tr>
-                <tr th:if="*{not #lists.isEmpty(senderAttachment)}" th:each="attachment : *{senderAttachment}">
+        <div class="col-9" id="attachmentList">
+            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
+            <input type="hidden" name="files" value="0">
+            <table id="documentAttachments" class="form-control">
+                <tr th:if="*{#lists.isEmpty(attachments)}"><td><label>Нет приложений</label></td></tr>
+                <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
                     <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
                 </tr>
             </table>
@@ -92,31 +91,16 @@
         </div>
     </div>
     <!-- Receiver Executor -->
-    <div class="form-group m-form__group row" th:hidden="*{documentState.ordinal() < 9}">
+    <div class="form-group m-form__group row" th:if="*{documentState.ordinal() > 8}">
         <label class="col-3 col-form-label"> Испонитель : </label>
         <div class="col-9">
+            <input type="hidden" th:field="*{receiverExecutor.executorType}">
             <select hidden th:field="*{receiverExecutor.staff}" multiple>
                 <option th:each="r : *{receiverExecutor?.staff}"
                         th:value="${r.id}"
                         th:text="${r.name}">Responsible</option>
             </select>
             <label class="form-control" th:each="s : *{receiverExecutor.staff}" th:text="${s.name}"> Staff </label>
-        </div>
-    </div>
-    <!-- Receiver Attachment -->
-    <div class="form-group m-form__group row" th:hidden="*{documentState.ordinal() < 8}">
-        <label class="col-3 col-form-label"> Приложения : </label>
-        <div class="col-9">
-            <input type="file" id="receiverFiles" name="receiverFiles" multiple style="display:none" onchange="handleFiles(this.files, 'receiverFilesList')">
-            <a class="btn" role="button" href="javascript:doClick('receiverFiles')" th:if="*{documentState.ordinal() > 7}"> Добавить приложения </a>
-            <table id="receiverFilesList" class="form-control">
-                <tr th:if="*{#lists.isEmpty(receiverAttachment)}">
-                    <td><label>Нет приложений</label></td>
-                </tr>
-                <tr th:if="*{not #lists.isEmpty(receiverAttachment)}" th:each="attachment : *{receiverAttachment}">
-                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}" class="btn" role="button"></label></a></td>
-                </tr>
-            </table>
         </div>
     </div>
     <!-- Comment -->
@@ -128,6 +112,7 @@
     </div>
 </th:block>
 <th:block th:fragment="incoming">
+    <!-- Incomming -->
     <!-- Sender Responsible -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
@@ -190,7 +175,7 @@
     <!-- DESCRIPTION -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
-            <span> Описание : </span>
+            <span> Краткое содержание : </span>
         </label>
         <div class="col-sm-9">
             <textarea th:field="*{description}"></textarea>
@@ -211,64 +196,45 @@
         <label class="col-3 col-form-label">
             <span> Кому на исполнение : </span>
         </label>
-        <input type="hidden" th:field="*{receiverResponsible.responsibleType}" value="1"/>
+        <input type="hidden" id="receiverResponsible.responsibleType" name="receiverResponsible.responsibleType" value="1"/>
         <div class="col-9">
-            <div th:hidden="*{documentState.ordinal() > 0}">
+            <div th:hidden="*{documentState.ordinal() > 7}">
                 <select class="s2 form-control" th:field="*{receiverResponsible.staff}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/staff">
                     <option th:each="r : *{receiverResponsible?.staff}"
                             th:value="${r.id}"
                             th:text="${r.name}">Responsible</option>
                 </select>
             </div>
-            <label class="form-control" th:each="s : *{receiverResponsible.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 0}"> Staff </label>
+            <label class="form-control" th:each="s : *{receiverResponsible.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 7}"> Staff </label>
         </div>
     </div>
-    <!-- Sender Attachment -->
+    <!-- Attachment -->
     <div class="form-group m-form__group row">
-        <label class="col-3 col-form-label">
-            <span> Приложения : </span>
-        </label>
-        <div class="col-sm-9">
-            <input type="file" id="senderFiles" name="senderFiles" multiple style="display:none" onchange="handleFiles(this.files, 'senderFilesList')">
-            <a class="btn" role="button" href="javascript:doClick('senderFiles')" th:if="*{documentState.ordinal() < 2}"> Добавить приложения </a>
-            <table id="senderFilesList" class="form-control">
-                <tr th:if="*{#lists.isEmpty(senderAttachment)}"><td><label>Нет приложений</label></td></tr>
-                <tr th:if="*{not #lists.isEmpty(senderAttachment)}" th:each="attachment : *{senderAttachment}">
+        <label class="col-3 col-form-label"> Приложения : </label>
+        <div class="col-9" id="attachmentList">
+            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
+            <input type="hidden" name="files" value="0">
+            <table id="documentAttachments" class="form-control">
+                <tr th:if="*{#lists.isEmpty(attachments)}"><td><label>Нет приложений</label></td></tr>
+                <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
                     <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
                 </tr>
             </table>
         </div>
     </div>
     <!-- Receiver Executor -->
-    <div class="form-group m-form__group row" th:hidden="*{documentState.ordinal() < 5}">
+    <div class="form-group m-form__group row" th:if="*{receiverExecutor != null}">
         <label class="col-3 col-form-label">
-            <span> Испонитель : </span>
+            <span> Испонители : </span>
         </label>
         <div class="col-9">
-            <div th:hidden="*{documentState.ordinal() > 5}">
-                <select class="s2 form-control" th:field="*{receiverExecutor.staff}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/staff">
-                    <option th:each="r : *{receiverExecutor?.staff}"
-                            th:value="${r.id}"
-                            th:text="${r.name}">Responsible</option>
-                </select>
-            </div>
-            <label class="form-control"  th:each="s : *{receiverExecutor.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 6}"> Staff </label>
-        </div>
-    </div>
-    <!-- Receiver Attachment -->
-    <div class="form-group m-form__group row" th:hidden="*{documentState.ordinal() < 8}">
-        <label class="col-3 col-form-label">
-            <span> Приложения : </span>
-        </label>
-        <div class="col-sm-9">
-            <input type="file" id="receiverFiles" name="receiverFiles" multiple style="display:none" onchange="handleFiles(this.files, 'receiverFilesList')">
-            <a class="btn" role="button" href="javascript:doClick('receiverFiles')" th:if="*{documentState.ordinal() > 7}"> Добавить приложения </a>
-            <table id="receiverFilesList" class="form-control">
-                <tr th:if="*{#lists.isEmpty(receiverAttachment)}"><td><label>Нет приложений</label></td></tr>
-                <tr th:if="*{not #lists.isEmpty(receiverAttachment)}" th:each="attachment : *{receiverAttachment}">
-                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}" class="btn" role="button"></label></a></td>
-                </tr>
-            </table>
+            <input type="hidden" th:field="*{receiverExecutor.executorType}"/>
+            <select th:field="*{receiverExecutor.staff}" multiple="multiple" style="display: none;">
+                <option th:each="r : *{receiverExecutor?.staff}"
+                        th:value="${r.id}"
+                        th:text="${r.name}">Responsible</option>
+            </select>
+            <label class="form-control" th:each="s : *{receiverExecutor.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 6}"> Staff </label>
         </div>
     </div>
     <!-- Comment -->
@@ -283,6 +249,7 @@
     <input type="hidden" th:field="*{receiverRegisteredDate}"/>
 </th:block>
 <th:block th:fragment="outgoing">
+    <!-- Outgoing -->
     <!-- Sender Registration Data -->
     <input type="hidden" th:field="*{senderRegisteredNumber}"/>
     <input type="hidden" th:field="*{senderRegisteredDate}"/>
@@ -318,31 +285,19 @@
     </div>
     <!-- Sender Responsible -->
     <div class="form-group m-form__group row">
+        <input type="hidden" th:field="*{senderResponsible.responsibleType}" value="1"/>
         <label class="col-3 col-form-label">
-            <span> ОТ :  </span>
+            <span> От кого : </span>
         </label>
-        <div th:class="*{documentState.ordinal() > 1} ? 'col-0' : 'col-3'" th:hidden="*{documentState.ordinal() > 1}">
-            <select class="s2s form-control" id="srt_select" th:field="*{senderResponsible.responsibleType}" style="width: 100%">
-                <option value="3">Организация</option>
-                <option value="1">Сотрудник</option>
-            </select>
-        </div>
-        <div th:class="*{documentState.ordinal() > 1} ? 'col-9' : 'col-6'">
-            <div class="sdr" id="si1" th:hidden="*{documentState.ordinal() > 1}">
+        <div class="col-9">
+            <div th:hidden="*{documentState.ordinal() > 1}">
                 <select class="s2 form-control" th:field="*{senderResponsible.staff}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/staff">
                     <option th:each="r : *{senderResponsible?.staff}"
                             th:value="${r.id}"
                             th:text="${r.name}">Responsible</option>
                 </select>
             </div>
-            <div class="sdr" id="si3" th:hidden="*{documentState.ordinal() > 1}">
-                <select class="s2s form-control" th:field="*{senderResponsible.organizations}" style="width: 100%">
-                    <option value=""></option>
-                    <option value="1">ГАУБК при МФ КР</option>
-                </select>
-            </div>
             <label class="form-control" th:each="s : *{senderResponsible.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
-            <label class="form-control" th:each="s : *{senderResponsible.organizations}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
         </div>
     </div>
     <!-- TITLE -->
@@ -358,7 +313,7 @@
     <!-- DESCRIPTION -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
-            <span> Описание : </span>
+            <span> Краткое содержание : </span>
         </label>
         <div class="col-sm-9">
             <textarea th:field="*{description}"></textarea>
@@ -367,37 +322,25 @@
     <!-- INDEXNO -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
-            <span> Индекс : </span>
+            <span> Номер бланка : </span>
         </label>
         <div class="col-sm-9">
-            <input class="form-control m-input" required th:field="*{indexNo}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'">
+            <input class="form-control m-input" th:field="*{indexNo}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'">
             <label class="form-control" th:text="*{indexNo}" th:if="*{documentState.ordinal() > 1}"> Title </label>
         </div>
     </div>
-    <!-- Sender Attachment -->
-    <div class="form-group m-form__group row" th:hidden="*{documentState.ordinal() > 1 and senderAttachment == null}">
-        <label class="col-3 col-form-label">
-            <span> Приложения : </span>
-        </label>
-        <div class="col-sm-9">
-            <input type="file" id="senderFiles" name="senderFiles" multiple style="display:none" onchange="handleFiles(this.files, 'senderFilesList')">
-            <a class="btn" role="button" href="javascript:doClick('senderFiles')" th:if="*{documentState.ordinal() < 2}"> Добавить приложения </a>
-            <table id="senderFilesList" class="form-control">
-                <tr th:if="*{#lists.isEmpty(senderAttachment)}"><td><label>Нет приложений</label></td></tr>
-                <tr th:if="*{not #lists.isEmpty(senderAttachment)}" th:each="attachment : *{senderAttachment}">
+    <!-- Attachment -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label"> Приложения : </label>
+        <div class="col-9" id="attachmentList">
+            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
+            <input type="hidden" name="files" value="0">
+            <table id="documentAttachments" class="form-control">
+                <tr th:if="*{#lists.isEmpty(attachments)}"><td><label>Нет приложений</label></td></tr>
+                <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
                     <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
                 </tr>
             </table>
-        </div>
-    </div>
-    <!-- Document Due Date -->
-    <div class="form-group m-form__group row">
-        <label class="col-3 col-form-label">
-            <span> Срок : </span>
-        </label>
-        <div class="col-sm-9">
-            <input class="dtp form-control" th:field="*{documentDueDate}" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'" autocomplete="off"/>
-            <label class="form-control" th:text="*{documentDueDate} != null ? *{#dates.format(documentDueDate, 'dd-MM-yyyy HH:mm')} : 'Срок не установлен'" th:if="*{documentState.ordinal() > 1}"> Title </label>
         </div>
     </div>
     <!-- Comment -->

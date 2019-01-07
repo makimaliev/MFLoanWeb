@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<!-- begin::Head -->
+<head>
+    <title>MFLoan | Docflow</title>
+    <div th:replace="fragments/header :: header-css"/>
+
+</head>
+<!-- end::Head -->
+
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <div class="m-content">
+                <div class="m-portlet m-portlet--full-height">
+
+                        <!----  Contents -->
+                        <form th:action="@{/doc/save/constants}" id="document_form" class="m-form m-form--fit m-form--label-align-right" th:object="${systemConstant}" method="POST">
+                            <div class="m-portlet__head">
+                                <div class="m-portlet__head-caption">
+                                    <div class="m-portlet__head-title">
+                                        <h3 class="m-portlet__head-text">Сотрудники ответственные за</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-portlet__body">
+                                <div class="m-scrollable" data-scrollbar-shown="true" data-axis="y" data-height="200">
+                                    <!--begin::Form-->
+                                    <div class="form-group m-form__group row">
+                                        <label class="col-3 col-form-label">
+                                            <span> Входящие документы : </span>
+                                        </label>
+                                        <div class="col-6">
+                                            <select class="s2 form-control m-form__control" multiple="multiple" th:field="*{incomingRegistrator}">
+                                                <option th:each="r : *{incomingRegistrator}"
+                                                        th:value="${r.id}"
+                                                        th:text="${r.staff.name}">Responsible</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group m-form__group row">
+                                        <label class="col-3 col-form-label">
+                                            <span> Исходящие документы : </span>
+                                        </label>
+                                        <div class="col-6">
+                                            <select class="s2 form-control m-form__control" multiple="multiple" th:field="*{outgoingRegistrator}">
+                                                <option th:each="r : *{outgoingRegistrator}"
+                                                        th:value="${r.id}"
+                                                        th:text="${r.staff.name}">Responsible</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group m-form__group row">
+                                        <label class="col-3 col-form-label">
+                                            <span> Прикрепления : </span>
+                                        </label>
+                                        <div class="col-6">
+                                            <select class="s2 form-control m-form__control" multiple="multiple" th:field="*{scannerUser}">
+                                                <option th:each="r : *{scannerUser}"
+                                                        th:value="${r.id}"
+                                                        th:text="${r.staff.name}">Responsible</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!--end::Form-->
+                                </div>
+                            </div>
+                            <div class="m-portlet__foot">
+                                <button type="button" class="btn btn-primary" onclick="window.history.back()"> Отмена </button>
+                                <button type="submit" class="btn btn-success"> Сохранить </button>
+                            </div>
+                        </form>
+                        <!----  Contents -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END CONTENT BODY -->
+    <!-- begin::Footer -->
+    <div th:replace="layout/footer"/>
+    <!-- end::Footer -->
+</div>
+<div class="m-scroll-top m-scroll-top--skin-top" data-toggle="m-scroll-top" data-scroll-offset="500" data-scroll-speed="300">
+    <i class="la la-arrow-up"></i>
+</div>
+<div th:replace="fragments/footer :: footer-js"/>
+
+<script type="text/javascript" th:inline="javascript">
+
+    var soption = {
+        minimumInputLength: 2,
+        placeholder: "Выбрать",
+        language: {
+            inputTooShort: function () {
+                return "";
+            },
+            noResults: function () {
+                return "Не найден";
+            },
+            searching: function () {
+                return "";
+            },
+        },
+        ajax: {
+            url: "/doc/data/user",
+            data: function (params) {
+                var query = {
+                    name: params.term
+                }
+                return query;
+            },
+            processResults: function (data) {
+                return {
+                    results : data
+                };
+            }
+        }
+    }
+
+    $('.s2 ').select2(soption);
+</script>
+
+</body>
+</html>
