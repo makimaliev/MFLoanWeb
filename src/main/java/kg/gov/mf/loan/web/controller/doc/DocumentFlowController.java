@@ -826,10 +826,10 @@ public class DocumentFlowController extends BaseController {
 
                 if(taskService.getTasks(vars).size() == 0)
                 {
-                    for (long user : staticUser)
+                    for (User user : systemConstantService.getById(1).getOutgoingRegistrator())
                     {
-                        document.getUsers().add(getUser(user));
-                        addTask(Transition.REGISTER.text(), document.getId(), null, document.getDocumentDueDate(), getUser(user), State.APPROVED);
+                        document.getUsers().add(user);
+                        addTask(Transition.REGISTER.text(), document.getId(), null, document.getDocumentDueDate(), user, State.APPROVED);
                     }
                 }
                 //endregion
@@ -864,9 +864,9 @@ public class DocumentFlowController extends BaseController {
                 document.getDispatchData().add(setDispatchData(State.DONE, ""));
                 document.setDocumentState(State.DONE);
 
-                for (long user : staticUser)
+                for (User user : systemConstantService.getById(1).getOutgoingRegistrator())
                 {
-                    taskService.completeTask(document.getId(), getUser(user), "Завершен");
+                    taskService.completeTask(document.getId(), user, "Завершен");
                 }
                 //endregion
 

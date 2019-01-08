@@ -38,18 +38,6 @@
                             <div class="m-portlet__body">
                                 <div class="m-scrollable" data-scrollbar-shown="true" data-axis="y" data-height="200">
                                     <!--begin::Form-->
-                                    <div class="form-group m-form__group row">
-                                        <label class="col-3 col-form-label">
-                                            <span> Входящие документы : </span>
-                                        </label>
-                                        <div class="col-6">
-                                            <select class="s2 form-control m-form__control" multiple="multiple" th:field="*{incomingRegistrator}">
-                                                <option th:each="r : *{incomingRegistrator}"
-                                                        th:value="${r.id}"
-                                                        th:text="${r.staff.name}">Responsible</option>
-                                            </select>
-                                        </div>
-                                    </div>
 
                                     <div class="form-group m-form__group row">
                                         <label class="col-3 col-form-label">
