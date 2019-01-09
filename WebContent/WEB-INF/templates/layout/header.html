@@ -99,9 +99,9 @@
 
             <!--<div class="container">-->
                 <div class="row">
-                    <div class="col">
+                    <div class="col" style="width: 100% !important;">
                         <div class="row">
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="dropdown">
                                     <button sec:authorize="hasAnyAuthority('ADMIN','LOAN_SUPERVISOR','PERM_VIEW_LAON_MENU')" class="btn btn-primary dropdown-toggle m-lg-3" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="m-menu__link-text">
@@ -144,7 +144,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="dropdown">
                                     <button sec:authorize="hasAnyAuthority('ADMIN','COLLATERAL_SUPERVISOR','PERM_COLLATERAL_LAON_MENU')" class="btn btn-primary dropdown-toggle m-lg-3" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="m-menu__link-text">
@@ -179,7 +179,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="dropdown">
                                     <button sec:authorize="hasAnyAuthority('ADMIN','COLLECTION_SUPERVISOR','PERM_VIEW_COLLECTION_MENU')" class="btn btn-primary dropdown-toggle m-lg-3" type="button"
                                             id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -199,10 +199,20 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col">
+                            <div class="col-md-5 mt-3" sec:authorize="hasAnyAuthority('ADMIN','PERM_ORGANIZATION_PERSON_LIST')">
+                                <a class="btn btn-brand" th:href="@{/person/list}">
+                                    <span th:text="#{label.persons}" class="m-menu__link-text">
 
+                                    </span>
+                                </a>
+                                <a class="btn btn-brand" type="button" th:href="@{/organization/list}">
+
+                                    <span th:text="#{label.organizations}" class="m-menu__link-text">
+
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                     <div class="col">
                         <div class="m-stack__item m-stack__item--fluid m-header-head" id="m_header_nav">

@@ -28,6 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -155,6 +157,7 @@ public class LoanController {
         model.addAttribute("creditOrder",loan.getCreditOrder());
         Staff staff=userService.findById(loan.getSupervisorId()).getStaff();
         model.addAttribute("supervisorName",staff.getName());
+        model.addAttribute("supervisorId",loan.getSupervisorId());
 
         Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
 //        String jsonTerms = gson.toJson(getTermsByLoanId(loanId));
@@ -223,7 +226,11 @@ public class LoanController {
 //        String jsonAccrues = gson.toJson(getAccruesByLoanId(loanId));
 //        model.addAttribute("accrues", jsonAccrues);
 
+        User user = userService.findByUsername(Utils.getPrincipal());
+//        System.out.println(user.getId());
+//        System.out.println(loan.getSupervisorId());
         model.addAttribute("loggedinuser", Utils.getPrincipal());
+        model.addAttribute("loggedinuserId",user.getId());
         return "/manage/debtor/loan/view";
     }
 

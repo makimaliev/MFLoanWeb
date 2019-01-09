@@ -93,14 +93,16 @@ var DatatableDataLocalSPs = function () {
 
                     var result = '';
 
-                    result = result + '\
-						<a sec:authorize="hasAnyAuthority(ADMIN,PERM_UPDATE_SUPERVISORPLAN)" href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/sp/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+                    if(loggedInUserId==supervisorId) {
+                        result = result + '\
+						<a sec:authorize="hasAnyAuthority(ADMIN,PERM_UPDATE_SUPERVISORPLAN)" href="/manage/debtor/' + debtorId + '/loan/' + loanId + '/sp/' + row.id + '/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-edit"></i>\
 						</a>\
-						<a hidden="hidden" href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/sp/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
+						<a hidden="hidden" href="/manage/debtor/' + debtorId + '/loan/' + loanId + '/sp/' + row.id + '/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
 							<i class="la la-trash"></i>\
 						</a>\
-					';
+					    ';
+                    }
 
                     // if(!hasRoleAdmin)
                     //     result = '';

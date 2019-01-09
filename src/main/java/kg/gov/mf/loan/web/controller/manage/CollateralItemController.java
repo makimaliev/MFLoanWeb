@@ -189,6 +189,7 @@ public class CollateralItemController {
 			item.setCollateralItemDetails(itemDetails);
 			itemDetails.setCollateralItem(item);
 			itemService.update(item);
+			itemDetailsService.update(itemDetails);
 		}
 			
 		
