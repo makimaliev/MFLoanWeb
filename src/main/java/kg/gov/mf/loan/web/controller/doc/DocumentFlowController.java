@@ -106,7 +106,13 @@ public class DocumentFlowController extends BaseController {
                     { Transition.RECONCILE, Transition.REJECT },        // PENDING
                     { Transition.REQUEST, Transition.TORECONCILE },     // RECONCILED
                     { Transition.APPROVE, Transition.REJECT },          // REQUESTED
-                    { Transition.REGISTER }                             // APPROVED
+                    { Transition.REGISTER },                            // APPROVED
+                    {},                                                 // REJECTED
+                    { Transition.DONE },                                // REGISTERED
+                    {},                                                 // ACCEPTED
+                    {},                                                 // SENT
+                    {},                                                 // STARTED
+                    {}                                                  // DONE
                 }
             };
     //endregion
@@ -164,10 +170,19 @@ public class DocumentFlowController extends BaseController {
         document.setOwner(getUser().getId());
         document.setDocumentType(documentSubTypeService.getByInternalName(subType).getDocumentType());
         document.setDocumentSubType(documentSubTypeService.getByInternalName(subType));
+
         if(document.getDocumentType().getInternalName() == "incoming")
         {
             document.getReceiverResponsible().setResponsibleType(1);
         }
+
+        /*
+        if(document.getDocumentType().getInternalName() == "outgoing")
+        {
+            document.getSenderResponsible().setResponsibleType(1);
+            document.getSenderResponsible().getStaff().add(userService.findByUsername("").getStaff());
+        }
+        */
         //**************************************************************************************************************
 
         String currentView = document.getDocumentType().getInternalName();
@@ -295,16 +310,6 @@ public class DocumentFlowController extends BaseController {
     public String view(@PathVariable("id") Long id, Model model) {
 
         if(getUser() == null) return "/login/login";
-
-        Date date = new Date();
-        DecimalFormat dFormat= new DecimalFormat("00");
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-
-        String day = dFormat.format(cal.get(Calendar.DAY_OF_MONTH));
-        String month = dFormat.format(cal.get(Calendar.MONTH) + 1);
-        String year = String.valueOf(cal.get(Calendar.YEAR));
 
         Document document = documentService.getById(id);
 
@@ -623,17 +628,25 @@ public class DocumentFlowController extends BaseController {
             // ******************************************** Complete Tasks *********************************************
             if (action.equals("APPROVE"))
             {
+                //region APPROVE
                 taskService.completeTask(document.getId(), getUser(), "Выполнен");
+                document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), description));
+                document.setDocumentState(State.ACCEPTED);
+
+                for (Staff staff : document.getReceiverResponsible().getStaff())
+                {
+                    document.getUsers().add(getUser(staff));
+                    addTask("На исполнение", document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
+                }
+                //endregion
             }
 
-            if (action.equals("SEND") || action.equals("START") || action.equals("DONE"))
-            {
-                taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
-            }
-
-            // *********************************** Add Tasks, Users and Description ************************************
             if (action.equals("SEND"))
             {
+                //region SEND
+                taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
+                document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), description));
+
                 Executor executor = new Executor();
                 executor.setExecutorType(1);
 
@@ -646,77 +659,41 @@ public class DocumentFlowController extends BaseController {
                     document.setReceiverExecutor(executor);
                 }
 
-                //region [User, Task]
                 for (Staff staff : document.getExecutor())
                 {
                     document.getReceiverExecutor().getStaff().add(staff);
                     document.getUsers().add(getUser(staff));
-                    addTask("На исполнение", document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
+                    addTask("На исполнение", document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), State.SENT);
                 }
                 //endregion
             }
 
             if (action.equals("START"))
             {
-                //region [User, AutoTask]
+                //region START
+                taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
+                document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), description));
                 document.getReceiverExecutor().getStaff().add(getUser().getStaff());
                 addTask("Завершить задачу", document.getId(),null, document.getDocumentDueDate(), getUser(), State.STARTED);
                 //endregion
             }
 
-            // ************************************* Update Document State *********************************************
-            if(action.equals("START") || action.equals("DONE"))
+            if (action.equals("DONE"))
             {
+                //region DONE
+                taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
+                document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), description));
+
                 Map<String, String> vars = new HashMap<>();
                 vars.put("objectId", String.valueOf(document.getId()));
                 vars.put("status", "OPEN");
                 int taskCount = taskService.getTasks(vars).size();
 
-                if ((action.equals("START") || action.equals("DONE")) && taskCount == 0)
+                if (taskCount == 0)
                 {
-                    document.setDocumentState(Transition.valueOf(action).state());
-                }
-            }
-            else if(action.equals("APPROVE"))
-            {
-                document.setDocumentState(State.ACCEPTED);
-            }
-            else if(action.equals("SEND"))
-            {
-                int count = 0;
-                for(Staff staff : document.getReceiverResponsible().getStaff())
-                {
-                    Map<String, String> vars = new HashMap<>();
-                    vars.put("objectId", String.valueOf(document.getId()));
-                    vars.put("assignedTo", String.valueOf(staff.getUser().getId()));
-                    vars.put("status", "OPEN");
-                    count = taskService.getTask(staff.getUser(), vars) != null ? ++count : count;
-                }
-
-                if (count == 0)
-                {
-                    document.setDocumentState(Transition.valueOf(action).state());
-                }
-            }
-            else
-            {
-                document.setDocumentState(Transition.valueOf(action).state());
-            }
-
-            // *************************************** Add Dispatch Data ***********************************************
-            if (action.equals("APPROVE"))
-            {
-                //region [User, Task]
-                for (Staff staff : document.getReceiverResponsible().getStaff())
-                {
-                    document.getUsers().add(getUser(staff));
-                    addTask("На исполнение", document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
+                    document.setDocumentState(State.DONE);
                 }
                 //endregion
-            }
-            else
-            {
-                document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), description));
             }
 
             documentService.update(document);
@@ -861,6 +838,24 @@ public class DocumentFlowController extends BaseController {
                         + "<br>Дата : " + DATE_FORMAT.format(document.getSenderRegisteredDate());
 
                 document.getDispatchData().add(setDispatchData(State.REGISTERED, description));
+                document.setDocumentState(State.REGISTERED);
+
+                for (User user : systemConstantService.getById(1).getOutgoingRegistrator())
+                {
+                    taskService.completeTask(document.getId(), user, State.REGISTERED.text());
+                }
+
+                for (User user : systemConstantService.getById(1).getOutgoingRegistrator())
+                {
+                    document.getUsers().add(user);
+                    addTask(Transition.DONE.text(), document.getId(), null, document.getDocumentDueDate(), user, null);
+                }
+                //endregion
+            }
+
+            if (action.equals("DONE"))
+            {
+                //region [Description, User, AutoTask]
                 document.getDispatchData().add(setDispatchData(State.DONE, ""));
                 document.setDocumentState(State.DONE);
 
@@ -869,7 +864,6 @@ public class DocumentFlowController extends BaseController {
                     taskService.completeTask(document.getId(), user, "Завершен");
                 }
                 //endregion
-
             }
 
             documentService.update(document);

@@ -196,13 +196,22 @@
             </div>
         </div>
     </div>
-    <!-- INDEXNO -->
+    <!-- PAGEINDEX -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
-            <span> Индекс : </span>
+            <span th:utext="|#{label.document.pageIndex} : |"> Номер бланка : </span>
         </label>
         <div class="col-sm-9">
             <label class="form-control" th:text="*{indexNo}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- PAGECOUNT -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span th:utext="|#{label.document.pageCount} : |"> Номер бланка : </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{pageCount}" th:if="*{documentState.ordinal() > 1}"> Title </label>
         </div>
     </div>
     <!-- Document Due Date -->

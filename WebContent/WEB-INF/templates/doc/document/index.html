@@ -43,46 +43,47 @@
                     </div>
                     <div class="m-portlet__body">
 
+                        <!--th:block th:replace="doc/layout::__${type + 'Index'}__"/-->
+
                         <table class="table table-bordered" id="documentTable">
                             <thead class="thead-default">
-                                <tr>
-                                    <th width="50px"></th>
-                                    <th width="120px">Исх. № и Дата</th>
-                                    <th width="120px" th:if="${type != 'outgoing'}">Вхд. № и Дата</th>
-                                    <th width="200px" th:text="#{label.document.documentSubType}">Тип документа</th>
-                                    <th th:text="#{label.document.title}">Относительно</th>
-                                    <th width="250px" th:text="#{label.document.generalStatus}">Состояние</th>
-                                    <th th:text="#{label.document.sender}">Отправитель</th>
-                                    <th th:text="#{label.document.receiver}">Исполнитель</th>
-                                    <th th:text="#{label.document.dueDate}" width="100px">Срок</th>
-                                    <th width="30px"></th>
-                                </tr>
+                            <tr>
+                                <th width="50px"></th>
+                                <th width="120px">Исх. № и Дата</th>
+                                <th width="120px">Вхд. № и Дата</th>
+                                <th width="200px" th:text="#{label.document.documentSubType}">Тип документа</th>
+                                <th th:text="#{label.document.title}">Относительно</th>
+                                <th width="250px" th:text="#{label.document.generalStatus}">Состояние</th>
+                                <th th:text="#{label.document.sender}">Отправитель</th>
+                                <th th:text="#{label.document.receiver}">Исполнитель</th>
+                                <th th:text="#{label.document.dueDate}" width="100px">Срок</th>
+                                <th width="30px"></th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="document : ${documents}">
-                                    <td class="text-danger text-center"><span th:if="${document.documentDueDate}">K</span></td>
-                                    <td th:utext="${!document.senderRegisteredNumber.isEmpty() ? document.senderRegisteredNumber + '<hr>' + #dates.format(document.senderRegisteredDate, 'dd-MM-yyyy') : ''}"></td>
-                                    <td th:utext="${document.receiverRegisteredNumber + '<hr>' + #dates.format(document.receiverRegisteredDate, 'dd-MM-yyyy')}" th:if="${type != 'outgoing'}"></td>
-                                    <td th:text="${document.documentSubType.name}"></td>
-                                    <td th:text="${document.title}"></td>
-                                    <td th:text="${document.documentState.text()}"></td>
-                                    <td th:if="${type == 'outgoing'}">ГАУБК при МФ КР</td>
-                                    <td th:if="${type != 'outgoing'}">
-                                        <br>
-                                        <p th:if="${document.senderResponsible.responsibleType == 1}" th:each="ss : ${document.senderResponsible.staff}" th:utext="${ss.name}"> </p>
-                                        <p th:if="${document.senderResponsible.responsibleType == 2}" th:each="sd : ${document.senderResponsible.departments}" th:utext="${sd.name}"> </p>
-                                        <p th:if="${document.senderResponsible.responsibleType == 3}" th:each="so : ${document.senderResponsible.organizations}" th:utext="${so.name}"> </p>
-                                        <p th:if="${document.senderResponsible.responsibleType == 4}" th:each="sp : ${document.senderResponsible.person}" th:utext="${sp.name}"> </p>
-                                    </td>
-                                    <td>
-                                        <br>
-                                        <p th:if="${document.receiverResponsible.responsibleType == 1}" th:each="rs : ${document.receiverResponsible.staff}" th:utext="${rs.name}"> </p>
-                                        <p th:if="${document.receiverResponsible.responsibleType == 2}" th:each="rd : ${document.receiverResponsible.departments}" th:utext="${rd.name}"> </p>
-                                        <p th:if="${document.receiverResponsible.responsibleType == 3}" th:each="ro : ${document.receiverResponsible.organizations}" th:utext="${ro.name}"> </p>
-                                        <p th:if="${document.receiverResponsible.responsibleType == 4}" th:each="rp : ${document.receiverResponsible.person}" th:utext="${rp.name}"> </p>
-                                    </td>
-                                    <td th:text="${document.documentDueDate} != null ? ${#dates.format(document.documentDueDate, 'dd-MM-yyyy')} : ''">None</td>
-                                    <td class="table-actions text-right">
+                            <tr th:each="document : ${documents}">
+                                <td class="text-danger text-center"><span th:if="${document.documentDueDate}">K</span></td>
+                                <td th:utext="${!document.senderRegisteredNumber.isEmpty() ? document.senderRegisteredNumber + '<hr>' + #dates.format(document.senderRegisteredDate, 'dd-MM-yyyy') : ''}"></td>
+                                <td th:utext="${document.receiverRegisteredNumber + '<hr>' + #dates.format(document.receiverRegisteredDate, 'dd-MM-yyyy')}" th:if="${type != 'outgoing'}"></td>
+                                <td th:text="${document.documentSubType.name}"></td>
+                                <td th:text="${document.title}"></td>
+                                <td th:text="${document.documentState.text()}"></td>
+                                <td>
+                                    <br>
+                                    <p th:if="${document.senderResponsible.responsibleType == 1}" th:each="ss : ${document.senderResponsible.staff}" th:utext="${ss.name}"> </p>
+                                    <p th:if="${document.senderResponsible.responsibleType == 2}" th:each="sd : ${document.senderResponsible.departments}" th:utext="${sd.name}"> </p>
+                                    <p th:if="${document.senderResponsible.responsibleType == 3}" th:each="so : ${document.senderResponsible.organizations}" th:utext="${so.name}"> </p>
+                                    <p th:if="${document.senderResponsible.responsibleType == 4}" th:each="sp : ${document.senderResponsible.person}" th:utext="${sp.name}"> </p>
+                                </td>
+                                <td>
+                                    <br>
+                                    <p th:if="${document.receiverResponsible.responsibleType == 1}" th:each="rs : ${document.receiverResponsible.staff}" th:utext="${rs.name}"> </p>
+                                    <p th:if="${document.receiverResponsible.responsibleType == 2}" th:each="rd : ${document.receiverResponsible.departments}" th:utext="${rd.name}"> </p>
+                                    <p th:if="${document.receiverResponsible.responsibleType == 3}" th:each="ro : ${document.receiverResponsible.organizations}" th:utext="${ro.name}"> </p>
+                                    <p th:if="${document.receiverResponsible.responsibleType == 4}" th:each="rp : ${document.receiverResponsible.person}" th:utext="${rp.name}"> </p>
+                                </td>
+                                <td th:text="${document.documentDueDate} != null ? ${#dates.format(document.documentDueDate, 'dd-MM-yyyy')} : ''">None</td>
+                                <td class="table-actions text-right">
                                         <span>
                                             <div class="dropdown">
                                                 <a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown"><i class="la la-ellipsis-h"></i></a>
@@ -99,8 +100,8 @@
                                                 </div>
                                             </div>
                                         </span>
-                                    </td>
-                                </tr>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
 

@@ -319,14 +319,24 @@
             <textarea th:field="*{description}"></textarea>
         </div>
     </div>
-    <!-- INDEXNO -->
+    <!-- PAGEINDEX -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
-            <span> Номер бланка : </span>
+            <span th:utext="|#{label.document.pageIndex} : |"> Номер бланка : </span>
         </label>
         <div class="col-sm-9">
             <input class="form-control m-input" th:field="*{indexNo}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'">
             <label class="form-control" th:text="*{indexNo}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- PAGECOUNT -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span th:utext="|#{label.document.pageCount} : |"> Номер бланка : </span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control m-input" th:field="*{pageCount}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'">
+            <label class="form-control" th:text="*{pageCount}" th:if="*{documentState.ordinal() > 1}"> Title </label>
         </div>
     </div>
     <!-- Attachment -->
