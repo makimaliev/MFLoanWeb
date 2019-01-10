@@ -40,12 +40,13 @@
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label"> Приложения : </label>
         <div class="col-9">
-            <table class="form-control">
-                <tr th:if="*{#lists.isEmpty(attachments)}"><td><label>Нет приложений</label></td></tr>
+            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
+            <table id="documentAttachments" class="form-control">
                 <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
                     <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
                 </tr>
             </table>
+
         </div>
     </div>
     <!-- Document Due Date -->
@@ -93,9 +94,9 @@
         </div>
     </div>
     <!-- TITLE -->
-    <div class="form-group m-form__group row">
+    <div class="form-group m-form__group row" th:hidden="*{title.isEmpty()}">
         <label class="col-3 col-form-label">
-            <span> Относительно : </span>
+            <span> Входящий № и ДАТА МФКР : </span>
         </label>
         <div class="col-sm-9">
             <label class="form-control" th:text="*{title}"> Title </label>
@@ -104,7 +105,7 @@
     <!-- DESCRIPTION -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
-            <span> Краткое содержание : </span>
+            <span> Относительно : </span>
         </label>
         <div class="col-sm-9">
             <div class="form-control bg-secondary">
@@ -135,8 +136,8 @@
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label"> Приложения : </label>
         <div class="col-9">
-            <table class="form-control">
-                <tr th:if="*{#lists.isEmpty(attachments)}"><td><label>Нет приложений</label></td></tr>
+            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
+            <table id="documentAttachments" class="form-control">
                 <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
                     <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
                 </tr>
@@ -227,8 +228,8 @@
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label"> Приложения : </label>
         <div class="col-9">
-            <table class="form-control">
-                <tr th:if="*{#lists.isEmpty(attachments)}"><td><label>Нет приложений</label></td></tr>
+            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
+            <table id="documentAttachments" class="form-control">
                 <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
                     <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
                 </tr>
