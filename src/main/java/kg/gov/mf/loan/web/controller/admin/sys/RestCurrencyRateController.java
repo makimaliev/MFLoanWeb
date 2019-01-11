@@ -117,7 +117,7 @@ public class RestCurrencyRateController {
                 this.toDateQuery+
                 this.searchQuery+
                 this.typeQuery+
-                " order by " + sortField + " " + sortStr + " LIMIT " + offset + "," + perPage;
+                " order by " + sortField + " " + sortStr + ",t LIMIT " + offset + "," + perPage;
         String countQuery="Select count(1) \n" +
                 "from currency_rate c, orderTermCurrency o \n" +
                 "where c.currency_type_id=o.id\n" +
