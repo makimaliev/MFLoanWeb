@@ -88,6 +88,9 @@ public class CollectionPhaseController {
 	@Autowired
 	CollectionPhaseIndexService collectionPhaseIndexService;
 
+	@Autowired
+	CollectionPhaseSubIndexService collectionPhaseSubIndexService;
+
 	/** The entity manager. */
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -103,6 +106,8 @@ public class CollectionPhaseController {
 	}
 
 	private List<PhaseDetails> phaseDetailsList=new ArrayList<>();
+
+	private List<CollectionPhaseSubIndexModel> collectionPhaseSubIndexModelList=new ArrayList<CollectionPhaseSubIndexModel>();
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/view"})
     public String viewCollateralItem(ModelMap model, 
@@ -336,6 +341,24 @@ public class CollectionPhaseController {
 		return "OK";
 	}
 
+	@RequestMapping(value = "/subIndexByIndex/list", method = RequestMethod.GET)
+	public @ResponseBody
+	List<CollectionPhaseSubIndexModel> findSubIndexByIndex(@RequestParam(value = "indexId", required = true) Long indexId) {
+
+		CollectionPhaseIndex collectionPhaseIndex= this.collectionPhaseIndexService.getById(indexId);
+//		Set<CollectionPhaseSubIndex> collectionPhaseSubIndices= ;
+		List<CollectionPhaseSubIndexModel> lists=new ArrayList<CollectionPhaseSubIndexModel>();
+		for(CollectionPhaseSubIndex collectionPhaseSubIndex:collectionPhaseIndex.getCollectionPhaseSubIndices()){
+			CollectionPhaseSubIndexModel model=new CollectionPhaseSubIndexModel();
+			model.setId(collectionPhaseSubIndex.getId());
+			model.setIndexId(collectionPhaseIndex.getId());
+			model.setName(collectionPhaseSubIndex.getName());
+			lists.add(model);
+		}
+//		this.collectionPhaseSubIndexModelList=lists;
+		return lists;
+	}
+
 	private String initeDate=null;
 	@PostMapping("/initializephasesave/initdate")
     @ResponseBody
@@ -350,7 +373,13 @@ public class CollectionPhaseController {
 			@PathVariable("phaseId")Long phaseId)
 	{
 		Debtor debtor = debtorService.getById(debtorId);
+
+		CollectionPhaseIndex collectionPhaseIndexModel= (CollectionPhaseIndex) this.collectionPhaseIndexService.getById(Long.valueOf(1));
+
+		Set<CollectionPhaseSubIndex> collectionPhaseSubIndexModels= collectionPhaseIndexModel.getCollectionPhaseSubIndices();
+
 		model.addAttribute("debtorId", debtorId);
+		model.addAttribute("subIndexId", Long.valueOf(1));
 		model.addAttribute("debtor", debtor);
 		model.addAttribute("phaseId", phaseId);
 		model.addAttribute("procId", procId);
@@ -388,6 +417,7 @@ public class CollectionPhaseController {
 
 			CollectionPhase collectionPhase=new CollectionPhase();
 			collectionPhase.setLoans(phaseService.getById(procedure.getLastPhase()).getLoans());
+			collectionPhase.setCollectionPhaseIndex(collectionPhaseIndexModel);
 			model.addAttribute("phase", collectionPhase);
 			List<Long> loanIds=new ArrayList<>();
 			List<Loan> loans=new ArrayList<>();
@@ -500,6 +530,31 @@ public class CollectionPhaseController {
 		model.addAttribute("procId",procId);
 		model.addAttribute("groupList",collectionPhaseGroupService.list());
 		model.addAttribute("indexList",collectionPhaseIndexService.list());
+		CollectionPhaseIndex collectionPhaseIndex=collectionPhaseIndexService.getById(Long.valueOf(1));
+		model.addAttribute("subIndex",collectionPhaseIndex.getCollectionPhaseSubIndices());
+
+//		HashMap<Long,List<Long>> subIndexMap=new HashMap<>();
+//		for (CollectionPhaseSubIndex sub1:collectionPhaseSubIndexService.list()){
+//			CollectionPhaseSubIndex sub=collectionPhaseSubIndexService.getById(sub1.getId());
+//			if(!subIndexMap.containsKey(sub.getCollectionPhaseIndex().getId())){
+//				List<Long> lis=Arrays.asList(sub.getId());
+////				lis=subIndexMap.get(sub.getCollectionPhaseIndex().getId());
+////				lis.add();
+//				subIndexMap.put(sub.getCollectionPhaseIndex().getId(),lis);
+//			}
+//			else{
+////					List<Long> lis=subIndexMap.get(sub.getCollectionPhaseIndex().getId());
+////					lis.add(sub.getId());
+//				List<Long> list;
+//				list=subIndexMap.get(sub.getCollectionPhaseIndex().getId());
+//				list.add(sub.getId());
+//				subIndexMap.get(sub.getCollectionPhaseIndex().getId()).clear();
+//				subIndexMap.put(sub.getCollectionPhaseIndex().getId(),list);
+////				List<Long> lo=;
+////				lo.add(sub.getId());
+//			}
+//		}
+//		model.addAttribute("subIndeces",subIndexMap);
 
 		return "/manage/debtor/collectionprocedure/collectionphase/changeGroupIndex";
 	}
@@ -510,6 +565,9 @@ public class CollectionPhaseController {
 		CollectionPhase collectionPhase1=collectionPhaseService.getById(phaseId);
 		collectionPhase1.setCollectionPhaseGroup(collectionPhaseGroupService.getById(collectionPhase.getCollectionPhaseGroup().getId()));
 		collectionPhase1.setCollectionPhaseIndex(collectionPhaseIndexService.getById(collectionPhase.getCollectionPhaseIndex().getId()));
+		Set<CollectionPhaseSubIndex> lost= new HashSet<CollectionPhaseSubIndex>();
+		lost.add(collectionPhaseSubIndexService.getById(Long.valueOf(collectionPhase.getDocNumber())));
+		collectionPhaseIndexService.getById(collectionPhase.getCollectionPhaseIndex().getId()).setCollectionPhaseSubIndices(lost);
 		collectionPhaseService.update(collectionPhase1);
 
 		return "redirect:" + "/manage/debtor/{debtorId}/collectionprocedure/{procId}/view";

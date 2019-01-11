@@ -29,6 +29,7 @@
                     <div class="m-portlet__body">
                         <form th:action="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phase.id}__/groupAndIndex/change}" th:object="${phase}" method="post" class="m-form m-form--fit m-form--label-align-right">
                             <input hidden="hidden" th:field="*{id}">
+                            <input id="valueOfSubIndex" hidden="hidden" th:field="*{docNumber}">
                             <div class="m-portlet__body">
                                 <div class="m-form__section">
                                     <div class="form-group m-form__group row">
@@ -39,6 +40,7 @@
                                             <select class="form-control m-bootstrap-select m_selectpicker"  th:field="*{collectionPhaseGroup.id}">
                                                 <option th:each="group : ${groupList}"
                                                         th:value="${group.id}"
+                                                        th:selected="${group.id}==${phase.collectionPhaseGroup.id}"
                                                         th:text="${group.name}"></option>
                                             </select>
                                         </div>
@@ -48,10 +50,27 @@
                                             Collateral office registration number <span class="m--font-danger">*</span>
                                         </label>
                                         <div class="col-lg-4 col-md-9 col-sm-12">
-                                            <select class="form-control m-bootstrap-select m_selectpicker"  th:field="*{collectionPhaseIndex.id}">
+                                            <select class="form-control m-bootstrap-select m_selectpicker" th:field="*{collectionPhaseIndex.id}" id="collectionPhaseIndex">
                                                 <option th:each="index : ${indexList}"
                                                         th:value="${index.id}"
+                                                        th:selected="${index.id}==${phase.collectionPhaseIndex.id}"
                                                         th:text="${index.name}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group m-form__group row">
+                                        <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.phase.subIndex.name}">
+                                            Collateral office registration number <span class="m--font-danger">*</span>
+                                        </label>
+                                        <div class="col-lg-4 col-md-9 col-sm-12">
+                                            <!--<select id="subIndex" class="form-control m-bootstrap-select m_selectpicker" multiple="multiple" th:field="*{collectionPhaseIndex.collectionPhaseSubIndices}">-->
+                                            <select id="subIndex" class="form-control m-bootstrap-select m_selectpicker">
+                                                <option value="0" text="Нечего не выбрано!">
+
+                                                </option>
+                                                <option th:each="subInde : ${subIndex}"
+                                                        th:value="${subInde.id}"
+                                                        th:text="${subInde.name}"></option>
                                             </select>
                                         </div>
                                     </div>
@@ -84,8 +103,58 @@
 </div>
 <div th:replace="fragments/footer :: footer-js"></div>
 
-<script>
+<script th:inline="javascript">
+
+    /*<![CDATA[*/
+
+
     $('.m_selectpicker').selectpicker('refresh');
+    $.getJSON("/subIndexByIndex/list", {
+        indexId : $('#collectionPhaseIndex').val(),
+        ajax : 'true'
+    }, function(data) {
+        console.log(data)
+
+        $('#subIndex').empty();
+        var len = data.length;
+        for ( var i = 0; i < len; i++) {
+            $('#subIndex').append("<option value='"+data[i].id+"'>"+data[i].name+"</option>");
+        }
+
+        $('#subIndex').selectpicker('refresh');
+    });
+
+    var debtorId=[[${debtorId}]];
+    var procId=[[${procId}]];
+    var phaseId=[[${phaseId}]];
+    $("#valueOfSubIndex").val($("#subIndex").val());
+    $("#subIndex").on('change',function () {
+        // alert($("#subIndex").val());
+        $("#valueOfSubIndex").val($("#subIndex").val());
+    });
+
+    $('#collectionPhaseIndex').change(
+        function() {
+
+            // alert(this);
+            // updateIndex(this);
+
+            // alert($('#collectionPhaseIndex').val());
+            $.getJSON("/subIndexByIndex/list", {
+                indexId : $('#collectionPhaseIndex').val(),
+                ajax : 'true'
+            }, function(data) {
+                console.log(data)
+
+                $('#subIndex').empty();
+                var len = data.length;
+                for ( var i = 0; i < len; i++) {
+                    $('#subIndex').append("<option value='"+data[i].id+"'>"+data[i].name+"</option>");
+                }
+
+                $('#subIndex').selectpicker('refresh');
+            });
+        });
 </script>
 </body>
 </html>
