@@ -125,6 +125,13 @@ public class RestLoanViewController {
             parameters.put("r=bov_loan_reg_date",tos);
         }
 
+        boolean searchByFinGroup = datatable.containsKey("datatable[query][finGroupId]");
+        if (searchByFinGroup){
+            String finGroupStr = datatable.get("datatable[query][finGroupId]");
+            List<String> finGroupIds=Arrays.asList(finGroupStr);
+            parameters.put("r=inv_loan_fin_group_id",finGroupIds);
+        }
+
 
         Integer page = Integer.parseInt(pageStr);
         Integer perPage = Integer.parseInt(perPageStr);

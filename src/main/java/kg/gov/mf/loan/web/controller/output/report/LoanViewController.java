@@ -4,6 +4,8 @@ package kg.gov.mf.loan.web.controller.output.report;
 import kg.gov.mf.loan.admin.org.service.DistrictService;
 import kg.gov.mf.loan.admin.org.service.RegionService;
 import kg.gov.mf.loan.admin.sys.service.MessageResourceService;
+import kg.gov.mf.loan.manage.model.loan.LoanFinGroup;
+import kg.gov.mf.loan.manage.service.loan.LoanFinGroupService;
 import kg.gov.mf.loan.output.report.model.GroupType;
 import kg.gov.mf.loan.output.report.model.LoanView;
 import kg.gov.mf.loan.output.report.model.ReferenceView;
@@ -45,6 +47,9 @@ public class LoanViewController {
 
     @Autowired
     DistrictService districtService;
+
+    @Autowired
+    LoanFinGroupService loanFinGroupService;
 
 
     LinkedHashMap<String,String> selected=new LinkedHashMap<>();
@@ -128,6 +133,8 @@ public class LoanViewController {
                 }
             }
         }
+        List<LoanFinGroup> finGroups = loanFinGroupService.list();
+        model.addAttribute("finGroups", finGroups);
         model.addAttribute("selectedFields",selectedFieldNames);
         model.addAttribute("selectedFieldsTranslated",selectedFieldNamesTranslated);
         model.addAttribute("selectedFieldNamesWithId",resultListOfReferenceView);
