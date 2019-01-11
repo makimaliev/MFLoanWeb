@@ -89,35 +89,15 @@
 
         $("#submitBtn").on('click',function () {
 
+
             // console.log(selecteds)
-            $.ajax({
-                type:'post',
-                data:{"selecteds":selecteds.toString()},
-                url:"/api/report/"+id+"/filterParameter",
-                success(data){
-                    // alert(data)
-                    // var rr="/reportTemplate/"+data+"/generate";
-                    // window.location=rr;
-                    $.ajax({
-                        type:'GET',
-                        data:{},
-                        url:"/reportTemplate/"+data+"/generate",
-                        success(){
-                            $.ajax({
-                                type:'POST',
-                                data:{},
-                                url:"/report/reportTemplate/"+data+"/delete",
-                                success(data){
-                                    if (data="OK"){
-                                        var reportList="/report/list";
-                                        window.location=reportList;
-                                    }
-                                }
-                            });
-                        }
-                    });
-            }
-        });
+            // $.ajax({
+            //     type:'post',
+            //     data:{"selecteds":selecteds.toString()},
+            //     url:"/api/report/"+id+"/filterParameter"
+            // });
+
+            window.location.href = "/api/report/"+id+"/filterParameter"+"?selecteds="+selecteds.toString();
 
 
 

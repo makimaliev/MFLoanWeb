@@ -9,7 +9,7 @@ import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.RoleService;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.output.report.model.Comparator;
-import kg.gov.mf.loan.output.report.utils.ReportTool;
+import kg.gov.mf.loan.output.report.utils.*;
 import kg.gov.mf.loan.web.fetchModels.jsTreeModel;
 import kg.gov.mf.loan.web.fetchModels.jsTreeStateModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +27,8 @@ import kg.gov.mf.loan.output.report.model.*;
 import kg.gov.mf.loan.output.report.service.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 import java.util.logging.Filter;
 
@@ -326,35 +328,41 @@ public class ReportController {
 	@ResponseBody
 	public List<jsTreeModel> getTree(@RequestParam(value = "id") Long id){
 
+
+    	List<Long> groupTypeIds = new ArrayList<>();
+
 		ReportTool reportTool=new ReportTool();
 		List<jsTreeModel> jsTreeModels=new ArrayList<>();
 		for (FilterParameter filterParameter:reportService.findById(Long.valueOf(id)).getFilterParameters())
 		{
 			GroupType groupType=filterParameter.getObjectList().getGroupType();
-			jsTreeModel jsTree= new jsTreeModel();
 
+			if(!groupTypeIds.contains(groupType.getId()))
+			{
+				groupTypeIds.add(groupType.getId());
 
-			jsTree.setId(String.valueOf(groupType.getId()));
-			jsTree.setParent("#");
-			jsTree.setChildren(false);
-			jsTree.setText(groupType.getName());
-			jsTreeModels.add(jsTree);
-			for (ReferenceView referenceView:referenceViewService.findByParameter(reportTool.getMapNameOfGroupType(filterParameter.getObjectList().getGroupType()))){
-				jsTreeModel jsTree1= new jsTreeModel();
-				jsTree1.setId(groupType.getId()+"_"+referenceView.getId());
-				jsTree1.setText(referenceView.getName());
-				jsTree1.setParent(String.valueOf(groupType.getId()));
-				jsTreeModels.add(jsTree1);
+				jsTreeModel jsTree= new jsTreeModel();
+
+				jsTree.setId(String.valueOf(groupType.getId()));
+				jsTree.setParent("#");
+				jsTree.setChildren(false);
+				jsTree.setText(groupType.getName());
+				jsTreeModels.add(jsTree);
+				for (ReferenceView referenceView:referenceViewService.findByParameter(reportTool.getMapNameOfGroupType(filterParameter.getObjectList().getGroupType()))){
+					jsTreeModel jsTree1= new jsTreeModel();
+					jsTree1.setId(groupType.getId()+"_"+referenceView.getId());
+					jsTree1.setText(referenceView.getName());
+					jsTree1.setParent(String.valueOf(groupType.getId()));
+					jsTreeModels.add(jsTree1);
+				}
 			}
 		}
 		return jsTreeModels;
 
 	}
 
-	@PostMapping("/api/report/{id}/filterParameter")
-	@ResponseBody
-	public String  saveFilterParameter(@PathVariable(value = "id") Long id,@RequestParam(value = "selecteds") String selecteds) {
-
+	@RequestMapping("/api/report/{id}/filterParameter")
+	public void  saveFilterParameter(@PathVariable(value = "id") Long id,@RequestParam(value = "selecteds") String selecteds,  HttpServletResponse response) {
 
         HashMap<String, List<String>> alls = new HashMap<>();
         List<String> splitted = Arrays.asList(selecteds.split(","));
@@ -423,18 +431,100 @@ public class ReportController {
         reportTemplate1.setShowGroup4(reportTemplate.getShowGroup4());
         reportTemplate1.setShowGroup5(reportTemplate.getShowGroup5());
         reportTemplate1.setShowGroup6(reportTemplate.getShowGroup6());
-        reportTemplate1.setOnDate(new Date());
+        reportTemplate1.setOnDate(reportTemplate.getOnDate());
         reportTemplate1.setReport(reportTemplate.getReport());
-        reportTemplateService.create(reportTemplate1);
+
+		response.setContentType("application/vnd.ms-excel");
+		response.setHeader("Content-disposition","attachment; filename=report.xls");
+		OutputStream out = null;
 
 
-        return String.valueOf(reportTemplate1.getId());
+
+
+
+		switch(reportTemplate1.getReport().getReportType().toString())
+		{
+			case "LOAN_SUMMARY":
+				generateReport(out,response,new ReportGeneratorLoanSummary(), reportTemplate1);
+
+				break;
+
+			case "LOAN_PAYMENT":
+				generateReport(out,response,new ReportGeneratorPayment(), reportTemplate1);
+				break;
+
+			case "COLLATERAL_ITEM":
+				generateReport(out,response,new ReportGeneratorCollateralItem(), reportTemplate1);
+				break;
+
+			case "COLLATERAL_INSPECTION":
+				generateReport(out,response,new ReportGeneratorCollateralInspection(), reportTemplate1);
+				break;
+
+			case "COLLATERAL_ARREST_FREE":
+				generateReport(out,response,new ReportGeneratorCollateralArrestFree(), reportTemplate1);
+				break;
+
+			case "STAFF":
+				generateReport(out,response,new ReportGeneratorStaffEvent(), reportTemplate1);
+				break;
+
+			case "DOCUMENT":
+				generateReport(out,response,new ReportGeneratorDocument(), reportTemplate1);
+				break;
+
+
+			case "LOAN_SCHEDULE":
+				generateReport(out,response,new ReportGeneratorPaymentSchedule(), reportTemplate1);
+				break;
+
+			case "LOAN_PLAN":
+				generateReport(out,response,new ReportGeneratorSupervisorPlan(), reportTemplate1);
+				break;
+
+			case "LOAN_WRITE_OFF":
+				generateReport(out,response,new ReportGeneratorLoanWriteOff(), reportTemplate1);
+				break;
+
+
+			case "LOAN_DEBT_TRANSFER":
+				generateReport(out,response,new ReportGeneratorLoanDebtTransfer(), reportTemplate1);
+				break;
+
+			case "COLLECTION_PHASE":
+				generateReport(out,response,new ReportGeneratorCollectionPhase(), reportTemplate1);
+				break;
+
+			case "ENTITY_DOCUMENT":
+				generateReport(out,response,new ReportGeneratorEntityDocument(), reportTemplate1);
+
+
+				break;
+
+		}
+
+        //reportTemplateService.create(reportTemplate1);
+
+
+//        return String.valueOf(reportTemplate1.getId());
     }
 
     @PostMapping("/report/reportTemplate/{data}/delete")
     @ResponseBody
     public String deleteReportTemplate(@PathVariable(value = "data") Long data){
-        reportTemplateService.deleteById(data);
+        //reportTemplateService.deleteById(data);
         return "OK";
     }
+
+	public void generateReport(OutputStream out, HttpServletResponse response, ReportGenerator reportGenerator, ReportTemplate reportTemplate  )
+	{
+		try {
+			out = response.getOutputStream();
+			reportGenerator.generateReportByTemplate(reportTemplate).write(out);
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
 }
