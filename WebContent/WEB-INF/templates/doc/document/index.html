@@ -48,9 +48,13 @@
 
                     </div>
                     <div class="m-portlet__foot">
-                        <span sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')" th:each="dst : ${documentSubTypes}">
+                        <span th:if="${type=='incoming'}" sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')" th:each="dst : ${documentSubTypes}">
                             <a th:href="@{/doc/new/__${dst.internalName}__}" class="btn btn-success" th:text="${dst.name}"> New Document </a>
                         </span>
+                        <span th:if="${type=='outgoing' or type=='internal'}" th:each="dst : ${documentSubTypes}">
+                            <a th:href="@{/doc/new/__${dst.internalName}__}" class="btn btn-success" th:text="${dst.name}"> New Document </a>
+                        </span>
+
                     </div>
                 </div>
             </div>
