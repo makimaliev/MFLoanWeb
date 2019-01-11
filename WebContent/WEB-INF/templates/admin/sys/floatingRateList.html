@@ -232,11 +232,11 @@
                 },  */{
                     field: "i",
                     title: "#",
-                    sortable: 'desc',
                     responsive: {hidden: 'xl'},
                 },{
                     field: "d",
                     title: "Date",
+					sortable: 'desc',
                     textAlign:'center',
                     template: function (row) {
                         var date =new Date(parseInt(row.d));
