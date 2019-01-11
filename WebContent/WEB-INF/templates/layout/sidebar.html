@@ -23,7 +23,7 @@
                 </a>
             </li>
 
-            <li sec:authorize="hasAnyAuthority('ADMIN')" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
+            <li  class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
                 <a  href="#" class="m-menu__link m-menu__toggle">
                     <i class="m-menu__link-icon la la-wrench"></i>
                     <span class="m-menu__link-text">
@@ -42,7 +42,7 @@
                             </a>
                         </li>
 
-                        <li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
+                        <li sec:authorize="hasAnyAuthority('ADMIN','PERM_CREDITORDER_MENU')" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
                             <a  href="#" class="m-menu__link m-menu__toggle">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>
@@ -141,7 +141,7 @@
                             </div>
                         </li>
 
-                        <li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
+                        <li sec:authorize="hasAnyAuthority('ADMIN')" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
                             <a  href="#" class="m-menu__link m-menu__toggle">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>

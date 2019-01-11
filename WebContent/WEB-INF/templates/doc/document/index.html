@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 <!-- begin::Head -->
 <head>
     <div th:replace="fragments/header :: header-css"/>
@@ -47,7 +48,7 @@
 
                     </div>
                     <div class="m-portlet__foot">
-                        <span th:each="dst : ${documentSubTypes}">
+                        <span sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')" th:each="dst : ${documentSubTypes}">
                             <a th:href="@{/doc/new/__${dst.internalName}__}" class="btn btn-success" th:text="${dst.name}"> New Document </a>
                         </span>
                     </div>
