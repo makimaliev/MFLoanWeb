@@ -1,17 +1,17 @@
 package kg.gov.mf.loan.web.controller.doc;
 
+import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.doc.model.Attachment;
+import kg.gov.mf.loan.doc.model.Document;
 import kg.gov.mf.loan.doc.service.AttachmentService;
+import kg.gov.mf.loan.doc.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -27,18 +27,21 @@ public class AttachmentsController extends BaseController {
 
     private AttachmentService attachmentService;
     private UserService userService;
+    private DocumentService documentService;
 
     @Autowired
-    public AttachmentsController(AttachmentService attachmentService, UserService userService) {
+    public AttachmentsController(AttachmentService attachmentService, UserService userService, DocumentService documentService) {
         this.attachmentService = attachmentService;
         this.userService = userService;
+        this.documentService = documentService;
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public ResponseEntity upload(MultipartHttpServletRequest request) {
+    public ResponseEntity upload(MultipartHttpServletRequest request,
+                                 @RequestParam(value = "documentId", required = false) Long documentId) {
 
         Attachment attachment = new Attachment();
-        //User user = userService.findById(getUser().getId());
+        User user = userService.findById(getUser().getId());
 
         try {
             Iterator<String> itr = request.getFileNames();
@@ -59,9 +62,18 @@ public class AttachmentsController extends BaseController {
                 attachment.setName(filename);
                 attachment.setInternalName(fsname);
                 attachment.setMimeType(mimeType);
-                //attachment.setAuthor(user);
+
+                attachment.setAuthor(user.getId());
 
                 attachmentService.add(attachment);
+
+                if(documentId != null)
+                {
+                    Document document = documentService.getById(documentId);
+                    document.getAttachments().add(attachment);
+                    documentService.update(document);
+                }
+
             }
         }
         catch (Exception e) {

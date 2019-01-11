@@ -103,5 +103,69 @@
 <div th:replace="fragments/footer :: footer-js"/>
 
 <!--begin::Page Resources -->
+<div class="modal fade" id="attachment" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Прикрепление</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/doc/attachments/upload(documentId=${document.id})}" class="dropzone" id="dz"></form>
+            </div>
+            <div class="modal-footer">
+                <button type="reset" class="btn btn-secondary" form="dz" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    Dropzone.autoDiscover = false;
+    var myDropzone = new Dropzone("#dz",
+        {
+            createImageThumbnails: false,
+            dictDefaultMessage: "Добавить",
+            previewTemplate:
+            '<div class="row p-2">' +
+            '   <div class="col-7"><span data-dz-name></span></div>' +
+            '   <div class="col-3" data-dz-size></div>' +
+            '</div>',
+            success: function (file, response) {
+                file.previewElement.classList.add("dz-success");
+                file.previewElement.id = response.id;
+                addFile(response);
+            },
+            error: function (file, response) {
+                file.previewElement.classList.add("dz-error");
+            }
+        });
+
+    function addFile(file) {
+
+        var tr = document.createElement("tr");
+        tr.setAttribute("id", "tr" + file.id);
+        var td = document.createElement("td");
+        var a = document.createElement("a");
+        a.setAttribute("href", "/doc/attachments/download/" + file.id)
+        var info = document.createElement("label");
+        info.innerHTML = file.name;
+
+        tr.appendChild(td);
+        td.appendChild(a);
+        a.appendChild(info)
+
+        var da = document.getElementById("documentAttachments");
+        da.appendChild(tr);
+    }
+
+    $('#attachment').on('hidden.bs.modal', function (e) {
+        myDropzone.removeAllFiles();
+    })
+
+</script>
 </body>
 </html>

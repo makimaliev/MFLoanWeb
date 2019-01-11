@@ -86,7 +86,7 @@
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label"> Срок : </label>
         <div class="col-9">
-            <input class="dtp form-control" th:field="*{documentDueDate}" th:type="*{documentState.ordinal() < 4} ? 'text' : 'hidden'" autocomplete="off"/>
+            <input class="dtp form-control" th:field="*{documentDueDate}" th:type="*{documentState.ordinal() < 4} ? 'text' : 'hidden'" autocomplete="off" readonly="readonly"/>
             <label class="form-control" data-date-format="dd-mm-yyyy" th:text="*{documentDueDate} != null ? *{#dates.format(documentDueDate, 'dd-MM-yyyy HH:mm')} : 'Срок не установлен'" th:if="*{documentState.ordinal() > 4}"> Title </label>
         </div>
     </div>
@@ -158,24 +158,24 @@
             <span> Дата : </span>
         </label>
         <div class="col-sm-9">
-            <input class="dtp form-control" th:field="*{senderRegisteredDate}" th:type="*{documentState.ordinal() == 0} ? 'text' : 'hidden'" autocomplete="off"/>
+            <input class="dtp form-control" th:field="*{senderRegisteredDate}" th:type="*{documentState.ordinal() == 0} ? 'text' : 'hidden'" autocomplete="off" readonly="readonly"/>
             <label class="form-control" th:text="*{#dates.format(senderRegisteredDate, 'dd-MM-yyyy')}" th:if="*{documentState.ordinal() != 0}"> Description </label>
         </div>
     </div>
     <!-- TITLE -->
-    <div class="form-group m-form__group row">
+    <div class="form-group m-form__group row" th:hidden="*{documentState.ordinal() > 1 and #strings.length(title) == 0}">
         <label class="col-3 col-form-label">
-            <span> Относительно : </span>
+            <span> Входящий № и ДАТА МФКР : </span>
         </label>
         <div class="col-sm-9">
-            <input class="form-control" required th:field="*{title}" autocomplete="off" th:type="*{documentState.ordinal() == 0} ? 'text' : 'hidden'">
+            <input class="form-control" th:field="*{title}" autocomplete="off" th:type="*{documentState.ordinal() == 0} ? 'text' : 'hidden'">
             <label class="form-control" th:text="*{title}" th:if="*{documentState.ordinal() != 0}"> Title </label>
         </div>
     </div>
     <!-- DESCRIPTION -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
-            <span> Краткое содержание : </span>
+            <span> Относительно : </span>
         </label>
         <div class="col-sm-9">
             <textarea th:field="*{description}"></textarea>
@@ -187,7 +187,7 @@
             <span> Срок исполнения документа : </span>
         </label>
         <div class="col-sm-9">
-            <input class="dtp form-control" th:field="*{documentDueDate}" th:type="*{documentState.ordinal() == 0} ? 'text' : 'hidden'" autocomplete="off"/>
+            <input class="dtp form-control" th:field="*{documentDueDate}" th:type="*{documentState.ordinal() == 0} ? 'text' : 'hidden'" autocomplete="off" readonly="readonly"/>
             <label class="form-control" th:text="*{documentDueDate} != null ? *{#dates.format(documentDueDate, 'dd-MM-yyyy')} : 'Срок не установлен'" th:if="*{documentState.ordinal() != 0}"> Title </label>
         </div>
     </div>
@@ -215,9 +215,13 @@
             <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
             <input type="hidden" name="files" value="0">
             <table id="documentAttachments" class="form-control">
-                <tr th:if="*{#lists.isEmpty(attachments)}"><td><label>Нет приложений</label></td></tr>
                 <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
-                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
+                    <td>
+                        <a th:href="@{/doc/attachments/download/__${attachment.id}__}">
+                            <label th:text="${attachment.name}"></label>
+                        </a>
+                        <i th:text="'/Автор - ' + ${@userServiceJpaImpl.findById(__${attachment.author}__).staff.name}+'/'"></i>
+                    </td>
                 </tr>
             </table>
         </div>
@@ -325,7 +329,7 @@
             <span th:utext="|#{label.document.pageIndex} : |"> Номер бланка : </span>
         </label>
         <div class="col-sm-9">
-            <input class="form-control m-input" th:field="*{indexNo}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'">
+            <input class="form-control m-input" th:field="*{indexNo}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'number' : 'hidden'">
             <label class="form-control" th:text="*{indexNo}" th:if="*{documentState.ordinal() > 1}"> Title </label>
         </div>
     </div>
@@ -335,7 +339,7 @@
             <span th:utext="|#{label.document.pageCount} : |"> Номер бланка : </span>
         </label>
         <div class="col-sm-9">
-            <input class="form-control m-input" th:field="*{pageCount}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'">
+            <input class="form-control m-input" th:field="*{pageCount}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'number' : 'hidden'">
             <label class="form-control" th:text="*{pageCount}" th:if="*{documentState.ordinal() > 1}"> Title </label>
         </div>
     </div>

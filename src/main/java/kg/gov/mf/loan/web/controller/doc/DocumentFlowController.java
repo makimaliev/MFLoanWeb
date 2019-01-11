@@ -37,7 +37,6 @@ public class DocumentFlowController extends BaseController {
             this.text = text;
         }
     }
-
     //region Dependencies
     private DocumentService documentService;
     private DocumentTypeService documentTypeService;
@@ -253,6 +252,7 @@ public class DocumentFlowController extends BaseController {
         document.setDocumentState(curretState);
 
         model.addAttribute("cu", getUser().getUsername());
+        model.addAttribute("cuid", getUser().getId());
         model.addAttribute("stages", getStages(currentView));
         model.addAttribute("hasReject", hasReject);
         model.addAttribute("tasks", taskService.getTasks(vars));
@@ -317,6 +317,7 @@ public class DocumentFlowController extends BaseController {
         vars.put("objectId", String.valueOf(document.getId()));
 
         model.addAttribute("tasks", taskService.getTasks(vars));
+        //model.addAttribute("accounts", chatUserService.list(10,5));
         model.addAttribute("stages", getStages(document.getDocumentType().getInternalName()));
         model.addAttribute("document", document);
         model.addAttribute("responsible", responsible);
@@ -326,6 +327,8 @@ public class DocumentFlowController extends BaseController {
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public String delete(@PathVariable("id") Long id) {
+
+        if(getUser() == null) return "/login/login";
 
         Document document = documentService.getById(id);
         documentService.remove(document);
@@ -602,8 +605,15 @@ public class DocumentFlowController extends BaseController {
             document.getUsers().add(getUser());
             document.setDocumentState(Transition.valueOf(action).state());
 
-            description = "№ Исходящего документа : " + document.getSenderRegisteredNumber()
+            description =
+                    "№ Исходящего документа : " + document.getSenderRegisteredNumber()
                     + "<br>Дата : " + DATE_FORMAT.format(document.getSenderRegisteredDate());
+
+            if(!document.getTitle().isEmpty())
+            {
+                description = description + "<br>№ Входящего документа и Дата МФКР : " + document.getTitle();
+            }
+
             document.getDispatchData().add(setDispatchData(State.DRAFT, description));
 
             document.setReceiverRegisteredNumber(registerService.generateRegistrationNumber(document));
