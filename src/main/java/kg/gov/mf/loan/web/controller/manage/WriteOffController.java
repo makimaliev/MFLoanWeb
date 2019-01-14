@@ -60,6 +60,7 @@ public class WriteOffController {
 			writeOff.setTotalAmount(0.0);
 			writeOff.setPrincipal(0.0);
 			writeOff.setDescription("-");
+			writeOff.setRecord_status(1);
 			model.addAttribute("wo",writeOff );
 		}
 			

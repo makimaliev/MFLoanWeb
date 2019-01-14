@@ -91,6 +91,7 @@ public class CreditTermController {
 			term.setTransactionOrder(txOrderService.getById(Long.valueOf(1)));
 			term.setDaysInMonthMethod(daysMethodService.getById(Long.valueOf(1)));
 			term.setDaysInYearMethod(daysMethodService.getById(Long.valueOf(1)));
+			term.setRecord_status(1);
 			model.addAttribute("term", term);
 		}
 			

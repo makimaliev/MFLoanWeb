@@ -693,6 +693,7 @@ public class LoanController {
             model.setDaysInMonthMethodName(term.getDaysInMonthMethod().getName());
             model.setDaysInYearMethodId(term.getDaysInYearMethod().getId());
             model.setDaysInYearMethodName(term.getDaysInYearMethod().getName());
+            model.setRecord_status(term.getRecord_status());
             result.add(model);
         }
 
@@ -799,6 +800,7 @@ public class LoanController {
             model.setDetails(p.getDetails());
             model.setPaymentTypeId(p.getPaymentType().getId());
             model.setPaymentTypeName(p.getPaymentType().getName());
+            model.setRecord_status(p.getRecord_status());
 
             result.add(model);
         }
@@ -829,6 +831,7 @@ public class LoanController {
             model.setPenalty(w.getPenalty());
             model.setFee(w.getFee());
             model.setDescription(w.getDescription());
+            model.setRecord_status(w.getRecord_status());
 
             result.add(model);
         }
@@ -861,6 +864,7 @@ public class LoanController {
             model.setDescription(sp.getDescription());
             model.setReg_by_id(sp.getReg_by_id());
             model.setReg_date(sp.getReg_date());
+            model.setRecord_status(sp.getRecord_status());
 
             result.add(model);
         }

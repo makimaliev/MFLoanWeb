@@ -22,6 +22,7 @@ public class SupervisorPlanModel implements Comparable<SupervisorPlanModel>{
     private Double fee;
     private String description;
     private long reg_by_id;
+    private int record_status;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy", timezone = "Asia/Bishkek")
     private Date reg_date;
@@ -110,5 +111,13 @@ public class SupervisorPlanModel implements Comparable<SupervisorPlanModel>{
 
     public void setReg_date(Date reg_date) {
         this.reg_date = reg_date;
+    }
+
+    public int getRecord_status() {
+        return record_status;
+    }
+
+    public void setRecord_status(int record_status) {
+        this.record_status = record_status;
     }
 }

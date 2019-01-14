@@ -35,6 +35,7 @@ public class PaymentModel implements Comparable<PaymentModel>{
 
     private long paymentTypeId;
     private String paymentTypeName;
+    private int record_status;
 
     @Override
     public int compareTo(PaymentModel model)
@@ -144,5 +145,13 @@ public class PaymentModel implements Comparable<PaymentModel>{
 
     public void setPaymentTypeName(String paymentTypeName) {
         this.paymentTypeName = paymentTypeName;
+    }
+
+    public int getRecord_status() {
+        return record_status;
+    }
+
+    public void setRecord_status(int record_status) {
+        this.record_status = record_status;
     }
 }

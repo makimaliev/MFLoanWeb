@@ -47,6 +47,8 @@ public class CreditTermModel implements Comparable<CreditTermModel> {
     private long daysInYearMethodId;
     private String daysInYearMethodName;
 
+    private int record_status;
+
     @Override
     public int compareTo(CreditTermModel model)
     {
@@ -219,5 +221,13 @@ public class CreditTermModel implements Comparable<CreditTermModel> {
 
     public void setDaysInYearMethodName(String daysInYearMethodName) {
         this.daysInYearMethodName = daysInYearMethodName;
+    }
+
+    public int getRecord_status() {
+        return record_status;
+    }
+
+    public void setRecord_status(int record_status) {
+        this.record_status = record_status;
     }
 }

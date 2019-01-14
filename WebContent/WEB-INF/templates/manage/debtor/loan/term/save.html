@@ -88,9 +88,10 @@
 						</div>
 					</div>
 					<!--begin::Form-->
-					<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/term/save}" method="post" class="m-form m-form--fit m-form--label-align-right">
+					<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/term/save}" method="post" th:object="${term}" class="m-form m-form--fit m-form--label-align-right">
 
 						<input hidden="true" type="text" id="id" name="id" th:value="${term.id}"/>
+						<input hidden="true" type="text" id="record" name="id" th:field="*{record_status}"/>
 
 						<div class="m-portlet__body">
 							<div class="m-form__section">
@@ -255,6 +256,20 @@
 									</div>
 								</div>
 
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.orgForm.modal.enabled}"></label>
+									<div class="col-3">
+										<div class="col-lg-4 col-md-9 col-sm-12">
+											<span class="m-switch m-switch--outline m-switch--primary">
+												<label>
+													<input type="checkbox" id="record_status" name="enabled">
+													<span></span>
+												</label>
+											</span>
+										</div>
+									</div>
+								</div>
+
 							</div>
 						</div>
 						<div class="m-portlet__foot m-portlet__foot--fit">
@@ -292,7 +307,30 @@
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
 <!--end::Page Resources -->
-
+<script>
+	if($("#record").val()==1){
+		$("#record_status").trigger('click');
+	}
+	if($("#record_status").is(':checked')){
+		$("#record").val(1);
+	}
+	else{
+		$("#record").val(2);
+	}
+	$("#record_status").on('change', function() {
+		if ($(this).is(':checked')) {
+			// switchStatus = $(this).is(':checked');
+			$("#record").val(1);
+			// alert(switchStatus);// To verify
+		}
+		else {
+			// switchStatus = $(this).is(':checked');
+			$("#record").val(2);
+			// alert($("#record").val())
+			// alert(switchStatus);// To verify
+		}
+	});
+</script>
 </body>
 <!-- end::Body -->
 </html>

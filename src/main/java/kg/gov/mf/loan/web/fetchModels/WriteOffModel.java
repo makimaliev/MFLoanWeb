@@ -21,6 +21,7 @@ public class WriteOffModel implements Comparable<WriteOffModel>{
     private Double penalty;
     private Double fee;
     private String description;
+    private int record_status;
 
     @Override
     public int compareTo(WriteOffModel model)
@@ -90,5 +91,13 @@ public class WriteOffModel implements Comparable<WriteOffModel>{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getRecord_status() {
+        return record_status;
+    }
+
+    public void setRecord_status(int record_status) {
+        this.record_status = record_status;
     }
 }

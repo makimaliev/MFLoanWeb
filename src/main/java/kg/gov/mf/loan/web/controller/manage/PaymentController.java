@@ -89,6 +89,7 @@ public class PaymentController {
 			payment.setFee(Double.valueOf(0));
 			payment.setExchange_rate(currencyRate.getRate());
 			payment.setPaymentType(pTypeService.getById(Long.valueOf(1)));
+			payment.setRecord_status(1);
 			model.addAttribute("payment", payment);
 		}
 			

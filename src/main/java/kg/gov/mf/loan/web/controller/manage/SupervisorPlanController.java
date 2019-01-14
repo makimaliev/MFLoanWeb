@@ -60,6 +60,7 @@ public class SupervisorPlanController {
 			sp.setPenalty(0.0);
 			sp.setPrincipal(0.0);
 			sp.setDescription("-");
+			sp.setRecord_status(1);
 			model.addAttribute("sp", sp);
 		}
 			

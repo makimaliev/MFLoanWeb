@@ -84,6 +84,19 @@ var DatatableDataLocalSPs = function () {
                     }
                     return d;
                 }
+            },{
+                field: "record_status",
+                title: "Статус",
+                width: 100,
+                template: function (row) {
+
+                    if(row.record_status==2){
+                        return '<span class="m-badge m-badge--danger m-badge--wide"> Отменен</span>';
+                    }
+                    else{
+                        return '<span class="m-badge m-badge--success m-badge--wide">Действует</span>';
+                    }
+                }
             }, {
                 field: "action",
                 width: 110,
