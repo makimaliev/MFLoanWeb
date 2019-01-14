@@ -82,6 +82,25 @@
                                     <input type="checkbox" id="showGroup1" name="showGroup1" th:value="${showGroup1}">
                                 </div>
 
+                                <div class="col-4 " th:each="fieldName: ${fieldNames}">
+                                    <label for="fieldName" class="form-control-label" th:text="#{label.objectField.name}">Field Name<span class="required"> * </span></label>
+                                    <input type="text" class="form-control" id="fieldName" name="fieldName" th:value="${fieldName}">
+                                </div>
+
+                                <div class="col-4" th:each="comparator: ${comparators}">
+                                    <select id="comparator" th:value="${comparator}"  class="selectpicker">
+                                        <option th:each="comparatorInList : ${T(kg.gov.mf.loan.output.report.model.Comparator).values()}"
+                                                th:value="${comparatorInList}"
+                                                th:text="${comparatorInList}"
+                                                th:selected="${comparator==comparatorInList.name()}"
+                                        >Region</option>
+                                    </select>
+                                </div>
+                                <div class="col-4" th:each="comparedValue: ${comparedValues}">
+                                    <label class="form-control-label" th:text="#{label.filterParameter.comparedValue}">Compared Value<span class="required"> * </span></label>
+                                    <input type="text" class="form-control" id="comparedValue" name="comparedValue" th:value="${comparedValue}">
+                                </div>
+
                             </div>
                         </div>
 

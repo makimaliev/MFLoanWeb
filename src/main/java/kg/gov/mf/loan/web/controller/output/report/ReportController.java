@@ -295,6 +295,12 @@ public class ReportController {
 	@RequestMapping("/report/{id}/customView")
 	public String jsTree(ModelMap model,@PathVariable(value = "id") Long id){
 
+
+        List<String> fieldNameList = new ArrayList<>();
+        List<String> comparatorList = new ArrayList<>();
+        List<String> selectedComparatorList = new ArrayList<>();
+        List<String> comparedValueList = new ArrayList<>();
+
 		ReportTool reportTool=new ReportTool();
 //		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
 //		List<District> districts=districtService.findByRegionId(Long.valueOf(1));
@@ -322,10 +328,31 @@ public class ReportController {
 //		model.addAttribute("jsonJsTree",jsonJsTree);
 		for (FilterParameter filterParameter:reportService.findById(Long.valueOf(id)).getFilterParameters())
 		{
-			System.out.println(filterParameter.getObjectList().getGroupType().getName());
-			System.out.println(filterParameter.getObjectList().getGroupType().getRow_name());
-			System.out.println(referenceViewService.findByParameter(reportTool.getMapNameOfGroupType(filterParameter.getObjectList().getGroupType())));
+			if(filterParameter.getFilterParameterType() == FilterParameterType.CONTENT_COMPARE)
+            {
+                fieldNameList.add(filterParameter.getFieldName());
+                comparatorList.add(filterParameter.getComparator().toString());
+                comparedValueList.add(filterParameter.getComparedValue().toString());
+
+                for (Comparator comparator: Comparator.values())
+                {
+                    if(filterParameter.getComparator()==comparator)
+                        selectedComparatorList.add(comparator.toString());
+                }
+            }
 		}
+
+
+
+
+		model.addAttribute("fieldNames", fieldNameList);
+        model.addAttribute("comparators", comparatorList);
+        model.addAttribute("selectedComparators", selectedComparatorList);
+        model.addAttribute("comparedValues", comparedValueList);
+
+
+
+
 
 		Report modelReport = this.reportService.findById(id);
 
