@@ -71,6 +71,9 @@ public class DocumentSubTypeController extends BaseController {
 
         if(documentSubType.getId() == 0)
         {
+            String dt = documentSubType.getDocumentType().getInternalName();
+            String dst = documentSubType.getInternalName();
+            documentSubType.setInternalName(dt+dst);
             documentSubTypeService.add(documentSubType);
         }
         else
