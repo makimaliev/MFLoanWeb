@@ -13,6 +13,7 @@ import kg.gov.mf.loan.output.report.utils.*;
 import kg.gov.mf.loan.web.fetchModels.jsTreeModel;
 import kg.gov.mf.loan.web.fetchModels.jsTreeStateModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -29,6 +31,7 @@ import kg.gov.mf.loan.output.report.service.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Filter;
 
@@ -74,6 +77,12 @@ public class ReportController {
         this.reportService = rs;
     }
 
+    @InitBinder
+    public void initBinder(WebDataBinder binder)
+    {
+        CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
+        binder.registerCustomEditor(Date.class, editor);
+    }
 	@RequestMapping(value = "/report/list", method = RequestMethod.GET)
 	public String listReports(Model model) {
 
@@ -317,7 +326,33 @@ public class ReportController {
 			System.out.println(filterParameter.getObjectList().getGroupType().getRow_name());
 			System.out.println(referenceViewService.findByParameter(reportTool.getMapNameOfGroupType(filterParameter.getObjectList().getGroupType())));
 		}
+
+		Report modelReport = this.reportService.findById(id);
+
+
 		model.addAttribute("id",id);
+
+		ReportTemplate reportTemplate = this.reportTemplateService.findByReportId(id);
+
+		model.addAttribute("onDate",reportTemplate.getOnDate());
+
+		if(reportTemplate.getAdditionalDate()!=null)
+		{
+			model.addAttribute("showAdditionalDate",true);
+		}
+		else
+		{
+			model.addAttribute("showAdditionalDate",false);
+		}
+
+
+		model.addAttribute("additionalDate",reportTemplate.getAdditionalDate());
+
+		model.addAttribute("groupTypeList", modelReport.getGroupTypes());
+
+		model.addAttribute("showGroup1", reportTemplate.getShowGroup1());
+
+
 
 		return "/output/report/reportCustomView";
 
@@ -362,7 +397,16 @@ public class ReportController {
 	}
 
 	@RequestMapping("/api/report/{id}/filterParameter")
-	public void  saveFilterParameter(@PathVariable(value = "id") Long id,@RequestParam(value = "selecteds") String selecteds,  HttpServletResponse response) {
+	public void  saveFilterParameter(@PathVariable(value = "id") Long id,
+									 @RequestParam(value = "selecteds") String selecteds,
+									 @RequestParam(value = "onDate" , required = false) String onDate,
+									 @RequestParam(value = "groupType1Select" , required = false) String groupType1select,
+									 @RequestParam(value = "showGroup1" , required = false) String showGroup1,
+
+
+									 HttpServletResponse response) {
+
+		ReportTool reportTool=new ReportTool();
 
         HashMap<String, List<String>> alls = new HashMap<>();
         List<String> splitted = Arrays.asList(selecteds.split(","));
@@ -425,13 +469,23 @@ public class ReportController {
         reportTemplate1.setGroupType6(reportTemplate.getGroupType6());
         reportTemplate1.setName(reportTemplate.getName());
         reportTemplate1.setOutputParameters(reportTemplate.getOutputParameters());
+
+        System.out.println(showGroup1);
+		System.out.println(groupType1select);
+
         reportTemplate1.setShowGroup1(reportTemplate.getShowGroup1());
         reportTemplate1.setShowGroup2(reportTemplate.getShowGroup2());
         reportTemplate1.setShowGroup3(reportTemplate.getShowGroup3());
         reportTemplate1.setShowGroup4(reportTemplate.getShowGroup4());
         reportTemplate1.setShowGroup5(reportTemplate.getShowGroup5());
         reportTemplate1.setShowGroup6(reportTemplate.getShowGroup6());
-        reportTemplate1.setOnDate(reportTemplate.getOnDate());
+
+        Date onDateFormatted = reportTool.StringToDate(onDate);
+        if(onDateFormatted!=null)
+			reportTemplate1.setOnDate(onDateFormatted);
+        else
+        	reportTemplate1.setOnDate(reportTemplate.getOnDate());
+
         reportTemplate1.setReport(reportTemplate.getReport());
 
 		response.setContentType("application/vnd.ms-excel");
@@ -520,7 +574,7 @@ public class ReportController {
 	{
 		try {
 			out = response.getOutputStream();
-			reportGenerator.generateReportByTemplate(reportTemplate).write(out);
+			//reportGenerator.generateReportByTemplate(reportTemplate).write(out);
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();

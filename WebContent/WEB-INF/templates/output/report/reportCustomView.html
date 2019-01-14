@@ -31,8 +31,66 @@
                         </div>
                     </div>
                     <div class="m-portlet__body">
-                        <button type="button" class="btn m-btn--square  btn-primary" id="submitBtn" th:text="#{label.save}">SUBMIT</button>
-                        <div id="jsTree1"></div>
+
+
+                        <div>
+                            <div class="form-group m-form__group row">
+                                <label class="col-form-label col-lg-4 col-sm-12">
+                                    <span th:text="#{label.information.date}"></span>
+                                    <span class="m--font-danger">*</span>
+                                </label>
+                                <div class="col-lg-4 col-md-9 col-sm-12">
+                                    <div class="input-group date m_datetimepicker_6">
+                                        <input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" id="onDate" name="onDate" th:value="${onDate}"/>
+                                        <span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group m-form__group row" th:if="${showAdditionalDate=='true'}">
+                                <label class="col-form-label col-lg-4 col-sm-12">
+                                    <span th:text="#{label.information.date2}"></span>
+                                    <span class="m--font-danger">*</span>
+                                </label>
+                                <div class="col-lg-4 col-md-9 col-sm-12">
+                                    <div class="input-group date m_datetimepicker_6">
+                                        <input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" id="additionalDate" name="additionalDate" th:value="${additionalDate}"/>
+                                        <span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <label class="col-form-label col-lg-4 col-sm-12">
+                                    <span th:text="#{label.reportTemplate.groupType1}"></span>
+                                    <span class="m--font-danger">*</span>
+                                </label>
+                                <div class="col-lg-8 col-md-9 col-sm-12">
+
+                                    <select id="groupType1select" th:value="${groupType1}" class="form-control m-bootstrap-select m_selectpicker">
+                                        <option th:value="null">-</option>
+                                        <option th:each="groupType1InList : ${groupTypeList}"
+                                                th:value="${{groupType1InList}}"
+                                                th:text="${groupType1InList.name}">groupType</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-8 col-md-9 col-sm-12">
+                                    <input type="checkbox" id="showGroup1" name="showGroup1" th:value="${showGroup1}">
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+
+                            <div id="jsTree1"></div>
+                            <button type="button" class="btn m-btn--square  btn-primary" id="submitBtn" th:text="#{label.save}">SUBMIT</button>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -55,6 +113,19 @@
 </body>
 </html>
 
+<script>
+    $('.m_selectpicker').selectpicker('refresh');
+
+    $('.m_datetimepicker_6').datetimepicker({
+        format: "dd.mm.yyyy",
+        todayHighlight: true,
+        autoclose: true,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        pickerPosition: 'bottom-left'
+    });
+</script>
 
 <script th:inline="javascript">
     var jsonJsTree = /*[[${jsonJsTree}]]*/ [];
@@ -97,10 +168,21 @@
             //     url:"/api/report/"+id+"/filterParameter"
             // });
 
-            window.location.href = "/api/report/"+id+"/filterParameter"+"?selecteds="+selecteds.toString();
+            var params = "";
+            params=params+"&onDate="+$("#onDate").val();
+            params=params+"&groupType1Select="+$("#groupType1select").val();
+            params=params+"&showGroup1="+$("#showGroup1").val();
+
+            alert($("#showGroup1").val());
+
+
+            window.location.href = "/api/report/"+id+"/filterParameter"+"?selecteds="+selecteds.toString()+params;
 
 
 
         });
     });
 </script>
+
+
+
