@@ -761,6 +761,7 @@ public class LoanController {
             model.setCollectedPenaltyPayment(ps.getCollectedPenaltyPayment());
             model.setInstallmentStateId(ps.getInstallmentState().getId());
             model.setInstallmentStateName(ps.getInstallmentState().getName());
+            model.setRecord_status(ps.getRecord_status());
 
             result.add(model);
         }

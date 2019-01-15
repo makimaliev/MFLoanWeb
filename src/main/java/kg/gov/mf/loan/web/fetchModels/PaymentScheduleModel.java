@@ -27,6 +27,7 @@ public class PaymentScheduleModel implements Comparable<PaymentScheduleModel>{
 
     private long installmentStateId;
     private String installmentStateName;
+    private int record_status;
 
     @Override
     public int compareTo(PaymentScheduleModel model)
@@ -104,5 +105,13 @@ public class PaymentScheduleModel implements Comparable<PaymentScheduleModel>{
 
     public void setInstallmentStateName(String installmentStateName) {
         this.installmentStateName = installmentStateName;
+    }
+
+    public int getRecord_status() {
+        return record_status;
+    }
+
+    public void setRecord_status(int record_status) {
+        this.record_status = record_status;
     }
 }

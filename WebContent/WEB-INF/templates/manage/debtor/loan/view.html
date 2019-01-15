@@ -372,6 +372,83 @@
                                 <!--begin: Datatable -->
                                 <div class="m_datatable" id="paymentSchedulesTable"></div>
                                 <!--end: Datatable -->
+								<div class="row">
+									<div class="col-sm-2 mt-4">
+										<div class="m-widget1">
+											<div class="m-widget1__item">
+												<div class="row m-row--no-padding align-items-center">
+													<div class="col">
+														<h3 class="m-widget1__title">Освоение</h3>
+														<span class="m-widget1__desc"></span>
+													</div>
+													<div class="col m--align-right">
+														<span class="m-widget1__number m--font-brand" id="sumOfPSDisbursement" text="0.0"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-2 mt-4">
+										<div class="m-widget1">
+											<div class="m-widget1__item">
+												<div class="row m-row--no-padding align-items-center">
+													<div class="col">
+														<h3 class="m-widget1__title">Осн. сумма</h3>
+														<span class="m-widget1__desc"></span>
+													</div>
+													<div class="col m--align-right">
+														<span class="m-widget1__number m--font-brand" id="sumOfPSPrincipal" text="0.0"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-2 mt-4">
+										<div class="m-widget1">
+											<div class="m-widget1__item">
+												<div class="row m-row--no-padding align-items-center">
+													<div class="col">
+														<h3 class="m-widget1__title">Процент</h3>
+														<span class="m-widget1__desc"></span>
+													</div>
+													<div class="col m--align-right">
+														<span class="m-widget1__number m--font-brand" id="sumOfPSInterest" text="0.0"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-2 mt-4">
+										<div class="m-widget1">
+											<div class="m-widget1__item">
+												<div class="row m-row--no-padding align-items-center">
+													<div class="col">
+														<h3 class="m-widget1__title">Нак. проц</h3>
+														<span class="m-widget1__desc"></span>
+													</div>
+													<div class="col m--align-right">
+														<span class="m-widget1__number m--font-brand" id="sumOfPSCollectedInterest" text="0.0"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-2 mt-4">
+										<div class="m-widget1">
+											<div class="m-widget1__item">
+												<div class="row m-row--no-padding align-items-center">
+													<div class="col">
+														<h3 class="m-widget1__title">Нак. штр</h3>
+														<span class="m-widget1__desc"></span>
+													</div>
+													<div class="col m--align-right">
+														<span class="m-widget1__number m--font-brand" id="sumOfPSCollectedPrincipal" text="0.0"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 							<div class="tab-pane" id="payments" role="tabpanel">
                                 <!--begin: Search Form -->
@@ -454,6 +531,68 @@
                                 <!--begin: Datatable -->
                                 <div class="m_datatable" id="paymentsTable"></div>
                                 <!--end: Datatable -->
+								<div class="row">
+									<div class="col-sm-2 mt-4">
+										<div class="m-widget1">
+											<div class="m-widget1__item">
+												<div class="row m-row--no-padding align-items-center">
+													<div class="col">
+														<h3 class="m-widget1__title">Сумма</h3>
+														<span class="m-widget1__desc"></span>
+													</div>
+													<div class="col m--align-right">
+														<span class="m-widget1__number m--font-brand" id="sumOfPTotal" text="0.0"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-2 mt-4">
+										<div class="m-widget1">
+											<div class="m-widget1__item">
+												<div class="row m-row--no-padding align-items-center">
+													<div class="col">
+														<h3 class="m-widget1__title">Осн. сумма</h3>
+														<span class="m-widget1__desc"></span>
+													</div>
+													<div class="col m--align-right">
+														<span class="m-widget1__number m--font-brand" id="sumOfPPrincipal" text="0.0"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-2 mt-4">
+										<div class="m-widget1">
+											<div class="m-widget1__item">
+												<div class="row m-row--no-padding align-items-center">
+													<div class="col">
+														<h3 class="m-widget1__title">Штраф</h3>
+														<span class="m-widget1__desc"></span>
+													</div>
+													<div class="col m--align-right">
+														<span class="m-widget1__number m--font-brand" id="sumOfPPenalty" text="0.0"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-2 mt-4">
+										<div class="m-widget1">
+											<div class="m-widget1__item">
+												<div class="row m-row--no-padding align-items-center">
+													<div class="col">
+														<h3 class="m-widget1__title">Процент</h3>
+														<span class="m-widget1__desc"></span>
+													</div>
+													<div class="col m--align-right">
+														<span class="m-widget1__number m--font-brand" id="sumOfPInterest" text="0.0"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 							<div class="tab-pane" id="supervisorPlans" role="tabpanel">
                                 <!--begin: Search Form -->
@@ -966,6 +1105,7 @@
     /*<![CDATA[*/
     var debtorId = /*[[${debtor.id}]]*/ [];
     var loanId = /*[[${loan.id}]]*/ [];
+    var jsonPayments;
     var loggedInUserId=/*[[${loggedinuserId}]]*/ [];
     var supervisorId=/*[[${supervisorId}]]*/ [];
     // var jsonWOs = /*[[${WOs}]]*/ [];
@@ -993,7 +1133,7 @@
         loanIds = JSON.stringify({
             'id' : loanIds
         });
-        console.log(loanIds)
+        // console.log(loanIds)
         $.ajax({
             type : 'GET',
             url : "/printoutTemplate/1/objectId/1/generate",
@@ -1128,6 +1268,19 @@
 </script>
 <!--<div th:replace="layout/footer"/>-->
 <script>
+	// Payments sums
+	var sumOfPTotal=0.0;
+	var sumOfPPrincipal=0.0;
+	var sumOfPInterest=0.0;
+	var sumOfPPenalty=0.0;
+
+	// PaymentSchedules sums
+	var sumOfPSDisbursement=0.0;
+	var sumOfPSPrincipal=0.0;
+	var sumOfPSInterest=0.0;
+	var sumOfPSCollectedInterest=0.0;
+	var sumOfPSCollectedPincipal=0.0;
+
 	$("#writeOffFunction").on('click',function () {
         $.ajax({
 			type:'post',
@@ -1144,7 +1297,23 @@
             url: '/paymentScheduleRequest/'+loanId,
             success:function (data) {
                 jsonPaymentSchedules=data;
+				var norm=JSON.parse(data);
+				// console.log(norm);
                 $.getScript("/js/data-debtor-loan-paymentSchedules.js");
+				for(var i in norm){
+					if(norm[i].record_status==1){
+						sumOfPSDisbursement=sumOfPSDisbursement+parseFloat(norm[i].disbursement);
+						sumOfPSInterest=sumOfPSInterest+parseFloat(norm[i].interestPayment);
+						sumOfPSPrincipal=sumOfPSPrincipal+parseFloat(norm[i].principalPayment);
+						sumOfPSCollectedInterest=sumOfPSCollectedInterest+parseFloat(norm[i].collectedInterestPayment);
+						sumOfPSCollectedPincipal=sumOfPSCollectedPincipal+parseFloat(norm[i].collectedPenaltyPayment);
+					}
+				}
+				$("#sumOfPSDisbursement").text(sumOfPSDisbursement);
+				$("#sumOfPSPrincipal").text(sumOfPSPrincipal);
+				$("#sumOfPSInterest").text(sumOfPSInterest);
+				$("#sumOfPSCollectedInterest").text(sumOfPSCollectedInterest);
+				$("#sumOfPSCollectedPrincipal").text(sumOfPSCollectedPincipal);
             }
         });
     });
@@ -1154,7 +1323,21 @@
             url: '/paymentRequest/'+loanId,
             success:function (data) {
                 jsonPayments=data;
+                var norm=JSON.parse(jsonPayments);
                 $.getScript("/js/data-debtor-loan-payments.js");
+                for(var i in norm){
+					if(norm[i].record_status==1){
+						sumOfPTotal=sumOfPTotal+parseFloat(norm[i].totalAmount);
+						sumOfPPrincipal=sumOfPPrincipal+parseFloat(norm[i].principal);
+						sumOfPPenalty=sumOfPPenalty+parseFloat(norm[i].penalty);
+						sumOfPInterest=sumOfPInterest+parseFloat(norm[i].interest);
+					}
+				}
+                $("#sumOfPTotal").text(sumOfPTotal);
+                $("#sumOfPPrincipal").text(sumOfPPrincipal);
+                $("#sumOfPPenalty").text(sumOfPPenalty);
+                $("#sumOfPInterest").text(sumOfPInterest);
+
             }
         });
     });

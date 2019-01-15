@@ -79,6 +79,7 @@ public class PaymentScheduleController {
 			paymentSchedule.setDisbursement(0.0);
 			paymentSchedule.setInterestPayment(0.0);
 			paymentSchedule.setPrincipalPayment(0.0);
+			paymentSchedule.setRecord_status(1);
 			paymentSchedule.setInstallmentState(installmentStateService.getById(Long.valueOf(1)));
 			model.addAttribute("paymentSchedule", paymentSchedule);
 		}
