@@ -248,7 +248,7 @@
                     field: "View",
                     width: 80,
                     textAlign: 'center',
-                    title: "Просмотр",
+                    title: [[#{label.view}]],
                     sortable: false,
                     selector: false,
                     overflow: 'visible',
@@ -265,7 +265,7 @@
                     responsive: {hidden: 'xl'}
                 },{
                     field: "v_debtor_name",
-                    title: "Наименование",
+                    title: [[#{v_debtor_name}]],
                     width:300,
                     template: function (row) {
                         var d = row.v_debtor_name;

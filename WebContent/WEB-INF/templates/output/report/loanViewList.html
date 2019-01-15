@@ -231,7 +231,7 @@
     var liness="";
     var ssss=$("#selected_field_names").val();
     var stringOfFields={};
-    var columnes=[{
+    /*var columnes=[{
         field: "View",
         width: 80,
         textAlign: 'center',
@@ -257,6 +257,7 @@
         console.log(columnes)
         if(x.length==1){
             lines=x[0].substring(1);
+            alert(lines)
             if(lines.includes(']')){
                 lines=lines.slice(0,-1);
             }
@@ -267,6 +268,22 @@
                         for(var key in t){
                             if(row[lines]==key){
                                 return t[key];
+                            }
+                        }
+                    }
+                };
+                columnes.push(stringOfFields);
+            }
+            else if(lines=="v_debtor_name"){
+                // alert("jereeeeeeee")
+                stringOfFields={field:lines,title:sds[counter++],
+                    template: function (row) {
+                        t=asaa[lines];
+                        for(var key in t){
+                            if(row[lines]==key){
+                                return '\
+						            <a href="/manage/debtor/'+ row.v_debtor_id +'/loan/'+ row.v_loan_id+'/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"><span value=t[key] ></span></a>\
+					                ';
                             }
                         }
                     }
@@ -325,7 +342,7 @@
     }
 
     var sp=ssss.split(",");
-    rec(sp);
+    rec(sp);*/
     //== Class definition
     var DatatableJsonRemoteDemo = function () {
         //== Private functions
@@ -364,7 +381,68 @@
                 filterable: false,
                 pagination: false,
                 // columns definition
-                columns: columnes,
+                columns:  [{
+                    field: "View",
+                    width: 80,
+                    textAlign: 'center',
+                    title: [[#{label.view}]],
+                    sortable: false,
+                    selector: false,
+                    overflow: 'visible',
+
+                    template: function (row) {
+                        return '\
+						<a href="/manage/debtor/'+row.v_debtor_id+'/loan/'+row.v_loan_id+'/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
+					';
+                    }
+                },  {
+                    field: "v_loan_id",
+                    title: "#",
+                    sortable: 'desc',
+                    responsive: {hidden: 'xl'}
+                },{
+                    field: "v_debtor_name",
+                    title: [[#{v_debtor_name}]],
+                    width:300,
+                    template: function (row) {
+                        var d = row.v_debtor_name;
+                        if(d.length>40){
+                            d= d.substring(0,40)+"...";
+                            return '\
+                                <a href="/manage/debtor/'+ row.v_debtor_id + '/view">'+d+'</a>\
+                            ';
+                        }
+                        return '\
+                            <a href="/manage/debtor/'+ row.v_debtor_id + '/view">'+d+'</a>\
+                        ';
+                    }
+                }, {
+                    field: "v_loan_reg_number",
+                    title: [[#{v_loan_reg_number}]],
+                    width:300,
+                    template: function (row) {
+                        var d = row.v_loan_reg_number;
+                        if(d.length>40){
+                            return d.substring(0,40)+"...";
+                        }
+                        return d;
+                    }
+                }, {
+                    field: "v_loan_amount",
+                    title: [[#{label.loan.amount}]],
+                    textAlign:'center',
+                    template:function (row) {
+                        return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_loan_amount);
+                    }
+                },{
+                    field: "v_loan_reg_date",
+                    title: [[#{label.loan.regDate}]],
+                    textAlign:'center',
+                    template: function (row) {
+                        var date = moment("/Date("+row.v_loan_reg_date+")/").format("DD.MM.YYYY");
+                        return date;
+                    }
+                }],
                 translate: {
                     records: {
                         processing: 'Подождите пожалуйста...',
