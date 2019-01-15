@@ -84,9 +84,9 @@ public class CreditTermController {
 			term.setPenaltyOnPrincipleOverdueRateValue(Double.valueOf(0));
 			term.setPenaltyOnInterestOverdueRateValue(Double.valueOf(0));
 			term.setPenaltyLimitPercent(Double.valueOf(20));
-			term.setFloatingRateType(orderTermFloatingRateTypeService.getById(Long.valueOf(1)));
-			term.setPenaltyOnInterestOverdueRateType(orderTermFloatingRateTypeService.getById(Long.valueOf(1)));
-			term.setPenaltyOnPrincipleOverdueRateType(orderTermFloatingRateTypeService.getById(Long.valueOf(1)));
+			term.setFloatingRateType(orderTermFloatingRateTypeService.getById(Long.valueOf(2)));
+			term.setPenaltyOnInterestOverdueRateType(orderTermFloatingRateTypeService.getById(Long.valueOf(2)));
+			term.setPenaltyOnPrincipleOverdueRateType(orderTermFloatingRateTypeService.getById(Long.valueOf(2)));
 			term.setRatePeriod(orderTermRatePeriodService.getById(Long.valueOf(1)));
 			term.setTransactionOrder(txOrderService.getById(Long.valueOf(1)));
 			term.setDaysInMonthMethod(daysMethodService.getById(Long.valueOf(1)));
