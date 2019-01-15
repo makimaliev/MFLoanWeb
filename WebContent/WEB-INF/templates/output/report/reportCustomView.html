@@ -33,150 +33,153 @@
                     <div class="m-portlet__body">
 
                         <!--REPORT TEMPLATE INFORMATION -->
-                        <div class="col-6" th:object="${reportTemplateModel}">
-                            <div class="form-group m-form__group row">
-                                <label class="col-6">
-                                    <span th:text="#{label.information.date}"></span>
-                                </label>
-                                <div class="col-6">
-                                    <div class="input-group date m_datetimepicker_6">
-                                        <input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" id="onDate" name="onDate" th:field="*{onDate}"/>
-                                        <span class="input-group-addon">
+                        <div class="row mb-5">
+
+                            <div class="col-6" th:object="${reportTemplateModel}">
+                                <div class="form-group m-form__group row">
+                                    <label class="col-6">
+                                        <span th:text="#{label.information.date}"></span>
+                                    </label>
+                                    <div class="col-6">
+                                        <div class="input-group date m_datetimepicker_6">
+                                            <input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" id="onDate" name="onDate" th:field="*{onDate}"/>
+                                            <span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
 
-                            <div class="form-group m-form__group row" th:if="${showAdditionalDate=='true'}">
-                                <label class="col-6">
-                                    <span th:text="#{label.information.date2}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-6">
-                                    <div class="input-group date m_datetimepicker_6">
-                                        <input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" id="additionalDate" name="additionalDate" th:value="${additionalDate}"/>
-                                        <span class="input-group-addon">
+                                <div class="form-group m-form__group row" th:if="${showAdditionalDate=='true'}">
+                                    <label class="col-6">
+                                        <span th:text="#{label.information.date2}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-6">
+                                        <div class="input-group date m_datetimepicker_6">
+                                            <input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" id="additionalDate" name="additionalDate" th:value="${additionalDate}"/>
+                                            <span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group m-form__group row">
-                                <label class="col-4">
-                                    <span th:text="#{label.reportTemplate.groupType1}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-2">
-                                    <input class="m-checkbox" type="checkbox" id="showGroup1id" name="showGroup1" th:field="*{showGroup1}">
-                                </div>
-                                <div class="col-6">
-                                    <select id="groupType1select" th:field="*{groupType1}" class="form-control m-bootstrap-select m_selectpicker">
-                                        <option th:value="null">-</option>
-                                        <option th:each="groupType1InList : ${groupTypeList}"
-                                                th:value="${{groupType1InList}}"
-                                                th:text="${groupType1InList.name}">groupType</option>
-                                    </select>
-                                </div>
+                                <div class="form-group m-form__group row">
+                                    <label class="col-4">
+                                        <span th:text="#{label.reportTemplate.groupType1}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-2">
+                                        <input class="m-checkbox" type="checkbox" id="showGroup1id" name="showGroup1" th:field="*{showGroup1}">
+                                    </div>
+                                    <div class="col-6">
+                                        <select id="groupType1select" th:field="*{groupType1}" class="form-control m-bootstrap-select m_selectpicker">
+                                            <option th:value="null">-</option>
+                                            <option th:each="groupType1InList : ${groupTypeList}"
+                                                    th:value="${{groupType1InList}}"
+                                                    th:text="${groupType1InList.name}">groupType</option>
+                                        </select>
+                                    </div>
 
-                            </div>
-                            <div class="form-group m-form__group row">
-                                <label class="col-4">
-                                    <span th:text="#{label.reportTemplate.groupType2}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-2">
-                                    <input type="checkbox" id="showGroup2" name="showGroup2" th:field="*{showGroup2}">
                                 </div>
-                                <div class="col-6">
-                                    <select id="groupType2select" th:field="*{groupType2}" class="form-control m-bootstrap-select m_selectpicker">
-                                        <option th:value="null">-</option>
-                                        <option th:each="groupType2InList : ${groupTypeList}"
-                                                th:value="${{groupType2InList}}"
-                                                th:text="${groupType2InList.name}">groupType</option>
-                                    </select>
-                                </div>
+                                <div class="form-group m-form__group row">
+                                    <label class="col-4">
+                                        <span th:text="#{label.reportTemplate.groupType2}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-2">
+                                        <input type="checkbox" id="showGroup2" name="showGroup2" th:field="*{showGroup2}">
+                                    </div>
+                                    <div class="col-6">
+                                        <select id="groupType2select" th:field="*{groupType2}" class="form-control m-bootstrap-select m_selectpicker">
+                                            <option th:value="null">-</option>
+                                            <option th:each="groupType2InList : ${groupTypeList}"
+                                                    th:value="${{groupType2InList}}"
+                                                    th:text="${groupType2InList.name}">groupType</option>
+                                        </select>
+                                    </div>
 
-                            </div>
-                            <div class="form-group m-form__group row">
-                                <label class="col-4">
-                                    <span th:text="#{label.reportTemplate.groupType3}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-2">
-                                    <input type="checkbox" id="showGroup3" name="showGroup3" th:field="*{showGroup3}">
                                 </div>
-                                <div class="col-6">
-                                    <select id="groupType3select" th:field="*{groupType3}" class="form-control m-bootstrap-select m_selectpicker" disabled="disabled">
-                                        <option th:value="null">-</option>
-                                        <option th:each="groupType3InList : ${groupTypeList}"
-                                                th:value="${{groupType3InList}}"
-                                                th:text="${groupType3InList.name}">groupType</option>
-                                    </select>
-                                </div>
+                                <div class="form-group m-form__group row">
+                                    <label class="col-4">
+                                        <span th:text="#{label.reportTemplate.groupType3}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-2">
+                                        <input type="checkbox" id="showGroup3" name="showGroup3" th:field="*{showGroup3}">
+                                    </div>
+                                    <div class="col-6">
+                                        <select id="groupType3select" th:field="*{groupType3}" class="form-control m-bootstrap-select m_selectpicker" disabled="disabled">
+                                            <option th:value="null">-</option>
+                                            <option th:each="groupType3InList : ${groupTypeList}"
+                                                    th:value="${{groupType3InList}}"
+                                                    th:text="${groupType3InList.name}">groupType</option>
+                                        </select>
+                                    </div>
 
-                            </div>
-                            <div class="form-group m-form__group row">
-                                <label class="col-4">
-                                    <span th:text="#{label.reportTemplate.groupType4}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-2">
-                                    <input type="checkbox" id="showGroup4" name="showGroup4" th:field="*{showGroup4}">
                                 </div>
-                                <div class="col-6">
-                                    <select id="groupType4select" th:field="*{groupType4}" class="form-control m-bootstrap-select m_selectpicker" disabled="disabled">
-                                        <option th:value="null">-</option>
-                                        <option th:each="groupType4InList : ${groupTypeList}"
-                                                th:value="${{groupType4InList}}"
-                                                th:text="${groupType4InList.name}">groupType</option>
-                                    </select>
-                                </div>
+                                <div class="form-group m-form__group row">
+                                    <label class="col-4">
+                                        <span th:text="#{label.reportTemplate.groupType4}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-2">
+                                        <input type="checkbox" id="showGroup4" name="showGroup4" th:field="*{showGroup4}">
+                                    </div>
+                                    <div class="col-6">
+                                        <select id="groupType4select" th:field="*{groupType4}" class="form-control m-bootstrap-select m_selectpicker" disabled="disabled">
+                                            <option th:value="null">-</option>
+                                            <option th:each="groupType4InList : ${groupTypeList}"
+                                                    th:value="${{groupType4InList}}"
+                                                    th:text="${groupType4InList.name}">groupType</option>
+                                        </select>
+                                    </div>
 
-                            </div>
-                            <div class="form-group m-form__group row">
-                                <label class="col-4">
-                                    <span th:text="#{label.reportTemplate.groupType5}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-2">
-                                    <input type="checkbox" id="showGroup5" name="showGroup5" th:field="*{showGroup5}">
                                 </div>
-                                <div class="col-6">
-                                    <select id="groupType5select" th:field="*{groupType5}" class="form-control m-bootstrap-select m_selectpicker" disabled="disabled">
-                                        <option th:value="null">-</option>
-                                        <option th:each="groupType5InList : ${groupTypeList}"
-                                                th:value="${{groupType5InList}}"
-                                                th:text="${groupType5InList.name}">groupType</option>
-                                    </select>
-                                </div>
+                                <div class="form-group m-form__group row">
+                                    <label class="col-4">
+                                        <span th:text="#{label.reportTemplate.groupType5}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-2">
+                                        <input type="checkbox" id="showGroup5" name="showGroup5" th:field="*{showGroup5}">
+                                    </div>
+                                    <div class="col-6">
+                                        <select id="groupType5select" th:field="*{groupType5}" class="form-control m-bootstrap-select m_selectpicker" disabled="disabled">
+                                            <option th:value="null">-</option>
+                                            <option th:each="groupType5InList : ${groupTypeList}"
+                                                    th:value="${{groupType5InList}}"
+                                                    th:text="${groupType5InList.name}">groupType</option>
+                                        </select>
+                                    </div>
 
-                            </div>
-                            <div class="form-group m-form__group row">
-                                <label class="col-4">
-                                    <span th:text="#{label.reportTemplate.groupType6}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-2">
-                                    <input type="checkbox" id="showGroup6" name="showGroup6" th:field="*{showGroup6}">
                                 </div>
-                                <div class="col-6">
-                                    <select id="groupType6select" th:field="*{groupType6}" class="form-control m-bootstrap-select m_selectpicker" disabled="disabled">
-                                        <option th:value="null">-</option>
-                                        <option th:each="groupType6InList : ${groupTypeList}"
-                                                th:value="${{groupType6InList}}"
-                                                th:text="${groupType6InList.name}">groupType</option>
-                                    </select>
+                                <div class="form-group m-form__group row">
+                                    <label class="col-4">
+                                        <span th:text="#{label.reportTemplate.groupType6}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-2">
+                                        <input type="checkbox" id="showGroup6" name="showGroup6" th:field="*{showGroup6}">
+                                    </div>
+                                    <div class="col-6">
+                                        <select id="groupType6select" th:field="*{groupType6}" class="form-control m-bootstrap-select m_selectpicker" disabled="disabled">
+                                            <option th:value="null">-</option>
+                                            <option th:each="groupType6InList : ${groupTypeList}"
+                                                    th:value="${{groupType6InList}}"
+                                                    th:text="${groupType6InList.name}">groupType</option>
+                                        </select>
+                                    </div>
+
                                 </div>
-
                             </div>
-                        </div>
 
-                        <!--FILTER TREE -->
-                        <div class="col-6">
-                            <div class="form-group m-form__group row">
-                                <div id="jsTree1"></div>
+                            <!--FILTER TREE -->
+                            <div class="col-6">
+                                <div class="form-group m-form__group row">
+                                    <div id="jsTree1"></div>
+                                </div>
                             </div>
                         </div>
 
