@@ -10,6 +10,8 @@ import kg.gov.mf.loan.admin.sys.service.RoleService;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.output.report.model.Comparator;
 import kg.gov.mf.loan.output.report.utils.*;
+import kg.gov.mf.loan.web.fetchModels.CompareParametersModel;
+import kg.gov.mf.loan.web.fetchModels.ReportTemplateModel;
 import kg.gov.mf.loan.web.fetchModels.jsTreeModel;
 import kg.gov.mf.loan.web.fetchModels.jsTreeStateModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -295,11 +297,14 @@ public class ReportController {
 	@RequestMapping("/report/{id}/customView")
 	public String jsTree(ModelMap model,@PathVariable(value = "id") Long id){
 
+        String comparatorString = "";
+
 
         List<String> fieldNameList = new ArrayList<>();
         List<String> comparatorList = new ArrayList<>();
-        List<String> selectedComparatorList = new ArrayList<>();
         List<String> comparedValueList = new ArrayList<>();
+
+        List<CompareParametersModel> compareParametersModelsList = new ArrayList<>();
 
 		ReportTool reportTool=new ReportTool();
 //		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
@@ -334,11 +339,39 @@ public class ReportController {
                 comparatorList.add(filterParameter.getComparator().toString());
                 comparedValueList.add(filterParameter.getComparedValue().toString());
 
-                for (Comparator comparator: Comparator.values())
+                String comparatorStringTemp = "(=="+filterParameter.getFieldName()+filterParameter.getComparator().toString()+"==)";
+                if(!comparatorString.contains(comparatorStringTemp))
                 {
-                    if(filterParameter.getComparator()==comparator)
-                        selectedComparatorList.add(comparator.toString());
+                    comparatorString+=comparatorStringTemp;
+
+                    CompareParametersModel compareParametersModel = new CompareParametersModel();
+
+                    compareParametersModel.setFieldName(filterParameter.getFieldName());
+                    compareParametersModel.setComparator(filterParameter.getComparator().toString());
+                    compareParametersModel.setComparedValue(filterParameter.getComparedValue().toString());
+
+                    if(filterParameter.getComparator().toString().contains("DATE"))
+                    {
+                        compareParametersModel.setComparedValueType((short)2);
+
+                        SimpleDateFormat DateFormatShort = new SimpleDateFormat("dd.MM.yyyy");
+
+                        try
+                        {
+                            Date date = DateFormatShort.parse(filterParameter.getComparedValue().toString());
+                            compareParametersModel.setComparedDate(date);
+                        }
+                        catch (java.text.ParseException e)
+                        {
+
+                        }
+
+
+                    }
+                    compareParametersModelsList.add(compareParametersModel);
                 }
+
+
             }
 		}
 
@@ -347,8 +380,9 @@ public class ReportController {
 
 		model.addAttribute("fieldNames", fieldNameList);
         model.addAttribute("comparators", comparatorList);
-        model.addAttribute("selectedComparators", selectedComparatorList);
         model.addAttribute("comparedValues", comparedValueList);
+
+        model.addAttribute("compareParametersModels", compareParametersModelsList);
 
 
 
@@ -361,8 +395,26 @@ public class ReportController {
 
 		ReportTemplate reportTemplate = this.reportTemplateService.findByReportId(id);
 
-		model.addAttribute("onDate",reportTemplate.getOnDate());
 
+		ReportTemplateModel reportTemplateModel = new ReportTemplateModel();
+
+		if(reportTemplate.getOnDate()!=null) reportTemplateModel.setOnDate(reportTemplate.getOnDate());
+		if(reportTemplate.getAdditionalDate()!=null) reportTemplateModel.setAdditionalDate(reportTemplate.getAdditionalDate());
+		reportTemplateModel.setShowGroup1(reportTemplate.getShowGroup1());
+		reportTemplateModel.setShowGroup2(reportTemplate.getShowGroup2());
+		reportTemplateModel.setShowGroup3(reportTemplate.getShowGroup3());
+		reportTemplateModel.setShowGroup4(reportTemplate.getShowGroup4());
+		reportTemplateModel.setShowGroup5(reportTemplate.getShowGroup5());
+		reportTemplateModel.setShowGroup6(reportTemplate.getShowGroup6());
+
+		reportTemplateModel.setGroupType1(reportTemplate.getGroupType1());
+		reportTemplateModel.setGroupType2(reportTemplate.getGroupType2());
+		reportTemplateModel.setGroupType3(reportTemplate.getGroupType3());
+		reportTemplateModel.setGroupType4(reportTemplate.getGroupType4());
+		reportTemplateModel.setGroupType5(reportTemplate.getGroupType5());
+		reportTemplateModel.setGroupType6(reportTemplate.getGroupType6());
+
+		model.addAttribute("onDate",reportTemplate.getOnDate());
 		if(reportTemplate.getAdditionalDate()!=null)
 		{
 			model.addAttribute("showAdditionalDate",true);
@@ -373,11 +425,13 @@ public class ReportController {
 		}
 
 
-		model.addAttribute("additionalDate",reportTemplate.getAdditionalDate());
+//		model.addAttribute("additionalDate",reportTemplate.getAdditionalDate());
 
 		model.addAttribute("groupTypeList", modelReport.getGroupTypes());
 
-		model.addAttribute("showGroup1", reportTemplate.getShowGroup1());
+		model.addAttribute("reportTemplateModel",reportTemplateModel);
+
+//		model.addAttribute("showGroup1", reportTemplate.getShowGroup1());
 
 
 
@@ -429,9 +483,21 @@ public class ReportController {
 									 @RequestParam(value = "onDate" , required = false) String onDate,
 									 @RequestParam(value = "groupType1Select" , required = false) String groupType1select,
 									 @RequestParam(value = "showGroup1" , required = false) String showGroup1,
-
-
-									 HttpServletResponse response) {
+                                     @RequestParam(value = "groupType2Select" , required = false) String groupType2select,
+                                     @RequestParam(value = "showGroup2" , required = false) String showGroup2,
+                                     @RequestParam(value = "groupType3Select" , required = false) String groupType3select,
+                                     @RequestParam(value = "showGroup3" , required = false) String showGroup3,
+                                     @RequestParam(value = "groupType4Select" , required = false) String groupType4select,
+                                     @RequestParam(value = "showGroup4" , required = false) String showGroup4,
+                                     @RequestParam(value = "groupType5Select" , required = false) String groupType5select,
+                                     @RequestParam(value = "showGroup5" , required = false) String showGroup5,
+                                     @RequestParam(value = "groupType6Select" , required = false) String groupType6select,
+                                     @RequestParam(value = "showGroup6" , required = false) String showGroup6,
+                                     @RequestParam(value = "fieldName" , required = false) String[] fieldName,
+                                     @RequestParam(value = "comparator" , required = false) String[] comparator,
+                                     @RequestParam(value = "comparedValue" , required = false) String[] comparedValue,
+                                     @RequestParam(value = "comparedDate" , required = false) Date[] comparedDate,
+                                     HttpServletResponse response) {
 
 		ReportTool reportTool=new ReportTool();
 
@@ -480,6 +546,35 @@ public class ReportController {
             filterParameters.add(filterParameter);
 
         }
+
+        int counter =0;
+        if(fieldName!=null)
+        if(fieldName.length>0)
+
+		for (String fieldNameinLoop:fieldName) {
+
+			FilterParameter filterParameter = new FilterParameter();
+			filterParameter.setId(counter+1);
+			filterParameter.setComparator(Comparator.valueOf(comparator[counter]));
+
+			if(comparedValue!=null)
+			if(comparedValue.length>0)
+			if(comparedValue[counter]!=null)
+				filterParameter.setComparedValue(comparedValue[counter]);
+
+			if(comparedDate!=null)
+			if(comparedDate.length>0)
+			if(comparedDate[counter]!=null)
+				filterParameter.setComparedValue(reportTool.DateToString(comparedDate[counter]));
+
+			filterParameter.setFieldName(fieldName[counter]);
+
+			filterParameter.setFilterParameterType(FilterParameterType.CONTENT_COMPARE);
+			filterParameter.setName("-");
+			filterParameter.setObjectList(null);
+			filterParameters.add(filterParameter);
+		}
+
         reportTemplate.setFilterParameters(filterParameters);
 
         ReportTemplate reportTemplate1=new ReportTemplate();
@@ -497,15 +592,83 @@ public class ReportController {
         reportTemplate1.setName(reportTemplate.getName());
         reportTemplate1.setOutputParameters(reportTemplate.getOutputParameters());
 
-        System.out.println(showGroup1);
-		System.out.println(groupType1select);
+		reportTemplate1.setShowGroup1(Boolean.FALSE);
+		reportTemplate1.setShowGroup2(Boolean.FALSE);
+		reportTemplate1.setShowGroup3(Boolean.FALSE);
+		reportTemplate1.setShowGroup4(Boolean.FALSE);
+		reportTemplate1.setShowGroup5(Boolean.FALSE);
+		reportTemplate1.setShowGroup6(Boolean.FALSE);
 
-        reportTemplate1.setShowGroup1(reportTemplate.getShowGroup1());
-        reportTemplate1.setShowGroup2(reportTemplate.getShowGroup2());
-        reportTemplate1.setShowGroup3(reportTemplate.getShowGroup3());
-        reportTemplate1.setShowGroup4(reportTemplate.getShowGroup4());
-        reportTemplate1.setShowGroup5(reportTemplate.getShowGroup5());
-        reportTemplate1.setShowGroup6(reportTemplate.getShowGroup6());
+        if(showGroup1.equals("true"))
+        {
+			reportTemplate1.setShowGroup1(Boolean.TRUE);
+        }
+
+		if(showGroup2.equals("true"))
+		{
+			reportTemplate1.setShowGroup2(Boolean.TRUE);
+		}
+		if(showGroup3.equals("true"))
+		{
+			reportTemplate1.setShowGroup3(Boolean.TRUE);
+		}
+		if(showGroup4.equals("true"))
+		{
+			reportTemplate1.setShowGroup4(Boolean.TRUE);
+		}
+		if(showGroup5.equals("true"))
+		{
+			reportTemplate1.setShowGroup5(Boolean.TRUE);
+		}
+		if(showGroup6.equals("true"))
+		{
+			reportTemplate1.setShowGroup6(Boolean.TRUE);
+		}
+
+
+		if(groupType1select!=null)
+		{
+			GroupType groupType1 = groupTypeService.findById(Long.valueOf(groupType1select));
+			reportTemplate1.setGroupType1(groupType1);
+		}
+
+		if(groupType2select!=null)
+		{
+			GroupType groupType2 = groupTypeService.findById(Long.valueOf(groupType2select));
+			reportTemplate1.setGroupType2(groupType2);
+		}
+
+
+		if(groupType3select!=null)
+		{
+			GroupType groupType3 = groupTypeService.findById(Long.valueOf(groupType3select));
+			reportTemplate1.setGroupType3(groupType3);
+		}
+
+
+		if(groupType4select!=null)
+		{
+			GroupType groupType4 = groupTypeService.findById(Long.valueOf(groupType4select));
+			reportTemplate1.setGroupType4(groupType4);
+		}
+
+
+		if(groupType5select!=null)
+		{
+			GroupType groupType5 = groupTypeService.findById(Long.valueOf(groupType5select));
+			reportTemplate1.setGroupType5(groupType5);
+		}
+
+
+		if(groupType6select!=null)
+		{
+			if(!groupType6select.equals(""))
+			{
+				GroupType groupType6 = groupTypeService.findById(Long.valueOf(groupType6select));
+				reportTemplate1.setGroupType6(groupType6);
+			}
+		}
+
 
         Date onDateFormatted = reportTool.StringToDate(onDate);
         if(onDateFormatted!=null)
@@ -601,7 +764,7 @@ public class ReportController {
 	{
 		try {
 			out = response.getOutputStream();
-			//reportGenerator.generateReportByTemplate(reportTemplate).write(out);
+			reportGenerator.generateReportByTemplate(reportTemplate).write(out);
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
