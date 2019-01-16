@@ -99,11 +99,11 @@
 
             <!--<div class="container">-->
                 <div class="row">
-                    <div class="col" style="width: 100% !important;">
+                    <div class="col-sm-7" >
                         <div class="row">
                             <div class="col-md-2">
                                 <div class="dropdown">
-                                    <button sec:authorize="hasAnyAuthority('ADMIN','LOAN_SUPERVISOR','PERM_VIEW_LAON_MENU')" class="btn btn-primary dropdown-toggle m-lg-3" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button sec:authorize="hasAnyAuthority('ADMIN','LOAN_SUPERVISOR','PERM_VIEW_LAON_MENU')" class="btn btn-primary dropdown-toggle m-lg-2" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="m-menu__link-text">
                                             Кредитование
                                         </span>
@@ -146,7 +146,7 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="dropdown">
-                                    <button sec:authorize="hasAnyAuthority('ADMIN','COLLATERAL_SUPERVISOR','PERM_COLLATERAL_LAON_MENU')" class="btn btn-primary dropdown-toggle m-lg-3" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button sec:authorize="hasAnyAuthority('ADMIN','COLLATERAL_SUPERVISOR','PERM_COLLATERAL_LAON_MENU')" class="btn btn-primary dropdown-toggle m-lg-2" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="m-menu__link-text">
                                             Залоговое обеспечение
                                         </span>
@@ -181,7 +181,7 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="dropdown">
-                                    <button sec:authorize="hasAnyAuthority('ADMIN','COLLECTION_SUPERVISOR','PERM_VIEW_COLLECTION_MENU')" class="btn btn-primary dropdown-toggle m-lg-3" type="button"
+                                    <button sec:authorize="hasAnyAuthority('ADMIN','COLLECTION_SUPERVISOR','PERM_VIEW_COLLECTION_MENU')" class="btn btn-primary dropdown-toggle m-lg-2" type="button"
                                             id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="m-menu__link-text">
                                             Взыскание
@@ -199,19 +199,35 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-5 mt-3" sec:authorize="hasAnyAuthority('ADMIN','PERM_ORGANIZATION_PERSON_LIST')">
-                                <a class="btn btn-brand" th:href="@{/person/list}">
-                                    <span th:text="#{label.persons}" class="m-menu__link-text">
+                            <!--<div class="btn-group m-btn-group" role="group" aria-label="...">-->
+                                <!--<button th:href="@{/person/list}" type="button" class="btn btn-primary">Left</button>-->
+                                <!--<button type="button" class="btn btn-primary">Middle</button>-->
+                                <!--<button type="button" class="btn btn-primary">Right</button>-->
+                            <!--</div>-->
+                            <div class="btn-group btn-group-sm"  role="group">
+                                <a th:href="@{/person/list}" role="button" class="btn btn-sm btn-primary m-lg-2" th:text="#{label.persons}"   sec:authorize="hasAnyAuthority('ADMIN','PERM_ORGANIZATION_PERSON_LIST')">Left</a>
+                                <a th:href="@{/organization/list}" role="button" class="btn btn-primary m-lg-2" th:text="#{label.organizations}"  sec:authorize="hasAnyAuthority('ADMIN','PERM_ORGANIZATION_PERSON_LIST')">Left</a>
+                                <a th:href="@{/manage/debtor/list1}" role="button" class="btn btn-primary m-lg-2" th:text="#{label.title.debtors}"  sec:authorize="hasAnyAuthority('ADMIN','PERM_DEBTOR_LIST')">Left</a>
+                                <!--<a class="btn btn-primary" th:href="@{/person/list}">-->
+                                    <!--<span th:text="#{label.persons}" class="m-menu__link-text">-->
 
-                                    </span>
-                                </a>
-                                <a class="btn btn-brand" type="button" th:href="@{/organization/list}">
+                                    <!--</span>-->
+                                <!--</a>-->
+                                <!--<a class="btn btn-brand" type="button" th:href="@{/organization/list}">-->
 
-                                    <span th:text="#{label.organizations}" class="m-menu__link-text">
+                                    <!--<span th:text="#{label.organizations}" class="m-menu__link-text">-->
 
-                                    </span>
-                                </a>
+                                    <!--</span>-->
+                                <!--</a>-->
                             </div>
+                            <!--<div class="col-md-1" sec:authorize="hasAnyAuthority('ADMIN','PERM_DEBTOR_LIST')">-->
+                                <!--<a class="btn btn-brand mt-2" type="button" th:href="@{/debtor/list1}">-->
+
+                                    <!--<span th:text="#{label.title.debtors}" class="m-menu__link-text">-->
+
+                                    <!--</span>-->
+                                <!--</a>-->
+                            <!--</div>-->
                         </div>
                     </div>
                     <div class="col">
