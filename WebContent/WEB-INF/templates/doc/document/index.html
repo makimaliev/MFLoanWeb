@@ -74,10 +74,6 @@
 
 <script type="text/javascript" th:inline="javascript">
 
-    $('#generalSearch').keyup(function(){
-        table.search($(this).val()).draw() ;
-    });
-
     $(document).ready(function()
     {
         var dtOptions = {
@@ -98,7 +94,11 @@
             },
             sDom: 'rtlip',
         };
-        $('#documentTable').DataTable(dtOptions);
+        var table = $('#documentTable').DataTable(dtOptions);
+
+        $('#generalSearch').keyup(function(){
+            table.search($(this).val()).draw() ;
+        });
     });
 
 </script>

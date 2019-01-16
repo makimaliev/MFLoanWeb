@@ -99,9 +99,10 @@
 
             var message = JSON.parse(payload.body);
 
-            if(message.type === 'CHAT')
+            if(message.type === 'CHAT' && message.receiver == username)
             {
                 buildMessage(message);
+                notipy(message.senderfullname, message.content)
             }
         }
         function onError() {}
@@ -121,16 +122,35 @@
                 }
             }
         }
+        function notipy(t, m, r) {
 
-        $("#userlist tr td").click(function() {
+            $.notify({
+                title: t,
+                message: '<a href="#" id="usr" class="m-nav__link" data-toggle="modal" data-target="#chat_window" data-usr="' + r + '">' + m + '</a>'
+            }, {
+                delay: 0,
+                type: "info",
+                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss"></button>' +
+                '<span data-notify="icon"></span> ' +
+                '<span data-notify="title">{1}</span> ' +
+                '<span data-notify="message">{2}</span>' +
+                '<div class="progress" data-notify="progressbar">' +
+                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                '</div>' +
+                '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                '</div>'
+            });
+        }
+        function setReceiver(usr) {
 
-            if(receiver !== this.id)
+            if(receiver !== usr)
             {
                 messageArea.innerHTML = "";
                 chatModalTitle.innerHTML = this.innerText;
 
                 $("#" + receiver).removeClass();
-                receiver = this.id;
+                receiver = usr;
                 $("#" + receiver).addClass("bg-info text-white");
 
                 $("#userlist tr").removeAttr("style");
@@ -148,7 +168,12 @@
                 });
                 this.scrollTop = this.scrollHeight;
             }
+        }
+
+        $("#userlist tr td").click(function() {
+            setReceiver(this.id)
         });
+
         $('#chat_window').on('hidden.bs.modal', function (e) {
 
             receiver = null;
@@ -159,8 +184,8 @@
             $("#userlist tr td").removeClass();
         });
         $('#chat_window').on('show.bs.modal', function (e) {
-
-            connect();
+            console.log($("#usr").data("usr"));
+            setReceiver($("#usr").data("usr"));
         });
 
         messageForm.addEventListener('submit', sendMessage, true);
@@ -174,6 +199,8 @@
         }
 
         $(document).ready(function() {
+
+            connect();
 
             var path = window.location.pathname.split("/");
 

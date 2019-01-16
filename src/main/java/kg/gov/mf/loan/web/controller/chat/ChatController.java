@@ -39,10 +39,8 @@ public class ChatController {
     @SendToUser("/queue/public")
     public Chat sendMessageTo(@Payload Chat chatMessage, Principal principal) throws Exception
     {
-        /*
         chatMessage.setSenderfullname(userService.findByUsername(chatMessage.getSender()).getStaff().getName());
         chatMessage.setReceiverfullname(userService.findByUsername(chatMessage.getReceiver()).getStaff().getName());
-        */
         return chatMessage;
     }
 
@@ -51,10 +49,8 @@ public class ChatController {
     public Chat sendMessage(@Payload Chat chatMessage, Principal principal)
     {
         Object o = principal;
-        /*
         chatMessage.setSenderfullname( userService.findByUsername(chatMessage.getSender()).getStaff().getName());
         chatMessage.setReceiverfullname(userService.findByUsername(chatMessage.getReceiver()).getStaff().getName());
-        */
         chatService.add(chatMessage);
         return chatMessage;
     }
