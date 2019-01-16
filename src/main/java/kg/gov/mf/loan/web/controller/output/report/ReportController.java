@@ -518,7 +518,7 @@ public class ReportController {
         }
 
         ReportTemplate reportTemplate = reportTemplateService.findByReportId(id);
-        reportTemplate.setFilterParameters(null);
+
         Set<FilterParameter> filterParameters = new HashSet<FilterParameter>();
         int c = 1;
         for (String key : alls.keySet()) {
@@ -573,13 +573,12 @@ public class ReportController {
 			filterParameter.setName("-");
 			filterParameter.setObjectList(null);
 			filterParameters.add(filterParameter);
+			counter++;
 		}
-
-        reportTemplate.setFilterParameters(filterParameters);
 
         ReportTemplate reportTemplate1=new ReportTemplate();
         reportTemplate1.setUsers(reportTemplate.getUsers());
-        reportTemplate1.setFilterParameters(reportTemplate.getFilterParameters());
+        reportTemplate1.setFilterParameters(filterParameters);
         reportTemplate1.setAdditionalDate(reportTemplate.getAdditionalDate());
         reportTemplate1.setContentParameters(reportTemplate.getContentParameters());
         reportTemplate1.setGenerationParameters(reportTemplate.getGenerationParameters());
@@ -676,8 +675,6 @@ public class ReportController {
         else
         	reportTemplate1.setOnDate(reportTemplate.getOnDate());
 
-        reportTemplate1.setReport(reportTemplate.getReport());
-
 		response.setContentType("application/vnd.ms-excel");
 		response.setHeader("Content-disposition","attachment; filename=report.xls");
 		OutputStream out = null;
@@ -686,7 +683,7 @@ public class ReportController {
 
 
 
-		switch(reportTemplate1.getReport().getReportType().toString())
+		switch(reportTemplate.getReport().getReportType().toString())
 		{
 			case "LOAN_SUMMARY":
 				generateReport(out,response,new ReportGeneratorLoanSummary(), reportTemplate1);
