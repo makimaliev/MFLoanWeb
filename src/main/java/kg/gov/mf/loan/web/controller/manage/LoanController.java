@@ -313,6 +313,7 @@ public class LoanController {
                 normalLoan.setLoanState(loanStateService.getById(Long.valueOf(1)));
                 normalLoan.setLoanType(loanTypeService.getById(Long.valueOf(1)));
                 normalLoan.setCurrency(orderTermCurrencyService.getById(Long.valueOf(1)));
+                normalLoan.setLoanFinGroup(loanFinGroupService.getById(Long.valueOf(2)));
                 model.addAttribute("loan", normalLoan);
             }
 		    else if(classId == 2){
@@ -322,6 +323,7 @@ public class LoanController {
                 trancheeLoan.setLoanState(loanStateService.getById(Long.valueOf(1)));
                 trancheeLoan.setLoanType(loanTypeService.getById(Long.valueOf(1)));
                 trancheeLoan.setCurrency(orderTermCurrencyService.getById(Long.valueOf(1)));
+                trancheeLoan.setLoanFinGroup(loanFinGroupService.getById(Long.valueOf(2)));
                 model.addAttribute("loan", trancheeLoan);
             }
 		    else{
@@ -331,6 +333,7 @@ public class LoanController {
                 restructuredLoan.setLoanState(loanStateService.getById(Long.valueOf(1)));
                 restructuredLoan.setLoanType(loanTypeService.getById(Long.valueOf(1)));
                 restructuredLoan.setCurrency(orderTermCurrencyService.getById(Long.valueOf(1)));
+                restructuredLoan.setLoanFinGroup(loanFinGroupService.getById(Long.valueOf(2)));
                 model.addAttribute("loan", restructuredLoan);
             }
             model.addAttribute("ownerText", "");
@@ -971,6 +974,7 @@ public class LoanController {
             model.setTotalPenaltyPaid(d.getTotalPenaltyPaid());
             model.setTotalFeePaid(d.getTotalFeePaid());
             model.setLoanSummaryType(d.getLoanSummaryType());
+            model.setRecord_status(d.getRecord_status());
 
             result.add(model);
         }

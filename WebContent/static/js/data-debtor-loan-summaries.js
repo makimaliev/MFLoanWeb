@@ -42,7 +42,22 @@ var DatatableDataLocalSummaries = function () {
                 responsive: {hidden: 'xl'},
             },  {
 				field: "onDate",
-				title: "На дату"
+				title: "На дату",
+                template: function (row) {
+				    if (hasRoleAdmin==true){
+                        if (row.record_status==1){
+                            return row.onDate;
+                        }
+                        else{
+                            return '\
+						    <span type="text" class="m-badge  m-badge--danger m-badge--wide">'+ row.onDate +'</span>\
+					        ';
+                        }
+                    }
+				    else{
+				        return row.onDate;
+                    }
+                }
 			},/*{
                 field: "loanAmount",
                 title: "Сумма по договору",
