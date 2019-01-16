@@ -139,35 +139,39 @@ public class CollectionPhaseController {
 
     @RequestMapping(value="/collectionPhase/{id}/getPhaseDetails", method=RequestMethod.POST)
     @ResponseBody
-    public String getPhaseDetailsTable(@RequestParam Map<String, String> selectedLoans,@PathVariable(value = "id") Long id){
+    public String getPhaseDetailsTable(@RequestParam(value = "selectedLoans") String selectedLoans,@PathVariable(value = "id") Long id){
 
         List<PhaseDetailsModel> result = new ArrayList<>();
-        for (String value:selectedLoans.values()
-        ) {
-            LoanModel1 loan=getLoanIdAndRegNumber(Long.parseLong(value));
-            if(loan!=null){
-				PhaseDetailsModel dTemp = new PhaseDetailsModel();
-				dTemp.setLoanId(loan.getId());
-				dTemp.setLoanRegNumber(loan.getRegNumber());
-				dTemp.setLoanStateId(loan.getStateId());
-            	try{
-					CollectionPhase phase=phaseService.getById(id);
-					for (PhaseDetails phaseDetails1:phase.getPhaseDetails()){
-						PhaseDetails phaseDetails=phaseDetailsService.getById(phaseDetails1.getId());
-						dTemp.setStartPrincipal(phaseDetails.getStartPrincipal());
-						dTemp.setStartInterest(phaseDetails.getStartInterest());
-						dTemp.setStartPenalty(phaseDetails.getStartPenalty());
-						dTemp.setStartTotalAmount(phaseDetails.getStartTotalAmount());
+        List<String> listOfLoans= Arrays.asList(selectedLoans.split("[^0-9.]"));
+        for (String value:listOfLoans) {
+        	if (value.length()!=0){
+				LoanModel1 loan=getLoanIdAndRegNumber(Long.parseLong(value));
+				if(loan!=null){
+					PhaseDetailsModel dTemp = new PhaseDetailsModel();
+					dTemp.setLoanId(loan.getId());
+					dTemp.setLoanRegNumber(loan.getRegNumber());
+					dTemp.setLoanStateId(loan.getStateId());
+					try{
+						CollectionPhase phase=phaseService.getById(id);
+						for (PhaseDetails phaseDetails1:phase.getPhaseDetails()){
+							if(phaseDetails1.getLoan_id()==Long.valueOf(value)){
+								PhaseDetails phaseDetails=phaseDetailsService.getById(phaseDetails1.getId());
+								dTemp.setStartPrincipal(phaseDetails.getStartPrincipal());
+								dTemp.setStartInterest(phaseDetails.getStartInterest());
+								dTemp.setStartPenalty(phaseDetails.getStartPenalty());
+								dTemp.setStartTotalAmount(phaseDetails.getStartTotalAmount());
+							}
+						}
 					}
+					catch(Exception e){
+						dTemp.setStartPrincipal(Double.valueOf(0));
+						dTemp.setStartInterest(Double.valueOf(0));
+						dTemp.setStartPenalty(Double.valueOf(0));
+						dTemp.setStartTotalAmount(Double.valueOf(0));
+					}
+					result.add(dTemp);
 				}
-            	catch(Exception e){
-					dTemp.setStartPrincipal(0.0);
-					dTemp.setStartInterest(0.0);
-					dTemp.setStartPenalty(0.0);
-					dTemp.setStartTotalAmount(0.0);
-				}
-                result.add(dTemp);
-            }
+        	}
         }
 
         Gson gson2 = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -507,9 +511,19 @@ public class CollectionPhaseController {
 			}
 			else
 			{
+				Set<PhaseDetails> listOfDetails=oldPhase.getPhaseDetails();
 				for(PhaseDetails phaseDetail:phaseDetailsList){
 					phaseDetail.setCollectionPhase(phase);
-					phaseDetailsService.add(phaseDetail);
+					for(PhaseDetails phaseDetail1:listOfDetails){
+						if (phaseDetail.getLoan_id()==phaseDetail1.getLoan_id()){
+							phaseDetail1.setStartInterest(phaseDetail.getStartInterest());
+							phaseDetail1.setStartPenalty(phaseDetail.getStartPenalty());
+							phaseDetail1.setStartPrincipal(phaseDetail.getStartPrincipal());
+							phaseDetail1.setStartTotalAmount(phaseDetail.getStartTotalAmount());
+							phaseDetail1.setCollectionPhase(phase);
+							phaseDetailsService.update(phaseDetail1);
+						}
+					}
 				}
 			}
 
