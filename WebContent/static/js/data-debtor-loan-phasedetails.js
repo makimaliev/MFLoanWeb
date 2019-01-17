@@ -46,7 +46,7 @@ var phaseDetailsTableInit = function (jsonInput) {
             title: "По осн.с.",
             template: function (row) {
                 return '\
-						<input type="text" class="form-control m-input" id="startPrinc'+row.loanId+'" value="'+ row.startPrincipal.toLocaleString() + '">\
+						<input type="text" class="form-control m-input" id="startPrinc'+row.loanId+'" value="'+ (row.startPrincipal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",") + '">\
 					';
             }
         },{
@@ -54,7 +54,7 @@ var phaseDetailsTableInit = function (jsonInput) {
             title: "По проц.",
             template: function (row) {
                 return '\
-						<input type="text" class="form-control m-input" id="startInt'+row.loanId+'" value="'+ row.startInterest.toLocaleString() +'">\
+						<input type="text" class="form-control m-input" id="startInt'+row.loanId+'" value="'+ (row.startInterest).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",") +'">\
 					';
             }
         },{
@@ -62,7 +62,7 @@ var phaseDetailsTableInit = function (jsonInput) {
             title: "По штр.",
             template: function (row) {
                 return '\
-						<input type="text" class="form-control m-input" id="startPen'+row.loanId+'" value="'+ row.startPenalty.toLocaleString() +'">\
+						<input type="text" class="form-control m-input" id="startPen'+row.loanId+'" value="'+ (row.startPenalty).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",") +'">\
 					';
             }
         },{
@@ -71,7 +71,7 @@ var phaseDetailsTableInit = function (jsonInput) {
             width: 160,
             template: function (row) {
                 return '\
-						<input type="text" class="form-control m-input" id="total'+row.loanId+'" value="'+ row.startTotalAmount +'" disabled>\
+						<input type="text" class="form-control m-input" id="total'+row.loanId+'" value="'+ (row.startTotalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",") +'" disabled>\
 					';
             }
         }],

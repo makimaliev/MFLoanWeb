@@ -291,7 +291,7 @@
                 title: "По осн.с.",
                 template: function (row) {
                     return '\
-						<input type="text" class="form-control m-input" id="startPrinc' + row.loanId + '" value="' + parseFloat(row.startPrincipal) + '">\
+						<input type="text" class="form-control m-input" id="startPrinc' + row.loanId + '" value="' + (row.startPrincipal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",") + '">\
 					';
                 }
             }, {
@@ -299,7 +299,7 @@
                 title: "По проц.",
                 template: function (row) {
                     return '\
-						<input type="text" class="form-control m-input" id="startInt' + row.loanId + '" value="' + parseFloat(row.startInterest) + '">\
+						<input type="text" class="form-control m-input" id="startInt' + row.loanId + '" value="' + (row.startInterest).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",") + '">\
 					';
                 }
             }, {
@@ -307,7 +307,7 @@
                 title: "По штр.",
                 template: function (row) {
                     return '\
-						<input type="text" class="form-control m-input" id="startPen' + row.loanId + '" value="' + parseFloat(row.startPenalty) + '">\
+						<input type="text" class="form-control m-input" id="startPen' + row.loanId + '" value="' + (row.startPenalty).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",") + '">\
 					';
                 }
             }, {
@@ -316,7 +316,7 @@
                 width: 160,
                 template: function (row) {
                     return '\
-						<input type="text" class="form-control m-input" id="total' + row.loanId + '" value="' + parseFloat(row.startTotalAmount) + '" disabled>\
+						<input type="text" class="form-control m-input" id="total' + row.loanId + '" value="' + (row.startTotalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",") + '" disabled>\
 					';
                 }
             }],

@@ -108,13 +108,31 @@ public class PaymentScheduleController {
     {
 		Loan loan = loanService.getById(loanId);
 		paymentSchedule.setLoan(loan);
-		
+
+		if(paymentSchedule.getExpectedDate()==null){
+			paymentSchedule.setExpectedDate(new Date());
+		}
+		if(paymentSchedule.getDisbursement()==null){
+			paymentSchedule.setDisbursement(0.0);
+		}
+		if(paymentSchedule.getPrincipalPayment()==null){
+			paymentSchedule.setPrincipalPayment(0.0);
+		}
+		if(paymentSchedule.getInterestPayment()==null){
+			paymentSchedule.setInterestPayment(0.0);
+		}
+		if(paymentSchedule.getCollectedInterestPayment()==null){
+			paymentSchedule.setCollectedInterestPayment(0.0);
+		}
+		if(paymentSchedule.getCollectedPenaltyPayment()==null){
+			paymentSchedule.setCollectedPenaltyPayment(0.0);
+		}
 		if(paymentSchedule.getId() == 0)
 			paymentScheduleService.add(paymentSchedule);
 		else
 			paymentScheduleService.update(paymentSchedule);
 		
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#paymentSchedules";
     }
 	
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/paymentschedule/{psId}/delete", method=RequestMethod.POST)

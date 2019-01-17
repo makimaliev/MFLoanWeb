@@ -96,6 +96,9 @@
 								<a class="nav-link m--font-primary active" data-toggle="tab" href="#main" th:text="#{label.collection.phase}"></a>
 							</li>
 							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#loans" th:text="#{label.collection.loans}"></a>
+							</li>
+							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#collectionEvent" th:text="#{label.collection.event}"></a>
 							</li>
 						</ul>
@@ -126,6 +129,31 @@
 									<div class="m_datatable" id="phaseDetailsTable"></div>
 									<!--end: Datatable -->
 								</div>
+							</div>
+							<div class="tab-pane" id="loans" role="tabpanel">
+								<!--begin: Search Form -->
+								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+									<div class="row align-items-center">
+										<div class="col-xl-7 order-1 order-xl-1">
+											<div class="form-group m-form__group row align-items-center">
+												<div class="col-lg-6">
+													<div class="m-input-icon m-input-icon--left">
+														<input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search">
+														<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--end: Search Form -->
+								<!--begin: Datatable -->
+								<div class="m_datatable" id="loansTable"></div>
+								<!--end: Datatable -->
 							</div>
 							<div class="tab-pane" id="collectionEvent" role="tabpanel">
 								<div class="m-portlet__body m-portlet__body--no-padding">
@@ -199,6 +227,7 @@
 
 <!--begin::Page Resources -->
 <script th:src="@{/js/data-debtor-proc-phase-details.js}" th:inline="javascript" type="text/javascript"></script>
+<script th:src="@{/js/data-debtor-loan.js}" th:inline="javascript" type="text/javascript"></script>
 <!--end::Page Resources -->
 
 <div th:with="isAdmin = ${#authorization.expression('hasRole(''ADMIN'')')}">
@@ -212,6 +241,7 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     var jsonPhaseDetails = /*[[${phaseDetails}]]*/ [];
+	var jsonLoans = /*[[${jsonLoans}]]*/ [];
     var debtorId = /*[[${debtor.id}]]*/ [];
     var procId = /*[[${procId}]]*/ [];
     /*]]>*/

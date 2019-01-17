@@ -88,25 +88,25 @@
 					<div class="m-portlet__body">
 						<ul class="nav nav-tabs" role="tablist">
 							<li class="nav-item">
-								<a class="nav-link m--font-primary active" data-toggle="tab" href="#main" th:text="#{label.loan.credit}" id="main1"></a>
+								<a class="nav-link m--font-primary active" data-toggle="tab" href="#main" th:text="#{label.loan.credit}" id="mainFunction"></a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanSummary" th:text="#{label.loan.loanSummary}" id="loanSummaryFunction"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#paymentSchedules" th:text="#{label.loan.paymentSchedules}" id="paymentScheduleFunction"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#paymentSchedules" th:text="#{label.loan.paymentSchedules}" id="paymentSchedulesFunction"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#payments" th:text="#{label.loan.payments}" id="paymentFunction"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#payments" th:text="#{label.loan.payments}" id="paymentsFunction"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#supervisorPlans" th:text="#{label.loan.supervisorPlans}" id="supervisorPlanFunction"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#supervisorPlans" th:text="#{label.loan.supervisorPlans}" id="supervisorPlansFunction"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#writeOffs" th:text="#{label.loan.writeOffs}" id="writeOffFunction"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#writeOffs" th:text="#{label.loan.writeOffs}" id="writeOffsFunction"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#creditTerms" th:text="#{label.loan.creditTerms}" id="creditTermFunction"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#creditTerms" th:text="#{label.loan.creditTerms}" id="creditTermsFunction"></a>
 							</li>
                             <li class="nav-item" id="childListe">
                                 <a class="nav-link m--font-primary" data-toggle="tab" href="#childList" th:text="#{label.loan.childList}" id="childListFunction"></a>
@@ -119,6 +119,12 @@
 							</li>
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#initializaPhase" th:text="#{label.debtor.tab.initializaPhase}"></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#agreements" th:text="#{label.loan.tab.agreements}" id="agreementsFunction"></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#collectionPhases" th:text="#{label.collectionPhases}" id="collectionPhasesFunction"></a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#additional" th:text="#{label.additional}"></a>
@@ -382,7 +388,7 @@
 														<span class="m-widget1__desc"></span>
 													</div>
 													<div class="col m--align-right">
-														<span class="m-widget1__number m--font-brand" id="sumOfPSDisbursement" text="0.0"></span>
+														<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfPSDisbursement" text="0.0"></span>
 													</div>
 												</div>
 											</div>
@@ -397,7 +403,7 @@
 														<span class="m-widget1__desc"></span>
 													</div>
 													<div class="col m--align-right">
-														<span class="m-widget1__number m--font-brand" id="sumOfPSPrincipal" text="0.0"></span>
+														<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfPSPrincipal" text="0.0"></span>
 													</div>
 												</div>
 											</div>
@@ -412,7 +418,7 @@
 														<span class="m-widget1__desc"></span>
 													</div>
 													<div class="col m--align-right">
-														<span class="m-widget1__number m--font-brand" id="sumOfPSInterest" text="0.0"></span>
+														<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfPSInterest" text="0.0"></span>
 													</div>
 												</div>
 											</div>
@@ -427,7 +433,7 @@
 														<span class="m-widget1__desc"></span>
 													</div>
 													<div class="col m--align-right">
-														<span class="m-widget1__number m--font-brand" id="sumOfPSCollectedInterest" text="0.0"></span>
+														<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfPSCollectedInterest" text="0.0"></span>
 													</div>
 												</div>
 											</div>
@@ -442,7 +448,7 @@
 														<span class="m-widget1__desc"></span>
 													</div>
 													<div class="col m--align-right">
-														<span class="m-widget1__number m--font-brand" id="sumOfPSCollectedPrincipal" text="0.0"></span>
+														<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfPSCollectedPrincipal" text="0.0"></span>
 													</div>
 												</div>
 											</div>
@@ -541,7 +547,7 @@
 														<span class="m-widget1__desc"></span>
 													</div>
 													<div class="col m--align-right">
-														<span class="m-widget1__number m--font-brand" id="sumOfPTotal" text="0.0"></span>
+														<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfPTotal" text="0.0"></span>
 													</div>
 												</div>
 											</div>
@@ -556,7 +562,7 @@
 														<span class="m-widget1__desc"></span>
 													</div>
 													<div class="col m--align-right">
-														<span class="m-widget1__number m--font-brand" id="sumOfPPrincipal" text="0.0"></span>
+														<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfPPrincipal" text="0.0"></span>
 													</div>
 												</div>
 											</div>
@@ -571,7 +577,7 @@
 														<span class="m-widget1__desc"></span>
 													</div>
 													<div class="col m--align-right">
-														<span class="m-widget1__number m--font-brand" id="sumOfPPenalty" text="0.0"></span>
+														<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfPPenalty" text="0.0"></span>
 													</div>
 												</div>
 											</div>
@@ -586,7 +592,7 @@
 														<span class="m-widget1__desc"></span>
 													</div>
 													<div class="col m--align-right">
-														<span class="m-widget1__number m--font-brand" id="sumOfPInterest" text="0.0"></span>
+														<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfPInterest" text="0.0"></span>
 													</div>
 												</div>
 											</div>
@@ -810,6 +816,68 @@
 								</div>
 								<!--end: Selected Rows Group Action Form -->
 							</div>
+							<div class="tab-pane" id="agreements" role="tabpanel">
+								<!--begin: Search Form -->
+								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+									<div class="row align-items-center">
+										<div class="col-xl-9 order-1 order-xl-1">
+											<div class="form-group m-form__group row align-items-center">
+												<div class="col-lg-6">
+													<div class="m-input-icon m-input-icon--left">
+														<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search1">
+														<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="col-xl-3 order-3 order-xl-3 m--align-right">
+											<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLATERALAGREEMENT')" th:href="@{/manage/debtor/__${debtor.id}__/collateralagreement/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span>
+													<i class="la la-plus"></i>
+													<span>
+														Добавить залоговое обеспечение
+													</span>
+												</span>
+											</a>
+											<div class="m-separator m-separator--dashed d-xl-none"></div>
+										</div>
+									</div>
+								</div>
+								<!--end: Search Form -->
+								<!--begin: Datatable -->
+								<div class="m_datatable" id="agreementsTable"></div>
+								<!--end: Datatable -->
+							</div>
+							<div class="tab-pane" id="collectionPhases" role="tabpanel">
+								<!--begin: Search Form -->
+								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+									<div class="row align-items-center">
+										<div class="col-xl-9 order-1 order-xl-1">
+											<div class="form-group m-form__group row align-items-center">
+												<div class="col-lg-6">
+													<div class="m-input-icon m-input-icon--left">
+														<input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search14">
+														<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--end: Search Form -->
+								<!--begin: Datatable -->
+								<div class="m_datatable" id="phasesTable"></div>
+								<!--end: Datatable -->
+							</div>
 							<div class="tab-pane" id="additional" role="tabpanel">
 								<ul class="nav nav-tabs" role="tablist">
 									<li class="nav-item">
@@ -827,9 +895,6 @@
 									<li class="nav-item">
 										<a class="nav-link m--font-primary" data-toggle="tab" href="#bankrupts" th:text="#{label.loan.bankrupt}"></a>
 									</li>
-									<!--<li class="nav-item">-->
-										<!--<a class="nav-link m&#45;&#45;font-primary" data-toggle="tab" href="#collectionPhases" th:text="#{label.collectionPhases}"></a>-->
-									<!--</li>-->
 								</ul>
 								<div class="tab-content">
 									<div class="tab-pane active" id="loanGoods" role="tabpanel">
@@ -1017,34 +1082,9 @@
 										<div class="m_datatable" id="bankruptsTable"></div>
 										<!--end: Datatable -->
 									</div>
-									<div class="tab-pane" id="collectionPhases" role="tabpanel">
-										<!--begin: Search Form -->
-										<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-											<div class="row align-items-center">
-												<div class="col-xl-9 order-1 order-xl-1">
-													<div class="form-group m-form__group row align-items-center">
-														<div class="col-lg-6">
-															<div class="m-input-icon m-input-icon--left">
-																<input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search14">
-																<span class="m-input-icon__icon m-input-icon__icon--left">
-															<span>
-																<i class="la la-search"></i>
-															</span>
-														</span>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<!--end: Search Form -->
-										<!--begin: Datatable -->
-										<div class="m_datatable" id="phasesTable"></div>
-										<!--end: Datatable -->
-									</div>
 								</div>
 							</div>
-							</div>
+						</div>
 						<div class="modal fade bs-modal-lg in" id="loanFinGroupModal" tabindex="-1" role="dialog" aria-hidden="true">
 							<div class="modal-dialog modal-lg" role="document">
 								<div class="modal-content">
@@ -1086,7 +1126,7 @@
 <script th:src="@{/js/data-debtor-loan-targetedUses.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-reconstructedLists.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-bankrupts.js}" th:inline="javascript" type="text/javascript"></script>
-<script th:src="@{/js/data-debtor-loan-phases.js}" th:inline="javascript" type="text/javascript"></script>
+<!--<script th:src="@{/js/data-debtor-loan-phases.js}" th:inline="javascript" type="text/javascript"></script>-->
 <!--<script th:src="@{/js/data-debtor-loan-detailedSummaries.js}" th:inline="javascript" type="text/javascript"></script>-->
 <!--<script th:src="@{/js/data-debtor-loan-summaries.js}" th:inline="javascript" type="text/javascript"></script>-->
 <!--<script th:src="@{/js/data-debtor-loan-accrues.js}" th:inline="javascript" type="text/javascript"></script>-->
@@ -1106,6 +1146,7 @@
     var debtorId = /*[[${debtor.id}]]*/ [];
     var loanId = /*[[${loan.id}]]*/ [];
     var jsonPayments;
+    var jsonAgreements;
     var loggedInUserId=/*[[${loggedinuserId}]]*/ [];
     var supervisorId=/*[[${supervisorId}]]*/ [];
     // var jsonWOs = /*[[${WOs}]]*/ [];
@@ -1119,7 +1160,7 @@
     var jsonTUs = /*[[${TUs}]]*/ [];
     var jsonRLs = /*[[${RLs}]]*/ [];
     var jsonBankrupts = /*[[${bankrupts}]]*/ [];
-    var jsonPhases = /*[[${phases}]]*/ [];
+    // var jsonPhases = /*[[${phases}]]*/ [];
     // var jsonDetailedSummaries = /*[[${detailedSummaries}]]*/ [];
     // var jsonSummaries = /*[[${summaries}]]*/ [];
     // var jsonAccrues = /*[[${accrues}]]*/ [];
@@ -1267,6 +1308,34 @@
     });
 </script>
 <!--<div th:replace="layout/footer"/>-->
+<script th:inline="javascript">
+	// var tabN=[[${tabName}]];
+	var ttt;
+	$(document).ready(function() {
+		if (sessionStorage.getItem("tab")) {
+			// alert(location.hash)
+			ttt=sessionStorage.getItem("tab");
+			// alert(ttt);
+			$("a[href='" + ttt + "']").tab("show");
+			$(ttt.toString()+"Function").click();
+		}
+		$(document.body).on("click", "a[data-toggle]", function(event) {
+			var tabName = this.getAttribute("href");
+			sessionStorage.SessionName = "tab";
+			sessionStorage.setItem("tab",tabName);
+			// $.ajax({
+			// 	type:"post",
+			// 	url:'/loan/tab/names',
+			// 	data:{"tabName":tabName}
+			//
+			// });
+		});
+	});
+	$(window).on("popstate", function() {
+		var anchor = ttt || $("a[data-toggle='tab']").first().attr("href");
+		$("a[href='" + anchor + "']").tab("show");
+	});
+</script>
 <script>
 	// Payments sums
 	var sumOfPTotal=0.0;
@@ -1281,7 +1350,7 @@
 	var sumOfPSCollectedInterest=0.0;
 	var sumOfPSCollectedPincipal=0.0;
 
-	$("#writeOffFunction").on('click',function () {
+	$("#writeOffsFunction").on('click',function () {
         $.ajax({
 			type:'post',
             url: '/writeOffsRequest/'+loanId,
@@ -1291,7 +1360,7 @@
             }
         });
     });
-    $("#paymentScheduleFunction").on('click',function () {
+    $("#paymentSchedulesFunction").on('click',function () {
         $.ajax({
             type:'post',
             url: '/paymentScheduleRequest/'+loanId,
@@ -1309,15 +1378,15 @@
 						sumOfPSCollectedPincipal=sumOfPSCollectedPincipal+parseFloat(norm[i].collectedPenaltyPayment);
 					}
 				}
-				$("#sumOfPSDisbursement").text(sumOfPSDisbursement);
-				$("#sumOfPSPrincipal").text(sumOfPSPrincipal);
-				$("#sumOfPSInterest").text(sumOfPSInterest);
-				$("#sumOfPSCollectedInterest").text(sumOfPSCollectedInterest);
-				$("#sumOfPSCollectedPrincipal").text(sumOfPSCollectedPincipal);
+				$("#sumOfPSDisbursement").text((sumOfPSDisbursement).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
+				$("#sumOfPSPrincipal").text((sumOfPSPrincipal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
+				$("#sumOfPSInterest").text((sumOfPSInterest).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
+				$("#sumOfPSCollectedInterest").text((sumOfPSCollectedInterest).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
+				$("#sumOfPSCollectedPrincipal").text((sumOfPSCollectedPincipal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
             }
         });
     });
-    $("#paymentFunction").on('click',function () {
+    $("#paymentsFunction").on('click',function () {
         $.ajax({
             type:'post',
             url: '/paymentRequest/'+loanId,
@@ -1333,10 +1402,10 @@
 						sumOfPInterest=sumOfPInterest+parseFloat(norm[i].interest);
 					}
 				}
-                $("#sumOfPTotal").text(sumOfPTotal);
-                $("#sumOfPPrincipal").text(sumOfPPrincipal);
-                $("#sumOfPPenalty").text(sumOfPPenalty);
-                $("#sumOfPInterest").text(sumOfPInterest);
+                $("#sumOfPTotal").text((sumOfPTotal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
+                $("#sumOfPPrincipal").text((sumOfPPrincipal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
+                $("#sumOfPPenalty").text((sumOfPPenalty).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
+                $("#sumOfPInterest").text((sumOfPInterest).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
 
             }
         });
@@ -1361,7 +1430,7 @@
             }
         });
     });
-	$("#supervisorPlanFunction").on('click',function () {
+	$("#supervisorPlansFunction").on('click',function () {
         $.ajax({
             type:'post',
             url: '/supervisorPlanRequest/'+loanId,
@@ -1381,7 +1450,7 @@
             }
         });
     });
-    $("#creditTermFunction").on('click',function () {
+    $("#creditTermsFunction").on('click',function () {
         $.ajax({
             type:'post',
             url: '/creditTermRequest/'+loanId,
@@ -1402,6 +1471,28 @@
             }
         });
     });
+
+	$("#agreementsFunction").on('click',function () {
+		$.ajax({
+			type:'post',
+			url: '/agreements/'+loanId,
+			success:function (data) {
+				jsonAgreements=data;
+				$.getScript("/js/data-debtor-agreements.js");
+			}
+		});
+	});
+
+	$("#collectionPhasesFunction").on('click',function () {
+		$.ajax({
+			type:'post',
+			url: '/phases/'+loanId,
+			success:function (data) {
+				jsonPhases=data;
+				$.getScript("/js/data-debtor-loan-phases.js");
+			}
+		});
+	});
 
 
 
