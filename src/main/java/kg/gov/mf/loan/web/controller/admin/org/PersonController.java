@@ -147,6 +147,9 @@ public class PersonController {
     @Autowired
 	DebtorService debtorService;
 
+    @Autowired
+	StaffService staffService;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
@@ -263,7 +266,7 @@ public class PersonController {
 		modelIdentityDoc.setId(0);
 		
 		IdentityDocType modelIdentityDocType = new IdentityDocType();
-		modelIdentityDocType.setId(1);
+		modelIdentityDocType.setId(2);
 		modelIdentityDoc.setIdentityDocType(modelIdentityDocType);
 		
 		IdentityDocGivenBy modelIdentityDocGivenBy = new IdentityDocGivenBy();
@@ -357,13 +360,32 @@ public class PersonController {
 			this.ownerService.add(newOwner);
 
 		} else {
+			Owner owner;
 			this.personService.edit(person);
-			Owner owner=this.ownerService.getByEntityId(person.getId(),"PERSON");
-			owner.setName(person.getName());
-			this.ownerService.update(owner);
+			try{
+				owner=this.ownerService.getByEntityId(person.getId(),"PERSON");
+				owner.setName(person.getName());
+				this.ownerService.update(owner);
+			}
+			catch (Exception e){
+				owner=new Owner();
+				owner.setName(person.getName());
+				owner.setOwnerType(OwnerType.PERSON);
+				owner.setEntityId(person.getId());
+				owner.setAddress(person.getAddress());
+				ownerService.add(owner);
+			}
+			try{
+				Staff staff=staffService.findById(person.getId());
+				staff.setName(owner.getName());
+				staffService.edit(staff);
+			}
+			catch(Exception e){
+				System.out.println(e);
+			}
 			try{
 				Debtor debtor=debtorService.getByOwnerId(owner.getId());
-				debtor.setName(owner.getName());
+				debtor.setName(person.getName());
 				debtorService.update(debtor);
 			}
 			catch (Exception e){

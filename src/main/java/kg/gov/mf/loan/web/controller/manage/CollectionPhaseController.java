@@ -132,6 +132,8 @@ public class CollectionPhaseController {
         Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
         String jsonPhaseDetails = gson.toJson(getPhaseDetailsByPhaseId(phaseId));
         model.addAttribute("phaseDetails", jsonPhaseDetails);
+		String jsonLoans = gson.toJson(getLoansByPhaseId(phaseId));
+        model.addAttribute("jsonLoans", jsonLoans);
 
 		return "/manage/debtor/collectionprocedure/collectionphase/view";
 
@@ -839,5 +841,25 @@ public class CollectionPhaseController {
 		}
 	}
 
+
+	private List<LoanModel> getLoansByPhaseId(long phaseId)
+	{
+		String baseQuery = "SELECT loan.id, loan.loan_class_id, loan.regNumber, loan.regDate, loan.amount, loan.currencyId, currency.name as currencyName,\n" +
+				"  loan.loanTypeId, type.name as loanTypeName, loan.loanStateId, state.name as loanStateName,\n" +
+				"  loan.supervisorId, IFNULL(loan.parent_id, 0) as parentLoanId, loan.creditOrderId\n" +
+				"FROM loan loan, orderTermCurrency currency,mfloan.loanCollectionPhase lCPH, loanType type, loanState state\n" +
+				"WHERE loan.currencyId = currency.id\n" +
+				"  AND loan.loanTypeId = type.id\n" +
+				"  AND loan.loanStateId = state.id\n" +
+				"  AND loan.id= lCPH.loanId\n" +
+				"  AND lCPH.collectionPhaseId =" + phaseId+ "\n" +
+				"  AND  ISNULL(loan.parent_id) \n" +
+				"ORDER BY  loan.regDate DESC";
+
+		Query query = entityManager.createNativeQuery(baseQuery, LoanModel.class);
+
+		List<LoanModel> loans = query.getResultList();
+		return loans;
+	}
 	
 }

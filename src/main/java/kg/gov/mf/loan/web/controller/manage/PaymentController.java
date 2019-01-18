@@ -113,6 +113,27 @@ public class PaymentController {
     public String savePayment(Payment payment, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId)
     {
 		Loan loan = loanService.getById(loanId);
+		if(payment.getPaymentDate()==null){
+			payment.setPaymentDate(new Date());
+		}
+		if(payment.getTotalAmount()==null){
+			payment.setTotalAmount(0.0);
+		}
+		if(payment.getInterest()==null){
+			payment.setInterest(0.0);
+		}
+		if(payment.getPenalty()==null){
+			payment.setPenalty(0.0);
+		}
+		if(payment.getPrincipal()==null){
+			payment.setPrincipal(0.0);
+		}
+		if (loan.getCurrency().getId()==Long.valueOf(1)){
+			payment.setIn_loan_currency(true);
+		}
+		else{
+			payment.setIn_loan_currency(false);
+		}
 		payment.setLoan(loan);
 		
 		if(payment.getId() == 0)

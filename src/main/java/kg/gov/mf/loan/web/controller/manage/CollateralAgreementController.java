@@ -15,6 +15,7 @@ import kg.gov.mf.loan.manage.service.collateral.AdditionalAgreementService;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemService;
 import kg.gov.mf.loan.web.fetchModels.AdditionalAgreementModel;
 import kg.gov.mf.loan.web.fetchModels.CollateralItemModel;
+import kg.gov.mf.loan.web.fetchModels.LoanModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -36,6 +37,9 @@ import kg.gov.mf.loan.manage.model.debtor.OwnerType;
 import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 @Controller
 public class CollateralAgreementController {
@@ -63,7 +67,10 @@ public class CollateralAgreementController {
 
 	@Autowired
 	CollateralItemService collateralItemService;
-	
+
+	@Autowired
+	EntityManager entityManager;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
@@ -84,6 +91,9 @@ public class CollateralAgreementController {
 
 		String jsonAdditionalAgreements=gson.toJson(getAdditionalsByAgreementId(agreementId));
 		model.addAttribute("additionalAgreements",jsonAdditionalAgreements);
+
+		String jsonLoans=gson.toJson(getLoansByLoanId(agreementId));
+		model.addAttribute("jsonLoans",jsonLoans);
 
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtorId", debtorId);
@@ -222,6 +232,26 @@ public class CollateralAgreementController {
 		}
 
 		return result;
+	}
+
+	private List<LoanModel> getLoansByLoanId(long agreementId)
+	{
+		String baseQuery = "SELECT loan.id, loan.loan_class_id, loan.regNumber, loan.regDate, loan.amount, loan.currencyId, currency.name as currencyName,\n" +
+				"  loan.loanTypeId, type.name as loanTypeName, loan.loanStateId, state.name as loanStateName,\n" +
+				"  loan.supervisorId, IFNULL(loan.parent_id, 0) as parentLoanId, loan.creditOrderId\n" +
+				"FROM loan loan, orderTermCurrency currency,mfloan.loanCollateralAgreement lCA, loanType type, loanState state\n" +
+				"WHERE loan.currencyId = currency.id\n" +
+				"  AND loan.loanTypeId = type.id\n" +
+				"  AND loan.loanStateId = state.id\n" +
+				"  AND loan.id= lCA.loanId\n" +
+				"  AND lCA.collateralAgreementId =" + agreementId+ "\n" +
+				"  AND  ISNULL(loan.parent_id) \n" +
+				"ORDER BY  loan.regDate DESC";
+
+		Query query = entityManager.createNativeQuery(baseQuery, LoanModel.class);
+
+		List<LoanModel> loans = query.getResultList();
+		return loans;
 	}
 	
 	/*

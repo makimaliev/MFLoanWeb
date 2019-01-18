@@ -8,17 +8,23 @@ import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
+import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
+import kg.gov.mf.loan.manage.model.collateral.CollateralItem;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
+import kg.gov.mf.loan.manage.model.collection.CollectionProcedure;
 import kg.gov.mf.loan.manage.model.loan.*;
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
 import kg.gov.mf.loan.manage.model.orderterm.*;
 import kg.gov.mf.loan.manage.model.process.Accrue;
 import kg.gov.mf.loan.manage.model.process.LoanDetailedSummary;
 import kg.gov.mf.loan.manage.model.process.LoanSummary;
+import kg.gov.mf.loan.manage.repository.collateral.CollateralItemReposiory;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.repository.order.CreditOrderRepository;
 import kg.gov.mf.loan.manage.repository.org.StaffRepository;
+import kg.gov.mf.loan.manage.service.collateral.CollateralItemService;
 import kg.gov.mf.loan.manage.service.collateral.QuantityTypeService;
+import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
 import kg.gov.mf.loan.manage.service.loan.*;
 import kg.gov.mf.loan.manage.service.orderterm.*;
 import kg.gov.mf.loan.output.report.service.ReferenceViewService;
@@ -140,6 +146,18 @@ public class LoanController {
     @Autowired
     LoanFinGroupService loanFinGroupService;
 
+    @Autowired
+    CollateralAgreementService collateralAgreementService;
+
+    @Autowired
+    CollateralItemService collateralItemService;
+
+    @Autowired
+    CollateralItemReposiory collateralItemReposiory;
+
+    @Autowired
+    CollectionPhaseService collectionPhaseService;
+
     static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
 	
 	@InitBinder
@@ -148,7 +166,7 @@ public class LoanController {
 		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
 	    binder.registerCustomEditor(Date.class, editor);
 	}
-	
+
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/view"})
     public String viewLoan(ModelMap model, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId) {
 
@@ -231,6 +249,8 @@ public class LoanController {
 //        System.out.println(loan.getSupervisorId());
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         model.addAttribute("loggedinuserId",user.getId());
+
+
         return "/manage/debtor/loan/view";
     }
 
@@ -662,6 +682,22 @@ public class LoanController {
     public String getListOfCreditTerms(@PathVariable("loanId") Long loanId){
         Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
         String result = gson.toJson(getTermsByLoanId(loanId));
+        return result;
+    }
+
+    @PostMapping("/agreements/{loanId}")
+    @ResponseBody
+    public String getListOfAgreements(@PathVariable("loanId") Long loanId){
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String result = gson.toJson(getCollAgreementsByLoanId(loanId));
+        return result;
+    }
+
+    @PostMapping("/phases/{loanId}")
+    @ResponseBody
+    public String getListOfPhases(@PathVariable("loanId") Long loanId){
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String result = gson.toJson(getPhasesByLoanId(loanId));
         return result;
     }
 
@@ -1179,9 +1215,10 @@ public class LoanController {
     {
         List<CollectionPhaseModel> result = new ArrayList<>();
         Loan loan = loanService.getById(loanId);
-        for(CollectionPhase d: loan.getCollectionPhases())
+        for(CollectionPhase dd: loan.getCollectionPhases())
         {
             CollectionPhaseModel model = new CollectionPhaseModel();
+            CollectionPhase d=collectionPhaseService.getById(dd.getId());
             model.setId(d.getId());
             model.setStartDate(d.getStartDate());
             model.setCloseDate(d.getCloseDate());
@@ -1196,14 +1233,83 @@ public class LoanController {
             result.add(model);
         }
 
-//        Collections.sort(result);
-        Collections.sort(result, new Comparator<CollectionPhaseModel>() {
-            @Override
-            public int compare(CollectionPhaseModel o1, CollectionPhaseModel o2) {
-                return o2.getStartDate().compareTo(o1.getStartDate());
-            }
-        });
+        Collections.sort(result);
         return result;
     }
+
+    private List<CollateralAgreementModel> getCollAgreementsByLoanId(long loanId)
+    {
+        Map<Long, CollateralAgreementModel> models = new HashMap<>();
+        Loan loan=loanService.getById(loanId);
+        Set<CollateralAgreement> agreements = loan.getCollateralAgreements();
+        for(CollateralAgreement agreement1: agreements)
+        {
+            CollateralAgreement agreement=collateralAgreementService.getById(agreement1.getId());
+            List<CollateralItem> items = collateralItemReposiory.findByCollateralAgreementId(agreement.getId());
+            for(CollateralItem item1: items)
+            {
+                CollateralItem item=collateralItemService.getById(item1.getId());
+                CollateralAgreementModel model = new CollateralAgreementModel();
+                model.setId(agreement.getId());
+                model.setAgreementNumber(agreement.getAgreementNumber());
+                model.setAgreementDate(agreement.getAgreementDate());
+                model.setCollateralOfficeRegNumber(agreement.getCollateralOfficeRegNumber());
+                model.setCollateralOfficeRegDate(agreement.getCollateralOfficeRegDate());
+                model.setNotaryOfficeRegNumber(agreement.getNotaryOfficeRegNumber());
+                model.setNotaryOfficeRegDate(agreement.getNotaryOfficeRegDate());
+                model.setArrestRegNumber(agreement.getArrestRegNumber());
+                model.setArrestRegDate(agreement.getArrestRegDate());
+                model.setOwnerId(agreement.getOwner().getId());
+                model.setItemId(item.getId());
+                model.setItemName(item.getName());
+                model.setItemDescription(item.getDescription());
+                model.setItemTypeId(item.getItemType().getId());
+                model.setItemTypeName(item.getItemType().getName());
+                model.setQuantity(item.getQuantity());
+                model.setQuantityTypeId(item.getQuantityType().getId());
+                model.setQuantityTypeName(item.getQuantityType().getName());
+                model.setCollateralValue(item.getCollateralValue());
+
+                if(!models.containsKey(model.getItemId()))
+                    models.put(model.getItemId(), model);
+            }
+
+        }
+
+        List<CollateralAgreementModel> result = new ArrayList<>();
+        for(CollateralAgreementModel model: models.values())
+            result.add(model);
+
+        Collections.sort(result);
+        return result;
+
+    }
+
+//    private List<CollectionPhaseModel> getPhasesByLoanId(long loanId)
+//    {
+//        List<CollectionPhaseModel> result = new ArrayList<>();
+//        Loan loan=loanService.getById(loanId);
+//        for(CollectionPhase tempp: loan.getCollectionPhases())
+//        {
+//            CollectionPhase temp=collectionPhaseService.getById(tempp.getId());
+//
+//            CollectionPhaseModel model = new CollectionPhaseModel();
+//            model.setId(temp.getId());
+//            model.setStartDate(temp.getStartDate());
+//            model.setCloseDate(temp.getCloseDate());
+//            model.setLastEvent(temp.getLastEvent());
+//            model.setLastStatusId(temp.getLastStatusId());
+//            model.setPhaseStatusId(temp.getPhaseStatus().getId());
+//            model.setPhaseStatusName(temp.getPhaseStatus().getName());
+//            model.setPhaseTypeId(temp.getPhaseType().getId());
+//            model.setPhaseTypeName(temp.getPhaseType().getName());
+//            model.setProcedureId(temp.getCollectionProcedure().getId());
+//            result.add(model);
+//        }
+//
+//        Collections.sort(result);
+//
+//        return result;
+//    }
 
 }
