@@ -132,6 +132,27 @@ public class RestLoanViewController {
             parameters.put("r=inv_loan_fin_group_id",finGroupIds);
         }
 
+        boolean searchByCreditNumber= datatable.containsKey("datatable[query][creditNumber]");
+        if(searchByCreditNumber){
+            String creditNumber = datatable.get("datatable[query][creditNumber]");
+            List<String> searchWord= Arrays.asList(creditNumber);
+            parameters.put("r=ycv_credit_order_reg_number",searchWord);
+        }
+
+        boolean searchByLoanType = datatable.containsKey("datatable[query][loanTypeId]");
+        if (searchByLoanType ){
+            String loanTypeStr = datatable.get("datatable[query][loanTypeId]");
+            List<String> loanTypeIds=Arrays.asList(loanTypeStr);
+            parameters.put("r=inv_loan_type_id",loanTypeIds);
+        }
+
+        boolean searchBySupervisor= datatable.containsKey("datatable[query][supervisorId]");
+        if (searchBySupervisor){
+            String supervisorStr = datatable.get("datatable[query][supervisorId]");
+            List<String> supervisorIds=Arrays.asList(supervisorStr);
+            parameters.put("r=inv_loan_supervisor_id",supervisorIds);
+        }
+
 
         Integer page = Integer.parseInt(pageStr);
         Integer perPage = Integer.parseInt(perPageStr);

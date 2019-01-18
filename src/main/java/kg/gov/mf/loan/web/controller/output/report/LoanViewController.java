@@ -5,7 +5,9 @@ import kg.gov.mf.loan.admin.org.service.DistrictService;
 import kg.gov.mf.loan.admin.org.service.RegionService;
 import kg.gov.mf.loan.admin.sys.service.MessageResourceService;
 import kg.gov.mf.loan.manage.model.loan.LoanFinGroup;
+import kg.gov.mf.loan.manage.model.loan.LoanType;
 import kg.gov.mf.loan.manage.service.loan.LoanFinGroupService;
+import kg.gov.mf.loan.manage.service.loan.LoanTypeService;
 import kg.gov.mf.loan.output.report.model.GroupType;
 import kg.gov.mf.loan.output.report.model.LoanView;
 import kg.gov.mf.loan.output.report.model.ReferenceView;
@@ -50,6 +52,10 @@ public class LoanViewController {
 
     @Autowired
     LoanFinGroupService loanFinGroupService;
+
+    @Autowired
+    LoanTypeService loanTypeService;
+
 
 
     LinkedHashMap<String,String> selected=new LinkedHashMap<>();
@@ -135,6 +141,14 @@ public class LoanViewController {
         }
         List<LoanFinGroup> finGroups = loanFinGroupService.list();
         model.addAttribute("finGroups", finGroups);
+
+        List<ReferenceView> loanTypes=referenceViewService.findByParameter("loan_type");
+        model.addAttribute("loanTypes",loanTypes);
+
+        List<ReferenceView> supervisors=referenceViewService.findByParameter("supervisor");
+        model.addAttribute("supervisors",supervisors);
+
+
         model.addAttribute("selectedFields",selectedFieldNames);
         model.addAttribute("selectedFieldsTranslated",selectedFieldNamesTranslated);
         model.addAttribute("selectedFieldNamesWithId",resultListOfReferenceView);
