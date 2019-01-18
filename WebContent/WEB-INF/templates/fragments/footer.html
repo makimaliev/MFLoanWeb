@@ -13,8 +13,6 @@
         var messageForm = document.querySelector('#messageForm');
         var messageInput = document.querySelector('#message');
         var messageArea = document.querySelector('#messageArea');
-        var userSearch = document.querySelector('#usersearch');
-        var userList = document.querySelector('#userlist');
         var chatModalTitle = document.querySelector('#chatModalTitle');
         var stompClient = null;
         var username = [[${#authentication.name}]];
@@ -99,36 +97,27 @@
 
             var message = JSON.parse(payload.body);
 
-            if(message.type === 'CHAT' && message.receiver == username)
+            if(message.type === 'CHAT' && (message.receiver === username || message.sender === username))
             {
-                buildMessage(message);
-                notipy(message.senderfullname, message.content)
-            }
-        }
-        function onError() {}
-        function searchUser() {
-
-            var filter, usr, uid, i;
-
-            filter = userSearch.value.toUpperCase();
-            usr = userList.getElementsByTagName('tr');
-
-            for (i = 0; i < usr.length; i++) {
-                uid = usr[i].getElementsByTagName("td")[0];
-                if (uid.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    usr[i].style.display = "";
-                } else {
-                    usr[i].style.display = "none";
+                if(($("#chat_window").data('bs.modal') || {})._isShown)
+                {
+                    buildMessage(message);
+                }
+                else {
+                    receiver = message.sender;
+                    $('#cu').val(receiver).trigger('change');
+                    notipy(message.senderfullname, message.content)
                 }
             }
         }
+        function onError() {}
         function notipy(t, m, r) {
 
             $.notify({
                 title: t,
-                message: '<a href="#" id="usr" class="m-nav__link" data-toggle="modal" data-target="#chat_window" data-usr="' + r + '">' + m + '</a>'
+                message: '<a href="#" class="m-nav__link" data-toggle="modal" data-target="#chat_window">' + m + '</a>'
             }, {
-                delay: 0,
+                delay: 5000,
                 type: "info",
                 template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
                 '<button type="button" aria-hidden="true" class="close" data-notify="dismiss"></button>' +
@@ -142,18 +131,9 @@
                 '</div>'
             });
         }
-        function setReceiver(usr) {
-
-            if(receiver !== usr)
-            {
+        function loadMessages(usr) {
                 messageArea.innerHTML = "";
-                chatModalTitle.innerHTML = this.innerText;
 
-                $("#" + receiver).removeClass();
-                receiver = usr;
-                $("#" + receiver).addClass("bg-info text-white");
-
-                $("#userlist tr").removeAttr("style");
                 prevdate = null;
                 $.ajax({
                     type: "POST",
@@ -167,25 +147,10 @@
                     }
                 });
                 this.scrollTop = this.scrollHeight;
-            }
         }
 
-        $("#userlist tr td").click(function() {
-            setReceiver(this.id)
-        });
-
-        $('#chat_window').on('hidden.bs.modal', function (e) {
-
-            receiver = null;
-            messageArea.innerHTML = "";
-            chatModalTitle.innerHTML = "";
-
-            $("#userlist tr").removeAttr("style");
-            $("#userlist tr td").removeClass();
-        });
         $('#chat_window').on('show.bs.modal', function (e) {
-            console.log($("#usr").data("usr"));
-            setReceiver($("#usr").data("usr"));
+            loadMessages(receiver)
         });
 
         messageForm.addEventListener('submit', sendMessage, true);
@@ -202,10 +167,15 @@
 
             connect();
 
+            $('#cu').select2();
+            $('#cu').on('select2:select', function (e) {
+                receiver = e.params.data.id
+                loadMessages(receiver)
+            });
+
             var path = window.location.pathname.split("/");
 
-            if(path[2] != "edit")
-            {
+            if(path[2] != "edit") {
                 var tasks = [[${@taskService.getTasksByUserId(@userServiceJpaImpl.findByUsername(#authentication.name).id)}]];
 
                 for (var i = 0; i < tasks.length; i++) {
@@ -228,7 +198,6 @@
                     });
                 }
             }
-
             changePageAndSize();
         });
 

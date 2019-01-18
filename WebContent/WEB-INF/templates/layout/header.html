@@ -1,7 +1,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 
-<div class="modal fade" id="chat_window" tabindex="-1" role="dialog" aria-labelledby="chat_window" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+<div class="modal fade" id="chat_window" role="dialog" aria-labelledby="chat_window" aria-hidden="true" >
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="chatModalTitle">&nbsp;</h5>
@@ -12,34 +12,22 @@
             <div class="modal-body bg-light p-0" id="chat-page">
 
                 <!--*******************************-->
+                <select id="cu" style="width: 100%">
+                    <option th:each="user : ${#lists.sort(@chatUserServiceImpl.list())}"
+                            th:value="${user.username}"
+                            th:text="${user.name}">Responsible</option>
+                </select>
 
-                <div class="row m-0">
-                    <div class="col-5 p-0">
-                        <input type="text" id="usersearch" onkeyup="searchUser()" placeholder="Поиск..." style="width: 100%; height: 40px; padding-left: 20px; border: 1px solid transparent; ">
-                        <div class="pre-scrollable">
-                            <table class="table table-hover" id="userlist" style="cursor: pointer">
-                                <tr th:each="user : ${#lists.sort(@chatUserServiceImpl.list())}">
-                                    <td th:id="${user.username}" th:text="${user.name}" height="40px" th:title="${user.username}"></td>
-                                </tr>
-                            </table>
+                <!--div id="messageArea" class="m-3"></div-->
+                <!-- Start -->
+                <div class="chat" style="height: 300px">
+                    <div class="chat-container">
+                        <div class="conversation">
+                            <div class="conversation-container p-3" id="messageArea"></div>
                         </div>
-                    </div>
-                    <div class="col-7 p-0">
-                        <!--div id="messageArea" class="m-3"></div-->
-                        <!-- Start -->
-                        <div class="chat">
-                            <div class="chat-container">
-                                <div class="conversation">
-                                    <div class="conversation-container p-3" id="messageArea">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End -->
-
                     </div>
                 </div>
-
+                <!-- End -->
                 <!--*******************************-->
 
             </div>

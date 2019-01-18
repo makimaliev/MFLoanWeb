@@ -226,11 +226,10 @@
             <thead class="thead-default">
             <tr>
                 <th width="50px"></th>
-                <th width="120px">Исх. № и Дата</th>
-                <th width="120px">Вхд. № и Дата</th>
                 <th th:utext="|#{label.document.documentSubType} <br> #{label.document.title}|">Относительно</th>
-                <th width="250px" th:text="#{label.document.generalStatus}">Состояние</th>
+                <th width="120px">Исх. № и Дата</th>
                 <th th:text="#{label.document.sender}">Отправитель</th>
+                <th width="120px">Вхд. № и Дата</th>
                 <th th:text="#{label.document.receiver}">Исполнитель</th>
                 <th th:text="#{label.document.duedate}" width="100px">Срок</th>
                 <th width="30px"></th>
@@ -239,10 +238,8 @@
             <tbody>
             <tr th:each="document : ${documents}">
                 <td class="text-danger text-center"><span th:if="${document.documentDueDate}">K</span></td>
-                <td th:utext="${!document.senderRegisteredNumber.isEmpty() ? document.senderRegisteredNumber + '<hr>' + #dates.format(document.senderRegisteredDate, 'dd-MM-yyyy') : ''}"></td>
-                <td th:utext="${!document.receiverRegisteredNumber.isEmpty() ? document.receiverRegisteredNumber + '<hr>' + #dates.format(document.receiverRegisteredDate, 'dd-MM-yyyy') : ''}"></td>
                 <td th:utext="|<b>${document.documentSubType.name}</b><br>${document.title}|"></td>
-                <td th:text="${document.documentState.text()}"></td>
+                <td th:utext="${!document.senderRegisteredNumber.isEmpty() ? document.senderRegisteredNumber + '<hr>' + #dates.format(document.senderRegisteredDate, 'dd-MM-yyyy') : ''}"></td>
                 <td>
                     <br>
                     <p th:if="${document.senderResponsible.responsibleType == 1}" th:each="ss : ${document.senderResponsible.staff}" th:utext="${ss.name}"> </p>
@@ -250,6 +247,7 @@
                     <p th:if="${document.senderResponsible.responsibleType == 3}" th:each="so : ${document.senderResponsible.organizations}" th:utext="${so.name}"> </p>
                     <p th:if="${document.senderResponsible.responsibleType == 4}" th:each="sp : ${document.senderResponsible.person}" th:utext="${sp.name}"> </p>
                 </td>
+                <td th:utext="${!document.receiverRegisteredNumber.isEmpty() ? document.receiverRegisteredNumber + '<hr>' + #dates.format(document.receiverRegisteredDate, 'dd-MM-yyyy') : ''}"></td>
                 <td>
                     <br>
                     <p th:if="${document.receiverResponsible.responsibleType == 1}" th:each="rs : ${document.receiverResponsible.staff}" th:utext="${rs.name}"> </p>
