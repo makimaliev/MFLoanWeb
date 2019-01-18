@@ -198,15 +198,15 @@ public class DebtorController {
 		}
 
 		model.addAttribute("isPerson",isPerson);
-		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
-		String jsonLoans = gson.toJson(getLoansByDebtorId(debtorId));
-		model.addAttribute("loans", jsonLoans);
+//		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+//		String jsonLoans = gson.toJson(getLoansByDebtorId(debtorId));
+//		model.addAttribute("loans", jsonLoans);
 
-		String jsonAgreements = gson.toJson(getCollAgreementsByDebtorId(debtorId));
-		model.addAttribute("agreements", jsonAgreements);
-
-        String jsonProcs = gson.toJson(getProcsByDebtorId(debtorId));
-        model.addAttribute("procs", jsonProcs);
+//		String jsonAgreements = gson.toJson(getCollAgreementsByDebtorId(debtorId));
+//		model.addAttribute("agreements", jsonAgreements);
+//
+//        String jsonProcs = gson.toJson(getProcsByDebtorId(debtorId));
+//        model.addAttribute("procs", jsonProcs);
 
 		List<CreditOrder> orders = orderService.list();
 		model.addAttribute("orders", orders);
@@ -453,6 +453,30 @@ public class DebtorController {
 		return "redirect:" + "/manage/debtor/worksector/list";
 	}
 	//END - WORK SECTOR
+
+    @PostMapping("/debtorLoans/{debtorId}")
+    @ResponseBody
+    public String getListOfLoans(@PathVariable("debtorId") Long debtorId){
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String result = gson.toJson(getLoansByDebtorId(debtorId));
+        return result;
+    }
+
+    @PostMapping("/debtorAgreements/{debtorId}")
+    @ResponseBody
+    public String getListOfAgreements(@PathVariable("debtorId") Long debtorId){
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String result = gson.toJson(getCollAgreementsByDebtorId(debtorId));
+        return result;
+    }
+
+    @PostMapping("/debtorProcedures/{debtorId}")
+    @ResponseBody
+    public String getListOfProcedures(@PathVariable("debtorId") Long debtorId){
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String result = gson.toJson(getProcsByDebtorId(debtorId));
+        return result;
+    }
 
 	private List<LoanModel> getLoansByDebtorId(long debtorId)
 	{

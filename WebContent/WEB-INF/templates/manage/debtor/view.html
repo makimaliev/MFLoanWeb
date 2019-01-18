@@ -75,13 +75,13 @@
 								<a class="nav-link m--font-primary active" data-toggle="tab" href="#loanInfo" th:text="#{label.debtor.tab.loan.info}"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanListOfDebtor" th:text="#{label.debtor.tab.loans}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanListOfDebtor" th:text="#{label.debtor.tab.loans}" id="loanListOfDebtorFunction"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#agreementListOfDebtor" th:text="#{label.debtor.tab.agreements}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#agreementListOfDebtor" th:text="#{label.debtor.tab.agreements}" id="agreementListOfDebtorFunction"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#procedureListOfDebtor" th:text="#{label.debtor.tab.procedures}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#procedureListOfDebtor" th:text="#{label.debtor.tab.procedures}" id="procedureListOfDebtorFunction"></a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#initializaPhase" th:text="#{label.debtor.tab.initializaPhase}"></a>
@@ -430,9 +430,9 @@
 <div th:replace="fragments/footer :: footer-js"/>
 
 <!--begin::Page Resources -->
-<script th:src="@{/js/data-debtor-loan.js}" th:inline="javascript" type="text/javascript"></script>
-<script th:src="@{/js/data-debtor-agreements.js}" th:inline="javascript" type="text/javascript"></script>
-<script th:src="@{/js/data-debtor-procs.js}" th:inline="javascript" type="text/javascript"></script>
+<!--<script th:src="@{/js/data-debtor-loan.js}" th:inline="javascript" type="text/javascript"></script>-->
+<!--<script th:src="@{/js/data-debtor-agreements.js}" th:inline="javascript" type="text/javascript"></script>-->
+<!--<script th:src="@{/js/data-debtor-procs.js}" th:inline="javascript" type="text/javascript"></script>-->
 <script th:src="@{/js/data-debtor-loan-phasedetails.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
 <script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
@@ -449,9 +449,12 @@
 </div>
 <script th:inline="javascript">
     /*<![CDATA[*/
-    var jsonLoans = /*[[${loans}]]*/ [];
-    var jsonAgreements = /*[[${agreements}]]*/ [];
-    var jsonProcs = /*[[${procs}]]*/ [];
+    // var jsonLoans = /*[[${loans}]]*/ [];
+    // var jsonAgreements = /*[[${agreements}]]*/ [];
+    // var jsonProcs = /*[[${procs}]]*/ [];
+    var jsonLoans;
+    var jsonAgreements;
+    var jsonProcs;
     var debtorId = /*[[${debtor.id}]]*/ [];
     var entityId = /*[[${debtor.owner.entityId}]]*/ [];
     var ownerType = /*[[${debtor.owner.ownerType}]]*/ [];
@@ -619,6 +622,60 @@
     $("ul.nav-tabs a").click(function (e) {
         e.preventDefault();
         $(this).tab('show');
+    });
+</script>
+<script>
+    $("#loanListOfDebtorFunction").on('click',function () {
+        $.ajax({
+            type:'post',
+            url: '/debtorLoans/'+debtorId,
+            success:function (data) {
+                jsonLoans=data;
+                $.getScript("/js/data-debtor-loan.js");
+            }
+        });
+    });
+    $("#agreementListOfDebtorFunction").on('click',function () {
+        $.ajax({
+            type:'post',
+            url: '/debtorAgreements/'+debtorId,
+            success:function (data) {
+                jsonAgreements=data;
+                $.getScript("/js/data-debtor-agreements.js");
+            }
+        });
+    });
+
+    $("#procedureListOfDebtorFunction").on('click',function () {
+        $.ajax({
+            type:'post',
+            url: '/debtorProcedures/'+debtorId,
+            success:function (data) {
+                jsonProcs=data;
+                $.getScript("/js/data-debtor-procs.js");
+            }
+        });
+    });
+</script>
+<script th:inline="javascript">
+    var ttt;
+    $(document).ready(function() {
+        if (sessionStorage.getItem("debtorTab")) {
+            // alert(location.hash)
+            ttt=sessionStorage.getItem("debtorTab");
+            // alert(ttt);
+            $("a[href='" + ttt + "']").tab("show");
+            $(ttt.toString()+"Function").click();
+        }
+        $(document.body).on("click", "a[data-toggle]", function(event) {
+            var tabName = this.getAttribute("href");
+            sessionStorage.SessionName = "debtorTab";
+            sessionStorage.setItem("debtorTab",tabName);
+        });
+    });
+    $(window).on("popstate", function() {
+        var anchor = ttt || $("a[data-toggle='tab']").first().attr("href");
+        $("a[href='" + anchor + "']").tab("show");
     });
 </script>
 </body>
