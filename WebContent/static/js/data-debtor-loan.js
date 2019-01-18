@@ -54,57 +54,7 @@ var DatatableDataLocalLoans = function () {
 						<a href="/manage/debtor/'+ debtorId + '/loan/' + row.id +'/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
 					';
                 }
-            }, {
-				field: "regNumber",
-                width: 450,
-				title: "Регистрационный номер",
-                template: function (row) {
-				    var result = '';
-
-				    if(row.regNumber.length <= 60)
-				        result = row.regNumber;
-				    else {
-				        result = row.regNumber.substr(0, 60);
-				        result = result + '...';
-                    }
-
-                    return result;
-                }
-			},{
-                field: "regDate",
-                title: "Дата регистрации",
-                width: 100
-            }, {
-                field: "amount",
-                title: "Сумма по договору",
-                width: 120,
-                template: function (row) {
-                    return (row.amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                }
             },{
-                field: "currencyName",
-                title: "Валюта",
-                width: 70
-            }, {
-                field: "loanTypeName",
-                title: "Вид",
-                width: 180
-            }, {
-                field: "loanStateName",
-                title: "Статус",
-                template: function (row) {
-                    var status = {
-                        1: {'class': ' m-badge--warning'},
-                        2: {'class': ' '},
-                        3: {'class': ' m-badge--danger'},
-                        4: {'class': ' m-badge--success'}
-                    };
-
-                    console.log(row.loanStateId)
-                    console.log( status[row.loanStateId].class)
-                    return '<span class="m-badge ' + status[row.loanStateId].class + ' m-badge--wide">' + row.loanStateName + '</span>';
-                }
-            }, {
                 field: "action",
                 width: 110,
                 title: "",
@@ -127,6 +77,47 @@ var DatatableDataLocalLoans = function () {
 
                     return result;
                 }
+            }, {
+				field: "regNumber",
+                width: 450,
+				title: "Регистрационный номер",
+                template: function (row) {
+                    var status = {
+                        1: {'class': ''},
+                        2: {'class': ''},
+                        3: {'class': 'btn-danger'},
+                        4: {'class': ''}
+                    };
+                    var result = '';
+
+                    if(row.regNumber.length <= 60){
+                        return '<span class=" ' + status[row.loanStateId].class + ' ">' + row.regNumber + '</span>';
+                    }
+
+				    else {
+                        return '<span class=" ' + status[row.loanStateId].class + ' ">' + row.regNumber+ '</span>';
+                    }
+
+                }
+			},{
+                field: "regDate",
+                title: "Дата регистрации",
+                width: 100
+            }, {
+                field: "amount",
+                title: "Сумма по договору",
+                width: 120,
+                template: function (row) {
+                    return (row.amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                }
+            },{
+                field: "currencyName",
+                title: "Валюта",
+                width: 70
+            }, {
+                field: "loanTypeName",
+                title: "Вид",
+                width: 180
             }],
             translate: {
                 records: {
