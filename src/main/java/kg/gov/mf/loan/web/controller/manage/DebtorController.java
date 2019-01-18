@@ -5,10 +5,7 @@ import java.util.*;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import kg.gov.mf.loan.admin.org.model.Department;
-import kg.gov.mf.loan.admin.org.model.Organization;
-import kg.gov.mf.loan.admin.org.model.Person;
-import kg.gov.mf.loan.admin.org.model.Position;
+import kg.gov.mf.loan.admin.org.model.*;
 import kg.gov.mf.loan.admin.org.service.*;
 import kg.gov.mf.loan.admin.sys.service.InformationService;
 import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
@@ -143,6 +140,9 @@ public class DebtorController {
 	@Autowired
 	LoanService loanService;
 
+	@Autowired
+	DepartmentService departmentService;
+
 	/** The entity manager. */
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -164,15 +164,30 @@ public class DebtorController {
 
 			isPerson="false";
 			Organization organization = this.organizationService.findById(debtor.getOwner().getEntityId());
-            String staff="";
-			for (Department department:organization.getDepartment())
+//            String staff="";
+			List<String> staffWithPositions=new ArrayList<>();
+			for (Department department1:organization.getDepartment())
 			{
-				staff= staffService.findAllByDepartment(department).get(0).getName();
+				Department department=departmentService.findById(department1.getId());
+				int counter=0;
+				for(Staff staff1:staffService.findAllByDepartment(department)){
+					Staff staff=staffService.findById(staff1.getId());
+					String positionName=staff.getPosition().getName();
+					String staffName=staff.getName();
+					if(staffName.length()>3){
+						staffWithPositions.add(positionName+" : "+staffName);
+					}
+					counter++;
+					if (counter==5){
+						break;
+					}
+				}
 				break;
+
 			}
 
 			model.addAttribute("organization", organization);
-			model.addAttribute("staff", staff);
+			model.addAttribute("staffs", staffWithPositions);
 //			model.addAttribute("informationList", this.informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2, organization.getId()));
 		}
 		else{

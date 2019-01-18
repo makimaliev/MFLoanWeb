@@ -161,8 +161,11 @@
                                                         <div class="row m-row--no-padding align-items-center">
                                                             <div class="col">
                                                                 <h3 class="m-widget1__title" th:text="#{label.organization.staff}"></h3>
-                                                                <span class="m-widget1__desc m--font-brand" th:text="${staff}"></span>
-                                                            </div>
+																<ul th:each="staff:${staffs}">
+																	<!--<ol class="m-widget1__desc m&#45;&#45;font-brand"  th:text="${staff}"></ol>-->
+																	<span class="m-widget1__desc m--font-brand" th:text="${staff}"></span>
+																</ul>
+															</div>
                                                         </div>
                                                     </div>
                                                 </div>
