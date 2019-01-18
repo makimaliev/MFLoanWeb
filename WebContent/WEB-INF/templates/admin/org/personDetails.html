@@ -64,7 +64,10 @@
 				<div class="m-portlet m-portlet--full-height">
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
-							<div class="m-portlet__head-title">
+							<div th:if="${hasDebtor}=='true'" class="m-portlet__head-title">
+								<h3 class="m-portlet__head-text" id="personLink" th:text="${person.name}" onclick="gotoURL()" onMouseOver="this.style.cursor='pointer'"></h3>
+							</div>
+							<div th:if="${hasDebtor}=='false'" class="m-portlet__head-title">
 								<h3 class="m-portlet__head-text" th:text="${person?.name}"></h3>
 							</div>
 						</div>
@@ -543,7 +546,17 @@
 
     /*]]>*/
 </script>
-
+<script th:inline="javascript">
+	var debtorId=/*[[${debtorId}]]*/ [];
+	var personURL = '';
+	personURL= '/manage/debtor/'+debtorId+ '/view';
+</script>
+<script type="text/javascript">
+	function gotoURL()
+	{
+		window.location.href = personURL;
+	}
+</script>
 </body>
 <!-- end::Body -->
 </html>

@@ -231,6 +231,17 @@ public class OrganizationController {
 
 		Organization organization = this.organizationService.findById(id);
 
+		Owner owner=this.ownerService.getByEntityId(organization.getId(),"ORGANIZATION");
+		String hasDebtor="true";
+		try{
+			Debtor debtor=debtorService.getByOwnerId(owner.getId());
+			model.addAttribute("debtorId",debtor.getId());
+		}
+		catch (Exception e){
+			hasDebtor="false";
+			model.addAttribute("debtorId",0);
+		}
+		model.addAttribute("hasDebtor", hasDebtor);
 		List<Position> organizationPositionList = new ArrayList<Position>();
 
 		for (Department department:organization.getDepartment())
