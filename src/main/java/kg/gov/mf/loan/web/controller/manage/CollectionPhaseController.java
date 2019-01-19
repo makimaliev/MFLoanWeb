@@ -7,6 +7,10 @@ import java.util.*;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.admin.org.model.Staff;
+import kg.gov.mf.loan.admin.org.service.StaffService;
+import kg.gov.mf.loan.admin.sys.model.User;
+import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collection.*;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.process.LoanDetailedSummary;
@@ -91,12 +95,18 @@ public class CollectionPhaseController {
 	@Autowired
 	CollectionPhaseSubIndexService collectionPhaseSubIndexService;
 
+	@Autowired
+	UserService userService;
+
 	/** The entity manager. */
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Autowired
     CollectionEventService collectionEventService;
+
+	@Autowired
+	StaffService staffService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -324,6 +334,11 @@ public class CollectionPhaseController {
             procedure.setProcedureType(procedureTypeService.getById(1L));
             procService.add(procedure);
             phase.setCollectionProcedure(procedure);
+
+			User user = userService.findByUsername(Utils.getPrincipal());
+			Staff staff=staffService.findById(user.getStaff().getId());
+			phase.setDepartment_id(staff.getDepartment().getId());
+
             phaseService.add(phase);
 
             for (PhaseDetailsModel model: list
@@ -422,6 +437,16 @@ public class CollectionPhaseController {
 
 
 			CollectionPhase collectionPhase=new CollectionPhase();
+
+			User user = userService.findByUsername(Utils.getPrincipal());
+			Staff staff=staffService.findById(user.getStaff().getId());
+			try {
+				collectionPhase.setDepartment_id(staff.getDepartment().getId());
+			}
+			catch(Exception e){
+			}
+
+			collectionPhase.setStartDate(new Date());
 			collectionPhase.setLoans(phaseService.getById(procedure.getLastPhase()).getLoans());
 			collectionPhase.setCollectionPhaseIndex(collectionPhaseIndexModel);
 			model.addAttribute("phase", collectionPhase);
@@ -461,10 +486,13 @@ public class CollectionPhaseController {
     		@PathVariable("procId")Long procId,
     		ModelMap model)
     {
+
 		CollectionProcedure procedure = procService.getById(procId);
 		phase.setCollectionProcedure(procedure);
 
 		if(phase.getId() == 0){
+
+
 			phase.setPhaseStatus(phaseStatusService.getById(Long.valueOf(1)));
 			phaseService.add(phase);
 			if(phaseDetailsList.isEmpty()){
