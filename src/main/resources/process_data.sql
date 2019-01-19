@@ -1526,9 +1526,30 @@ BEGIN
 
           UNION ALL
 
+          select
+            'daily' as type,
+            6 as orderType,
+            ((curdate() - interval 1 year - 5) + interval (t.i * 100 + u.i * 10 + v.i) day) as onDate,
+            0            AS disbursement,
+            0            AS principalPaid,
+            0            AS principalPayment,
+            0 as interestPaid,
+            0 as collectedInterestPayment,
+            0 as penaltyPaid,
+            0 as collectedPenaltyPayment,
+            0 as pTotalAmount,
+            1 as curRate
+          from
+              ints t
+              join ints u
+              join ints v
+          having onDate between '2019-01-01' and CURDATE()
+
+          UNION ALL
+
           SELECT
             'future payment' as type,
-            6 as orderType,
+            7 as orderType,
             ps.expectedDate AS onDate,
             0 AS disbursement,
             ps.principalPayment AS principalPaid,
@@ -3704,4 +3725,10 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-19 16:47:52
+-- Dump completed on 2019-01-19 17:13:43
+CREATE TABLE if not exists ints ( i tinyint(4) );
+
+TRUNCATE ints;
+
+insert into ints (i)
+values (0),(1),(2),(3),(4),(5),(6),(7),(8),(9);
