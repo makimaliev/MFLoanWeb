@@ -1366,6 +1366,13 @@
             url: '/paymentScheduleRequest/'+loanId,
             success:function (data) {
                 jsonPaymentSchedules=data;
+
+				sumOfPSDisbursement=(0);
+				sumOfPSInterest=(0);
+				sumOfPSPrincipal=(0);
+				sumOfPSCollectedInterest=(0);
+				sumOfPSCollectedPincipal=(0);
+
 				var norm=JSON.parse(data);
 				// console.log(norm);
                 $.getScript("/js/data-debtor-loan-paymentSchedules.js");
@@ -1391,6 +1398,10 @@
             type:'post',
             url: '/paymentRequest/'+loanId,
             success:function (data) {
+				sumOfPTotal=0;
+				sumOfPPrincipal=0;
+				sumOfPPenalty=0;
+				sumOfPInterest=0;
                 jsonPayments=data;
                 var norm=JSON.parse(jsonPayments);
                 $.getScript("/js/data-debtor-loan-payments.js");

@@ -158,6 +158,9 @@ public class LoanController {
     @Autowired
     CollectionPhaseService collectionPhaseService;
 
+    @Autowired
+    OrderTermFundService orderTermFundService;
+
     static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
 	
 	@InitBinder
@@ -261,7 +264,7 @@ public class LoanController {
             model.addAttribute("loanFinGroup",loan.getLoanFinGroup());
         }
 	    else{
-            model.addAttribute("loanFinGroup",loanFinGroupService.getById(Long.valueOf(1)));
+            model.addAttribute("loanFinGroup",loanFinGroupService.getById(Long.valueOf(2)));
         }
         model.addAttribute("loanId",loanId);
         model.addAttribute("finGroupList",loanFinGroupService.list());
@@ -292,7 +295,7 @@ public class LoanController {
             model.addAttribute("fund",loan.getFund());
         }
         else{
-            model.addAttribute("fund",fundService.getById(Long.valueOf(1)));
+            model.addAttribute("fund",fundService.getById(Long.valueOf(30)));
         }
         model.addAttribute("loanId",loanId);
         model.addAttribute("fundList",fundService.list());
@@ -334,6 +337,7 @@ public class LoanController {
                 normalLoan.setLoanType(loanTypeService.getById(Long.valueOf(1)));
                 normalLoan.setCurrency(orderTermCurrencyService.getById(Long.valueOf(1)));
                 normalLoan.setLoanFinGroup(loanFinGroupService.getById(Long.valueOf(2)));
+                normalLoan.setFund(orderTermFundService.getById(Long.valueOf(30)));
                 model.addAttribute("loan", normalLoan);
             }
 		    else if(classId == 2){
@@ -344,6 +348,7 @@ public class LoanController {
                 trancheeLoan.setLoanType(loanTypeService.getById(Long.valueOf(1)));
                 trancheeLoan.setCurrency(orderTermCurrencyService.getById(Long.valueOf(1)));
                 trancheeLoan.setLoanFinGroup(loanFinGroupService.getById(Long.valueOf(2)));
+                trancheeLoan.setFund(orderTermFundService.getById(Long.valueOf(30)));
                 model.addAttribute("loan", trancheeLoan);
             }
 		    else{
@@ -354,6 +359,7 @@ public class LoanController {
                 restructuredLoan.setLoanType(loanTypeService.getById(Long.valueOf(1)));
                 restructuredLoan.setCurrency(orderTermCurrencyService.getById(Long.valueOf(1)));
                 restructuredLoan.setLoanFinGroup(loanFinGroupService.getById(Long.valueOf(2)));
+                restructuredLoan.setFund(orderTermFundService.getById(Long.valueOf(30)));
                 model.addAttribute("loan", restructuredLoan);
             }
             model.addAttribute("ownerText", "");
@@ -409,7 +415,7 @@ public class LoanController {
 		
 		saveLoanData(loan);
 			
-		return "redirect:" + "/manage/debtor/{debtorId}/view";
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/"+loan.getId()+"/view";
 	}
 
     @RequestMapping(value="/manage/debtor/{debtorId}/loan/2/save", method=RequestMethod.POST)
@@ -423,7 +429,7 @@ public class LoanController {
 
         saveLoanData(loan);
 
-        return "redirect:" + "/manage/debtor/{debtorId}/view";
+        return "redirect:" + "/manage/debtor/{debtorId}/loan/"+loan.getId()+"/view";
     }
 
     @RequestMapping(value="/manage/debtor/{debtorId}/loan/3/save", method=RequestMethod.POST)
@@ -437,7 +443,7 @@ public class LoanController {
 
         saveLoanData(loan);
 
-        return "redirect:" + "/manage/debtor/{debtorId}/view";
+        return "redirect:" + "/manage/debtor/{debtorId}/loan/"+loan.getId()+"/view";
     }
 
     private void setBankruptData(Loan loan)

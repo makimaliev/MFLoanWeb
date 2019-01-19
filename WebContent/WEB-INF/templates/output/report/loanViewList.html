@@ -57,7 +57,7 @@
                     <div class="m-portlet__body">
                         <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                             <div class="form-group m-form__group row " style="margin-left: 10px">
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="m-input-icon m-input-icon--left mb-2">
                                         <input type="text" class="form-control m-input m-input--solid" th:placeholder=#{label.debtor.name} id="debtor_name">
                                         <span class="m-input-icon__icon m-input-icon__icon--left">
@@ -78,7 +78,7 @@
                                 <!--<div class="col-md-2">-->
                                     <!---->
                                 <!--</div>-->
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="m-form__group m-form__group--inline mb-2">
                                         <div class="m-form__label">
                                             <label>
@@ -111,7 +111,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="input-group date m_datetimepicker mb-2" id="from_datepicker">
                                         <input  class="form-control m-input" th:placeholder="#{label.fromDate}" name="date" />
                                         <span class="input-group-addon">
@@ -125,7 +125,7 @@
                                                 </span>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="m-form__group m-form__group--inline mb-2">
                                         <div class="m-form__label">
                                             <label>
@@ -138,6 +138,46 @@
                                                     Все
                                                 </option>
                                                 <option th:each="finGroup: ${finGroups}" th:value="${finGroup.id}" th:text="${finGroup.name}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="m-form__group m-form__group--inline mb-2">
+                                        <div class="m-form__label">
+                                            <label>
+                                                Вид кредита:
+                                            </label>
+                                        </div>
+                                        <div class="m-form__control">
+                                            <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_loan_type">
+                                                <option value="">
+                                                    Все
+                                                </option>
+                                                <option th:each="loanType: ${loanTypes}" th:value="${loanType.id}" th:text="${loanType.name}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="m-input-icon m-input-icon--left mb-2">
+                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder=#{label.loan.creditNumber} id="credit_number">
+                                        <span class="m-input-icon__icon m-input-icon__icon--left">
+                                                    <span>
+                                                        <i class="la la-search"></i>
+                                                    </span>
+                                                </span>
+                                    </div>
+                                    <div class="m-form__group m-form__group--inline mb-2">
+                                        <div class="m-form__label">
+                                            <label>
+                                                Куратор:
+                                            </label>
+                                        </div>
+                                        <div class="m-form__control">
+                                            <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_supervisor">
+                                                <option value="">
+                                                    Все
+                                                </option>
+                                                <option th:each="supervisor: ${supervisors}" th:value="${supervisor.id}" th:text="${supervisor.name}"></option>
                                             </select>
                                         </div>
                                     </div>
@@ -225,6 +265,9 @@
     });
 </script>
 <script th:inline="javascript" >
+
+    var loanTypes=/*[[${loanTypes}]]*/ [];
+    var supervisors=/*[[${supervisors}]]*/ [];
     var sds=[[${selectedFieldsTranslated}]];
     var asaa=[[${selectedFieldNamesWithId}]];
     var lines="";
@@ -403,7 +446,7 @@
                 },{
                     field: "v_debtor_name",
                     title: [[#{v_debtor_name}]],
-                    width:300,
+                    width:270,
                     template: function (row) {
                         var d = row.v_debtor_name;
                         if(d.length>40){
@@ -419,22 +462,66 @@
                 }, {
                     field: "v_loan_reg_number",
                     title: [[#{v_loan_reg_number}]],
-                    width:300,
+                    width:270,
                     template: function (row) {
                         var d = row.v_loan_reg_number;
-                        if(d.length>40){
-                            return d.substring(0,40)+"...";
+                        if(d.length>30){
+                            return d.substring(0,30)+"...";
                         }
                         return d;
                     }
                 }, {
                     field: "v_loan_amount",
                     title: [[#{label.loan.amount}]],
+                    width:120,
                     textAlign:'center',
                     template:function (row) {
                         return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_loan_amount);
                     }
+                }, {
+                    field: "v_credit_order_reg_number",
+                    title: [[#{label.loan.credit.order.reg.number}]],
+                    width:270,
+                    template: function (row) {
+                        var d = row.v_credit_order_reg_number;
+                        if(d.length>30){
+                            return d.substring(0,30)+"...";
+                        }
+                        return d;
+                    }
                 },{
+                    field: "v_loan_supervisor_id",
+                    title: [[#{label.loan.supervisor}]],
+                    width:270,
+                    template:function (row) {
+                        for (var i in supervisors){
+                            if(row.v_loan_supervisor_id==supervisors[i].id){
+                                if(supervisors[i].name.length>35){
+                                    return supervisors[i].name.substring(0,32)+"...";
+                                }
+                                else{
+                                    return supervisors[i].name;
+                                }
+                            }
+                        }
+                    }
+                },{
+                    field: "v_loan_type_id",
+                    title: [[#{label.loan.type}]],
+                    width:170,
+                    template:function (row) {
+                        for (var i in loanTypes){
+                            if(row.v_loan_type_id==loanTypes[i].id){
+                                if(loanTypes[i].name.length>20){
+                                    return loanTypes[i].name.substring(0,20)+"...";
+                                }
+                                else{
+                                    return loanTypes[i].name;
+                                }
+                            }
+                        }
+                    }
+                }, {
                     field: "v_loan_reg_date",
                     title: [[#{label.loan.regDate}]],
                     textAlign:'center',
@@ -466,8 +553,10 @@
                     }
                 }
             });
-            $('#m_form_region, #m_form_district,#m_form_finGroup').selectpicker();
+            $('#m_form_region, #m_form_district,#m_form_finGroup,#m_form_loan_type,#m_form_supervisor').selectpicker();
+
             var query = datatable.getDataSourceQuery();
+
             $('#debtor_name').on('keyup', function () {
                 datatable.search($(this).val(), 'debtorName');
             }).val(typeof query.debtorName !== 'undefined' ? query.debtorName: '');
@@ -495,6 +584,18 @@
             $('#m_form_finGroup').on('change', function () {
                 datatable.search($(this).val(), 'finGroupId');
             }).val(typeof query.finGroupId !== 'undefined' ? query.finGroupId: '');
+
+            $('#m_form_loan_type').on('change', function () {
+                datatable.search($(this).val(), 'loanTypeId');
+            }).val(typeof query.loanTypeId !== 'undefined' ? query.loanTypeId: '');
+
+            $('#m_form_supervisor').on('change', function () {
+                datatable.search($(this).val(), 'supervisorId');
+            }).val(typeof query.supervisorId!== 'undefined' ? query.supervisorId: '');
+
+            $('#credit_number').on('keyup', function () {
+                datatable.search($(this).val(), 'creditNumber');
+            }).val(typeof query.creditNumber!== 'undefined' ? query.creditNumber: '');
 
         };
         return {

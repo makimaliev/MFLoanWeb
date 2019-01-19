@@ -30,6 +30,8 @@ public class CollectionPhaseModel implements Comparable<CollectionPhaseModel> {
 
     private long procedureId;
 
+    private long departmentId;
+
     @Override
     public int compareTo(CollectionPhaseModel model)
     {
@@ -114,5 +116,13 @@ public class CollectionPhaseModel implements Comparable<CollectionPhaseModel> {
 
     public void setPhaseTypeName(String phaseTypeName) {
         this.phaseTypeName = phaseTypeName;
+    }
+
+    public long getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(long departmentId) {
+        this.departmentId = departmentId;
     }
 }

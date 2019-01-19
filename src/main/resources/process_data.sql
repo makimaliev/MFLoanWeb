@@ -2576,6 +2576,109 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `runUpdateRootLoan` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `runUpdateRootLoan`(IN parent_loan_id bigint)
+BEGIN
+
+    DECLARE v_finished INTEGER DEFAULT 0;
+    DECLARE loan_id BIGINT;
+    DECLARE loan_class INT;
+    DECLARE loan_state INT;
+
+    DEClARE tCursor CURSOR FOR
+
+      SELECT loan.id, loan.loan_class_id, loan.loanStateId
+      FROM loan loan
+      WHERE loan.parent_id = parent_loan_id
+      ORDER BY loan.id;
+
+    DECLARE CONTINUE HANDLER
+    FOR NOT FOUND SET v_finished = 1;
+
+    START TRANSACTION;
+
+    OPEN tCursor;
+
+    run_calculate: LOOP
+
+      FETCH tCursor INTO loan_id, loan_class, loan_state;
+
+      IF v_finished = 1 THEN
+        LEAVE run_calculate;
+      END IF;
+
+      #update parent loan amount
+      IF loan_class = 2 THEN
+        UPDATE loan l, (select SUM(tLoan.amount) as ss FROM loan tLoan WHERE tLoan.parent_id = loan_id AND tLoan.loanStateId != 3) t
+        SET l.amount = t.ss WHERE l.id = loan_id;
+      END IF;
+
+      CALL updateRootLoanPayment(loan_id);
+      CALL updateRootLoanPaymentSchedule(loan_id);
+      IF loan_class = 2 THEN
+        CALL updateTrancheeLoanData(loan_id);
+      END IF;
+
+      INSERT INTO loanSummary (version, loanAmount, loanSummaryType, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty, overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalFeePaid, totalInterestPaid, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalPenaltyPaid, totalPrincipalPaid, loanId, createDate)
+        SELECT 1,
+          SUM(p.loanAmount),
+          p.loanSummaryType,
+          p.onDate,
+          SUM(p.outstadingFee),
+          SUM(p.outstadingInterest),
+          SUM(p.outstadingPenalty),
+          SUM(p.outstadingPrincipal),
+          SUM(p.overdueFee),
+          SUM(p.overdueInterest),
+          SUM(p.overduePenalty),
+          SUM(p.overduePrincipal),
+          SUM(p.paidFee),
+          SUM(p.paidInterest),
+          SUM(p.paidPenalty),
+          SUM(p.paidPrincipal),
+          SUM(p.totalDisbursed),
+          SUM(p.totalFeePaid),
+          SUM(p.totalInterestPaid),
+          SUM(p.totalOutstanding),
+          SUM(p.totalOverdue),
+          SUM(p.totalPaid),
+          SUM(p.totalPaidKGS),
+          SUM(p.totalPenaltyPaid),
+          SUM(p.totalPrincipalPaid),
+          loan_id,
+          CURDATE()
+        FROM loanSummary p
+        WHERE p.loanId IN
+              (SELECT id
+               FROM loan
+               WHERE parent_id = loan_id
+              AND loanStateId != 3)
+        GROUP BY p.onDate
+        ORDER BY p.onDate;
+
+      #CALL updateRootLoanSummary(loan_id);
+
+    END LOOP run_calculate;
+
+    CLOSE tCursor;
+
+    COMMIT;
+
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `runUpdateRootLoans` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2716,6 +2819,116 @@ BEGIN
       select 'close' as type, loan.closeDate as onDate, id as loanId
       from loan loan
       where loan.closeDate is not null
+     ) tt;
+
+    DECLARE CONTINUE HANDLER
+    FOR NOT FOUND SET v_finished = 1;
+
+    OPEN tCursor;
+
+    get_data: LOOP
+
+      FETCH tCursor INTO b_type, b_onDate, b_loanId;
+
+      IF v_finished = 1 THEN
+        LEAVE get_data;
+      END IF;
+
+      #IF b_type = 'finish' OR b_type = 'close' THEN
+      IF b_type = 'close' THEN
+        #Nullify overdue and outstanding fields on loanDetailedSummary(no action if negative) and loanSummary tables
+        update loanDetailedSummary lds
+        set lds.interestOverdue = case when lds.interestOverdue >= 0 then 0 else lds.interestOverdue end,
+            lds.interestOutstanding = case when lds.interestOutstanding >= 0 then 0 else lds.interestOutstanding end,
+            lds.principalOverdue = case when lds.principalOverdue >= 0 then 0 else lds.principalOverdue end,
+            lds.principalOutstanding = case when lds.principalOutstanding >= 0 then 0 else lds.principalOutstanding end,
+            lds.penaltyOverdue = case when lds.penaltyOverdue >= 0 then 0 else lds.penaltyOverdue end,
+            lds.penaltyOutstanding = case when lds.penaltyOutstanding >= 0 then 0 else lds.penaltyOutstanding end
+        where lds.loanId = b_loanId
+        and lds.onDate >= b_onDate;
+
+        update loanSummary ls
+        set ls.overduePrincipal = 0,
+            ls.outstadingPrincipal = 0,
+            ls.overdueInterest = 0,
+            ls.outstadingInterest = 0,
+            ls.overduePenalty = 0,
+            ls.outstadingPenalty = 0,
+            ls.overdueFee = 0,
+            ls.outstadingFee = 0,
+            ls.totalOverdue = 0,
+            ls.totalOutstanding = 0
+        where ls.loanId = b_loanId
+        and ls.onDate >= b_onDate;
+
+      END IF;
+
+      /*
+      IF b_type = 'start' THEN
+        #Nullify overdue fields loanDetailedSummary(no action if negative) and loanSummary tables
+        update loanDetailedSummary lds
+        set lds.interestOverdue = case when lds.interestOverdue >= 0 then 0 else lds.interestOverdue end,
+            lds.principalOverdue = case when lds.principalOverdue >= 0 then 0 else lds.principalOverdue end,
+            lds.penaltyOverdue = case when lds.penaltyOverdue >= 0 then 0 else lds.penaltyOverdue end
+        where lds.loanId = b_loanId
+        and lds.onDate >= b_onDate;
+
+        update loanSummary ls
+        set ls.overduePrincipal = 0,
+            ls.overdueInterest = 0,
+            ls.overduePenalty = 0,
+            ls.overdueFee = 0
+        where ls.loanId = b_loanId
+        and ls.onDate >= b_onDate;
+      END IF;
+      */
+
+    END LOOP get_data;
+
+    CLOSE tCursor;
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `updateBankruptInfoForLoan` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBankruptInfoForLoan`(IN loan_id bigint)
+BEGIN
+
+    DECLARE b_loanId BIGINT;
+    DECLARE b_type TEXT;
+    DECLARE b_onDate DATE;
+
+    DECLARE v_finished INTEGER DEFAULT 0;
+
+    DEClARE tCursor CURSOR FOR
+
+      select tt.type,
+       tt.onDate,
+       tt.loanId
+      from
+     (
+     /*
+      select 'start' as type, bn.startedOnDate as onDate, bn.loanId
+      from bankrupt bn
+      union all
+      select 'finish' as type, bn.finishedOnDate as onDate, bn.loanId
+      from bankrupt bn
+      union all
+      */
+      select 'close' as type, loan.closeDate as onDate, id as loanId
+      from loan loan
+      where loan.closeDate is not null and loan.id = loan_id
      ) tt;
 
     DECLARE CONTINUE HANDLER
@@ -3491,4 +3704,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-07 20:39:38
+-- Dump completed on 2019-01-19 16:47:52

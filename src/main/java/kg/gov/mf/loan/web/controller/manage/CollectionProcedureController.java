@@ -8,6 +8,10 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.admin.org.model.Staff;
+import kg.gov.mf.loan.admin.org.service.StaffService;
+import kg.gov.mf.loan.admin.sys.model.User;
+import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
 import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
 import kg.gov.mf.loan.web.fetchModels.CollectionPhaseModel;
@@ -47,6 +51,12 @@ public class CollectionProcedureController {
 
 	@Autowired
 	CollectionPhaseService collectionPhaseService;
+
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	StaffService staffService;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -64,6 +74,15 @@ public class CollectionProcedureController {
         Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
         String jsonPhases = gson.toJson(getPhasesByProcId(procId));
         model.addAttribute("phases", jsonPhases);
+
+		User user = userService.findByUsername(Utils.getPrincipal());
+		Staff staff=staffService.findById(user.getStaff().getId());
+		try{
+			model.addAttribute("departmentId",staff.getDepartment().getId());
+		}
+		catch(Exception e){
+			model.addAttribute("departmentId",0);
+		}
 
 		model.addAttribute("debtorId", debtorId);
 		model.addAttribute("debtor", debtorService.getById(debtorId));
@@ -224,6 +243,12 @@ public class CollectionProcedureController {
             model.setPhaseTypeId(temp.getPhaseType().getId());
             model.setPhaseTypeName(temp.getPhaseType().getName());
             model.setProcedureId(temp.getCollectionProcedure().getId());
+            try{
+				model.setDepartmentId(temp.getDepartment_id());
+			}
+            catch(Exception e){
+            	model.setDepartmentId(Long.valueOf(0));
+			}
             result.add(model);
         }
 

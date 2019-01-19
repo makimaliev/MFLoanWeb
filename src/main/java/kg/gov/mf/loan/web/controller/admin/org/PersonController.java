@@ -225,7 +225,17 @@ public class PersonController {
 	public String viewPersonDetailsById(@PathVariable("id") long id, Model model) {
 
 		Person person = this.personService.findById(id);
-
+		Owner owner=this.ownerService.getByEntityId(person.getId(),"PERSON");
+		String hasDebtor="true";
+		try{
+			Debtor debtor=debtorService.getByOwnerId(owner.getId());
+			model.addAttribute("debtorId",debtor.getId());
+		}
+		catch (Exception e){
+			hasDebtor="false";
+			model.addAttribute("debtorId",0);
+		}
+		model.addAttribute("hasDebtor", hasDebtor);
 		model.addAttribute("person", person);
 //		model.addAttribute("positionList", this.positionService.findAll());
 		model.addAttribute("informationList", this.informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2, person.getId()));
