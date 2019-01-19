@@ -16,7 +16,7 @@
         <div th:class="*{documentState.ordinal() > 4} or ${cu == #authentication.name} ? 'col-0' : 'col-3'" th:hidden="*{documentState.ordinal() > 4}">
             <select class="s2s form-control" id="rrt_select" th:field="*{receiverResponsible.responsibleType}" style="width:100%">
                 <option value="1">Сотрудник</option>
-                <option value="2">Отдел</option>
+                <!--option value="2">Отдел</option-->
             </select>
         </div>
         <div th:class="*{documentState.ordinal() > 4} ? 'col-9' : 'col-6'">
@@ -27,15 +27,15 @@
                             th:text="${r.name}">Responsible</option>
                 </select>
             </div>
-            <div class="rdr" id="ri2" th:hidden="*{documentState.ordinal() > 4}">
+            <!--div class="rdr" id="ri2" th:hidden="*{documentState.ordinal() > 4}">
                 <select class="s2 form-control" th:field="*{receiverResponsible.departments}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/department">
                     <option th:each="r : *{receiverResponsible?.departments}"
                             th:value="${r.id}"
                             th:text="${r.name}">Responsible</option>
                 </select>
-            </div>
+            </div-->
             <label class="form-control" th:each="s : *{receiverResponsible.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 4}"> Staff </label>
-            <label class="form-control" th:each="d : *{receiverResponsible.departments}" th:text="${d.name}" th:if="*{documentState.ordinal() > 4}"> Staff </label>
+            <!--label class="form-control" th:each="d : *{receiverResponsible.departments}" th:text="${d.name}" th:if="*{documentState.ordinal() > 4}"> Staff </label-->
         </div>
     </div>
     <!-- Sender Responsible -->
@@ -141,6 +141,15 @@
             </div>
             <label class="form-control" th:each="s : *{senderResponsible.organizations}" th:text="${s.name}" th:if="*{documentState.ordinal() > 0}"> Staff </label>
             <label class="form-control" th:each="s : *{senderResponsible.person}" th:text="${s.name}" th:if="*{documentState.ordinal() > 0}"> Staff </label>
+        </div>
+    </div>
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span></span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control" th:field="*{senderResponsible.responsibleName}" autocomplete="off" th:type="*{documentState.ordinal() == 0} ? 'text' : 'hidden'">
+            <label class="form-control" th:text="*{senderResponsible.responsibleName}" th:if="*{documentState.ordinal() != 0}"> Title </label>
         </div>
     </div>
     <!-- Sender Registration Data -->
@@ -285,6 +294,15 @@
             </div>
             <label class="form-control" th:each="s : *{receiverResponsible.organizations}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
             <label class="form-control" th:each="s : *{receiverResponsible.person}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+        </div>
+    </div>
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span></span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control" th:field="*{receiverResponsible.responsibleName}" autocomplete="off" th:type="*{documentState.ordinal() == 0} ? 'text' : 'hidden'">
+            <label class="form-control" th:text="*{receiverResponsible.responsibleName}" th:if="*{documentState.ordinal() != 0}"> Title </label>
         </div>
     </div>
     <!-- Sender Responsible -->

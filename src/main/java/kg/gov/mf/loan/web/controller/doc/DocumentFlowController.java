@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -26,6 +27,14 @@ import java.util.*;
 @RequestMapping("/doc")
 public class DocumentFlowController extends BaseController {
 
+    class DataTableResult {
+
+        public int draw;
+        public int recordsTotal;
+        public int recordsFiltered;
+        public List<Document> data = new ArrayList<>();
+        public String error = "";
+    }
     class Result {
 
         public Long id;
@@ -344,7 +353,7 @@ public class DocumentFlowController extends BaseController {
         return "/doc/document/view";
     }
 
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/delete/{id}", method = RequestMethod.GET)
     public String delete(@PathVariable("id") Long id) {
 
         if(getUser() == null) return "/login/login";
@@ -432,7 +441,6 @@ public class DocumentFlowController extends BaseController {
             document.getUsers().add(getUser());
             document.setDocumentState(Transition.valueOf(action.toUpperCase()).state());
             document.getDispatchData().add(setDispatchData(State.DRAFT, ""));
-            document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), ""));
             documentService.add(document);
 
             if(action.equals("TORECONCILE"))
@@ -441,6 +449,7 @@ public class DocumentFlowController extends BaseController {
                 {
                     document.getUsers().add(getUser(staff));
                     addTask(State.PENDING.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), State.PENDING);
+                    document.getDispatchData().add(setDispatchData(State.PENDING, staff.getName()));
                 }
             }
 
@@ -448,6 +457,7 @@ public class DocumentFlowController extends BaseController {
             {
                 document.getUsers().add(getUser(staff));
                 addTask(State.REQUESTED.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null);
+                document.getDispatchData().add(setDispatchData(State.REQUESTED, staff.getName()));
             }
 
             document.setDocumentState(State.REQUESTED);
@@ -467,6 +477,7 @@ public class DocumentFlowController extends BaseController {
             {
                 //region Description
                 taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
+                document.getDispatchData().add(setDispatchData(State.RECONCILED, ""));
 
                 Map<String, String> vars = new HashMap<>();
                 vars.put("objectId", String.valueOf(document.getId()));
@@ -508,6 +519,7 @@ public class DocumentFlowController extends BaseController {
                         addTask("Документ на обработку", document.getId(), getUser(), document.getDocumentDueDate(), getUser(department), null);
                     }
                 }
+                document.getDispatchData().add(setDispatchData(State.APPROVED, description));
                 document.setDocumentState(State.APPROVED);
                 //endregion
             }
@@ -516,6 +528,7 @@ public class DocumentFlowController extends BaseController {
             {
                 taskService.completeTask(document.getId(), getUser(), State.REJECTED.text() + "<br>" + document.getComment());
                 addTask("Доработать", document.getId(), getUser(), document.getDocumentDueDate(), getUser(document.getOwner()), State.DRAFT);
+                document.getDispatchData().add(setDispatchData(State.REJECTED, description));
             }
 
             if (action.equals("ACCEPT"))
@@ -540,6 +553,8 @@ public class DocumentFlowController extends BaseController {
                         addTask("Назначить исполнителя", document.getId(), null, document.getDocumentDueDate(), getUser(department), State.ACCEPTED);
                     }
                 }
+
+                document.getDispatchData().add(setDispatchData(State.ACCEPTED, description));
                 document.setDocumentState(State.ACCEPTED);
                 //endregion
             }
@@ -558,6 +573,7 @@ public class DocumentFlowController extends BaseController {
                     staffSet.add(staff);
                     document.getUsers().add(getUser(staff));
                     addTask("На исполнение", document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), State.SENT);
+                    document.getDispatchData().add(setDispatchData(State.SENT, staff.getName()));
                 }
 
                 executor.setStaff(staffSet);
@@ -570,17 +586,18 @@ public class DocumentFlowController extends BaseController {
             {
                 taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
                 addTask("Завершить задачу", document.getId(),null, document.getDocumentDueDate(), getUser(), State.STARTED);
+                document.getDispatchData().add(setDispatchData(State.STARTED, ""));
             }
 
             if(action.equals("DONE"))
             {
                 taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
+                document.getDispatchData().add(setDispatchData(State.DONE, ""));
 
                 Map<String, String> vars = new HashMap<>();
                 vars.put("objectId", String.valueOf(document.getId()));
                 vars.put("status", "OPEN");
                 int taskCount = taskService.getTasks(vars).size();
-
 
                 if (action.equals("DONE") && taskCount == 0)
                 {
@@ -592,7 +609,6 @@ public class DocumentFlowController extends BaseController {
             // *********************************************************************************************************
             // *************************************** Add Dispatch Data ***********************************************
             // *********************************************************************************************************
-            document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), description));
 
             documentService.update(document);
         }
@@ -614,7 +630,7 @@ public class DocumentFlowController extends BaseController {
 
             if(!document.getTitle().isEmpty())
             {
-                description = description + "<br>№ Входящего документа и Дата МФКР : " + document.getTitle();
+                description = description + "<hr>№ Входящего документа и Дата МФКР : " + document.getTitle();
             }
 
             document.getDispatchData().add(setDispatchData(State.DRAFT, description));
@@ -729,12 +745,14 @@ public class DocumentFlowController extends BaseController {
                 for (Staff staff : document.getReconciler())
                 {
                     document.getUsers().add(getUser(staff));
+                    document.getDispatchData().add(setDispatchData(State.PENDING, staff.getName()));
                 }
             }
 
             for (Staff staff : document.getSenderResponsible().getStaff())
             {
                 document.getUsers().add(getUser(staff));
+                document.getDispatchData().add(setDispatchData(State.REQUESTED, staff.getName()));
             }
 
             document.setDocumentState(State.APPROVED);
@@ -744,8 +762,6 @@ public class DocumentFlowController extends BaseController {
                 document.getUsers().add(user);
                 addTask(Transition.REGISTER.text(), document.getId(), null, document.getDocumentDueDate(), user, State.APPROVED);
             }
-            document.getDispatchData().add(setDispatchData(State.PENDING, ""));
-            document.getDispatchData().add(setDispatchData(State.REQUESTED, ""));
             documentService.update(document);
 
         }
@@ -769,16 +785,16 @@ public class DocumentFlowController extends BaseController {
                     for (Staff staff : document.getReconciler())
                     {
                         document.getUsers().add(getUser(staff));
+                        document.getDispatchData().add(setDispatchData(State.RECONCILED, staff.getName()));
                     }
-                    document.getDispatchData().add(setDispatchData(State.RECONCILED, ""));
                 }
 
                 for (Staff staff : document.getSenderResponsible().getStaff())
                 {
                     document.getUsers().add(getUser(staff));
+                    document.getDispatchData().add(setDispatchData(State.APPROVED, staff.getName()));
                 }
 
-                document.getDispatchData().add(setDispatchData(State.APPROVED, ""));
                 document.setDocumentState(State.APPROVED);
 
                 for (User user : systemConstantService.getById(1).getOutgoingRegistrator())
@@ -828,7 +844,6 @@ public class DocumentFlowController extends BaseController {
                     document.getUsers().add(user);
                     addTask(Transition.DONE.text(), document.getId(), null, document.getDocumentDueDate(), user, null);
                 }
-                document.getDispatchData().add(setDispatchData(State.REGISTERED, ""));
                 //endregion
             }
 
@@ -936,6 +951,7 @@ public class DocumentFlowController extends BaseController {
     @RequestMapping("/data/user")
     @ResponseBody
     public List<Result> getUser(@RequestParam String name) {
+
         List<Result> data = new ArrayList<>();
 
         for(ChatUser chatUser : chatUserService.getAllByName(name))
@@ -943,5 +959,17 @@ public class DocumentFlowController extends BaseController {
             data.add(new Result(chatUser.getId(), chatUser.getName()));
         }
         return data;
+    }
+
+    @RequestMapping("/documents")
+    @ResponseBody
+    public DataTableResult getDocuments(HttpServletRequest request) {
+
+        DataTableResult dataTableResult = new DataTableResult();
+        dataTableResult.draw = 1;
+        dataTableResult.recordsTotal = documentService.list().size();
+        dataTableResult.data = documentService.list();
+
+        return dataTableResult;
     }
 }

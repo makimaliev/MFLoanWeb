@@ -27,6 +27,8 @@
         function onConnected() {
             stompClient.subscribe('/topic/public', onMessageReceived);
             stompClient.send("/app/chat.addUser", {}, JSON.stringify({sender: username, type: 'JOIN'}))
+            chatModalTitle.innerHTML = "Online"
+            messageInput.disabled = false;
         }
         function sendMessage(event) {
             var messageContent = messageInput.value.trim();
@@ -110,7 +112,10 @@
                 }
             }
         }
-        function onError() {}
+        function onError() {
+            messageInput.disabled = true;
+            chatModalTitle.innerHTML = "Offline"
+        }
         function notipy(t, m, r) {
 
             $.notify({
