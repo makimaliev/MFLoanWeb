@@ -29,7 +29,7 @@
                     <div class="m-portlet__body">
                         <form th:action="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phase.id}__/groupAndIndex/change}" th:object="${phase}" method="post" class="m-form m-form--fit m-form--label-align-right">
                             <input hidden="hidden" th:field="*{id}">
-                            <input id="valueOfSubIndex" hidden="hidden" th:field="*{docNumber}">
+                            <input id="valueOfSubIndex" hidden="hidden" th:field="*{sub_index_id}">
                             <div class="m-portlet__body">
                                 <div class="m-form__section">
                                     <div class="form-group m-form__group row">

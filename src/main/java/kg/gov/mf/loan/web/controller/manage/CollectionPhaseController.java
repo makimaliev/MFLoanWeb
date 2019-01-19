@@ -20,6 +20,8 @@ import kg.gov.mf.loan.manage.service.collection.*;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.process.LoanDetailedSummaryService;
 import kg.gov.mf.loan.manage.service.process.LoanSummaryService;
+import kg.gov.mf.loan.output.report.model.ReferenceView;
+import kg.gov.mf.loan.output.report.service.ReferenceViewService;
 import kg.gov.mf.loan.process.service.JobItemService;
 import kg.gov.mf.loan.web.fetchModels.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +99,9 @@ public class CollectionPhaseController {
 
 	@Autowired
 	UserService userService;
+
+	@Autowired
+	ReferenceViewService referenceViewService;
 
 	/** The entity manager. */
 	@PersistenceContext
@@ -577,29 +582,6 @@ public class CollectionPhaseController {
 		CollectionPhaseIndex collectionPhaseIndex=collectionPhaseIndexService.getById(Long.valueOf(1));
 		model.addAttribute("subIndex",collectionPhaseIndex.getCollectionPhaseSubIndices());
 
-//		HashMap<Long,List<Long>> subIndexMap=new HashMap<>();
-//		for (CollectionPhaseSubIndex sub1:collectionPhaseSubIndexService.list()){
-//			CollectionPhaseSubIndex sub=collectionPhaseSubIndexService.getById(sub1.getId());
-//			if(!subIndexMap.containsKey(sub.getCollectionPhaseIndex().getId())){
-//				List<Long> lis=Arrays.asList(sub.getId());
-////				lis=subIndexMap.get(sub.getCollectionPhaseIndex().getId());
-////				lis.add();
-//				subIndexMap.put(sub.getCollectionPhaseIndex().getId(),lis);
-//			}
-//			else{
-////					List<Long> lis=subIndexMap.get(sub.getCollectionPhaseIndex().getId());
-////					lis.add(sub.getId());
-//				List<Long> list;
-//				list=subIndexMap.get(sub.getCollectionPhaseIndex().getId());
-//				list.add(sub.getId());
-//				subIndexMap.get(sub.getCollectionPhaseIndex().getId()).clear();
-//				subIndexMap.put(sub.getCollectionPhaseIndex().getId(),list);
-////				List<Long> lo=;
-////				lo.add(sub.getId());
-//			}
-//		}
-//		model.addAttribute("subIndeces",subIndexMap);
-
 		return "/manage/debtor/collectionprocedure/collectionphase/changeGroupIndex";
 	}
 
@@ -610,8 +592,33 @@ public class CollectionPhaseController {
 		collectionPhase1.setCollectionPhaseGroup(collectionPhaseGroupService.getById(collectionPhase.getCollectionPhaseGroup().getId()));
 		collectionPhase1.setCollectionPhaseIndex(collectionPhaseIndexService.getById(collectionPhase.getCollectionPhaseIndex().getId()));
 		Set<CollectionPhaseSubIndex> lost= new HashSet<CollectionPhaseSubIndex>();
-		lost.add(collectionPhaseSubIndexService.getById(Long.valueOf(collectionPhase.getDocNumber())));
+		collectionPhase1.setSub_index_id(collectionPhase.getSub_index_id());
+		lost.add(collectionPhaseSubIndexService.getById(Long.valueOf(collectionPhase.getSub_index_id())));
 		collectionPhaseIndexService.getById(collectionPhase.getCollectionPhaseIndex().getId()).setCollectionPhaseSubIndices(lost);
+		collectionPhaseService.update(collectionPhase1);
+
+		return "redirect:" + "/manage/debtor/{debtorId}/collectionprocedure/{procId}/view";
+	}
+
+	@RequestMapping(value="/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/department/change", method=RequestMethod.GET)
+	public String  changeDepartment(ModelMap model,@PathVariable("debtorId") Long debtorId,@PathVariable("procId") Long procId,@PathVariable("phaseId") Long phaseId){
+
+		CollectionPhase collectionPhase=collectionPhaseService.getById(phaseId);
+		model.addAttribute("phase",collectionPhase);
+		model.addAttribute("debtorId",debtorId);
+		model.addAttribute("procId",procId);
+
+		List<ReferenceView> departments=referenceViewService.findByParameter("department");
+		model.addAttribute("departments",departments);
+
+		return "/manage/debtor/collectionprocedure/collectionphase/changeDepartment";
+	}
+
+	@RequestMapping(value="/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/department/change", method=RequestMethod.POST)
+	public String departmentChange(@PathVariable("phaseId") Long phaseId,@PathVariable("debtorId") Long debtorId,@PathVariable("procId") Long procId, CollectionPhase collectionPhase){
+
+		CollectionPhase collectionPhase1=collectionPhaseService.getById(phaseId);
+		collectionPhase1.setDepartment_id(collectionPhase.getDepartment_id());
 		collectionPhaseService.update(collectionPhase1);
 
 		return "redirect:" + "/manage/debtor/{debtorId}/collectionprocedure/{procId}/view";

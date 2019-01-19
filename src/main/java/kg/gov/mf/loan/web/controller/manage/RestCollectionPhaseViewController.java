@@ -84,6 +84,48 @@ public class RestCollectionPhaseViewController {
             parameters.put("r=inv_cph_phaseStatusId",statuses);
         }
 
+        boolean searchByFinGroup= datatable.containsKey("datatable[query][finGroupId]");
+        if (searchByFinGroup){
+            String searchStr = datatable.get("datatable[query][finGroupId]");
+            List<String> searchStrs=Arrays.asList(searchStr);
+            parameters.put("r=inv_loan_fin_group_id",searchStrs);
+        }
+
+        boolean searchByIndex= datatable.containsKey("datatable[query][indexId]");
+        if (searchByIndex){
+            String searchStr = datatable.get("datatable[query][indexId]");
+            List<String> searchStrs=Arrays.asList(searchStr);
+            parameters.put("r=inv_cph_index_id",searchStrs);
+        }
+
+        boolean searchByGroup= datatable.containsKey("datatable[query][groupId]");
+        if (searchByGroup){
+            String searchStr = datatable.get("datatable[query][groupId]");
+            List<String> searchStrs=Arrays.asList(searchStr);
+            parameters.put("r=inv_cph_group_id",searchStrs);
+        }
+        boolean searchBySubIndex= datatable.containsKey("datatable[query][subIndexId]");
+        if (searchBySubIndex){
+            String searchStr = datatable.get("datatable[query][subIndexId]");
+            List<String> searchStrs=Arrays.asList(searchStr);
+            parameters.put("r=inv_cph_sub_index_id",searchStrs);
+        }
+
+        boolean searchByDocNumber= datatable.containsKey("datatable[query][docNumber]");
+        if(searchByDocNumber){
+            String searchStr = datatable.get("datatable[query][docNumber]");
+            List<String> searchStrs= Arrays.asList(searchStr);
+            parameters.put("r=ycv_cph_doc_number",searchStrs);
+        }
+
+        boolean searchByResultDocNumber= datatable.containsKey("datatable[query][resultDocNumber]");
+        if(searchByResultDocNumber){
+            String searchStr = datatable.get("datatable[query][resultDocNumber]");
+            List<String> searchStrs= Arrays.asList(searchStr);
+            parameters.put("r=ycv_cph_result_doc_number",searchStrs);
+        }
+
+
         List<CollectionPhaseView> all=collectionPhaseViewService.findByParameter(parameters,offset,perPage,sortStr,sortField);
 
         return all;

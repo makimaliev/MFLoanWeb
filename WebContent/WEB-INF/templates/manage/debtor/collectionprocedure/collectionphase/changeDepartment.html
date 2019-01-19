@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{label.collection.procedure.group}">MFLoan | Credit Orders</title>
+    <div th:replace="fragments/header :: header-css" />
+</head>
+
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <div class="m-content">
+                <div class="m-portlet m-portlet--mobile">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text" th:text="#{label.collection.phase.department}">Collection Procedure Types</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-portlet__body">
+                        <form th:action="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phase.id}__/department/change}" th:object="${phase}" method="post" class="m-form m-form--fit m-form--label-align-right">
+
+                            <input hidden="hidden" th:field="*{id}">
+                            <input hidden="hidden" id="departmentId" th:field="*{department_id}">
+
+                            <div class="m-portlet__body">
+                                <div class="m-form__section">
+                                    <div class="form-group m-form__group row">
+                                        <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.phase.department.name}">
+                                            Agreement number <span class="m--font-danger">*</span>
+                                        </label>
+                                        <div class="col-lg-4 col-md-9 col-sm-12">
+                                            <select class="form-control m-bootstrap-select m_selectpicker"  th:field="*{department_id}" id="newDepartmentId">
+                                                <option th:each="department : ${departments}"
+                                                        th:value="${department.id}"
+                                                        th:selected="${department.id}==${phase.department_id}"
+                                                        th:text="${department.name}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-portlet__foot m-portlet__foot--fit">
+                                <div class="m-form__actions m-form__actions">
+                                    <div class="row">
+                                        <div class="col-lg-4"></div>
+                                        <div class="col-lg-6">
+                                            <button sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLECTIONPHASE')" type="submit" class="btn btn-primary" th:text="#{label.button.save}">
+                                                Save
+                                            </button>
+                                            <button onclick="window.history.back()" type="button" class="btn btn-secondary" th:text="#{label.button.cancel}">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div th:replace="layout/footer"/>
+</div>
+<div th:replace="fragments/footer :: footer-js"></div>
+
+<script th:inline="javascript">
+    $('.m_selectpicker').selectpicker('refresh');
+    $("#newDepartmentId").on('change',function () {
+        $("#departmentId").val($("#newDepartmentId").val())
+    });
+</script>
+</body>
+</html>

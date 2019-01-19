@@ -68,6 +68,13 @@ var DatatableDataLocalPhases = function () {
                 template: function (row) {
 
                     var result = '';
+                    if(hasRoleAdmin){
+                        result = result + '\
+                                <a sec:authorize="hasAnyAuthority(ADMIN)" href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + procId + '/collectionphase/' + row.id +'/department/change" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Изменить отделение">\
+                                    <i class="fa fa-building"></i>\
+                                </a>\
+						    ';
+                    }
 
                     if(row.phaseTypeId==1){
                         if((departmentId==row.departmentId || row.departmentId==0) && departmentId!=0){

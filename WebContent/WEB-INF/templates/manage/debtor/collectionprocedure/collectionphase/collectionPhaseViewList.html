@@ -62,30 +62,13 @@
                             <div class="">
                                 <div class="form-group m-form__group row align-items-center" style="margin-left: 10px">
                                     <div class="col-md-3">
-                                        <div class="m-input-icon m-input-icon--left">
+                                        <div class="m-input-icon m-input-icon--left mb-1">
                                             <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{v_debtor_name}" id="debtor_name">
                                             <span class="m-input-icon__icon m-input-icon__icon--left">
                                                 <span>
                                                     <i class="la la-search"></i>
                                                 </span>
                                             </span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="m-form__group m-form__group--inline">
-                                            <div class="m-form__label">
-                                                <label th:text="#{label.collection.procedure.status}">
-                                                    Collection procedure status :
-                                                </label>
-                                            </div>
-                                            <div class="m-form__control">
-                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="procedure_status">
-                                                    <option value="">
-                                                        Все
-                                                    </option>
-                                                    <option th:each="procedure: ${procedures}" th:value="${procedure.id}" th:text="${procedure.name}"></option>
-                                                </select>
-                                            </div>
                                         </div>
                                         <div class="m-form__group m-form__group--inline">
                                             <div class="m-form__label">
@@ -102,8 +85,56 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="m-form__group m-form__group--inline">
+                                            <div class="m-form__label">
+                                                <label th:text="#{label.loan.finGroup}">
+                                                    Collection procedure status :
+                                                </label>
+                                            </div>
+                                            <div class="m-form__control">
+                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="fin_group">
+                                                    <option value="">
+                                                        Все
+                                                    </option>
+                                                    <option th:each="finGroup: ${finGroups}" th:value="${finGroup.id}" th:text="${finGroup.name}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
+                                        <div class="m-input-icon m-input-icon--left mb-1">
+                                            <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.doc.number}" id="doc_number">
+                                            <span class="m-input-icon__icon m-input-icon__icon--left">
+                                                <span>
+                                                    <i class="la la-search"></i>
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="m-input-icon m-input-icon--left mb-1">
+                                            <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.result.doc.number}" id="result_doc_number">
+                                            <span class="m-input-icon__icon m-input-icon__icon--left">
+                                                <span>
+                                                    <i class="la la-search"></i>
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="m-form__group m-form__group--inline">
+                                            <div class="m-form__label">
+                                                <label th:text="#{label.collection.procedure.status}">
+                                                    Collection procedure status :
+                                                </label>
+                                            </div>
+                                            <div class="m-form__control">
+                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="procedure_status">
+                                                    <option value="">
+                                                        Все
+                                                    </option>
+                                                    <option th:each="procedure: ${procedures}" th:value="${procedure.id}" th:text="${procedure.name}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
                                         <div class="m-form__group m-form__group--inline" style="margin-bottom: 5px">
                                             <div class="m-form__label">
                                                 <label>
@@ -135,7 +166,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <div class="input-group date m_datetimepicker" id="from_datepicker" style="margin-bottom: 5px">
                                             <input  class="form-control m-input" th:placeholder="#{label.fromDate}" name="date" />
                                             <span class="input-group-addon">
@@ -147,6 +178,53 @@
                                             <span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="m-form__group m-form__group--inline" style="margin-bottom: 5px">
+                                            <div class="m-form__label">
+                                                <label>
+                                                    Группа:
+                                                </label>
+                                            </div>
+                                            <div class="m-form__control">
+                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="phase_group">
+                                                    <option value="">
+                                                        Все
+                                                    </option>
+                                                    <option th:each="group: ${collectionPhaseGroups}" th:value="${group.id}" th:text="${group.name}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="m-form__group m-form__group--inline">
+                                            <div class="m-form__label">
+                                                <label>
+                                                    Индекс:
+                                                </label>
+                                            </div>
+                                            <div class="m-form__control">
+                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="phase_index">
+                                                    <option value="">
+                                                        Все
+                                                    </option>
+                                                    <option th:each="index : ${collectionPhaseIndexes}" th:value="${index.id}" th:text="${index.name}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="m-form__group m-form__group--inline">
+                                            <div class="m-form__label">
+                                                <label th:text="#{label.collection.phase.sub.index}">
+                                                    Collection procedure status :
+                                                </label>
+                                            </div>
+                                            <div class="m-form__control">
+                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="sub_index">
+                                                    <option value="">
+                                                        Все
+                                                    </option>
+                                                    <option th:each="subIndex: ${collectionPhaseSubIndexes}" th:value="${subIndex.id}" th:text="${subIndex.name}"></option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -368,7 +446,7 @@
                 }
             });
 
-            $('#m_form_region, #m_form_district,#phase_type,#procedure_status').selectpicker();
+            $('#m_form_region, #m_form_district,#phase_type,#procedure_status,#phase_group,#phase_index,#fin_group,#sub_index').selectpicker();
 
             var query = datatable.getDataSourceQuery();
             $('#debtor_name').on('keyup', function () {
@@ -402,6 +480,30 @@
             $('#procedure_status').on('change', function () {
                 datatable.search($(this).val(), 'statusId');
             }).val(typeof query.statusId!== 'undefined' ? query.statusId: '');
+
+            $('#phase_group').on('change', function () {
+                datatable.search($(this).val(), 'groupId');
+            }).val(typeof query.groupId!== 'undefined' ? query.groupId: '');
+
+            $('#phase_index').on('change', function () {
+                datatable.search($(this).val(), 'indexId');
+            }).val(typeof query.indexId!== 'undefined' ? query.indexId: '');
+
+            $('#fin_group').on('change', function () {
+                datatable.search($(this).val(), 'finGroupId');
+            }).val(typeof query.finGroupId!== 'undefined' ? query.finGroupId: '');
+
+            $('#sub_index').on('change', function () {
+                datatable.search($(this).val(), 'subIndexId');
+            }).val(typeof query.subIndexId!== 'undefined' ? query.subIndexId: '');
+
+            $('#doc_number').on('keyup', function () {
+                datatable.search($(this).val(), 'docNumber');
+            }).val(typeof query.docNumber!== 'undefined' ? query.docNumber: '');
+
+            $('#result_doc_number').on('keyup', function () {
+                datatable.search($(this).val(), 'resultDocNumber');
+            }).val(typeof query.resultDocNumber !== 'undefined' ? query.resultDocNumber: '');
 
         };
 

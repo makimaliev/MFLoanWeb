@@ -262,6 +262,7 @@ public class DebtorController {
 		if(debtor.getId() == 0){
 			Owner owner = ownerRepository.findOne(debtor.getOwner().getId());
 			debtor.setOwner(owner);
+			debtor.setAddress_id(owner.getAddress().getId());
 			debtor.setName(owner.getName());
 			if(owner.getOwnerType().equals(OwnerType.ORGANIZATION))
 				debtor.setOrgForm(formService.getById(1L));
