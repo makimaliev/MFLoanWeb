@@ -1309,6 +1309,7 @@ BEGIN
     DECLARE collIntPayment DOUBLE;
     DECLARE totalCollIntPayment DOUBLE DEFAULT 0;
     DECLARE intOverdue DOUBLE DEFAULT 0;
+    DECLARE real_intOverdue DOUBLE DEFAULT 0;
     DECLARE penAccrued DOUBLE DEFAULT 0;
     DECLARE totalPenAccrued DOUBLE DEFAULT 0;
     DECLARE penPaid DOUBLE;
@@ -2045,6 +2046,12 @@ BEGIN
       SET totalIntPayment = totalIntPayment + intPayment;
       SET intOverdue = totalIntPayment + totalCollIntPayment - totalIntPaid - total_wo_int;
 
+      #loan with 1107 id case
+      set real_intOverdue = intOverdue;
+      if loan_id = 1107 then
+        set intOverdue = intOverdue*2.0/3.0;
+      end if;
+
 
 #       SET penOverdue = intPaid;
 
@@ -2149,6 +2156,8 @@ BEGIN
         END IF;
 
       END IF;
+
+      set intOverdue = real_intOverdue;
 
       IF flag = FALSE THEN
         SET flag = TRUE;
@@ -3725,10 +3734,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-19 17:13:43
-CREATE TABLE if not exists ints ( i tinyint(4) );
-
-TRUNCATE ints;
-
-insert into ints (i)
-values (0),(1),(2),(3),(4),(5),(6),(7),(8),(9);
+-- Dump completed on 2019-01-20 13:25:06
