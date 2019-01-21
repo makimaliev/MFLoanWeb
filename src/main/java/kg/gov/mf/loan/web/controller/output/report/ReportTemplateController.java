@@ -21,7 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 public class ReportTemplateController {
@@ -193,7 +195,13 @@ public class ReportTemplateController {
 		model.addAttribute("userList", modelReport.getUsers());
 
 		model.addAttribute("reportTemplateGenerationParameters", modelReportTemplate.getGenerationParameters());
-		model.addAttribute("reportTemplateFilterParameters", modelReportTemplate.getFilterParameters());
+
+		List<Long> filterParameterIds=new ArrayList<>();
+		for (FilterParameter filterParameter:modelReportTemplate.getFilterParameters()){
+			filterParameterIds.add(filterParameter.getId());
+		}
+
+		model.addAttribute("reportTemplateFilterParameters",filterParameterIds );
 		model.addAttribute("reportTemplateContentParameters", modelReportTemplate.getContentParameters());
 		model.addAttribute("reportTemplateOutputParameters", modelReportTemplate.getOutputParameters());
 

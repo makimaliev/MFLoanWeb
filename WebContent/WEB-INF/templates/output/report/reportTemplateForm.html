@@ -208,7 +208,7 @@
 					<option th:each="filterParameterInList : ${filterParameterList}"
 							th:value="${filterParameterInList.id}"
 							th:text="${filterParameterInList.name}"
-							th:selected="${reportTemplateFilterParameters.contains(filterParameterInList)}"></option>
+							th:selected="${reportTemplateFilterParameters.contains(filterParameterInList.id)}"></option>
 				</select>
 			</div>
 		</div>

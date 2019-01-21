@@ -218,8 +218,11 @@ public class ReportController {
 		model.addAttribute("contentParameterList", this.contentParameterService.findAll());
 		model.addAttribute("outputParameterList", this.outputParameterService.findAll());
 
-
-		model.addAttribute("reportFilterParameters", modelReport.getFilterParameters());
+		List<Long> filterParameterIds=new ArrayList<>();
+		for (FilterParameter filterParameter:modelReport.getFilterParameters()){
+			filterParameterIds.add(filterParameter.getId());
+		}
+		model.addAttribute("reportFilterParameters", filterParameterIds);
 		model.addAttribute("reportContentParameters", modelReport.getContentParameters());
 		model.addAttribute("reportGroupTypes", modelReport.getGroupTypes());
 		model.addAttribute("reportOutputParameters", modelReport.getOutputParameters());
