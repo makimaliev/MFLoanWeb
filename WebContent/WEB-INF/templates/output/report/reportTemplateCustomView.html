@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <title>	Отчет</title>
+
+    <div  th:replace="fragments/header :: header-css" />
+    <link th:href="@{/assets/global/plugins/jstree/dist/themes/default/style.min.css}" rel="stylesheet" type="text/css" />
+</head>
+<!-- end::Head -->
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <div class="m-content">
+                <div class="m-portlet m-portlet--mobile">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text">Отчет</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-portlet__body">
+
+                        <!--REPORT TEMPLATE INFORMATION -->
+                        <div class="row mb-5">
+
+                            <div class="col-6" th:object="${reportTemplateModel}">
+                                <div class="form-group m-form__group row">
+                                    <label class="col-6">
+                                        <span th:text="#{label.information.date}"></span>
+                                    </label>
+                                    <div class="col-6">
+                                        <div class="input-group date m_datetimepicker_6">
+                                            <input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" id="onDate" name="onDate" th:field="*{onDate}"/>
+                                            <span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group m-form__group row" th:if="${showAdditionalDate=='true'}">
+                                    <label class="col-6">
+                                        <span th:text="#{label.information.date2}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-6">
+                                        <div class="input-group date m_datetimepicker_6">
+                                            <input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" id="additionalDate" name="additionalDate" th:value="${additionalDate}"/>
+                                            <span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group m-form__group row">
+                                    <label class="col-4">
+                                        <span th:text="#{label.reportTemplate.groupType1}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-2">
+                                        <input class="m-checkbox" type="checkbox" id="showGroup1id" name="showGroup1" th:field="*{showGroup1}">
+                                    </div>
+                                    <div class="col-6">
+                                        <select id="groupType1select" th:field="*{groupType1}" class="form-control m-bootstrap-select m_selectpicker">
+                                            <option th:value="null">-</option>
+                                            <option th:each="groupType1InList : ${groupTypeList}"
+                                                    th:value="${{groupType1InList}}"
+                                                    th:text="${groupType1InList.name}">groupType</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="form-group m-form__group row">
+                                    <label class="col-4">
+                                        <span th:text="#{label.reportTemplate.groupType2}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-2">
+                                        <input type="checkbox" id="showGroup2" name="showGroup2" th:field="*{showGroup2}">
+                                    </div>
+                                    <div class="col-6">
+                                        <select id="groupType2select" th:field="*{groupType2}" class="form-control m-bootstrap-select m_selectpicker">
+                                            <option th:value="null">-</option>
+                                            <option th:each="groupType2InList : ${groupTypeList}"
+                                                    th:value="${{groupType2InList}}"
+                                                    th:text="${groupType2InList.name}">groupType</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="form-group m-form__group row">
+                                    <label class="col-4">
+                                        <span th:text="#{label.reportTemplate.groupType3}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-2">
+                                        <input type="checkbox" id="showGroup3" name="showGroup3" th:field="*{showGroup3}">
+                                    </div>
+                                    <div class="col-6">
+                                        <select id="groupType3select" th:field="*{groupType3}" class="form-control m-bootstrap-select m_selectpicker" disabled="disabled">
+                                            <option th:value="null">-</option>
+                                            <option th:each="groupType3InList : ${groupTypeList}"
+                                                    th:value="${{groupType3InList}}"
+                                                    th:text="${groupType3InList.name}">groupType</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="form-group m-form__group row">
+                                    <label class="col-4">
+                                        <span th:text="#{label.reportTemplate.groupType4}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-2">
+                                        <input type="checkbox" id="showGroup4" name="showGroup4" th:field="*{showGroup4}">
+                                    </div>
+                                    <div class="col-6">
+                                        <select id="groupType4select" th:field="*{groupType4}" class="form-control m-bootstrap-select m_selectpicker" disabled="disabled">
+                                            <option th:value="null">-</option>
+                                            <option th:each="groupType4InList : ${groupTypeList}"
+                                                    th:value="${{groupType4InList}}"
+                                                    th:text="${groupType4InList.name}">groupType</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="form-group m-form__group row">
+                                    <label class="col-4">
+                                        <span th:text="#{label.reportTemplate.groupType5}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-2">
+                                        <input type="checkbox" id="showGroup5" name="showGroup5" th:field="*{showGroup5}">
+                                    </div>
+                                    <div class="col-6">
+                                        <select id="groupType5select" th:field="*{groupType5}" class="form-control m-bootstrap-select m_selectpicker" disabled="disabled">
+                                            <option th:value="null">-</option>
+                                            <option th:each="groupType5InList : ${groupTypeList}"
+                                                    th:value="${{groupType5InList}}"
+                                                    th:text="${groupType5InList.name}">groupType</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="form-group m-form__group row">
+                                    <label class="col-4">
+                                        <span th:text="#{label.reportTemplate.groupType6}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-2">
+                                        <input type="checkbox" id="showGroup6" name="showGroup6" th:field="*{showGroup6}">
+                                    </div>
+                                    <div class="col-6">
+                                        <select id="groupType6select" th:field="*{groupType6}" class="form-control m-bootstrap-select m_selectpicker" disabled="disabled">
+                                            <option th:value="null">-</option>
+                                            <option th:each="groupType6InList : ${groupTypeList}"
+                                                    th:value="${{groupType6InList}}"
+                                                    th:text="${groupType6InList.name}">groupType</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!--FILTER TREE -->
+                            <div class="col-6">
+                                <div class="form-group m-form__group row">
+                                    <div id="jsTree1"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-group m-form__group row" th:each="compareParameterModelInList, iterator: ${compareParametersModels}">
+
+                                <input hidden="hidden" type="text" class="col-4" th:id="'fieldName_' + ${iterator.index}" name="fieldName" th:value="${compareParameterModelInList.fieldName}"  disabled="disabled">
+                                <label class="col-4" th:text="#{${compareParameterModelInList.fieldName}}"></label>
+                                <select th:id="'comparator_' + ${iterator.index}" th:value="${compareParameterModelInList.comparator}"  class="selectpicker" disabled="disabled">
+                                    <option th:each="comparatorInList : ${T(kg.gov.mf.loan.output.report.model.Comparator).values()}"
+                                            th:value="${comparatorInList}"
+                                            th:text="#{${comparatorInList}}"
+                                            th:selected="${compareParameterModelInList.comparator==comparatorInList.name()}"
+                                    >Region</option>
+                                </select>
+
+
+                                <div th:if="${compareParameterModelInList.getComparedValueType()==1}">
+                                    <input type="text" th:id="'comparedValue_' + ${iterator.index}" name="comparedValue" th:value="${compareParameterModelInList.comparedValue}" class="form-control" >
+                                </div>
+
+
+
+
+
+                                <div class="input-group date m_datetimepicker_6" th:if="${compareParameterModelInList.getComparedValueType()==2}">
+                                    <input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:id="'comparedDate_' + ${iterator.index}" name="comparedDate" th:value="${#dates.format(compareParameterModelInList.comparedDate,'dd.MM.yyy')}"/>
+                                    <span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-group m-form__group row">
+                                <button type="button" class="btn m-btn--square  btn-primary" id="submitBtn" th:text="#{label.table.generate}">SUBMIT</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END CONTENT BODY -->
+    <!-- begin::Footer -->
+    <div th:replace="layout/footer"/>
+    <!-- end::Footer -->
+</div>
+<div class="m-scroll-top m-scroll-top--skin-top" data-toggle="m-scroll-top" data-scroll-offset="500" data-scroll-speed="300">
+    <i class="la la-arrow-up"></i>
+</div>
+<div th:replace="fragments/footer :: footer-js"/>
+
+
+<script th:src="@{/assets/global/plugins/jstree/dist/jstree.min.js}" type="text/javascript"></script>
+<script th:src="@{/assets/global/plugins/jstree/dist/jstree.js}" type="text/javascript"></script>
+<!--<script th:src="@{/assets/global/plugins/jstree/dist/libs/jquery.js}" type="text/javascript"></script>-->
+</body>
+</html>
+
+<script>
+    $('.m_selectpicker').selectpicker('refresh');
+
+    $('.m_datetimepicker_6').datetimepicker({
+        format: "dd.mm.yyyy",
+        todayHighlight: true,
+        autoclose: true,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        pickerPosition: 'bottom-center'
+    });
+</script>
+
+<script th:inline="javascript">
+    var jsonJsTree = /*[[${jsonJsTree}]]*/ [];
+    var id = /*[[${id}]]*/ [];
+    var selecteds=[];
+    // $('#jsTree1').jstree({ 'core' : {
+    //         'data' :jsonJsTree
+    //     } });
+
+    $(function() {
+        // $("#jsTree1").jstree({
+        //     "plugins" : [ "checkbox" ]});
+
+        $('#jsTree1').jstree({
+            'core' : {
+                'data': {
+                    "url": "/api/reportTemplate/jsTree/",
+                    'data':{'id':id},
+                    "dataType": "json" // needed only if you do not supply JSON headers
+                },
+            },
+            "checkbox" : {
+                "tie_selection" : false
+            },
+            "plugins" : [ "checkbox"]
+
+        });
+        $('#jsTree1').on('click',function () {
+            selecteds=($("#jsTree1").jstree("get_checked"));
+            // console.log(selecteds);
+        });
+
+        $("#submitBtn").on('click',function () {
+
+
+            // console.log(selecteds)
+            // $.ajax({
+            //     type:'post',
+            //     data:{"selecteds":selecteds.toString()},
+            //     url:"/api/report/"+id+"/filterParameter"
+            // });
+
+            var params = "";
+            params=params+"&onDate="+$("#onDate").val();
+            params=params+"&groupType1Select="+$("#groupType1select").val();
+            params=params+"&showGroup1="+$("#showGroup1id").prop('checked');
+
+            params=params+"&groupType2Select="+$("#groupType2select").val();
+            params=params+"&showGroup2="+$("#showGroup2").prop('checked');
+
+            params=params+"&groupType3Select="+$("#groupType3select").val();
+            params=params+"&showGroup3="+$("#showGroup3").prop('checked');
+
+            params=params+"&groupType4Select="+$("#groupType4select").val();
+            params=params+"&showGroup4="+$("#showGroup4").prop('checked');
+
+            params=params+"&groupType5Select="+$("#groupType5select").val();
+            params=params+"&showGroup5="+$("#showGroup5").prop('checked');
+
+            params=params+"&groupType6Select="+$("#groupType6select").val();
+            params=params+"&showGroup6="+$("#showGroup6").prop('checked');
+
+
+
+
+            var Count = 0;
+            var Obj   = document.getElementById("fieldName_"+Count);
+
+            while(Obj!=null)
+            {
+                params += '&fieldName='+document.getElementById("fieldName_"+Count).value;
+                params += '&comparator='+document.getElementById("comparator_"+Count).value;
+
+                var comparedValue = document.getElementById("comparedValue_"+Count);
+
+                if(comparedValue!=null)
+                {
+                    params += '&comparedValue='+document.getElementById("comparedValue_"+Count).value;
+                }
+
+                var comparedDate = document.getElementById("comparedDate_"+Count);
+                if(comparedDate!=null)
+                {
+                    params += '&comparedDate='+document.getElementById("comparedDate_"+Count).value;
+                }
+
+                Count++;
+                Obj   = document.getElementById("fieldName_"+Count);
+            }
+
+            window.location.href = "/api/reportTemplate/"+id+"/filterParameter"+"?selecteds="+selecteds.toString()+params;
+
+
+
+        });
+    });
+</script>
+
+
+
