@@ -313,7 +313,7 @@
         </label>
         <div class="col-9">
             <div th:hidden="*{documentState.ordinal() > 1}">
-                <select class="s2 form-control" th:field="*{senderResponsible.staff}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/staff">
+                <select class="s2 form-control" th:field="*{senderResponsible.staff}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/staff" required>
                     <option th:each="r : *{senderResponsible?.staff}"
                             th:value="${r.id}"
                             th:text="${r.name}">Responsible</option>
@@ -328,7 +328,7 @@
             <span> Относительно : </span>
         </label>
         <div class="col-sm-9">
-            <input class="form-control m-input" required th:field="*{title}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'">
+            <input class="form-control m-input" th:field="*{title}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'" required>
             <label class="form-control" th:text="*{title}" th:if="*{documentState.ordinal() > 1}"> Title </label>
         </div>
     </div>
@@ -347,7 +347,7 @@
             <span th:utext="|#{label.document.pageIndex} : |"> Номер бланка : </span>
         </label>
         <div class="col-sm-9">
-            <input class="form-control m-input" th:field="*{indexNo}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'number' : 'hidden'">
+            <input class="form-control m-input" th:field="*{indexNo}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'">
             <label class="form-control" th:text="*{indexNo}" th:if="*{documentState.ordinal() > 1}"> Title </label>
         </div>
     </div>
@@ -384,6 +384,24 @@
             <textarea class="form-control" rows="5" th:field="*{comment}" value=" "></textarea>
         </div>
     </div>
+    <!-- Document Link -->
+    <!--div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Ссылка на документ : </span>
+        </label>
+        <div class="col-9" id="documentList">
+            <select class="form-control" th:field="*{documentLinks}" multiple="multiple" style="width: 100%">
+                <option th:each="d : ${mydocs}"
+                        th:value="${d.id}"
+                        th:text="${d.documentSubType.name} + ' № ' + ${d.senderRegisteredNumber}">Responsible</option>
+            </select>
+            <table class="table table-bordered table-hover">
+                <tr th:if="*{not #lists.isEmpty(documentLinks)}" th:each="docs : *{documentLinks}">
+                    <td><a th:href="@{/doc/view/__${docs}__}"><label th:text="${mydocs[__${docs}__].title}"></label></a></td>
+                </tr>
+            </table>
+        </div>
+    </div-->
 </th:block>
 </body>
 </html>

@@ -26,7 +26,7 @@
                         <div class="m-portlet__head">
                             <div class="m-portlet__head-caption">
                                 <div class="m-portlet__head-title">
-                                    <h3 class="m-portlet__head-text" th:text="*{documentType.name} + ' документ №' + *{id}"></h3>
+                                    <h3 class="m-portlet__head-text" th:text="*{documentType.name}"></h3>
                                 </div>
                             </div>
                         </div>
@@ -47,6 +47,15 @@
                                         <div class="tab-content" id="nav-tabContent">
                                             <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="nav-main-tab">
                                                 <div class="col-10 justify-content-center">
+                                                    <!-- Document Subtype -->
+                                                    <div class="form-group m-form__group row">
+                                                        <div class="col-3"></div>
+                                                        <div class="col-9">
+                                                            <br>
+                                                            <h2 class="text-center" th:text="*{senderRegisteredNumber != null ? documentSubType.name + ' № ' + senderRegisteredNumber : documentSubType.name}"></h2>
+                                                            <br>
+                                                        </div>
+                                                    </div>
                                                     <th:block th:replace="doc/document/viewcontent::__${document.documentType.internalName}__"/>
                                                 </div>
                                             </div>

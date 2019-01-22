@@ -30,7 +30,7 @@
                         <div class="m-portlet__head">
                             <div class="m-portlet__head-caption">
                                 <div class="m-portlet__head-title">
-                                    <h3 class="m-portlet__head-text" th:text="*{id == 0} ? 'Новый ' + *{documentType.name} + ' документ' : *{documentType.name} + ' документ №' + *{id}"></h3>
+                                    <h3 class="m-portlet__head-text" th:text="*{id == 0} ? 'Новый ' + *{documentType.name} + ' документ' : *{documentType.name} + ' документ'"></h3>
                                 </div>
                             </div>
                         </div>
@@ -52,7 +52,15 @@
                                         <div class="tab-content" id="nav-tabContent">
                                             <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="nav-main-tab">
                                                 <div class="col-10 justify-content-center">
-                                                    <br>
+                                                    <!-- Document Subtype -->
+                                                    <div class="form-group m-form__group row">
+                                                        <div class="col-3"></div>
+                                                        <div class="col-9">
+                                                            <br>
+                                                            <h2 class="text-center" th:text="*{documentState.ordinal() > 7 ? documentSubType.name + ' № ' + senderRegisteredNumber : documentSubType.name}"></h2>
+                                                            <br>
+                                                        </div>
+                                                    </div>
                                                     <th:block th:replace="doc/document/editcontent::__${document.documentType.internalName}__"/>
                                                 </div>
                                             </div>
@@ -152,10 +160,41 @@
         </div>
     </div>
 </div>
-
+<div class="modal fade" id="documentLinker" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Прикрепление</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!--div class="pre-scrollable">
+                    <table class="table table-bordered table-hover">
+                        <tr th:each="d : ${mydocs}">
+                            <td th:text="${d.id}"></td>
+                            <td th:text="${d.documentType.name}"></td>
+                            <td th:text="${d.documentSubType.name}"></td>
+                            <td th:text="${d.title}"></td>
+                        </tr>
+                    </table>
+                </div-->
+            </div>
+            <div class="modal-footer">
+                <button type="reset" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <script type="text/javascript">
+
+    $(document).ready(function() {
+        $('#documentLinks').select2();
+    });
+
 
     Dropzone.autoDiscover = false;
     var myDropzone = new Dropzone("#dz",
@@ -196,8 +235,7 @@
             }
         });
 
-    function attachmentHandler(file)
-    {
+    function attachmentHandler(file) {
         var a = document.createElement("input");
         a.setAttribute("type", "hidden");
         a.setAttribute("id", "a" + file.id);
@@ -205,7 +243,6 @@
         a.setAttribute("value", file.id);
         document.getElementById("attachmentList").appendChild(a);
     }
-
     function addFile(file) {
 
         var tr = document.createElement("tr");
@@ -223,6 +260,17 @@
         var da = document.getElementById("documentAttachments");
             da.appendChild(tr);
     }
+
+    function documentLinkHandler(documentId)
+    {
+        var a = document.createElement("input");
+        a.setAttribute("type", "hidden");
+        a.setAttribute("id", "docID" + documentId);
+        a.setAttribute("name", "documentLinks");
+        a.setAttribute("value", documentId);
+        document.getElementById("documentList").appendChild(a);
+    }
+
 
     $('#attachment').on('hidden.bs.modal', function (e) {
         myDropzone.removeAllFiles();

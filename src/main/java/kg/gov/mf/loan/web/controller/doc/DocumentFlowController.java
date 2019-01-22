@@ -216,6 +216,8 @@ public class DocumentFlowController extends BaseController {
         model.addAttribute("responsible", responsible);
         model.addAttribute("documentState",  document.getDocumentState().toString());
 
+        model.addAttribute("mydocs", documentService.getDocuments(getUser().getId()));
+
         return "/doc/document/edit";
     }
 
@@ -261,6 +263,8 @@ public class DocumentFlowController extends BaseController {
         // *************************************************************************************************************
         document.setDocumentState(curretState);
 
+        //
+
         model.addAttribute("cu", getUser().getUsername());
         model.addAttribute("cuid", getUser().getId());
         model.addAttribute("stages", getStages(currentView));
@@ -271,13 +275,15 @@ public class DocumentFlowController extends BaseController {
         model.addAttribute("responsible", responsible);
         model.addAttribute("documentState", document.getDocumentState().toString());
 
+        model.addAttribute("mydocs", documentService.getDocuments(getUser().getId()));
+
         return "/doc/document/edit";
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(@ModelAttribute("document") Document document,
                        @RequestParam("action") String action,
-                       @RequestParam("files") long files[]) {
+                       @RequestParam(value = "files", required=false) long files[]) {
 
         if(getUser() == null) return "/login/login";
 
@@ -315,6 +321,22 @@ public class DocumentFlowController extends BaseController {
 
         return "redirect:/doc?type=" + docType;
     }
+
+    //******************************************************************************************************************
+    @RequestMapping(value = "/save/{id}", method = RequestMethod.GET)
+    public String register(@PathVariable("id") Long id) {
+
+        if(getUser() == null) return "/login/login";
+
+        Document document = documentService.getById(id);
+
+        String docType = documentTypeService.getById(document.getDocumentType().getId()).getInternalName();
+
+        saveOutgoingDocument(document, "REGISTER");
+
+        return "redirect:/doc?type=" + docType;
+    }
+    //******************************************************************************************************************
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public String update(@ModelAttribute("document") Document document,
