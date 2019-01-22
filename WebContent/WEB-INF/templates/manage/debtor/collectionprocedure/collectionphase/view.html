@@ -93,7 +93,10 @@
 					<div class="m-portlet__body">
 						<ul class="nav nav-tabs" role="tablist">
 							<li class="nav-item">
-								<a class="nav-link m--font-primary active" data-toggle="tab" href="#main" th:text="#{label.collection.phase}"></a>
+								<a class="nav-link m--font-primary active" data-toggle="tab" href="#main" th:text="#{label.collection.info.phase}"></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#phase" th:text="#{label.collection.phase}"></a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#loans" th:text="#{label.collection.loans}"></a>
@@ -103,7 +106,87 @@
 							</li>
 						</ul>
 						<div class="tab-content">
-							<div class="tab-pane active" id="main" role="tabpanel">
+							<div class="tab-pane active" id="main">
+								<div class="m-portlet__body m-portlet__body--no-padding">
+									<div class="row m-row--no-padding m-row--col-separator-xl">
+										<div class="col-md-12 col-lg-12 col-xl-4">
+											<!--begin:: Widgets/Stats2-1 -->
+											<div class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.collection.phase.start.date}"></h3>
+															<span class="m-widget1__desc m--font-brand" th:text="${#dates.format(phase.startDate, 'dd.MM.yyyy')}"></span>
+														</div>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.collection.phase.start.amount}"></h3>
+															<span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(phase.start_amount, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
+														</div>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.collection.phase.doc.number}"></h3>
+															<span class="m-widget1__desc m--font-brand" th:text="${phase.docNumber}"></span>
+														</div>
+													</div>
+												</div>
+											</div>
+											<!--end:: Widgets/Stats2-1 -->
+										</div>
+										<div class="col-md-12 col-lg-12 col-xl-4">
+											<!--begin:: Widgets/Stats2-2 -->
+											<div class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.collection.phase.type}"></h3>
+															<span class="m-widget1__desc m--font-brand" th:text="${phase.phaseType.name}"></span>
+														</div>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.collection.phase.status}"></h3>
+															<span class="m-widget1__desc m--font-brand" th:text="${phase.phaseStatus.name}"></span>
+														</div>
+													</div>
+												</div>
+											</div>
+											<!--begin:: Widgets/Stats2-2 -->
+										</div>
+										<div class="col-md-12 col-lg-12 col-xl-4">
+											<!--begin:: Widgets/Stats2-2 -->
+											<div class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col" th:if="${phase.close_amount!= null}" >
+															<h3 class="m-widget1__title" th:text="#{label.collection.phase.close.amount}"></h3>
+															<span class="m-widget1__desc m--font-brand"th:text="${#numbers.formatDecimal(phase.close_amount, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
+														</div>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col" th:if="${phase.resultDocNumber!= null}">
+															<h3 class="m-widget1__title" th:text="#{label.collection.phase.resultDocNumber}"></h3>
+															<span class="m-widget1__desc m--font-brand" th:text="${phase.resultDocNumber}"></span>
+														</div>
+													</div>
+												</div>
+											</div>
+											<!--begin:: Widgets/Stats2-2 -->
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane" id="phase" role="tabpanel">
 								<div class="m-portlet__body m-portlet__body--no-padding">
 									<!--begin: Search Form -->
 									<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">

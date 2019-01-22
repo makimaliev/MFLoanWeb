@@ -328,9 +328,14 @@
             $('#m_form_region, #m_form_district').selectpicker();
 
             var query = datatable.getDataSourceQuery();
+
             $('#debtor_name').on('keyup', function () {
-                datatable.search($(this).val(), 'debtorName');
+                var counterOfDebtor=$('#debtor_name').val().length;
+                if(counterOfDebtor>=5 || counterOfDebtor==0){
+                    datatable.search($(this).val(), 'debtorName');
+                }
             }).val(typeof query.debtorName !== 'undefined' ? query.debtorName: '');
+
             $('#details').on('keyup', function () {
                 datatable.search($(this).val(), 'detail');
             }).val(typeof query.detail !== 'undefined' ? query.detail: '');

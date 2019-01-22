@@ -689,6 +689,7 @@ public class CollectionPhaseController {
 		System.out.println();
 		phase.setPhaseStatus(collectionPhase.getPhaseStatus());
 		phase.setCloseDate(collectionPhase.getCloseDate());
+		phase.setResultDocNumber(collectionPhase.getResultDocNumber());
 		phaseService.update(phase);
 		CollectionProcedure procedure=procService.getById(phase.getCollectionProcedure().getId());
 		procedure.setCloseDate(collectionPhase.getCollectionProcedure().getCloseDate());

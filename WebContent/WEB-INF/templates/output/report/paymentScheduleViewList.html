@@ -260,7 +260,15 @@
                 },{
                     field: "v_debtor_name",
                     title: "Наименование",
-                    textAlign:'left'
+                    textAlign:'left',
+                    width:300,
+                    template: function (row) {
+                        var d = row.v_debtor_name;
+                        if(d.length>40){
+                            return d.substring(0,40)+"...";
+                        }
+                        return d;
+                    }
                 }, {
                     field: "v_ps_collected_interest_payment",
                     title: "Накопленный проц.",
@@ -352,8 +360,11 @@
 
             var query = datatable.getDataSourceQuery();
             $('#debtor_name').on('keyup', function () {
-                datatable.search($(this).val(), 'debtorName');
-            }).val(typeof query.debtorName!== 'undefined' ? query.debtorName: '');
+                var counterOfDebtor=$('#debtor_name').val().length;
+                if(counterOfDebtor>=5 || counterOfDebtor==0){
+                    datatable.search($(this).val(), 'debtorName');
+                }
+            }).val(typeof query.debtorName !== 'undefined' ? query.debtorName: '');
 
             $('#credit_order').on('change', function () {
                 datatable.search($(this).val(), 'creditOrder');

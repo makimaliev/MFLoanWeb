@@ -237,7 +237,15 @@
                     responsive: {hidden: 'xl'}
                 },{
                     field: "v_debtor_name",
-                    title: "Наименование"
+                    title: "Наименование",
+                    width:300,
+                    template: function (row) {
+                        var d = row.v_debtor_name;
+                        if(d.length>40){
+                            return d.substring(0,40)+"...";
+                        }
+                        return d;
+                    }
                 },  {
                     field: "v_sp_principal",
                     title: "Осн. сумма",
@@ -305,7 +313,10 @@
 
             var query = datatable.getDataSourceQuery();
             $('#debtor_name').on('keyup', function () {
-                datatable.search($(this).val(), 'debtorName');
+                var counterOfDebtor=$('#debtor_name').val().length;
+                if(counterOfDebtor>=5 || counterOfDebtor==0){
+                    datatable.search($(this).val(), 'debtorName');
+                }
             }).val(typeof query.debtorName !== 'undefined' ? query.debtorName: '');
 
             $('#m_form_region').on('change', function () {

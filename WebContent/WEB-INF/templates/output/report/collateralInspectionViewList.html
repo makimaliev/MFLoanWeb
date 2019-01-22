@@ -261,8 +261,8 @@
                     width:300,
                     template: function (row) {
                         var d = row.v_debtor_name;
-                        if(d.length>40){
-                            return d.substring(0,40)+"...";
+                        if(d.length>35){
+                            return d.substring(0,32)+"...";
                         }
                         return d;
                     }
@@ -338,7 +338,10 @@
 
             var query = datatable.getDataSourceQuery();
             $('#debtor_name').on('keyup', function () {
-                datatable.search($(this).val(), 'debtorName');
+                var counterOfDebtor=$('#debtor_name').val().length;
+                if(counterOfDebtor>=5 || counterOfDebtor==0){
+                    datatable.search($(this).val(), 'debtorName');
+                }
             }).val(typeof query.debtorName !== 'undefined' ? query.debtorName: '');
             $('#ci_name').on('keyup', function () {
                 datatable.search($(this).val(), 'ciName');

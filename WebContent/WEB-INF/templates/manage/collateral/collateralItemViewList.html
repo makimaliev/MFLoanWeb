@@ -336,7 +336,10 @@
 
             var query = datatable.getDataSourceQuery();
             $('#m_form_searchByDebtorName').on('keyup', function () {
-                datatable.search($(this).val(), 'debtorName');
+                var counterOfDebtor=$('#m_form_searchByDebtorName').val().length;
+                if(counterOfDebtor>=5 || counterOfDebtor==0){
+                    datatable.search($(this).val(), 'debtorName');
+                }
             }).val(typeof query.debtorName !== 'undefined' ? query.debtorName: '');
 
             $('#m_form_searchByAgreementNum').on('keyup', function () {

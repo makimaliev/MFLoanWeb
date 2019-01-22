@@ -119,6 +119,14 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="form-group m-form__group row">
+                                            <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.collection.phase.resultDocNumber}">
+                                                <span class="m--font-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" th:field="*{resultDocNumber}">
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="tab-pane" id="procedure" role="tabpanel">
                                         <div class="form-group m-form__group row">
