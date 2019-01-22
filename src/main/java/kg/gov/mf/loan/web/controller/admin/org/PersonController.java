@@ -225,9 +225,9 @@ public class PersonController {
 	public String viewPersonDetailsById(@PathVariable("id") long id, Model model) {
 
 		Person person = this.personService.findById(id);
-		Owner owner=this.ownerService.getByEntityId(person.getId(),"PERSON");
 		String hasDebtor="true";
 		try{
+			Owner owner=this.ownerService.getByEntityId(person.getId(),"PERSON");
 			Debtor debtor=debtorService.getByOwnerId(owner.getId());
 			model.addAttribute("debtorId",debtor.getId());
 		}

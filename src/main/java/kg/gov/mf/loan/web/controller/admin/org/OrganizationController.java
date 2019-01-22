@@ -231,9 +231,9 @@ public class OrganizationController {
 
 		Organization organization = this.organizationService.findById(id);
 
-		Owner owner=this.ownerService.getByEntityId(organization.getId(),"ORGANIZATION");
 		String hasDebtor="true";
 		try{
+			Owner owner=this.ownerService.getByEntityId(organization.getId(),"ORGANIZATION");
 			Debtor debtor=debtorService.getByOwnerId(owner.getId());
 			model.addAttribute("debtorId",debtor.getId());
 		}
