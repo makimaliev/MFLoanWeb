@@ -17,10 +17,6 @@
     <th:block th:fragment="script">
         <script type="text/javascript" th:inline="javascript">
 
-            function hide() {
-                $('#pick').modal('hide')
-            }
-
             $(document).ready(function() {
 
                 CKEDITOR.config.readOnly = [[${document.documentState.ordinal()}]] > 4;
@@ -48,129 +44,10 @@
                     ]
                 });
 
-                var dt_settings = {
-                    autoclose: true,
-                    minView : 2,
-                    maxView : 2,
-                    format : 'dd-mm-yyyy hh:ii'
-                };
-                $('.dtp').datetimepicker(dt_settings);
-
-                $('.sdr').hide();
-                $('.rdr').hide();
-
-                if($('#id').val() > 0 || $('#id').val() != null) {
-
-                    $('#si' + $('#srt_select').val()).show();
-                    $('#si' + $('#srt_select').val() + ' .s2').prop('required', true);
-
-                    $('#ri' + $('#rrt_select').val()).show();
-                    $('#ri' + $('#rrt_select').val() + ' .s2').prop('required', true);
-
-                }
-
-                $('#srt_select').change(function(){
-                    $('#si' + $(this).val()).find( "select" ).val('').trigger('change')
-                    $('.sdr ').hide();
-                    $('#si' + $(this).val()).show();
-
-                    $('.sdr .s2').prop('required', false)
-                    $('#si' + $(this).val() + ' .s2').prop('required', 'true');
-                });
-                $('#rrt_select').change(function(){
-                    $('#ri' + $(this).val()).find( "select" ).val('').trigger('change')
-                    $('.rdr ').hide();
-                    $('#ri' + $(this).val()).show();
-
-                    $('.rdr .s2').prop('required', false)
-                    $('#ri' + $(this).val() + ' .s2').prop('required', 'true');
-                });
-
-                var soption = {
-                    minimumInputLength: 2,
-                    placeholder: "Выбрать",
-                    language: {
-                        inputTooShort: function () {
-                            return "";
-                        },
-                        noResults: function () {
-                            return "Не найден";
-                        },
-                        searching: function () {
-                            return "";
-                        },
-                    },
-                    ajax: {
-                        data: function (params) {
-                            var query = {
-                                name: params.term
-                            }
-                            return query;
-                        },
-                        processResults: function (data) {
-                            return {
-                                results : data
-                            };
-                        }
-                    }
-                }
-                var ssoption = {
-                    minimumResultsForSearch: -1,
-                    placeholder: "Выбрать",
-                    language: {
-                        inputTooShort: function () {
-                            return "";
-                        },
-                        noResults: function () {
-                            return "Не найден";
-                        },
-                        searching: function () {
-                            return "";
-                        }
-                    }
-                }
-
-                $('.s2 ').select2(soption);
-                $('.s2s ').select2(ssoption);
                 $('#tabstages a').on('click', function (e) {
                     e.currentTarget.id == "nav-main-tab" ? $(".act").show() : $(".act").hide()
                 })
             });
-
-            function doClick(side) {
-                var el = document.getElementById(side);
-                if (el) {
-                    el.click();
-                }
-            }
-            function handleFiles(files, side) {
-
-                var filesList = document.getElementById(side);
-
-                $("#" + side + " tr").remove();
-
-                if (files.length)
-                {
-                    filesList.style.display = "block"
-
-                    for (var i=0; i < files.length; i++) {
-
-                        var tr = document.createElement("tr");
-                        filesList.appendChild(tr);
-
-                        var td = document.createElement("td");
-                        tr.appendChild(td);
-
-                        var info = document.createElement("label");
-                        info.innerHTML = files[i].name;
-                        td.appendChild(info);
-                    }
-                }
-                else
-                {
-                    filesList.style.display = "none"
-                }
-            }
 
         </script>
     </th:block>

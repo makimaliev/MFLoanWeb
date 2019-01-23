@@ -188,17 +188,104 @@
     </div>
 </div>
 
-
 <script type="text/javascript">
+
+    function hide() {
+        $('#pick').modal('hide')
+    }
 
     $(document).ready(function() {
         $('#documentLinks').select2();
+
+        var dt_settings = {
+            autoclose: true,
+            minView : 2,
+            maxView : 2,
+            format : 'dd-mm-yyyy hh:ii'
+        };
+        $('.dtp').datetimepicker(dt_settings);
+
+        $('.sdr').hide();
+        $('.rdr').hide();
+
+        if($('#id').val() > 0 || $('#id').val() != null) {
+
+            $('#si' + $('#srt_select').val()).show();
+            $('#si' + $('#srt_select').val() + ' .s2').prop('required', true);
+
+            $('#ri' + $('#rrt_select').val()).show();
+            $('#ri' + $('#rrt_select').val() + ' .s2').prop('required', true);
+
+        }
+
+        $('#srt_select').change(function(){
+            $('#si' + $(this).val()).find( "select" ).val('').trigger('change')
+            $('.sdr ').hide();
+            $('#si' + $(this).val()).show();
+
+            $('.sdr .s2').prop('required', false)
+            $('#si' + $(this).val() + ' .s2').prop('required', 'true');
+        });
+        $('#rrt_select').change(function(){
+            $('#ri' + $(this).val()).find( "select" ).val('').trigger('change')
+            $('.rdr ').hide();
+            $('#ri' + $(this).val()).show();
+
+            $('.rdr .s2').prop('required', false)
+            $('#ri' + $(this).val() + ' .s2').prop('required', 'true');
+        });
+
+        var soption = {
+            minimumInputLength: 2,
+            placeholder: "Выбрать",
+            language: {
+                inputTooShort: function () {
+                    return "";
+                },
+                noResults: function () {
+                    return "Не найден";
+                },
+                searching: function () {
+                    return "";
+                },
+            },
+            ajax: {
+                data: function (params) {
+                    var query = {
+                        name: params.term
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results : data
+                    };
+                }
+            }
+        }
+        var ssoption = {
+            minimumResultsForSearch: -1,
+            placeholder: "Выбрать",
+            language: {
+                inputTooShort: function () {
+                    return "";
+                },
+                noResults: function () {
+                    return "Не найден";
+                },
+                searching: function () {
+                    return "";
+                }
+            }
+        }
+
+        $('.s2 ').select2(soption);
+        $('.s2s ').select2(ssoption);
     });
 
-
     Dropzone.autoDiscover = false;
-    var myDropzone = new Dropzone("#dz",
-        {
+    var myDropzone = new Dropzone("#dz", {
+
             createImageThumbnails: false,
             dictDefaultMessage: "Добавить",
             previewTemplate:
@@ -260,9 +347,7 @@
         var da = document.getElementById("documentAttachments");
             da.appendChild(tr);
     }
-
-    function documentLinkHandler(documentId)
-    {
+    function documentLinkHandler(documentId) {
         var a = document.createElement("input");
         a.setAttribute("type", "hidden");
         a.setAttribute("id", "docID" + documentId);
@@ -270,7 +355,6 @@
         a.setAttribute("value", documentId);
         document.getElementById("documentList").appendChild(a);
     }
-
 
     $('#attachment').on('hidden.bs.modal', function (e) {
         myDropzone.removeAllFiles();

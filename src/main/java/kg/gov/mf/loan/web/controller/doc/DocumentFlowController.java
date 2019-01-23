@@ -216,7 +216,7 @@ public class DocumentFlowController extends BaseController {
         model.addAttribute("responsible", responsible);
         model.addAttribute("documentState",  document.getDocumentState().toString());
 
-        model.addAttribute("mydocs", documentService.getDocuments(getUser().getId()));
+        model.addAttribute("mydocs", documentService.getInvolvedDocuments("incoming", getUser().getId()));
 
         return "/doc/document/edit";
     }
@@ -275,7 +275,7 @@ public class DocumentFlowController extends BaseController {
         model.addAttribute("responsible", responsible);
         model.addAttribute("documentState", document.getDocumentState().toString());
 
-        model.addAttribute("mydocs", documentService.getDocuments(getUser().getId()));
+        model.addAttribute("mydocs", documentService.getInvolvedDocuments("incoming", getUser().getId()));
 
         return "/doc/document/edit";
     }
