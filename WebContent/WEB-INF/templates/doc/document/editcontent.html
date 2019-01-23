@@ -174,7 +174,7 @@
     <!-- TITLE -->
     <div class="form-group m-form__group row" th:hidden="*{documentState.ordinal() > 1 and #strings.length(title) == 0}">
         <label class="col-3 col-form-label">
-            <span> Входящий № и ДАТА МФКР : </span>
+            <span> Относительно : </span>
         </label>
         <div class="col-sm-9">
             <input class="form-control" th:field="*{title}" autocomplete="off" th:type="*{documentState.ordinal() == 0} ? 'text' : 'hidden'">
@@ -184,7 +184,7 @@
     <!-- DESCRIPTION -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
-            <span> Относительно : </span>
+            <span> Краткое содержание : </span>
         </label>
         <div class="col-sm-9">
             <textarea th:field="*{description}"></textarea>
@@ -385,7 +385,7 @@
         </div>
     </div>
     <!-- Document Link -->
-    <!--div class="form-group m-form__group row">
+    <!--div class="form-group m-form__group row" sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')">
         <label class="col-3 col-form-label">
             <span> Ссылка на документ : </span>
         </label>

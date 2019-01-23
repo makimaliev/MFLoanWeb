@@ -5,6 +5,7 @@
     <th:block th:fragment="hiddenFields">
         <div hidden="hidden">
             <input type="hidden" th:field="*{id}"/>
+            <input type="hidden" th:field="*{docIndex}"/>
             <input type="hidden" th:field="*{version}"/>
             <input type="hidden" th:field="*{uuid}"/>
             <input type="hidden" th:field="*{owner}"/>
@@ -269,22 +270,22 @@
                 </td>
                 <td th:text="${document.documentDueDate} != null ? ${#dates.format(document.documentDueDate, 'dd-MM-yyyy')} : ''">None</td>
                 <td class="table-actions text-right">
-                                        <span>
-                                            <div class="dropdown">
-                                                <a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown"><i class="la la-ellipsis-h"></i></a>
-                                                <div class="dropdown-menu dropdown-menu-right">
+                    <span>
+                        <div class="dropdown">
+                            <a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown"><i class="la la-ellipsis-h"></i></a>
+                            <div class="dropdown-menu dropdown-menu-right">
 
-                                                    <a class="dropdown-item" th:if="${tasks.?[objectId == __${document.id}__].isEmpty()}" th:href="@{/doc/view/__${document.id}__}">
-                                                        <span th:text="#{label.view}"></span>
-                                                    </a>
+                                <a class="dropdown-item" th:if="${tasks.?[objectId == __${document.id}__].isEmpty()}" th:href="@{/doc/view/__${document.id}__}">
+                                    <span th:text="#{label.view}"></span>
+                                </a>
 
-                                                    <a class="dropdown-item" th:if="${!tasks.?[objectId == __${document.id}__].isEmpty()}" th:href="@{/doc/edit/__${document.id}__}">
-                                                        <span th:text="#{label.open}"></span>
-                                                    </a>
+                                <a class="dropdown-item" th:if="${!tasks.?[objectId == __${document.id}__].isEmpty()}" th:href="@{/doc/edit/__${document.id}__}">
+                                    <span th:text="#{label.open}"></span>
+                                </a>
 
-                                                </div>
-                                            </div>
-                                        </span>
+                            </div>
+                        </div>
+                    </span>
                 </td>
             </tr>
             </tbody>
@@ -295,11 +296,12 @@
             <thead class="thead-default">
             <tr>
                 <th width="50px"></th>
+
                 <th width="120px">Исх. № и Дата</th>
-                <th width="120px">Вхд. № и ДАТА МФКР</th>
                 <th width="120px">Вхд. № и Дата</th>
                 <th th:text="#{label.document.title}">Относительно</th>
-                <th width="250px" th:text="#{label.document.generalStatus}">Состояние</th>
+
+                <th th:text="#{label.document.generalStatus}">Состояние</th>
                 <th th:text="#{label.document.sender}">Отправитель</th>
                 <th th:text="#{label.document.receiver}">Исполнитель</th>
                 <th th:text="#{label.document.duedate}" width="100px">Срок</th>
@@ -309,10 +311,11 @@
             <tbody>
             <tr th:each="document : ${documents}">
                 <td class="text-danger text-center"><span th:if="${document.documentDueDate}">K</span></td>
+
                 <td th:utext="${!document.senderRegisteredNumber.isEmpty() ? document.senderRegisteredNumber + '<hr>' + #dates.format(document.senderRegisteredDate, 'dd-MM-yyyy') : ''}"></td>
-                <td th:text="${document.title}"></td>
                 <td th:utext="${!document.receiverRegisteredNumber.isEmpty() ? document.receiverRegisteredNumber + '<hr>' + #dates.format(document.receiverRegisteredDate, 'dd-MM-yyyy') : ''}"></td>
-                <td th:utext="|<b>${document.documentSubType.name}</b><br>${document.description}|"></td>
+                <td th:text="${document.title}"></td>
+
                 <td th:text="${document.documentState.text()}"></td>
                 <td>
                     <br>
@@ -362,7 +365,7 @@
             </thead>
             <tbody>
             <tr th:each="document, i : ${documents}">
-                <td th:text="${i.index + 1}"></td>
+                <td th:text="${document.docIndex}"></td>
                 <td th:utext="${!document.senderRegisteredNumber.isEmpty() ? document.senderRegisteredNumber + '<hr>' + #dates.format(document.senderRegisteredDate, 'dd-MM-yyyy') : ''}"></td>
                 <td th:utext="|<b>${document.documentSubType.name}</b><br>${document.title}|"></td>
                 <td th:text="${document.documentState.text()}"></td>
@@ -387,10 +390,9 @@
                                     <span th:text="#{label.open}"></span>
                                 </a>
 
-                                <a th:if="${document.documentState.ordinal() < 7}" class="dropdown-item" th:href="@{/doc/save/__${document.id}__}" sec:authorize="hasAnyAuthority('PERM_REGISTER_OUTGOINGDOC')" >
+                                <a id="register" th:if="${document.documentState.ordinal() < 7}" class="dropdown-item" th:href="@{/doc/save/__${document.id}__}" sec:authorize="hasAnyAuthority('PERM_REGISTER_OUTGOINGDOC')" >
                                     <span>Зарегистрировать</span>
                                 </a>
-
                             </div>
                         </div>
                     </span>

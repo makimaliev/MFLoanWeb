@@ -324,17 +324,17 @@ public class DocumentFlowController extends BaseController {
 
     //******************************************************************************************************************
     @RequestMapping(value = "/save/{id}", method = RequestMethod.GET)
+    @ResponseBody
     public String register(@PathVariable("id") Long id) {
 
         if(getUser() == null) return "/login/login";
 
         Document document = documentService.getById(id);
+        document = saveOutgoingDocument(document, "REGISTER");
 
-        String docType = documentTypeService.getById(document.getDocumentType().getId()).getInternalName();
-
-        saveOutgoingDocument(document, "REGISTER");
-
-        return "redirect:/doc?type=" + docType;
+        return document.getDocumentSubType().getName() + "\n"
+                + document.getSenderRegisteredNumber() + "\n"
+                + "ИСполнитель : " + userService.findById(document.getOwner()).getStaff().getName();
     }
     //******************************************************************************************************************
 
@@ -453,7 +453,7 @@ public class DocumentFlowController extends BaseController {
 
         taskService.add(task);
     }
-    private void saveInternalDocument(Document document, String action) {
+    private Document saveInternalDocument(Document document, String action) {
 
         String description = document.getComment();
 
@@ -635,8 +635,10 @@ public class DocumentFlowController extends BaseController {
             documentService.update(document);
         }
         //endregion
+
+        return document;
     }
-    private void saveIncomingDocument(Document document, String action) {
+    private Document saveIncomingDocument(Document document, String action) {
 
         String description = document.getComment();
 
@@ -750,8 +752,10 @@ public class DocumentFlowController extends BaseController {
             documentService.update(document);
         }
         //endregion
+
+        return document;
     }
-    private void saveOutgoingDocument(Document document, String action) {
+    private Document saveOutgoingDocument(Document document, String action) {
 
         String description = document.getComment();
 
@@ -884,6 +888,8 @@ public class DocumentFlowController extends BaseController {
             documentService.update(document);
         }
         //endregion
+
+        return document;
     }
 
     // *****************************************************************************************************************
@@ -986,6 +992,8 @@ public class DocumentFlowController extends BaseController {
     @RequestMapping("/documents")
     @ResponseBody
     public DataTableResult getDocuments(HttpServletRequest request) {
+
+        Object list = request.getParameterNames();
 
         DataTableResult dataTableResult = new DataTableResult();
         dataTableResult.draw = 1;

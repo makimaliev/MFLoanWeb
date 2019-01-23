@@ -76,8 +76,19 @@
 
     $(document).ready(function()
     {
+        $('#register').click(function() {
+            $.ajax({
+                url: $(this).attr('href'),
+                success: function(response) {
+                    alert(response);
+                    location.reload();
+                }
+            });
+            return false;
+        });
+
         var dtOptions = {
-            stateSave: true,
+            stateSave: false,
             info: '',
             language: {
                 emptyTable: "<center>Нет данных</center>",
