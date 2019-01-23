@@ -75,7 +75,6 @@
             <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
             <input type="hidden" name="files" value="0">
             <table id="documentAttachments" class="form-control">
-                <tr th:if="*{#lists.isEmpty(attachments)}"><td><label>Нет приложений</label></td></tr>
                 <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
                     <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
                 </tr>
@@ -368,7 +367,6 @@
             <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
             <input type="hidden" name="files" value="0">
             <table id="documentAttachments" class="form-control">
-                <tr th:if="*{#lists.isEmpty(attachments)}"><td><label>Нет приложений</label></td></tr>
                 <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
                     <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
                 </tr>
