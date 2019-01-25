@@ -1385,6 +1385,7 @@ BEGIN
     DECLARE has_libor BOOLEAN;
     DECLARE has_libor_po BOOLEAN;
     DECLARE has_libor_io BOOLEAN;
+    DECLARE date_prev_loan_summary DATE;
 
     DEClARE tCursor CURSOR FOR
 
@@ -2133,9 +2134,11 @@ BEGIN
 
           if loan_summary_type = 'SYSTEM' or (loan_summary_type = 'MANUAL' and tempDate = inDate) or (loan_summary_type = 'FIXED' and not isAlreadyInserted and tempDate = inDate) then
 
+            select onDate into date_prev_loan_summary from loanSummary where loanId = loan_id order by onDate desc limit 1;
+
             aBlock: begin
 
-              if pType = 'daily' and prevDate = tempDate then
+              if pType = 'daily' and date_prev_loan_summary = tempDate then
                 leave aBlock;
               end if;
 
@@ -3743,4 +3746,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-25 10:07:48
+-- Dump completed on 2019-01-25 10:49:56
