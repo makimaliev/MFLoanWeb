@@ -2893,6 +2893,8 @@ begin
 
             CALL calculateLoanDetailedSummaryUntilOnDate(t_loan_id, in_date, 1, 'MANUAL');
 
+            CALL updateBankruptInfoForLoan(t_loan_id);
+
           end loop run_calculate;
 
         close t_cursor;
@@ -3862,4 +3864,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-25 17:58:45
+-- Dump completed on 2019-01-25 18:12:43
