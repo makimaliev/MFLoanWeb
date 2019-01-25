@@ -190,8 +190,13 @@ public class LoanController {
 //
 //        String jsonChildL = gson.toJson(getChildrenByLoanId(loanId));
 //        model.addAttribute("children", jsonChildList);
+        model.addAttribute("isEmptyChild",false);
         if(loan.getChildren().isEmpty()){
-            model.addAttribute("isEmptyChild","true");
+            model.addAttribute("isEmptyChild",true);
+        }
+        model.addAttribute("hasParent",false);
+        if(loan.getParent()!=null){
+            model.addAttribute("hasParent",true);
         }
 //        String jsonPaymentSchedules = gson.toJson(getPaymentSchedulesByLoanId(loanId));
 //        model.addAttribute("paymentSchedules", jsonPaymentSchedules);

@@ -140,14 +140,16 @@ var DatatableDataLocalTerms = function () {
 
                     var result = '';
 
-                    result = result + '\
-						<a sec:authorize="hasAnyAuthority(ADMIN,PERM_UPDATE_ORDERTERM)" href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/term/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
-							<i class="la la-edit"></i>\
-						</a>\
-						<a hidden="hidden" href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/term/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
-							<i class="la la-trash"></i>\
-						</a>\
-					';
+                    if(isEmptyChild==true) {
+                        result = result + '\
+                            <a sec:authorize="hasAnyAuthority(ADMIN,PERM_UPDATE_ORDERTERM)" href="/manage/debtor/' + debtorId + '/loan/' + loanId + '/term/' + row.id + '/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+                                <i class="la la-edit"></i>\
+                            </a>\
+                            <a hidden="hidden" href="/manage/debtor/' + debtorId + '/loan/' + loanId + '/term/' + row.id + '/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
+                                <i class="la la-trash"></i>\
+                            </a>\
+                        ';
+                    }
 
                     if(!hasRoleAdmin)
                         result = '';

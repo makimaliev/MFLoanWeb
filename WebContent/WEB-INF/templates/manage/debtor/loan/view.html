@@ -117,7 +117,7 @@
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#accrue" th:text="#{label.loan.accrue}" id="accrueFunction"></a>
 							</li>
-							<li class="nav-item">
+							<li class="nav-item" th:if="${hasParent}==false">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#initializaPhase" th:text="#{label.debtor.tab.initializaPhase}"></a>
 							</li>
 							<li class="nav-item">
@@ -691,7 +691,7 @@
                                                 </div>
 												<div class="col-lg-6 m--align-right">
 
-													<form th:action="@{/printoutTemplate/1/objectId/1/generate}" method="post">
+													<form th:action="@{/printoutTemplate/1/objectId/1/generate}" method="post" th:if="${hasParent}==false">
 
 													<div class="m-form__group m-form__group--inline">
 														<div class="m-form__label">
@@ -1336,7 +1336,9 @@
 		$("a[href='" + anchor + "']").tab("show");
 	});
 </script>
-<script>
+<script th:inline="javascript">
+
+    var isEmptyChild=[[${isEmptyChild}]];
 	// Payments sums
 	var sumOfPTotal=0.0;
 	var sumOfPPrincipal=0.0;
