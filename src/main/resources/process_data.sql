@@ -2868,6 +2868,7 @@ begin
 
     if is_leaf_or_normal_loan then
       CALL calculateLoanDetailedSummaryUntilOnDate(loan_id, in_date, 1, 'MANUAL');
+      CALL updateBankruptInfoForLoan(loan_id);
     else
       begin
         declare v_finished integer default 0;
@@ -3864,4 +3865,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-25 18:12:43
+-- Dump completed on 2019-01-25 18:18:53
