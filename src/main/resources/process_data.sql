@@ -2131,7 +2131,7 @@ BEGIN
 
         IF tempDate <= inDate THEN
 
-          IF loan_summary_type_text = 'MANUAL' AND isAlreadyInserted THEN
+          IF loan_summary_type_text = 'MANUAL' AND isAlreadyInserted AND pType!='daily' THEN
             UPDATE loanSummary SET record_status = 2 WHERE loanId = loan_id AND onDate = tempDate;
           END IF;
 
@@ -3862,4 +3862,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-25 17:39:03
+-- Dump completed on 2019-01-25 17:58:45
