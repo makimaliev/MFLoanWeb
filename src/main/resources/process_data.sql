@@ -2851,10 +2851,10 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `run_calc_manual_summary_for_loan`(in loan_id bigint, in in_date date)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `run_calc_manual_summary_for_loan`(IN loan_id bigint, IN in_date date)
 begin
 
-    DECLARE is_leaf_or_normal_loan BOOLEAN;
+    declare is_leaf_or_normal_loan boolean default true;
 
     #if parent loan then first calculate for all child loans then calculate loan itself else just calculate for loan
     if exists(
@@ -3862,4 +3862,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-25 17:18:46
+-- Dump completed on 2019-01-25 17:39:03
