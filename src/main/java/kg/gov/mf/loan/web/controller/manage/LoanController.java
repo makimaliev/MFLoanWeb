@@ -25,6 +25,7 @@ import kg.gov.mf.loan.manage.repository.org.StaffRepository;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemService;
 import kg.gov.mf.loan.manage.service.collateral.QuantityTypeService;
 import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
+import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.manage.service.loan.*;
 import kg.gov.mf.loan.manage.service.orderterm.*;
 import kg.gov.mf.loan.output.report.service.ReferenceViewService;
@@ -160,6 +161,9 @@ public class LoanController {
 
     @Autowired
     OrderTermFundService orderTermFundService;
+
+    @Autowired
+    OwnerService ownerService;
 
     static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
 	
@@ -370,6 +374,9 @@ public class LoanController {
 		if(loanId > 0)
 		{
 			Loan loan = loanService.getById(loanId);
+			if(loan.getFund()==null){
+			    loan.setFund(orderTermFundService.getById(Long.valueOf(30)));
+            }
 			model.addAttribute("loan", loan);
 			User user = userService.findById(loan.getSupervisorId());
 			Staff staff = staffRepository.findById(user.getStaff().getId());
@@ -412,9 +419,12 @@ public class LoanController {
 		Debtor debtor = debtorService.getById(debtorId);
 		loan.setDebtor(debtor);
 		setBankruptData(loan);
-		
+		if(loan.getLoanType().getId()==10){
+		    loan.setCloseDate(null);
+        }
+
 		saveLoanData(loan);
-			
+
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/"+loan.getId()+"/view";
 	}
 
@@ -426,6 +436,10 @@ public class LoanController {
         Debtor debtor = debtorService.getById(debtorId);
         loan.setDebtor(debtor);
         setBankruptData(loan);
+
+        if(loan.getLoanType().getId()==10){
+            loan.setCloseDate(null);
+        }
 
         saveLoanData(loan);
 
@@ -440,6 +454,10 @@ public class LoanController {
         Debtor debtor = debtorService.getById(debtorId);
         loan.setDebtor(debtor);
         setBankruptData(loan);
+
+        if(loan.getLoanType().getId()==10){
+            loan.setCloseDate(null);
+        }
 
         saveLoanData(loan);
 
@@ -1118,6 +1136,12 @@ public class LoanController {
             model.setTransferPaymentId(d.getTransferPaymentId());
             model.setTransferCreditId(d.getTransferCreditId());
             model.setTransferPersonId(d.getTransferPersonId());
+            try{
+                model.setTransferPersonName(debtorService.getByOwnerId(d.getTransferPersonId()).getName());
+            }
+            catch (Exception e){
+                System.out.println(e);
+            }
 //            model.setGoodsTypeId(d.getGoodsTypeId());
             try{
 

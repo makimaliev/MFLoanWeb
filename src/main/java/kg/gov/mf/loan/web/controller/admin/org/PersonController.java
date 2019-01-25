@@ -386,7 +386,7 @@ public class PersonController {
 				ownerService.add(owner);
 			}
 			try{
-				Staff staff=staffService.findById(person.getId());
+				Staff staff=staffService.findByPerson(person);
 				staff.setName(owner.getName());
 				staffService.edit(staff);
 			}

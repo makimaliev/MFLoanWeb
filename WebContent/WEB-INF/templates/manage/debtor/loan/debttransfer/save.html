@@ -305,14 +305,14 @@
     <!--});-->
 <!--</script>-->
 
-<!--<script type="text/javascript">-->
-    <!--function updateTOwner(sel)-->
-    <!--{-->
-        <!--var owner_text = document.getElementById("owner_typeahead").value;-->
-        <!--var owner_id = owner_text.match(/[^[\]]+(?=])/g);-->
-        <!--$("#tpId").val(owner_id);-->
-    <!--}-->
-<!--</script>-->
+<script type="text/javascript">
+    function updateTOwner(sel)
+    {
+        var owner_text = document.getElementById("owner_typeahead").value;
+        var owner_id = owner_text.match(/[^[\]]+(?=])/g);
+        $("#tpId").val(owner_id);
+    }
+</script>
 <script>
     $("#m_form_unitType,#m_form_goodType").selectpicker();
     // $("#unitTypeId").val($("#m_form_goodType").val());

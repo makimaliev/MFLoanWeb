@@ -65,7 +65,7 @@ var DatatableDataLocalDebtTransfers = function () {
                 field: "transferCreditId",
                 title: "Кредит"
             }, */{
-                field: "transferPersonId",
+                field: "transferPersonName",
                 title: "Должник"
             }, {
                 field: "goodsType",

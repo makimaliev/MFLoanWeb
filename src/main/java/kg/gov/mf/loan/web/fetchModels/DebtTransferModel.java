@@ -31,6 +31,8 @@ public class DebtTransferModel implements Comparable<DebtTransferModel>{
 
     private long transferPersonId;
 
+    private String transferPersonName;
+
     private String goodsType;
 
     @Override
@@ -125,5 +127,13 @@ public class DebtTransferModel implements Comparable<DebtTransferModel>{
 
     public void setGoodsType(String goodsType) {
         this.goodsType = goodsType;
+    }
+
+    public String getTransferPersonName() {
+        return transferPersonName;
+    }
+
+    public void setTransferPersonName(String transferPersonName) {
+        this.transferPersonName = transferPersonName;
     }
 }
