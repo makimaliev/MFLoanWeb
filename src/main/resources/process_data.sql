@@ -1386,6 +1386,7 @@ BEGIN
     DECLARE has_libor_po BOOLEAN;
     DECLARE has_libor_io BOOLEAN;
     DECLARE date_prev_loan_summary DATE;
+    DECLARE loan_summary_type_text VARCHAR(20);
 
     DEClARE tCursor CURSOR FOR
 
@@ -1595,6 +1596,8 @@ BEGIN
       INSERT INTO logCalculateLoanSummary(version, loanId, onDate, message)
       VALUES (1,loan_id, inDate, 'No term info found');
     END IF;
+
+    SET loan_summary_type_text = loan_summary_type;
 
     OPEN tCursor;
 
@@ -2081,7 +2084,7 @@ BEGIN
 
       IF tempDate <= inDate THEN
 
-        if loan_summary_type = 'SYSTEM' and pType != 'daily' then
+        if loan_summary_type_text = 'SYSTEM' and pType != 'daily' then
 
           INSERT INTO loanDetailedSummary(version, collectedInterestDisbursed, collectedInterestPayment, collectedPenaltyDisbursed, collectedPenaltyPayment, daysInPeriod, disbursement, interestAccrued,
                                             interestOutstanding, interestOverdue, interestPaid, interestPayment, onDate, penaltyAccrued, penaltyOutstanding, penaltyOverdue, penaltyPaid, principalOutstanding,
@@ -2096,7 +2099,7 @@ BEGIN
 
       END IF;
 
-      if loan_summary_type = 'MANUAL' or loan_summary_type = 'FIXED' then
+      if loan_summary_type_text = 'MANUAL' or loan_summary_type_text = 'FIXED' then
 
         if exists(select 1 from loanSummary
                   where loanId = loan_id
@@ -2118,7 +2121,7 @@ BEGIN
         END IF;
 
         IF intAccrued + penAccrued + pOIO + pOPO > 0 THEN
-          if loan_summary_type = 'SYSTEM' or ((loan_summary_type = 'MANUAL' or loan_summary_type = 'FIXED') and tempDate = inDate) and pType != 'daily' then
+          if loan_summary_type_text = 'SYSTEM' or ((loan_summary_type_text = 'MANUAL' or loan_summary_type_text = 'FIXED') and tempDate = inDate) and pType != 'daily' then
             INSERT INTO accrue(version, daysInPeriod, fromDate, interestAccrued, lastInstPassed, penaltyAccrued, penaltyOnInterestOverdue, penaltyOnPrincipalOverdue, toDate, loanId)
               VALUES (1, daysInPer, pDate, ROUND(intAccrued,2), FALSE , ROUND(penAccrued,2), ROUND(pOIO,2), ROUND(pOPO,2), tempDate, loan_id);
           end if;
@@ -2128,11 +2131,11 @@ BEGIN
 
         IF tempDate <= inDate THEN
 
-          IF loan_summary_type = 'MANUAL' AND isAlreadyInserted THEN
+          IF loan_summary_type_text = 'MANUAL' AND isAlreadyInserted THEN
             UPDATE loanSummary SET record_status = 2 WHERE loanId = loan_id AND onDate = tempDate;
           END IF;
 
-          if loan_summary_type = 'SYSTEM' or (loan_summary_type = 'MANUAL' and tempDate = inDate) or (loan_summary_type = 'FIXED' and not isAlreadyInserted and tempDate = inDate) then
+          if loan_summary_type_text = 'SYSTEM' or (loan_summary_type_text = 'MANUAL' and tempDate = inDate) or (loan_summary_type_text = 'FIXED' and not isAlreadyInserted and tempDate = inDate) then
 
             select onDate into date_prev_loan_summary from loanSummary where loanId = loan_id order by onDate desc limit 1;
 
@@ -2142,10 +2145,17 @@ BEGIN
                 leave aBlock;
               end if;
 
+              if pType = 'daily' then
+                set loan_summary_type_text = 'DAILY';
+              end if;
+
               INSERT INTO loanSummary(version, loanSummaryType, loanAmount, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty,
                                       overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalInterestPaid, totalPenaltyPaid, totalPrincipalPaid, totalFeePaid, loanId, createDate)
-              VALUES (1, loan_summary_type, loan_amount, tempDate, 0.0, intOutstanding, penOutstanding, princOutstanding, 0.0, intOverdue, penOverdue, princOverdue, 0.0, totalIntPaid, totalPrincPaid,
+              VALUES (1, loan_summary_type_text, loan_amount, tempDate, 0.0, intOutstanding, penOutstanding, princOutstanding, 0.0, intOverdue, penOverdue, princOverdue, 0.0, totalIntPaid, totalPrincPaid,
                                                                                                                                                     princPaid, totalDisb, total_outstanding, total_overdue, total_paid, total_paidKGS, totalIntPaid, totalPenPaid, totalPrincPaid, 0, loan_id, CURDATE());
+
+              set loan_summary_type_text = loan_summary_type;
+
             end aBlock;
 
           end if;
@@ -2155,15 +2165,22 @@ BEGIN
 
         IF tempDate <= inDate THEN
 
-          IF loan_summary_type = 'MANUAL' AND isAlreadyInserted THEN
+          IF loan_summary_type_text = 'MANUAL' AND isAlreadyInserted THEN
             UPDATE loanSummary SET record_status = 2 WHERE loanId = loan_id AND onDate = tempDate;
           END IF;
 
-          if loan_summary_type = 'SYSTEM' or (loan_summary_type = 'MANUAL' and tempDate = inDate) or (loan_summary_type = 'FIXED' and not isAlreadyInserted and tempDate = inDate) then
+          if loan_summary_type_text = 'SYSTEM' or (loan_summary_type_text = 'MANUAL' and tempDate = inDate) or (loan_summary_type_text = 'FIXED' and not isAlreadyInserted and tempDate = inDate) then
+
+            if pType = 'daily' then
+              set loan_summary_type_text = 'DAILY';
+            end if;
+
             INSERT INTO loanSummary(version, loanSummaryType, loanAmount, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty,
                                     overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalInterestPaid, totalPenaltyPaid, totalPrincipalPaid, totalFeePaid, loanId, createDate)
-            VALUES (1, loan_summary_type, loan_amount, tempDate, 0.0, intOutstanding, penOutstanding, princOutstanding, 0.0, intOverdue, penOverdue, princOverdue, 0.0, totalIntPaid, totalPrincPaid,
+            VALUES (1, loan_summary_type_text, loan_amount, tempDate, 0.0, intOutstanding, penOutstanding, princOutstanding, 0.0, intOverdue, penOverdue, princOverdue, 0.0, totalIntPaid, totalPrincPaid,
                                                                                                                                                   princPaid, totalDisb, total_outstanding, total_overdue, total_paid, total_paidKGS, totalIntPaid, totalPenPaid, totalPrincPaid, 0, loan_id, CURDATE());
+
+            set loan_summary_type_text = loan_summary_type;
           end if;
         END IF;
 
@@ -2819,6 +2836,105 @@ BEGIN
     COMMIT;
 
   END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `run_calc_manual_summary_for_loan` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `run_calc_manual_summary_for_loan`(in loan_id bigint, in in_date date)
+begin
+
+    DECLARE is_leaf_or_normal_loan BOOLEAN;
+
+    #if parent loan then first calculate for all child loans then calculate loan itself else just calculate for loan
+    if exists(
+      SELECT loan.id
+      FROM loan loan
+      WHERE loan.id IN (SELECT DISTINCT parent_id FROM loan WHERE parent_id IS NOT NULL)
+      and loan.id = loan_id
+    ) then
+      set is_leaf_or_normal_loan = false;
+    end if;
+
+    if is_leaf_or_normal_loan then
+      CALL calculateLoanDetailedSummaryUntilOnDate(loan_id, in_date, 1, 'MANUAL');
+    else
+      begin
+        declare v_finished integer default 0;
+        declare t_loan_id bigint;
+        declare t_cursor cursor for
+          SELECT loan.id
+          FROM loan loan
+          WHERE parent_id = loan_id
+          ORDER BY loan.id;
+
+        declare continue handler for not found
+        set v_finished = 1;
+
+        open t_cursor;
+
+          run_calculate: loop
+
+            fetch t_cursor into t_loan_id;
+
+            if v_finished = 1 then
+              leave run_calculate;
+            end if;
+
+            CALL calculateLoanDetailedSummaryUntilOnDate(t_loan_id, in_date, 1, 'MANUAL');
+
+          end loop run_calculate;
+
+        close t_cursor;
+
+        insert into loanSummary (version, loanAmount, loanSummaryType, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty, overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalFeePaid, totalInterestPaid, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalPenaltyPaid, totalPrincipalPaid, loanId, createDate)
+        select 1,
+          SUM(p.loanAmount),
+          p.loanSummaryType,
+          p.onDate,
+          SUM(p.outstadingFee),
+          SUM(p.outstadingInterest),
+          SUM(p.outstadingPenalty),
+          SUM(p.outstadingPrincipal),
+          SUM(p.overdueFee),
+          SUM(p.overdueInterest),
+          SUM(p.overduePenalty),
+          SUM(p.overduePrincipal),
+          SUM(p.paidFee),
+          SUM(p.paidInterest),
+          SUM(p.paidPenalty),
+          SUM(p.paidPrincipal),
+          SUM(p.totalDisbursed),
+          SUM(p.totalFeePaid),
+          SUM(p.totalInterestPaid),
+          SUM(p.totalOutstanding),
+          SUM(p.totalOverdue),
+          SUM(p.totalPaid),
+          SUM(p.totalPaidKGS),
+          SUM(p.totalPenaltyPaid),
+          SUM(p.totalPrincipalPaid),
+          loan_id,
+          CURDATE()
+        from loanSummary p
+        where p.loanId in
+              (select id
+               from loan
+               where parent_id = loan_id
+              and loanStateId != 3)
+        and p.onDate = in_date;
+      end;
+    end if;
+  end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -3746,4 +3862,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-25 10:49:56
+-- Dump completed on 2019-01-25 17:18:46
