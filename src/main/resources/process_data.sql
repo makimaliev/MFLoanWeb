@@ -1310,6 +1310,9 @@ BEGIN
     DECLARE totalCollIntPayment DOUBLE DEFAULT 0;
     DECLARE intOverdue DOUBLE DEFAULT 0;
     DECLARE real_intOverdue DOUBLE DEFAULT 0;
+
+    DECLARE grace_interest_amount DOUBLE DEFAULT 0;
+
     DECLARE penAccrued DOUBLE DEFAULT 0;
     DECLARE totalPenAccrued DOUBLE DEFAULT 0;
     DECLARE penPaid DOUBLE;
@@ -2047,14 +2050,29 @@ BEGIN
       SET collIntDisbursed = getCollectedIntDisbursed(loan_id);
       SET intOutstanding = totalIntAccrued + collIntDisbursed - totalIntPaid - total_wo_int;
       SET totalCollIntPayment = totalCollIntPayment + collIntPayment;
+
+      if loan_id = 1107 then
+        if tempDate <= '2016-01-01' then
+          SET grace_interest_amount = grace_interest_amount+intPayment*1.0/3.0;
+          set intPayment = intPayment*2.0/3.0;
+        end if;
+
+        if tempDate = '2016-07-01' then
+          set totalIntPayment = totalIntPayment+grace_interest_amount;
+        end if;
+      end if;
+
+
       SET totalIntPayment = totalIntPayment + intPayment;
+
+
+
+
       SET intOverdue = totalIntPayment + totalCollIntPayment - totalIntPaid - total_wo_int;
 
       #loan with 1107 id case
       set real_intOverdue = intOverdue;
-      if loan_id = 1107 then
-        set intOverdue = intOverdue*2.0/3.0;
-      end if;
+
 
 
 #       SET penOverdue = intPaid;
