@@ -29,8 +29,10 @@ import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.manage.service.loan.*;
 import kg.gov.mf.loan.manage.service.orderterm.*;
+import kg.gov.mf.loan.manage.service.process.LoanSummaryService;
 import kg.gov.mf.loan.output.report.service.ReferenceViewService;
 import kg.gov.mf.loan.web.fetchModels.*;
+import org.bouncycastle.ocsp.Req;
 import org.hibernate.boot.model.relational.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -165,6 +167,9 @@ public class LoanController {
 
     @Autowired
     OwnerService ownerService;
+
+    @Autowired
+    LoanSummaryService loanSummaryService;
 
     static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
 	
@@ -627,6 +632,64 @@ public class LoanController {
 		if(id > 0)
 			loanTypeService.remove(loanTypeService.getById(id));
 		return "redirect:" + "/manage/debtor/loan/type/list";
+    }
+
+    @RequestMapping(value = "/manage/debtor/{debtorId}/loan/{loanId}/summary/{id}/view",method = RequestMethod.GET)
+    public String viewSummary(ModelMap model,@PathVariable("debtorId") Long debtorId,@PathVariable("loanId") Long loanId,@PathVariable("id") Long id){
+
+	    Loan loan=loanService.getById(loanId);
+
+        LoanSummary loanSummary=loanSummaryService.getById(id);
+        String name="";
+        if(loan.getCurrency().getId()!=17){
+            name=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+loanSummary.getOnDate()+". в тыс. "+loan.getCurrency().getName();
+        }
+        else{
+            name=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+loanSummary.getOnDate()+". в тоннах "+loan.getCurrency().getName();
+        }
+
+        Double rate=currencyRateService.findByDateAndType(loanSummary.getOnDate(),loan.getCurrency()).getRate();
+
+        Boolean notKGS=false;
+        LoanSummary newLoanSummary=new LoanSummary();
+        if(loan.getCurrency().getId()!=1){
+            notKGS=true;
+            newLoanSummary.setLoanAmount(loanSummary.getLoanAmount()*rate);
+            newLoanSummary.setTotalDisbursed(loanSummary.getTotalDisbursed()*rate);
+            newLoanSummary.setPaidPrincipal(loanSummary.getPaidPrincipal()*rate);
+            newLoanSummary.setPaidInterest(loanSummary.getPaidInterest()*rate);
+            newLoanSummary.setPaidPenalty(loanSummary.getPaidPenalty()*rate);
+            newLoanSummary.setPaidFee(loanSummary.getPaidFee()*rate);
+            newLoanSummary.setTotalOutstanding(loanSummary.getTotalOutstanding()*rate);
+            newLoanSummary.setOutstadingPrincipal(loanSummary.getOutstadingPrincipal()*rate);
+            newLoanSummary.setOutstadingInterest(loanSummary.getOutstadingInterest()*rate);
+            newLoanSummary.setOutstadingPenalty(loanSummary.getOutstadingPenalty()*rate);
+            newLoanSummary.setTotalOverdue(loanSummary.getTotalOverdue()*rate);
+            newLoanSummary.setOverduePrincipal(loanSummary.getOverduePrincipal()*rate);
+            newLoanSummary.setOverdueInterest(loanSummary.getOverdueInterest()*rate);
+            newLoanSummary.setOverduePenalty(loanSummary.getOverduePenalty()*rate);
+            newLoanSummary.setOverdueFee(loanSummary.getOverdueFee()*rate);
+            newLoanSummary.setTotalPrincipalPaid(loanSummary.getTotalPrincipalPaid()*rate);
+            newLoanSummary.setTotalInterestPaid(loanSummary.getTotalInterestPaid()*rate);
+            newLoanSummary.setTotalPenaltyPaid(loanSummary.getTotalPenaltyPaid()*rate);
+            newLoanSummary.setTotalFeePaid(loanSummary.getTotalFeePaid()*rate);
+            newLoanSummary.setOnDate(loanSummary.getOnDate());
+            newLoanSummary.setTotalPaidKGS(loanSummary.getTotalPaidKGS());
+            model.addAttribute("newSummary",newLoanSummary);
+        }
+	    else{
+            model.addAttribute("newSummary",loanSummary);
+        }
+	    model.addAttribute("debtorId",debtorId);
+        model.addAttribute("debtor",debtorService.getById(debtorId));
+        model.addAttribute("loanId",loanId);
+        model.addAttribute("loan",loan);
+        model.addAttribute("summary",loanSummary);
+        model.addAttribute("name",name);
+        model.addAttribute("rate","в тыс. сомах по курсу "+rate);
+        model.addAttribute("notKGS",notKGS);
+
+	    return "/manage/debtor/loan/loanSummary";
     }
 
     @PostMapping("/paymentScheduleRequest/{loanId}")

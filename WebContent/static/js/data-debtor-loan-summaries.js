@@ -46,16 +46,20 @@ var DatatableDataLocalSummaries = function () {
                 template: function (row) {
 				    if (hasRoleAdmin==true){
                         if (row.record_status==1){
-                            return row.onDate;
+                            return '\
+						    <a href="/manage/debtor/'+ debtorId + '/loan/'+loanId+'/summary/'+row.id+'/view">'+ row.onDate +'</a>\
+					        ';
                         }
                         else{
                             return '\
-						    <span type="text" class="m-badge  m-badge--danger m-badge--wide">'+ row.onDate +'</span>\
+						    <a href="/manage/debtor/'+ debtorId + '/loan/'+loanId+'/summary/'+row.id+'/view"><span type="text" class="m-badge  m-badge--danger m-badge--wide">'+ row.onDate +'</span></a>\
 					        ';
                         }
                     }
 				    else{
-				        return row.onDate;
+                        return '\
+						    <a href="/manage/debtor/'+ debtorId + '/loan/'+loanId+'/summary/'+row.id+'/view">'+ row.onDate +'</a>\
+					        ';
                     }
                 }
 			},/*{
