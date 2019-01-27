@@ -1309,7 +1309,6 @@ BEGIN
     DECLARE collIntPayment DOUBLE;
     DECLARE totalCollIntPayment DOUBLE DEFAULT 0;
     DECLARE intOverdue DOUBLE DEFAULT 0;
-    DECLARE real_intOverdue DOUBLE DEFAULT 0;
 
     DECLARE grace_interest_amount DOUBLE DEFAULT 0;
 
@@ -1529,27 +1528,6 @@ BEGIN
             1 as curRate
           FROM dual
           WHERE includeToday = 1
-
-          UNION ALL
-
-          select
-            'daily' as type,
-            6 as orderType,
-            ((curdate() - interval 1 year - 5) + interval (t.i * 100 + u.i * 10 + v.i) day) as onDate,
-            0            AS disbursement,
-            0            AS principalPaid,
-            0            AS principalPayment,
-            0 as interestPaid,
-            0 as collectedInterestPayment,
-            0 as penaltyPaid,
-            0 as collectedPenaltyPayment,
-            0 as pTotalAmount,
-            1 as curRate
-          from
-              ints t
-              join ints u
-              join ints v
-          having onDate between '2019-01-01' and CURDATE()
 
           UNION ALL
 
@@ -2014,7 +1992,6 @@ BEGIN
       SET totalCollPenPayment = totalCollPenPayment + collPenPayment;
       SET totalPenPaid = totalPenPaid + penPaid;
 
-
       IF penalty_limit > 0 AND tempDate < '2014-11-25' AND penPaid > 0 THEN
         SET paymentSumBeforeSpecDate=paymentSumBeforeSpecDate+penPaid;
       END IF;
@@ -2022,9 +1999,6 @@ BEGIN
       IF penalty_limit > 0 AND tempDate >= '2014-11-25' AND penPaid > 0 THEN
         SET paymentSumAfterSpecDate=paymentSumAfterSpecDate+penPaid;
       END IF;
-
-
-
 
       SET penOverdue = totalPenAccrued + totalCollPenPayment - totalPenPaid - total_wo_pen;
       SET collPenDisbursed = getCollectedPenDisbursed(loan_id);
@@ -2062,18 +2036,9 @@ BEGIN
         end if;
       end if;
 
-
       SET totalIntPayment = totalIntPayment + intPayment;
 
-
-
-
       SET intOverdue = totalIntPayment + totalCollIntPayment - totalIntPaid - total_wo_int;
-
-      #loan with 1107 id case
-      set real_intOverdue = intOverdue;
-
-
 
 #       SET penOverdue = intPaid;
 
@@ -2082,8 +2047,6 @@ BEGIN
 #         SET penOverdue = intPaid;
 
       END IF;
-
-
 
 #       IF pType = 'write off' THEN
 #         SET intOutstanding = intOutstanding - total_wo_int;
@@ -2102,7 +2065,7 @@ BEGIN
 
       IF tempDate <= inDate THEN
 
-        if loan_summary_type_text = 'SYSTEM' and pType != 'daily' then
+        if loan_summary_type_text = 'SYSTEM' then
 
           INSERT INTO loanDetailedSummary(version, collectedInterestDisbursed, collectedInterestPayment, collectedPenaltyDisbursed, collectedPenaltyPayment, daysInPeriod, disbursement, interestAccrued,
                                             interestOutstanding, interestOverdue, interestPaid, interestPayment, onDate, penaltyAccrued, penaltyOutstanding, penaltyOverdue, penaltyPaid, principalOutstanding,
@@ -2155,10 +2118,11 @@ BEGIN
 
           if loan_summary_type_text = 'SYSTEM' or (loan_summary_type_text = 'MANUAL' and tempDate = inDate) or (loan_summary_type_text = 'FIXED' and not isAlreadyInserted and tempDate = inDate) then
 
-            select onDate into date_prev_loan_summary from loanSummary where loanId = loan_id order by onDate desc limit 1;
+            #select onDate into date_prev_loan_summary from loanSummary where loanId = loan_id order by onDate desc limit 1;
 
             aBlock: begin
 
+              /*
               if pType = 'daily' and date_prev_loan_summary = tempDate then
                 leave aBlock;
               end if;
@@ -2166,13 +2130,14 @@ BEGIN
               if pType = 'daily' then
                 set loan_summary_type_text = 'DAILY';
               end if;
+              */
 
               INSERT INTO loanSummary(version, loanSummaryType, loanAmount, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty,
                                       overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalInterestPaid, totalPenaltyPaid, totalPrincipalPaid, totalFeePaid, loanId, createDate)
               VALUES (1, loan_summary_type_text, loan_amount, tempDate, 0.0, intOutstanding, penOutstanding, princOutstanding, 0.0, intOverdue, penOverdue, princOverdue, 0.0, totalIntPaid, totalPrincPaid,
                                                                                                                                                     princPaid, totalDisb, total_outstanding, total_overdue, total_paid, total_paidKGS, totalIntPaid, totalPenPaid, totalPrincPaid, 0, loan_id, CURDATE());
 
-              set loan_summary_type_text = loan_summary_type;
+              #set loan_summary_type_text = loan_summary_type;
 
             end aBlock;
 
@@ -2189,22 +2154,23 @@ BEGIN
 
           if loan_summary_type_text = 'SYSTEM' or (loan_summary_type_text = 'MANUAL' and tempDate = inDate) or (loan_summary_type_text = 'FIXED' and not isAlreadyInserted and tempDate = inDate) then
 
+            /*
             if pType = 'daily' then
               set loan_summary_type_text = 'DAILY';
             end if;
+            */
 
             INSERT INTO loanSummary(version, loanSummaryType, loanAmount, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty,
                                     overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalInterestPaid, totalPenaltyPaid, totalPrincipalPaid, totalFeePaid, loanId, createDate)
             VALUES (1, loan_summary_type_text, loan_amount, tempDate, 0.0, intOutstanding, penOutstanding, princOutstanding, 0.0, intOverdue, penOverdue, princOverdue, 0.0, totalIntPaid, totalPrincPaid,
                                                                                                                                                   princPaid, totalDisb, total_outstanding, total_overdue, total_paid, total_paidKGS, totalIntPaid, totalPenPaid, totalPrincPaid, 0, loan_id, CURDATE());
 
-            set loan_summary_type_text = loan_summary_type;
+            #set loan_summary_type_text = loan_summary_type;
+
           end if;
         END IF;
 
       END IF;
-
-      set intOverdue = real_intOverdue;
 
       IF flag = FALSE THEN
         SET flag = TRUE;
@@ -3883,4 +3849,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-25 18:18:53
+-- Dump completed on 2019-01-27 15:43:13
