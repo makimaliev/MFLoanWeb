@@ -403,6 +403,10 @@
 													<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator">
 														Расчет
 													</button>
+													<form id="checkedLoans" th:action="@{/manage/debtor/__${debtor.id}__/loan/summary/view}" method="get">
+														<input hidden="hidden" type="text" name="name" id="selectedLoanses">
+														<input hidden="hidden" type="text" name="date" id="selectedLoansesDate">
+													</form>
 												</div>
 											</div>
 											<div id="phaseDetailsDiv" class="collapse" >
@@ -468,51 +472,33 @@
 </script>
 
 <script type="text/javascript">
+	var selectedLoans = {};
     function gotoURL(sel)
     {
         window.location.href = debtorURL;
     }
     $("#bnt_init_manualCalculator").on('click',function () {
-        var selectedLoans = {};
         // on checkbox checked event
-        $('#loansTable')
-            .on('m-datatable--on-check', function (e, args) {
-                var str = args.toString().split(',')
-                for (var i = 0; i < str.length; i++) {
-                    selectedLoans[str[i]] = str[i];
-                }
-                var count = datatable.setSelectedRecords().getSelectedRecords().length;
-                $('#m_datatable_selected_number').html(count);
-                if (count > 0) {
-                    $('#m_datatable_group_action_form').collapse('show');
-                }
-            })
-            .on('m-datatable--on-uncheck m-datatable--on-layout-updated', function (e, args) {
-                var str = args.toString().split(',')
-                for (var i = 0; i < str.length; i++) {
-                    delete selectedLoans[str[i]];
-                }
-                var count = datatable.setSelectedRecords().getSelectedRecords().length;
-                // $('#m_datatable_selected_number').html(count);
-                // if (count === 0) {
-                //     $('#m_datatable_group_action_form').collapse('hide');
-                //     $('#phaseDetailsDiv').collapse('hide');
-                //     selectedItems = [];
-                // }
-            });
         if (!$("#phaseInitDate").val())
         {
         }
         else
         {
             var initDate = $("#phaseInitDate").val();
+            // console.log(selectedLoans);
             $.ajax({
                 type : 'POST',
                 url : "/manage/debtor/"+debtorId+"/initializeManualCalculator",
                 data: {selectedLoans:selectedLoans, initDater: initDate},
-                success:function () {
-                    location.reload();
-                }
+				success:function () {
+                    var stringSelecteds="";
+                    for (var i in selectedLoans){
+                        stringSelecteds=stringSelecteds+"-"+i.toString();
+                    }
+					$("#selectedLoanses").val(stringSelecteds.toString());
+                    $("#selectedLoansesDate").val(initDate);
+					$("#checkedLoans").submit();
+				}
             });
         }
 
@@ -634,6 +620,34 @@
                 $.getScript("/js/data-debtor-loan.js");
             }
         });
+		$('#loansTable')
+				.on('m-datatable--on-check', function (e, args) {
+					var str = args.toString().split(',')
+					// alert(str)
+					for (var i = 0; i < str.length; i++) {
+						selectedLoans[str[i]] = str[i];
+					}
+					console.log(selectedLoans)
+					// alert(str)
+					// var count = datatable.setSelectedRecords().getSelectedRecords().length;
+					// $('#m_datatable_selected_number').html(count);
+					// if (count > 0) {
+					// 	$('#m_datatable_group_action_form').collapse('show');
+					// }
+				})
+				.on('m-datatable--on-uncheck m-datatable--on-layout-updated', function (e, args) {
+					var str = args.toString().split(',')
+					for (var i = 0; i < str.length; i++) {
+						delete selectedLoans[str[i]];
+					}console.log(selectedLoans)
+					// var count = datatable.setSelectedRecords().getSelectedRecords().length;
+					// $('#m_datatable_selected_number').html(count);
+					// if (count === 0) {
+					//     $('#m_datatable_group_action_form').collapse('hide');
+					//     $('#phaseDetailsDiv').collapse('hide');
+					//     selectedItems = [];
+					// }
+				});
     });
     $("#agreementListOfDebtorFunction").on('click',function () {
         $.ajax({
