@@ -76,7 +76,7 @@
                         <div class="m-portlet__head">
                             <div class="m-portlet__head-caption">
                                 <div class="m-portlet__head-title">
-                                    <h3 class="m-portlet__head-text" th:text="${agreement.agreementNumber}"></h3>
+                                    <h3 class="m-portlet__head-text" th:text="${agreement.notaryOfficeRegNumber}+' от '+${agreement.notaryOfficeRegDate}"></h3>
                                 </div>
                             </div>
                         </div>
@@ -102,58 +102,6 @@
 						<div class="tab-content">
 							<div class="tab-pane active" id="collateralAgreementInfo" role="tabpanel">
 								<div class="row m-row--no-padding m-row--col-separator-xl">
-									<div class="col-md-12 col-lg-12 col-xl-4">
-										<!--begin:: Widgets/Stats2-1 -->
-										<div class="m-widget1">
-											<div class="m-widget1__item">
-												<div class="row m-row--no-padding align-items-center">
-													<div class="col">
-														<h3 class="m-widget1__title" th:text="#{label.agreement.date}"></h3>
-														<span class="m-widget1__desc m--font-brand" th:text="${#dates.format(agreement.agreementDate,'dd.MM.yyyy')}"></span>
-													</div>
-												</div>
-											</div>
-											<div class="m-widget1__item">
-												<div class="row m-row--no-padding align-items-center">
-													<div class="col">
-														<h3 class="m-widget1__title" th:text="#{label.agreement.collateralOfficeRegNumber}"></h3>
-														<span class="m-widget1__desc m--font-brand" th:text="${agreement.collateralOfficeRegNumber}"></span>
-													</div>
-												</div>
-											</div>
-											<div class="m-widget1__item">
-												<div class="row m-row--no-padding align-items-center">
-													<div class="col">
-														<h3 class="m-widget1__title" th:text="#{label.agreement.collateralOfficeRegDate}"></h3>
-														<span class="m-widget1__desc m--font-brand" th:text="${#dates.format(agreement.collateralOfficeRegDate,'dd.MM.yyyy')}"></span>
-													</div>
-												</div>
-											</div>
-										</div>
-										<!--end:: Widgets/Stats2-1 -->
-									</div>
-									<div class="col-md-12 col-lg-12 col-xl-4">
-										<!--begin:: Widgets/Stats2-2 -->
-										<div class="m-widget1">
-											<div class="m-widget1__item">
-												<div class="row m-row--no-padding align-items-center">
-													<div class="col">
-														<h3 class="m-widget1__title" th:text="#{label.agreement.notaryOfficeRegNumber}"></h3>
-														<span class="m-widget1__desc m--font-brand" th:text="${agreement.notaryOfficeRegNumber}"></span>
-													</div>
-												</div>
-											</div>
-											<div class="m-widget1__item">
-												<div class="row m-row--no-padding align-items-center">
-													<div class="col">
-														<h3 class="m-widget1__title" th:text="#{label.agreement.notaryOfficeRegDate}"></h3>
-														<span class="m-widget1__desc m--font-brand" th:text="${#dates.format(agreement.notaryOfficeRegDate,'dd.MM.yyyy')}"></span>
-													</div>
-												</div>
-											</div>
-										</div>
-										<!--begin:: Widgets/Stats2-2 -->
-									</div>
 									<div class="col-md-12 col-lg-12 col-xl-4">
 										<!--begin:: Widgets/Stats2-3 -->
 										<div class="m-widget1">
@@ -183,6 +131,36 @@
 											</div>
 										</div>
 										<!--begin:: Widgets/Stats2-3 -->
+									</div>
+									<div class="col-md-12 col-lg-12 col-xl-4" th:if="${agreement.collateralOfficeRegNumber}!=null">
+										<!--begin:: Widgets/Stats2-1 -->
+										<div class="m-widget1">
+											<!--<div class="m-widget1__item">-->
+												<!--<div class="row m-row&#45;&#45;no-padding align-items-center">-->
+													<!--<div class="col">-->
+														<!--<h3 class="m-widget1__title" th:text="#{label.agreement.date}"></h3>-->
+														<!--<span class="m-widget1__desc m&#45;&#45;font-brand" th:text="${#dates.format(agreement.agreementDate,'dd.MM.yyyy')}"></span>-->
+													<!--</div>-->
+												<!--</div>-->
+											<!--</div>-->
+											<div class="m-widget1__item">
+												<div class="row m-row--no-padding align-items-center">
+													<div class="col">
+														<h3 class="m-widget1__title" th:text="#{label.agreement.collateralOfficeRegNumber}"></h3>
+														<span class="m-widget1__desc m--font-brand" th:text="${agreement.collateralOfficeRegNumber}"></span>
+													</div>
+												</div>
+											</div>
+											<div class="m-widget1__item">
+												<div class="row m-row--no-padding align-items-center">
+													<div class="col">
+														<h3 class="m-widget1__title" th:text="#{label.agreement.collateralOfficeRegDate}"></h3>
+														<span class="m-widget1__desc m--font-brand" th:text="${#dates.format(agreement.collateralOfficeRegDate,'dd.MM.yyyy')}"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!--end:: Widgets/Stats2-1 -->
 									</div>
 								</div>
 							</div>

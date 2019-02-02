@@ -152,6 +152,8 @@ public class CollateralAgreementController {
 		if(agreement.getId() == 0){
 			Owner owner=ownerRepository.findOne(debtorService.getById(debtorId).getOwner().getId());
 			agreement.setOwner(owner);
+			agreement.setAgreementDate(agreement.getNotaryOfficeRegDate());
+			agreement.setAgreementNumber(agreement.getNotaryOfficeRegNumber());
 			agreementService.add(agreement);
 		}
 

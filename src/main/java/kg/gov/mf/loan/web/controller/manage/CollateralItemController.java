@@ -1,9 +1,12 @@
 package kg.gov.mf.loan.web.controller.manage;
 
+import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,10 +24,7 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemArrestFreeService;
@@ -145,9 +145,13 @@ public class CollateralItemController {
 			collateralItem.setQuantityType(qTypeService.getById(Long.valueOf(1)));
 			collateralItem.setQuantity(1.0);
 			collateralItem.setCollateralValue(0.0);
+			collateralItem.setEstimatedValue(0.0);
 			CollateralItemDetails collateralItemDetails=new CollateralItemDetails();
 //			collateralItem.setCollateralItemDetails(collateralItemDetails);
 //			collateralItemDetails.setCollateralItem(collateralItem);
+			model.addAttribute("ownerText","");
+			model.addAttribute("organizationText","");
+			collateralItem.setItemType(iTypeService.getById(Long.valueOf(1)));
 			model.addAttribute("item", collateralItem);
 			model.addAttribute("itemDetails", collateralItemDetails);
 		}
@@ -158,6 +162,16 @@ public class CollateralItemController {
 			CollateralItemDetails tDetails = itemDetailsService.getById(tItem.getCollateralItemDetails().getId());
 			model.addAttribute("item", tItem);
 			model.addAttribute("itemDetails", tDetails);
+			Owner owner=ownerService.getById(tItem.getOwner().getId());
+			if(owner.getOwnerType().name()=="ORGANIZATION"){
+				model.addAttribute("ownerText","["+owner.getId()+"] "+owner.getName()+" (Организация)");
+			}
+			else{
+				model.addAttribute("ownerText","["+owner.getId()+"] "+owner.getName()+" (Физ. лицо)");
+			}
+
+			Owner owner1=ownerService.getById(tItem.getOrganization().getId());
+			model.addAttribute("organizationText","["+owner1.getId()+"] "+owner1.getName()+" (Организация)");
 		}
 		
 		model.addAttribute("iTypes", iTypeService.list());
@@ -168,19 +182,32 @@ public class CollateralItemController {
 	}
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/save"}, method=RequestMethod.POST)
-    public String saveCollateralItem(CollateralItem item, 
+    public String saveCollateralItem(CollateralItem item, String date,
     		CollateralItemDetails itemDetails,
     		@PathVariable("debtorId")Long debtorId,
     		@PathVariable("agreementId")Long agreementId,
-    		ModelMap model)
-    {
+    		ModelMap model) throws ParseException {
 		CollateralAgreement agreement = agreementService.getById(agreementId);
 		item.setCollateralAgreement(agreement);
 		
 		if(item.getId() == 0)
 		{
+//			item.setCollateralItemDetails(itemDetails);
+//			itemService.add(item);
+//			itemDetailsService.add(itemDetails);
+
+			itemDetails.setCollateralItem(item);
 			item.setCollateralItemDetails(itemDetails);
 			itemDetails.setCollateralItem(item);
+//			itemService.add(item);
+			date=date.replace(",","");
+			if(date.length()==10) {
+				itemDetails.setProdDate(new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).parse(date));
+			}
+			if(item.getItemType().getId()==1||item.getItemType().getId()==4||item.getItemType().getId()==5){
+
+			}
+//			itemDetailsService.add(itemDetails);
 			itemService.add(item);
 			itemDetailsService.add(itemDetails);
 		}
@@ -188,6 +215,11 @@ public class CollateralItemController {
 		{
 			item.setCollateralItemDetails(itemDetails);
 			itemDetails.setCollateralItem(item);
+			date=date.replace(",","");
+			if(date.length()==10)
+			itemDetails.setProdDate(new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).parse(date));
+
+
 			itemService.update(item);
 			itemDetailsService.update(itemDetails);
 		}
