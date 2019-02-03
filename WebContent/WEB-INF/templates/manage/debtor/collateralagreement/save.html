@@ -86,49 +86,52 @@
 						<div class="m-portlet__body">
 							<div class="m-form__section">
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.number}">
-										Agreement number <span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" th:field="*{agreementNumber}">
-									</div>
-								</div>
+								<!--<div class="form-group m-form__group row">-->
+									<!--<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.number}">-->
+										<!--Agreement number <span class="m&#45;&#45;font-danger">*</span>-->
+									<!--</label>-->
+									<!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+										<!--<input type="text" class="form-control m-input" th:field="*{agreementNumber}">-->
+									<!--</div>-->
+								<!--</div>-->
+
+								<!--<div class="form-group m-form__group row">-->
+									<!--<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.date}">-->
+										<!--Agreement Date-->
+									<!--</label>-->
+									<!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+										<!--<div class="input-group date m_datetimepicker_6">-->
+											<!--<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{agreementDate}"/>-->
+											<!--<span class="input-group-addon">-->
+													<!--<i class="la la-calendar glyphicon-th"></i>-->
+												<!--</span>-->
+										<!--</div>-->
+									<!--</div>-->
+								<!--</div>-->
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.date}">
-										Agreement Date
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.loans}">
+										Loans <span class="m--font-danger">*</span>
 									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{agreementDate}"/>
-											<span class="input-group-addon">
-													<i class="la la-calendar glyphicon-th"></i>
-												</span>
-										</div>
-									</div>
-								</div>
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.collateralOfficeRegNumber}">
-										Collateral office registration number <span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" th:field="*{collateralOfficeRegNumber}">
-									</div>
-								</div>
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.collateralOfficeRegDate}">
-										Collateral office registration date
-									</label>
+
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<div class="input-group date m_datetimepicker_6">
-											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{collateralOfficeRegDate}"/>
-											<span class="input-group-addon">
-													<i class="la la-calendar glyphicon-th"></i>
-												</span>
-										</div>
+										<!--
+										<select class="form-control m-select2" id="m_select2_3" name="param" multiple="multiple" >
+											<option th:each="loan : ${tLoans}"
+													th:value="${{loan}}"
+													th:text="${loan.regNumber}">
+											</option>
+										</select>
+										-->
+
+										<select class="form-control m-bootstrap-select m_selectpicker" multiple th:field="*{loans}">
+											<option th:each="loan : ${tLoans}"
+													th:value="${{loan}}"
+													th:text="${loan.regNumber}">
+											</option>
+										</select>
 									</div>
 								</div>
 
@@ -179,28 +182,25 @@
 								</div>
 
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.loans}">
-										Loans <span class="m--font-danger">*</span>
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.collateralOfficeRegNumber}">
+										Collateral office registration number <span class="m--font-danger">*</span>
 									</label>
-
-
-
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<!--
-										<select class="form-control m-select2" id="m_select2_3" name="param" multiple="multiple" >
-											<option th:each="loan : ${tLoans}"
-													th:value="${{loan}}"
-													th:text="${loan.regNumber}">
-											</option>
-										</select>
-										-->
+										<input type="text" class="form-control m-input" th:field="*{collateralOfficeRegNumber}">
+									</div>
+								</div>
 
-										<select class="form-control m-bootstrap-select m_selectpicker" multiple th:field="*{loans}">
-											<option th:each="loan : ${tLoans}"
-													th:value="${{loan}}"
-													th:text="${loan.regNumber}">
-											</option>
-										</select>
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.collateralOfficeRegDate}">
+										Collateral office registration date
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<div class="input-group date m_datetimepicker_6">
+											<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{collateralOfficeRegDate}"/>
+											<span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
+										</div>
 									</div>
 								</div>
 

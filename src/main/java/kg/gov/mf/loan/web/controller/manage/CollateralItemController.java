@@ -1,9 +1,12 @@
 package kg.gov.mf.loan.web.controller.manage;
 
+import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,10 +24,7 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemArrestFreeService;
@@ -118,6 +118,42 @@ public class CollateralItemController {
         String jsonArrestFrees = gson.toJson(getArrestFreesByItemId(itemId));
         model.addAttribute("arrestFrees", jsonArrestFrees);
 
+        String ownerName= "-";
+        String organizationName = "-";
+
+        if(tItem!=null)
+		{
+			if(tItem.getOwner()!=null)
+			{
+				ownerName = tItem.getOwner().getName();
+			}
+			if(tItem.getOrganization()!=null)
+			{
+				organizationName = tItem.getOrganization().getName();
+			}
+			else
+			{
+				if(tItem.getCollateralItemDetails()!=null)
+				{
+					if(tItem.getCollateralItemDetails().getArrest_by()>0)
+					{
+						switch (String.valueOf(tItem.getCollateralItemDetails().getArrest_by()))
+						{
+							case "1" : organizationName = "ГГТИ";
+							case "2" : organizationName = "Госрегистр";
+							case "3" : organizationName = "ГАИ";
+							case "4" : organizationName = "Айыл окмоту";
+							case "5" : organizationName = "Отсутствует";
+						}
+					}
+				}
+			}
+
+		}
+
+		model.addAttribute("ownerName",ownerName);
+        model.addAttribute("organizationName",organizationName);
+
 		//model.addAttribute("inspections", tItem.getCollateralItemInspectionResults());
 		
 		return "/manage/debtor/collateralagreement/collateralitem/view";
@@ -145,9 +181,13 @@ public class CollateralItemController {
 			collateralItem.setQuantityType(qTypeService.getById(Long.valueOf(1)));
 			collateralItem.setQuantity(1.0);
 			collateralItem.setCollateralValue(0.0);
+			collateralItem.setEstimatedValue(0.0);
 			CollateralItemDetails collateralItemDetails=new CollateralItemDetails();
 //			collateralItem.setCollateralItemDetails(collateralItemDetails);
 //			collateralItemDetails.setCollateralItem(collateralItem);
+			model.addAttribute("ownerText","");
+			model.addAttribute("organizationText","");
+			collateralItem.setItemType(iTypeService.getById(Long.valueOf(1)));
 			model.addAttribute("item", collateralItem);
 			model.addAttribute("itemDetails", collateralItemDetails);
 		}
@@ -158,6 +198,20 @@ public class CollateralItemController {
 			CollateralItemDetails tDetails = itemDetailsService.getById(tItem.getCollateralItemDetails().getId());
 			model.addAttribute("item", tItem);
 			model.addAttribute("itemDetails", tDetails);
+			Owner owner=ownerService.getById(tItem.getOwner().getId());
+			if(owner.getOwnerType().name()=="ORGANIZATION"){
+				model.addAttribute("ownerText","["+owner.getId()+"] "+owner.getName()+" (Организация)");
+			}
+			else{
+				model.addAttribute("ownerText","["+owner.getId()+"] "+owner.getName()+" (Физ. лицо)");
+			}
+
+			Owner owner1 = null;
+			if(tItem.getOrganization()!=null)
+			{
+				owner1=ownerService.getById(tItem.getOrganization().getId());
+				model.addAttribute("organizationText","["+owner1.getId()+"] "+owner1.getName()+" (Организация)");
+			}
 		}
 		
 		model.addAttribute("iTypes", iTypeService.list());
@@ -168,31 +222,69 @@ public class CollateralItemController {
 	}
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/save"}, method=RequestMethod.POST)
-    public String saveCollateralItem(CollateralItem item, 
+    public String saveCollateralItem(CollateralItem item, String date, String expl_date,
     		CollateralItemDetails itemDetails,
     		@PathVariable("debtorId")Long debtorId,
     		@PathVariable("agreementId")Long agreementId,
-    		ModelMap model)
-    {
+    		ModelMap model) throws ParseException {
 		CollateralAgreement agreement = agreementService.getById(agreementId);
 		item.setCollateralAgreement(agreement);
-		
+
+
+		if(item.getOrganization()!=null)
+			if(item.getOrganization().getId()==0)
+				item.setOrganization(null);
+
 		if(item.getId() == 0)
 		{
-			item.setCollateralItemDetails(itemDetails);
+			if(item.getRisk_rate()==null) item.setRisk_rate((double)1);
+			if(item.getDemand_rate()==null) item.setDemand_rate((double)1);
+
+			ConditionType conditionTypeByDefault = cTypeService.getById(1L);
+
+			if(item.getConditionType()==null) item.setConditionType(conditionTypeByDefault);
+
+			date=date.replace(",","");
+			if(date.length()==10) {
+				itemDetails.setProdDate(new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).parse(date));
+			}
+
+			if(expl_date!=null)
+			{
+				expl_date=expl_date.replace(",","");
+				if(expl_date.length()==10) {
+					itemDetails.setExplDate(new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).parse(expl_date));
+				}
+			}
+
+
+			if(itemDetails.getGoods_address()==null) itemDetails.setGoods_address("");
+
 			itemDetails.setCollateralItem(item);
+			item.setCollateralItemDetails(itemDetails);
+
+			if(item.getCollateralItemDetails()!=null)
 			itemService.add(item);
-			itemDetailsService.add(itemDetails);
 		}
 		else
 		{
+
 			item.setCollateralItemDetails(itemDetails);
-			itemDetails.setCollateralItem(item);
+			date=date.replace(",","");
+			if(date.length()==10)
+			itemDetails.setProdDate(new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).parse(date));
+
+			if(expl_date!=null)
+			{
+				expl_date=expl_date.replace(",","");
+				if(expl_date.length()==10) {
+					itemDetails.setExplDate(new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).parse(expl_date));
+				}
+			}
+
 			itemService.update(item);
-			itemDetailsService.update(itemDetails);
 		}
-			
-		
+
 		return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/view";
     }
 

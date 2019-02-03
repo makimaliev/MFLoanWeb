@@ -92,40 +92,38 @@
 
 						<input type="hidden" name="id" th:value="*{id}"/>
 						<input type="hidden" name="id" th:field="*{owner.id}" id="ownerId"/>
+						<input type="hidden" th:field="*{organization.id}" id="organizationId"/>
 
 						<div class="m-portlet__body">
 							<div class="m-form__section">
-
+                                <div class="form-group m-form__group row">
+                                    <label class="col-form-label col-lg-4 col-sm-12">
+                                        <span th:text="#{label.collateralItem.name}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-4 col-md-9 col-sm-12">
+                                        <input type="text" class="form-control m-input" name="name" th:value="${item.name}">
+                                    </div>
+                                </div>
+                                <div class="form-group m-form__group row">
+                                    <label class="col-form-label col-lg-4 col-sm-12">
+                                        <span th:text="#{label.collateralItem.description}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-4 col-md-9 col-sm-12">
+                                        <textarea class="form-control m-input" name="description" th:value="${item.description}"></textarea>
+                                    </div>
+                                </div>
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.item.owner}">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.item.owner2}">
 									Owner <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="m-typeahead">
-											<input class="form-control m-input" id="owner_typeahead" type="text" placeholder="Owners" th:value="*{owner}" >
+											<input class="form-control m-input" id="owner_typeahead" type="text" placeholder="Owners" th:value="${ownerText}" >
 										</div>
 									</div>
 								</div>
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.collateralItem.name}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="name" th:value="${item.name}">
-									</div>
-								</div>
-
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.collateralItem.description}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<textarea class="form-control m-input" name="description" th:value="${item.description}"></textarea>
-									</div>
-								</div>
-
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
 										<span th:text="#{label.collateralItem.type}"></span>
@@ -137,7 +135,6 @@
 										</select>
 									</div>
 								</div>
-
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
 										<span th:text="#{label.collateralItem.quantity}"></span>
@@ -147,7 +144,6 @@
 										<input type="text" class="form-control m-input" name="quantity" th:value="${item.quantity}">
 									</div>
 								</div>
-
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
 										<span th:text="#{label.collateralItem.quantityType}"></span>
@@ -160,7 +156,6 @@
 										</select>
 									</div>
 								</div>
-
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
 										<span th:text="#{label.collateralItem.collateralValue}"></span>
@@ -170,7 +165,6 @@
 										<input type="text" class="form-control m-input" name="collateralValue" th:value="${item.collateralValue}">
 									</div>
 								</div>
-
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
 										<span th:text="#{label.collateralItem.estimatedValue}"></span>
@@ -180,142 +174,311 @@
 										<input type="text" class="form-control m-input" name="estimatedValue" th:value="${item.estimatedValue}">
 									</div>
 								</div>
-								<!--
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.collateralItem.conditionType}"></span>
-										<span class="m--font-danger">*</span>
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.item.organization}">
+										Owner <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${item.conditionType.id}" name="conditionType"  id="conditionType" th:title="#{label.select}">
-											<option value="0" th:text="#{label.select}"></option>
-											<option th:each="type : ${cTypes}" th:value="${type.id}" th:text="${type.name}"></option>
-										</select>
+										<div class="m-typeahead">
+											<input class="form-control m-input" id="organization_typeahead" type="text" th:placeholder="#{label.item.organization}" th:value="${organizationText}">
+										</div>
 									</div>
 								</div>
-								-->
-
 							</div>
+                            <div id="myDiv">
+                                <div th:object="${itemDetails}">
+                                    <div class="m-form__section">
+                                        <div class="m-form__heading">
+                                            <h3 class="m-form__heading-title" th:text="#{label.collateralItem.details}"></h3>
+                                        </div>
 
-							<div class="m-form__section">
+                                        <div class="form-group m-form__group row" id="goods_type">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span id="detailsLabel8" th:text="#{label.collateralItem.details8}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="goods_type" th:value="${itemDetails?.goods_type}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="goods_id">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span id="detailsLabel6" th:text="#{label.collateralItem.details6}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="goods_id" th:value="${itemDetails?.goods_id}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="prod_date">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span id="detailsLabel7" th:text="#{label.collateralItem.details7}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <div class="input-group date m_datetimepicker_6">
+                                                    <input type="text" class="form-control m-input" name="date" th:placeholder="#{label.select.date}" th:value="${#dates.format(itemDetails?.prodDate, 'dd.MM.yyyy')}"/>
+                                                    <span class="input-group-addon">
+                                                        <i class="la la-calendar glyphicon-th"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="expl_date">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span th:text="#{label.collateralItem.explDate}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <div class="input-group date m_datetimepicker_6">
+                                                    <input type="text" class="form-control m-input" name="expl_date" th:placeholder="#{label.select.date}" th:value="${#dates.format(itemDetails?.explDate, 'dd.MM.yyyy')}"/>
+                                                    <span class="input-group-addon">
+                                                        <i class="la la-calendar glyphicon-th"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="document">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span th:text="#{label.collateralItem.document}"></span>
+                                                <span class="m--font-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="document" th:value="${itemDetails?.document}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="goods_address">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span  th:text="#{label.collateralItem.goodsAddress}"></span>
+                                                <span class="m--font-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="goods_address" th:value="${itemDetails?.goods_address}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="details1">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span id="detailsLabel1" th:text="#{label.collateralItem.details1}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="details1" th:value="${itemDetails?.details1}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="details2">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span id="detailsLabel2" th:text="#{label.collateralItem.details2}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="details2" th:value="${itemDetails?.details2}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="details3">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span id="detailsLabel3" th:text="#{label.collateralItem.details3}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="details3" th:value="${itemDetails?.details3}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="details4">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span id="detailsLabel4" th:text="#{label.collateralItem.details4}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="details4" th:value="${itemDetails?.details4}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="details5">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span id="detailsLabel5" th:text="#{label.collateralItem.details5}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="details5" th:value="${itemDetails?.details5}">
+                                            </div>
+                                        </div>
+                                        <div th:hidden="hidden" class="form-group m-form__group row" id="details6">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span th:text="#{label.collateralItem.details6}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="details6" th:value="${itemDetails?.details6}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="incomplete_reason">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span  th:text="#{label.collateralItem.incomplete_reason}"></span>
+                                                <span class="m--font-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="incomplete_reason" th:value="${itemDetails?.incomplete_reason}">
+                                            </div>
+                                        </div>
+                                    </div>
 
-								<div class="m-form__heading">
-									<h3 class="m-form__heading-title" th:text="#{label.collateralItem.details}"></h3>
-								</div>
 
-								<input type="hidden" name="id" th:value="${item.id}"/>
+                                    <!--&lt;!&ndash;<div id="beasts" th:if="${item.itemType.id}==6" class="m-form__section">&ndash;&gt;-->
+                                    <!--<div id="beasts" class="m-form__section">-->
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span id="detailsLabel1" th:text="#{label.collateralItem.details1}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="details1" th:value="${itemDetails.details1}">
-									</div>
-								</div>
+                                    <!--<div class="m-form__heading">-->
+                                    <!--<h3 class="m-form__heading-title" th:text="#{label.collateralItem.details}"></h3>-->
+                                    <!--</div>-->
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.beast.details1}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="details1" th:value="${itemDetails?.details1}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span id="detailsLabel2" th:text="#{label.collateralItem.details2}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="details2" th:value="${itemDetails.details2}">
-									</div>
-								</div>
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.beast.details2}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="details2" th:value="${itemDetails?.details2}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span id="detailsLabel3" th:text="#{label.collateralItem.details3}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="details3" th:value="${itemDetails.details3}">
-									</div>
-								</div>
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.beast.details3}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="details3" th:value="${itemDetails?.details3}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span id="detailsLabel4" th:text="#{label.collateralItem.details4}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="details4" th:value="${itemDetails.details4}">
-									</div>
-								</div>
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.beast.details4}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="details4" th:value="${itemDetails?.details4}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--&lt;!&ndash;<div id="realty" th:if="${item.itemType.id}==7 or ${item.itemType.id}==3" class="m-form__section">&ndash;&gt;-->
+                                    <!--<div id="realty" class="m-form__section">-->
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span id="detailsLabel5" th:text="#{label.collateralItem.details5}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="details5" th:value="${itemDetails.details5}">
-									</div>
-								</div>
+                                    <!--<div class="m-form__heading">-->
+                                    <!--<h3 class="m-form__heading-title" th:text="#{label.collateralItem.details}"></h3>-->
+                                    <!--</div>-->
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span id="detailsLabel1" th:text="#{label.collateralItem.realty.details1}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="details1" th:value="${itemDetails?.details1}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span id="detailsLabel6" th:text="#{label.collateralItem.details6}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="details6" th:value="${itemDetails.details6}">
-									</div>
-								</div>
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span id="detailsLabel2" th:text="#{label.collateralItem.realty.details2}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="details2" th:value="${itemDetails?.details2}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.collateralItem.document}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="document" th:value="${itemDetails.document}">
-									</div>
-								</div>
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span id="detailsLabel3" th:text="#{label.collateralItem.realty.details3}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="details3" th:value="${itemDetails?.details3}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.collateralItem.incomplete_reason}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="incomplete_reason" th:value="${itemDetails.incomplete_reason}">
-									</div>
-								</div>
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span id="detailsLabel4" th:text="#{label.collateralItem.realty.details4}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="details4" th:value="${itemDetails?.details4}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.collateralItem.goods_type}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="goods_type" th:value="${itemDetails.goods_type}">
-									</div>
-								</div>
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.document}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="document" th:value="${itemDetails?.document}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.goods_type}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="goods_type" th:value="${itemDetails?.goods_type}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.collateralItem.goods_address}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="goods_address" th:value="${itemDetails.goods_address}">
-									</div>
-								</div>
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.goods_address}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="goods_address" th:value="${itemDetails?.goods_address}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.collateralItem.goods_id}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="goods_id" th:value="${itemDetails.goods_id}">
-									</div>
-								</div>
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.prodDate}"></span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<div class="input-group date m_datetimepicker_6">-->
+                                    <!--<input type="text" class="form-control m-input" name="date" th:placeholder="#{label.select.date}" th:value="${#dates.format(itemDetails?.prodDate, 'dd.MM.yyyy')}"/>-->
+                                    <!--<span class="input-group-addon">-->
+                                    <!--<i class="la la-calendar glyphicon-th"></i>-->
+                                    <!--</span>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
 
-							</div>
+                                    <!--</div>-->
+                                    <!--<div id="product" th:if="${item.itemType.id}==2" class="m-form__section">-->
+                                    <!--<div id="product"  class="m-form__section">-->
+
+                                    <!--<div class="m-form__heading">-->
+                                    <!--<h3 class="m-form__heading-title" th:text="#{label.collateralItem.details}"></h3>-->
+                                    <!--</div>-->
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.document}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="document" th:value="${itemDetails?.document}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.prodDate}"></span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<div class="input-group date m_datetimepicker_6">-->
+                                    <!--<input type="text" class="form-control m-input" name="date" th:placeholder="#{label.select.date}" th:value="${#dates.format(itemDetails?.prodDate, 'dd.MM.yyyy')}"/>-->
+                                    <!--<span class="input-group-addon">-->
+                                    <!--<i class="la la-calendar glyphicon-th"></i>-->
+                                    <!--</span>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                </div>
+                            </div>
 						</div>
 						<div class="m-portlet__foot m-portlet__foot--fit">
 							<div class="m-form__actions m-form__actions">
@@ -330,6 +493,8 @@
 						</div>
 					</form>
 					<!--end::Form-->
+
+
 				</div>
 				<!--end::Portlet-->
 			</div>
@@ -361,8 +526,8 @@
 
 
 
-		function updateText()
-		{
+        function updateText()
+        {
             var det1 = [];
 
             var det11=/*[[#{label.collateralItem.details1.type1}]]*/ 'default';
@@ -492,6 +657,51 @@
             det6.push(det67);
             det6.push(det68);
 
+            var det7 = [];
+
+            var det71=/*[[#{label.collateralItem.details7.type1}]]*/ 'default';
+            var det72=/*[[#{label.collateralItem.details7.type2}]]*/ 'default';
+            var det73=/*[[#{label.collateralItem.details7.type3}]]*/ 'default';
+            var det74=/*[[#{label.collateralItem.details7.type4}]]*/ 'default';
+            var det75=/*[[#{label.collateralItem.details7.type5}]]*/ 'default';
+            var det76=/*[[#{label.collateralItem.details7.type6}]]*/ 'default';
+            var det77=/*[[#{label.collateralItem.details7.type7}]]*/ 'default';
+            var det78=/*[[#{label.collateralItem.details7.type8}]]*/ 'default';
+
+
+            det7.push(det71);
+            det7.push(det72);
+            det7.push(det73);
+            det7.push(det74);
+            det7.push(det75);
+            det7.push(det76);
+            det7.push(det77);
+            det7.push(det78);
+
+
+            var det8 = [];
+
+            var det81=/*[[#{label.collateralItem.details8.type1}]]*/ 'default';
+            var det82=/*[[#{label.collateralItem.details8.type2}]]*/ 'default';
+            var det83=/*[[#{label.collateralItem.details8.type3}]]*/ 'default';
+            var det84=/*[[#{label.collateralItem.details8.type4}]]*/ 'default';
+            var det85=/*[[#{label.collateralItem.details8.type5}]]*/ 'default';
+            var det86=/*[[#{label.collateralItem.details8.type6}]]*/ 'default';
+            var det87=/*[[#{label.collateralItem.details8.type7}]]*/ 'default';
+            var det88=/*[[#{label.collateralItem.details8.type8}]]*/ 'default';
+
+
+            det8.push(det81);
+            det8.push(det82);
+            det8.push(det83);
+            det8.push(det84);
+            det8.push(det85);
+            det8.push(det86);
+            det8.push(det87);
+            det8.push(det88);
+
+
+
             var index = $('#itemType').val()-1;
 
             $('#detailsLabel1').html(det1[index]);
@@ -500,39 +710,88 @@
             $('#detailsLabel4').html(det4[index]);
             $('#detailsLabel5').html(det5[index]);
             $('#detailsLabel6').html(det6[index]);
+            $('#detailsLabel7').html(det7[index]);
+            $('#detailsLabel8').html(det8[index]);
+
 
 
         }
 
+        function hideDivs()
+        {
+            if($("#itemType").val()==1||$("#itemType").val()==4||$("#itemType").val()==5)
+            {
+                $("#goods_address").hide();
+            }
+            if($("#itemType").val()==6)
+            {
+                $("#goods_address").hide();
+                $("#goods_type").hide();
+                $("#prod_date").hide();
+                $("#goods_id").hide();
+                $("#expl_date").hide();
+            }
+
+            if($("#itemType").val()==2)
+            {
+                $("#goods_address").hide();
+                $("#goods_id").hide();
+                $("#details1").hide();
+                $("#details2").hide();
+                $("#details3").hide();
+                $("#details4").hide();
+                $("#details5").hide();
+            }
+
+            if($("#itemType").val()==3 || $("#itemType").val()==7)
+            {
+                $("#details5").hide();
+            }
+        }
+
         updateText();
+        hideDivs();
 
         $('#itemType').change(function () {
 
-				updateText();
+            updateText();
+            hideDivs();
+
+
+
+                	// else if ($("#itemType").val()==6){
+                     //   $("#myDiv").empty();
+                     //   $("#myDiv").prepend(beasts);
+                	// }
+                	// else if($("#itemType").val()==3||$("#itemType").val()==7){
+                     //   $("#myDiv").empty();
+                     //   $("#myDiv").prepend(realty);
+                	// }
+                	// else{
+                     //   $("#myDiv").empty();
+                     //   $("#myDiv").prepend(product);
+                	// }
         });
-
-
-
 
     });
     /*]]>*/
 </script>
 
 <script type="text/javascript">
-    // body.onload(function () {
-    //     var spanText1 = 'label.collateralItem.details1.type'+ this.value
-    //     $('#detailsLabel1').html(spanText1)
-    //     var spanText2 = 'label.collateralItem.details2.type'+ this.value
-    //     $('#detailsLabel2').html(spanText2)
-    //     var spanText3 = 'label.collateralItem.details3.type'+ this.value
-    //     $('#detailsLabel3').html(spanText3)
-    //     var spanText4 = 'label.collateralItem.details4.type'+ this.value
-    //     $('#detailsLabel4').html(spanText4)
-    //     var spanText5 = 'label.collateralItem.details5.type'+ this.value
-    //     $('#detailsLabel5').html(spanText5)
-    //     var spanText6 = 'label.collateralItem.details6.type'+ this.value
-    //     $('#detailsLabel6').html(spanText6)
-    // });
+    body.onload(function () {
+        var spanText1 = 'label.collateralItem.details1.type'+ this.value
+        $('#detailsLabel1').html(spanText1)
+        var spanText2 = 'label.collateralItem.details2.type'+ this.value
+        $('#detailsLabel2').html(spanText2)
+        var spanText3 = 'label.collateralItem.details3.type'+ this.value
+        $('#detailsLabel3').html(spanText3)
+        var spanText4 = 'label.collateralItem.details4.type'+ this.value
+        $('#detailsLabel4').html(spanText4)
+        var spanText5 = 'label.collateralItem.details5.type'+ this.value
+        $('#detailsLabel5').html(spanText5)
+        var spanText6 = 'label.collateralItem.details6.type'+ this.value
+        $('#detailsLabel6').html(spanText6)
+    });
 </script>
 <script type="text/javascript">
     function updateTOwner(sel)
@@ -540,10 +799,54 @@
         var owner_text = document.getElementById("owner_typeahead").value;
         var owner_id = owner_text.split("]")[0];
         $("#ownerId").val(owner_id.substring(1,owner_id.length));
+
+
+        var organization_text = document.getElementById("organization_typeahead").value;
+
+        var organization_id = organization_text.match(/[^[\]]+(?=])/g);
+
+
+
+        if(organization_id == null){
+            organization_id = 0;
+        }
+		$("#organizationId").val(organization_id);
+
     }
 </script>
 <script th:inline="javascript">
 	var jsonOwners=[[${owners}]];
+	var item=[[item]];
+	// var transports=$("#transports");
+	// var beasts=$("#beasts");
+	// var realty=$("#realty");
+	// var product=$("#product");
+	// // $("#transports").removeAttribute("hidden");
+	// var maker= function () {
+	// 	// alert($("#itemType").val());
+	// 	if($("#itemType").val()==1||$("#itemType").val()==4||$("#itemType").val()==5){
+	// 		$("#myDiv").empty();
+     //        $("#myDiv").prepend(transports);
+	// 	}
+	// 	else if ($("#itemType").val()==6){
+     //        $("#myDiv").empty();
+     //        $("#myDiv").prepend(beasts);
+	// 	}
+	// 	else if($("#itemType").val()==3||$("#itemType").val()==7){
+     //        $("#myDiv").empty();
+     //        $("#myDiv").prepend(realty);
+	// 	}
+	// 	else{
+     //        $("#myDiv").empty();
+     //        $("#myDiv").prepend(product);
+	// 	}
+	// };
+    //
+	// maker();
+    //
+	// $("#itemType").on('change',function () {
+	// 	maker();
+	// });
 </script>
 
 </body>
