@@ -92,13 +92,30 @@
 
 						<input type="hidden" name="id" th:value="*{id}"/>
 						<input type="hidden" name="id" th:field="*{owner.id}" id="ownerId"/>
-						<input type="hidden" name="id" th:field="*{organization.id}" id="organizationId"/>
+						<input type="hidden" th:field="*{organization.id}" id="organizationId"/>
 
 						<div class="m-portlet__body">
 							<div class="m-form__section">
-
+                                <div class="form-group m-form__group row">
+                                    <label class="col-form-label col-lg-4 col-sm-12">
+                                        <span th:text="#{label.collateralItem.name}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-4 col-md-9 col-sm-12">
+                                        <input type="text" class="form-control m-input" name="name" th:value="${item.name}">
+                                    </div>
+                                </div>
+                                <div class="form-group m-form__group row">
+                                    <label class="col-form-label col-lg-4 col-sm-12">
+                                        <span th:text="#{label.collateralItem.description}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-4 col-md-9 col-sm-12">
+                                        <textarea class="form-control m-input" name="description" th:value="${item.description}"></textarea>
+                                    </div>
+                                </div>
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.item.owner}">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.item.owner2}">
 									Owner <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
@@ -107,26 +124,6 @@
 										</div>
 									</div>
 								</div>
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.collateralItem.name}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="name" th:value="${item.name}">
-									</div>
-								</div>
-
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.collateralItem.description}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<textarea class="form-control m-input" name="description" th:value="${item.description}"></textarea>
-									</div>
-								</div>
-
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
 										<span th:text="#{label.collateralItem.type}"></span>
@@ -138,7 +135,6 @@
 										</select>
 									</div>
 								</div>
-
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
 										<span th:text="#{label.collateralItem.quantity}"></span>
@@ -148,7 +144,6 @@
 										<input type="text" class="form-control m-input" name="quantity" th:value="${item.quantity}">
 									</div>
 								</div>
-
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
 										<span th:text="#{label.collateralItem.quantityType}"></span>
@@ -161,7 +156,6 @@
 										</select>
 									</div>
 								</div>
-
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
 										<span th:text="#{label.collateralItem.collateralValue}"></span>
@@ -171,7 +165,6 @@
 										<input type="text" class="form-control m-input" name="collateralValue" th:value="${item.collateralValue}">
 									</div>
 								</div>
-
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
 										<span th:text="#{label.collateralItem.estimatedValue}"></span>
@@ -181,7 +174,6 @@
 										<input type="text" class="form-control m-input" name="estimatedValue" th:value="${item.estimatedValue}">
 									</div>
 								</div>
-
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.item.organization}">
 										Owner <span class="m--font-danger">*</span>
@@ -193,7 +185,300 @@
 									</div>
 								</div>
 							</div>
-                            <div id="myDiv"></div>
+                            <div id="myDiv">
+                                <div th:object="${itemDetails}">
+                                    <div class="m-form__section">
+                                        <div class="m-form__heading">
+                                            <h3 class="m-form__heading-title" th:text="#{label.collateralItem.details}"></h3>
+                                        </div>
+
+                                        <div class="form-group m-form__group row" id="goods_type">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span id="detailsLabel8" th:text="#{label.collateralItem.details8}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="goods_type" th:value="${itemDetails?.goods_type}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="goods_id">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span id="detailsLabel6" th:text="#{label.collateralItem.details6}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="goods_id" th:value="${itemDetails?.goods_id}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="prod_date">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span id="detailsLabel7" th:text="#{label.collateralItem.details7}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <div class="input-group date m_datetimepicker_6">
+                                                    <input type="text" class="form-control m-input" name="date" th:placeholder="#{label.select.date}" th:value="${#dates.format(itemDetails?.prodDate, 'dd.MM.yyyy')}"/>
+                                                    <span class="input-group-addon">
+                                                        <i class="la la-calendar glyphicon-th"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="expl_date">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span th:text="#{label.collateralItem.explDate}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <div class="input-group date m_datetimepicker_6">
+                                                    <input type="text" class="form-control m-input" name="expl_date" th:placeholder="#{label.select.date}" th:value="${#dates.format(itemDetails?.explDate, 'dd.MM.yyyy')}"/>
+                                                    <span class="input-group-addon">
+                                                        <i class="la la-calendar glyphicon-th"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="document">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span th:text="#{label.collateralItem.document}"></span>
+                                                <span class="m--font-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="document" th:value="${itemDetails?.document}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="goods_address">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span  th:text="#{label.collateralItem.goodsAddress}"></span>
+                                                <span class="m--font-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="goods_address" th:value="${itemDetails?.goods_address}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="details1">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span id="detailsLabel1" th:text="#{label.collateralItem.details1}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="details1" th:value="${itemDetails?.details1}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="details2">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span id="detailsLabel2" th:text="#{label.collateralItem.details2}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="details2" th:value="${itemDetails?.details2}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="details3">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span id="detailsLabel3" th:text="#{label.collateralItem.details3}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="details3" th:value="${itemDetails?.details3}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="details4">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span id="detailsLabel4" th:text="#{label.collateralItem.details4}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="details4" th:value="${itemDetails?.details4}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="details5">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span id="detailsLabel5" th:text="#{label.collateralItem.details5}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="details5" th:value="${itemDetails?.details5}">
+                                            </div>
+                                        </div>
+                                        <div th:hidden="hidden" class="form-group m-form__group row" id="details6">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span th:text="#{label.collateralItem.details6}"></span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="details6" th:value="${itemDetails?.details6}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row" id="incomplete_reason">
+                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                <span  th:text="#{label.collateralItem.incomplete_reason}"></span>
+                                                <span class="m--font-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                <input type="text" class="form-control m-input" name="incomplete_reason" th:value="${itemDetails?.incomplete_reason}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <!--&lt;!&ndash;<div id="beasts" th:if="${item.itemType.id}==6" class="m-form__section">&ndash;&gt;-->
+                                    <!--<div id="beasts" class="m-form__section">-->
+
+                                    <!--<div class="m-form__heading">-->
+                                    <!--<h3 class="m-form__heading-title" th:text="#{label.collateralItem.details}"></h3>-->
+                                    <!--</div>-->
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.beast.details1}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="details1" th:value="${itemDetails?.details1}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.beast.details2}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="details2" th:value="${itemDetails?.details2}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.beast.details3}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="details3" th:value="${itemDetails?.details3}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.beast.details4}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="details4" th:value="${itemDetails?.details4}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--&lt;!&ndash;<div id="realty" th:if="${item.itemType.id}==7 or ${item.itemType.id}==3" class="m-form__section">&ndash;&gt;-->
+                                    <!--<div id="realty" class="m-form__section">-->
+
+                                    <!--<div class="m-form__heading">-->
+                                    <!--<h3 class="m-form__heading-title" th:text="#{label.collateralItem.details}"></h3>-->
+                                    <!--</div>-->
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span id="detailsLabel1" th:text="#{label.collateralItem.realty.details1}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="details1" th:value="${itemDetails?.details1}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span id="detailsLabel2" th:text="#{label.collateralItem.realty.details2}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="details2" th:value="${itemDetails?.details2}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span id="detailsLabel3" th:text="#{label.collateralItem.realty.details3}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="details3" th:value="${itemDetails?.details3}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span id="detailsLabel4" th:text="#{label.collateralItem.realty.details4}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="details4" th:value="${itemDetails?.details4}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.document}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="document" th:value="${itemDetails?.document}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.goods_type}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="goods_type" th:value="${itemDetails?.goods_type}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.goods_address}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="goods_address" th:value="${itemDetails?.goods_address}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.prodDate}"></span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<div class="input-group date m_datetimepicker_6">-->
+                                    <!--<input type="text" class="form-control m-input" name="date" th:placeholder="#{label.select.date}" th:value="${#dates.format(itemDetails?.prodDate, 'dd.MM.yyyy')}"/>-->
+                                    <!--<span class="input-group-addon">-->
+                                    <!--<i class="la la-calendar glyphicon-th"></i>-->
+                                    <!--</span>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+
+                                    <!--</div>-->
+                                    <!--<div id="product" th:if="${item.itemType.id}==2" class="m-form__section">-->
+                                    <!--<div id="product"  class="m-form__section">-->
+
+                                    <!--<div class="m-form__heading">-->
+                                    <!--<h3 class="m-form__heading-title" th:text="#{label.collateralItem.details}"></h3>-->
+                                    <!--</div>-->
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.document}"></span>-->
+                                    <!--<span class="m&#45;&#45;font-danger">*</span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<input type="text" class="form-control m-input" name="document" th:value="${itemDetails?.document}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="form-group m-form__group row">-->
+                                    <!--<label class="col-form-label col-lg-4 col-sm-12">-->
+                                    <!--<span th:text="#{label.collateralItem.prodDate}"></span>-->
+                                    <!--</label>-->
+                                    <!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+                                    <!--<div class="input-group date m_datetimepicker_6">-->
+                                    <!--<input type="text" class="form-control m-input" name="date" th:placeholder="#{label.select.date}" th:value="${#dates.format(itemDetails?.prodDate, 'dd.MM.yyyy')}"/>-->
+                                    <!--<span class="input-group-addon">-->
+                                    <!--<i class="la la-calendar glyphicon-th"></i>-->
+                                    <!--</span>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                </div>
+                            </div>
 						</div>
 						<div class="m-portlet__foot m-portlet__foot--fit">
 							<div class="m-form__actions m-form__actions">
@@ -209,263 +494,7 @@
 					</form>
 					<!--end::Form-->
 
-                    <div hidden="hidden" th:object="${itemDetails}">
-                        <!--<div id="transports" th:if="${item.itemType.id}==1 or ${item.itemType.id}==4 or ${item.itemType.id}==5" class="m-form__section">-->
-                        <div id="transports" class="m-form__section">
 
-                            <div class="m-form__heading">
-                                <h3 class="m-form__heading-title" th:text="#{label.collateralItem.details}"></h3>
-                            </div>
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span  th:text="#{label.collateralItem.transport.details1}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="details1" th:value="${itemDetails?.details1}">
-                                </div>
-                            </div>
-
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span th:text="#{label.collateralItem.transport.details2}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="details2" th:value="${itemDetails?.details2}">
-                                </div>
-                            </div>
-
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span th:text="#{label.collateralItem.transport.details3}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="details3" th:value="${itemDetails?.details3}">
-                                </div>
-                            </div>
-
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span th:text="#{label.collateralItem.transport.details4}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="details4" th:value="${itemDetails?.details4}">
-                                </div>
-                            </div>
-
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span th:text="#{label.collateralItem.transport.details5}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="details5" th:value="${itemDetails?.details5}">
-                                </div>
-                            </div>
-
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span th:text="#{label.collateralItem.transport.details6}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="details6" th:value="${itemDetails?.details6}">
-                                </div>
-                            </div>
-
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span th:text="#{label.collateralItem.prodDate}"></span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <div class="input-group date m_datetimepicker_6">
-                                        <input type="text" class="form-control m-input" name="date" th:placeholder="#{label.select.date}" th:value="${#dates.format(itemDetails?.prodDate, 'dd.MM.yyyy')}"/>
-                                        <span class="input-group-addon">
-                                                        <i class="la la-calendar glyphicon-th"></i>
-                                                    </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span th:text="#{label.collateralItem.goods_type}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="goods_type" th:value="${itemDetails?.goods_type}">
-                                </div>
-                            </div>
-                        </div>
-                        <!--<div id="beasts" th:if="${item.itemType.id}==6" class="m-form__section">-->
-                        <div id="beasts" class="m-form__section">
-
-                            <div class="m-form__heading">
-                                <h3 class="m-form__heading-title" th:text="#{label.collateralItem.details}"></h3>
-                            </div>
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span th:text="#{label.collateralItem.beast.details1}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="details1" th:value="${itemDetails?.details1}">
-                                </div>
-                            </div>
-
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span th:text="#{label.collateralItem.beast.details2}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="details2" th:value="${itemDetails?.details2}">
-                                </div>
-                            </div>
-
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span th:text="#{label.collateralItem.beast.details3}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="details3" th:value="${itemDetails?.details3}">
-                                </div>
-                            </div>
-
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span th:text="#{label.collateralItem.beast.details4}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="details4" th:value="${itemDetails?.details4}">
-                                </div>
-                            </div>
-                        </div>
-                        <!--<div id="realty" th:if="${item.itemType.id}==7 or ${item.itemType.id}==3" class="m-form__section">-->
-                        <div id="realty" class="m-form__section">
-
-                            <div class="m-form__heading">
-                                <h3 class="m-form__heading-title" th:text="#{label.collateralItem.details}"></h3>
-                            </div>
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span id="detailsLabel1" th:text="#{label.collateralItem.realty.details1}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="details1" th:value="${itemDetails?.details1}">
-                                </div>
-                            </div>
-
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span id="detailsLabel2" th:text="#{label.collateralItem.realty.details2}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="details2" th:value="${itemDetails?.details2}">
-                                </div>
-                            </div>
-
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span id="detailsLabel3" th:text="#{label.collateralItem.realty.details3}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="details3" th:value="${itemDetails?.details3}">
-                                </div>
-                            </div>
-
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span id="detailsLabel4" th:text="#{label.collateralItem.realty.details4}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="details4" th:value="${itemDetails?.details4}">
-                                </div>
-                            </div>
-
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span th:text="#{label.collateralItem.document}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="document" th:value="${itemDetails?.document}">
-                                </div>
-                            </div>
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span th:text="#{label.collateralItem.goods_type}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="goods_type" th:value="${itemDetails?.goods_type}">
-                                </div>
-                            </div>
-
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span th:text="#{label.collateralItem.goods_address}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="goods_address" th:value="${itemDetails?.goods_address}">
-                                </div>
-                            </div>
-
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span th:text="#{label.collateralItem.prodDate}"></span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <div class="input-group date m_datetimepicker_6">
-                                        <input type="text" class="form-control m-input" name="date" th:placeholder="#{label.select.date}" th:value="${#dates.format(itemDetails?.prodDate, 'dd.MM.yyyy')}"/>
-                                        <span class="input-group-addon">
-                                                        <i class="la la-calendar glyphicon-th"></i>
-                                                    </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <!--<div id="product" th:if="${item.itemType.id}==2" class="m-form__section">-->
-                        <div id="product"  class="m-form__section">
-
-                            <div class="m-form__heading">
-                                <h3 class="m-form__heading-title" th:text="#{label.collateralItem.details}"></h3>
-                            </div>
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span th:text="#{label.collateralItem.document}"></span>
-                                    <span class="m--font-danger">*</span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="document" th:value="${itemDetails?.document}">
-                                </div>
-                            </div>
-                            <div class="form-group m-form__group row">
-                                <label class="col-form-label col-lg-4 col-sm-12">
-                                    <span th:text="#{label.collateralItem.prodDate}"></span>
-                                </label>
-                                <div class="col-lg-4 col-md-9 col-sm-12">
-                                    <div class="input-group date m_datetimepicker_6">
-                                        <input type="text" class="form-control m-input" name="date" th:placeholder="#{label.select.date}" th:value="${#dates.format(itemDetails?.prodDate, 'dd.MM.yyyy')}"/>
-                                        <span class="input-group-addon">
-													<i class="la la-calendar glyphicon-th"></i>
-												</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 				</div>
 				<!--end::Portlet-->
 			</div>
@@ -493,182 +522,276 @@
 
 <script th:inline="javascript">
     /*<![CDATA[*/
-    <!--$(document).ready(function(){-->
+    $(document).ready(function(){
 
 
 
-		<!--function updateText()-->
-		<!--{-->
-            <!--var det1 = [];-->
+        function updateText()
+        {
+            var det1 = [];
 
-            <!--var det11=/*[[#{label.collateralItem.details1.type1}]]*/ 'default';-->
-            <!--var det12=/*[[#{label.collateralItem.details1.type2}]]*/ 'default';-->
-            <!--var det13=/*[[#{label.collateralItem.details1.type3}]]*/ 'default';-->
-            <!--var det14=/*[[#{label.collateralItem.details1.type4}]]*/ 'default';-->
-            <!--var det15=/*[[#{label.collateralItem.details1.type5}]]*/ 'default';-->
-            <!--var det16=/*[[#{label.collateralItem.details1.type6}]]*/ 'default';-->
-            <!--var det17=/*[[#{label.collateralItem.details1.type7}]]*/ 'default';-->
-            <!--var det18=/*[[#{label.collateralItem.details1.type8}]]*/ 'default';-->
-
-
-            <!--det1.push(det11);-->
-            <!--det1.push(det12);-->
-            <!--det1.push(det13);-->
-            <!--det1.push(det14);-->
-            <!--det1.push(det15);-->
-            <!--det1.push(det16);-->
-            <!--det1.push(det17);-->
-            <!--det1.push(det18);-->
-
-            <!--var det2 = [];-->
-
-            <!--var det21=/*[[#{label.collateralItem.details2.type1}]]*/ 'default';-->
-            <!--var det22=/*[[#{label.collateralItem.details2.type2}]]*/ 'default';-->
-            <!--var det23=/*[[#{label.collateralItem.details2.type3}]]*/ 'default';-->
-            <!--var det24=/*[[#{label.collateralItem.details2.type4}]]*/ 'default';-->
-            <!--var det25=/*[[#{label.collateralItem.details2.type5}]]*/ 'default';-->
-            <!--var det26=/*[[#{label.collateralItem.details2.type6}]]*/ 'default';-->
-            <!--var det27=/*[[#{label.collateralItem.details2.type7}]]*/ 'default';-->
-            <!--var det28=/*[[#{label.collateralItem.details2.type8}]]*/ 'default';-->
+            var det11=/*[[#{label.collateralItem.details1.type1}]]*/ 'default';
+            var det12=/*[[#{label.collateralItem.details1.type2}]]*/ 'default';
+            var det13=/*[[#{label.collateralItem.details1.type3}]]*/ 'default';
+            var det14=/*[[#{label.collateralItem.details1.type4}]]*/ 'default';
+            var det15=/*[[#{label.collateralItem.details1.type5}]]*/ 'default';
+            var det16=/*[[#{label.collateralItem.details1.type6}]]*/ 'default';
+            var det17=/*[[#{label.collateralItem.details1.type7}]]*/ 'default';
+            var det18=/*[[#{label.collateralItem.details1.type8}]]*/ 'default';
 
 
-            <!--det2.push(det21);-->
-            <!--det2.push(det22);-->
-            <!--det2.push(det23);-->
-            <!--det2.push(det24);-->
-            <!--det2.push(det25);-->
-            <!--det2.push(det26);-->
-            <!--det2.push(det27);-->
-            <!--det2.push(det28);-->
+            det1.push(det11);
+            det1.push(det12);
+            det1.push(det13);
+            det1.push(det14);
+            det1.push(det15);
+            det1.push(det16);
+            det1.push(det17);
+            det1.push(det18);
+
+            var det2 = [];
+
+            var det21=/*[[#{label.collateralItem.details2.type1}]]*/ 'default';
+            var det22=/*[[#{label.collateralItem.details2.type2}]]*/ 'default';
+            var det23=/*[[#{label.collateralItem.details2.type3}]]*/ 'default';
+            var det24=/*[[#{label.collateralItem.details2.type4}]]*/ 'default';
+            var det25=/*[[#{label.collateralItem.details2.type5}]]*/ 'default';
+            var det26=/*[[#{label.collateralItem.details2.type6}]]*/ 'default';
+            var det27=/*[[#{label.collateralItem.details2.type7}]]*/ 'default';
+            var det28=/*[[#{label.collateralItem.details2.type8}]]*/ 'default';
 
 
-            <!--var det3 = [];-->
-
-            <!--var det31=/*[[#{label.collateralItem.details3.type1}]]*/ 'default';-->
-            <!--var det32=/*[[#{label.collateralItem.details3.type2}]]*/ 'default';-->
-            <!--var det33=/*[[#{label.collateralItem.details3.type3}]]*/ 'default';-->
-            <!--var det34=/*[[#{label.collateralItem.details3.type4}]]*/ 'default';-->
-            <!--var det35=/*[[#{label.collateralItem.details3.type5}]]*/ 'default';-->
-            <!--var det36=/*[[#{label.collateralItem.details3.type6}]]*/ 'default';-->
-            <!--var det37=/*[[#{label.collateralItem.details3.type7}]]*/ 'default';-->
-            <!--var det38=/*[[#{label.collateralItem.details3.type8}]]*/ 'default';-->
+            det2.push(det21);
+            det2.push(det22);
+            det2.push(det23);
+            det2.push(det24);
+            det2.push(det25);
+            det2.push(det26);
+            det2.push(det27);
+            det2.push(det28);
 
 
-            <!--det3.push(det31);-->
-            <!--det3.push(det32);-->
-            <!--det3.push(det33);-->
-            <!--det3.push(det34);-->
-            <!--det3.push(det35);-->
-            <!--det3.push(det36);-->
-            <!--det3.push(det37);-->
-            <!--det3.push(det38);-->
+            var det3 = [];
 
-            <!--var det4 = [];-->
-
-            <!--var det41=/*[[#{label.collateralItem.details4.type1}]]*/ 'default';-->
-            <!--var det42=/*[[#{label.collateralItem.details4.type2}]]*/ 'default';-->
-            <!--var det43=/*[[#{label.collateralItem.details4.type3}]]*/ 'default';-->
-            <!--var det44=/*[[#{label.collateralItem.details4.type4}]]*/ 'default';-->
-            <!--var det45=/*[[#{label.collateralItem.details4.type5}]]*/ 'default';-->
-            <!--var det46=/*[[#{label.collateralItem.details4.type6}]]*/ 'default';-->
-            <!--var det47=/*[[#{label.collateralItem.details4.type7}]]*/ 'default';-->
-            <!--var det48=/*[[#{label.collateralItem.details4.type8}]]*/ 'default';-->
+            var det31=/*[[#{label.collateralItem.details3.type1}]]*/ 'default';
+            var det32=/*[[#{label.collateralItem.details3.type2}]]*/ 'default';
+            var det33=/*[[#{label.collateralItem.details3.type3}]]*/ 'default';
+            var det34=/*[[#{label.collateralItem.details3.type4}]]*/ 'default';
+            var det35=/*[[#{label.collateralItem.details3.type5}]]*/ 'default';
+            var det36=/*[[#{label.collateralItem.details3.type6}]]*/ 'default';
+            var det37=/*[[#{label.collateralItem.details3.type7}]]*/ 'default';
+            var det38=/*[[#{label.collateralItem.details3.type8}]]*/ 'default';
 
 
-            <!--det4.push(det41);-->
-            <!--det4.push(det42);-->
-            <!--det4.push(det43);-->
-            <!--det4.push(det44);-->
-            <!--det4.push(det45);-->
-            <!--det4.push(det46);-->
-            <!--det4.push(det47);-->
-            <!--det4.push(det48);-->
+            det3.push(det31);
+            det3.push(det32);
+            det3.push(det33);
+            det3.push(det34);
+            det3.push(det35);
+            det3.push(det36);
+            det3.push(det37);
+            det3.push(det38);
+
+            var det4 = [];
+
+            var det41=/*[[#{label.collateralItem.details4.type1}]]*/ 'default';
+            var det42=/*[[#{label.collateralItem.details4.type2}]]*/ 'default';
+            var det43=/*[[#{label.collateralItem.details4.type3}]]*/ 'default';
+            var det44=/*[[#{label.collateralItem.details4.type4}]]*/ 'default';
+            var det45=/*[[#{label.collateralItem.details4.type5}]]*/ 'default';
+            var det46=/*[[#{label.collateralItem.details4.type6}]]*/ 'default';
+            var det47=/*[[#{label.collateralItem.details4.type7}]]*/ 'default';
+            var det48=/*[[#{label.collateralItem.details4.type8}]]*/ 'default';
 
 
-
-            <!--var det5 = [];-->
-
-            <!--var det51=/*[[#{label.collateralItem.details5.type1}]]*/ 'default';-->
-            <!--var det52=/*[[#{label.collateralItem.details5.type2}]]*/ 'default';-->
-            <!--var det53=/*[[#{label.collateralItem.details5.type3}]]*/ 'default';-->
-            <!--var det54=/*[[#{label.collateralItem.details5.type4}]]*/ 'default';-->
-            <!--var det55=/*[[#{label.collateralItem.details5.type5}]]*/ 'default';-->
-            <!--var det56=/*[[#{label.collateralItem.details5.type6}]]*/ 'default';-->
-            <!--var det57=/*[[#{label.collateralItem.details5.type7}]]*/ 'default';-->
-            <!--var det58=/*[[#{label.collateralItem.details5.type8}]]*/ 'default';-->
-
-
-            <!--det5.push(det51);-->
-            <!--det5.push(det52);-->
-            <!--det5.push(det53);-->
-            <!--det5.push(det54);-->
-            <!--det5.push(det55);-->
-            <!--det5.push(det56);-->
-            <!--det5.push(det57);-->
-            <!--det5.push(det58);-->
-
-            <!--var det6 = [];-->
-
-            <!--var det61=/*[[#{label.collateralItem.details6.type1}]]*/ 'default';-->
-            <!--var det62=/*[[#{label.collateralItem.details6.type2}]]*/ 'default';-->
-            <!--var det63=/*[[#{label.collateralItem.details6.type3}]]*/ 'default';-->
-            <!--var det64=/*[[#{label.collateralItem.details6.type4}]]*/ 'default';-->
-            <!--var det65=/*[[#{label.collateralItem.details6.type5}]]*/ 'default';-->
-            <!--var det66=/*[[#{label.collateralItem.details6.type6}]]*/ 'default';-->
-            <!--var det67=/*[[#{label.collateralItem.details6.type7}]]*/ 'default';-->
-            <!--var det68=/*[[#{label.collateralItem.details6.type8}]]*/ 'default';-->
-
-
-            <!--det6.push(det61);-->
-            <!--det6.push(det62);-->
-            <!--det6.push(det63);-->
-            <!--det6.push(det64);-->
-            <!--det6.push(det65);-->
-            <!--det6.push(det66);-->
-            <!--det6.push(det67);-->
-            <!--det6.push(det68);-->
-
-            <!--var index = $('#itemType').val()-1;-->
-
-            <!--$('#detailsLabel1').html(det1[index]);-->
-            <!--$('#detailsLabel2').html(det2[index]);-->
-            <!--$('#detailsLabel3').html(det3[index]);-->
-            <!--$('#detailsLabel4').html(det4[index]);-->
-            <!--$('#detailsLabel5').html(det5[index]);-->
-            <!--$('#detailsLabel6').html(det6[index]);-->
-
-
-        <!--}-->
-
-        <!--updateText();-->
-
-        <!--$('#itemType').change(function () {-->
-
-				<!--updateText();-->
-        <!--});-->
+            det4.push(det41);
+            det4.push(det42);
+            det4.push(det43);
+            det4.push(det44);
+            det4.push(det45);
+            det4.push(det46);
+            det4.push(det47);
+            det4.push(det48);
 
 
 
+            var det5 = [];
 
-    <!--});-->
+            var det51=/*[[#{label.collateralItem.details5.type1}]]*/ 'default';
+            var det52=/*[[#{label.collateralItem.details5.type2}]]*/ 'default';
+            var det53=/*[[#{label.collateralItem.details5.type3}]]*/ 'default';
+            var det54=/*[[#{label.collateralItem.details5.type4}]]*/ 'default';
+            var det55=/*[[#{label.collateralItem.details5.type5}]]*/ 'default';
+            var det56=/*[[#{label.collateralItem.details5.type6}]]*/ 'default';
+            var det57=/*[[#{label.collateralItem.details5.type7}]]*/ 'default';
+            var det58=/*[[#{label.collateralItem.details5.type8}]]*/ 'default';
+
+
+            det5.push(det51);
+            det5.push(det52);
+            det5.push(det53);
+            det5.push(det54);
+            det5.push(det55);
+            det5.push(det56);
+            det5.push(det57);
+            det5.push(det58);
+
+            var det6 = [];
+
+            var det61=/*[[#{label.collateralItem.details6.type1}]]*/ 'default';
+            var det62=/*[[#{label.collateralItem.details6.type2}]]*/ 'default';
+            var det63=/*[[#{label.collateralItem.details6.type3}]]*/ 'default';
+            var det64=/*[[#{label.collateralItem.details6.type4}]]*/ 'default';
+            var det65=/*[[#{label.collateralItem.details6.type5}]]*/ 'default';
+            var det66=/*[[#{label.collateralItem.details6.type6}]]*/ 'default';
+            var det67=/*[[#{label.collateralItem.details6.type7}]]*/ 'default';
+            var det68=/*[[#{label.collateralItem.details6.type8}]]*/ 'default';
+
+
+            det6.push(det61);
+            det6.push(det62);
+            det6.push(det63);
+            det6.push(det64);
+            det6.push(det65);
+            det6.push(det66);
+            det6.push(det67);
+            det6.push(det68);
+
+            var det7 = [];
+
+            var det71=/*[[#{label.collateralItem.details7.type1}]]*/ 'default';
+            var det72=/*[[#{label.collateralItem.details7.type2}]]*/ 'default';
+            var det73=/*[[#{label.collateralItem.details7.type3}]]*/ 'default';
+            var det74=/*[[#{label.collateralItem.details7.type4}]]*/ 'default';
+            var det75=/*[[#{label.collateralItem.details7.type5}]]*/ 'default';
+            var det76=/*[[#{label.collateralItem.details7.type6}]]*/ 'default';
+            var det77=/*[[#{label.collateralItem.details7.type7}]]*/ 'default';
+            var det78=/*[[#{label.collateralItem.details7.type8}]]*/ 'default';
+
+
+            det7.push(det71);
+            det7.push(det72);
+            det7.push(det73);
+            det7.push(det74);
+            det7.push(det75);
+            det7.push(det76);
+            det7.push(det77);
+            det7.push(det78);
+
+
+            var det8 = [];
+
+            var det81=/*[[#{label.collateralItem.details8.type1}]]*/ 'default';
+            var det82=/*[[#{label.collateralItem.details8.type2}]]*/ 'default';
+            var det83=/*[[#{label.collateralItem.details8.type3}]]*/ 'default';
+            var det84=/*[[#{label.collateralItem.details8.type4}]]*/ 'default';
+            var det85=/*[[#{label.collateralItem.details8.type5}]]*/ 'default';
+            var det86=/*[[#{label.collateralItem.details8.type6}]]*/ 'default';
+            var det87=/*[[#{label.collateralItem.details8.type7}]]*/ 'default';
+            var det88=/*[[#{label.collateralItem.details8.type8}]]*/ 'default';
+
+
+            det8.push(det81);
+            det8.push(det82);
+            det8.push(det83);
+            det8.push(det84);
+            det8.push(det85);
+            det8.push(det86);
+            det8.push(det87);
+            det8.push(det88);
+
+
+
+            var index = $('#itemType').val()-1;
+
+            $('#detailsLabel1').html(det1[index]);
+            $('#detailsLabel2').html(det2[index]);
+            $('#detailsLabel3').html(det3[index]);
+            $('#detailsLabel4').html(det4[index]);
+            $('#detailsLabel5').html(det5[index]);
+            $('#detailsLabel6').html(det6[index]);
+            $('#detailsLabel7').html(det7[index]);
+            $('#detailsLabel8').html(det8[index]);
+
+
+
+        }
+
+        function hideDivs()
+        {
+            if($("#itemType").val()==1||$("#itemType").val()==4||$("#itemType").val()==5)
+            {
+                $("#goods_address").hide();
+            }
+            if($("#itemType").val()==6)
+            {
+                $("#goods_address").hide();
+                $("#goods_type").hide();
+                $("#prod_date").hide();
+                $("#goods_id").hide();
+                $("#expl_date").hide();
+            }
+
+            if($("#itemType").val()==2)
+            {
+                $("#goods_address").hide();
+                $("#goods_id").hide();
+                $("#details1").hide();
+                $("#details2").hide();
+                $("#details3").hide();
+                $("#details4").hide();
+                $("#details5").hide();
+            }
+
+            if($("#itemType").val()==3 || $("#itemType").val()==7)
+            {
+                $("#details5").hide();
+            }
+        }
+
+        updateText();
+        hideDivs();
+
+        $('#itemType').change(function () {
+
+            updateText();
+            hideDivs();
+
+
+
+                	// else if ($("#itemType").val()==6){
+                     //   $("#myDiv").empty();
+                     //   $("#myDiv").prepend(beasts);
+                	// }
+                	// else if($("#itemType").val()==3||$("#itemType").val()==7){
+                     //   $("#myDiv").empty();
+                     //   $("#myDiv").prepend(realty);
+                	// }
+                	// else{
+                     //   $("#myDiv").empty();
+                     //   $("#myDiv").prepend(product);
+                	// }
+        });
+
+    });
     /*]]>*/
 </script>
 
 <script type="text/javascript">
-    // body.onload(function () {
-    //     var spanText1 = 'label.collateralItem.details1.type'+ this.value
-    //     $('#detailsLabel1').html(spanText1)
-    //     var spanText2 = 'label.collateralItem.details2.type'+ this.value
-    //     $('#detailsLabel2').html(spanText2)
-    //     var spanText3 = 'label.collateralItem.details3.type'+ this.value
-    //     $('#detailsLabel3').html(spanText3)
-    //     var spanText4 = 'label.collateralItem.details4.type'+ this.value
-    //     $('#detailsLabel4').html(spanText4)
-    //     var spanText5 = 'label.collateralItem.details5.type'+ this.value
-    //     $('#detailsLabel5').html(spanText5)
-    //     var spanText6 = 'label.collateralItem.details6.type'+ this.value
-    //     $('#detailsLabel6').html(spanText6)
-    // });
+    body.onload(function () {
+        var spanText1 = 'label.collateralItem.details1.type'+ this.value
+        $('#detailsLabel1').html(spanText1)
+        var spanText2 = 'label.collateralItem.details2.type'+ this.value
+        $('#detailsLabel2').html(spanText2)
+        var spanText3 = 'label.collateralItem.details3.type'+ this.value
+        $('#detailsLabel3').html(spanText3)
+        var spanText4 = 'label.collateralItem.details4.type'+ this.value
+        $('#detailsLabel4').html(spanText4)
+        var spanText5 = 'label.collateralItem.details5.type'+ this.value
+        $('#detailsLabel5').html(spanText5)
+        var spanText6 = 'label.collateralItem.details6.type'+ this.value
+        $('#detailsLabel6').html(spanText6)
+    });
 </script>
 <script type="text/javascript">
     function updateTOwner(sel)
@@ -676,47 +799,54 @@
         var owner_text = document.getElementById("owner_typeahead").value;
         var owner_id = owner_text.split("]")[0];
         $("#ownerId").val(owner_id.substring(1,owner_id.length));
-        // alert($("#ownerId").val())
 
-		var org_text = document.getElementById("organization_typeahead").value;
-		var org_id = org_text.split("]")[0];
-		$("#organizationId").val(org_id.substring(1,org_id.length));
-		// alert($("#organizationId").val())
+
+        var organization_text = document.getElementById("organization_typeahead").value;
+
+        var organization_id = organization_text.match(/[^[\]]+(?=])/g);
+
+
+
+        if(organization_id == null){
+            organization_id = 0;
+        }
+		$("#organizationId").val(organization_id);
+
     }
 </script>
 <script th:inline="javascript">
 	var jsonOwners=[[${owners}]];
 	var item=[[item]];
-	var transports=$("#transports");
-	var beasts=$("#beasts");
-	var realty=$("#realty");
-	var product=$("#product");
-	// $("#transports").removeAttribute("hidden");
-	var maker= function () {
-		// alert($("#itemType").val());
-		if($("#itemType").val()==1||$("#itemType").val()==4||$("#itemType").val()==5){
-			$("#myDiv").empty();
-            $("#myDiv").prepend(transports);
-		}
-		else if ($("#itemType").val()==6){
-            $("#myDiv").empty();
-            $("#myDiv").prepend(beasts);
-		}
-		else if($("#itemType").val()==3||$("#itemType").val()==7){
-            $("#myDiv").empty();
-            $("#myDiv").prepend(realty);
-		}
-		else{
-            $("#myDiv").empty();
-            $("#myDiv").prepend(product);
-		}
-	};
-
-	maker();
-
-	$("#itemType").on('change',function () {
-		maker();
-	});
+	// var transports=$("#transports");
+	// var beasts=$("#beasts");
+	// var realty=$("#realty");
+	// var product=$("#product");
+	// // $("#transports").removeAttribute("hidden");
+	// var maker= function () {
+	// 	// alert($("#itemType").val());
+	// 	if($("#itemType").val()==1||$("#itemType").val()==4||$("#itemType").val()==5){
+	// 		$("#myDiv").empty();
+     //        $("#myDiv").prepend(transports);
+	// 	}
+	// 	else if ($("#itemType").val()==6){
+     //        $("#myDiv").empty();
+     //        $("#myDiv").prepend(beasts);
+	// 	}
+	// 	else if($("#itemType").val()==3||$("#itemType").val()==7){
+     //        $("#myDiv").empty();
+     //        $("#myDiv").prepend(realty);
+	// 	}
+	// 	else{
+     //        $("#myDiv").empty();
+     //        $("#myDiv").prepend(product);
+	// 	}
+	// };
+    //
+	// maker();
+    //
+	// $("#itemType").on('change',function () {
+	// 	maker();
+	// });
 </script>
 
 </body>
