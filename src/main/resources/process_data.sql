@@ -2128,9 +2128,12 @@ BEGIN
               end if;
               */
 
-              if pType = 'dummy date' then
-                set loan_summary_type_text = 'DAILY';
-              end if;
+              if not (loan_summary_type_text = 'MANUAL') then
+                if pType = 'dummy date'  then
+                  set loan_summary_type_text = 'DAILY';
+                end if;
+              END IF;
+
 
               INSERT INTO loanSummary(version, loanSummaryType, loanAmount, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty,
                                       overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalInterestPaid, totalPenaltyPaid, totalPrincipalPaid, totalFeePaid, loanId, createDate)

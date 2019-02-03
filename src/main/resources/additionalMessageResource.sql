@@ -165,5 +165,9 @@ insert into message_resource(kgz,rus,eng,messageKey) values ('86','86','86','lab
 
 
 
-
-label.collateralItem.details1.type1
+update collateralItemDetails det set det.id = det.id+1 where det.id > 27741 order by id desc;
+update collateralItemDetails det set det.id = det.id+1 where det.id > 27714 order by id desc;
+update collateralItemDetails det set det.id = det.id+1 where det.id > 26801 order by id desc;
+update collateralItemDetails det set det.id = det.id+1 where det.id > 10320 order by id desc;
+update collateralItemDetails det set det.id = det.id+1 where det.id > 8517 order by id desc;
+update collateralItemDetails det set det.id = det.id+1 where det.id > 3606 order by id desc;
