@@ -4,6 +4,7 @@ import kg.gov.mf.loan.admin.org.model.Department;
 import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.doc.model.*;
+
 import kg.gov.mf.loan.doc.service.*;
 import kg.gov.mf.loan.task.model.ChatUser;
 import kg.gov.mf.loan.task.model.SystemConstant;
@@ -14,12 +15,15 @@ import kg.gov.mf.loan.task.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -56,6 +60,8 @@ public class DocumentFlowController extends BaseController {
     private AccountService accountService;
     private SystemConstantService systemConstantService;
     private ChatUserService chatUserService;
+
+    //private DocumentRepository documentRepository;
 
     @Autowired
     public DocumentFlowController(DocumentService documentService,
@@ -149,7 +155,6 @@ public class DocumentFlowController extends BaseController {
 
         List<Document> documents = documentService.getInvolvedDocuments(type, getUser().getId());
         DocumentType documentType = documentTypeService.getByInternalName(type);
-        String title = documentType.getName();
 
         Map<String, String> vars = new HashMap<>();
         vars.put("assignedTo", String.valueOf(getUser().getId()));
@@ -160,11 +165,13 @@ public class DocumentFlowController extends BaseController {
         model.addAttribute("row", CURRENTVIEW.valueOf(type.toUpperCase()).ordinal());
         model.addAttribute("ds", documentStatusService);
         model.addAttribute("documents", documents);
-        model.addAttribute("title", title);
+        model.addAttribute("title", documentType.getName());
         model.addAttribute("responsible", responsible);
-        model.addAttribute("documentSubTypes", documentType.getDocumentSubTypes());
         model.addAttribute("type", type);
         model.addAttribute("cu", getUser().getId());
+
+        if(getUser().getStaff() != null)
+            model.addAttribute("documentSubTypes", documentType.getDocumentSubTypes());
 
         return "/doc/document/index";
     }
@@ -175,7 +182,7 @@ public class DocumentFlowController extends BaseController {
         if(getUser() == null) return "/login/login";
 
         Document document = new Document();
-        document.setOwner(getUser().getId());
+        document.setOwner(getUser());
         document.setDocumentType(documentSubTypeService.getByInternalName(subType).getDocumentType());
         document.setDocumentSubType(documentSubTypeService.getByInternalName(subType));
 
@@ -184,13 +191,11 @@ public class DocumentFlowController extends BaseController {
             document.getReceiverResponsible().setResponsibleType(1);
         }
 
-        /*
         if(document.getDocumentType().getInternalName() == "outgoing")
         {
             document.getSenderResponsible().setResponsibleType(1);
-            document.getSenderResponsible().getStaff().add(userService.findByUsername("").getStaff());
+            document.getSenderResponsible().getStaff().add(userService.findByUsername("ruk001").getStaff());
         }
-        */
         //**************************************************************************************************************
 
         String currentView = document.getDocumentType().getInternalName();
@@ -332,9 +337,7 @@ public class DocumentFlowController extends BaseController {
         Document document = documentService.getById(id);
         document = saveOutgoingDocument(document, "REGISTER");
 
-        return document.getDocumentSubType().getName() + "\n"
-                + document.getSenderRegisteredNumber() + "\n"
-                + "ИСполнитель : " + userService.findById(document.getOwner()).getStaff().getName();
+        return document.getSenderRegisteredNumber() + "<hr>" + document.getSenderRegisteredDate();
     }
     //******************************************************************************************************************
 
@@ -549,7 +552,7 @@ public class DocumentFlowController extends BaseController {
             if(action.equals("REJECT"))
             {
                 taskService.completeTask(document.getId(), getUser(), State.REJECTED.text() + "<br>" + document.getComment());
-                addTask("Доработать", document.getId(), getUser(), document.getDocumentDueDate(), getUser(document.getOwner()), State.DRAFT);
+                addTask("Доработать", document.getId(), getUser(), document.getDocumentDueDate(), document.getOwner(), State.DRAFT);
                 document.getDispatchData().add(setDispatchData(State.REJECTED, description));
             }
 
@@ -648,23 +651,25 @@ public class DocumentFlowController extends BaseController {
             document.getUsers().add(getUser());
             document.setDocumentState(Transition.valueOf(action).state());
 
-            description =
-                    "№ Исходящего документа : " + document.getSenderRegisteredNumber()
-                    + "<br>Дата : " + DATE_FORMAT.format(document.getSenderRegisteredDate());
-
-            if(!document.getTitle().isEmpty())
+            if(!document.getSenderRegisteredNumber().isEmpty())
             {
-                description = description + "<hr>№ Входящего документа и Дата МФКР : " + document.getTitle();
+                description = "№ Исходящего документа : " + document.getSenderRegisteredNumber();
+            }
+            if(document.getSenderRegisteredDate() != null)
+            {
+                description += "<br>Дата : " + DATE_FORMAT.format(document.getSenderRegisteredDate());
             }
 
             document.getDispatchData().add(setDispatchData(State.DRAFT, description));
+            documentService.add(document);
+
 
             document.setReceiverRegisteredNumber(registerService.generateRegistrationNumber(document));
             document.setReceiverRegisteredDate(new Date());
             description = "№ Входящего документа : " + document.getReceiverRegisteredNumber()
                     + "<br>Дата : " + DATE_FORMAT.format(document.getReceiverRegisteredDate());
             document.getDispatchData().add(setDispatchData(State.REGISTERED, description));
-            documentService.add(document);
+            documentService.update(document);
 
             addTask("Отправить ответственным", document.getId(), null, document.getDocumentDueDate(), getUser(), null);
         }
@@ -842,7 +847,7 @@ public class DocumentFlowController extends BaseController {
 
                 if (taskService.getTasks(vars).size() == 0)
                 {
-                    addTask("Доработать документ", document.getId(), null, document.getDocumentDueDate(), getUser(document.getOwner()), State.DRAFT);
+                    addTask("Доработать документ", document.getId(), null, document.getDocumentDueDate(), document.getOwner(), State.DRAFT);
                     document.setDocumentState(State.REJECTED);
                 }
                 document.getDispatchData().add(setDispatchData(State.APPROVED, "Отклонен : " + description));
@@ -993,13 +998,26 @@ public class DocumentFlowController extends BaseController {
     @ResponseBody
     public DataTableResult getDocuments(HttpServletRequest request) {
 
+        Object map = request.getParameterMap();
+
         Object list = request.getParameterNames();
 
+        int first = Integer.valueOf(request.getParameter("start"));
+        int maxresult = Integer.valueOf(request.getParameter("length"));
+        int count = documentService.list().size();
+
         DataTableResult dataTableResult = new DataTableResult();
-        dataTableResult.draw = 1;
-        dataTableResult.recordsTotal = documentService.list().size();
-        dataTableResult.data = documentService.list();
+        dataTableResult.draw = Integer.valueOf(request.getParameter("draw"));
+        dataTableResult.recordsTotal = count;
+        dataTableResult.recordsFiltered = count;
+        dataTableResult.data = documentService.list(first, maxresult);
 
         return dataTableResult;
+    }
+
+    @RequestMapping("/incomingdocs")
+    @ResponseBody
+    public DataTablesOutput<Document> getDocs(@Valid @RequestBody DataTablesInput input) {
+        return null; //documentRepository.findAll(input);
     }
 }
