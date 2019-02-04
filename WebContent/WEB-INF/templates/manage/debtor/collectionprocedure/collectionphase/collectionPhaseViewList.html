@@ -348,9 +348,7 @@
                     template: function (row) {
                         var d = row.v_debtor_name;
                         if(d.length>40){
-                            return '\
-                                <a href="/manage/debtor/'+ row.v_debtor_id + '/view">'+d+'</a>\
-                            ';
+                            d=d.substring(0,37);
                         }
                         return '\
                             <a href="/manage/debtor/'+ row.v_debtor_id + '/view">'+d+'</a>\

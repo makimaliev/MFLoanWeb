@@ -242,9 +242,11 @@
                     template: function (row) {
                         var d = row.v_debtor_name;
                         if(d.length>40){
-                            return d.substring(0,40)+"...";
+                            d=d.substring(0,40)+"...";
                         }
-                        return d;
+                        return '\
+                                <a href="/manage/debtor/'+ row.v_debtor_id + '/view">'+d+'</a>\
+                            ';
                     }
                 },  {
                     field: "v_sp_principal",
