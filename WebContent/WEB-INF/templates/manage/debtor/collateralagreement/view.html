@@ -101,6 +101,18 @@
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane active" id="collateralAgreementInfo" role="tabpanel">
+								<div sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLATERALAGREEMENT','PERM_ADD_COLLATERALAGREEMENT')" class="col-xl-12 order-3 order-xl-3 m--align-right">
+									<div >
+										<div>
+											<a th:href="@{/manage/debtor/__${debtor.id}__/collateralagreement/__${agreement.id}__/save}" class="btn btn-outline-danger" title="Редактировать">
+													<span>
+														<i class="la la-edit"></i>
+														<span th:text="#{label.table.edit}"></span>
+													</span>
+											</a>
+										</div>
+									</div>
+								</div>
 								<div class="row m-row--no-padding m-row--col-separator-xl">
 									<div class="col-md-12 col-lg-12 col-xl-4">
 										<!--begin:: Widgets/Stats2-3 -->

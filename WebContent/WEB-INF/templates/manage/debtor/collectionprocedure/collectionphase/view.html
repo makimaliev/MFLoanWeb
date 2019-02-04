@@ -107,6 +107,24 @@
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane active" id="main">
+								<div sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLECTIONPHASE')" class="col-xl-12 order-3 order-xl-3 m--align-right">
+									<div class="row justify-content-md-end">
+										<div>
+											<a th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phase.id}__/save}" class="btn btn-outline-danger" title="Редактировать">
+												<span>
+													<i class="la la-edit"></i>
+													<span th:text="#{label.table.edit}"></span>
+												</span>
+											</a>
+											<a th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phase.id}__/changeStatus}" class="btn btn-sm btn-accent" title="Изменить статус">
+												<span>
+													<i class="la la-edit"></i>
+													<span th:text="#{label.collection.phase.change.status}"></span>
+												</span>
+											</a>
+										</div>
+									</div>
+								</div>
 								<div class="m-portlet__body m-portlet__body--no-padding">
 									<div class="row m-row--no-padding m-row--col-separator-xl">
 										<div class="col-md-12 col-lg-12 col-xl-4">

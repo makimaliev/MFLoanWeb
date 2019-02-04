@@ -101,6 +101,9 @@ var DatatableDataLocalProcs = function () {
                             <a hidden="hidden" href="/manage/debtor/' + debtorId + '/collectionprocedure/' + row.id + '/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
                                 <i class="la la-trash"></i>\
                             </a>\
+                            <a sec:authorize="hasAnyAuthority(ADMIN,PERM_ADD_COLLECTIONPHASE)" href="/manage/debtor/' + debtorId + '/collectionprocedure/' + row.id + '/collectionphase/0/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+                                <i class="la la-plus"></i>\
+                            </a>\
                              <a  href="/printoutTemplate/5/objectId/' + row.phaseId + '/select" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Претензия">\
                                 <i class="la la-exclamation-circle"></i>\
                             </a>\
@@ -113,6 +116,9 @@ var DatatableDataLocalProcs = function () {
                             </a>\
                             <a sec:authorize="hasAnyAuthority(ADMIN,PERM_UPDATE_COLLECTIONPHASE)" href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + row.id + '/collectionphase/' + row.phaseId +'/changeStatus" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Изменить статус">\
                             <i class="la la-neuter"></i>\
+                            </a>\
+                             <a sec:authorize="hasAnyAuthority(ADMIN,PERM_ADD_COLLECTIONPHASE)" href="/manage/debtor/' + debtorId + '/collectionprocedure/' + row.id + '/collectionphase/0/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Добавить фазу">\
+                                <i class="la la-plus"></i>\
                             </a>\
                             <a hidden="hidden" href="/manage/debtor/'+ debtorId + '/collectionprocedure/' + row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
                                 <i class="la la-trash"></i>\

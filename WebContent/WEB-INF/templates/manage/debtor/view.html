@@ -169,6 +169,20 @@
                                                         </div>
                                                     </div>
                                                 </div>
+												<div sec:authorize="hasAnyAuthority('ADMIN')" class="m-widget1">
+													<div class="m-widget1__item">
+														<div class="row m-row--no-padding align-items-center">
+															<div class="col">
+																<a th:href="@{/manage/debtor/__${debtor.id}__/save}" class="btn btn-outline-danger" title="Редактировать">
+																	<span>
+																	<i class="la la-edit"></i>
+																	<span th:text="#{label.title.add.edit.debtor}"></span>
+																</span>
+																</a>
+															</div>
+														</div>
+													</div>
+												</div>
                                                 <!--begin:: Widgets/Stats2-3 -->
                                             </div>
                                         </div>
@@ -239,8 +253,20 @@
                                                 </div>
                                                 <!--begin:: Widgets/Stats2-2 -->
                                             </div>
-                                            <div class="col-md-12 col-lg-12 col-xl-4">
-                                            </div>
+											<div sec:authorize="hasAnyAuthority('ADMIN')" class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<a th:href="@{/manage/debtor/__${debtor.id}__/save}" class="btn btn-outline-danger" title="Редактировать">
+																	<span>
+																	<i class="la la-edit"></i>
+																	<span th:text="#{label.table.edit}"></span>
+																</span>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
                                         </div>
                                     </div>
                                 </div>

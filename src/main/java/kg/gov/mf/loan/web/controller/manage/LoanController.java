@@ -185,6 +185,16 @@ public class LoanController {
 
 		Loan loan = loanService.getById(loanId);
         model.addAttribute("loan", loan);
+        String name=loan.getClass().getSimpleName();
+        if(name == "NormalLoan"){
+            model.addAttribute("classId",1);
+        }
+        else if(name == "TrancheeLoan"){
+            model.addAttribute("classId",2);
+        }
+        else{
+            model.addAttribute("classId",3);
+        }
         model.addAttribute("creditOrder",loan.getCreditOrder());
         Staff staff=userService.findById(loan.getSupervisorId()).getStaff();
         model.addAttribute("supervisorName",staff.getName());
