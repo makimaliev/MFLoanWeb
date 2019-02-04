@@ -510,6 +510,7 @@ public class DebtorController {
                     newLoanSummary.setOutstadingPrincipal(loanSummary.getOutstadingPrincipal()*rate);
                     newLoanSummary.setOutstadingInterest(loanSummary.getOutstadingInterest()*rate);
                     newLoanSummary.setOutstadingPenalty(loanSummary.getOutstadingPenalty()*rate);
+                    newLoanSummary.setOutstadingFee(loanSummary.getOutstadingFee()*rate);
                     newLoanSummary.setTotalOverdue(loanSummary.getTotalOverdue()*rate);
                     newLoanSummary.setOverduePrincipal(loanSummary.getOverduePrincipal()*rate);
                     newLoanSummary.setOverdueInterest(loanSummary.getOverdueInterest()*rate);
@@ -521,12 +522,13 @@ public class DebtorController {
                     newLoanSummary.setTotalFeePaid(loanSummary.getTotalFeePaid()*rate);
                     newLoanSummary.setOnDate(loanSummary.getOnDate());
                     newLoanSummary.setTotalPaidKGS(loanSummary.getTotalPaidKGS());
+                    newLoanSummary.setTotalPaid(loanSummary.getTotalPaid());
 
                     model.addAttribute("newSummary",newLoanSummary);
 
                     summaries.put(loanSummary,newLoanSummary);
 
-                    if(!sumLoanSummary.getLoanAmount().equals(null)) {
+                    if(sumLoanSummary.getLoanAmount()!=null) {
                         sumLoanSummary.setTotalPaidKGS(sumLoanSummary.getTotalPaidKGS() + newLoanSummary.getTotalPaidKGS());
                         sumLoanSummary.setTotalPaid(sumLoanSummary.getTotalPaid() + newLoanSummary.getTotalPaid());
                         sumLoanSummary.setTotalFeePaid(sumLoanSummary.getTotalFeePaid() + newLoanSummary.getTotalFeePaid());
