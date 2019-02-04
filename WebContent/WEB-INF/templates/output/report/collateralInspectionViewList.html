@@ -262,9 +262,11 @@
                     template: function (row) {
                         var d = row.v_debtor_name;
                         if(d.length>35){
-                            return d.substring(0,32)+"...";
+                            d= d.substring(0,32)+"...";
                         }
-                        return d;
+                        return '\
+                                <a href="/manage/debtor/'+ row.v_debtor_id + '/view">'+d+'</a>\
+                            ';
                     }
                 },  {
                     field: "v_ci_name",
