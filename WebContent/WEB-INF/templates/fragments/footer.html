@@ -10,6 +10,7 @@
     <script type="text/javascript" th:inline="javascript">
 
         // Chat Begin
+        /*
         var messageForm = document.querySelector('#messageForm');
         var messageInput = document.querySelector('#message');
         var messageArea = document.querySelector('#messageArea');
@@ -159,6 +160,15 @@
         });
 
         messageForm.addEventListener('submit', sendMessage, true);
+
+        connect();
+
+        $('#cu').select2();
+        $('#cu').on('select2:select', function (e) {
+            receiver = e.params.data.id
+            loadMessages(receiver)
+        });
+        */
         // Chat End
 
         function changePageAndSize() {
@@ -168,20 +178,7 @@
             });
         }
 
-        function showTask(task)
-        {
-
-        }
-
         $(document).ready(function() {
-
-            connect();
-
-            $('#cu').select2();
-            $('#cu').on('select2:select', function (e) {
-                receiver = e.params.data.id
-                loadMessages(receiver)
-            });
 
             var path = window.location.pathname.split("/");
 
