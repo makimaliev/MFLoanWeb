@@ -253,5 +253,370 @@
         </div>
     </div>
 </th:block>
+
+<th:block th:fragment="reconciliationreport">
+    <!-- Outgoing -->
+    <!-- Receiver Responsible -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Кому : </span>
+        </label>
+        <div class="col-9">
+            <label class="form-control" th:each="s : *{receiverResponsible.organizations}" th:text="${s.name}"> Staff </label>
+            <label class="form-control" th:each="s : *{receiverResponsible.person}" th:text="${s.name}"> Staff </label>
+        </div>
+    </div>
+    <div class="form-group m-form__group row" th:if="*{receiverResponsible.responsibleName != null}">
+        <label class="col-3 col-form-label">
+            <span></span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{receiverResponsible.responsibleName}" th:if="*{documentState.ordinal() != 0}"> Title </label>
+        </div>
+    </div>
+    <!-- Sender Responsible -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> ОТ КОГО :  </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:each="s : *{senderResponsible.staff}" th:text="${s.name}"> Staff </label>
+            <label class="form-control" th:each="s : *{senderResponsible.organizations}" th:text="${s.name}"> Staff </label>
+        </div>
+    </div>
+    <!-- TITLE -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Относительно : </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{title}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- DESCRIPTION -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Краткое содержание : </span>
+        </label>
+        <div class="col-sm-9">
+            <div class="form-control bg-secondary">
+                <div class="m-4 p-5 bg-white" th:utext="*{description}">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- PAGEINDEX -->
+    <div class="form-group m-form__group row" th:if="*{indexNo != ''}">
+        <label class="col-3 col-form-label">
+            <span th:utext="|#{label.document.pageIndex} : |"> Номер бланка : </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{indexNo}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- PAGECOUNT -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span th:utext="|#{label.document.pageCount} : |"> Номер бланка : </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{pageCount}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- Document Due Date -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Срок : </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{documentDueDate} != null ? *{#dates.format(documentDueDate, 'dd-MM-yyyy')} : 'Срок не установлен'" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!--************** Attachment **************-->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label"> Приложения : </label>
+        <div class="col-9">
+            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
+            <table id="documentAttachments" class="form-control">
+                <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
+                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</th:block>
+<th:block th:fragment="complaint">
+    <!-- Outgoing -->
+    <!-- Receiver Responsible -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Кому : </span>
+        </label>
+        <div class="col-9">
+            <label class="form-control" th:each="s : *{receiverResponsible.organizations}" th:text="${s.name}"> Staff </label>
+            <label class="form-control" th:each="s : *{receiverResponsible.person}" th:text="${s.name}"> Staff </label>
+        </div>
+    </div>
+    <div class="form-group m-form__group row" th:if="*{receiverResponsible.responsibleName != null}">
+        <label class="col-3 col-form-label">
+            <span></span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{receiverResponsible.responsibleName}" th:if="*{documentState.ordinal() != 0}"> Title </label>
+        </div>
+    </div>
+    <!-- Sender Responsible -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> ОТ КОГО :  </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:each="s : *{senderResponsible.staff}" th:text="${s.name}"> Staff </label>
+            <label class="form-control" th:each="s : *{senderResponsible.organizations}" th:text="${s.name}"> Staff </label>
+        </div>
+    </div>
+    <!-- TITLE -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Относительно : </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{title}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- DESCRIPTION -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Краткое содержание : </span>
+        </label>
+        <div class="col-sm-9">
+            <div class="form-control bg-secondary">
+                <div class="m-4 p-5 bg-white" th:utext="*{description}">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- PAGEINDEX -->
+    <div class="form-group m-form__group row" th:if="*{indexNo != ''}">
+        <label class="col-3 col-form-label">
+            <span th:utext="|#{label.document.pageIndex} : |"> Номер бланка : </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{indexNo}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- PAGECOUNT -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span th:utext="|#{label.document.pageCount} : |"> Номер бланка : </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{pageCount}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- Document Due Date -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Срок : </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{documentDueDate} != null ? *{#dates.format(documentDueDate, 'dd-MM-yyyy')} : 'Срок не установлен'" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!--************** Attachment **************-->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label"> Приложения : </label>
+        <div class="col-9">
+            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
+            <table id="documentAttachments" class="form-control">
+                <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
+                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</th:block>
+<th:block th:fragment="notification">
+    <!-- Outgoing -->
+    <!-- Receiver Responsible -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Кому : </span>
+        </label>
+        <div class="col-9">
+            <label class="form-control" th:each="s : *{receiverResponsible.organizations}" th:text="${s.name}"> Staff </label>
+            <label class="form-control" th:each="s : *{receiverResponsible.person}" th:text="${s.name}"> Staff </label>
+        </div>
+    </div>
+    <div class="form-group m-form__group row" th:if="*{receiverResponsible.responsibleName != null}">
+        <label class="col-3 col-form-label">
+            <span></span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{receiverResponsible.responsibleName}" th:if="*{documentState.ordinal() != 0}"> Title </label>
+        </div>
+    </div>
+    <!-- Sender Responsible -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> ОТ КОГО :  </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:each="s : *{senderResponsible.staff}" th:text="${s.name}"> Staff </label>
+            <label class="form-control" th:each="s : *{senderResponsible.organizations}" th:text="${s.name}"> Staff </label>
+        </div>
+    </div>
+    <!-- TITLE -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Относительно : </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{title}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- DESCRIPTION -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Краткое содержание : </span>
+        </label>
+        <div class="col-sm-9">
+            <div class="form-control bg-secondary">
+                <div class="m-4 p-5 bg-white" th:utext="*{description}">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- PAGEINDEX -->
+    <div class="form-group m-form__group row" th:if="*{indexNo != ''}">
+        <label class="col-3 col-form-label">
+            <span th:utext="|#{label.document.pageIndex} : |"> Номер бланка : </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{indexNo}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- PAGECOUNT -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span th:utext="|#{label.document.pageCount} : |"> Номер бланка : </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{pageCount}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- Document Due Date -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Срок : </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{documentDueDate} != null ? *{#dates.format(documentDueDate, 'dd-MM-yyyy')} : 'Срок не установлен'" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!--************** Attachment **************-->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label"> Приложения : </label>
+        <div class="col-9">
+            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
+            <table id="documentAttachments" class="form-control">
+                <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
+                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</th:block>
+<th:block th:fragment="contract">
+    <!-- Outgoing -->
+    <!-- Receiver Responsible -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Кому : </span>
+        </label>
+        <div class="col-9">
+            <label class="form-control" th:each="s : *{receiverResponsible.organizations}" th:text="${s.name}"> Staff </label>
+            <label class="form-control" th:each="s : *{receiverResponsible.person}" th:text="${s.name}"> Staff </label>
+        </div>
+    </div>
+    <div class="form-group m-form__group row" th:if="*{receiverResponsible.responsibleName != null}">
+        <label class="col-3 col-form-label">
+            <span></span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{receiverResponsible.responsibleName}" th:if="*{documentState.ordinal() != 0}"> Title </label>
+        </div>
+    </div>
+    <!-- Sender Responsible -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> ОТ КОГО :  </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:each="s : *{senderResponsible.staff}" th:text="${s.name}"> Staff </label>
+            <label class="form-control" th:each="s : *{senderResponsible.organizations}" th:text="${s.name}"> Staff </label>
+        </div>
+    </div>
+    <!-- TITLE -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Относительно : </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{title}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- DESCRIPTION -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Краткое содержание : </span>
+        </label>
+        <div class="col-sm-9">
+            <div class="form-control bg-secondary">
+                <div class="m-4 p-5 bg-white" th:utext="*{description}">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- PAGEINDEX -->
+    <div class="form-group m-form__group row" th:if="*{indexNo != ''}">
+        <label class="col-3 col-form-label">
+            <span th:utext="|#{label.document.pageIndex} : |"> Номер бланка : </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{indexNo}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- PAGECOUNT -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span th:utext="|#{label.document.pageCount} : |"> Номер бланка : </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{pageCount}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- Document Due Date -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Срок : </span>
+        </label>
+        <div class="col-sm-9">
+            <label class="form-control" th:text="*{documentDueDate} != null ? *{#dates.format(documentDueDate, 'dd-MM-yyyy')} : 'Срок не установлен'" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!--************** Attachment **************-->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label"> Приложения : </label>
+        <div class="col-9">
+            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
+            <table id="documentAttachments" class="form-control">
+                <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
+                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</th:block>
 </body>
 </html>

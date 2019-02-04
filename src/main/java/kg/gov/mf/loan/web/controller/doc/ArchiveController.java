@@ -3,7 +3,7 @@ package kg.gov.mf.loan.web.controller.doc;
 import kg.gov.mf.loan.doc.model.Archive;
 import kg.gov.mf.loan.doc.model.Attachment;
 import kg.gov.mf.loan.doc.service.ArchiveService;
-import kg.gov.mf.loan.doc.service.RegisterService;
+import kg.gov.mf.loan.doc.service.CounterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -23,7 +23,7 @@ import java.util.UUID;
 public class ArchiveController extends BaseController {
 
     private ArchiveService archiveService;
-    private RegisterService registerService;
+    private CounterService registerService;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -32,7 +32,7 @@ public class ArchiveController extends BaseController {
     }
 
     @Autowired
-    public ArchiveController(ArchiveService archiveService, RegisterService registerService) {
+    public ArchiveController(ArchiveService archiveService, CounterService registerService) {
         this.archiveService = archiveService;
         this.registerService = registerService;
     }

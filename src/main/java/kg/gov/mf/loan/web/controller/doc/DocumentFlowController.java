@@ -115,11 +115,11 @@ public class DocumentFlowController extends BaseController {
                     { Transition.DONE }                                 // STARTED
                 },
                 {   // Outgoing
-                    { Transition.REQUEST, Transition.TORECONCILE },     // NEW
-                    { Transition.REQUEST, Transition.TORECONCILE },     // DRAFT
-                    { Transition.RECONCILE, Transition.REJECT },        // PENDING
-                    { Transition.REQUEST, Transition.TORECONCILE },     // RECONCILED
-                    { Transition.APPROVE, Transition.REJECT },          // REQUESTED
+                    { Transition.REQUEST },                             // NEW
+                    { Transition.REQUEST },                             // DRAFT
+                    {},                                                 // PENDING
+                    {},                                                 // RECONCILED
+                    {},                                                 // REQUESTED
                     { Transition.REGISTER },                            // APPROVED
                     {},                                                 // REJECTED
                     { Transition.DONE },                                // REGISTERED
@@ -127,7 +127,21 @@ public class DocumentFlowController extends BaseController {
                     {},                                                 // SENT
                     {},                                                 // STARTED
                     {}                                                  // DONE
-                }
+                },
+                {   // OTHERS
+                    { Transition.REQUEST },                             // NEW
+                    { Transition.REQUEST },                             // DRAFT
+                    {},                                                 // PENDING
+                    {},                                                 // RECONCILED
+                    {},                                                 // REQUESTED
+                    { Transition.REGISTER },                            // APPROVED
+                    {},                                                 // REJECTED
+                    { Transition.DONE },                                // REGISTERED
+                    {},                                                 // ACCEPTED
+                    {},                                                 // SENT
+                    {},                                                 // STARTED
+                    {}                                                  // DONE
+                },
             };
     //endregion
     private final static Map<Integer, String> responsible = new HashMap<Integer, String>() {
@@ -162,13 +176,9 @@ public class DocumentFlowController extends BaseController {
 
         model.addAttribute("tasks", taskService.getTasks(vars));
         model.addAttribute("ACTIONS", ACTIONS);
-        model.addAttribute("row", CURRENTVIEW.valueOf(type.toUpperCase()).ordinal());
-        model.addAttribute("ds", documentStatusService);
         model.addAttribute("documents", documents);
         model.addAttribute("title", documentType.getName());
-        model.addAttribute("responsible", responsible);
         model.addAttribute("type", type);
-        model.addAttribute("cu", getUser().getId());
 
         if(getUser().getStaff() != null)
             model.addAttribute("documentSubTypes", documentType.getDocumentSubTypes());
@@ -198,36 +208,21 @@ public class DocumentFlowController extends BaseController {
         }
         //**************************************************************************************************************
 
-        String currentView = document.getDocumentType().getInternalName();
-        int row = CURRENTVIEW.valueOf(currentView.toUpperCase()).ordinal();
-        int col = document.getDocumentState().ordinal();
-
-        List<Transition> actions = new ArrayList<>();
-        for(Transition action : ACTIONS[row][col])
-        {
-            actions.add(action);
-        }
-
-        boolean hasReject = false;
-
-        if(ACTIONS[row][col].length > 1){
-            hasReject = ACTIONS[row][col][1].equals(Transition.REJECT) ? true : false;
-        }
-
-        model.addAttribute("stages", getStages(currentView));
-        model.addAttribute("hasReject", hasReject);
-        model.addAttribute("actions", actions);
+        //model.addAttribute("stages", getStages(currentView));
+        model.addAttribute("hasReject", hasReject(document));
+        model.addAttribute("actions", getActions(document));
         model.addAttribute("document", document);
         model.addAttribute("responsible", responsible);
         model.addAttribute("documentState",  document.getDocumentState().toString());
 
-        model.addAttribute("mydocs", documentService.getInvolvedDocuments("incoming", getUser().getId()));
+        //model.addAttribute("mydocs", documentService.getInvolvedDocuments("incoming", getUser().getId()));
 
         return "/doc/document/edit";
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String edit(@PathVariable("id") Long id, Model model) {
+
 
         if(getUser() == null) return "/login/login";
 
@@ -241,7 +236,6 @@ public class DocumentFlowController extends BaseController {
         vars.put("status", "OPEN");
         Task task = taskService.getTask(getUser(), vars);
 
-
         if(task != null && task.getProgress() != null)
             document.setDocumentState(State.valueOf(task.getProgress()));
 
@@ -249,35 +243,13 @@ public class DocumentFlowController extends BaseController {
         vars.put("objectId", String.valueOf(document.getId()));
         //endregion
 
-        String currentView = document.getDocumentType().getInternalName();
-        int row = CURRENTVIEW.valueOf(currentView.toUpperCase()).ordinal();
-        int col = document.getDocumentState().ordinal();
-
-        List<Transition> actions = new ArrayList<>();
-        for(Transition action : ACTIONS[row][col])
-        {
-            actions.add(action);
-        }
-
-        boolean hasReject = false;
-
-        if(ACTIONS[row][col].length > 1){
-            hasReject = ACTIONS[row][col][1].equals(Transition.REJECT) ? true : false;
-        }
-
-        // *************************************************************************************************************
         document.setDocumentState(curretState);
 
-        //
-
-        model.addAttribute("cu", getUser().getUsername());
-        model.addAttribute("cuid", getUser().getId());
-        model.addAttribute("stages", getStages(currentView));
-        model.addAttribute("hasReject", hasReject);
+        //model.addAttribute("stages", getStages(currentView));
+        model.addAttribute("hasReject", hasReject(document));
         model.addAttribute("tasks", taskService.getTasks(vars));
-        model.addAttribute("actions", actions);
+        model.addAttribute("actions", getActions(document));
         model.addAttribute("document", document);
-        model.addAttribute("responsible", responsible);
         model.addAttribute("documentState", document.getDocumentState().toString());
 
         model.addAttribute("mydocs", documentService.getInvolvedDocuments("incoming", getUser().getId()));
@@ -337,7 +309,7 @@ public class DocumentFlowController extends BaseController {
         Document document = documentService.getById(id);
         document = saveOutgoingDocument(document, "REGISTER");
 
-        return document.getSenderRegisteredNumber() + "<hr>" + document.getSenderRegisteredDate();
+        return document.getSenderRegisteredNumber();
     }
     //******************************************************************************************************************
 
@@ -426,6 +398,30 @@ public class DocumentFlowController extends BaseController {
 
         return stages;
     }
+    private List<Transition> getActions(Document document) {
+        int row = document.getDocumentType().getId() < 4 ? (int)document.getDocumentType().getId()-1 : 3;
+        int col = document.getDocumentState().ordinal();
+
+        List<Transition> actions = new ArrayList<>();
+        for(Transition action : ACTIONS[row][col])
+        {
+            actions.add(action);
+        }
+        return actions;
+    }
+    private boolean hasReject(Document document) {
+
+        boolean hasReject = false;
+
+        int row = document.getDocumentType().getId() < 4 ? (int)document.getDocumentType().getId()-1 : 3;
+        int col = document.getDocumentState().ordinal();
+
+        if(ACTIONS[row][col].length > 1){
+            hasReject = ACTIONS[row][col][1].equals(Transition.REJECT) ? true : false;
+        }
+        return hasReject;
+    }
+
     private DispatchData setDispatchData(State state, String description) {
 
         DispatchData dispatchData = new DispatchData();
@@ -805,54 +801,6 @@ public class DocumentFlowController extends BaseController {
             document.setUsers(doc.getUsers());
             document.setDocumentState(doc.getDocumentState());
             document.setDispatchData(doc.getDispatchData());
-
-            if (action.equals("TORECONCILE") || action.equals("REQUEST"))
-            {
-                //region Description
-                taskService.completeTask(document.getId(), getUser(), "Завершен");
-
-                if(document.getReconciler() != null)
-                {
-                    for (Staff staff : document.getReconciler())
-                    {
-                        document.getUsers().add(getUser(staff));
-                        document.getDispatchData().add(setDispatchData(State.RECONCILED, staff.getName()));
-                    }
-                }
-
-                for (Staff staff : document.getSenderResponsible().getStaff())
-                {
-                    document.getUsers().add(getUser(staff));
-                    document.getDispatchData().add(setDispatchData(State.APPROVED, staff.getName()));
-                }
-
-                document.setDocumentState(State.APPROVED);
-
-                for (User user : systemConstantService.getById(1).getOutgoingRegistrator())
-                {
-                    document.getUsers().add(user);
-                    addTask(Transition.REGISTER.text(), document.getId(), null, document.getDocumentDueDate(), user, State.APPROVED);
-                }
-                //endregion
-            }
-
-            if (action.equals("REJECT"))
-            {
-                //region Description
-                taskService.completeTask(document.getId(), getUser(), "Отклонен : " + description);
-
-                Map<String, String> vars = new HashMap<>();
-                vars.put("objectId", String.valueOf(document.getId()));
-                vars.put("status", "OPEN");
-
-                if (taskService.getTasks(vars).size() == 0)
-                {
-                    addTask("Доработать документ", document.getId(), null, document.getDocumentDueDate(), document.getOwner(), State.DRAFT);
-                    document.setDocumentState(State.REJECTED);
-                }
-                document.getDispatchData().add(setDispatchData(State.APPROVED, "Отклонен : " + description));
-                //endregion
-            }
 
             if (action.equals("REGISTER"))
             {

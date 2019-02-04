@@ -330,6 +330,626 @@
             <textarea th:field="*{description}"></textarea>
         </div>
     </div>
+    <!-- RECONCILER -->
+    <div class="form-group m-form__group row" th:if="*{documentState.ordinal() < 2}">
+        <label class="col-3 col-form-label">
+            <span> На Согласование : </span>
+        </label>
+        <div class="col-9">
+            <select class="s2 form-control" th:field="*{reconciler}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/staff">
+                <option value="">Select</option>
+            </select>
+        </div>
+    </div>
+    <!-- PAGEINDEX -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span th:utext="|#{label.document.pageIndex} : |"> Номер бланка : </span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control m-input" th:field="*{indexNo}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'">
+            <label class="form-control" th:text="*{indexNo}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- PAGECOUNT -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span th:utext="|#{label.document.pageCount} : |"> Номер бланка : </span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control m-input" th:field="*{pageCount}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'number' : 'hidden'">
+            <label class="form-control" th:text="*{pageCount}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- Attachment -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label"> Приложения : </label>
+        <div class="col-9" id="attachmentList">
+            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
+            <input type="hidden" name="files" value="0">
+            <table id="documentAttachments" class="form-control">
+                <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
+                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!-- Comment -->
+    <div class="form-group m-form__group row" th:if="${hasReject}">
+        <label class="col-3 col-form-label">
+            <span> Примечание : </span>
+        </label>
+        <div class="col-sm-9">
+            <textarea class="form-control" rows="5" th:field="*{comment}" value=" "></textarea>
+        </div>
+    </div>
+    <!-- Document Link  sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')" -->
+    <!--div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Ссылка на документ : </span>
+        </label>
+        <div class="col-9" id="documentList">
+            <select class="form-control" th:field="*{documentLinks}" multiple="multiple" style="width: 100%">
+                <option th:each="d : ${mydocs}"
+                        th:value="${d.id}"
+                        th:text="${d.documentSubType.name} + ' № ' + ${d.senderRegisteredNumber}">Responsible</option>
+            </select>
+            <table class="table table-bordered table-hover">
+                <tr th:if="*{not #lists.isEmpty(documentLinks)}" th:each="docs : *{documentLinks}">
+                    <td><a th:href="@{/doc/view/__${docs}__}"><label th:text="${mydocs[__${docs}__].title}"></label></a></td>
+                </tr>
+            </table>
+        </div>
+    </div-->
+</th:block>
+
+<th:block th:fragment="reconciliationreport">
+    <!-- Outgoing -->
+    <!-- Sender Registration Data -->
+    <input type="hidden" th:field="*{senderRegisteredNumber}"/>
+    <input type="hidden" th:field="*{senderRegisteredDate}"/>
+    <!-- Receiver Responsible -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Кому : </span>
+        </label>
+        <div th:class="*{documentState.ordinal() > 1} ? 'col-0' : 'col-3'" th:hidden="*{documentState.ordinal() > 1}">
+            <select class="s2s form-control" id="rrt_select" th:field="*{receiverResponsible.responsibleType}" style="width: 100%">
+                <option value="3">Организация</option>
+                <option value="4">ФИЗ Лицо</option>
+            </select>
+        </div>
+        <div th:class="*{documentState.ordinal() > 1} ? 'col-9' : 'col-6'">
+            <div class="rdr" id="ri3" th:hidden="*{documentState.ordinal() > 1}">
+                <select class="s2 form-control" th:field="*{receiverResponsible.organizations}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/organizations">
+                    <option th:each="r : *{receiverResponsible?.organizations}"
+                            th:value="${r.id}"
+                            th:text="${r.name}">Responsible</option>
+                </select>
+            </div>
+            <div class="rdr" id="ri4" th:hidden="*{documentState.ordinal() > 1}">
+                <select class="s2 form-control" th:field="*{receiverResponsible.person}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/person">
+                    <option th:each="r : *{receiverResponsible?.person}"
+                            th:value="${r.id}"
+                            th:text="${r.name}">Responsible</option>
+                </select>
+            </div>
+            <label class="form-control" th:each="s : *{receiverResponsible.organizations}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+            <label class="form-control" th:each="s : *{receiverResponsible.person}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+        </div>
+    </div>
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span></span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control" th:field="*{receiverResponsible.responsibleName}" autocomplete="off" th:type="*{documentState.ordinal() == 0} ? 'text' : 'hidden'">
+            <label class="form-control" th:text="*{receiverResponsible.responsibleName}" th:if="*{documentState.ordinal() != 0}"> Title </label>
+        </div>
+    </div>
+    <!-- Sender Responsible -->
+    <div class="form-group m-form__group row">
+        <input type="hidden" th:field="*{senderResponsible.responsibleType}" value="1"/>
+        <label class="col-3 col-form-label">
+            <span> От кого : </span>
+        </label>
+        <div class="col-9">
+            <div th:hidden="*{documentState.ordinal() > 1}">
+                <select class="s2 form-control" th:field="*{senderResponsible.staff}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/staff" required>
+                    <option th:each="r : *{senderResponsible?.staff}"
+                            th:value="${r.id}"
+                            th:text="${r.name}">Responsible</option>
+                </select>
+            </div>
+            <label class="form-control" th:each="s : *{senderResponsible.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+        </div>
+    </div>
+    <!-- TITLE -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Относительно : </span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control m-input" th:field="*{title}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'" required>
+            <label class="form-control" th:text="*{title}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- DESCRIPTION -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Краткое содержание : </span>
+        </label>
+        <div class="col-sm-9">
+            <textarea th:field="*{description}"></textarea>
+        </div>
+    </div>
+    <!-- PAGEINDEX -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span th:utext="|#{label.document.pageIndex} : |"> Номер бланка : </span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control m-input" th:field="*{indexNo}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'">
+            <label class="form-control" th:text="*{indexNo}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- RECONCILER -->
+    <div class="form-group m-form__group row" th:if="*{documentState.ordinal() < 2}">
+        <label class="col-3 col-form-label">
+            <span> На Согласование : </span>
+        </label>
+        <div class="col-9">
+            <select class="s2 form-control" th:field="*{reconciler}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/staff">
+                <option value="">Select</option>
+            </select>
+        </div>
+    </div>
+    <!-- PAGECOUNT -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span th:utext="|#{label.document.pageCount} : |"> Номер бланка : </span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control m-input" th:field="*{pageCount}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'number' : 'hidden'">
+            <label class="form-control" th:text="*{pageCount}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- Attachment -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label"> Приложения : </label>
+        <div class="col-9" id="attachmentList">
+            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
+            <input type="hidden" name="files" value="0">
+            <table id="documentAttachments" class="form-control">
+                <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
+                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!-- Comment -->
+    <div class="form-group m-form__group row" th:if="${hasReject}">
+        <label class="col-3 col-form-label">
+            <span> Примечание : </span>
+        </label>
+        <div class="col-sm-9">
+            <textarea class="form-control" rows="5" th:field="*{comment}" value=" "></textarea>
+        </div>
+    </div>
+    <!-- Document Link  sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')" -->
+    <!--div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Ссылка на документ : </span>
+        </label>
+        <div class="col-9" id="documentList">
+            <select class="form-control" th:field="*{documentLinks}" multiple="multiple" style="width: 100%">
+                <option th:each="d : ${mydocs}"
+                        th:value="${d.id}"
+                        th:text="${d.documentSubType.name} + ' № ' + ${d.senderRegisteredNumber}">Responsible</option>
+            </select>
+            <table class="table table-bordered table-hover">
+                <tr th:if="*{not #lists.isEmpty(documentLinks)}" th:each="docs : *{documentLinks}">
+                    <td><a th:href="@{/doc/view/__${docs}__}"><label th:text="${mydocs[__${docs}__].title}"></label></a></td>
+                </tr>
+            </table>
+        </div>
+    </div-->
+</th:block>
+<th:block th:fragment="complaint">
+    <!-- Outgoing -->
+    <!-- Sender Registration Data -->
+    <input type="hidden" th:field="*{senderRegisteredNumber}"/>
+    <input type="hidden" th:field="*{senderRegisteredDate}"/>
+    <!-- Receiver Responsible -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Кому : </span>
+        </label>
+        <div th:class="*{documentState.ordinal() > 1} ? 'col-0' : 'col-3'" th:hidden="*{documentState.ordinal() > 1}">
+            <select class="s2s form-control" id="rrt_select" th:field="*{receiverResponsible.responsibleType}" style="width: 100%">
+                <option value="3">Организация</option>
+                <option value="4">ФИЗ Лицо</option>
+            </select>
+        </div>
+        <div th:class="*{documentState.ordinal() > 1} ? 'col-9' : 'col-6'">
+            <div class="rdr" id="ri3" th:hidden="*{documentState.ordinal() > 1}">
+                <select class="s2 form-control" th:field="*{receiverResponsible.organizations}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/organizations">
+                    <option th:each="r : *{receiverResponsible?.organizations}"
+                            th:value="${r.id}"
+                            th:text="${r.name}">Responsible</option>
+                </select>
+            </div>
+            <div class="rdr" id="ri4" th:hidden="*{documentState.ordinal() > 1}">
+                <select class="s2 form-control" th:field="*{receiverResponsible.person}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/person">
+                    <option th:each="r : *{receiverResponsible?.person}"
+                            th:value="${r.id}"
+                            th:text="${r.name}">Responsible</option>
+                </select>
+            </div>
+            <label class="form-control" th:each="s : *{receiverResponsible.organizations}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+            <label class="form-control" th:each="s : *{receiverResponsible.person}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+        </div>
+    </div>
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span></span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control" th:field="*{receiverResponsible.responsibleName}" autocomplete="off" th:type="*{documentState.ordinal() == 0} ? 'text' : 'hidden'">
+            <label class="form-control" th:text="*{receiverResponsible.responsibleName}" th:if="*{documentState.ordinal() != 0}"> Title </label>
+        </div>
+    </div>
+    <!-- Sender Responsible -->
+    <div class="form-group m-form__group row">
+        <input type="hidden" th:field="*{senderResponsible.responsibleType}" value="1"/>
+        <label class="col-3 col-form-label">
+            <span> От кого : </span>
+        </label>
+        <div class="col-9">
+            <div th:hidden="*{documentState.ordinal() > 1}">
+                <select class="s2 form-control" th:field="*{senderResponsible.staff}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/staff" required>
+                    <option th:each="r : *{senderResponsible?.staff}"
+                            th:value="${r.id}"
+                            th:text="${r.name}">Responsible</option>
+                </select>
+            </div>
+            <label class="form-control" th:each="s : *{senderResponsible.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+        </div>
+    </div>
+    <!-- TITLE -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Относительно : </span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control m-input" th:field="*{title}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'" required>
+            <label class="form-control" th:text="*{title}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- DESCRIPTION -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Краткое содержание : </span>
+        </label>
+        <div class="col-sm-9">
+            <textarea th:field="*{description}"></textarea>
+        </div>
+    </div>
+    <!-- RECONCILER -->
+    <div class="form-group m-form__group row" th:if="*{documentState.ordinal() < 2}">
+        <label class="col-3 col-form-label">
+            <span> На Согласование : </span>
+        </label>
+        <div class="col-9">
+            <select class="s2 form-control" th:field="*{reconciler}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/staff">
+                <option value="">Select</option>
+            </select>
+        </div>
+    </div>
+    <!-- PAGEINDEX -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span th:utext="|#{label.document.pageIndex} : |"> Номер бланка : </span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control m-input" th:field="*{indexNo}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'">
+            <label class="form-control" th:text="*{indexNo}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- PAGECOUNT -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span th:utext="|#{label.document.pageCount} : |"> Номер бланка : </span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control m-input" th:field="*{pageCount}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'number' : 'hidden'">
+            <label class="form-control" th:text="*{pageCount}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- Attachment -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label"> Приложения : </label>
+        <div class="col-9" id="attachmentList">
+            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
+            <input type="hidden" name="files" value="0">
+            <table id="documentAttachments" class="form-control">
+                <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
+                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!-- Comment -->
+    <div class="form-group m-form__group row" th:if="${hasReject}">
+        <label class="col-3 col-form-label">
+            <span> Примечание : </span>
+        </label>
+        <div class="col-sm-9">
+            <textarea class="form-control" rows="5" th:field="*{comment}" value=" "></textarea>
+        </div>
+    </div>
+    <!-- Document Link  sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')" -->
+    <!--div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Ссылка на документ : </span>
+        </label>
+        <div class="col-9" id="documentList">
+            <select class="form-control" th:field="*{documentLinks}" multiple="multiple" style="width: 100%">
+                <option th:each="d : ${mydocs}"
+                        th:value="${d.id}"
+                        th:text="${d.documentSubType.name} + ' № ' + ${d.senderRegisteredNumber}">Responsible</option>
+            </select>
+            <table class="table table-bordered table-hover">
+                <tr th:if="*{not #lists.isEmpty(documentLinks)}" th:each="docs : *{documentLinks}">
+                    <td><a th:href="@{/doc/view/__${docs}__}"><label th:text="${mydocs[__${docs}__].title}"></label></a></td>
+                </tr>
+            </table>
+        </div>
+    </div-->
+</th:block>
+<th:block th:fragment="notification">
+    <!-- Outgoing -->
+    <!-- Sender Registration Data -->
+    <input type="hidden" th:field="*{senderRegisteredNumber}"/>
+    <input type="hidden" th:field="*{senderRegisteredDate}"/>
+    <!-- Receiver Responsible -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Кому : </span>
+        </label>
+        <div th:class="*{documentState.ordinal() > 1} ? 'col-0' : 'col-3'" th:hidden="*{documentState.ordinal() > 1}">
+            <select class="s2s form-control" id="rrt_select" th:field="*{receiverResponsible.responsibleType}" style="width: 100%">
+                <option value="3">Организация</option>
+                <option value="4">ФИЗ Лицо</option>
+            </select>
+        </div>
+        <div th:class="*{documentState.ordinal() > 1} ? 'col-9' : 'col-6'">
+            <div class="rdr" id="ri3" th:hidden="*{documentState.ordinal() > 1}">
+                <select class="s2 form-control" th:field="*{receiverResponsible.organizations}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/organizations">
+                    <option th:each="r : *{receiverResponsible?.organizations}"
+                            th:value="${r.id}"
+                            th:text="${r.name}">Responsible</option>
+                </select>
+            </div>
+            <div class="rdr" id="ri4" th:hidden="*{documentState.ordinal() > 1}">
+                <select class="s2 form-control" th:field="*{receiverResponsible.person}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/person">
+                    <option th:each="r : *{receiverResponsible?.person}"
+                            th:value="${r.id}"
+                            th:text="${r.name}">Responsible</option>
+                </select>
+            </div>
+            <label class="form-control" th:each="s : *{receiverResponsible.organizations}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+            <label class="form-control" th:each="s : *{receiverResponsible.person}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+        </div>
+    </div>
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span></span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control" th:field="*{receiverResponsible.responsibleName}" autocomplete="off" th:type="*{documentState.ordinal() == 0} ? 'text' : 'hidden'">
+            <label class="form-control" th:text="*{receiverResponsible.responsibleName}" th:if="*{documentState.ordinal() != 0}"> Title </label>
+        </div>
+    </div>
+    <!-- Sender Responsible -->
+    <div class="form-group m-form__group row">
+        <input type="hidden" th:field="*{senderResponsible.responsibleType}" value="1"/>
+        <label class="col-3 col-form-label">
+            <span> От кого : </span>
+        </label>
+        <div class="col-9">
+            <div th:hidden="*{documentState.ordinal() > 1}">
+                <select class="s2 form-control" th:field="*{senderResponsible.staff}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/staff" required>
+                    <option th:each="r : *{senderResponsible?.staff}"
+                            th:value="${r.id}"
+                            th:text="${r.name}">Responsible</option>
+                </select>
+            </div>
+            <label class="form-control" th:each="s : *{senderResponsible.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+        </div>
+    </div>
+    <!-- TITLE -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Относительно : </span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control m-input" th:field="*{title}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'" required>
+            <label class="form-control" th:text="*{title}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- DESCRIPTION -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Краткое содержание : </span>
+        </label>
+        <div class="col-sm-9">
+            <textarea th:field="*{description}"></textarea>
+        </div>
+    </div>
+    <!-- RECONCILER -->
+    <div class="form-group m-form__group row" th:if="*{documentState.ordinal() < 2}">
+        <label class="col-3 col-form-label">
+            <span> На Согласование : </span>
+        </label>
+        <div class="col-9">
+            <select class="s2 form-control" th:field="*{reconciler}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/staff">
+                <option value="">Select</option>
+            </select>
+        </div>
+    </div>
+    <!-- PAGEINDEX -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span th:utext="|#{label.document.pageIndex} : |"> Номер бланка : </span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control m-input" th:field="*{indexNo}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'">
+            <label class="form-control" th:text="*{indexNo}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- PAGECOUNT -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span th:utext="|#{label.document.pageCount} : |"> Номер бланка : </span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control m-input" th:field="*{pageCount}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'number' : 'hidden'">
+            <label class="form-control" th:text="*{pageCount}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- Attachment -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label"> Приложения : </label>
+        <div class="col-9" id="attachmentList">
+            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
+            <input type="hidden" name="files" value="0">
+            <table id="documentAttachments" class="form-control">
+                <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
+                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!-- Comment -->
+    <div class="form-group m-form__group row" th:if="${hasReject}">
+        <label class="col-3 col-form-label">
+            <span> Примечание : </span>
+        </label>
+        <div class="col-sm-9">
+            <textarea class="form-control" rows="5" th:field="*{comment}" value=" "></textarea>
+        </div>
+    </div>
+    <!-- Document Link  sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')" -->
+    <!--div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Ссылка на документ : </span>
+        </label>
+        <div class="col-9" id="documentList">
+            <select class="form-control" th:field="*{documentLinks}" multiple="multiple" style="width: 100%">
+                <option th:each="d : ${mydocs}"
+                        th:value="${d.id}"
+                        th:text="${d.documentSubType.name} + ' № ' + ${d.senderRegisteredNumber}">Responsible</option>
+            </select>
+            <table class="table table-bordered table-hover">
+                <tr th:if="*{not #lists.isEmpty(documentLinks)}" th:each="docs : *{documentLinks}">
+                    <td><a th:href="@{/doc/view/__${docs}__}"><label th:text="${mydocs[__${docs}__].title}"></label></a></td>
+                </tr>
+            </table>
+        </div>
+    </div-->
+</th:block>
+<th:block th:fragment="contract">
+    <!-- Outgoing -->
+    <!-- Sender Registration Data -->
+    <input type="hidden" th:field="*{senderRegisteredNumber}"/>
+    <input type="hidden" th:field="*{senderRegisteredDate}"/>
+    <!-- Receiver Responsible -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Кому : </span>
+        </label>
+        <div th:class="*{documentState.ordinal() > 1} ? 'col-0' : 'col-3'" th:hidden="*{documentState.ordinal() > 1}">
+            <select class="s2s form-control" id="rrt_select" th:field="*{receiverResponsible.responsibleType}" style="width: 100%">
+                <option value="3">Организация</option>
+                <option value="4">ФИЗ Лицо</option>
+            </select>
+        </div>
+        <div th:class="*{documentState.ordinal() > 1} ? 'col-9' : 'col-6'">
+            <div class="rdr" id="ri3" th:hidden="*{documentState.ordinal() > 1}">
+                <select class="s2 form-control" th:field="*{receiverResponsible.organizations}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/organizations">
+                    <option th:each="r : *{receiverResponsible?.organizations}"
+                            th:value="${r.id}"
+                            th:text="${r.name}">Responsible</option>
+                </select>
+            </div>
+            <div class="rdr" id="ri4" th:hidden="*{documentState.ordinal() > 1}">
+                <select class="s2 form-control" th:field="*{receiverResponsible.person}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/person">
+                    <option th:each="r : *{receiverResponsible?.person}"
+                            th:value="${r.id}"
+                            th:text="${r.name}">Responsible</option>
+                </select>
+            </div>
+            <label class="form-control" th:each="s : *{receiverResponsible.organizations}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+            <label class="form-control" th:each="s : *{receiverResponsible.person}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+        </div>
+    </div>
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span></span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control" th:field="*{receiverResponsible.responsibleName}" autocomplete="off" th:type="*{documentState.ordinal() == 0} ? 'text' : 'hidden'">
+            <label class="form-control" th:text="*{receiverResponsible.responsibleName}" th:if="*{documentState.ordinal() != 0}"> Title </label>
+        </div>
+    </div>
+    <!-- Sender Responsible -->
+    <div class="form-group m-form__group row">
+        <input type="hidden" th:field="*{senderResponsible.responsibleType}" value="1"/>
+        <label class="col-3 col-form-label">
+            <span> От кого : </span>
+        </label>
+        <div class="col-9">
+            <div th:hidden="*{documentState.ordinal() > 1}">
+                <select class="s2 form-control" th:field="*{senderResponsible.staff}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/staff" required>
+                    <option th:each="r : *{senderResponsible?.staff}"
+                            th:value="${r.id}"
+                            th:text="${r.name}">Responsible</option>
+                </select>
+            </div>
+            <label class="form-control" th:each="s : *{senderResponsible.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
+        </div>
+    </div>
+    <!-- TITLE -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Относительно : </span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control m-input" th:field="*{title}" autocomplete="off" th:type="*{documentState.ordinal() < 2} ? 'text' : 'hidden'" required>
+            <label class="form-control" th:text="*{title}" th:if="*{documentState.ordinal() > 1}"> Title </label>
+        </div>
+    </div>
+    <!-- DESCRIPTION -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Краткое содержание : </span>
+        </label>
+        <div class="col-sm-9">
+            <textarea th:field="*{description}"></textarea>
+        </div>
+    </div>
+    <!-- RECONCILER -->
+    <div class="form-group m-form__group row" th:if="*{documentState.ordinal() < 2}">
+        <label class="col-3 col-form-label">
+            <span> На Согласование : </span>
+        </label>
+        <div class="col-9">
+            <select class="s2 form-control" th:field="*{reconciler}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/staff">
+                <option value="">Select</option>
+            </select>
+        </div>
+    </div>
     <!-- PAGEINDEX -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
