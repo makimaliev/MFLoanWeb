@@ -74,7 +74,7 @@
 					</div>
 				</div>
 
-				<div sec:authorize="hasRole('ADMIN')" class="m-portlet m-portlet--full-height">
+				<div sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_PERSON')" class="m-portlet m-portlet--full-height">
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="row">
