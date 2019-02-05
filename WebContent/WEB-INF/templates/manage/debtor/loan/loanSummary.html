@@ -773,7 +773,7 @@
 
                                     <tr class="grid_table_footer_tr">
                                         <td class="grid_table_footer_td" align="center"></td>
-                                        <td class="grid_table_footer_td" align="left" th:text="${name}"></td>
+                                        <td class="grid_table_footer_td" align="left" ><a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/view}" th:text="${name}"></a></td>
                                         <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summary.totalDisbursed, 1,'DEFAULT', 2, 'COMMA')}"></td>
                                         <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summary.totalPaid, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
                                         <td class="grid_table_footer_td" align="center" th:text="${#dates.format(summary.onDate,'dd.MM.yyyy')}"></td>
@@ -787,10 +787,10 @@
 
                                     <tr class="grid_table_cell_tr" th:if="${notKGS}==true">
                                         <td class="grid_table_cell_td" align="center"></td>
-                                        <td class="grid_table_cell_td" align="left" th:text="${rate}"></td>
+                                        <td class="grid_table_cell_td" align="right" th:text="${rate}"></td>
                                         <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(newSummary.totalDisbursed, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
                                         <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(newSummary.totalPaidKGS, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td" align="center" th:text="${#dates.format(newSummary.onDate,'dd.MM.yyyy')}"></td>
+                                        <td class="grid_table_cell_td" align="center" ></td>
                                         <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(newSummary.totalOutstanding, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
                                         <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(newSummary.outstadingPrincipal, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
                                         <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(newSummary.outstadingInterest, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
