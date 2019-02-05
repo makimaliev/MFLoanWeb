@@ -174,11 +174,15 @@
 											Loans <span class="m--font-danger">*</span>
 										</label>
 										<div class="col-lg-4 col-md-9 col-sm-12">
-											<select class="form-control m-bootstrap-select m_selectpicker" multiple th:field="*{loans}">
+											<select name="loanses" class="form-control m-bootstrap-select m_selectpicker" multiple>
+												<!--<option th:each="loan : ${tLoans}"-->
+														<!--th:value="${loan}"-->
+														<!--th:text="${loan.regNumber}">-->
+												<!--</option>-->
 												<option th:each="loan : ${tLoans}"
-														th:value="${{loan}}"
-														th:text="${loan.regNumber}">
-												</option>
+														th:value="${loan.id}"
+														th:text="${loan.regNumber}"
+														th:selected="${loanIds.contains(loan.id)}"></option>
 											</select>
 										</div>
 									</div>
@@ -299,9 +303,10 @@
                 field: "startPrincipal",
                 title: "По осн.с.",
                 template: function (row) {
-                    return '\
+					return '\
 						<input type="text" class="form-control m-input" id="startPrinc' + row.loanId + '" value="' + (row.startPrincipal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",") + '">\
 					';
+
                 }
             }, {
                 field: "startInterest",
@@ -384,7 +389,8 @@
 							phaseDetailsModels.push(PhaseDetailsModel);
 						}
 					});
-				}
+                    console.log(phaseDetailsModels);
+                }
                 // console.log(phaseDetailsModels);
                 phaseDetailsModels = JSON.stringify({
                     'phaseDetailsModels' : phaseDetailsModels

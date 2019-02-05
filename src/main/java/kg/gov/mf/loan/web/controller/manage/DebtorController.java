@@ -692,10 +692,10 @@ public class DebtorController {
 
 				String name1="";
 				if(loan.getCurrency().getId()!=17){
-					name1=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+loanSummary.getOnDate()+". в тыс. "+loan.getCurrency().getName();
+					name1=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).format(loanSummary.getOnDate())+". в тыс. "+loan.getCurrency().getName();
 				}
 				else{
-					name1=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+loanSummary.getOnDate()+". в тоннах "+loan.getCurrency().getName();
+					name1=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).format(loanSummary.getOnDate())+". в тоннах "+loan.getCurrency().getName();
 				}
 				loanSummary.setUuid(name1);
 				loanSummary.setVersion(loan.getId());
@@ -765,7 +765,7 @@ public class DebtorController {
 						sumLoanSummary.setOutstadingPenalty(sumLoanSummary.getOutstadingPenalty() + loanSummary.getOutstadingPenalty());
 						sumLoanSummary.setOutstadingPrincipal(sumLoanSummary.getOutstadingPrincipal() + loanSummary.getOutstadingPrincipal());
 						sumLoanSummary.setOutstadingInterest(sumLoanSummary.getOutstadingInterest() + loanSummary.getOutstadingInterest());
-						sumLoanSummary.setOutstadingFee(sumLoanSummary.getOutstadingFee() + loanSummary.getOutstadingFee());
+//						sumLoanSummary.setOutstadingFee(sumLoanSummary.getOutstadingFee() + loanSummary.getOutstadingFee());
 						sumLoanSummary.setTotalOverdue(sumLoanSummary.getTotalOverdue() + loanSummary.getTotalOverdue());
                         sumLoanSummary.setOverduePrincipal(sumLoanSummary.getOverduePrincipal()+ loanSummary.getOverduePrincipal());
                         sumLoanSummary.setOverdueInterest(sumLoanSummary.getOverdueInterest()+ loanSummary.getOverdueInterest());

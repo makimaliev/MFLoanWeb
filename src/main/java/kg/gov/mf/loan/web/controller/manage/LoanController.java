@@ -655,10 +655,10 @@ public class LoanController {
         LoanSummary loanSummary=loanSummaryService.getById(id);
         String name1="";
         if(loan.getCurrency().getId()!=17){
-            name1=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+loanSummary.getOnDate()+". в тыс. "+loan.getCurrency().getName();
+            name1=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).format(loanSummary.getOnDate())+". в тыс. "+loan.getCurrency().getName();
         }
         else{
-            name1=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+loanSummary.getOnDate()+". в тоннах "+loan.getCurrency().getName();
+            name1=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).format(loanSummary.getOnDate())+". в тоннах "+loan.getCurrency().getName();
         }
         loanSummary.setUuid(name1);
         loanSummary.setVersion(loan.getId());

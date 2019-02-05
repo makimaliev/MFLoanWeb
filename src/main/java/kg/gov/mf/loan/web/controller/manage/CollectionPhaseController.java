@@ -459,17 +459,23 @@ public class CollectionPhaseController {
 			List<Loan> loans=new ArrayList<>();
             for (Loan l:phaseService.getById(procedure.getLastPhase()).getLoans()) {
                 loanIds.add(l.getId());
-                loans.add(loanService.getById(l.getId()));
             }
+			for (Loan l:debtor.getLoans()) {
+				loans.add(l);
+			}
 			model.addAttribute("tLoans", loans);
 			model.addAttribute("loanIds", loanIds);
 		}
 
 		if(phaseId > 0)
 		{
+			List<Loan> loans=new ArrayList<>();
+			for (Loan l:debtor.getLoans()) {
+				loans.add(l);
+			}
 			CollectionPhase phase = phaseService.getById(phaseId);
 			model.addAttribute("phase", phase);
-			model.addAttribute("tLoans", phase.getLoans());
+			model.addAttribute("tLoans", loans);
 
 			List<Long> loanIds=new ArrayList<>();
 
@@ -489,15 +495,21 @@ public class CollectionPhaseController {
     public String saveCollateralItem(CollectionPhase phase,
     		@PathVariable("debtorId")Long debtorId,
     		@PathVariable("procId")Long procId,
-    		ModelMap model)
+    		ModelMap model,String[] loanses)
     {
 
 		CollectionProcedure procedure = procService.getById(procId);
 		phase.setCollectionProcedure(procedure);
 
+		Set<Loan> loanSet=new HashSet<>();
+		if(loanses!=null)
+			for (String id: loanses){
+				loanSet.add(loanService.getById(Long.valueOf(id)));
+			}
 		if(phase.getId() == 0){
 
 
+			phase.setLoans(loanSet);
 			phase.setPhaseStatus(phaseStatusService.getById(Long.valueOf(1)));
 			phaseService.add(phase);
 			if(phaseDetailsList.isEmpty()){
@@ -540,6 +552,7 @@ public class CollectionPhaseController {
 			CollectionPhase oldPhase = phaseService.getById(phase.getId());
 
 			phase.setPhaseStatus(oldPhase.getPhaseStatus());
+			phase.setLoans(loanSet);
 
 			if(phaseDetailsList.isEmpty()){
 				System.out.println("asdf");

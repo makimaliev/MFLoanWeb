@@ -1,23 +1,24 @@
 package kg.gov.mf.loan.web.controller.manage;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.lowagie.text.pdf.ArabicLigaturizer;
 import kg.gov.mf.loan.manage.model.collateral.AdditionalAgreement;
 import kg.gov.mf.loan.manage.model.collateral.CollateralItem;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import kg.gov.mf.loan.manage.service.collateral.AdditionalAgreementService;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemService;
+import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.web.fetchModels.AdditionalAgreementModel;
 import kg.gov.mf.loan.web.fetchModels.CollateralItemModel;
 import kg.gov.mf.loan.web.fetchModels.LoanModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
@@ -70,6 +71,9 @@ public class CollateralAgreementController {
 
 	@Autowired
 	EntityManager entityManager;
+
+	@Autowired
+	LoanService loanService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -127,12 +131,18 @@ public class CollateralAgreementController {
 			agreement.setCollateralOfficeRegDate(new Date());
 			agreement.setNotaryOfficeRegDate(new Date());
 			model.addAttribute("agreement", agreement);
+			model.addAttribute("loanIds", null);
 			model.addAttribute("ownerText", "");
 		}
 
 		if(agreementId > 0)
 		{
 			CollateralAgreement agreement = agreementService.getById(agreementId);
+			ArrayList<Long> loanIds=new ArrayList<>();
+			for(Loan loan:agreement.getLoans()){
+				loanIds.add(loan.getId());
+			}
+			model.addAttribute("loanIds",loanIds);
 			model.addAttribute("agreement", agreement);
 			Owner owner = agreement.getOwner();
 			String ownerText = "[" + owner.getId() + "] "
@@ -146,14 +156,19 @@ public class CollateralAgreementController {
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collateralagreement/save"}, method=RequestMethod.POST)
     public String saveCollateralAgreement(CollateralAgreement agreement, 
-    		@PathVariable("debtorId")Long debtorId,
+    		@PathVariable("debtorId")Long debtorId,String[] loanses,
     		ModelMap model)
     {
+		Set<Loan> loanSet =new HashSet<>();
+    	for(String l:loanses){
+    		loanSet.add(loanService.getById(Long.valueOf(l)));
+		}
 		if(agreement.getId() == 0){
 			Owner owner=ownerRepository.findOne(debtorService.getById(debtorId).getOwner().getId());
 			agreement.setOwner(owner);
 			agreement.setAgreementDate(agreement.getNotaryOfficeRegDate());
 			agreement.setAgreementNumber(agreement.getNotaryOfficeRegNumber());
+			agreement.setLoans(loanSet);
 			agreementService.add(agreement);
 		}
 
@@ -161,6 +176,7 @@ public class CollateralAgreementController {
 		{
 			Owner owner = ownerRepository.findOne(agreement.getOwner().getId());
 			agreement.setOwner(owner);
+			agreement.setLoans(loanSet);
 			agreementService.update(agreement);
 		}
 
