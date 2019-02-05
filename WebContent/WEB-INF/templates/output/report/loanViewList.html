@@ -451,9 +451,6 @@
                         var d = row.v_debtor_name;
                         if(d.length>30){
                             d= d.substring(0,30)+"...";
-                            return '\
-                                <a href="/manage/debtor/'+ row.v_debtor_id + '/view">'+d+'</a>\
-                            ';
                         }
                         return '\
                             <a href="/manage/debtor/'+ row.v_debtor_id + '/view">'+d+'</a>\
@@ -466,9 +463,11 @@
                     template: function (row) {
                         var d = row.v_loan_reg_number;
                         if(d.length>30){
-                            return d.substring(0,30)+"...";
+                            d= d.substring(0,30)+"...";
                         }
-                        return d;
+                        return '\
+                                <a href="/manage/debtor/'+row.v_debtor_id+'/loan/'+row.v_loan_id+'/view">'+d+'</a>\
+                            ';
                     }
                 }, {
                     field: "v_loan_amount",
@@ -559,7 +558,7 @@
 
             $('#debtor_name').on('keyup', function () {
                 var counterOfDebtor=$('#debtor_name').val().length;
-                if(counterOfDebtor>=5 || counterOfDebtor==0){
+                if(counterOfDebtor>=3 || counterOfDebtor==0){
                     datatable.search($(this).val(), 'debtorName');
                 }
             }).val(typeof query.debtorName !== 'undefined' ? query.debtorName: '');

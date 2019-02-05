@@ -1078,7 +1078,7 @@ public class LoanController {
                 result.add(model);
             }
         }
-        LoanSummary d=loanSummaryService.getLastByLoanSummaryType("DAILY");
+        LoanSummary d=loanSummaryService.getLastByLoanSummaryType("DAILY",loanId);
         LoanSummaryModel model = new LoanSummaryModel();
         model.setId(d.getId());
         model.setOnDate(d.getOnDate());

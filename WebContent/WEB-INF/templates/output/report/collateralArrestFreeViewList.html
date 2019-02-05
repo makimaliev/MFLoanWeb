@@ -333,7 +333,7 @@
 
             $('#debtor_name').on('keyup', function () {
                 var counterOfDebtor=$('#debtor_name').val().length;
-                if(counterOfDebtor>=5 || counterOfDebtor==0){
+                if(counterOfDebtor>=3 || counterOfDebtor==0){
                     datatable.search($(this).val(), 'debtorName');
                 }
             }).val(typeof query.debtorName !== 'undefined' ? query.debtorName: '');

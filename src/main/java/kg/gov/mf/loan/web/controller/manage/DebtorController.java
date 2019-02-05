@@ -491,6 +491,8 @@ public class DebtorController {
                     name1=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+loanSummary.getOnDate()+". в тоннах "+loan.getCurrency().getName();
                 }
                 loanSummary.setUuid(name1);
+                loanSummary.setVersion(loan.getId());
+                loanSummary.setId(debtorId);
 
                 Double rate=currencyRateService.findByDateAndType(loanSummary.getOnDate(),loan.getCurrency()).getRate();
 
