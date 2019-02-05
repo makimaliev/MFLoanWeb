@@ -647,59 +647,101 @@ public class LoanController {
     @RequestMapping(value = "/manage/debtor/{debtorId}/loan/{loanId}/summary/{id}/view",method = RequestMethod.GET)
     public String viewSummary(ModelMap model,@PathVariable("debtorId") Long debtorId,@PathVariable("loanId") Long loanId,@PathVariable("id") Long id){
 
+        LoanSummary sumLoanSummary=new LoanSummary();
+        HashMap<LoanSummary,LoanSummary> summaries=new HashMap<>();
+
 	    Loan loan=loanService.getById(loanId);
 
         LoanSummary loanSummary=loanSummaryService.getById(id);
-        String name="";
+        String name1="";
         if(loan.getCurrency().getId()!=17){
-            name=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+loanSummary.getOnDate()+". в тыс. "+loan.getCurrency().getName();
+            name1=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+loanSummary.getOnDate()+". в тыс. "+loan.getCurrency().getName();
         }
         else{
-            name=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+loanSummary.getOnDate()+". в тоннах "+loan.getCurrency().getName();
+            name1=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+loanSummary.getOnDate()+". в тоннах "+loan.getCurrency().getName();
         }
+        loanSummary.setUuid(name1);
+        loanSummary.setVersion(loan.getId());
+        loanSummary.setId(debtorId);
+
+        loanSummary.setLoanAmount(conditional(loanSummary.getLoanAmount()));
+        loanSummary.setTotalDisbursed(conditional(loanSummary.getTotalDisbursed()));
+        loanSummary.setPaidPrincipal(conditional(loanSummary.getPaidPrincipal()));
+        loanSummary.setPaidInterest(conditional(loanSummary.getPaidInterest()));
+        loanSummary.setPaidPenalty(conditional(loanSummary.getPaidPenalty()));
+        loanSummary.setPaidFee(conditional(loanSummary.getPaidFee()));
+        loanSummary.setTotalOutstanding(conditional(loanSummary.getTotalOutstanding()));
+        loanSummary.setOutstadingPrincipal(conditional(loanSummary.getOutstadingPrincipal()));
+        loanSummary.setOutstadingInterest(conditional(loanSummary.getOutstadingInterest()));
+        loanSummary.setOutstadingPenalty(conditional(loanSummary.getOutstadingPenalty()));
+        loanSummary.setTotalOverdue(conditional(loanSummary.getTotalOverdue()));
+        loanSummary.setOverduePrincipal(conditional(loanSummary.getOverduePrincipal()));
+        loanSummary.setOverdueInterest(conditional(loanSummary.getOverdueInterest()));
+        loanSummary.setOverduePenalty(conditional(loanSummary.getOverduePenalty()));
+        loanSummary.setOverdueFee(conditional(loanSummary.getOverdueFee()));
+        loanSummary.setTotalPrincipalPaid(conditional(loanSummary.getTotalPrincipalPaid()));
+        loanSummary.setTotalInterestPaid(conditional(loanSummary.getTotalInterestPaid()));
+        loanSummary.setTotalPenaltyPaid(conditional(loanSummary.getTotalPenaltyPaid()));
+        loanSummary.setTotalFeePaid(conditional(loanSummary.getTotalFeePaid()));
+        loanSummary.setTotalPaidKGS(conditional(loanSummary.getTotalPaidKGS()));
+        loanSummary.setTotalPaid(conditional(loanSummary.getTotalPaid()));
 
         Double rate=currencyRateService.findByDateAndType(loanSummary.getOnDate(),loan.getCurrency()).getRate();
 
-        Boolean notKGS=false;
         LoanSummary newLoanSummary=new LoanSummary();
         if(loan.getCurrency().getId()!=1){
-            notKGS=true;
-            newLoanSummary.setLoanAmount(loanSummary.getLoanAmount()*rate);
-            newLoanSummary.setTotalDisbursed(loanSummary.getTotalDisbursed()*rate);
-            newLoanSummary.setPaidPrincipal(loanSummary.getPaidPrincipal()*rate);
-            newLoanSummary.setPaidInterest(loanSummary.getPaidInterest()*rate);
-            newLoanSummary.setPaidPenalty(loanSummary.getPaidPenalty()*rate);
-            newLoanSummary.setPaidFee(loanSummary.getPaidFee()*rate);
-            newLoanSummary.setTotalOutstanding(loanSummary.getTotalOutstanding()*rate);
-            newLoanSummary.setOutstadingPrincipal(loanSummary.getOutstadingPrincipal()*rate);
-            newLoanSummary.setOutstadingInterest(loanSummary.getOutstadingInterest()*rate);
-            newLoanSummary.setOutstadingPenalty(loanSummary.getOutstadingPenalty()*rate);
-            newLoanSummary.setTotalOverdue(loanSummary.getTotalOverdue()*rate);
-            newLoanSummary.setOverduePrincipal(loanSummary.getOverduePrincipal()*rate);
-            newLoanSummary.setOverdueInterest(loanSummary.getOverdueInterest()*rate);
-            newLoanSummary.setOverduePenalty(loanSummary.getOverduePenalty()*rate);
-            newLoanSummary.setOverdueFee(loanSummary.getOverdueFee()*rate);
-            newLoanSummary.setTotalPrincipalPaid(loanSummary.getTotalPrincipalPaid()*rate);
-            newLoanSummary.setTotalInterestPaid(loanSummary.getTotalInterestPaid()*rate);
-            newLoanSummary.setTotalPenaltyPaid(loanSummary.getTotalPenaltyPaid()*rate);
-            newLoanSummary.setTotalFeePaid(loanSummary.getTotalFeePaid()*rate);
+            newLoanSummary.setVersion(Long.valueOf(0));
+            newLoanSummary.setUuid("в тыс. сомах по курсу "+rate);
+            newLoanSummary.setLoanAmount((loanSummary.getLoanAmount()*rate));
+            newLoanSummary.setTotalDisbursed((loanSummary.getTotalDisbursed()*rate));
+            newLoanSummary.setPaidPrincipal((loanSummary.getPaidPrincipal()*rate));
+            newLoanSummary.setPaidInterest((loanSummary.getPaidInterest()*rate));
+            newLoanSummary.setPaidPenalty((loanSummary.getPaidPenalty()*rate));
+            newLoanSummary.setPaidFee((loanSummary.getPaidFee()*rate));
+            newLoanSummary.setTotalOutstanding((loanSummary.getTotalOutstanding()*rate));
+            newLoanSummary.setOutstadingPrincipal((loanSummary.getOutstadingPrincipal()*rate));
+            newLoanSummary.setOutstadingInterest((loanSummary.getOutstadingInterest()*rate));
+            newLoanSummary.setOutstadingPenalty((loanSummary.getOutstadingPenalty()*rate));
+            newLoanSummary.setTotalOverdue((loanSummary.getTotalOverdue()*rate));
+            newLoanSummary.setOverduePrincipal((loanSummary.getOverduePrincipal()*rate));
+            newLoanSummary.setOverdueInterest((loanSummary.getOverdueInterest()*rate));
+            newLoanSummary.setOverduePenalty((loanSummary.getOverduePenalty()*rate));
+            newLoanSummary.setOverdueFee((loanSummary.getOverdueFee()*rate));
+            newLoanSummary.setTotalPrincipalPaid((loanSummary.getTotalPrincipalPaid()*rate));
+            newLoanSummary.setTotalInterestPaid((loanSummary.getTotalInterestPaid()*rate));
+            newLoanSummary.setTotalPenaltyPaid((loanSummary.getTotalPenaltyPaid()*rate));
+            newLoanSummary.setTotalFeePaid((loanSummary.getTotalFeePaid()*rate));
             newLoanSummary.setOnDate(loanSummary.getOnDate());
-            newLoanSummary.setTotalPaidKGS(loanSummary.getTotalPaidKGS());
-            model.addAttribute("newSummary",newLoanSummary);
+            newLoanSummary.setTotalPaidKGS((loanSummary.getTotalPaidKGS()));
+            newLoanSummary.setTotalPaid((loanSummary.getTotalPaid()));
+//            model.addAttribute("newSummary",newLoanSummary);
+            summaries.put(loanSummary,newLoanSummary);
+            model.addAttribute("totals",newLoanSummary);
         }
 	    else{
-            model.addAttribute("newSummary",loanSummary);
+            loanSummary.setUuid(loanSummary.getUuid()+" в тыс. сомах по курсу "+rate);
+//            model.addAttribute("newSummary",loanSummary);
+            model.addAttribute("totals",loanSummary);
+            summaries.put(loanSummary,loanSummary);
         }
-	    model.addAttribute("debtorId",debtorId);
+        model.addAttribute("debtorId",debtorId);
         model.addAttribute("debtor",debtorService.getById(debtorId));
-        model.addAttribute("loanId",loanId);
-        model.addAttribute("loan",loan);
-        model.addAttribute("summary",loanSummary);
-        model.addAttribute("name",name);
-        model.addAttribute("rate","в тыс. сомах по курсу "+rate);
-        model.addAttribute("notKGS",notKGS);
+        model.addAttribute("lists",summaries);
 
-	    return "/manage/debtor/loan/loanSummary";
+        return "/manage/debtor/loanSummary";
+    }
+
+//	if less than zero make zero
+    public Double conditional(Double num){
+        if(num<0){
+            return Double.valueOf(0);
+        }
+        else if(num==Double.valueOf(0)){
+            return num;
+        }
+        else{
+            return num/1000;
+        }
     }
 
     @PostMapping("/paymentScheduleRequest/{loanId}")

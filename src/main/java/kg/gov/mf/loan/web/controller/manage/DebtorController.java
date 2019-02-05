@@ -703,11 +703,9 @@ public class DebtorController {
 
 				Double rate=currencyRateService.findByDateAndType(loanSummary.getOnDate(),loan.getCurrency()).getRate();
 
-				Boolean notKGS=false;
 				LoanSummary newLoanSummary=new LoanSummary();
 				if(loan.getCurrency().getId()!=1){
-					notKGS=true;
-					newLoanSummary.setVersion(Long.valueOf(1));
+					newLoanSummary.setVersion(Long.valueOf(0));
 					newLoanSummary.setUuid("в тыс. сомах по курсу "+rate);
 					newLoanSummary.setLoanAmount(conditional(loanSummary.getLoanAmount()*rate));
 					newLoanSummary.setTotalDisbursed(conditional(loanSummary.getTotalDisbursed()*rate));
@@ -758,7 +756,7 @@ public class DebtorController {
 					}
 				}
 				else{
-					loanSummary.setVersion(Long.valueOf(0));
+//					loanSummary.setVersion(Long.valueOf(0));
 					loanSummary.setUuid(loanSummary.getUuid()+" в тыс. сомах по курсу "+rate);
 					summaries.put(loanSummary,loanSummary);
 					if(sumLoanSummary.getLoanAmount()!=null) {
@@ -800,11 +798,17 @@ public class DebtorController {
 		return "/manage/debtor/loanSummary";
 	}
 
+//	if less than zero make zero
 	public Double conditional(Double num){
-	    if(num<0){
-	        return Double.valueOf(0);
+        if(num<0){
+            return Double.valueOf(0);
         }
-        return num;
+        else if(num==Double.valueOf(0)){
+            return num;
+        }
+        else{
+            return num/1000;
+        }
     }
 	//END - WORK SECTOR
 

@@ -757,7 +757,7 @@
                                         <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.overduePenalty, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
                                     </tr>
 
-                                    <tr class="grid_table_cell_tr" th:each="summ:${list.value}" th:if="${summ.version}==1">
+                                    <tr class="grid_table_cell_tr" th:each="summ:${list.value}" th:if="${summ.version}==0">
                                         <td class="grid_table_cell_td" align="center"></td>
                                         <td class="grid_table_cell_td" align="right" th:text="${summ.uuid}"></td>
                                         <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.loanAmount, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
