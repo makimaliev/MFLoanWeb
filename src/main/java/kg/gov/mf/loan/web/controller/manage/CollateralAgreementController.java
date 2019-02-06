@@ -125,13 +125,14 @@ public class CollateralAgreementController {
 		
 		if(agreementId == 0)
 		{
+			ArrayList<Long> loanIds=new ArrayList<>();
 			CollateralAgreement agreement = new CollateralAgreement();
 			agreement.setAgreementDate(new Date());
 			agreement.setArrestRegDate(new Date());
 			agreement.setCollateralOfficeRegDate(new Date());
 			agreement.setNotaryOfficeRegDate(new Date());
 			model.addAttribute("agreement", agreement);
-			model.addAttribute("loanIds", null);
+			model.addAttribute("loanIds", loanIds);
 			model.addAttribute("ownerText", "");
 		}
 
