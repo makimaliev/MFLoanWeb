@@ -50,6 +50,8 @@ public class CollateralAgreementModel implements Comparable<CollateralAgreementM
     @Override
     public int compareTo(CollateralAgreementModel model)
     {
+        if(model.agreementDate==null || this.agreementDate==null)
+            return 1;
         return model.agreementDate.compareTo(this.agreementDate);
     }
 

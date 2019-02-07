@@ -83,9 +83,6 @@
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#procedureListOfDebtor" th:text="#{label.debtor.tab.procedures}" id="procedureListOfDebtorFunction"></a>
 							</li>
-							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#initializaPhase" th:text="#{label.debtor.tab.initializaPhase}"></a>
-							</li>
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane active" id="loanInfo" role="tabpanel">
@@ -275,9 +272,9 @@
 								<!--begin: Search Form -->
 								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
 									<div class="row align-items-center">
-										<div class="col-xl-7 order-1 order-xl-1">
+										<div class="col-xl-12 order-1 order-xl-1">
 											<div class="form-group m-form__group row align-items-center">
-												<div class="col-lg-6">
+												<div class="col-lg-2">
 													<div class="m-input-icon m-input-icon--left">
 														<input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search">
 														<span class="m-input-icon__icon m-input-icon__icon--left">
@@ -287,34 +284,53 @@
 														</span>
 													</div>
 												</div>
+
+												<div class="col-lg-2">
+													<div class="m-form__control">
+														<div class="input-group date m_datetimepicker_6">
+															<input type="text" class="form-control m-input" id="phaseInitDate"/>
+															<span class="input-group-addon">
+																<i class="la la-calendar glyphicon-th"></i>
+															</span>
+														</div>
+													</div>
+												</div>
+												<div class="col-lg-4">
+														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="btn_show_loanSummary">
+															Расчет
+														</button>
+														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator">
+															Акт сверки
+														</button>
+														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLECTIONPHASE')" class="btn btn-sm btn-accent" type="button" id="bnt_init_phase">
+															Претензия
+														</button>
+
+														<form id="checkedLoans" th:action="@{/manage/debtor/__${debtor.id}__/loan/summary/view}" method="get">
+															<input hidden="hidden" type="text" name="name" id="selectedLoanses">
+															<input hidden="hidden" type="text" name="date" id="selectedLoansesDate">
+														</form>
+														<form id="showSummaries" th:action="@{/manage/debtor/__${debtor.id}__/summary/view}" method="get">
+															<input hidden="hidden" type="text" name="name" id="selectedName">
+															<input hidden="hidden" type="text" name="date" id="dateOfSelected">
+														</form>
+												</div>
+												<div class="col-lg-4">
+													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN')" th:href="@{/manage/debtor/__${debtor.id}__/loan/1/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+														<span><i class="la la-plus"></i><span>Добавить кредит</span></span>
+													</a>
+
+													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN')" th:href="@{/manage/debtor/__${debtor.id}__/loan/2/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+														<span><i class="la la-plus"></i><span>Добавить транш</span></span>
+													</a>
+
+													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN')" th:href="@{/manage/debtor/__${debtor.id}__/loan/3/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+														<span><i class="la la-plus"></i><span>Добавить реструктуризацию</span></span>
+													</a>
+												</div>
 											</div>
 										</div>
-											<div class="col-xl-5 order-6 order-xl-5 m--align-right">
-												<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN')" th:href="@{/manage/debtor/__${debtor.id}__/loan/1/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-												<span>
-													<i class="la la-plus"></i>
-													<span>
-														Добавить кредит
-													</span>
-												</span>
-												</a>
-												<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN')" th:href="@{/manage/debtor/__${debtor.id}__/loan/2/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-												<span>
-													<i class="la la-plus"></i>
-													<span>
-														Добавить транш
-													</span>
-												</span>
-												</a>
-												<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN')" th:href="@{/manage/debtor/__${debtor.id}__/loan/3/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-												<span>
-													<i class="la la-plus"></i>
-													<span>
-														Добавить реструктуризацию
-													</span>
-												</span>
-												</a>
-											</div>
+
 									</div>
 								</div>
 								<!--end: Search Form -->
@@ -385,74 +401,19 @@
 								<div class="m_datatable" id="procsTable"></div>
 								<!--end: Datatable -->
 							</div>
-							<div class="tab-pane" id="initializaPhase" role="tabpanel">
-								<div class="m-form__content">
-									<div class="m-alert m-alert--icon alert alert-danger m--hide" role="alert" id="m_form_2_msg">
-										<div class="m-alert__icon">
-											<i class="la la-warning"></i>
-										</div>
-										<div class="m-alert__text">
-											Выберите пожалуйста дату.
-										</div>
-										<div class="m-alert__close">
-											<button type="button" class="close" data-close="alert" aria-label="Close"></button>
-										</div>
-									</div>
-								</div>
-								<!--begin: Selected Rows Group Action Form -->
-								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30" id="m_datatable_group_action_form">
-									<div class="row align-items-center">
-										<div class="col-xl-8 order-2 order-xl-1">
-											<div class="form-group m-form__group row align-items-center">
-												<div class="col-md-5">
-													<div class="m-form__group m-form__group--inline">
-														<div class="m-form__label">
-															<label class="m-label m-label--single">
-																Дата:
-															</label>
-														</div>
-														<div class="m-form__control">
-															<div class="input-group date m_datetimepicker_6">
-																<input type="text" class="form-control m-input" id="phaseInitDate"/>
-																<span class="input-group-addon">
-																<i class="la la-calendar glyphicon-th"></i>
-															</span>
-															</div>
-														</div>
-													</div>
-													<div class="d-md-none m--margin-bottom-10"></div>
-												</div>
-												<div class="col-md-4">
-													<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLECTIONPHASE')" class="btn btn-sm btn-accent" type="button" id="bnt_init_phase">
-														Претензия
-													</button>
-													<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator">
-														Расчет
-													</button>
-													<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="btn_show_loanSummary">
-														Предварительный просмотр
-													</button>
-													<form id="checkedLoans" th:action="@{/manage/debtor/__${debtor.id}__/loan/summary/view}" method="get">
-														<input hidden="hidden" type="text" name="name" id="selectedLoanses">
-														<input hidden="hidden" type="text" name="date" id="selectedLoansesDate">
-													</form>
-													<form id="showSummaries" th:action="@{/manage/debtor/__${debtor.id}__/summary/view}" method="get">
-														<input hidden="hidden" type="text" name="name" id="selectedName">
-														<input hidden="hidden" type="text" name="date" id="dateOfSelected">
-													</form>
-												</div>
-											</div>
-											<div id="phaseDetailsDiv" class="collapse" >
-												<div class="m_datatable" id="phaseDetailsTable"></div>
-												<button class="btn btn-sm btn-accent" type="button" id="initPhaseSaveBtn" th:text="#{label.save}"></button>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!--end: Selected Rows Group Action Form -->
 							</div>
 						</div>
 					</div>
+				</div>
+
+				<div class="m-portlet m-portlet--full-height">
+						<div id="phaseDetailsDiv" class="collapse" >
+							<div class="m_datatable" id="phaseDetailsTable"></div>
+							<div class="row align-items-center">
+								<button class="btn btn-sm btn-accent" type="button" id="initPhaseSaveBtn" th:text="#{label.save}"></button>
+							</div>
+
+						</div>
 				</div>
 			</div>
 		</div>
