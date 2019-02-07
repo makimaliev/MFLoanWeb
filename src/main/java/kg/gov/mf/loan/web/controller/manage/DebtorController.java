@@ -588,7 +588,7 @@ public class DebtorController {
                 }
                 else{
                     loanSummary.setVersion(Long.valueOf(0));
-                    loanSummary.setUuid(loanSummary.getUuid()+" в тыс. сомах по курсу "+rate);
+//                    loanSummary.setUuid(loanSummary.getUuid()+" в тыс. сомах по курсу "+rate);
                     summaries.put(loanSummary,loanSummary);
                     if(sumLoanSummary.getLoanAmount()!=null) {
                         sumLoanSummary.setTotalPaidKGS(sumLoanSummary.getTotalPaidKGS() + loanSummary.getTotalPaidKGS());
@@ -757,7 +757,7 @@ public class DebtorController {
 				}
 				else{
 //					loanSummary.setVersion(Long.valueOf(0));
-					loanSummary.setUuid(loanSummary.getUuid()+" в тыс. сомах по курсу "+rate);
+//					loanSummary.setUuid(loanSummary.getUuid()+" в тыс. сомах по курсу "+rate);
 					summaries.put(loanSummary,loanSummary);
 					if(sumLoanSummary.getLoanAmount()!=null) {
 						sumLoanSummary.setTotalPaidKGS(sumLoanSummary.getTotalPaidKGS() + loanSummary.getTotalPaidKGS());

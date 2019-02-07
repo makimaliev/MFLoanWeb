@@ -117,9 +117,9 @@
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#accrue" th:text="#{label.loan.accrue}" id="accrueFunction"></a>
 							</li>
-							<li class="nav-item" th:if="${hasParent}==false">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#initializaPhase" th:text="#{label.debtor.tab.initializaPhase}"></a>
-							</li>
+							<!--<li class="nav-item" th:if="${hasParent}==false">-->
+								<!--<a class="nav-link m&#45;&#45;font-primary" data-toggle="tab" href="#initializaPhase" th:text="#{label.debtor.tab.initializaPhase}"></a>-->
+							<!--</li>-->
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#agreements" th:text="#{label.loan.tab.agreements}" id="agreementsFunction"></a>
 							</li>
@@ -703,38 +703,38 @@
                                                 </div>
 												<div class="col-lg-6 m--align-right">
 
-													<form th:action="@{/printoutTemplate/1/objectId/1/generate}" method="post" th:if="${hasParent}==false">
+													<!--<form th:action="@{/printoutTemplate/1/objectId/1/generate}" method="post" th:if="${hasParent}==false">-->
 
-													<div class="m-form__group m-form__group--inline">
-														<div class="m-form__label">
-															<label class="m-label m-label--single">
-																Дата:
-															</label>
-														</div>
-														<div class="m-form__control">
-															<div class="input-group date m_datetimepicker_6">
-																<input type="text" class="form-control m-input" id="manualCalculationDate" name="manualCalculationDate"/>
-																<span class="input-group-addon">
-																<i class="la la-calendar glyphicon-th"></i>
-															</span>
-															</div>
-														</div>
-														<div class="m-form__control">
-															<!--<a sec:authorize="hasRole('ADMIN')" th:href="@{/printoutTemplate/4/objectId/1/generate}" class="btn btn-accent m-btn m-btn&#45;&#45;custom m-btn&#45;&#45;icon m-btn&#45;&#45;air m-btn&#45;&#45;pill">-->
-																<!--<span>-->
-																	<!--<i class="la la-plus"></i>-->
-																	<!--<span>-->
-																		<!--Добавить расчет-->
-																	<!--</span>-->
-																<!--</span>-->
-															<!--</a>-->
+													<!--<div class="m-form__group m-form__group&#45;&#45;inline">-->
+														<!--<div class="m-form__label">-->
+															<!--<label class="m-label m-label&#45;&#45;single">-->
+																<!--Дата:-->
+															<!--</label>-->
+														<!--</div>-->
+														<!--<div class="m-form__control">-->
+															<!--<div class="input-group date m_datetimepicker_6">-->
+																<!--<input type="text" class="form-control m-input" id="manualCalculationDate" name="manualCalculationDate"/>-->
+																<!--<span class="input-group-addon">-->
+																<!--<i class="la la-calendar glyphicon-th"></i>-->
+															<!--</span>-->
+															<!--</div>-->
+														<!--</div>-->
+														<!--<div class="m-form__control">-->
+															<!--&lt;!&ndash;<a sec:authorize="hasRole('ADMIN')" th:href="@{/printoutTemplate/4/objectId/1/generate}" class="btn btn-accent m-btn m-btn&#45;&#45;custom m-btn&#45;&#45;icon m-btn&#45;&#45;air m-btn&#45;&#45;pill">&ndash;&gt;-->
+																<!--&lt;!&ndash;<span>&ndash;&gt;-->
+																	<!--&lt;!&ndash;<i class="la la-plus"></i>&ndash;&gt;-->
+																	<!--&lt;!&ndash;<span>&ndash;&gt;-->
+																		<!--&lt;!&ndash;Добавить расчет&ndash;&gt;-->
+																	<!--&lt;!&ndash;</span>&ndash;&gt;-->
+																<!--&lt;!&ndash;</span>&ndash;&gt;-->
+															<!--&lt;!&ndash;</a>&ndash;&gt;-->
 
-															<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator" th:text="#{label.button.calculate.manual}">
-																Сохранить расчет
-															</button>
-														</div>
-													</div>
-													</form>
+															<!--<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator" th:text="#{label.button.calculate.manual}">-->
+																<!--Сохранить расчет-->
+															<!--</button>-->
+														<!--</div>-->
+													<!--</div>-->
+													<!--</form>-->
 
 												</div>
                                             </div>
