@@ -405,22 +405,24 @@
 						</div>
 					</div>
 				</div>
-
-				<div class="m-portlet m-portlet--full-height">
-						<div id="phaseDetailsDiv" class="collapse" >
+				<div class="collapse" id="phaseDetailsDiv">
+					<div class="m-portlet__body  m-portlet__body--no-padding">
+						<div class="col m-col--no-padding ">
+						<div class="portlet">
 							<div class="m_datatable" id="phaseDetailsTable"></div>
-							<div class="row align-items-center">
+							<div >
 								<button class="btn btn-sm btn-accent" type="button" id="initPhaseSaveBtn" th:text="#{label.save}"></button>
 							</div>
-
 						</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<!-- end:: Body -->
 	<!-- begin::Footer -->
-	<div th:replace="layout/footer"/>
+	<!--<div th:replace="layout/footer"/>-->
 	<!-- end::Footer -->
 </div>
 <!-- end:: Page -->

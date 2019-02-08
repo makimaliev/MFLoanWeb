@@ -26,6 +26,7 @@ import kg.gov.mf.loan.process.service.JobItemService;
 import kg.gov.mf.loan.web.fetchModels.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
@@ -120,7 +121,9 @@ public class CollectionPhaseController {
 	    binder.registerCustomEditor(Date.class, editor);
 	}
 
-	private List<PhaseDetails> phaseDetailsList=new ArrayList<>();
+//	private final ThreadLocal<List<PhaseDetails>> threadLocal=new ThreadLocal<>();
+//	private List<PhaseDetails> phaseDetailsList=new ArrayList<>();
+	private HashMap<String,List<PhaseDetails>> phaseDetailsLists=new HashMap<>();
 
 	private List<CollectionPhaseSubIndexModel> collectionPhaseSubIndexModelList=new ArrayList<CollectionPhaseSubIndexModel>();
 	
@@ -283,7 +286,9 @@ public class CollectionPhaseController {
     @ResponseBody
     public void savePhaseDetails( @RequestBody PhaseDetailsModelList phaseDetailsModels){
 
-	    this.phaseDetailsList.clear();
+//	    this.phaseDetailsList.clear();
+//		threadLocal.remove();
+		List<PhaseDetails> phaseDetailsList=new ArrayList<>();
         List<PhaseDetailsModel> list = phaseDetailsModels.getPhaseDetailsModels();
         for (PhaseDetailsModel model: list
         ) {
@@ -293,8 +298,17 @@ public class CollectionPhaseController {
             details.setStartInterest(model.getStartInterest());
             details.setStartPenalty(model.getStartPenalty());
             details.setStartTotalAmount(model.getStartTotalAmount());
-            this.phaseDetailsList.add(details);
+            phaseDetailsList.add(details);
+
         }
+        String key= Utils.getPrincipal();
+        if(phaseDetailsLists.containsKey(key)){
+			phaseDetailsLists.remove(key);
+			phaseDetailsLists.put(key,phaseDetailsList);
+		}
+		else{
+			phaseDetailsLists.put(key,phaseDetailsList);
+		}
 
     }
 
@@ -358,6 +372,11 @@ public class CollectionPhaseController {
                 phaseDetailsService.add(details);
             }
 
+			String updateStart="(select sum(startTotalAmount) from phaseDetails where collectionPhaseId="+phase.getId()+")";
+			Query query=entityManager.createNativeQuery(updateStart);
+			Double sumOfStart= (Double) query.getSingleResult();
+			phase.setStart_amount(sumOfStart);
+			phaseService.update(phase);
             procedure.setLastPhase(phase.getId());
             //procedure.setLastStatusId(phase.getLastStatusId());
             procService.update(procedure);
@@ -512,7 +531,7 @@ public class CollectionPhaseController {
 			phase.setLoans(loanSet);
 			phase.setPhaseStatus(phaseStatusService.getById(Long.valueOf(1)));
 			phaseService.add(phase);
-			if(phaseDetailsList.isEmpty()){
+			if(phaseDetailsLists.get(Utils.getPrincipal()).isEmpty()){
                 Set<Loan> loans = phase.getLoans();
                 for (Loan loan: loans)
                 {
@@ -539,12 +558,17 @@ public class CollectionPhaseController {
                 }
 			}
 			else{
-			    for(PhaseDetails phaseDetail:phaseDetailsList){
+			    for(PhaseDetails phaseDetail:phaseDetailsLists.get(Utils.getPrincipal())){
 			        phaseDetail.setCollectionPhase(phase);
 			        phaseDetailsService.add(phaseDetail);
                 }
             }
-            phaseDetailsList.clear();
+			String updateStart="(select sum(startTotalAmount) from phaseDetails where collectionPhaseId="+phase.getId()+")";
+			Query query=entityManager.createNativeQuery(updateStart);
+			Double sumOfStart= (Double) query.getSingleResult();
+			phase.setStart_amount(sumOfStart);
+			phaseService.update(phase);
+            phaseDetailsLists.remove(Utils.getPrincipal());
 		}
 
 		else
@@ -554,13 +578,13 @@ public class CollectionPhaseController {
 			phase.setPhaseStatus(oldPhase.getPhaseStatus());
 			phase.setLoans(loanSet);
 
-			if(phaseDetailsList.isEmpty()){
+			if(phaseDetailsLists.get(Utils.getPrincipal()).isEmpty()){
 				System.out.println("asdf");
 			}
 			else
 			{
 				Set<PhaseDetails> listOfDetails=oldPhase.getPhaseDetails();
-				for(PhaseDetails phaseDetail:phaseDetailsList){
+				for(PhaseDetails phaseDetail:phaseDetailsLists.get(Utils.getPrincipal())){
 					phaseDetail.setCollectionPhase(phase);
 					for(PhaseDetails phaseDetail1:listOfDetails){
 						if (phaseDetail.getLoan_id()==phaseDetail1.getLoan_id()){
@@ -573,9 +597,14 @@ public class CollectionPhaseController {
 						}
 					}
 				}
+				String updateStart="(select sum(startTotalAmount) from phaseDetails where collectionPhaseId="+phase.getId()+")";
+				Query query=entityManager.createNativeQuery(updateStart);
+				Double sumOfStart= (Double) query.getSingleResult();
+				phase.setStart_amount(sumOfStart);
 			}
 
 			phaseService.update(phase);
+			phaseDetailsLists.remove(Utils.getPrincipal());
 		}
 
 		
@@ -688,7 +717,13 @@ public class CollectionPhaseController {
 				details.setClosePenalty(model.getClosePenalty());
 				details.setCloseTotalAmount(model.getCloseTotalAmount());
 				phaseDetailsService.update(details);
+
 			}
+			String updateStart="(select sum(closeTotalAmount) from phaseDetails where collectionPhaseId="+phase.getId()+")";
+			Query query=entityManager.createNativeQuery(updateStart);
+			Double sumOfClose= (Double) query.getSingleResult();
+			phase.setClose_amount(sumOfClose);
+			phaseService.update(phase);
 
 		}
 	}

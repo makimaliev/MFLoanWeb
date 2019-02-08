@@ -182,17 +182,17 @@
 										<div class="col-md-12 col-lg-12 col-xl-4">
 											<!--begin:: Widgets/Stats2-2 -->
 											<div class="m-widget1">
-												<div class="m-widget1__item">
+												<div class="m-widget1__item" th:if="${phase.close_amount!= null}">
 													<div class="row m-row--no-padding align-items-center">
-														<div class="col" th:if="${phase.close_amount!= null}" >
+														<div class="col"  >
 															<h3 class="m-widget1__title" th:text="#{label.collection.phase.close.amount}"></h3>
 															<span class="m-widget1__desc m--font-brand"th:text="${#numbers.formatDecimal(phase.close_amount, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
 														</div>
 													</div>
 												</div>
-												<div class="m-widget1__item">
+												<div class="m-widget1__item" th:if="${phase.resultDocNumber!= null}">
 													<div class="row m-row--no-padding align-items-center">
-														<div class="col" th:if="${phase.resultDocNumber!= null}">
+														<div class="col" >
 															<h3 class="m-widget1__title" th:text="#{label.collection.phase.resultDocNumber}"></h3>
 															<span class="m-widget1__desc m--font-brand" th:text="${phase.resultDocNumber}"></span>
 														</div>
