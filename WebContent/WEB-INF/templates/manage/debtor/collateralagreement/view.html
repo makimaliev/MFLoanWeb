@@ -133,6 +133,14 @@
 													</div>
 												</div>
 											</div>
+											<div class="m-widget1__item" th:if="${agreement.notary.id}!=null">
+												<div class="row m-row--no-padding align-items-center">
+													<div class="col">
+														<h3 class="m-widget1__title" th:text="#{label.agreement.notary}"></h3>
+														<span class="m-widget1__desc m--font-brand" th:text="${agreement.notary.name}"></span>
+													</div>
+												</div>
+											</div>
 											<div class="m-widget1__item" sec:authorize="hasRole('ADMIN')">
 												<div class="row m-row--no-padding align-items-center">
 													<div class="col">

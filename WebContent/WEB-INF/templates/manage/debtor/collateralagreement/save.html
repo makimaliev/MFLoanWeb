@@ -82,6 +82,7 @@
 
 						<input hidden="true" type="text" id="ownerId" name="owner.id" th:field="*{owner.id}" />
 						<input type="hidden" th:field="*{id}"/>
+						<input type="hidden" th:field="*{notary.id}" id="notaryId"/>
 
 						<div class="m-portlet__body">
 							<div class="m-form__section">
@@ -163,6 +164,17 @@
 								</div>
 
 								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.notary}">
+										Owner <span class="m--font-danger">*</span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<div class="m-typeahead">
+											<input class="form-control m-input" id="owner_typeahead" type="text" th:placeholder="#{label.agreement.notary}" th:value="${ownerText}">
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.arrestRegNumber}">
 										Arrest registration number <span class="m--font-danger">*</span>
 									</label>
@@ -207,19 +219,6 @@
 										</div>
 									</div>
 								</div>
-
-								<!--<div class="form-group m-form__group row">-->
-									<!--<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.table.owner}">-->
-										<!--Owner <span class="m&#45;&#45;font-danger">*</span>-->
-									<!--</label>-->
-									<!--<div class="col-lg-4 col-md-9 col-sm-12">-->
-										<!--<div class="m-typeahead">-->
-											<!--<input class="form-control m-input" id="owner_typeahead" type="text" placeholder="Owners" th:value="${ownerText}">-->
-										<!--</div>-->
-									<!--</div>-->
-								<!--</div>-->
-
-
 							</div>
 						</div>
 						<div class="m-portlet__foot m-portlet__foot--fit">
@@ -265,7 +264,7 @@
     {
         var owner_text = document.getElementById("owner_typeahead").value;
         var owner_id = owner_text.match(/[^[\]]+(?=])/g);
-        $("#ownerId").val(owner_id);
+        $("#notaryId").val(owner_id);
     }
 </script>
 
