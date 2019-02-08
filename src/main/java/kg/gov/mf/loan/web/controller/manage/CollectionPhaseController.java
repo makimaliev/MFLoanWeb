@@ -303,8 +303,7 @@ public class CollectionPhaseController {
         }
         String key= Utils.getPrincipal();
         if(phaseDetailsLists.containsKey(key)){
-			phaseDetailsLists.remove(key);
-			phaseDetailsLists.put(key,phaseDetailsList);
+			phaseDetailsLists.replace(key,phaseDetailsList);
 		}
 		else{
 			phaseDetailsLists.put(key,phaseDetailsList);
@@ -531,7 +530,7 @@ public class CollectionPhaseController {
 			phase.setLoans(loanSet);
 			phase.setPhaseStatus(phaseStatusService.getById(Long.valueOf(1)));
 			phaseService.add(phase);
-			if(phaseDetailsLists.isEmpty()){
+			if(phaseDetailsLists.get(Utils.getPrincipal())==null){
                 Set<Loan> loans = phase.getLoans();
                 for (Loan loan: loans)
                 {
@@ -578,7 +577,7 @@ public class CollectionPhaseController {
 			phase.setPhaseStatus(oldPhase.getPhaseStatus());
 			phase.setLoans(loanSet);
 
-			if(phaseDetailsLists.isEmpty()){
+			if(phaseDetailsLists.get(Utils.getPrincipal())==null){
 				System.out.println("asdf");
 			}
 			else

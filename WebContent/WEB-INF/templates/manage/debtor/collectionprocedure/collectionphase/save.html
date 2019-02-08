@@ -304,7 +304,7 @@
                 title: "По осн.с.",
                 template: function (row) {
 					return '\
-						<input type="text" class="form-control m-input" id="startPrinc' + row.loanId + '" value="' + (row.startPrincipal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",") + '">\
+						<input type="text" class="form-control m-input" id="startPrinc' + row.loanId + '" value="' + (row.startPrincipal).toFixed(2)+ '">\
 					';
 
                 }
@@ -313,7 +313,7 @@
                 title: "По проц.",
                 template: function (row) {
                     return '\
-						<input type="text" class="form-control m-input" id="startInt' + row.loanId + '" value="' + (row.startInterest).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",") + '">\
+						<input type="text" class="form-control m-input" id="startInt' + row.loanId + '" value="' + (row.startInterest).toFixed(2)+ '">\
 					';
                 }
             }, {
@@ -321,7 +321,7 @@
                 title: "По штр.",
                 template: function (row) {
                     return '\
-						<input type="text" class="form-control m-input" id="startPen' + row.loanId + '" value="' + (row.startPenalty).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",") + '">\
+						<input type="text" class="form-control m-input" id="startPen' + row.loanId + '" value="' + (row.startPenalty).toFixed(2)+ '">\
 					';
                 }
             }, {
@@ -330,7 +330,7 @@
                 width: 160,
                 template: function (row) {
                     return '\
-						<input type="text" class="form-control m-input" id="total' + row.loanId + '" value="' + (row.startTotalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",") + '" disabled>\
+						<input type="text" class="form-control m-input" id="total' + row.loanId + '" value="' + (row.startTotalAmount).toFixed(2)+ '" disabled>\
 					';
                 }
             }],
@@ -418,14 +418,17 @@
                         var totalInput = "#total" + val;
 
                         $(startPrincInput).on('input', function () {
+                            if($(startPrincInput).val()[$(startPrincInput).val()-1]!='.')
                             updateTotal();
                         });
 
                         $(startIntInput).on('input', function () {
+                            if($(startIntInput).val()[$(startIntInput).val()-1]!='.')
                             updateTotal();
                         });
 
                         $(startPenInput).on('input', function () {
+                            if($(startPenInput).val()[$(startPenInput).val()-1]!='.')
                             updateTotal();
                         });
 
