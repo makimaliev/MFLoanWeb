@@ -531,7 +531,7 @@ public class CollectionPhaseController {
 			phase.setLoans(loanSet);
 			phase.setPhaseStatus(phaseStatusService.getById(Long.valueOf(1)));
 			phaseService.add(phase);
-			if(phaseDetailsLists.get(Utils.getPrincipal()).isEmpty()){
+			if(phaseDetailsLists.isEmpty()){
                 Set<Loan> loans = phase.getLoans();
                 for (Loan loan: loans)
                 {
@@ -578,7 +578,7 @@ public class CollectionPhaseController {
 			phase.setPhaseStatus(oldPhase.getPhaseStatus());
 			phase.setLoans(loanSet);
 
-			if(phaseDetailsLists.get(Utils.getPrincipal()).isEmpty()){
+			if(phaseDetailsLists.isEmpty()){
 				System.out.println("asdf");
 			}
 			else
