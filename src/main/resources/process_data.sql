@@ -2725,7 +2725,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `runUpdateRootLoans`()
 BEGIN
@@ -2803,6 +2803,8 @@ BEGIN
                FROM loan
                WHERE parent_id = loan_id
               AND loanStateId != 3)
+        AND p.loanSummaryType = 'SYSTEM'
+        AND p.record_status = 1
         GROUP BY p.onDate
         ORDER BY p.onDate;
 
@@ -2913,6 +2915,8 @@ begin
                from loan
                where parent_id = loan_id
               and loanStateId != 3)
+        and p.loanSummaryType = 'MANUAL'
+        and p.record_status = 1
         and p.onDate = in_date;
       end;
     end if;
@@ -3844,4 +3848,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-29 10:28:41
+-- Dump completed on 2019-02-10 11:40:38
