@@ -165,7 +165,7 @@ public class PrintoutTemplateController {
 
 
 	@RequestMapping("/printoutTemplate/{id}/objectId/{object_id}/generate")
-	public void generatePrintoutByPrintoutTemplate(@PathVariable("id") long id, @PathVariable("object_id") long object_id,
+	public void generatePrintoutByPrintoutTemplate(@PathVariable("id") long id, @PathVariable("object_id") long object_id, String date,  String name,
 												   HttpServletResponse response) {
 		try
 		{
@@ -174,6 +174,18 @@ public class PrintoutTemplateController {
 			PrintoutTemplate printoutTemplate = this.printoutTemplateService.findById(id);
 
 
+			SimpleDateFormat DateFormatShort = new SimpleDateFormat("dd.MM.yyyy");
+
+			if(name!=null)
+			{
+				printoutTemplate.setName(name);
+			}
+
+
+			Date onDate = null;
+
+			if(date!=null)
+				onDate = DateFormatShort.parse(date);
 
 
 			switch(printoutTemplate.getPrintout().getPrintoutType().toString())
@@ -245,6 +257,7 @@ public class PrintoutTemplateController {
 						response.setContentType("application/pdf");
 						response.setHeader("Content-disposition","attachment; filename=xx.pdf");
 
+
 						printoutGeneratorLoanDetailedSummary.generatePrintoutByTemplate(printoutTemplate, null, object_id,document);
 
 
@@ -294,7 +307,9 @@ public class PrintoutTemplateController {
                         response.setContentType("application/pdf");
                         response.setHeader("Content-disposition","attachment; filename=xx.pdf");
 
-                        printoutGeneratorLoanSummary.generatePrintoutByTemplate(printoutTemplate, null, object_id,document);
+
+
+                        printoutGeneratorLoanSummary.generatePrintoutByTemplate(printoutTemplate, onDate, object_id,document);
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -370,11 +385,19 @@ public class PrintoutTemplateController {
 	}
 
 	@RequestMapping("/printoutType/1/objectId/{object_id}/generate")
-	public void generatePrintoutByType1(@PathVariable("object_id") long object_id,
+	public void generatePrintoutByType1(@PathVariable("object_id") long object_id, String date,  String name,
 								 HttpServletResponse response) {
 		try {
 
 			PrintoutGeneratorRevisionDoc printoutGeneratorRevisionDoc= new PrintoutGeneratorRevisionDoc();
+
+			PrintoutTemplate printoutTemplate = new PrintoutTemplate();
+
+			SimpleDateFormat DateFormatShort = new SimpleDateFormat("dd.MM.yyyy");
+
+			printoutTemplate.setName(name);
+			Date onDate = DateFormatShort.parse(date);
+
 
 			Document document = new Document(PageSize.A4.rotate(), 10, 10, 10, 10);
 
@@ -383,7 +406,7 @@ public class PrintoutTemplateController {
 			response.setContentType("application/pdf");
 			response.setHeader("Content-disposition","attachment; filename=xx.pdf");
 
-			printoutGeneratorRevisionDoc.generatePrintoutByTemplate(null, null, object_id,document);
+			printoutGeneratorRevisionDoc.generatePrintoutByTemplate(printoutTemplate, onDate, object_id,document);
 
 
 

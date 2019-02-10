@@ -638,174 +638,166 @@
 
     </style>
 </head>
-<!-- end::Head -->
-<!-- end::Body -->
-<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
-<!-- begin:: Page -->
-<div class="m-grid m-grid--hor m-grid--root m-page">
-    <!-- BEGIN: Header -->
-    <div th:replace="layout/header"/>
-    <!-- END: Header -->
 
-    <!-- begin::Body -->
-    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
-        <!-- BEGIN: Left Aside -->
-        <div th:replace="layout/sidebar"/>
-        <!-- END: Left Aside -->
-        <div class="m-grid__item m-grid__item--fluid m-wrapper">
-            <!-- BEGIN: Subheader -->
-            <div class="m-subheader ">
-                <div class="d-flex align-items-center">
-                    <div class="mr-auto">
 
-                        <h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.loan.loanSumm}"></h3>
-                        <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-                            <li class="m-nav__item m-nav__item--home">
-                                <a th:href="@{/}" class="m-nav__link m-nav__link--icon">
-                                    <i class="m-nav__link-icon la la-home"></i>
-                                </a>
-                            </li>
-                            <li class="m-nav__separator">
-                                -
-                            </li>
-                            <li class="m-nav__item">
-                                <a th:href="@{/manage/debtor/list}" class="m-nav__link">
-											<span class="m-nav__link-text" th:text="#{label.debtors}">
-												Список заемщиков
-											</span>
-                                </a>
-                            </li>
-                            <li class="m-nav__separator">
-                                -
-                            </li>
-                            <li class="m-nav__item">
-                                <a th:href="@{/manage/debtor/__${debtorId}__/view}" class="m-nav__link">
-											<span class="m-nav__link-text" th:text="${debtor.name}">
-												Заемщик
-											</span>
-                                </a>
-                            </li>
-                            <li class="m-nav__separator">
-                                -
-                            </li>
-                            <li class="m-nav__item">
-                                <span class="m-nav__link-text" th:text="#{label.loan.loanSummary}">
-                                    Расчет
-                                </span>
+<div class="m-content">
+    <!--Begin Portlet-->
+    <div class="m-portlet">
+        <div class="m-portlet__body">
+            <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                <div class="form-group m-form__group row " style="margin-left: 10px">
+                    <div id="calculation_date">
 
-                            </li>
-                        </ul>
                     </div>
+                    <div id="button_panel">
+
+                        <button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="btn_generate_type_4">
+                            Акт сверки
+                        </button>
+
+                        <button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="btn_generate_type_1">
+                            Расчет задолжности
+                        </button>
+                    </div>
+
                 </div>
             </div>
-            <!-- END: Subheader -->
-            <div class="m-content">
-                <div class="m-portlet m-portlet--full-height">
-                    <div class="m-portlet__head">
-                        <div class="m-portlet__head-caption">
-                            <div class="m-portlet__head-title">
-                                <h3 class="m-portlet__head-text" th:text="${debtor.name}"></h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--Begin Portlet-->
-                <div class="m-portlet">
-                    <div class="m-portlet__body">
-                        <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-                            <div class="form-group m-form__group row " style="margin-left: 10px">
-                            </div>
-                        </div>
-                        <div id="ResultPane">
-                            <div class="info_tableDiv" id="OutTable" >
-                                <table class="grid_table" width="100%">
-                                    <tr class="grid_table_header_tr">
-                                        <td class="grid_table_header_td" rowspan="2" align="center" width="2%">№</td>
-                                        <td class="grid_table_header_td" rowspan="2" align="center" width="21%">Вид кредита</td>
-                                        <td class="grid_table_header_td" rowspan="2" align="center" width="7%">Основная сумма по договору</td>
-                                        <td class="grid_table_header_td" rowspan="2" align="center" width="7%">Фактически получено</td>
-                                        <td class="grid_table_header_td" rowspan="2" align="center" width="7%">Срок возврата</td>
-                                        <td class="grid_table_header_td" rowspan="2" align="center" width="7%">Фактически возвращено</td>
-                                        <td class="grid_table_header_td" colspan="4" align="center" width="21%">Остаток задолженности по</td>
-                                        <td class="grid_table_header_td" colspan="4" align="center"  width="21%">Просроченная задолженность</td>
-                                    </tr>
-                                    <tr class="grid_table_header_tr">
-                                        <td class="grid_table_header_td" align="center" width="7%">Всего</td>
-                                        <td class="grid_table_header_td" align="center" width="7%">основной сумме</td>
-                                        <td class="grid_table_header_td" align="center" width="7%">процентам</td>
-                                        <td class="grid_table_header_td" align="center" width="7%">штрафам</td>
-                                        <td class="grid_table_header_td" align="center" width="7%">Всего</td>
-                                        <td class="grid_table_header_td" align="center" width="7%">основной сумме</td>
-                                        <td class="grid_table_header_td" align="center" width="7%">процентам</td>
-                                        <td class="grid_table_header_td" align="center" width="7%">штрафам</td>
-                                    </tr>
-<div th:each="list:${lists}">
-                                    <tr class="grid_table_footer_tr" th:each="summ:${list.key}">
-                                        <td class="grid_table_footer_td" align="center"></td>
-                                        <td class="grid_table_footer_td" align="left" ><a th:href="@{/manage/debtor/__${summ.id}__/loan/__${summ.version}__/view}" th:text="${summ.uuid}"></a></td>
-                                        <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.loanAmount, 1,'DEFAULT', 2, 'COMMA')}"></td>
-                                        <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.totalDisbursed, 1,'DEFAULT', 2, 'COMMA')}"></td>
-                                        <td class="grid_table_footer_td" align="center" th:text="${#dates.format(summ.onDate,'dd.MM.yyyy')}"></td>
-                                        <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.totalPaid, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.totalOutstanding, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.outstadingPrincipal, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.outstadingInterest, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.outstadingPenalty, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.totalOverdue, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.overduePrincipal, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.overdueInterest, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.overduePenalty, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                    </tr>
+            <div id="ResultPane">
+                <div class="info_tableDiv" id="OutTable" >
+                    <table class="grid_table" width="100%">
+                        <tr class="grid_table_header_tr">
+                            <td class="grid_table_header_td" rowspan="2" align="center" width="2%">№</td>
+                            <td class="grid_table_header_td" rowspan="2" align="center" width="21%">Вид кредита</td>
+                            <td class="grid_table_header_td" rowspan="2" align="center" width="7%">Основная сумма по договору</td>
+                            <td class="grid_table_header_td" rowspan="2" align="center" width="7%">Фактически получено</td>
+                            <td class="grid_table_header_td" rowspan="2" align="center" width="7%">Срок возврата</td>
+                            <td class="grid_table_header_td" rowspan="2" align="center" width="7%">Фактически возвращено</td>
+                            <td class="grid_table_header_td" colspan="4" align="center" width="21%">Остаток задолженности по</td>
+                            <td class="grid_table_header_td" colspan="4" align="center"  width="21%">Просроченная задолженность</td>
+                        </tr>
+                        <tr class="grid_table_header_tr">
+                            <td class="grid_table_header_td" align="center" width="7%">Всего</td>
+                            <td class="grid_table_header_td" align="center" width="7%">основной сумме</td>
+                            <td class="grid_table_header_td" align="center" width="7%">процентам</td>
+                            <td class="grid_table_header_td" align="center" width="7%">штрафам</td>
+                            <td class="grid_table_header_td" align="center" width="7%">Всего</td>
+                            <td class="grid_table_header_td" align="center" width="7%">основной сумме</td>
+                            <td class="grid_table_header_td" align="center" width="7%">процентам</td>
+                            <td class="grid_table_header_td" align="center" width="7%">штрафам</td>
+                        </tr>
+                        <div th:each="list:${lists}">
+                            <tr class="grid_table_footer_tr" th:each="summ:${list.key}">
+                                <td class="grid_table_footer_td" align="center"></td>
+                                <td class="grid_table_footer_td" align="left" ><a th:href="@{/manage/debtor/__${summ.id}__/loan/__${summ.version}__/view}" th:text="${summ.uuid}"></a></td>
+                                <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.loanAmount, 1,'DEFAULT', 2, 'COMMA')}"></td>
+                                <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.totalDisbursed, 1,'DEFAULT', 2, 'COMMA')}"></td>
+                                <td class="grid_table_footer_td" align="center" th:text="${#dates.format(summ.onDate,'dd.MM.yyyy')}"></td>
+                                <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.totalPaid, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                                <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.totalOutstanding, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                                <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.outstadingPrincipal, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                                <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.outstadingInterest, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                                <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.outstadingPenalty, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                                <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.totalOverdue, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                                <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.overduePrincipal, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                                <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.overdueInterest, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                                <td class="grid_table_footer_td" align="center" th:text="${#numbers.formatDecimal(summ.overduePenalty, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                            </tr>
 
-                                    <tr class="grid_table_cell_tr" th:each="summ:${list.value}" th:if="${summ.version}==1">
-                                        <td class="grid_table_cell_td" align="center"></td>
-                                        <td class="grid_table_cell_td" align="right" th:text="${summ.uuid}"></td>
-                                        <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.loanAmount, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.totalDisbursed, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td" align="center" ></td>
-                                        <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.totalPaidKGS, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.totalOutstanding, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.outstadingPrincipal, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.outstadingInterest, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.outstadingPenalty, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.totalOverdue, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.overduePrincipal, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.overdueInterest, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.overduePenalty, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                    </tr>
-</div>
-                                    <tr class="grid_table_cell_tr_sp4" th:each="summ:${totals}">
-                                        <td class="grid_table_cell_td_sp4"></td>
-                                        <td class="grid_table_cell_td_sp4" align="center"> ИТОГО (тыс. сом) </td>
-                                        <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.loanAmount, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.totalDisbursed, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td_sp4" align="center" th:text="${#dates.format(summ.onDate,'dd.MM.yyyy')}"></td>
-                                        <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.totalPaidKGS, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.totalOutstanding, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.outstadingPrincipal, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.outstadingInterest, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.outstadingPenalty, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.totalOverdue, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.overduePrincipal, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.overdueInterest, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                        <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.overduePenalty, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                                    </tr>
-                                </table>
-                            </div>
+                            <tr class="grid_table_cell_tr" th:each="summ:${list.value}" th:if="${summ.version}==1">
+                                <td class="grid_table_cell_td" align="center"></td>
+                                <td class="grid_table_cell_td" align="right" th:text="${summ.uuid}"></td>
+                                <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.loanAmount, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                                <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.totalDisbursed, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                                <td class="grid_table_cell_td" align="center" ></td>
+                                <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.totalPaidKGS, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                                <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.totalOutstanding, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                                <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.outstadingPrincipal, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                                <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.outstadingInterest, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                                <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.outstadingPenalty, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                                <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.totalOverdue, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                                <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.overduePrincipal, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                                <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.overdueInterest, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                                <td class="grid_table_cell_td" align="center" th:text="${#numbers.formatDecimal(summ.overduePenalty, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                            </tr>
                         </div>
-                    </div>
+                        <tr class="grid_table_cell_tr_sp4" th:each="summ:${totals}">
+                            <td class="grid_table_cell_td_sp4"></td>
+                            <td class="grid_table_cell_td_sp4" align="center"> ИТОГО (тыс. сом) </td>
+                            <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.loanAmount, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                            <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.totalDisbursed, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                            <td class="grid_table_cell_td_sp4" align="center" th:text="${#dates.format(summ.onDate,'dd.MM.yyyy')}"></td>
+                            <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.totalPaidKGS, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                            <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.totalOutstanding, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                            <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.outstadingPrincipal, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                            <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.outstadingInterest, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                            <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.outstadingPenalty, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                            <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.totalOverdue, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                            <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.overduePrincipal, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                            <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.overdueInterest, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                            <td class="grid_table_cell_td_sp4" align="center" th:text="${#numbers.formatDecimal(summ.overduePenalty, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- begin::Footer -->
-<!-- end::Footer -->
-</div>
+<script th:inline="javascript">
 
-<div th:replace="fragments/footer :: footer-js"/>
-</body>
-<!-- end::Body -->
+    isCalculationSaved= /*[[${isCalculationSaved}]]*/ [];
+    console.log(" online calculation"+isCalculationSaved);
+
+    if(!isCalculationSaved)
+    {
+        $("#btn_generate_type_4").hide();
+        $("#btn_generate_type_1").hide();
+
+    }
+
+    $("#btn_generate_type_4").on("click",function () {
+
+        var stringSelecteds="";
+        for (var i in selectedLoans){
+            stringSelecteds=stringSelecteds+"-"+i.toString();
+        }
+        var initDate = $("#phaseInitDate").val();
+        $("#selectedName").val(stringSelecteds.toString());
+        $("#dateOfSelected").val(initDate);
+        // $("#showSummaries").submit();
+
+        var sUrl ="/printoutTemplate/4/objectId/"+debtorId+"/generate?"+"name="+$("#selectedName").val()+"&date="+$("#dateOfSelected").val();
+
+        // $.get(sUrl, function(data) {
+        //     $('#content').html(data);
+        // });
+
+        window.location.href = sUrl;
+
+    });
+
+    $("#btn_generate_type_1").on("click",function () {
+
+        var stringSelecteds="";
+        for (var i in selectedLoans){
+            stringSelecteds=stringSelecteds+"-"+i.toString();
+        }
+        var initDate = $("#phaseInitDate").val();
+        $("#selectedName").val(stringSelecteds.toString());
+        $("#dateOfSelected").val(initDate);
+        // $("#showSummaries").submit();
+
+        var sUrl ="/printoutType/1/objectId/"+debtorId+"/generate?"+"name="+$("#selectedName").val()+"&date="+$("#dateOfSelected").val();
+
+        // $.get(sUrl, function(data) {
+        //     $('#content').html(data);
+        // });
+
+        window.location.href = sUrl;
+    });
+
+
+</script>
+
 </html>
 
 

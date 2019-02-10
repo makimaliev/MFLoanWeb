@@ -177,12 +177,12 @@ var DatatableDataLocalSummaries = function () {
 						<a href="/printoutTemplate/1/objectId/'+ row.id + '/generate" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Реестр погашений">\
 							<i class="la la-archive"></i>\
 						</a>\
-						<a href="/printoutTemplate/4/objectId/'+ row.id + '/generate" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Акт сверки">\
-							<i class="la la-file-text"></i>\
-						</a>\
-						<a href="/printoutType/1/objectId/'+ row.id + '/generate" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Расчет задолжности">\
-							<i class="la la-file-o"></i>\
-						</a>\
+						\
+						\
+						\
+						\
+						\
+						\
 					';
 
                     // if(!hasRoleAdmin)

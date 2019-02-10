@@ -300,7 +300,7 @@
 															Расчет
 														</button>
 														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator">
-															Акт сверки
+															Сохранить расчет
 														</button>
 														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLECTIONPHASE')" class="btn btn-sm btn-accent" type="button" id="bnt_init_phase">
 															Претензия
@@ -417,6 +417,11 @@
 						</div>
 					</div>
 				</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div id="content"></div>
+				</div>
+			</div>
 			</div>
 		</div>
 	</div>
@@ -453,6 +458,8 @@
     // var jsonAgreements = /*[[${agreements}]]*/ [];
     // var jsonProcs = /*[[${procs}]]*/ [];
     var jsonLoans;
+
+    var isCalculationSaved = false;
     var jsonAgreements;
     var jsonProcs;
     var debtorId = /*[[${debtor.id}]]*/ [];
@@ -464,10 +471,10 @@
         debtorURL = '/organization/'+entityId + '/details';
     else
         debtorURL = '/person/'+entityId + '/details';
-    console.log(debtorURL);
+
 </script>
 
-<script type="text/javascript">
+<script th:inline="javascript">
 	var selectedLoans = {};
     function gotoURL(sel)
     {
@@ -493,7 +500,18 @@
                     }
 					$("#selectedLoanses").val(stringSelecteds.toString());
                     $("#selectedLoansesDate").val(initDate);
-					$("#checkedLoans").submit();
+					// $("#checkedLoans").submit();
+
+                    var sUrl ="/manage/debtor/"+debtorId+"/loan/summary/view?"+"name="+$("#selectedLoanses").val()+"&date="+$("#selectedLoansesDate").val();
+
+                    isCalculationSaved= /*[[${isCalculationSaved}]]*/ [];
+                    console.log(" manual calculation"+isCalculationSaved);
+
+
+
+                    $.get(sUrl, function(data) {
+                        $('#content').html(data);
+                    });
 				}
             });
         }
@@ -510,7 +528,18 @@
         var initDate = $("#phaseInitDate").val();
         $("#selectedName").val(stringSelecteds.toString());
         $("#dateOfSelected").val(initDate);
-        $("#showSummaries").submit();
+        // $("#showSummaries").submit();
+
+        var sUrl ="/manage/debtor/"+debtorId+"/summary/view?"+"name="+$("#selectedName").val()+"&date="+$("#dateOfSelected").val();
+
+
+
+        $.get(sUrl, function(data) {
+            $('#content').html(data);
+        });
+
+
+
     });
 
 </script>
@@ -620,6 +649,7 @@
 </script>
 <script>
     $("#loanListOfDebtorFunction").on('click',function () {
+
         $.ajax({
             type:'post',
             url: '/debtorLoans/'+debtorId,
@@ -635,26 +665,12 @@
 					for (var i = 0; i < str.length; i++) {
 						selectedLoans[str[i]] = str[i];
 					}
-					console.log(selectedLoans)
-					// alert(str)
-					// var count = datatable.setSelectedRecords().getSelectedRecords().length;
-					// $('#m_datatable_selected_number').html(count);
-					// if (count > 0) {
-					// 	$('#m_datatable_group_action_form').collapse('show');
-					// }
 				})
 				.on('m-datatable--on-uncheck m-datatable--on-layout-updated', function (e, args) {
 					var str = args.toString().split(',')
 					for (var i = 0; i < str.length; i++) {
 						delete selectedLoans[str[i]];
-					}console.log(selectedLoans)
-					// var count = datatable.setSelectedRecords().getSelectedRecords().length;
-					// $('#m_datatable_selected_number').html(count);
-					// if (count === 0) {
-					//     $('#m_datatable_group_action_form').collapse('hide');
-					//     $('#phaseDetailsDiv').collapse('hide');
-					//     selectedItems = [];
-					// }
+					}
 				});
     });
     $("#agreementListOfDebtorFunction").on('click',function () {
