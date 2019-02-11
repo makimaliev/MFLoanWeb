@@ -122,6 +122,16 @@
 													<span th:text="#{label.collection.phase.change.status}"></span>
 												</span>
 											</a>
+                                            <a th:href="@{/printoutType/2/objectId/__${phase.id}__/generate}" class="btn btn-sm btn-accent" title="Претензия" th:if="${phase.phaseType.id}==1">
+                                                <span>
+													<span >Претензия</span>
+												</span>
+                                            </a>
+                                            <a th:href="@{/printoutType/3/objectId/__${phase.id}__/generate}" class="btn btn-sm btn-accent" title="Доо талап" th:if="${phase.phaseType.id}==1">
+                                                <span>
+													<span >Доо талап</span>
+												</span>
+                                            </a>
 										</div>
 									</div>
 								</div>

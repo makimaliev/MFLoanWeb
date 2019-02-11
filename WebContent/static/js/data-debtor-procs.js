@@ -89,6 +89,9 @@ var DatatableDataLocalProcs = function () {
                 title: "",
                 sortable: false,
                 template: function (row) {
+                // <a  href="/printoutTemplate/5/objectId/' + row.phaseId + '/select" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Претензия">\
+                // <i class="la la-exclamation-circle"></i>\
+                // </a>\
                     var result = '';
                     if(row.phaseTypeId==1) {
                         result = result + '\
@@ -104,9 +107,12 @@ var DatatableDataLocalProcs = function () {
                             <a sec:authorize="hasAnyAuthority(ADMIN,PERM_ADD_COLLECTIONPHASE)" href="/manage/debtor/' + debtorId + '/collectionprocedure/' + row.id + '/collectionphase/0/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
                                 <i class="la la-plus"></i>\
                             </a>\
-                             <a  href="/printoutTemplate/5/objectId/' + row.phaseId + '/select" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Претензия">\
-                                <i class="la la-exclamation-circle"></i>\
-                            </a>\
+                            <a href="/printoutType/2/objectId/'+ row.id + '/generate" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Претензия">\
+							    <i class="la la-exclamation-circle"></i>\
+						    </a>\
+						    <a href="/printoutType/3/objectId/'+ row.id + '/generate" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Доо талап">\
+							    <i class="la la-exclamation-circle"></i>\
+						    </a>\
                         ';
                     }
                     else{
