@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
 import kg.gov.mf.loan.manage.model.collection.CollectionProcedure;
+import kg.gov.mf.loan.manage.model.collection.PhaseDetails;
 import kg.gov.mf.loan.manage.model.orderterm.CurrencyRate;
 import kg.gov.mf.loan.manage.model.orderterm.OrderTermCurrency;
 import kg.gov.mf.loan.manage.repository.loan.PaymentRepository;
@@ -15,9 +16,13 @@ import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
 import kg.gov.mf.loan.manage.service.collection.CollectionProcedureService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.web.util.Pager;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -64,6 +69,19 @@ public class PaymentController {
 
 	@Autowired
 	CollectionPhaseService collectionPhaseService;
+
+	@Autowired
+	private SessionFactory sessionFactory;
+
+	public void setSessionFactory(SessionFactory sf){
+		this.sessionFactory = sf;
+	}
+
+
+	@Autowired
+	public PaymentController(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -118,7 +136,7 @@ public class PaymentController {
 			
 		return "/manage/debtor/loan/payment/save";
 	}
-	
+
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/payment/save"}, method=RequestMethod.POST)
     public String savePayment(Payment payment, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId)
     {
@@ -153,16 +171,28 @@ public class PaymentController {
 			paymentService.update(payment);
 			}
 
-		runUpdateQueries(loan);
-		
+		Session session;
+		try
+		{
+			session = sessionFactory.getCurrentSession();
+		}
+		catch (HibernateException e)
+		{
+			session = sessionFactory.openSession();
+		}
+		session.getTransaction().begin();
+		runUpdateQueries(loan,session);
+		session.getTransaction().commit();
+
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 
-    public void runUpdateQueries(Loan loan){
+    public void runUpdateQueries(Loan loan,Session session){
 
 
 		for(CollectionPhase phase1:loan.getCollectionPhases()){
 			CollectionPhase phase=collectionPhaseService.getById(phase1.getId());
+            SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
 			Date startDate=phase.getStartDate();
 			Date closeDate=new Date();
 			CollectionProcedure procedure=collectionProcedureService.getById(phase.getCollectionProcedure().getId());
@@ -172,18 +202,26 @@ public class PaymentController {
 			else if(procedure.getCloseDate()!=null){
 				closeDate=phase.getCollectionProcedure().getCloseDate();
 			}
-			String updatePhaseDetailsQuery="update phaseDetails\n" +
-					"set phaseDetails.paidFee=(select sum(fee) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closeDate+"'),\n" +
-					"    phaseDetails.paidInterest=(select sum(interest) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closeDate+"'),\n" +
-					"    phaseDetails.paidPenalty=(select sum(penalty) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closeDate+"'),\n" +
-					"    phaseDetails.paidPrincipal=(select sum(principal) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closeDate+"'),\n" +
-					"    phaseDetails.paidTotalAmount=(select sum(totalAmount) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closeDate+"') where collectionPhaseId="+phase.getId()+" and loan_id="+loan.getId();
-			entityManager.createNativeQuery(updatePhaseDetailsQuery);
-			String updatePhaseQuery="update collectionPhase\n" +
-					"set collectionPhase.paid=(select paidTotalAmount from phaseDetails where loan_id="+loan.getId()+" and collectionPhaseId="+phase.getId()+") where id="+phase.getId();
-			entityManager.createNativeQuery(updatePhaseQuery);
+			String closingDate=dateFormat.format(closeDate);
+			try {
+				String updatePhaseDetailsQuery="update phaseDetails\n" +
+						"set phaseDetails.paidFee=(select sum(fee) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closingDate+"'),\n" +
+						"    phaseDetails.paidInterest=(select sum(interest) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closingDate+"'),\n" +
+						"    phaseDetails.paidPenalty=(select sum(penalty) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closingDate+"'),\n" +
+						"    phaseDetails.paidPrincipal=(select sum(principal) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closingDate+"'),\n" +
+						"    phaseDetails.paidTotalAmount=(select sum(totalAmount) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closingDate+"') " +
+						"where collectionPhaseId="+phase.getId()+" and loan_id="+loan.getId();
 
-		}
+				session.createSQLQuery(updatePhaseDetailsQuery).executeUpdate();
+				String updatePhaseQuery="update collectionPhase\n" +
+						"set collectionPhase.paid=(select paidTotalAmount from phaseDetails where loan_id="+loan.getId()+" and collectionPhaseId="+phase.getId()+") where id="+phase.getId();
+				session.createSQLQuery(updatePhaseQuery).executeUpdate();
+			}
+			catch (Exception e){
+					System.out.println(e);
+			}
+
+        }
 	}
 	
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/payment/{paymentId}/delete", method=RequestMethod.GET)

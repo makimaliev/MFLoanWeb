@@ -141,6 +141,14 @@
 												<div class="m-widget1__item">
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.collection.phase.paid}"></h3>
+															<span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(phase.paid, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
+														</div>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
 															<h3 class="m-widget1__title" th:text="#{label.collection.phase.start.amount}"></h3>
 															<span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(phase.start_amount, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
 														</div>
