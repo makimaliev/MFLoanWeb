@@ -772,9 +772,9 @@ public class DebtorController {
                 loanSummary.setOutstadingInterest(conditional(loanSummary.getOutstadingInterest()));
                 loanSummary.setOutstadingPenalty(conditional(loanSummary.getOutstadingPenalty()));
                 loanSummary.setTotalOverdue(conditional(loanSummary.getTotalOverdue()));
-                loanSummary.setOverduePrincipal(conditional(loanSummary.getOutstadingPrincipal()));
-                loanSummary.setOverdueInterest(conditional(loanSummary.getOutstadingInterest()));
-                loanSummary.setOverduePenalty(conditional(loanSummary.getOutstadingPenalty()));
+                loanSummary.setOverduePrincipal(conditional(loanSummary.getOverduePrincipal()));
+                loanSummary.setOverdueInterest(conditional(loanSummary.getOverdueInterest()));
+                loanSummary.setOverduePenalty(conditional(loanSummary.getOverduePenalty()));
                 loanSummary.setOnDate(srokDate);
                 loanSummary.setTotalPaidKGS(conditional(loanSummary.getTotalPaidKGS()));
                 loanSummary.setTotalPaid(conditional(loanSummary.getTotalPaid()));
@@ -803,9 +803,9 @@ public class DebtorController {
 					newLoanSummary.setOutstadingInterest((loanSummary.getOutstadingInterest()*rate));
 					newLoanSummary.setOutstadingPenalty((loanSummary.getOutstadingPenalty()*rate));
 					newLoanSummary.setTotalOverdue((loanSummary.getTotalOverdue()*rate));
-                    newLoanSummary.setOverduePrincipal((loanSummary.getOutstadingPrincipal()*rate));
-                    newLoanSummary.setOverdueInterest((loanSummary.getOutstadingInterest()*rate));
-                    newLoanSummary.setOverduePenalty((loanSummary.getOutstadingPenalty()*rate));
+                    newLoanSummary.setOverduePrincipal((loanSummary.getOverduePrincipal()*rate));
+                    newLoanSummary.setOverdueInterest((loanSummary.getOverdueInterest()*rate));
+                    newLoanSummary.setOverduePenalty((loanSummary.getOverduePenalty()*rate));
 					newLoanSummary.setOnDate(loanSummary.getOnDate());
 					newLoanSummary.setTotalPaidKGS((loanSummary.getTotalPaidKGS()));
 					newLoanSummary.setTotalPaid((loanSummary.getTotalPaid()));

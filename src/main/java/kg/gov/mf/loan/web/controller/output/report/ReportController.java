@@ -657,8 +657,12 @@ public class ReportController {
 
 		if(groupType5select!=null)
 		{
-			GroupType groupType5 = groupTypeService.findById(Long.valueOf(groupType5select));
-			reportTemplate1.setGroupType5(groupType5);
+			if(!groupType6select.equals(""))
+			{
+				GroupType groupType5 = groupTypeService.findById(Long.valueOf(groupType5select));
+				reportTemplate1.setGroupType5(groupType5);
+			}
+
 		}
 
 
