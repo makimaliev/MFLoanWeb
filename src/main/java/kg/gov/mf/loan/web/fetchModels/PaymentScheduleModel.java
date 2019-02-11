@@ -12,7 +12,7 @@ public class PaymentScheduleModel implements Comparable<PaymentScheduleModel>{
     @Id
     private Long id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy", timezone = "Asia/Bishkek")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date expectedDate;
 
     private Double disbursement;
@@ -32,7 +32,7 @@ public class PaymentScheduleModel implements Comparable<PaymentScheduleModel>{
     @Override
     public int compareTo(PaymentScheduleModel model)
     {
-        return this.expectedDate.compareTo(model.expectedDate);
+        return model.expectedDate.compareTo(this.expectedDate);
     }
 
     public Long getId() {
