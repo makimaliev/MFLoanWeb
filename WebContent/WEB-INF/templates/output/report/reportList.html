@@ -57,6 +57,7 @@
 							<thead class="thead-default">
 							<tr>
 								<th>Id</th>
+								<th>Просмотр</th>
 								<th th:text="#{label.report.name}">Name</th>
 								<th>&nbsp;</th>
 							</tr>
@@ -64,6 +65,7 @@
 							<tbody>
 							<tr th:each="s : ${reportList}">
 								<td th:text="${s.id}">Id</td>
+								<td><a th:href="@{/report/__${s.id}__/customView}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a></td>
 								<td th:text="${s.name}">Name</td>
 								<td class="table-actions text-right">
 											<span>
