@@ -83,10 +83,10 @@ var DatatableDataLocalLoans = function () {
 				title: "Регистрационный номер",
                 template: function (row) {
                     var status = {
-                        1: {'class': ''},
+                        1: {'class': 'btn-warning'},
                         2: {'class': ''},
                         3: {'class': 'btn-danger'},
-                        4: {'class': ''}
+                        4: {'class': 'btn-metal'}
                     };
                     var result = '';
 
