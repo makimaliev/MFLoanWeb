@@ -48,14 +48,6 @@
                                             <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="nav-main-tab">
                                                 <div class="col-10 justify-content-center">
                                                     <!-- Document Subtype -->
-                                                    <div class="form-group m-form__group row">
-                                                        <div class="col-3"></div>
-                                                        <div class="col-9">
-                                                            <br>
-                                                            <h2 class="text-center" th:text="*{senderRegisteredNumber != null ? documentSubType.name + ' № ' + senderRegisteredNumber : documentSubType.name}"></h2>
-                                                            <br>
-                                                        </div>
-                                                    </div>
                                                     <th:block th:replace="doc/document/viewcontent::__${document.documentType.internalName}__"/>
                                                 </div>
                                             </div>

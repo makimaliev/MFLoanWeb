@@ -4,6 +4,7 @@
 <body>
 <th:block th:fragment="internal">
     <!-- Internal -->
+
     <!-- Receiver Responsible -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label"> Кому : </label>
@@ -66,14 +67,22 @@
 </th:block>
 <th:block th:fragment="incoming">
     <!-- Incomming -->
+    <div class="form-group m-form__group row">
+        <div class="col-3"></div>
+        <div class="col-9">
+            <br>
+            <h2 class="text-center" th:text="*{receiverRegisteredNumber != null ? documentSubType.name + ' № ' + receiverRegisteredNumber : documentSubType.name}"></h2>
+            <br>
+        </div>
+    </div>
     <!-- Sender Responsible -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
             <span> От Кого :  </span>
         </label>
         <div class="col-sm-9">
-            <label class="form-control" th:each="s : *{senderResponsible?.organizations}" th:text="${s.name}"> Staff </label>
-            <label class="form-control" th:each="s : *{senderResponsible?.person}" th:text="${s.name}"> Staff </label>
+            <label class="form-control" th:each="s : *{senderResponsible?.organizations}" th:text="${s?.name}"> Staff </label>
+            <label class="form-control" th:each="s : *{senderResponsible?.person}" th:text="${s?.name}"> Staff </label>
         </div>
     </div>
     <div class="form-group m-form__group row">
@@ -81,7 +90,7 @@
             <span></span>
         </label>
         <div class="col-sm-9">
-            <label class="form-control" th:text="*{senderResponsible.responsibleName}" th:if="*{documentState.ordinal() != 0}"> Title </label>
+            <label class="form-control" th:text="*{senderResponsible?.responsibleName}" th:if="*{documentState.ordinal() != 0}"> Title </label>
         </div>
     </div>
     <!-- Sender Registration Data -->
@@ -164,6 +173,14 @@
 </th:block>
 <th:block th:fragment="outgoing">
     <!-- Outgoing -->
+    <div class="form-group m-form__group row">
+        <div class="col-3"></div>
+        <div class="col-9">
+            <br>
+            <h2 class="text-center" th:text="*{senderRegisteredNumber != null ? documentSubType.name + ' № ' + senderRegisteredNumber : documentSubType.name}"></h2>
+            <br>
+        </div>
+    </div>
     <!-- Receiver Responsible -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">

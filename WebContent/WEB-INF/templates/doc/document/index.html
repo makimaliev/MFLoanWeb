@@ -1,27 +1,30 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <!-- begin::Head -->
 <head>
+    <title th:text="#{label.identityDocType.page.title}">Loan view</title>
+
     <div th:replace="fragments/header :: header-css"/>
 </head>
 <!-- end::Head -->
-
 <!-- end::Body -->
 <body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
 <!-- begin:: Page -->
-
 <div class="m-grid m-grid--hor m-grid--root m-page">
     <!-- BEGIN: Header -->
     <div th:replace="layout/header"/>
     <!-- END: Header -->
+
     <!-- begin::Body -->
     <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
         <!-- BEGIN: Left Aside -->
         <div th:replace="layout/sidebar"/>
         <!-- END: Left Aside -->
         <div class="m-grid__item m-grid__item--fluid m-wrapper">
+
             <div class="m-content">
+                <!--Begin Portlet-->
                 <div class="m-portlet m-portlet--mobile">
                     <div class="m-portlet__head">
                         <div class="m-portlet__head-caption">
@@ -45,6 +48,7 @@
                     <div class="m-portlet__body">
 
                         <th:block th:replace="doc/layout::__${type + 'Index'}__"/>
+
                         <!--table class="table table-bordered table-hover" id="ddt">
                             <thead class="thead-default">
                                 <tr>
@@ -75,19 +79,31 @@
             </div>
         </div>
     </div>
-    <!-- END CONTENT BODY -->
     <!-- begin::Footer -->
     <div th:replace="layout/footer"/>
     <!-- end::Footer -->
 </div>
-<div class="m-scroll-top m-scroll-top--skin-top" data-toggle="m-scroll-top" data-scroll-offset="500" data-scroll-speed="300">
-    <i class="la la-arrow-up"></i>
-</div>
+
 <div th:replace="fragments/footer :: footer-js"/>
 
 <script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
 
 <script type="text/javascript" th:inline="javascript">
+
+    $(".openact").click(function(event) {
+
+        event.preventDefault();
+
+        $.ajax({
+            url: $(this).attr('href'),
+            success: function(response) {
+                alert(response);
+                location.reload();
+            }
+        });
+
+        return false;
+    });
 
     $(document).ready(function()
     {
@@ -98,7 +114,7 @@
                 emptyTable: "<center>Нет данных</center>",
                 lengthMenu: "_MENU_",
                 zeroRecords: "",
-                info: "_END_ из _TOTAL_ записей",
+                info: "Всего _TOTAL_ записей",
                 search: "Search : ... ",
                 paginate: {
                     first: '<i class="la la-angle-double-left"></i>',
@@ -107,38 +123,20 @@
                     last: '<i class="la la-angle-double-right"></i>'
                 }
             },
-            sDom: 'rtlip',
+            dom: "<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'l>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
+            //dom: 'rtlip',
         };
         var table = $('#documentTable').DataTable(dtOptions);
 
-        $(".openact").click(function(event) {
-
-            //var t1 = table.cell($(this).closest("tr"), 2);
-            //var t2 = table.cell($(this).closest("tr"), 3);
-
-            event.preventDefault();
-
-            $.ajax({
-                url: $(this).attr('href'),
-                success: function(response) {
-                    alert(response);
-                    location.reload();
-                }
-            });
-
-            //return false;
-        });
-
-        $(".tim").click(function(event) {
-            event.preventDefault();
-            table.cell($(this).closest("tr"), 3).data("Nurlan");
-        });
-
         /*
         var t1 = $('#ddt').DataTable({
-            info: false,
+            orderCellsTop: true,
+            fixedHeader: true,
+            searching: false,
             paging: true,
-            processing: true,
+            processing: false,
             ajax: '/doc/documents',
             serverSide: true,
             columns: [
@@ -156,7 +154,7 @@
                     data: 'docIndex'
                 },
                 {
-                    searchable: false,
+                    searchable: true,
                     orderable: false,
                     name: 'senderRegisteredNumber',
                     data: function (data, type, full, meta) {
@@ -165,7 +163,7 @@
                     }
                 },
                 {
-                    searchable: false,
+                    searchable: true,
                     orderable: false,
                     name: 'documentSubType.name',
                     data: function (data, type, full, meta) {
@@ -175,20 +173,20 @@
                 },
                 {
                     searchable: false,
-                    orderable: false,
+                    orderable: true,
                     name: 'documentState',
                     data: function (data, type, full, meta) {
                         return data.documentState === "REGISTERED" || data.documentState === "DONE" ? "Зарегистрирован" : "";
                     }
                 },
                 {
-                    searchable: false,
-                    orderable: false,
+                    searchable: true,
+                    orderable: true,
                     name: 'owner.staff.name',
                     data: 'owner.staff.name'
                 },
                 {
-                    searchable: false,
+                    searchable: true,
                     orderable: false,
                     name: 'receiverResponsible',
                     data: function (data, type, full, meta) {
@@ -213,21 +211,50 @@
                     }
                 },
                 {
-                    searchable: false,
+                    searchable: true,
                     orderable: false,
                     name: 'indexNo',
                     data: function (data, type, full, meta) {
                         return data.indexNo + "<hr>" + data.pageCount;
                     }
                 }
-            ]
+            ],
+            language: {
+                emptyTable: "<center>Нет данных</center>",
+                info: "Всего _TOTAL_ записей",
+                lengthMenu: "_MENU_",
+                paginate: {
+                    first: '<i class="la la-angle-double-left"></i>',
+                    previous: '<i class="la la-angle-left"></i>',
+                    next: '<i class="la la-angle-right"></i>',
+                    last: '<i class="la la-angle-double-right"></i>'
+                }
+            },
+            dom: '<t<i>pl>',
         });
-        */
 
         /*
-        $('#documentTable tbody').on( 'click', 'td', function () {
-            alert( table.cell( this ).data() );
-        } );
+        $('#ddt thead tr').clone(true).appendTo( '#ddt thead' );
+        $('#ddt thead tr:eq(1) th').each( function (i) {
+
+            $(this).html('<input type="text" class="form-control m-input m-input--solid">');
+            $('input', this).on('keyup change', function (){
+
+                if (this.value.length > 2 && table.column(i).search() !== this.value) {
+                    table.column(i)
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+        */
+        /*
+        l - perpage
+        r - processing
+        t - table
+        i - info
+        p - paging
+        f - filter
         */
 
         $('#generalSearch').keyup(function(){
@@ -238,4 +265,6 @@
 </script>
 
 </body>
+<!-- end::Body -->
 </html>
+

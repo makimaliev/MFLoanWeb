@@ -24,7 +24,7 @@
         <!-- END: Left Aside -->
         <div class="m-grid__item m-grid__item--fluid m-wrapper">
             <div class="m-content">
-                <div class="m-portlet m-portlet--full-height">
+                <div class="m-portlet m-portlet--full-height m--bg-fill-light">
 
                     <form th:action="@{/doc/save}" id="document_form" class="m-form m-form--fit m-form--label-align-right" th:object="${document}" method="POST" enctype="multipart/form-data">
                         <div class="m-portlet__head">
@@ -53,15 +53,8 @@
                                             <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="nav-main-tab">
                                                 <div class="col-10 justify-content-center">
                                                     <!-- Document Subtype -->
-                                                    <div class="form-group m-form__group row">
-                                                        <div class="col-3"></div>
-                                                        <div class="col-9">
-                                                            <br>
-                                                            <h2 class="text-center" th:text="*{documentState.ordinal() > 7 ? documentSubType.name + ' № ' + senderRegisteredNumber : documentSubType.name}"></h2>
-                                                            <br>
-                                                        </div>
-                                                    </div>
                                                     <th:block th:replace="doc/document/editcontent::__${document.documentType.internalName}__"/>
+
                                                 </div>
                                             </div>
                                             <!--div class="tab-pane fade" id="stages" role="tabpanel" aria-labelledby="nav-stages-tab">
@@ -94,6 +87,7 @@
                         </div>
                         <div class="m-portlet__foot">
                             <button type="button" class="btn btn-primary float-none" onclick="window.history.back()"> Отмена </button>
+                            <button type="submit" name="action" th:if="*{documentState.ordinal() > 1}" value="UPDATE" class="btn btn-info float-none"> Сохранить </button>
                             <th:block th:replace="doc/layout::documentActions"/>
                         </div>
                     </form>
@@ -118,6 +112,8 @@
 <th:block th:replace="doc/layout::script"/>
 
 <!--begin::Page Resources -->
+
+
 
 <div class="modal fade" id="pick" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -158,33 +154,6 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="documentLinker" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Прикрепление</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!--div class="pre-scrollable">
-                    <table class="table table-bordered table-hover">
-                        <tr th:each="d : ${mydocs}">
-                            <td th:text="${d.id}"></td>
-                            <td th:text="${d.documentType.name}"></td>
-                            <td th:text="${d.documentSubType.name}"></td>
-                            <td th:text="${d.title}"></td>
-                        </tr>
-                    </table>
-                </div-->
-            </div>
-            <div class="modal-footer">
-                <button type="reset" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script type="text/javascript">
 
@@ -205,6 +174,8 @@
 
         $('.sdr').hide();
         $('.rdr').hide();
+        //$('.sde').hide();
+        //$('.rde').hide();
 
         if($('#id').val() > 0 || $('#id').val() != null) {
 
@@ -232,7 +203,24 @@
             $('.rdr .s2').prop('required', false)
             $('#ri' + $(this).val() + ' .s2').prop('required', 'true');
         });
+        /*
+        $('#sre_select').change(function(){
+            $('#si' + $(this).val()).find( "select" ).val('').trigger('change')
+            $('.sdr ').hide();
+            $('#si' + $(this).val()).show();
 
+            $('.sdr .s2').prop('required', false)
+            $('#si' + $(this).val() + ' .s2').prop('required', 'true');
+        });
+        $('#rre_select').change(function(){
+            $('#ri' + $(this).val()).find( "select" ).val('').trigger('change')
+            $('.rdr ').hide();
+            $('#ri' + $(this).val()).show();
+
+            $('.rdr .s2').prop('required', false)
+            $('#ri' + $(this).val() + ' .s2').prop('required', 'true');
+        });
+        */
         var soption = {
             minimumInputLength: 2,
             placeholder: "Выбрать",
@@ -277,8 +265,50 @@
             }
         }
 
+        function formatState (state) {
+            if (!state.id) {
+                return state.text;
+            }
+            var $state = $(
+                '<a href="/doc/view/' + state.element.value + '"><span>' + state.text + '</span></a>'
+            );
+            return $state;
+        };
+        var sssoption = {
+            minimumInputLength: 2,
+            templateSelection: formatState,
+            placeholder: "Выбрать",
+            language: {
+                inputTooShort: function () {
+                    return "";
+                },
+                noResults: function () {
+                    return "Не найден";
+                },
+                searching: function () {
+                    return "";
+                },
+            },
+            ajax: {
+                data: function (params) {
+                    var query = {
+                        name: params.term
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+
+                    return {
+
+                        results : data
+                    };
+                }
+            }
+        }
+
         $('.s2 ').select2(soption);
         $('.s2s ').select2(ssoption);
+        $('.sds ').select2(sssoption);
     });
 
     Dropzone.autoDiscover = false;
