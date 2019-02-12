@@ -33,6 +33,9 @@ import kg.gov.mf.loan.output.report.service.LoanViewService;
 import kg.gov.mf.loan.output.report.utils.CalculationTool;
 import kg.gov.mf.loan.process.service.JobItemService;
 import kg.gov.mf.loan.web.fetchModels.*;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -167,6 +170,13 @@ public class DebtorController {
 	/** The entity manager. */
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@Autowired
+	private SessionFactory sessionFactory;
+
+	public void setSessionFactory(SessionFactory sf){
+		this.sessionFactory = sf;
+	}
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -900,6 +910,67 @@ public class DebtorController {
             return num/1000;
         }
     }
+
+//    update CollectionPhases of debtors' loans'
+	/*@RequestMapping(value = "/manage/debtor/{debtorId}/update/phases")
+	public String updateCollectionPhases(@PathVariable("debtorId") Long debtorId){
+
+		Debtor debtor=debtorService.getById(debtorId);
+		for (Loan loan1:debtor.getLoans()){
+			Loan loan=loanService.getById(loan1.getId());
+			Session session;
+			try
+			{
+				session = sessionFactory.getCurrentSession();
+			}
+			catch (HibernateException e)
+			{
+				session = sessionFactory.openSession();
+			}
+			session.getTransaction().begin();
+			runUpdateQueries(loan,session);
+			session.getTransaction().commit();
+		}
+		return "redirect: /manage/debtor/{debtorId}/view";
+	}
+
+	public void runUpdateQueries(Loan loan,Session session){
+
+
+		for(CollectionPhase phase1:loan.getCollectionPhases()){
+			CollectionPhase phase=collectionPhaseService.getById(phase1.getId());
+			SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
+			Date startDate=phase.getStartDate();
+			Date closeDate=new Date();
+			CollectionProcedure procedure=collectionProcedureService.getById(phase.getCollectionProcedure().getId());
+			if(phase.getCloseDate()!=null){
+				closeDate=phase.getCloseDate();
+			}
+			else if(procedure.getCloseDate()!=null){
+				closeDate=phase.getCollectionProcedure().getCloseDate();
+			}
+			String closingDate=dateFormat.format(closeDate);
+			try {
+				String updatePhaseDetailsQuery="update phaseDetails\n" +
+						"set phaseDetails.paidFee=(select sum(fee) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closingDate+"'),\n" +
+						"    phaseDetails.paidInterest=(select sum(interest) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closingDate+"'),\n" +
+						"    phaseDetails.paidPenalty=(select sum(penalty) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closingDate+"'),\n" +
+						"    phaseDetails.paidPrincipal=(select sum(principal) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closingDate+"'),\n" +
+						"    phaseDetails.paidTotalAmount=(select sum(totalAmount) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closingDate+"') " +
+						"where collectionPhaseId="+phase.getId()+" and loan_id="+loan.getId();
+
+				session.createSQLQuery(updatePhaseDetailsQuery).executeUpdate();
+				String updatePhaseQuery="update collectionPhase\n" +
+						"set collectionPhase.paid=(select paidTotalAmount from phaseDetails where loan_id="+loan.getId()+" and collectionPhaseId="+phase.getId()+") where id="+phase.getId();
+				session.createSQLQuery(updatePhaseQuery).executeUpdate();
+			}
+			catch (Exception e){
+				System.out.println(e);
+			}
+
+		}
+	}*/
+
 	//END - WORK SECTOR
 
     @PostMapping("/debtorLoans/{debtorId}")

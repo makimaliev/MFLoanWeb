@@ -172,9 +172,14 @@
 															<div class="col">
 																<a th:href="@{/manage/debtor/__${debtor.id}__/save}" class="btn btn-outline-danger" title="Редактировать">
 																	<span>
-																	<i class="la la-edit"></i>
-																	<span th:text="#{label.title.add.edit.debtor}"></span>
-																</span>
+																		<i class="la la-edit"></i>
+																		<span th:text="#{label.title.add.edit.debtor}"></span>
+																	</span>
+																</a>
+																<a th:href="@{/manage/debtor/__${debtor.id}__/update/phases}" class="btn btn-outline-danger" title="Обновить">
+																	<span>
+																		<span th:text="#{label.debtor.loan.phases.update}"></span>
+																	</span>
 																</a>
 															</div>
 														</div>
@@ -259,6 +264,11 @@
 																	<i class="la la-edit"></i>
 																	<span th:text="#{label.table.edit}"></span>
 																</span>
+															</a>
+															<a sec:authorize="hasAnyAuthority('ADMIN')" th:href="@{/manage/debtor/__${debtor.id}__/update/phases}" class="btn btn-outline-danger" title="Обновить">
+																	<span>
+																		<span th:text="#{label.debtor.loan.phases.update}"></span>
+																	</span>
 															</a>
 														</div>
 													</div>
