@@ -145,8 +145,12 @@ var phaseDetailsTableInit = function (jsonInput) {
                 data: phaseDetailsModels,
                 dataType: 'json',
                 success:function (data) {
-                    if(data == 'OK')
-                        window.location.replace("/manage/debtor/"+debtorId+"/view");
+                    if (data == 'OK') {
+                        if (fromLoan == false)
+                            window.location.replace("/manage/debtor/" + debtorId + "/view");
+                        else
+                            window.location.replace("/manage/debtor/" + debtorId + "/loan/" + loanId + "/view");
+                    }
                 }
             });
         });

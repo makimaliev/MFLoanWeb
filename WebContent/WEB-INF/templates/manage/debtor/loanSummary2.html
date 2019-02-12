@@ -754,12 +754,17 @@
 
     $("#btn_generate_type_4").on("click",function () {
 
-        var stringSelecteds="";
-        for (var i in selectedLoans){
-            stringSelecteds=stringSelecteds+"-"+i.toString();
-        }
         var initDate = $("#phaseInitDate").val();
-        $("#selectedName").val(stringSelecteds.toString());
+        if(fromLoan==true){
+            $("#selectedName").val(loanId);
+        }
+        else{
+            var stringSelecteds="";
+            for (var i in selectedLoans){
+                stringSelecteds=stringSelecteds+"-"+i.toString();
+            }
+            $("#selectedName").val(stringSelecteds.toString());
+        }
         $("#dateOfSelected").val(initDate);
         // $("#showSummaries").submit();
 
@@ -775,12 +780,16 @@
 
     $("#btn_generate_type_1").on("click",function () {
 
-        var stringSelecteds="";
-        for (var i in selectedLoans){
-            stringSelecteds=stringSelecteds+"-"+i.toString();
-        }
         var initDate = $("#phaseInitDate").val();
-        $("#selectedName").val(stringSelecteds.toString());
+        if(fromLoan==true)
+        $("#selectedName").val(loanId);
+        else{
+            var stringSelecteds="";
+            for (var i in selectedLoans){
+                stringSelecteds=stringSelecteds+"-"+i.toString();
+            }
+            $("#selectedName").val(stringSelecteds.toString());
+        }
         $("#dateOfSelected").val(initDate);
         // $("#showSummaries").submit();
 

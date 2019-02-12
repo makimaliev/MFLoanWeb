@@ -701,41 +701,38 @@
 														</span>
                                                     </div>
                                                 </div>
-												<div class="col-lg-6 m--align-right">
+												<div class="row">
 
-													<!--<form th:action="@{/printoutTemplate/1/objectId/1/generate}" method="post" th:if="${hasParent}==false">-->
+													<div class="col-lg-4">
+														<div class="m-form__control">
+															<div class="input-group date m_datetimepicker_6">
+																<input type="text" class="form-control m-input" id="phaseInitDate"/>
+																<span class="input-group-addon">
+																<i class="la la-calendar glyphicon-th"></i>
+															</span>
+															</div>
+														</div>
+													</div>
+													<div class="col-lg-8">
+														<button class="btn btn-sm btn-accent" type="button" id="btn_show_loanSummary">
+															Расчет
+														</button>
+														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator">
+															Сохранить расчет
+														</button>
+														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLECTIONPHASE')" class="btn btn-sm btn-accent" type="button" id="bnt_init_phase">
+															Претензия
+														</button>
 
-													<!--<div class="m-form__group m-form__group&#45;&#45;inline">-->
-														<!--<div class="m-form__label">-->
-															<!--<label class="m-label m-label&#45;&#45;single">-->
-																<!--Дата:-->
-															<!--</label>-->
-														<!--</div>-->
-														<!--<div class="m-form__control">-->
-															<!--<div class="input-group date m_datetimepicker_6">-->
-																<!--<input type="text" class="form-control m-input" id="manualCalculationDate" name="manualCalculationDate"/>-->
-																<!--<span class="input-group-addon">-->
-																<!--<i class="la la-calendar glyphicon-th"></i>-->
-															<!--</span>-->
-															<!--</div>-->
-														<!--</div>-->
-														<!--<div class="m-form__control">-->
-															<!--&lt;!&ndash;<a sec:authorize="hasRole('ADMIN')" th:href="@{/printoutTemplate/4/objectId/1/generate}" class="btn btn-accent m-btn m-btn&#45;&#45;custom m-btn&#45;&#45;icon m-btn&#45;&#45;air m-btn&#45;&#45;pill">&ndash;&gt;-->
-																<!--&lt;!&ndash;<span>&ndash;&gt;-->
-																	<!--&lt;!&ndash;<i class="la la-plus"></i>&ndash;&gt;-->
-																	<!--&lt;!&ndash;<span>&ndash;&gt;-->
-																		<!--&lt;!&ndash;Добавить расчет&ndash;&gt;-->
-																	<!--&lt;!&ndash;</span>&ndash;&gt;-->
-																<!--&lt;!&ndash;</span>&ndash;&gt;-->
-															<!--&lt;!&ndash;</a>&ndash;&gt;-->
-
-															<!--<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator" th:text="#{label.button.calculate.manual}">-->
-																<!--Сохранить расчет-->
-															<!--</button>-->
-														<!--</div>-->
-													<!--</div>-->
-													<!--</form>-->
-
+														<form id="checkedLoans" th:action="@{/manage/debtor/__${debtor.id}__/loan/summary/view}" method="get">
+															<input hidden="hidden" type="text" name="name" id="selectedLoanses">
+															<input hidden="hidden" type="text" name="date" id="selectedLoansesDate">
+														</form>
+														<form id="showSummaries" th:action="@{/manage/debtor/__${debtor.id}__/summary/view}" method="get">
+															<input hidden="hidden" type="text" name="name" id="selectedName">
+															<input hidden="hidden" type="text" name="date" id="dateOfSelected">
+														</form>
+													</div>
 												</div>
                                             </div>
                                         </div>
@@ -772,61 +769,61 @@
                                 <!--end: Datatable -->
 							</div>
 							<div class="tab-pane" id="initializaPhase" role="tabpanel">
-								<div class="m-form__content">
-									<div class="m-alert m-alert--icon alert alert-danger m--hide" role="alert" id="m_form_2_msg">
-										<div class="m-alert__icon">
-											<i class="la la-warning"></i>
-										</div>
-										<div class="m-alert__text" th:text="#{label.select.date}">
-											Выберите пожалуйста дату.
-										</div>
-										<div class="m-alert__close">
-											<button type="button" class="close" data-close="alert" aria-label="Close"></button>
-										</div>
-									</div>
-								</div>
-								<!--begin: Selected Rows Group Action Form -->
-								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30" id="m_datatable_group_action_form">
-									<div class="row align-items-center">
-										<div class="col-xl-8 order-2 order-xl-1">
-											<div class="form-group m-form__group row align-items-center">
-												<div class="col-md-5">
-													<div class="m-form__group m-form__group--inline">
-														<div class="m-form__label">
-															<label class="m-label m-label--single" th:text="#{label.date}">
-																Дата:
-															</label>
-														</div>
-														<div class="m-form__control">
-															<div class="input-group date m_datetimepicker_6">
-																<input type="text" class="form-control m-input" id="phaseInitDate"/>
-																<span class="input-group-addon">
-																<i class="la la-calendar glyphicon-th"></i>
-															</span>
-															</div>
-														</div>
-													</div>
-													<div class="d-md-none m--margin-bottom-10"></div>
-												</div>
-												<div class="col-md-4">
-													<button th:text="#{label.add.collection.phase}" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLECTIONPHASE')" class="btn btn-sm btn-accent" type="button" data-toggle="collapse" data-target="#phaseDetailsDiv" id="bnt_init_phase">
-														Сохранить претензию
-													</button>
+								<!--<div class="m-form__content">-->
+									<!--<div class="m-alert m-alert&#45;&#45;icon alert alert-danger m&#45;&#45;hide" role="alert" id="m_form_2_msg">-->
+										<!--<div class="m-alert__icon">-->
+											<!--<i class="la la-warning"></i>-->
+										<!--</div>-->
+										<!--<div class="m-alert__text" th:text="#{label.select.date}">-->
+											<!--Выберите пожалуйста дату.-->
+										<!--</div>-->
+										<!--<div class="m-alert__close">-->
+											<!--<button type="button" class="close" data-close="alert" aria-label="Close"></button>-->
+										<!--</div>-->
+									<!--</div>-->
+								<!--</div>-->
+								<!--&lt;!&ndash;begin: Selected Rows Group Action Form &ndash;&gt;-->
+								<!--<div class="m-form m-form&#45;&#45;label-align-right m&#45;&#45;margin-top-20 m&#45;&#45;margin-bottom-30" id="m_datatable_group_action_form">-->
+									<!--<div class="row align-items-center">-->
+										<!--<div class="col-xl-8 order-2 order-xl-1">-->
+											<!--<div class="form-group m-form__group row align-items-center">-->
+												<!--<div class="col-md-5">-->
+													<!--<div class="m-form__group m-form__group&#45;&#45;inline">-->
+														<!--<div class="m-form__label">-->
+															<!--<label class="m-label m-label&#45;&#45;single" th:text="#{label.date}">-->
+																<!--Дата:-->
+															<!--</label>-->
+														<!--</div>-->
+														<!--<div class="m-form__control">-->
+															<!--<div class="input-group date m_datetimepicker_6">-->
+																<!--<input type="text" class="form-control m-input" id="phaseInitDate"/>-->
+																<!--<span class="input-group-addon">-->
+																<!--<i class="la la-calendar glyphicon-th"></i>-->
+															<!--</span>-->
+															<!--</div>-->
+														<!--</div>-->
+													<!--</div>-->
+													<!--<div class="d-md-none m&#45;&#45;margin-bottom-10"></div>-->
+												<!--</div>-->
+												<!--<div class="col-md-4">-->
+													<!--<button th:text="#{label.add.collection.phase}" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLECTIONPHASE')" class="btn btn-sm btn-accent" type="button" data-toggle="collapse" data-target="#phaseDetailsDiv" id="bnt_init_phase">-->
+														<!--Сохранить претензию-->
+													<!--</button>-->
 
-													<!--<form th:action="@{/printoutTemplate/1/objectId/1/generate}" method="post">-->
-														<!--<button class="btn btn-sm btn-accent" type="submit" th:text="#{label.table.generate}"></button>-->
-													<!--</form>-->
-													<!--<button th:action="@{/printoutTemplate/1/objectId/1/generate}" class="btn btn-sm btn-accent" type="button" id="printGenerate" th:text="#{label.table.generate}"></button>-->
-												</div>
-											</div>
-											<div id="phaseDetailsDiv" class="collapse">
-												<div class="m_datatable" id="phaseDetailsTable"></div>
-												<button class="btn btn-sm btn-accent" type="button" id="initPhaseSaveBtn" th:text="#{label.form.save}"></button>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!--end: Selected Rows Group Action Form -->
+													<!--&lt;!&ndash;<form th:action="@{/printoutTemplate/1/objectId/1/generate}" method="post">&ndash;&gt;-->
+														<!--&lt;!&ndash;<button class="btn btn-sm btn-accent" type="submit" th:text="#{label.table.generate}"></button>&ndash;&gt;-->
+													<!--&lt;!&ndash;</form>&ndash;&gt;-->
+													<!--&lt;!&ndash;<button th:action="@{/printoutTemplate/1/objectId/1/generate}" class="btn btn-sm btn-accent" type="button" id="printGenerate" th:text="#{label.table.generate}"></button>&ndash;&gt;-->
+												<!--</div>-->
+											<!--</div>-->
+											<!--<div id="phaseDetailsDiv" class="collapse">-->
+												<!--<div class="m_datatable" id="phaseDetailsTable"></div>-->
+												<!--<button class="btn btn-sm btn-accent" type="button" id="initPhaseSaveBtn" th:text="#{label.form.save}"></button>-->
+											<!--</div>-->
+										<!--</div>-->
+									<!--</div>-->
+								<!--</div>-->
+								<!--&lt;!&ndash;end: Selected Rows Group Action Form &ndash;&gt;-->
 							</div>
 							<div class="tab-pane" id="agreements" role="tabpanel">
 								<!--begin: Search Form -->
@@ -1105,6 +1102,23 @@
 						</div>
 						</div>
 					</div>
+				<div class="collapse" id="phaseDetailsDiv">
+					<div class="m-portlet__body  m-portlet__body--no-padding">
+						<div class="col m-col--no-padding ">
+							<div class="portlet">
+								<div class="m_datatable" id="phaseDetailsTable"></div>
+								<div >
+									<button class="btn btn-sm btn-accent" type="button" id="initPhaseSaveBtn" th:text="#{label.save}"></button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div id="content"></div>
+					</div>
+				</div>
 				</div>
 				<!--end::Portlet-->
 			</div>
@@ -1158,6 +1172,7 @@
     var debtorId = /*[[${debtor.id}]]*/ [];
     var loanId = /*[[${loan.id}]]*/ [];
     var jsonPayments;
+    var isCalculationSaved = false;
     var jsonAgreements;
     var loggedInUserId=/*[[${loggedinuserId}]]*/ [];
     var supervisorId=/*[[${supervisorId}]]*/ [];
@@ -1177,6 +1192,7 @@
     // var jsonSummaries = /*[[${summaries}]]*/ [];
     // var jsonAccrues = /*[[${accrues}]]*/ [];
     /*]]>*/
+	var fromLoan=true;
 </script>
 <script>
 	$("#printGenerate").on('click',function () {
@@ -1204,36 +1220,70 @@
             else
             {
                 var initDate = $("#phaseInitDate").val();
+                console.log(debtorId)
                 $.ajax({
                     type : 'POST',
                     url : "/manage/debtor/"+debtorId+"/initializephase",
                     data: {selectedLoans:loanId, initDater: initDate},
                     success:function (data) {
                         phaseDetailsTableInit(data);
-                        // var divT = $('#phaseDetailsDiv');
-                        // divT.collapse('show');
-                        // mApp.scrollTo(divT, -200);
+                        var divT = $('#phaseDetailsDiv');
+                        divT.collapse('show');
+                        mApp.scrollTo(divT, -200);
                     }
                 });
                 //$.post( "/manage/debtor/"+debtorId+"/initializephase", );
             }
         });
     $("#bnt_init_manualCalculator").on('click',function () {
-        if (!$("#manualCalculationDate").val())
+        // on checkbox checked event
+        if (!$("#phaseInitDate").val())
         {
         }
         else
         {
-            var initDate = $("#manualCalculationDate").val();
+            var initDate = $("#phaseInitDate").val();
+            // console.log(selectedLoans);
             $.ajax({
                 type : 'POST',
                 url : "/manage/debtor/"+debtorId+"/initializeManualCalculator",
                 data: {selectedLoans:loanId, initDater: initDate},
-				success:function () {
-                    location.reload();
+                success:function () {
+                    $("#selectedLoanses").val(loanId);
+                    $("#selectedLoansesDate").val(initDate);
+                    // $("#checkedLoans").submit();
+
+                    var sUrl ="/manage/debtor/"+debtorId+"/loan/summary/view?"+"name="+$("#selectedLoanses").val()+"&date="+$("#selectedLoansesDate").val();
+
+                    isCalculationSaved= /*[[${isCalculationSaved}]]*/ [];
+                    console.log(" manual calculation"+isCalculationSaved);
+
+
+
+                    $.get(sUrl, function(data) {
+                        $('#content').html(data);
+                    });
                 }
             });
         }
+
+
+
+    });
+    $("#btn_show_loanSummary").on("click",function () {
+
+        var initDate = $("#phaseInitDate").val();
+        $("#selectedName").val(loanId);
+        $("#dateOfSelected").val(initDate);
+        // $("#showSummaries").submit();
+
+        var sUrl ="/manage/debtor/"+debtorId+"/summary/view?"+"name="+$("#selectedName").val()+"&date="+$("#dateOfSelected").val();
+
+
+
+        $.get(sUrl, function(data) {
+            $('#content').html(data);
+        });
 
 
 
