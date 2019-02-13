@@ -52,14 +52,29 @@ var DatatableDataLocalPhases = function () {
 					';
                 }
             }, {
+                field: "phaseTypeName",
+                title: "Вид"
+            }, {
                 field: "startDate",
                 title: "Дата фазы"
             }, {
-                field: "phaseStatusName",
-                title: "Статус"
+                field: "startTotalAmount",
+                title: "Сумма фазы",
+                template: function (row) {
+                    return parseFloat(row.startTotalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                }
             }, {
-                field: "phaseTypeName",
-                title: "Вид"
+                field: "phaseStatusName",
+                title: "Статус фазы"
+            }, {
+                field: "closeDate",
+                title: "Дата завершения"
+            }, {
+                field: "closeTotalAmount",
+                title: "Сумма завершения",
+                template: function (row) {
+                    return parseFloat(row.closeTotalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                }
             }, {
                 field: "action",
                 width: 110,
