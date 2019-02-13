@@ -79,7 +79,7 @@ public class CollectionProcedureController {
 		model.addAttribute("proc", proc);
 
         Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
-        String jsonPhases = gson.toJson(getProcsById(procId));
+        String jsonPhases = gson.toJson(getPhasesByProcId(procId));
         model.addAttribute("phases", jsonPhases);
 
 		User user = userService.findByUsername(Utils.getPrincipal());
