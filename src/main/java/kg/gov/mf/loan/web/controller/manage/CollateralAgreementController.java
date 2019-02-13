@@ -146,9 +146,17 @@ public class CollateralAgreementController {
 			model.addAttribute("loanIds",loanIds);
 			model.addAttribute("agreement", agreement);
 			Owner owner = agreement.getNotary();
-			String ownerText = "[" + owner.getId() + "] "
-					+ owner.getName()
-					+ " (" + (owner.getOwnerType().equals(OwnerType.ORGANIZATION)? "Организация":"Физ. лицо") +")";
+
+			String ownerText = "";
+
+			if(owner!=null)
+			{
+				ownerText = "[" + owner.getId() + "] "
+						+ owner.getName()
+						+ " (" + (owner.getOwnerType().equals(OwnerType.ORGANIZATION)? "Организация":"Физ. лицо") +")";
+			}
+
+
 			model.addAttribute("ownerText", ownerText);
 		}
 
