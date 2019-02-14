@@ -315,6 +315,7 @@ public class CollectionPhaseController {
 	@ResponseBody
 	public String initializePhaseSave(@PathVariable("debtorId")Long debtorId, @RequestBody PhaseDetailsModelList phaseDetailsModels)
 	{
+	    String result="";
 		if(phaseDetailsModels.getPhaseDetailsModels().size() > 0){
 
 		    Date startDate = null;
@@ -351,6 +352,7 @@ public class CollectionPhaseController {
             procedure.setProcedureStatus(procedureStatusService.getById(1L));
             procedure.setProcedureType(procedureTypeService.getById(1L));
             procService.add(procedure);
+            result=String.valueOf(procedure.getId());
             phase.setCollectionProcedure(procedure);
 
 			User user = userService.findByUsername(Utils.getPrincipal());
@@ -358,6 +360,7 @@ public class CollectionPhaseController {
 			phase.setDepartment_id(staff.getDepartment().getId());
 
             phaseService.add(phase);
+            result=result+"-"+String.valueOf(phase.getId());
 
             for (PhaseDetailsModel model: list
                     ) {
@@ -382,7 +385,7 @@ public class CollectionPhaseController {
 
         }
 
-		return "OK";
+		return result;
 	}
 
 	@RequestMapping(value = "/subIndexByIndex/list", method = RequestMethod.GET)
@@ -873,21 +876,21 @@ public class CollectionPhaseController {
         {
             CollectionPhaseDetailsModel model = new CollectionPhaseDetailsModel();
             model.setId(temp.getId());
-            model.setStartTotalAmount(temp.getStartTotalAmount());
-            model.setStartPrincipal(temp.getStartPrincipal());
-            model.setStartInterest(temp.getStartInterest());
-            model.setStartPenalty(temp.getStartPenalty());
-            model.setStartFee(temp.getStartFee());
-            model.setCloseTotalAmount(temp.getCloseTotalAmount());
-            model.setClosePrincipal(temp.getClosePrincipal());
-            model.setCloseInterest(temp.getCloseInterest());
-            model.setClosePenalty(temp.getClosePenalty());
-            model.setCloseFee(temp.getCloseFee());
-            model.setPaidTotalAmount(temp.getPaidTotalAmount());
-            model.setPaidPrincipal(temp.getPaidPrincipal());
-            model.setPaidInterest(temp.getPaidInterest());
-            model.setPaidPenalty(temp.getPaidPenalty());
-            model.setPaidFee(temp.getPaidFee());
+            model.setStartTotalAmount(ifNullMakeZero(temp.getStartTotalAmount()));
+            model.setStartPrincipal(ifNullMakeZero(temp.getStartPrincipal()));
+            model.setStartInterest(ifNullMakeZero(temp.getStartInterest()));
+            model.setStartPenalty(ifNullMakeZero(temp.getStartPenalty()));
+            model.setStartFee(ifNullMakeZero(temp.getStartFee()));
+            model.setCloseTotalAmount(ifNullMakeZero(temp.getCloseTotalAmount()));
+            model.setClosePrincipal(ifNullMakeZero(temp.getClosePrincipal()));
+            model.setCloseInterest(ifNullMakeZero(temp.getCloseInterest()));
+            model.setClosePenalty(ifNullMakeZero(temp.getClosePenalty()));
+            model.setCloseFee(ifNullMakeZero(temp.getCloseFee()));
+            model.setPaidTotalAmount(ifNullMakeZero(temp.getPaidTotalAmount()));
+            model.setPaidPrincipal(ifNullMakeZero(temp.getPaidPrincipal()));
+            model.setPaidInterest(ifNullMakeZero(temp.getPaidInterest()));
+            model.setPaidPenalty(ifNullMakeZero(temp.getPaidPenalty()));
+            model.setPaidFee(ifNullMakeZero(temp.getPaidFee()));
             model.setLoan_id(temp.getLoan_id());
             model.setRegNumber(loanService.getById(temp.getLoan_id()).getRegNumber());
             result.add(model);
@@ -895,6 +898,13 @@ public class CollectionPhaseController {
 
         return result;
     }
+    public Double ifNullMakeZero(Double num){
+		if(num==null){
+			return Double.valueOf(0);
+		}
+		else
+			return num;
+	}
 
     private List<CollectionPhaseDetailsModel1> getPhaseDetailsByCollectionPhaseId(long collectionPhaseId){
 

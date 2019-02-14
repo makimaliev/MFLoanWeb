@@ -1726,7 +1726,11 @@
                     data: phaseDetailsModels,
                     dataType: 'json',
                     success:function (data) {
-                        if (data == 'OK') {
+                        if(data!=""){
+                            var ids=data.split("-");
+                            window.location.replace("/manage/debtor/" + debtorId + "/collectionprocedure/"+ids[0]+"/collectionphase/"+ids[1]+"/view");
+                        }
+                        else {
                             if (fromLoan == false)
                                 window.location.replace("/manage/debtor/" + debtorId + "/view");
                             else
