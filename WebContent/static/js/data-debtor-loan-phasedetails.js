@@ -46,7 +46,7 @@ var phaseDetailsTableInit = function (jsonInput) {
             title: "По осн.с.",
             template: function (row) {
                 return '\
-						<input type="text" class="form-control m-input" id="startPrinc'+row.loanId+'" value="'+ (row.startPrincipal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",") + '">\
+						<input type="text" class="form-control m-input" id="startPrinc'+row.loanId+'" value="'+ (row.startPrincipal).toFixed(2)+ '">\
 					';
             }
         },{
@@ -54,7 +54,7 @@ var phaseDetailsTableInit = function (jsonInput) {
             title: "По проц.",
             template: function (row) {
                 return '\
-						<input type="text" class="form-control m-input" id="startInt'+row.loanId+'" value="'+ (row.startInterest).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",") +'">\
+						<input type="text" class="form-control m-input" id="startInt'+row.loanId+'" value="'+ (row.startInterest).toFixed(2) +'">\
 					';
             }
         },{
@@ -62,7 +62,7 @@ var phaseDetailsTableInit = function (jsonInput) {
             title: "По штр.",
             template: function (row) {
                 return '\
-						<input type="text" class="form-control m-input" id="startPen'+row.loanId+'" value="'+ (row.startPenalty).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",") +'">\
+						<input type="text" class="form-control m-input" id="startPen'+row.loanId+'" value="'+ (row.startPenalty).toFixed(2)+'">\
 					';
             }
         },{
@@ -71,7 +71,7 @@ var phaseDetailsTableInit = function (jsonInput) {
             width: 160,
             template: function (row) {
                 return '\
-						<input type="text" class="form-control m-input" id="total'+row.loanId+'" value="'+ (row.startTotalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",") +'" disabled>\
+						<input type="text" class="form-control m-input" id="total'+row.loanId+'" value="'+ (row.startTotalAmount).toFixed(2) +'" disabled>\
 					';
             }
         }],
@@ -182,6 +182,7 @@ var phaseDetailsTableInit = function (jsonInput) {
                     var sum = 0.0;
                     sum = ((parseFloat($(startPrincInput).val()) + parseFloat($(startIntInput).val()) + parseFloat($(startPenInput).val())));
                     $(totalInput).val(sum.toFixed(2));
+
                 }
             }
         });
