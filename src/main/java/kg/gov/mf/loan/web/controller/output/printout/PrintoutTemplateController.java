@@ -427,7 +427,7 @@ public class PrintoutTemplateController {
 
             PrintoutGeneratorPhaseSummary printoutGeneratorPhaseSummary= new PrintoutGeneratorPhaseSummary();
 
-            Document document = new Document(PageSize.A4, 10, 10, 10, 10);
+            Document document = new Document(PageSize.A4, 20, 20, 10, 10);
 
 //            PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
 
