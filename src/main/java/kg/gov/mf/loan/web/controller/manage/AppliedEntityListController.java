@@ -1,14 +1,19 @@
 package kg.gov.mf.loan.web.controller.manage;
 
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.manage.repository.entitylist.AppliedEntityListRepository;
+import kg.gov.mf.loan.web.fetchModels.AppliedEntityListMetaModel;
 import kg.gov.mf.loan.web.fetchModels.AppliedEntityModel;
+import kg.gov.mf.loan.web.fetchModels.DebtorMetaModel;
+import kg.gov.mf.loan.web.util.Meta;
 import kg.gov.mf.loan.web.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,9 +80,9 @@ public class AppliedEntityListController {
 		AppliedEntityList list = listService.getById(listId);
         model.addAttribute("entityList", list);
 
-		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
-		String jsonEntities = gson.toJson(getEntitiesByListId(listId));
-		model.addAttribute("entities", jsonEntities);
+//		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+//		String jsonEntities = gson.toJson(getEntitiesByListId(listId));
+//		model.addAttribute("entities", jsonEntities);
 
         model.addAttribute("orderId", orderId);
 		model.addAttribute("order", orderService.getById(orderId));
@@ -223,6 +228,55 @@ public class AppliedEntityListController {
 			elTypeService.remove(elTypeService.getById(id));
 		return "redirect:" + "/manage/order/entitylist/type/list";
     }
+
+    @PostMapping("/api/entitylists/{listId}/")
+	@ResponseBody
+	public AppliedEntityListMetaModel getList(@RequestParam Map<String, String> datatable,@PathVariable("listId") Long listId)
+	{
+		String pageStr = datatable.get("datatable[pagination][page]");
+		String perPageStr = datatable.get("datatable[pagination][perpage]");
+		String sortStr = datatable.get("datatable[sort][sort]");
+		String sortField = datatable.get("datatable[sort][field]");
+
+		Integer page = Integer.parseInt(pageStr);
+		Integer perPage = Integer.parseInt(perPageStr);
+		Integer offset = (page-1)*perPage;
+
+		boolean searchByName= datatable.containsKey("datatable[query][generalSearch]");
+
+		String ownerStr = searchByName?datatable.get("datatable[query][generalSearch]"):"";
+
+		String baseQuery = "SELECT ent.id, owner.name as ownerName, state.name as status, list.id as listId\n" +
+				"FROM appliedEntity ent, appliedEntityList list,\n" +
+				"  owner owner, appliedEntityState state\n" +
+				"WHERE ent.appliedEntityListId = list.id\n" +
+				"  AND owner.id = ent.ownerId\n" +
+				"  AND ent.appliedEntityStateId = state.id\n" +
+				"  AND list.id =" + listId+"\n"+
+				"  AND owner.name like \'%" + ownerStr+"%'\n"+
+				"ORDER BY " + sortField + " " + sortStr + " LIMIT " + offset +"," + perPage;
+
+		Query query = entityManager.createNativeQuery(baseQuery, AppliedEntityModel.class);
+
+		String countQuery= "select count(1)\n" +
+				"FROM appliedEntity ent, appliedEntityList list,\n" +
+				"  owner owner, appliedEntityState state\n" +
+				"WHERE ent.appliedEntityListId = list.id\n" +
+				"  AND owner.id = ent.ownerId\n" +
+				"  AND ent.appliedEntityStateId = state.id\n" +
+				"  AND list.id =" + listId;
+
+		BigInteger count = (BigInteger)entityManager.createNativeQuery(countQuery).getResultList().get(0);
+
+		AppliedEntityListMetaModel metaModel = new AppliedEntityListMetaModel();
+		Meta meta = new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, sortStr, sortField);
+		metaModel.setMeta(meta);
+
+		List<AppliedEntityModel> entities = query.getResultList();
+		metaModel.setData(entities);
+		return metaModel;
+
+	}
 
 	private List<AppliedEntityModel> getEntitiesByListId(long listId)
 	{

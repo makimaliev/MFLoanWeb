@@ -6,15 +6,26 @@ var DatatableDataLocalEntities = function () {
 	// demo initializer
 	var mainTableInit = function () {
 
-        var dataJSONArray = JSON.parse(jsonEntities);
+        // var dataJSONArray = JSON.parse();
 
 		var datatable = $('#entitiesTable').mDatatable({
 			// datasource definition
-			data: {
-				type: 'local',
-				source: dataJSONArray,
-				pageSize: 10
-			},
+            data: {
+                type: 'remote',
+                source: {
+                    read: {
+                        url: '/api/entitylists/'+listId+'/'
+                    }
+                },
+                pageSize: 10,
+                saveState: {
+                    cookie: false,
+                    webstorage: false
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
 
 			// layout definition
 			layout: {
@@ -25,13 +36,15 @@ var DatatableDataLocalEntities = function () {
 				footer: false // display/hide footer
 			},
 
+
+
 			// column sorting(refer to Kendo UI)
 			sortable: true,
 
 			// column based filtering(refer to Kendo UI)
 			filterable: false,
 
-			pagination: false,
+			pagination: true,
 
 			// inline and bactch editing(cooming soon)
 			// editable: false,
@@ -73,7 +86,7 @@ var DatatableDataLocalEntities = function () {
                     var result = '';
 
                     result = result + '\
-						<a href="/manage/order/'+ orderId + '/entitylist/' + row.listId +'/entity/' +row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+						<a sec:authorize="hasAnyAuthority(ADMIN,PERM_UPDATE_PAYMENT)" href="/manage/order/'+ orderId + '/entitylist/' + row.listId +'/entity/' +row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-edit"></i>\
 						</a>\
 						<a hidden="hidden" href="/manage/order/'+ orderId + '/entitylist/' + row.listId +'/entity/' +row.id +'/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
@@ -81,8 +94,7 @@ var DatatableDataLocalEntities = function () {
 						</a>\
 					';
 
-                    if(!hasRoleAdmin)
-                        result = '';
+
 
                     return result;
                 }
