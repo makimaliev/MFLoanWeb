@@ -749,6 +749,16 @@ public class CollectionPhaseController {
 		return "redirect:" + "/manage/debtor/{debtorId}/collectionprocedure/{procId}/view";
 	}
 
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/changeRecordStatus"}, method=RequestMethod.POST)
+	public String changeRecordStatus(@PathVariable("debtorId") Long debtorId,@PathVariable("procId") Long procId,@PathVariable("phaseId") Long phaseId){
+
+		CollectionPhase phase=phaseService.getById(phaseId);
+		phase.setRecord_status(2);
+		phaseService.update(phase);
+
+		return "redirect: /manage/debtor/{debtorId}/collectionprocedure/{procId}/view";
+	}
+
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/delete"}, method=RequestMethod.POST)
     public String deleteCollateralItem(long id, @PathVariable("debtorId")Long debtorId, @PathVariable("procId")Long procId)
     {

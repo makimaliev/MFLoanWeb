@@ -109,7 +109,7 @@
 							<div class="tab-pane active" id="main">
 								<div sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLECTIONPHASE')" class="col-xl-12 order-3 order-xl-3 m--align-right">
 									<div class="row justify-content-md-end">
-										<div>
+										<div class="col">
 											<a th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phase.id}__/save}" class="btn btn-outline-danger" title="Редактировать">
 												<span>
 													<i class="la la-edit"></i>
@@ -132,6 +132,33 @@
 													<span >Доо талап</span>
 												</span>
                                             </a>
+											<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLECTIONPHASE')" data-remote="false" data-toggle="modal"
+											   data-target="#confirmModal" role="button" class="btn btn-outline-danger" th:text="#{label.phase.changeRecord}"></a>
+											<div class="modal fade" id="confirmModal" tabindex="-1"
+												 role="dialog" aria-labelledby="myModalLabel"
+												 aria-hidden="true">
+												<div class="modal-dialog">
+													<div class="modal-content">
+														<div class="m-alert m-alert--icon m-alert--outline alert alert-primary" role="alert" >
+															<div class="m-alert__icon">
+																<i class="la la-warning"></i>
+															</div>
+															<div class="m-alert__text" >
+																<strong>Уверенны?</strong>
+															</div>
+															<div class="m-alert__actions" style="width: 200px;">
+																<form th:action="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phase.id}__/changeRecordStatus}" method="post" >
+																	<div class="row">
+																		<button class="btn btn-brand btn-sm m-btn m-btn--pill m-btn--wide mb-2"  type="submit" th:text="#{label.phase.change.recordStatus}"></button>
+																		<button class="btn btn-danger btn-sm m-btn m-btn--pill m-btn--wide"  type="button" th:text="#{label.cancel}" data-dismiss="modal"></button>
+																	</div>
+																</form>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+
 										</div>
 									</div>
 								</div>
@@ -218,6 +245,7 @@
 												</div>
 											</div>
 											<!--begin:: Widgets/Stats2-2 -->
+
 										</div>
 									</div>
 								</div>
