@@ -120,8 +120,8 @@ public class CreditOrderController {
         String jsonTerms = gson.toJson(getTermsByOrderId(orderId));
         model.addAttribute("orderTerms", jsonTerms);
 
-        String jsonEntities = gson.toJson(getEntitiesByOrderId(orderId));
-        model.addAttribute("entities", jsonEntities);
+//        String jsonEntities = gson.toJson(getEntitiesByOrderId(orderId));
+//        model.addAttribute("entities", jsonEntities);
         
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "/manage/order/view";

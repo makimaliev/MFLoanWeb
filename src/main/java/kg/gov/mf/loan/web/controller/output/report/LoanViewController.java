@@ -139,14 +139,17 @@ public class LoanViewController {
                 }
             }
         }
-        List<LoanFinGroup> finGroups = loanFinGroupService.list();
-        model.addAttribute("finGroups", finGroups);
+//        List<LoanFinGroup> finGroups = loanFinGroupService.list();
+//        model.addAttribute("finGroups", finGroups);
 
         List<ReferenceView> loanTypes=referenceViewService.findByParameter("loan_type");
         model.addAttribute("loanTypes",loanTypes);
 
         List<ReferenceView> supervisors=referenceViewService.findByParameter("supervisor");
         model.addAttribute("supervisors",supervisors);
+
+        List<ReferenceView> finGroups=referenceViewService.findByParameter("fin_group");
+        model.addAttribute("finGroups",finGroups);
 
 
         model.addAttribute("selectedFields",selectedFieldNames);

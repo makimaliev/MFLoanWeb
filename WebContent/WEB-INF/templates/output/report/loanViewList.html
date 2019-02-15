@@ -268,6 +268,7 @@
 
     var loanTypes=/*[[${loanTypes}]]*/ [];
     var supervisors=/*[[${supervisors}]]*/ [];
+    var finGroups=/*[[${finGroups}]]*/ [];
     var sds=[[${selectedFieldsTranslated}]];
     var asaa=[[${selectedFieldNamesWithId}]];
     var lines="";
@@ -459,7 +460,7 @@
                 }, {
                     field: "v_loan_reg_number",
                     title: [[#{v_loan_reg_number}]],
-                    width:270,
+                    width:230,
                     template: function (row) {
                         var d = row.v_loan_reg_number;
                         if(d.length>30){
@@ -480,7 +481,7 @@
                 }, {
                     field: "v_credit_order_reg_number",
                     title: [[#{label.loan.credit.order.reg.number}]],
-                    width:270,
+                    width:210,
                     template: function (row) {
                         var d = row.v_credit_order_reg_number;
                         if(d.length>30){
@@ -489,9 +490,25 @@
                         return d;
                     }
                 },{
+                    field: "v_loan_fin_group_id",
+                    title: [[#{label.loan.finGroup}]],
+                    width:250,
+                    template:function (row) {
+                        for (var i in finGroups){
+                            if(row.v_loan_fin_group_id==finGroups[i].id){
+                                if(finGroups[i].name.length>35){
+                                    return finGroups[i].name.substring(0,32)+"...";
+                                }
+                                else{
+                                    return finGroups[i].name;
+                                }
+                            }
+                        }
+                    }
+                },{
                     field: "v_loan_supervisor_id",
                     title: [[#{label.loan.supervisor}]],
-                    width:270,
+                    width:250,
                     template:function (row) {
                         for (var i in supervisors){
                             if(row.v_loan_supervisor_id==supervisors[i].id){

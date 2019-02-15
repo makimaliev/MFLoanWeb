@@ -144,9 +144,9 @@
 				<div class="m-portlet m-portlet--mobile">
 					<div class="m-portlet__body">
 						<ul class="nav nav-tabs" role="tablist">
-							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#appliedEntities" th:text="#{label.entities}"></a>
-							</li>
+							<!--<li class="nav-item">-->
+								<!--<a class="nav-link m&#45;&#45;font-primary" data-toggle="tab" href="#appliedEntities" th:text="#{label.entities}"></a>-->
+							<!--</li>-->
 							<li class="nav-item" >
 								<a class="nav-link m--font-primary active" data-toggle="tab" href="#documentPackages" th:text="#{label.order.documentPackages}"></a>
 							</li>
@@ -159,29 +159,29 @@
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane " id="appliedEntities" role="tabpanel">
-								<!--begin: Search Form -->
-								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-									<div class="row align-items-center">
-										<div class="col-xl-9 order-1 order-xl-1">
-											<div class="form-group m-form__group row align-items-center">
-												<div class="col-lg-6">
-													<div class="m-input-icon m-input-icon--left">
-														<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="m_form_search4">
-														<span class="m-input-icon__icon m-input-icon__icon--left">
-															<span>
-																<i class="la la-search"></i>
-															</span>
-														</span>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!--end: Search Form -->
-								<!--begin: Datatable -->
-								<div class="m_datatable" id="entitiesTable"></div>
-								<!--end: Datatable -->
+								<!--&lt;!&ndash;begin: Search Form &ndash;&gt;-->
+								<!--<div class="m-form m-form&#45;&#45;label-align-right m&#45;&#45;margin-top-20 m&#45;&#45;margin-bottom-30">-->
+									<!--<div class="row align-items-center">-->
+										<!--<div class="col-xl-9 order-1 order-xl-1">-->
+											<!--<div class="form-group m-form__group row align-items-center">-->
+												<!--<div class="col-lg-6">-->
+													<!--<div class="m-input-icon m-input-icon&#45;&#45;left">-->
+														<!--<input type="text" class="form-control m-input m-input&#45;&#45;solid" placeholder="Искать..." id="m_form_search4">-->
+														<!--<span class="m-input-icon__icon m-input-icon__icon&#45;&#45;left">-->
+															<!--<span>-->
+																<!--<i class="la la-search"></i>-->
+															<!--</span>-->
+														<!--</span>-->
+													<!--</div>-->
+												<!--</div>-->
+											<!--</div>-->
+										<!--</div>-->
+									<!--</div>-->
+								<!--</div>-->
+								<!--&lt;!&ndash;end: Search Form &ndash;&gt;-->
+								<!--&lt;!&ndash;begin: Datatable &ndash;&gt;-->
+								<!--<div class="m_datatable" id="entitiesTable"></div>-->
+								<!--&lt;!&ndash;end: Datatable &ndash;&gt;-->
 							</div>
 							<div class="tab-pane active" id="documentPackages" role="tabpanel" >
 								<!--begin: Search Form -->
@@ -321,13 +321,13 @@
 <script th:src="@{/js/data-order-lists.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-order-packages.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-order-terms.js}" th:inline="javascript" type="text/javascript"></script>
-<script th:src="@{/js/data-order-entities.js}" th:inline="javascript" type="text/javascript"></script>
+<!--<script th:src="@{/js/data-order-entities.js}" th:inline="javascript" type="text/javascript"></script>-->
 <script th:inline="javascript">
     /*<![CDATA[*/
     var jsonLists = /*[[${entityLists}]]*/ [];
     var jsonPackages = /*[[${orderDocumentPackages}]]*/ [];
     var jsonTerms = /*[[${orderTerms}]]*/ [];
-    var jsonEntities = /*[[${entities}]]*/ [];
+    // var jsonEntities = /*[[${entities}]]*/ [];
     var orderId = /*[[${order.id}]]*/ [];
     /*]]>*/
 </script>
