@@ -691,7 +691,7 @@
                                     <div class="row align-items-center">
                                         <div class="col-xl-9 order-1 order-xl-1">
                                             <div class="form-group m-form__group row align-items-center">
-                                                <div class="col-lg-6">
+                                                <div class="col-lg-5">
                                                     <div class="m-input-icon m-input-icon--left">
                                                         <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search5">
                                                         <span class="m-input-icon__icon m-input-icon__icon--left">
@@ -703,7 +703,7 @@
                                                 </div>
 												<div class="row">
 
-													<div class="col-lg-4">
+													<div class="col-lg-3">
 														<div class="m-form__control">
 															<div class="input-group date m_datetimepicker_6">
 																<input type="text" class="form-control m-input" id="phaseInitDate"/>
@@ -713,16 +713,23 @@
 															</div>
 														</div>
 													</div>
-													<div class="col-lg-8">
-														<button class="btn btn-sm btn-accent" type="button" id="btn_show_loanSummary">
+													<div class="col-lg-9">
+														<div class="row">
+														<button class="btn btn-sm btn-accent m-1" type="button" id="btn_show_loanSummary">
 															Расчет
 														</button>
-														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator">
+														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent m-1" type="button" id="bnt_init_manualCalculator">
 															Сохранить расчет
 														</button>
-														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLECTIONPHASE')" class="btn btn-sm btn-accent" type="button" id="bnt_init_phase">
+														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLECTIONPHASE')" class="btn btn-sm btn-accent m-1" type="button" id="bnt_init_phase">
 															Претензия
 														</button>
+
+														<form th:action="@{/printoutTemplate/1/objectId/__${loan.id}__/generate}">
+															<input hidden="hidden" name="date" id="generatesDate">
+															<input hidden="hidden" name="name" value="loanId">
+															<button class="btn btn-sm btn-accent m-1" type="submit">Реестр погашений</button>
+														</form>
 
 														<form id="checkedLoans" th:action="@{/manage/debtor/__${debtor.id}__/loan/summary/view}" method="get">
 															<input hidden="hidden" type="text" name="name" id="selectedLoanses">
@@ -732,6 +739,7 @@
 															<input hidden="hidden" type="text" name="name" id="selectedName">
 															<input hidden="hidden" type="text" name="date" id="dateOfSelected">
 														</form>
+														</div>
 													</div>
 												</div>
                                             </div>
@@ -1288,6 +1296,9 @@
 
 
     });
+    $("#phaseInitDate").on("change",function () {
+        $("#generatesDate").val($("#phaseInitDate").val());
+    })
     // $('#initPhaseSaveBtn')
     //     .on('click', function () {
     //         // var options = { year: 'numeric',month: 'long', day: 'numeric' };
@@ -1399,7 +1410,6 @@
 	});
 </script>
 <script th:inline="javascript">
-
     var isEmptyChild=[[${isEmptyChild}]];
 	// Payments sums
 	var sumOfPTotal=0.0;

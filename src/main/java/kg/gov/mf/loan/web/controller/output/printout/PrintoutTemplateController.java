@@ -176,7 +176,7 @@ public class PrintoutTemplateController {
 
 			SimpleDateFormat DateFormatShort = new SimpleDateFormat("dd.MM.yyyy");
 
-			if(name!=null)
+			if(name!=null&& !name.equals("loanId"))
 			{
 				printoutTemplate.setName(name);
 			}
@@ -205,11 +205,18 @@ public class PrintoutTemplateController {
 						response.setContentType("application/pdf");
 						response.setHeader("Content-disposition","attachment; filename=xx.pdf");
 
-						printoutGeneratorPaymentSummary.generatePrintoutByTemplate(printoutTemplate, null, object_id,document);
+						SimpleDateFormat dt= new SimpleDateFormat("yyyyy-mm-dd");
+						try{
 
-
-
-
+							if(name.equals("loanId")){
+								printoutGeneratorPaymentSummary.generatePrintoutByTemplate(printoutTemplate,onDate , object_id,document,"true");
+							}
+							else
+								printoutGeneratorPaymentSummary.generatePrintoutByTemplate(printoutTemplate, null, object_id,document,"false");
+						}
+						catch (Exception e){
+							printoutGeneratorPaymentSummary.generatePrintoutByTemplate(printoutTemplate, null, object_id,document,"false");
+						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
