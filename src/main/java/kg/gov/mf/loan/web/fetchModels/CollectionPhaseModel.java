@@ -31,6 +31,8 @@ public class CollectionPhaseModel implements Comparable<CollectionPhaseModel> {
     private long procedureId;
 
     private long departmentId;
+    private Double startTotalAmount;
+    private Double closeTotalAmount;
 
     @Override
     public int compareTo(CollectionPhaseModel model)
@@ -124,5 +126,21 @@ public class CollectionPhaseModel implements Comparable<CollectionPhaseModel> {
 
     public void setDepartmentId(long departmentId) {
         this.departmentId = departmentId;
+    }
+
+    public Double getStartTotalAmount() {
+        return startTotalAmount;
+    }
+
+    public void setStartTotalAmount(Double startTotalAmount) {
+        this.startTotalAmount = startTotalAmount;
+    }
+
+    public Double getCloseTotalAmount() {
+        return closeTotalAmount;
+    }
+
+    public void setCloseTotalAmount(Double closeTotalAmount) {
+        this.closeTotalAmount = closeTotalAmount;
     }
 }

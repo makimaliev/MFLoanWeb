@@ -250,6 +250,13 @@ public class CollectionProcedureController {
             model.setPhaseTypeId(temp.getPhaseType().getId());
             model.setPhaseTypeName(temp.getPhaseType().getName());
             model.setProcedureId(temp.getCollectionProcedure().getId());
+
+            String secondQuery="select sum(phd.startTotalAmount) as totalStartAmount,sum(phd.closeTotalAmount) as totalCloseAmount from phaseDetails phd where collectionPhaseId="+String.valueOf(temp.getId());
+            Query query2=entityManager.createNativeQuery(secondQuery, ProcedurePhaseDetailsModel.class);
+            ProcedurePhaseDetailsModel procedurePhaseDetailsModel= (ProcedurePhaseDetailsModel) query2.getSingleResult();
+            model.setStartTotalAmount(procedurePhaseDetailsModel.getTotalStartAmount());
+            model.setCloseTotalAmount(procedurePhaseDetailsModel.getTotalCloseAmount());
+
             try{
 				model.setDepartmentId(temp.getDepartment_id());
 			}
@@ -263,20 +270,21 @@ public class CollectionProcedureController {
 
         return result;
     }
+    /*
 	private List<CollectionProcedureModel> getProcsById(long procId)
 	{
 
 		Map<Long, CollectionProcedureModel> models = new HashMap<>();
-		Set<CollectionProcedure> procs = new HashSet<>();
 		String firstQuery="select cp.id as id,cph.id as phaseId,cphs.id as procedureStatusId,cps.name as procedureStatus,cpht.id as phaseTypeId,cpht.name as phaseType,cphs.id as phaseStatusId,cphs.name as phaseStatus,\n" +
 				"       cph.startDate as startDate,cph.closeDate as closeDate\n" +
 				"from collectionProcedure cp,collectionPhase cph,loan l,loanCollectionPhase lcph,procedureStatus cps,phaseType cpht,\n" +
 				"     phaseStatus cphs\n" +
 				"where lcph.loanId=l.id and cph.id=lcph.collectionPhaseId and cph.collectionProcedureId=cp.id\n" +
-				"and cps.id=cp.procedureStatusId and cpht.id=cph.phaseTypeId and cphs.id=cph.phaseStatusId and cph.collectionProcedureId="+String.valueOf(procId)+" group by id,phaseId order by id desc, startDate desc";
+				"and cps.id=cp.procedureStatusId and cpht.id=cph.phaseTypeId and cphs.id=cph.phaseStatusId and cph.collectionProcedureId="+procId+" order by startDate desc";
 		Query query1=entityManager.createNativeQuery(firstQuery, ProcedureModel.class);
 		List<ProcedureModel> procedureModelList=query1.getResultList();
-		for (ProcedureModel procedureModel:procedureModelList){
+		for (int i=0;i<procedureModelList.size();i++){
+		    ProcedureModel procedureModel=procedureModelList.get(i);
 			CollectionProcedureModel model = new CollectionProcedureModel();
 			model.setId(procedureModel.getId());
 			model.setProcedureStatusId(procedureModel.getProcedureStatusId());
@@ -354,6 +362,6 @@ public class CollectionProcedureController {
 
 		Collections.sort(result);
 		return result;
-	}
+	}*/
 	
 }
