@@ -912,25 +912,25 @@ public class DebtorController {
     }
 
 //    update CollectionPhases of debtors' loans'
-	/*@RequestMapping(value = "/manage/debtor/{debtorId}/update/phases")
+	@RequestMapping(value = "/manage/debtor/{debtorId}/update/phases")
 	public String updateCollectionPhases(@PathVariable("debtorId") Long debtorId){
 
 		Debtor debtor=debtorService.getById(debtorId);
+		Session session;
+		try
+		{
+			session = sessionFactory.getCurrentSession();
+		}
+		catch (HibernateException e)
+		{
+			session = sessionFactory.openSession();
+		}
+		session.getTransaction().begin();
 		for (Loan loan1:debtor.getLoans()){
 			Loan loan=loanService.getById(loan1.getId());
-			Session session;
-			try
-			{
-				session = sessionFactory.getCurrentSession();
-			}
-			catch (HibernateException e)
-			{
-				session = sessionFactory.openSession();
-			}
-			session.getTransaction().begin();
 			runUpdateQueries(loan,session);
-			session.getTransaction().commit();
 		}
+		session.getTransaction().commit();
 		return "redirect: /manage/debtor/{debtorId}/view";
 	}
 
@@ -961,7 +961,7 @@ public class DebtorController {
 
 				session.createSQLQuery(updatePhaseDetailsQuery).executeUpdate();
 				String updatePhaseQuery="update collectionPhase\n" +
-						"set collectionPhase.paid=(select paidTotalAmount from phaseDetails where loan_id="+loan.getId()+" and collectionPhaseId="+phase.getId()+") where id="+phase.getId();
+						" set collectionPhase.paid=(select paidTotalAmount from phaseDetails where loan_id="+loan.getId()+" and collectionPhaseId="+phase.getId()+") where id="+phase.getId();
 				session.createSQLQuery(updatePhaseQuery).executeUpdate();
 			}
 			catch (Exception e){
@@ -969,7 +969,7 @@ public class DebtorController {
 			}
 
 		}
-	}*/
+	}
 
 	//END - WORK SECTOR
 
