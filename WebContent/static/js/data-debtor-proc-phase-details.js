@@ -78,58 +78,58 @@ var DatatableDataLocalPhaseDetails = function () {
                     return (row.startTotalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
             },
-                {
-                    field: "paidPrincipal",
-                    title: "Погашено осн. сумма",
-                    template: function (row) {
-                        return (row.startPrincipal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                    }
-                }, {
-                    field: "paidInterest",
-                    title: "Погашено %",
-                    width:50,
-                    template: function (row) {
-                        return (row.startInterest).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                    }
-                }, {
-                    field: "paidPenalty",
-                    title: "Погашено штрф.",
-                    template: function (row) {
-                        return (row.startPenalty).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                    }
-                }, {
-                    field: "paidTotalAmount",
-                    title: "Погашено",
-                    template: function (row) {
-                        return (row.startTotalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                    }
-                },
-                {
-                    field: "closePrincipal",
-                    title: "Завершено осн. сумма",
-                    template: function (row) {
-                        return (row.startPrincipal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                    }
-                }, {
-                    field: "closeInterest",
-                    title: "Завершено %",
-                    width:50,
-                    template: function (row) {
-                        return (row.startInterest).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                    }
-                }, {
-                    field: "closePenalty",
-                    title: "Завершено штрф.",
-                    template: function (row) {
-                        return (row.startPenalty).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                    }
-                }, {
-                    field: "closeTotalAmount",
-                    title: "Завершено",
-                    template: function (row) {
-                        return (row.startTotalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
-                    }
-                }],
+            {
+                field: "paidPrincipal",
+                title: "Погашено осн. сумма",
+                template: function (row) {
+                    return (row.paidPrincipal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                }
+            }, {
+                field: "paidInterest",
+                title: "Погашено %",
+                width:50,
+                template: function (row) {
+                    return (row.paidInterest).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                }
+            }, {
+                field: "paidPenalty",
+                title: "Погашено штрф.",
+                template: function (row) {
+                    return (row.paidPenalty).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                }
+            }, {
+                field: "paidTotalAmount",
+                title: "Погашено",
+                template: function (row) {
+                    return (row.paidTotalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                }
+            },
+            {
+                field: "closePrincipal",
+                title: "Завершено осн. сумма",
+                template: function (row) {
+                    return (row.closePrincipal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                }
+            }, {
+                field: "closeInterest",
+                title: "Завершено %",
+                width:50,
+                template: function (row) {
+                    return (row.closeInterest).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                }
+            }, {
+                field: "closePenalty",
+                title: "Завершено штрф.",
+                template: function (row) {
+                    return (row.closePenalty).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                }
+            }, {
+                field: "closeTotalAmount",
+                title: "Завершено",
+                template: function (row) {
+                    return (row.closeTotalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                }
+            }],
             translate: {
                 records: {
                     processing: 'Подождите пожалуйста...',
