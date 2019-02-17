@@ -2063,7 +2063,7 @@ BEGIN
       SET total_paid = total_paid + princPaid + intPaid + penPaid;
       SET total_paidKGS = total_paidKGS + princPaidKGS + intPaidKGS + penPaidKGS;
 
-      IF tempDate <= inDate THEN
+      #IF tempDate <= inDate THEN
 
         if loan_summary_type_text = 'SYSTEM' then
 
@@ -2078,7 +2078,7 @@ BEGIN
                                                                                                                                 ROUND(totalIntPaid,2), ROUND(totalIntPayment,2), ROUND(totalPenAccrued,2), ROUND(totalPenPaid,2), ROUND(totalPrincPaid,2), ROUND(totalPrincPayment,2), total_paidKGS, loan_id);
         end if;
 
-      END IF;
+      #END IF;
 
       if loan_summary_type_text = 'MANUAL' or loan_summary_type_text = 'FIXED' then
 
@@ -3848,4 +3848,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-10 11:40:38
+-- Dump completed on 2019-02-17 12:01:09
