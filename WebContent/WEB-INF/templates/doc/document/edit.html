@@ -87,7 +87,8 @@
                         </div>
                         <div class="m-portlet__foot">
                             <button type="button" class="btn btn-primary float-none" onclick="window.history.back()"> Отмена </button>
-                            <button type="submit" name="action" th:if="*{documentState.ordinal() > 1}" value="UPDATE" class="btn btn-info float-none"> Сохранить </button>
+                            <button type="submit" name="action" th:if="*{id != 0 and documentState.ordinal() < 8}" value="UPDATE" class="btn btn-info float-none"> Сохранить </button>
+                            <button sec:authorize="hasAnyAuthority('ADMIN')" type="submit" name="action" value="UPDATE" class="btn btn-info float-none"> Сохранить </button>
                             <th:block th:replace="doc/layout::documentActions"/>
                         </div>
                     </form>
@@ -113,8 +114,6 @@
 
 <!--begin::Page Resources -->
 
-
-
 <div class="modal fade" id="pick" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -125,9 +124,30 @@
                 </button>
             </div>
             <div class="modal-body">
-                <select class="s2 form-control m-input" th:name="${document.documentState.ordinal() &lt; 5} ? 'reconciler' : 'executor'" style="width:100%" data-ajax--url="/doc/data/staff" form="document_form" multiple>
-                    <option value="">Select</option>
-                </select>
+
+
+                <div class="form-group m-form__group row">
+                    <label class="col-3 col-form-label"> Сотрудник : </label>
+                    <div class="col-sm-9">
+                        <select class="s2 form-control m-input" th:name="${document.documentState.ordinal() > 7} ? 'executor' : 'reconciler'" style="width:100%" data-ajax--url="/doc/data/staff" form="document_form" multiple>
+                            <option value="">Select</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group m-form__group row" th:if="${document.documentState.ordinal() > 7}">
+                    <label class="col-3 col-form-label"> Срок : </label>
+                    <div class="col-sm-9">
+                        <input th:field="${document.taskDueDate}" form="document_form" class="dtp form-control" autocomplete="off" readonly="readonly"/>
+                    </div>
+                </div>
+
+                <div class="form-group m-form__group row" th:if="${document.documentState.ordinal() > 7}">
+                    <label class="col-3 col-form-label"> Резолюция : </label>
+                    <div class="col-sm-9">
+                        <textarea class="form-control" rows="5" th:field="${document.resolution}" form="document_form"></textarea>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
@@ -155,13 +175,16 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript">
 
     function hide() {
         $('#pick').modal('hide')
     }
 
+    var dto = [[${dto}]]
+
     $(document).ready(function() {
+
         $('#documentLinks').select2();
 
         var dt_settings = {
@@ -180,15 +203,17 @@
         if($('#id').val() > 0 || $('#id').val() != null) {
 
             $('#si' + $('#srt_select').val()).show();
-            $('#si' + $('#srt_select').val() + ' .s2').prop('required', true);
-
             $('#ri' + $('#rrt_select').val()).show();
-            $('#ri' + $('#rrt_select').val() + ' .s2').prop('required', true);
 
+            if(dto !== "incoming" && $('#id').val() === 0) {
+                $('#si' + $('#srt_select').val() + ' .s2').prop('required', true);
+            }
+
+            $('#ri' + $('#rrt_select').val() + ' .s2').prop('required', true);
         }
 
         $('#srt_select').change(function(){
-            $('#si' + $(this).val()).find( "select" ).val('').trigger('change')
+            $('#si' + $(this).val()).find( "select" ).val(null).trigger('change')
             $('.sdr ').hide();
             $('#si' + $(this).val()).show();
 
@@ -196,7 +221,7 @@
             $('#si' + $(this).val() + ' .s2').prop('required', 'true');
         });
         $('#rrt_select').change(function(){
-            $('#ri' + $(this).val()).find( "select" ).val('').trigger('change')
+            $('#ri' + $(this).val()).find( "select" ).val(null).trigger('change')
             $('.rdr ').hide();
             $('#ri' + $(this).val()).show();
 
@@ -275,7 +300,7 @@
             return $state;
         };
         var sssoption = {
-            minimumInputLength: 2,
+            minimumInputLength: 1,
             templateSelection: formatState,
             placeholder: "Выбрать",
             language: {
@@ -309,6 +334,7 @@
         $('.s2 ').select2(soption);
         $('.s2s ').select2(ssoption);
         $('.sds ').select2(sssoption);
+
     });
 
     Dropzone.autoDiscover = false;
@@ -388,19 +414,6 @@
     $('#attachment').on('hidden.bs.modal', function (e) {
         myDropzone.removeAllFiles();
     })
-
-    /*
-    $("form input[type=submit]").click(function() {
-
-        if($(this).val()!=="REJECT"){
-            $('form input[type=text]').each(function() {
-                $(this).removeAttr("required");
-            });
-        }
-        $("input[type=submit]", $(this).parents("form")).removeAttr("clicked");
-        $(this).attr("clicked", "true");
-    });
-    */
 
 </script>
 

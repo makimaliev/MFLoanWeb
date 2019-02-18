@@ -103,7 +103,7 @@
         </div>
     </div>
     <!-- Comment -->
-    <div class="form-group m-form__group row" th:hidden="${not hasReject}">
+    <div class="form-group m-form__group row" th:hidden="${not hasComment}">
         <label class="col-3 col-form-label"> Примечание : </label>
         <div class="col-sm-9">
             <textarea class="form-control" rows="5" th:field="*{comment}" value=" "></textarea>
@@ -116,44 +116,47 @@
         <div class="col-3"></div>
         <div class="col-9">
             <br>
-            <h2 class="text-center" th:text="*{receiverRegisteredNumber != null ? documentSubType.name + ' № ' + receiverRegisteredNumber : documentSubType.name}"></h2>
+            <h2 class="text-center" th:text="*{receiverRegisteredNumber != null ? documentSubType.name + ' № ' + receiverRegisteredNumber : documentSubType.name + ' № ' + __${no}__}"></h2>
             <br>
         </div>
     </div>
-    <!-- Sender Responsible -->
     <div class="form-group m-form__group row">
-        <label class="col-3 col-form-label">
+        <label class="col-3 col-form-label" th:hidden="*{documentState.ordinal() <= 7}">
             <span> От Кого :  </span>
         </label>
-        <div class="col-3">
-            <select class="s2s form-control" id="srt_select" th:field="*{senderResponsible.responsibleType}" style="width:100%">
+        <div class="col-3" th:hidden="*{documentState.ordinal() <= 7}">
+            <select class="s2s" id="srt_select" th:field="*{senderResponsible.responsibleType}" style="width:100%">
                 <option value="3">Организация</option>
                 <option value="4">ФИЗ Лицо</option>
             </select>
         </div>
-        <div class="col-6">
+        <div class="col-6" th:hidden="*{documentState.ordinal() <= 7}">
+
             <div class="sdr" id="si3">
-                <select class="s2 form-control" th:field="*{senderResponsible.organizations}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/organizations">
+                <select class="s2" th:field="*{senderResponsible.organizations}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/organizations">
                     <option th:each="r : *{senderResponsible?.organizations}"
                             th:value="${r.id}"
                             th:text="${r.name}">Organizations</option>
                 </select>
             </div>
             <div class="sdr" id="si4">
-                <select class="s2 form-control" th:field="*{senderResponsible.person}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/person">
+                <select class="s2" th:field="*{senderResponsible.person}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/person">
                     <option th:each="r : *{senderResponsible?.person}"
                             th:value="${r.id}"
                             th:text="${r.name}">Person</option>
                 </select>
             </div>
+
+            <!--p class="form-control" th:if="*{documentState.ordinal() > 7}" th:each="r : *{senderResponsible?.organizations}" th:text="${r.name}"></p>
+            <p class="form-control" th:if="*{documentState.ordinal() > 7}" th:each="r : *{senderResponsible?.person}" th:text="${r.name}"></p-->
         </div>
-    </div>
+    </div >
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
-            <span></span>
+            <span th:text="*{documentState.ordinal() <= 7} ? 'От Кого :' : ''"></span>
         </label>
-        <div class="col-sm-9">
-            <input class="form-control" th:field="*{senderResponsible.responsibleName}" autocomplete="off" type="text">
+        <div class="col-9">
+            <input class="form-control" th:field="*{senderResponsible.responsibleName}" autocomplete="off" type="text" th:readonly="*{documentState.ordinal() > 7}">
         </div>
     </div>
     <!-- Sender Registration Data -->
@@ -162,42 +165,24 @@
             <span> № Исходящего документа : </span>
         </label>
         <div class="col-sm-9">
-            <input class="form-control" th:field="*{senderRegisteredNumber}" autocomplete="off" type="text">
+            <input class="form-control" th:field="*{senderRegisteredNumber}" autocomplete="off" type="text" th:readonly="*{documentState.ordinal() > 7}">
         </div>
     </div>
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
-            <span> Дата : </span>
+            <span> Дата Исходящего документа  : </span>
         </label>
         <div class="col-sm-9">
-            <input class="dtp form-control" th:field="*{senderRegisteredDate}" type="text" autocomplete="off" readonly="readonly"/>
+            <input class="form-control" th:field="*{senderRegisteredDate}" type="text" autocomplete="off" readonly="readonly" th:classappend="*{documentState.ordinal() < 8 ? 'dtp' : ''}"/>
         </div>
     </div>
     <!-- TITLE -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
-            <span> Относительно : </span>
+            <span> Краткое содержание документа : </span>
         </label>
         <div class="col-sm-9">
-            <input class="form-control" required th:field="*{title}" autocomplete="off" type="text">
-        </div>
-    </div>
-    <!-- DESCRIPTION -->
-    <div class="form-group m-form__group row">
-        <label class="col-3 col-form-label">
-            <span> Краткое содержание : </span>
-        </label>
-        <div class="col-sm-9">
-            <textarea th:field="*{description}"></textarea>
-        </div>
-    </div>
-    <!-- Document Due Date -->
-    <div class="form-group m-form__group row">
-        <label class="col-3 col-form-label">
-            <span> Срок исполнения документа : </span>
-        </label>
-        <div class="col-sm-9">
-            <input class="dtp form-control" th:field="*{documentDueDate}" type="text" autocomplete="off" readonly="readonly"/>
+            <textarea class="form-control" th:field="*{title}" rows="5" th:readonly="*{documentState.ordinal() > 7}"></textarea>
         </div>
     </div>
     <!-- Receiver Responsible -->
@@ -207,16 +192,66 @@
         </label>
         <input type="hidden" id="receiverResponsible.responsibleType" name="receiverResponsible.responsibleType" value="1"/>
         <div class="col-9">
-            <select class="s2 form-control" th:field="*{receiverResponsible.staff}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/staff" required>
-                <option th:each="r : *{receiverResponsible?.staff}"
-                        th:value="${r.id}"
-                        th:text="${r.name}">Responsible</option>
-            </select>
+            <div th:hidden="*{documentState.ordinal() > 7}">
+                <select class="s2 form-control" th:field="*{receiverResponsible.staff}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/staff" required>
+                    <option th:each="r : *{receiverResponsible?.staff}"
+                            th:value="${r.id}"
+                            th:text="${r.name}">Responsible</option>
+                </select>
+            </div>
+            <p class="form-control" th:if="*{documentState.ordinal() > 7}" th:each="r : *{receiverResponsible?.staff}" th:text="${r.name}"></p>
+        </div>
+    </div>
+    <!-- Receiver Executor -->
+    <div class="form-group m-form__group row" th:if="*{receiverExecutor != null}">
+        <label class="col-3 col-form-label">
+            <span> Испонители : </span>
+        </label>
+        <div class="col-9">
+            <input type="hidden" th:field="*{receiverExecutor.executorType}"/>
+            <div th:hidden="*{documentState.ordinal() > 7}">
+                <select th:field="*{receiverExecutor.staff}" multiple="multiple" style="display: none;">
+                    <option th:each="r : *{receiverExecutor?.staff}"
+                            th:value="${r.id}"
+                            th:text="${r.name}">Responsible</option>
+                </select>
+            </div>
+            <p class="form-control" th:if="*{documentState.ordinal() > 7}" th:each="r : *{receiverExecutor?.staff}" th:text="${r.name}"></p>
+        </div>
 
+    </div>
+    <!-- Comment -->
+    <div class="form-group m-form__group row" th:if="${hasComment or document.documentState.ordinal() < 7}">
+        <label class="col-3 col-form-label" th:text="${hasComment ? 'Примечание : ' : 'Резолюция : '}"></label>
+        <div class="col-sm-9">
+            <textarea class="form-control" rows="5" th:if="${hasComment}" th:field="*{comment}"></textarea>
+            <textarea class="form-control" rows="5" th:if="${not hasComment}" th:field="*{resolution}"></textarea>
+        </div>
+    </div>
+    <!-- Document Due Date -->
+    <div class="form-group m-form__group row">
+        <label class="col-3 col-form-label">
+            <span> Срок исполнения документа : </span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control" th:field="*{documentDueDate}" type="text" autocomplete="off" readonly="readonly" th:classappend="*{documentState.ordinal() < 8 ? 'dtp' : ''}"/>
+        </div>
+    </div>
+    <!-- Document Link  sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')" -->
+    <div class="form-group m-form__group row" th:hidden="${not hasComment}">
+        <label class="col-3 col-form-label">
+            <span> Ссылка на документ : </span>
+        </label>
+        <div class="col-9" id="documentList">
+            <select class="sds form-control" th:field="*{documentLinks}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/incomingdocuments">
+                <option th:each="d : *{documentLinks}"
+                        th:value="${d}"
+                        th:utext="${@documentServiceImpl.getById(__${d}__).documentSubType.name + ' №' + @documentServiceImpl.getById(__${d}__).receiverRegisteredNumber}">Responsible</option>
+            </select>
         </div>
     </div>
     <!-- Attachment -->
-    <div class="form-group m-form__group row">
+    <div class="form-group m-form__group row" th:hidden="*{documentState.ordinal() < 6}">
         <label class="col-3 col-form-label"> Приложения : </label>
         <div class="col-9" id="attachmentList">
             <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
@@ -231,40 +266,6 @@
                     </td>
                 </tr>
             </table>
-        </div>
-    </div>
-    <!-- Receiver Executor -->
-    <div class="form-group m-form__group row" th:if="*{receiverExecutor != null}">
-        <label class="col-3 col-form-label">
-            <span> Испонители : </span>
-        </label>
-        <div class="col-9">
-            <input type="hidden" th:field="*{receiverExecutor.executorType}"/>
-            <select th:field="*{receiverExecutor.staff}" multiple="multiple" style="display: none;">
-                <option th:each="r : *{receiverExecutor?.staff}"
-                        th:value="${r.id}"
-                        th:text="${r.name}">Responsible</option>
-            </select>
-        </div>
-    </div>
-    <!-- Comment -->
-    <div class="form-group m-form__group row" th:hidden="${not hasReject}">
-        <label class="col-3 col-form-label"> Примечание : </label>
-        <div class="col-sm-9">
-            <textarea class="form-control" rows="5" th:field="*{comment}" value=" "></textarea>
-        </div>
-    </div>
-    <!-- Document Link  sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')" -->
-    <div class="form-group m-form__group row" sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')">
-        <label class="col-3 col-form-label">
-            <span> Ссылка на документ : </span>
-        </label>
-        <div class="col-9" id="documentList">
-            <select class="sds form-control" th:field="*{documentLinks}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/incomingdocuments">
-                <option th:each="d : *{documentLinks}"
-                        th:value="${d}"
-                        th:utext="${@documentServiceImpl.getById(__${d}__).documentSubType.name + ' №' + @documentServiceImpl.getById(__${d}__).receiverRegisteredNumber}">Responsible</option>
-            </select>
         </div>
     </div>
     <!-- Receiver Registration Data -->
