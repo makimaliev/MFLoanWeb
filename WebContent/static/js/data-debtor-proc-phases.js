@@ -53,7 +53,15 @@ var DatatableDataLocalPhases = function () {
                 }
             }, {
                 field: "phaseTypeName",
-                title: "Вид"
+                title: "Вид",
+                template:function (row) {
+                    if(row.record_status==2){
+                        return '<span class="btn-danger">' + row.phaseTypeName+ '</span>';
+                    }
+                    else {
+                        return row.phaseTypeName;
+                    }
+                }
             }, {
                 field: "startDate",
                 title: "Дата фазы"

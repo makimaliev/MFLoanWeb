@@ -181,6 +181,7 @@
 
         $(document).ready(function() {
 
+            /*
             var path = window.location.pathname.split("/");
 
                 if (path[2] != "edit") {
@@ -189,7 +190,7 @@
 
                     for (var i = 0; i < tasks.length; i++) {
 
-                        if(username === "obsh003") {
+                        if(username === "obsh003" || username === "obsh002") {
                             if(tasks[i].description !== "Завершить") {
                                 $.notify({
                                     title: 'Задача №: ' + (i + 1),
@@ -232,6 +233,8 @@
                         }
                     }
                 }
+
+                */
 
             changePageAndSize();
         });

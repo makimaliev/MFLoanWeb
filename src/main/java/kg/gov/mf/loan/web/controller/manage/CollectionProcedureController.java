@@ -239,8 +239,10 @@ public class CollectionProcedureController {
         {
         	CollectionPhase temp=collectionPhaseService.getById(tempp.getId());
 
+        	if(Utils.getPrincipal().equals("admin")){
             CollectionPhaseModel model = new CollectionPhaseModel();
             model.setId(temp.getId());
+            model.setRecord_status(temp.getRecord_status());
             model.setStartDate(temp.getStartDate());
             model.setCloseDate(temp.getCloseDate());
             model.setLastEvent(temp.getLastEvent());
@@ -251,11 +253,14 @@ public class CollectionProcedureController {
             model.setPhaseTypeName(temp.getPhaseType().getName());
             model.setProcedureId(temp.getCollectionProcedure().getId());
 
-            String secondQuery="select sum(phd.startTotalAmount) as totalStartAmount,sum(phd.closeTotalAmount) as totalCloseAmount from phaseDetails phd where collectionPhaseId="+String.valueOf(temp.getId());
+            String secondQuery="select sum(phd.startTotalAmount) as totalStartAmount,sum(phd.closeTotalAmount) as totalCloseAmount from phaseDetails phd where record_status!=2 and collectionPhaseId="+String.valueOf(temp.getId());
             Query query2=entityManager.createNativeQuery(secondQuery, ProcedurePhaseDetailsModel.class);
             ProcedurePhaseDetailsModel procedurePhaseDetailsModel= (ProcedurePhaseDetailsModel) query2.getSingleResult();
             model.setStartTotalAmount(procedurePhaseDetailsModel.getTotalStartAmount());
-            model.setCloseTotalAmount(procedurePhaseDetailsModel.getTotalCloseAmount());
+				if(procedurePhaseDetailsModel.getTotalCloseAmount()!=null)
+					model.setCloseTotalAmount(procedurePhaseDetailsModel.getTotalCloseAmount());
+				else
+					model.setCloseTotalAmount(Double.valueOf(0));
 
             try{
 				model.setDepartmentId(temp.getDepartment_id());
@@ -264,6 +269,39 @@ public class CollectionProcedureController {
             	model.setDepartmentId(Long.valueOf(0));
 			}
             result.add(model);
+        	}
+        	else if(temp.getRecord_status()!=2 ){
+				CollectionPhaseModel model = new CollectionPhaseModel();
+				model.setId(temp.getId());
+				model.setRecord_status(temp.getRecord_status());
+				model.setStartDate(temp.getStartDate());
+				model.setCloseDate(temp.getCloseDate());
+				model.setLastEvent(temp.getLastEvent());
+				model.setLastStatusId(temp.getLastStatusId());
+				model.setPhaseStatusId(temp.getPhaseStatus().getId());
+				model.setPhaseStatusName(temp.getPhaseStatus().getName());
+				model.setPhaseTypeId(temp.getPhaseType().getId());
+				model.setPhaseTypeName(temp.getPhaseType().getName());
+				model.setProcedureId(temp.getCollectionProcedure().getId());
+
+				String secondQuery="select sum(phd.startTotalAmount) as totalStartAmount,sum(phd.closeTotalAmount) as totalCloseAmount from phaseDetails phd where record_status!=2 and collectionPhaseId="+String.valueOf(temp.getId());
+				Query query2=entityManager.createNativeQuery(secondQuery, ProcedurePhaseDetailsModel.class);
+				ProcedurePhaseDetailsModel procedurePhaseDetailsModel= (ProcedurePhaseDetailsModel) query2.getSingleResult();
+				model.setStartTotalAmount(procedurePhaseDetailsModel.getTotalStartAmount());
+				if(procedurePhaseDetailsModel.getTotalCloseAmount()!=null)
+				model.setCloseTotalAmount(procedurePhaseDetailsModel.getTotalCloseAmount());
+				else
+				model.setCloseTotalAmount(Double.valueOf(0));
+
+
+				try{
+					model.setDepartmentId(temp.getDepartment_id());
+				}
+				catch(Exception e){
+					model.setDepartmentId(Long.valueOf(0));
+				}
+				result.add(model);
+			}
         }
 
         Collections.sort(result);

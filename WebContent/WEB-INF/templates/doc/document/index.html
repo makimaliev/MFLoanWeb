@@ -6,6 +6,24 @@
     <title th:text="#{label.identityDocType.page.title}">Loan view</title>
 
     <div th:replace="fragments/header :: header-css"/>
+
+    <style type="text/css" th:inline="text">
+        .nopm {
+            padding: 0;
+            margin: 0;
+        }
+        .active-document {
+            background: #d9d9d9;
+        }
+        td.details-control {
+            background: url([[@{/doc/document/details_open.png}]]) no-repeat center center;
+            cursor: pointer;
+        }
+        tr.details td.details-control {
+            background: url([[@{/doc/document/details_close.png}]]) no-repeat center center;
+        }
+    </style>
+
 </head>
 <!-- end::Head -->
 <!-- end::Body -->
@@ -47,33 +65,47 @@
                     </div>
                     <div class="m-portlet__body">
 
-                        <th:block th:replace="doc/layout::__${type + 'Index'}__"/>
 
-                        <!--table class="table table-bordered table-hover" id="ddt">
+                        <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30" sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')">
+                            <div class="row align-items-center">
+                                <div class="col-12 m--align-right">
+
+                                    <span th:if="${type=='incoming'}" th:each="dst : ${documentSubTypes}">
+                                        <a th:href="@{/doc/new/__${dst.internalName}__}" class="btn btn-success" th:text="${dst.name}"> New Document </a>
+                                    </span>
+
+                                    <div class="m-separator m-separator--dashed d-xl-none"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!--th:block th:replace="doc/layout::__${type + 'Index'}__"/-->
+
+                        <table class="table table-bordered table-hover" id="incoming">
                             <thead class="thead-default">
                                 <tr>
-                                    <th width="30px">*</th>
+                                    <th></th>
                                     <th width="30px"></th>
-                                    <th width="120px">Исх. № <br> Дата</th>
-                                    <th th:utext="|#{label.document.documentSubType} <br> #{label.document.title}|">Относительно</th>
-                                    <th th:text="#{label.document.generalStatus}">Состояние</th>
-                                    <th th:text="#{label.document.executer}">Исполнитель</th>
-                                    <th th:text="#{label.document.receiver}">Получатель</th>
-                                    <th width="120px" th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|">Номер бланка</th>
+                                    <th width="120px">К</th>
+                                    <th width="80px">Вхд. №</th>
+                                    <th width="120px">Вхд. Дата</th>
+                                    <th width="120px">Исх. № и Дата</th>
+                                    <th th:text="#{label.document.sender}">Отправитель</th>
+                                    <th th:text="#{label.document.title}">Относительно</th>
+                                    <th width="330px" th:text="#{label.document.receiver}">Исполнитель</th>
+                                    <th width="150px" th:text="#{label.document.generalStatus}">Состояние</th>
                                 </tr>
                             </thead>
-                        </table-->
+                        </table>
+                        <hr>
 
                     </div>
                     <div class="m-portlet__foot">
-
-                        <span th:if="${type=='incoming'}" sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')" th:each="dst : ${documentSubTypes}">
-                            <a th:href="@{/doc/new/__${dst.internalName}__}" class="btn btn-success" th:text="${dst.name}"> New Document </a>
-                        </span>
                         <span th:if="${type!='incoming'}" th:each="dst : ${documentSubTypes}">
                             <a th:href="@{/doc/new/__${dst.internalName}__}" class="btn btn-success" th:text="${dst.name}"> New Document </a>
                         </span>
-
                     </div>
                 </div>
             </div>
@@ -105,17 +137,27 @@
         return false;
     });
 
+    function format ( d ) {
+        return  'Content : ' + d.title + '<br>';
+    }
+
     $(document).ready(function()
     {
         var dtOptions = {
-            stateSave: false,
+            stateSave: true,
             info: true,
             language: {
+                lengthMenu: 'Показать <select>'+
+                        '<option value="10">10</option>'+
+                        '<option value="25">25</option>'+
+                        '<option value="50">50</option>'+
+                        '<option value="100">100</option>'+
+                        '<option value="-1">Все</option>'+
+                        '</select>',
                 emptyTable: "<center>Нет данных</center>",
-                lengthMenu: "_MENU_",
+                search: "&nbsp;Поиск : &nbsp; ",
                 zeroRecords: "",
                 info: "Всего _TOTAL_ записей",
-                search: "Search : ... ",
                 paginate: {
                     first: '<i class="la la-angle-double-left"></i>',
                     previous: '<i class="la la-angle-left"></i>',
@@ -123,23 +165,42 @@
                     last: '<i class="la la-angle-double-right"></i>'
                 }
             },
-            dom: "<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'l>>" +
-                "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
-            //dom: 'rtlip',
+            dom: "<'row'<'col-6'i><'col-6'l>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-4'i><'col-4'p><'col-4'l>>"
         };
         var table = $('#documentTable').DataTable(dtOptions);
 
         /*
-        var t1 = $('#ddt').DataTable({
+        <div class="m-input-icon m-input-icon--left">
+            <input type="text" class="form-control m-input" th:placeholder="#{label.search}" id="generalSearch">
+            <span class="m-input-icon__icon m-input-icon__icon--left">
+                <span><i class="la la-search"></i></span>
+            </span>
+        </div>
+        */
+
+        var t1 = $('#incoming').DataTable({
             orderCellsTop: true,
             fixedHeader: true,
             searching: false,
             paging: true,
             processing: false,
-            ajax: '/doc/documents',
+            ajax: {
+                url: '/doc/documents',
+                data: function ( d ) {
+                    d.documentType = [[${type}]];
+                }
+            },
             serverSide: true,
             columns: [
+                {
+                    class: "details-control",
+                    searchable: false,
+                    orderable: false,
+                    data: null,
+                    defaultContent: ""
+                },
                 {
                     searchable: false,
                     orderable: false,
@@ -150,40 +211,70 @@
                 {
                     searchable: false,
                     orderable: true,
-                    name: 'docIndex',
-                    data: 'docIndex'
+                    name: 'documentDueDate',
+                    data: function (data, type, full, meta) {
+                        return data.documentDueDate !== null ? '<span class="text-danger">KОНТРОЛЬ<br>' + data.documentDueDate + '</span>' : '';
+
+                    }
+                },
+                {
+                    searchable: true,
+                    orderable: true,
+                    name: 'receiverRegisteredNumber',
+                    data: 'receiverRegisteredNumber',
+                    render: function (data) { return data + '$'; }
+                },
+                {
+                    searchable: true,
+                    orderable: false,
+                    name: 'receiverRegisteredDate',
+                    data: function (data, type, full, meta) {
+                        return data.receiverRegisteredDate;
+
+                    }
                 },
                 {
                     searchable: true,
                     orderable: false,
                     name: 'senderRegisteredNumber',
                     data: function (data, type, full, meta) {
-                        return data.senderRegisteredNumber + "<hr>" + new Date(data.senderRegisteredDate).toLocaleDateString();
+                        return data.senderRegisteredNumber + "<hr>" + data.senderRegisteredDate;
 
                     }
                 },
                 {
                     searchable: true,
                     orderable: false,
-                    name: 'documentSubType.name',
+                    name: 'senderResponsible',
                     data: function (data, type, full, meta) {
-                        return "<b>" + data.documentSubType.name + "</b><br>" + data.title;
+                        console.log(data)
 
-                    }
-                },
-                {
-                    searchable: false,
-                    orderable: true,
-                    name: 'documentState',
-                    data: function (data, type, full, meta) {
-                        return data.documentState === "REGISTERED" || data.documentState === "DONE" ? "Зарегистрирован" : "";
+                        var r = [];
+
+                        if(data.senderResponsible !== null) {
+
+
+                            if (data.senderResponsible.organizations != null) {
+                                data.senderResponsible.organizations.forEach(function (element) {
+                                    r.push(element.name)
+                                });
+                            }
+
+                            if (data.senderResponsible.person != null) {
+                                data.senderResponsible.person.forEach(function (element) {
+                                    r.push(element.name)
+                                });
+                            }
+                        }
+
+                        return r.join('');
                     }
                 },
                 {
                     searchable: true,
-                    orderable: true,
-                    name: 'owner.staff.name',
-                    data: 'owner.staff.name'
+                    orderable: false,
+                    name: 'title',
+                    data: 'title'
                 },
                 {
                     searchable: true,
@@ -193,29 +284,19 @@
 
                         var r = [];
 
-                        if(data.receiverResponsible.responsibleType == 3)
-                        {
-                            data.receiverResponsible.organizations.forEach(function(element) {
-                                r.push(element.name)
-                            });
-                        }
+                        data.receiverResponsible.staff.forEach(function(element) {
+                            r.push(element.name + '<br>')
+                        });
 
-                        if(data.receiverResponsible.responsibleType == 3)
-                        {
-                            data.receiverResponsible.person.forEach(function(element) {
-                                r.push(element.name)
-                            });
-                        }
-
-                        return r;
+                        return r.join('');
                     }
                 },
                 {
-                    searchable: true,
-                    orderable: false,
-                    name: 'indexNo',
+                    searchable: false,
+                    orderable: true,
+                    name: 'documentState',
                     data: function (data, type, full, meta) {
-                        return data.indexNo + "<hr>" + data.pageCount;
+                        return data.documentState === "REGISTERED" || data.documentState === "DONE" ? "Зарегистрирован" : "";
                     }
                 }
             ],
@@ -230,8 +311,41 @@
                     last: '<i class="la la-angle-double-right"></i>'
                 }
             },
-            dom: '<t<i>pl>',
+            dom: "<'row'<'col-6'i><'col-6'l>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-4'i><'col-4'p><'col-4'l>>"
         });
+
+        var detailRows = [];
+
+        $('#incoming tbody').on( 'click', 'tr td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = t1.row( tr );
+            var idx = $.inArray( tr.attr('id'), detailRows );
+
+            if ( row.child.isShown() ) {
+                tr.removeClass( 'details' );
+                row.child.hide();
+
+                // Remove from the 'open' array
+                detailRows.splice( idx, 1 );
+            }
+            else {
+                tr.addClass( 'details' );
+                row.child( format( row.data() ) ).show();
+
+                // Add to the 'open' array
+                if ( idx === -1 ) {
+                    detailRows.push( tr.attr('id') );
+                }
+            }
+        } );
+
+        t1.on( 'draw', function () {
+            $.each( detailRows, function ( i, id ) {
+                $('#'+id+' td.details-control').trigger( 'click' );
+            } );
+        } );
 
         /*
         $('#ddt thead tr').clone(true).appendTo( '#ddt thead' );
@@ -256,6 +370,7 @@
         p - paging
         f - filter
         */
+
 
         $('#generalSearch').keyup(function(){
             table.search($(this).val()).draw() ;

@@ -2832,7 +2832,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `run_calc_manual_summary_for_loan`(IN loan_id bigint, IN in_date date)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `run_calc_manual_summary_for_loan`(IN loan_id bigint, IN in_date date, IN type varchar(20))
 begin
 
     declare is_leaf_or_normal_loan boolean default true;
@@ -2848,7 +2848,7 @@ begin
     end if;
 
     if is_leaf_or_normal_loan then
-      CALL calculateLoanDetailedSummaryUntilOnDate(loan_id, in_date, 1, 'MANUAL');
+      CALL calculateLoanDetailedSummaryUntilOnDate(loan_id, in_date, 1, type);
       CALL updateBankruptInfoForLoan(loan_id);
     else
       begin
@@ -2873,7 +2873,7 @@ begin
               leave run_calculate;
             end if;
 
-            CALL calculateLoanDetailedSummaryUntilOnDate(t_loan_id, in_date, 1, 'MANUAL');
+            CALL calculateLoanDetailedSummaryUntilOnDate(t_loan_id, in_date, 1, type);
 
             CALL updateBankruptInfoForLoan(t_loan_id);
 
@@ -2915,7 +2915,7 @@ begin
                from loan
                where parent_id = loan_id
               and loanStateId != 3)
-        and p.loanSummaryType = 'MANUAL'
+        and p.loanSummaryType = type
         and p.record_status = 1
         and p.onDate = in_date;
       end;
@@ -3848,4 +3848,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-17 12:01:09
+-- Dump completed on 2019-02-17 17:04:56

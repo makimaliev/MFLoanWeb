@@ -10,6 +10,7 @@
             <input type="hidden" th:field="*{record_status}"/>
             <input type="hidden" th:field="*{owner}"/>
             <input type="hidden" th:field="*{documentState}"/>
+            <input type="hidden" th:field="*{docIndex}"/>
             <input type="hidden" th:field="*{documentType}"/>
             <input type="hidden" th:field="*{documentSubType}"/>
         </div>
@@ -59,6 +60,7 @@
                     <th class="align-middle m-2 text-white" width="auto">Дата</th>
                     <th class="align-middle m-2 text-white">От</th>
                     <th class="align-middle m-2 text-white">Задачи</th>
+                    <th class="align-middle m-2 text-white">Срок</th>
                     <th class="align-middle m-2 text-white">Кому</th>
                     <th class="align-middle m-2 text-white">Результат</th>
                     <th class="align-middle m-2 text-white" width="auto">Завершен</th>
@@ -66,12 +68,13 @@
                 </thead>
                 <tbody>
                 <tr th:each="task : ${tasks}">
-                    <td><label class="align-middle m-2" th:text= "${#dates.format(task.createdOn, 'dd-MM-yyyy')}"></label></td>
+                    <td><label class="align-middle m-2" th:text= "${#dates.format(task.createdOn, 'dd.MM.yyyy')}"></label></td>
                     <td><label class="align-middle m-2" th:utext="${task.createdBy != null } ? ${task.createdBy.staff.name} : 'Система'"></label></td>
                     <td><label class="align-middle m-2" th:utext="${task.description}"></label></td>
+                    <td><label class="align-middle m-2" th:utext="${#dates.format(task.targetResolutionDate, 'dd.MM.yyyy')}"></label></td>
                     <td><label class="align-middle m-2" th:utext="${task.assignedTo.staff.name}"></label></td>
                     <td><label class="align-middle m-2" th:utext="${task.resolutionSummary}"></label></td>
-                    <td><label class="align-middle m-2" th:text= "${#dates.format(task.actualResolutionDate, 'dd-MM-yyyy')}"></label></td>
+                    <td><label class="align-middle m-2" th:text= "${#dates.format(task.actualResolutionDate, 'dd.MM.yyyy')}"></label></td>
                 </tr>
                 </tbody>
             </table>
@@ -175,13 +178,15 @@
             <thead class="thead-default">
             <tr>
                 <th width="30px"></th>
-                <th width="60px">К</th>
-                <th width="120px">Вхд. № и Дата</th>
-                <th width="120px">Исх. № и Дата</th>
+                <th width="50px">KОНТРОЛЬ</th>
+                <th width="80px">Вхд. №</th>
+                <th width="60px">Вхд. Дата</th>
+                <th width="120px">Исх. №</th>
+                <th width="60px">Исх. Дата</th>
                 <th th:text="#{label.document.sender}">Отправитель</th>
                 <th th:text="#{label.document.title}">Относительно</th>
-                <th th:text="#{label.document.receiver}">Исполнитель</th>
-                <th th:text="#{label.document.generalStatus}">Состояние</th>
+                <th width="330px" th:text="#{label.document.receiver}">Исполнитель</th>
+                <th width="150px" th:text="#{label.document.generalStatus}">Состояние</th>
             </tr>
             </thead>
             <tbody>
@@ -200,31 +205,35 @@
                                     <span th:text="#{label.open}"></span>
                                 </a>
 
+                                <!--a class="dropdown-item" th:if="${tasks.?[objectId == __${document.id}__].isEmpty()}" th:href="@{/doc/edit/__${document.id}__}" sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')">
+                                    <span>-</span>
+                                </a-->
+
                             </div>
                         </div>
                     </span>
                 </td>
-                <td class="text-center"><span class="text-danger" th:if="${document.documentDueDate}" th:utext="${'KОНТРОЛЬ<br>' + #dates.format(document.documentDueDate, 'dd-MM-yyyy')}"></span></td>
-                <td th:utext="${document.receiverRegisteredNumber + '<hr>' + #dates.format(document.receiverRegisteredDate, 'dd-MM-yyyy')}"><span></span></td>
-                <td th:utext="${document.senderRegisteredNumber + '<hr>' + #dates.format(document.senderRegisteredDate, 'dd-MM-yyyy')}"><span></span></td>
+                <td class="text-center"><span class="text-danger" th:if="${document.documentDueDate}" th:utext="${#dates.format(document.documentDueDate, 'dd.MM.yy')}"></span></td>
+                <td class="text-center" th:utext="${document.receiverRegisteredNumber}"><span></span></td>
+                <td class="text-center" th:utext="${#dates.format(document.receiverRegisteredDate, 'dd.MM.yy')}"><span></span></td>
+                <td th:utext="${document.senderRegisteredNumber}"></td>
+                <td th:utext="${#dates.format(document.senderRegisteredDate, 'dd.MM.yy')}"></td>
+                <td>
+                    <p class="nopm" th:if="${document.senderResponsible?.responsibleType == 3}" th:each="so : ${document.senderResponsible?.organizations}" th:utext="${so.name}"> </p>
+                    <p class="nopm" th:if="${document.senderResponsible?.responsibleType == 4}" th:each="sp : ${document.senderResponsible?.person}" th:utext="${sp.name}"> </p>
+                    <p class="nopm" th:if="${not #strings.isEmpty(document.senderResponsible?.responsibleName)}" th:utext="${'/ ' + document.senderResponsible?.responsibleName + ' /'}"> </p>
+                </td>
                 <td th:text="${document.title}"></td>
+                <td>
+                    <p class="nopm" th:if="${document.receiverResponsible?.responsibleType == 1}" th:each="rs : ${document.receiverResponsible?.staff}" th:utext="${rs.name}"> </p>
+                </td>
                 <td th:text="${document.documentState.text()}"></td>
-                <td>
-                    <br>
-                    <p th:if="${document.senderResponsible?.responsibleType == 3}" th:each="so : ${document.senderResponsible?.organizations}" th:utext="${so.name}"> </p>
-                    <p th:if="${document.senderResponsible?.responsibleType == 4}" th:each="sp : ${document.senderResponsible?.person}" th:utext="${sp.name}"> </p>
-                    <p th:if="${not #strings.isEmpty(document.senderResponsible?.responsibleName)}" th:utext="${'/ ' + document.senderResponsible?.responsibleName + ' /'}"> </p>
-                </td>
-                <td>
-                    <br>
-                    <p th:if="${document.receiverResponsible?.responsibleType == 1}" th:each="rs : ${document.receiverResponsible?.staff}" th:utext="${rs.name}"> </p>
-                </td>
             </tr>
             </tbody>
         </table>
     </th:block>
     <th:block th:fragment="outgoingIndex">
-        <table class="table table-bordered table-hover" id="documentTable">
+        <table class="table table-bordered" id="documentTable">
             <thead class="thead-default">
             <tr>
                 <th width="30px">*</th>
@@ -238,7 +247,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="document, i : ${documents}">
+            <tr th:each="document, i : ${documents}" th:classappend="${document.docIndex == 0} ? 'active-document' : ''">
                 <td class="table-actions text-left">
                     <span>
                         <div class="dropdown">
@@ -261,17 +270,22 @@
                     </span>
                 </td>
                 <td th:text="${document.docIndex}"></td>
-                <td th:utext="${!document.senderRegisteredNumber.isEmpty() ? document.senderRegisteredNumber + '<hr>' + #dates.format(document.senderRegisteredDate, 'dd-MM-yyyy') : ''}"></td>
+                <td>
+                    <p th:utext="${document.senderRegisteredNumber}"></p>
+                    <p th:utext="${#dates.format(document.senderRegisteredDate, 'dd-MM-yyyy')}"></p>
+                </td>
                 <td th:utext="|<b>${document.documentSubType.name}</b><br>${document.title}|"></td>
                 <td th:text="${document.documentState.text()}"></td>
                 <td th:text="${document.owner.staff.name}">ГАУБК при МФ КР</td>
                 <td>
-                    <br>
-                    <p th:if="${document.receiverResponsible.responsibleType == 3}" th:each="ro : ${document.receiverResponsible.organizations}" th:utext="${ro.name}"> </p>
-                    <p th:if="${document.receiverResponsible.responsibleType == 4}" th:each="rp : ${document.receiverResponsible.person}" th:utext="${rp.name}"> </p>
-                    <p th:if="${not #strings.isEmpty(document.senderResponsible?.responsibleName)}" th:utext="${'/ ' + document.senderResponsible?.responsibleName + ' /'}"> </p>
+                    <p class="nopm" th:if="${document.receiverResponsible.responsibleType == 3}" th:each="ro : ${document.receiverResponsible.organizations}" th:utext="${ro.name}"> </p>
+                    <p class="nopm" th:if="${document.receiverResponsible.responsibleType == 4}" th:each="rp : ${document.receiverResponsible.person}" th:utext="${rp.name}"> </p>
+                    <p class="nopm" th:if="${not #strings.isEmpty(document.senderResponsible?.responsibleName)}" th:utext="${'/ ' + document.senderResponsible?.responsibleName + ' /'}"> </p>
                 </td>
-                <td th:utext="${document.indexNo  + '<hr>' + document.pageCount}"></td>
+                <td>
+                    <p th:utext="${document.indexNo}"></p>
+                    <p th:utext="${document.pageCount}"></p>
+                </td>
             </tr>
             </tbody>
         </table>
