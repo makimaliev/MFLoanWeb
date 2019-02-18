@@ -187,7 +187,8 @@
                             <div class="form-group m-form__group row" th:each="compareParameterModelInList, iterator: ${compareParametersModels}">
 
                                     <input hidden="hidden" type="text" class="col-4" th:id="'fieldName_' + ${iterator.index}" name="fieldName" th:value="${compareParameterModelInList.fieldName}"  disabled="disabled">
-                                <label class="col-4" th:text="#{${compareParameterModelInList.fieldName}}"></label>
+
+                                    <label class="col-4" th:text="#{${compareParameterModelInList.fieldName}}"></label>
                                     <select th:id="'comparator_' + ${iterator.index}" th:value="${compareParameterModelInList.comparator}"  class="selectpicker" disabled="disabled">
                                         <option th:each="comparatorInList : ${T(kg.gov.mf.loan.output.report.model.Comparator).values()}"
                                                 th:value="${comparatorInList}"
@@ -197,19 +198,13 @@
                                     </select>
 
 
-                                <div th:if="${compareParameterModelInList.getComparedValueType()==1}">
-                                    <input type="text" th:id="'comparedValue_' + ${iterator.index}" name="comparedValue" th:value="${compareParameterModelInList.comparedValue}" class="form-control" >
-                                </div>
+                                    <div th:if="${compareParameterModelInList.getComparedValueType()==1}" class="col-4">
+                                        <input type="text" th:id="'comparedValue_' + ${iterator.index}" name="comparedValue" th:value="${compareParameterModelInList.comparedValue}" class="form-control" >
+                                    </div>
 
-
-
-
-
-                                    <div class="input-group date m_datetimepicker_6" th:if="${compareParameterModelInList.getComparedValueType()==2}">
+                                    <div class="input-group date m_datetimepicker_6 col-4" th:if="${compareParameterModelInList.getComparedValueType()==2}">
                                         <input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:id="'comparedDate_' + ${iterator.index}" name="comparedDate" th:value="${#dates.format(compareParameterModelInList.comparedDate,'dd.MM.yyy')}"/>
-                                        <span class="input-group-addon">
-													<i class="la la-calendar glyphicon-th"></i>
-												</span>
+                                        <span class="input-group-addon"><i class="la la-calendar glyphicon-th"></i></span>
                                     </div>
                             </div>
                         </div>

@@ -352,6 +352,7 @@ public class ReportController {
                     compareParametersModel.setFieldName(filterParameter.getFieldName());
                     compareParametersModel.setComparator(filterParameter.getComparator().toString());
                     compareParametersModel.setComparedValue(filterParameter.getComparedValue().toString());
+					compareParametersModel.setComparedValueType((short)1);
 
                     if(filterParameter.getComparator().toString().contains("DATE"))
                     {
@@ -551,32 +552,71 @@ public class ReportController {
         }
 
         int counter =0;
+		int counterDate =0;
+		int counterValue =0;
+
         if(fieldName!=null)
         if(fieldName.length>0)
 
 		for (String fieldNameinLoop:fieldName) {
 
+
 			FilterParameter filterParameter = new FilterParameter();
+
 			filterParameter.setId(counter+1);
 			filterParameter.setComparator(Comparator.valueOf(comparator[counter]));
 
-			if(comparedValue!=null)
-			if(comparedValue.length>0)
-			if(comparedValue[counter]!=null)
-				filterParameter.setComparedValue(comparedValue[counter]);
+			if(filterParameter.getComparator().name().contains("DATE"))
+			{
+				if(comparedDate!=null)
+					if(comparedDate.length>counterDate)
+					{
+						if(comparedDate[counterDate]!=null)
+						{
+							filterParameter.setComparedValue(reportTool.DateToString(comparedDate[counterDate]));
+							counterDate++;
 
-			if(comparedDate!=null)
-			if(comparedDate.length>0)
-			if(comparedDate[counter]!=null)
-				filterParameter.setComparedValue(reportTool.DateToString(comparedDate[counter]));
+							filterParameter.setFieldName(fieldName[counter]);
 
-			filterParameter.setFieldName(fieldName[counter]);
+							filterParameter.setFilterParameterType(FilterParameterType.CONTENT_COMPARE);
+							filterParameter.setName("-");
+							filterParameter.setObjectList(null);
+							filterParameters.add(filterParameter);
+							counter++;
 
-			filterParameter.setFilterParameterType(FilterParameterType.CONTENT_COMPARE);
-			filterParameter.setName("-");
-			filterParameter.setObjectList(null);
-			filterParameters.add(filterParameter);
-			counter++;
+						}
+
+					}
+			}
+			else
+			{
+				if(comparedValue!=null)
+					if(comparedValue.length>counterValue)
+					{
+						if(comparedValue[counterValue]!=null)
+						{
+							filterParameter.setComparedValue(comparedValue[counterValue]);
+							counterValue++;
+
+							filterParameter.setFieldName(fieldName[counter]);
+
+							filterParameter.setFilterParameterType(FilterParameterType.CONTENT_COMPARE);
+							filterParameter.setName("-");
+							filterParameter.setObjectList(null);
+							filterParameters.add(filterParameter);
+							counter++;
+
+						}
+					}
+			}
+
+
+
+
+
+
+
+
 		}
 
         ReportTemplate reportTemplate1=new ReportTemplate();
