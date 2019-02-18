@@ -140,6 +140,7 @@ public class PaymentController {
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/payment/save"}, method=RequestMethod.POST)
     public String savePayment(Payment payment, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId)
     {
+    	if(payment.getPaymentDate()!=null){
 		Loan loan = loanService.getById(loanId);
 		if(payment.getPaymentDate()==null){
 			payment.setPaymentDate(new Date());
@@ -182,7 +183,7 @@ public class PaymentController {
 		}
 		session.getTransaction().begin();
 		runUpdateQueries(loan,session);
-		session.getTransaction().commit();
+		session.getTransaction().commit();}
 
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }

@@ -518,95 +518,87 @@ public class CollectionPhaseController {
     		@PathVariable("procId")Long procId,
     		ModelMap model,String[] loanses)
     {
+    	if(phase.getStartDate()!=null) {
 
-		CollectionProcedure procedure = procService.getById(procId);
-		phase.setCollectionProcedure(procedure);
+			CollectionProcedure procedure = procService.getById(procId);
+			phase.setCollectionProcedure(procedure);
 
-		Set<Loan> loanSet=new HashSet<>();
-		if(loanses!=null)
-			for (String id: loanses){
-				loanSet.add(loanService.getById(Long.valueOf(id)));
-			}
-		if(phase.getId() == 0){
+			Set<Loan> loanSet = new HashSet<>();
+			if (loanses != null)
+				for (String id : loanses) {
+					loanSet.add(loanService.getById(Long.valueOf(id)));
+				}
+			if (phase.getId() == 0) {
 
 
-			phase.setLoans(loanSet);
-			phase.setPhaseStatus(phaseStatusService.getById(Long.valueOf(1)));
-			phaseService.add(phase);
-			if(phaseDetailsLists.get(Utils.getPrincipal())==null){
-                Set<Loan> loans = phase.getLoans();
-                for (Loan loan: loans)
-                {
-                    PhaseDetails details = new PhaseDetails();
-                    details.setLoan_id(loan.getId());
-                    PhaseDetails latestDetails = phaseDetailsService.getById(getLatestDetailsByDate(loan.getId()));
-                    if(latestDetails != null)
-                    {
-                        details.setStartPrincipal(latestDetails.getStartPrincipal());
-                        details.setStartInterest(latestDetails.getStartInterest());
-                        details.setStartPenalty(latestDetails.getStartPenalty());
-                        details.setStartTotalAmount(latestDetails.getStartTotalAmount());
-                    }
-                    else
-                    {
-                        details.setStartPrincipal(0.0);
-                        details.setStartInterest(0.0);
-                        details.setStartPenalty(0.0);
-                        details.setStartTotalAmount(0.0);
-                    }
-
-                    details.setCollectionPhase(phase);
-                    phaseDetailsService.add(details);
-                }
-			}
-			else{
-			    for(PhaseDetails phaseDetail:phaseDetailsLists.get(Utils.getPrincipal())){
-			        phaseDetail.setCollectionPhase(phase);
-			        phaseDetailsService.add(phaseDetail);
-                }
-            }
-			String updateStart="(select sum(startTotalAmount) from phaseDetails where collectionPhaseId="+phase.getId()+")";
-			Query query=entityManager.createNativeQuery(updateStart);
-			Double sumOfStart= (Double) query.getSingleResult();
-			phase.setStart_amount(sumOfStart);
-			phaseService.update(phase);
-            phaseDetailsLists.remove(Utils.getPrincipal());
-		}
-
-		else
-		{
-			CollectionPhase oldPhase = phaseService.getById(phase.getId());
-
-			phase.setPhaseStatus(oldPhase.getPhaseStatus());
-			phase.setLoans(loanSet);
-
-			if(phaseDetailsLists.get(Utils.getPrincipal())==null){
-				System.out.println("asdf");
-			}
-			else
-			{
-				Set<PhaseDetails> listOfDetails=oldPhase.getPhaseDetails();
-				for(PhaseDetails phaseDetail:phaseDetailsLists.get(Utils.getPrincipal())){
-					phaseDetail.setCollectionPhase(phase);
-					for(PhaseDetails phaseDetail1:listOfDetails){
-						if (phaseDetail.getLoan_id()==phaseDetail1.getLoan_id()){
-							phaseDetail1.setStartInterest(phaseDetail.getStartInterest());
-							phaseDetail1.setStartPenalty(phaseDetail.getStartPenalty());
-							phaseDetail1.setStartPrincipal(phaseDetail.getStartPrincipal());
-							phaseDetail1.setStartTotalAmount(phaseDetail.getStartTotalAmount());
-							phaseDetail1.setCollectionPhase(phase);
-							phaseDetailsService.update(phaseDetail1);
+				phase.setLoans(loanSet);
+				phase.setPhaseStatus(phaseStatusService.getById(Long.valueOf(1)));
+				phaseService.add(phase);
+				if (phaseDetailsLists.get(Utils.getPrincipal()) == null) {
+					Set<Loan> loans = phase.getLoans();
+					for (Loan loan : loans) {
+						PhaseDetails details = new PhaseDetails();
+						details.setLoan_id(loan.getId());
+						PhaseDetails latestDetails = phaseDetailsService.getById(getLatestDetailsByDate(loan.getId()));
+						if (latestDetails != null) {
+							details.setStartPrincipal(latestDetails.getStartPrincipal());
+							details.setStartInterest(latestDetails.getStartInterest());
+							details.setStartPenalty(latestDetails.getStartPenalty());
+							details.setStartTotalAmount(latestDetails.getStartTotalAmount());
+						} else {
+							details.setStartPrincipal(0.0);
+							details.setStartInterest(0.0);
+							details.setStartPenalty(0.0);
+							details.setStartTotalAmount(0.0);
 						}
+
+						details.setCollectionPhase(phase);
+						phaseDetailsService.add(details);
+					}
+				} else {
+					for (PhaseDetails phaseDetail : phaseDetailsLists.get(Utils.getPrincipal())) {
+						phaseDetail.setCollectionPhase(phase);
+						phaseDetailsService.add(phaseDetail);
 					}
 				}
-				String updateStart="(select sum(startTotalAmount) from phaseDetails where collectionPhaseId="+phase.getId()+")";
-				Query query=entityManager.createNativeQuery(updateStart);
-				Double sumOfStart= (Double) query.getSingleResult();
+				String updateStart = "(select sum(startTotalAmount) from phaseDetails where collectionPhaseId=" + phase.getId() + ")";
+				Query query = entityManager.createNativeQuery(updateStart);
+				Double sumOfStart = (Double) query.getSingleResult();
 				phase.setStart_amount(sumOfStart);
-			}
+				phaseService.update(phase);
+				phaseDetailsLists.remove(Utils.getPrincipal());
+			} else {
+				CollectionPhase oldPhase = phaseService.getById(phase.getId());
 
-			phaseService.update(phase);
-			phaseDetailsLists.remove(Utils.getPrincipal());
+				phase.setPhaseStatus(oldPhase.getPhaseStatus());
+				phase.setLoans(loanSet);
+
+				if (phaseDetailsLists.get(Utils.getPrincipal()) == null) {
+					System.out.println("asdf");
+				} else {
+					Set<PhaseDetails> listOfDetails = oldPhase.getPhaseDetails();
+					for (PhaseDetails phaseDetail : phaseDetailsLists.get(Utils.getPrincipal())) {
+						phaseDetail.setCollectionPhase(phase);
+						for (PhaseDetails phaseDetail1 : listOfDetails) {
+							if (phaseDetail.getLoan_id() == phaseDetail1.getLoan_id()) {
+								phaseDetail1.setStartInterest(phaseDetail.getStartInterest());
+								phaseDetail1.setStartPenalty(phaseDetail.getStartPenalty());
+								phaseDetail1.setStartPrincipal(phaseDetail.getStartPrincipal());
+								phaseDetail1.setStartTotalAmount(phaseDetail.getStartTotalAmount());
+								phaseDetail1.setCollectionPhase(phase);
+								phaseDetailsService.update(phaseDetail1);
+							}
+						}
+					}
+					String updateStart = "(select sum(startTotalAmount) from phaseDetails where collectionPhaseId=" + phase.getId() + ")";
+					Query query = entityManager.createNativeQuery(updateStart);
+					Double sumOfStart = (Double) query.getSingleResult();
+					phase.setStart_amount(sumOfStart);
+				}
+
+				phaseService.update(phase);
+				phaseDetailsLists.remove(Utils.getPrincipal());
+			}
 		}
 
 		
