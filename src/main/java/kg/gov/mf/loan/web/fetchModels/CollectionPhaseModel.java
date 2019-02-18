@@ -13,6 +13,8 @@ public class CollectionPhaseModel implements Comparable<CollectionPhaseModel> {
     @Id
     private Long id;
 
+    private int record_status;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy", timezone = "Asia/Bishkek")
     private Date startDate;
 
@@ -54,6 +56,14 @@ public class CollectionPhaseModel implements Comparable<CollectionPhaseModel> {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getRecord_status() {
+        return record_status;
+    }
+
+    public void setRecord_status(int record_status) {
+        this.record_status = record_status;
     }
 
     public Date getStartDate() {
