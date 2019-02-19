@@ -312,6 +312,9 @@
 														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator">
 															Сохранить расчет
 														</button>
+														<button sec:authorize="hasAnyAuthority('ADMIN')" class="btn btn-sm btn-accent" type="button" id="bnt_init_dailyCalculator">
+															Сохранить расчет(Daily)
+														</button>
 														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLECTIONPHASE')" class="btn btn-sm btn-accent" type="button" id="bnt_init_phase">
 															Претензия
 														</button>
@@ -524,6 +527,31 @@
                         $('#content').html(data);
                     });
 				}
+            });
+        }
+
+
+
+    });
+    $("#bnt_init_dailyCalculator").on('click',function () {
+        // on checkbox checked event
+        if (!$("#phaseInitDate").val())
+        {
+        }
+        else
+        {
+            var initDate = $("#phaseInitDate").val();
+            // console.log(selectedLoans);
+            $.ajax({
+                type : 'POST',
+                url : "/manage/debtor/"+debtorId+"/initializeDailyCalculator",
+                data: {selectedLoans:selectedLoans, initDater: initDate},
+                success:function () {
+
+                    var sUrl ="/manage/debtor/"+debtorId+"/view";
+
+                    window.location=sUrl;
+                }
             });
         }
 

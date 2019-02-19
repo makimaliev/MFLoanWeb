@@ -282,6 +282,27 @@ public class CollectionPhaseController {
 		}
 	}
 
+	@PostMapping(value="/manage/debtor/{debtorId}/initializeDailyCalculator")
+	@ResponseBody
+	public void initializeDailyCalculator(@PathVariable("debtorId")Long debtorId, @RequestParam Map<String, String> selectedLoans, @RequestParam String initDater)
+	{
+		Date date1=null;
+		try {
+			date1=new SimpleDateFormat("dd.MM.yyyy").parse(initDater);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Date initDate=date1;
+		int count = 0;
+		for (String value:selectedLoans.values()
+		) {
+			if(count == selectedLoans.size()-1) continue;
+//			Loan loan = loanRepository.findOne(Long.parseLong(value));
+			this.jobItemService.runDailyCalculateProcedureForOneLoan(Long.parseLong(value), initDate);
+			count++;
+		}
+	}
+
     @RequestMapping(value="/collectionPhase/savePhaseDetails", method=RequestMethod.POST)
     @ResponseBody
     public void savePhaseDetails( @RequestBody PhaseDetailsModelList phaseDetailsModels){
