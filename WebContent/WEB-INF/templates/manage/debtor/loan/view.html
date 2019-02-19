@@ -691,7 +691,7 @@
                                     <div class="row align-items-center">
                                         <div class="col-xl-9 order-1 order-xl-1">
                                             <div class="form-group m-form__group row align-items-center">
-                                                <div class="col-lg-5">
+                                                <div class="col-lg-3">
                                                     <div class="m-input-icon m-input-icon--left">
                                                         <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search5">
                                                         <span class="m-input-icon__icon m-input-icon__icon--left">
@@ -720,6 +720,9 @@
 														</button>
 														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent m-1" type="button" id="bnt_init_manualCalculator">
 															Сохранить расчет
+														</button>
+														<button sec:authorize="hasAnyAuthority('ADMIN')" class="btn btn-sm btn-accent m-1" type="button" id="bnt_init_dailyCalculator">
+															Сохранить расчет(Daily)
 														</button>
 														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLECTIONPHASE')" class="btn btn-sm btn-accent m-1" type="button" id="bnt_init_phase">
 															Претензия
@@ -1278,6 +1281,32 @@
 
 
     });
+
+    $("#bnt_init_dailyCalculator").on('click',function () {
+        // on checkbox checked event
+        if (!$("#phaseInitDate").val())
+        {
+        }
+        else
+        {
+            var initDate = $("#phaseInitDate").val();
+            // console.log(selectedLoans);
+            $.ajax({
+                type : 'POST',
+                url : "/manage/debtor/"+debtorId+"/initializeDailyCalculator",
+                data: {selectedLoans:loanId, initDater: initDate},
+                success:function () {
+                    var sUrl ="/manage/debtor/"+debtorId+"/loan/"+loanId+"/view";
+
+                    window.location=sUrl;
+                }
+            });
+        }
+
+
+
+    });
+
     $("#btn_show_loanSummary").on("click",function () {
 
         var initDate = $("#phaseInitDate").val();

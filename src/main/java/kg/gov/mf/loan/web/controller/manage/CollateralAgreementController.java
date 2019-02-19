@@ -127,10 +127,10 @@ public class CollateralAgreementController {
 		{
 			ArrayList<Long> loanIds=new ArrayList<>();
 			CollateralAgreement agreement = new CollateralAgreement();
-			agreement.setAgreementDate(new Date());
-			agreement.setArrestRegDate(new Date());
-			agreement.setCollateralOfficeRegDate(new Date());
-			agreement.setNotaryOfficeRegDate(new Date());
+//			agreement.setAgreementDate();
+//			agreement.setArrestRegDate(new Date());
+//			agreement.setCollateralOfficeRegDate(new Date());
+//			agreement.setNotaryOfficeRegDate(new Date());
 			model.addAttribute("agreement", agreement);
 			model.addAttribute("loanIds", loanIds);
 			model.addAttribute("ownerText", "");
@@ -168,28 +168,30 @@ public class CollateralAgreementController {
     		@PathVariable("debtorId")Long debtorId,String[] loanses,
     		ModelMap model)
     {
-		Set<Loan> loanSet =new HashSet<>();
-    	for(String l:loanses){
-    		loanSet.add(loanService.getById(Long.valueOf(l)));
+    	if(agreement.getNotaryOfficeRegDate()!=null) {
+			Set<Loan> loanSet = new HashSet<>();
+			for (String l : loanses) {
+				loanSet.add(loanService.getById(Long.valueOf(l)));
+			}
+			if (agreement.getId() == 0) {
+				Owner owner = ownerRepository.findOne(debtorService.getById(debtorId).getOwner().getId());
+				agreement.setOwner(owner);
+				agreement.setAgreementDate(agreement.getNotaryOfficeRegDate());
+				agreement.setAgreementNumber(agreement.getNotaryOfficeRegNumber());
+				agreement.setLoans(loanSet);
+				agreementService.add(agreement);
+			} else {
+				Owner owner = ownerRepository.findOne(agreement.getOwner().getId());
+				agreement.setOwner(owner);
+				agreement.setLoans(loanSet);
+				agreementService.update(agreement);
+			}
+			return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/"+agreement.getId()+"/view";
 		}
-		if(agreement.getId() == 0){
-			Owner owner=ownerRepository.findOne(debtorService.getById(debtorId).getOwner().getId());
-			agreement.setOwner(owner);
-			agreement.setAgreementDate(agreement.getNotaryOfficeRegDate());
-			agreement.setAgreementNumber(agreement.getNotaryOfficeRegNumber());
-			agreement.setLoans(loanSet);
-			agreementService.add(agreement);
+		else{
+			return "redirect:" + "/manage/debtor/{debtorId}/view";
 		}
 
-		else
-		{
-			Owner owner = ownerRepository.findOne(agreement.getOwner().getId());
-			agreement.setOwner(owner);
-			agreement.setLoans(loanSet);
-			agreementService.update(agreement);
-		}
-
-		return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/"+agreement.getId()+"/view";
     }
 
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collateralagreement/delete"})
