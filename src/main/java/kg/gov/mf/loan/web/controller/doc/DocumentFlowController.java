@@ -1,6 +1,9 @@
 package kg.gov.mf.loan.web.controller.doc;
 
+import javafx.util.converter.PercentageStringConverter;
 import kg.gov.mf.loan.admin.org.model.Department;
+import kg.gov.mf.loan.admin.org.model.Organization;
+import kg.gov.mf.loan.admin.org.model.Person;
 import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.doc.model.*;
@@ -12,6 +15,7 @@ import kg.gov.mf.loan.task.service.ChatUserService;
 import kg.gov.mf.loan.task.service.SystemConstantService;
 import kg.gov.mf.loan.task.service.TaskService;
 import kg.gov.mf.loan.web.controller.doc.dto.DataTableResult;
+import kg.gov.mf.loan.web.controller.doc.dto.JsonDocument;
 import kg.gov.mf.loan.web.controller.doc.dto.SearchResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -923,25 +927,135 @@ public class DocumentFlowController extends BaseController {
         return data;
     }
 
+    @RequestMapping(value = "/documentList")
+    @ResponseBody
+    public List<JsonDocument> getDocuments(String documentType) {
+
+        List<JsonDocument> jsonDocuments = new ArrayList<>();
+
+        for(Document document : documentService.getDocuments(0, "outgoing", null))
+        {
+            JsonDocument jd = new JsonDocument();
+            jd.setId(document.getId());
+            jd.setDocIndex(document.getDocIndex());
+            jd.setPageCount(document.getPageCount());
+            jd.setIndexNo(document.getIndexNo());
+            jd.setDocumentState(document.getDocumentState().text());
+            jd.setOwner(document.getOwner().getStaff().getName());
+            jd.setDocumentSubType(document.getDocumentSubType().getName());
+            jd.setDocumentDueDate(document.getDocumentDueDate());
+            jd.setTitle(document.getTitle());
+            jd.setSenderRegisteredNumber(document.getSenderRegisteredNumber());
+            jd.setSenderRegisteredDate(document.getSenderRegisteredDate());
+            jd.setReceiverRegisteredNumber(document.getReceiverRegisteredNumber());
+            jd.setReceiverRegisteredDate(document.getReceiverRegisteredDate());
+            // Senders
+            List<String> senders = new ArrayList<>();
+            if(document.getSenderResponsible().getResponsibleType() == 1)
+            {
+                for(Staff staff : document.getSenderResponsible().getStaff())
+                {
+                    senders.add(staff.getName());
+                }
+            } else if(document.getSenderResponsible().getResponsibleType() == 2)
+            {
+                for(Department department : document.getSenderResponsible().getDepartments())
+                {
+                    senders.add(department.getName());
+                }
+            }
+            else if(document.getSenderResponsible().getResponsibleType() == 3)
+            {
+                for(Organization organization : document.getSenderResponsible().getOrganizations())
+                {
+                    senders.add(organization.getName());
+                }
+            } else {
+                for(Person person : document.getSenderResponsible().getPerson())
+                {
+                    senders.add(person.getName());
+                }
+            }
+
+            List<String> receivers = new ArrayList<>();
+            if(document.getReceiverResponsible().getResponsibleType() == 1)
+            {
+                for(Staff staff : document.getReceiverResponsible().getStaff())
+                {
+                    receivers.add(staff.getName());
+                }
+            } else if(document.getReceiverResponsible().getResponsibleType() == 2)
+            {
+                for(Department department : document.getReceiverResponsible().getDepartments())
+                {
+                    receivers.add(department.getName());
+                }
+            }
+            else if(document.getReceiverResponsible().getResponsibleType() == 3)
+            {
+                for(Organization organization : document.getReceiverResponsible().getOrganizations())
+                {
+                    receivers.add(organization.getName());
+                }
+            } else {
+                for(Person person : document.getReceiverResponsible().getPerson())
+                {
+                    receivers.add(person.getName());
+                }
+            }
+
+            jd.setSenderResponsible(senders.toArray(new String[0]));
+            jd.setSenderResponsible(receivers.toArray(new String[0]));
+
+            jsonDocuments.add(jd);
+        }
+
+        return jsonDocuments;
+    }
+
     @RequestMapping("/documents")
     @ResponseBody
     public DataTableResult getDocuments(HttpServletRequest request) {
 
         Map<String, String[]> map = request.getParameterMap();
-        String order = request.getParameter("order[0][column]");
+
+        List<String> columns = new ArrayList<String>();
+        int col = 0;
+
+        for (Map.Entry<String, String[]> entry : map.entrySet())
+        {
+            if(entry.getKey().contains("columns"))
+            {
+                if (entry.getKey().matches("columns\\[\\d+\\]\\[searchable\\]"))
+                {
+                    if (entry.getValue()[0].equals("true"))
+                    {
+                        columns.add(request.getParameter("columns[" + col + "][name]"));
+                    }
+                    col++;
+                }
+            }
+        }
+
+        String orderColumn = request.getParameter("order[0][column]") != null ? request.getParameter("order[0][column]") : "id";
+        String orderDirection = request.getParameter("order[0][dir]") != null ?  request.getParameter("order[0][dir]") : "asc";
+        String columnToOrder = request.getParameter("columns[" + orderColumn + "][name]") != "0" ? request.getParameter("columns[" + orderColumn + "][name]") : "id";
         String docType = request.getParameter("documentType");
+        String searchValue = request.getParameter("search[value]");
         int start = Integer.valueOf(request.getParameter("start"));
         int length = Integer.valueOf(request.getParameter("length"));
         int draw = Integer.valueOf(request.getParameter("draw"));
         int count = documentService.count(docType);
 
-        List<Document> data = documentService.list(docType, null, 0, start, length, "id", "asc", null, null);
+
+        List<Document> data = documentService.list(docType, null, 0, start, length, columnToOrder, orderDirection, columns.toArray(new String[0]), searchValue);
 
         DataTableResult dataTableResult = new DataTableResult();
         dataTableResult.setDraw(draw);
         dataTableResult.setRecordsTotal(count);
         dataTableResult.setRecordsFiltered(count);
         dataTableResult.setData(data);
+        //dataTableResult.setError(searchValue);
 
         return dataTableResult;
     }
