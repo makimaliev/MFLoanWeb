@@ -1,10 +1,10 @@
 package kg.gov.mf.loan.web.controller.doc;
 
-import javafx.util.converter.PercentageStringConverter;
 import kg.gov.mf.loan.admin.org.model.Department;
 import kg.gov.mf.loan.admin.org.model.Organization;
 import kg.gov.mf.loan.admin.org.model.Person;
 import kg.gov.mf.loan.admin.org.model.Staff;
+import kg.gov.mf.loan.admin.org.service.StaffService;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.doc.model.*;
 import kg.gov.mf.loan.doc.service.*;
@@ -17,6 +17,10 @@ import kg.gov.mf.loan.task.service.TaskService;
 import kg.gov.mf.loan.web.controller.doc.dto.DataTableResult;
 import kg.gov.mf.loan.web.controller.doc.dto.JsonDocument;
 import kg.gov.mf.loan.web.controller.doc.dto.SearchResult;
+import kg.gov.mf.loan.web.fetchModels.DocumentMetaModel;
+import kg.gov.mf.loan.web.fetchModels.DocumentModel;
+import kg.gov.mf.loan.web.util.Meta;
+import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -26,8 +30,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigInteger;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -35,6 +43,17 @@ import java.util.*;
 @Controller
 @RequestMapping("/doc")
 public class DocumentFlowController extends BaseController {
+
+    @Autowired
+    EntityManager entityManager;
+
+
+    @Autowired
+    ResponsibleService responsibleService;
+
+    @Autowired
+    StaffService staffService;
+
 
     //region Dependencies
     private DocumentService documentService;
@@ -980,50 +999,264 @@ public class DocumentFlowController extends BaseController {
         return jsonDocuments;
     }
 
-    @RequestMapping("/documents")
+//    @RequestMapping("/documents")
+//    @ResponseBody
+//    public DataTableResult getDocuments(HttpServletRequest request) {
+//
+//        Map<String, String[]> map = request.getParameterMap();
+//
+//        List<String> columns = new ArrayList<String>();
+//        int col = 0;
+//
+//        for (Map.Entry<String, String[]> entry : map.entrySet())
+//        {
+//            if(entry.getKey().contains("columns"))
+//            {
+//                if (entry.getKey().matches("columns\\[\\d+\\]\\[searchable\\]"))
+//                {
+//                    if (entry.getValue()[0].equals("true"))
+//                    {
+//                        columns.add(request.getParameter("columns[" + col + "][name]"));
+//                    }
+//                    col++;
+//                }
+//            }
+//        }
+//
+//        String orderColumn = request.getParameter("order[0][column]") != null ? request.getParameter("order[0][column]") : "id";
+//        String orderDirection = request.getParameter("order[0][dir]") != null ? request.getParameter("order[0][dir]") : "asc";
+//        String columnToOrder = request.getParameter("columns[" + orderColumn + "][name]") != "0" ? request.getParameter("columns[" + orderColumn + "][name]") : "id";
+//        String docType = request.getParameter("documentType");
+//        String searchValue = request.getParameter("search[value]");
+//        int start = Integer.valueOf(request.getParameter("start"));
+//        int length = Integer.valueOf(request.getParameter("length"));
+//        int draw = Integer.valueOf(request.getParameter("draw"));
+//        int count = documentService.count(docType);
+//
+//        List<Document> data = documentService.list(docType, null, 0, start, length, columnToOrder, orderDirection, columns.toArray(new String[0]), searchValue);
+//
+//        DataTableResult dataTableResult = new DataTableResult();
+//        dataTableResult.setDraw(draw);
+//        dataTableResult.setRecordsTotal(count);
+//        dataTableResult.setRecordsFiltered(count);
+//        dataTableResult.setData(data);
+//        //dataTableResult.setError(searchValue);
+//
+//        return dataTableResult;
+//    }
+
+    @RequestMapping("/documents/{docType}")
     @ResponseBody
-    public DataTableResult getDocuments(HttpServletRequest request) {
+    public DocumentMetaModel getDocuments(@RequestParam Map<String, String> datatable,@PathVariable("docType") String docType) throws ParseException {
 
-        Map<String, String[]> map = request.getParameterMap();
+        String pageStr = datatable.get("datatable[pagination][page]");
+        String perPageStr = datatable.get("datatable[pagination][perpage]");
+        String sortStr = datatable.get("datatable[sort][sort]");
+        String sortField = datatable.get("datatable[sort][field]");
 
-        List<String> columns = new ArrayList<String>();
-        int col = 0;
+        Integer page = Integer.parseInt(pageStr);
+        Integer perPage = Integer.parseInt(perPageStr);
+        Integer offset = (page-1)*perPage;
+        String titleQuery="";
+        String receiverQuery="";
+        String senderQuery="";
+        String fromDateQuery="";
+        String toDateQuery="";
+        String subTypeQuery="";
 
-        for (Map.Entry<String, String[]> entry : map.entrySet())
-        {
-            if(entry.getKey().contains("columns"))
-            {
-                if (entry.getKey().matches("columns\\[\\d+\\]\\[searchable\\]"))
-                {
-                    if (entry.getValue()[0].equals("true"))
-                    {
-                        columns.add(request.getParameter("columns[" + col + "][name]"));
-                    }
-                    col++;
-                }
-            }
+
+        boolean searchByTitle= datatable.containsKey("datatable[query][title]");
+        if(searchByTitle){
+            String word= datatable.get("datatable[query][title]");
+            titleQuery="and title like '%"+word+"%'\n";
         }
 
-        String orderColumn = request.getParameter("order[0][column]") != null ? request.getParameter("order[0][column]") : "id";
-        String orderDirection = request.getParameter("order[0][dir]") != null ? request.getParameter("order[0][dir]") : "asc";
-        String columnToOrder = request.getParameter("columns[" + orderColumn + "][name]") != "0" ? request.getParameter("columns[" + orderColumn + "][name]") : "id";
-        String docType = request.getParameter("documentType");
-        String searchValue = request.getParameter("search[value]");
-        int start = Integer.valueOf(request.getParameter("start"));
-        int length = Integer.valueOf(request.getParameter("length"));
-        int draw = Integer.valueOf(request.getParameter("draw"));
-        int count = documentService.count(docType);
+        boolean searchByReceiver= datatable.containsKey("datatable[query][receiver]");
+        if(searchByReceiver){
+            String word= datatable.get("datatable[query][receiver]");
+            receiverQuery="and receiverResponsible in( select r_id from responsible_view where r_name like '%"+word+"%')\n";
+        }
 
-        List<Document> data = documentService.list(docType, null, 0, start, length, columnToOrder, orderDirection, columns.toArray(new String[0]), searchValue);
+        boolean searchBySender= datatable.containsKey("datatable[query][sender]");
+        if(searchBySender){
+            String word= datatable.get("datatable[query][sender]");
 
-        DataTableResult dataTableResult = new DataTableResult();
-        dataTableResult.setDraw(draw);
-        dataTableResult.setRecordsTotal(count);
-        dataTableResult.setRecordsFiltered(count);
-        dataTableResult.setData(data);
-        //dataTableResult.setError(searchValue);
+            senderQuery="and senderResponsible in( select r_id from responsible_view where r_name like '%"+word+"%')\n";
+        }
 
-        return dataTableResult;
+        boolean searchByDocType= datatable.containsKey("datatable[query][docType]");
+        if(searchByDocType){
+            String word= datatable.get("datatable[query][docType]");
+            subTypeQuery="and documentSubType = '"+word+"'\n";
+        }
+
+        SimpleDateFormat dt = new SimpleDateFormat("yyyy.MM.dd");
+
+        boolean getFromDate= datatable.containsKey("datatable[query][fromDate]");
+        if (getFromDate){
+            String from = datatable.get("datatable[query][fromDate]");
+            String[] words=from.split("\\.");
+            fromDateQuery="and senderRegisteredDate>='"+words[2]+"-"+words[1]+"-"+words[0]+"'\n";
+        }
+
+        boolean getToDate= datatable.containsKey("datatable[query][toDate]");
+        if (getToDate){
+            String to = datatable.get("datatable[query][toDate]");
+            String[] words=to.split("\\.");
+            toDateQuery="and senderRegisteredDate<='"+words[2]+"-"+words[1]+"-"+words[0]+"'\n";
+        }
+
+
+        DocumentType documentType=documentTypeService.getByInternalName(docType);
+        User user=userService.findByUsername(Utils.getPrincipal());
+
+        String baseQuery="select d.id ,d.docIndex,d.indexNo,d.title,d.documentDueDate,\n" +
+                "       d.receiverRegisteredDate,d.receiverRegisteredNumber,\n" +
+                "       d.senderRegisteredDate,d.senderRegisteredNumber,\n" +
+                "       d.documentState,dst.name as documentSubType,d.owner,\n" +
+                "       d.senderResponsible as senderResponsible,d.pageCount,\n" +
+                "       d.receiverResponsible as receiverResponsible,\n" +
+                "       d.senderExecutor as senderExecutor,d.documentState, \n" +
+                "       d.receiverExecutor as receiverExecutor, 'false' as hasTask\n"+
+                "from df_document d,cat_document_subtype dst,df_document_users du where d.documentType="+documentType.getId()+" and  dst.id=d.documentSubType " +
+                titleQuery+
+                senderQuery+
+                receiverQuery+
+                subTypeQuery+
+                fromDateQuery+
+                toDateQuery+
+                "and du.Document_id=d.id and du.users_id="+user.getId()+" \n"+
+                "order by " + sortField + " " + sortStr + " LIMIT " + offset +"," + perPage;
+
+        Query query=entityManager.createNativeQuery(baseQuery, DocumentModel.class);
+
+        String countQuery="select count(1)\n" +
+                "from df_document d,cat_document_subtype dst,df_document_users du where d.documentType="+documentType.getId()+" and  dst.id=d.documentSubType " +
+                titleQuery+
+                senderQuery+
+                receiverQuery+
+                subTypeQuery+
+                fromDateQuery+
+                toDateQuery+
+                "and du.Document_id=d.id and du.users_id="+user.getId();
+        BigInteger count = (BigInteger)entityManager.createNativeQuery(countQuery).getResultList().get(0);
+
+        List<DocumentModel> documents=query.getResultList();
+
+        for(DocumentModel documentModel:documents){
+            User user1=userService.findById(Long.valueOf(documentModel.getOwner()));
+            State state=State.valueOf(documentModel.getDocumentState());
+            documentModel.setDocumentState(state.text());
+            documentModel.setOwner(user1.getStaff().getName());
+
+            Map<String, String> vars = new HashMap<>();
+            vars.put("objectId", String.valueOf(documentModel.getId()));
+            vars.put("status", "OPEN");
+            try {
+                Task taskList = taskService.getTask(getUser(), vars);
+                if(taskList!=null)
+                    documentModel.setHasTask("true");
+            }
+            catch (Exception e){}
+
+//            List<Task> tasks=taskService.getTasksByObjectId(documentModel.getId());
+//            for(Task task:tasks){
+//                if(task.getAssignedTo()==user && task.getStatus()==TaskStatus.OPEN){
+//                    documentModel.setHasTask("true");
+//                }
+//            }
+            String senders = "";
+            try {
+                Responsible senderResponsible = responsibleService.getById(Long.valueOf(documentModel.getSenderResponsible()));
+                if (senderResponsible.getResponsibleType() == 1) {
+                    for (Staff staff : senderResponsible.getStaff()) {
+                        if (senders.length() == 0)
+                            senders = senders + staff.getName();
+                        else
+                            senders = senders + "<br> " + staff.getName();
+                    }
+                } else if (senderResponsible.getResponsibleType() == 2) {
+                    for (Department department : senderResponsible.getDepartments()) {
+                        if (senders.length() == 0)
+                            senders = senders + department.getName();
+                        else
+                            senders = senders + "<br> " + department.getName();
+                    }
+                } else if (senderResponsible.getResponsibleType() == 3) {
+                    for (Organization organization : senderResponsible.getOrganizations()) {
+                        if (senders.length() == 0)
+                            senders = senders + organization.getName();
+                        else
+                            senders = senders + "<br> " + organization.getName();
+                    }
+                } else {
+                    for (Person person : senderResponsible.getPerson()) {
+                        if (senders.length() == 0)
+                            senders = senders + person.getName();
+                        else
+                            senders = senders + "<br> " + person.getName();
+                    }
+                }
+            }
+            catch (Exception e){
+
+            }
+            documentModel.setSenderResponsible(senders);
+            String receivers = "";
+            Responsible receiverResponsible=responsibleService.getById(Long.valueOf(documentModel.getReceiverResponsible()));
+            if(receiverResponsible.getResponsibleType() == 1)
+            {
+                for(Staff staff : receiverResponsible.getStaff())
+                {
+                    if(receivers.length()==0)
+                        receivers=receivers+staff.getName();
+                    else
+                        receivers=receivers+"<br> "+staff.getName();
+                }
+            } else if(receiverResponsible.getResponsibleType() == 2)
+            {
+                for(Department department : receiverResponsible.getDepartments())
+                {
+                    if(receivers.length()==0)
+                        receivers=receivers+department.getName();
+                    else
+                        receivers=receivers+"<br> "+department.getName();
+                }
+            }
+            else if(receiverResponsible.getResponsibleType() == 3)
+            {
+                for(Organization organization : receiverResponsible.getOrganizations())
+                {
+                    if(receivers.length()==0)
+                        receivers=receivers+organization.getName();
+                    else
+                        receivers=receivers+"<br> "+organization.getName();
+                }
+            } else {
+                for(Person person : receiverResponsible.getPerson())
+                {
+                    if(receivers.length()==0)
+                        receivers=receivers+person.getName();
+                    else
+                        receivers=receivers+"<br> "+person.getName();
+                }
+            }
+            documentModel.setReceiverResponsible(receivers);
+        }
+
+        DocumentMetaModel metaModel = new DocumentMetaModel();
+        Meta meta = new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, sortStr, sortField);
+        metaModel.setMeta(meta);
+        metaModel.setData(documents);
+
+//        try {
+//            query.getResultList();
+//        }
+//        catch(Exception e){
+//            System.out.println(e);
+//        }
+
+        return metaModel;
     }
 
     @RequestMapping(value = "/dt/documents")
