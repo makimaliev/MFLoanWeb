@@ -464,7 +464,7 @@ public class PrintoutTemplateController {
 
             PrintoutGeneratorCreditClaim printoutGeneratorCreditClaim= new PrintoutGeneratorCreditClaim();
 
-            Document document = new Document(PageSize.A4, 10, 10, 10, 10);
+            Document document = new Document(PageSize.A4, 20, 20, 10, 10);
 
 			RtfWriter2 rtfWriter2 = RtfWriter2.getInstance(document,response.getOutputStream());
 

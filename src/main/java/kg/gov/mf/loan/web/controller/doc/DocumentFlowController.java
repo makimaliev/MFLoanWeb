@@ -1,6 +1,6 @@
 package kg.gov.mf.loan.web.controller.doc;
 
-import javafx.util.converter.PercentageStringConverter;
+
 import kg.gov.mf.loan.admin.org.model.Department;
 import kg.gov.mf.loan.admin.org.model.Organization;
 import kg.gov.mf.loan.admin.org.model.Person;

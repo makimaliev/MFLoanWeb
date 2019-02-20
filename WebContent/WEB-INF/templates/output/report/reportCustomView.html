@@ -183,7 +183,7 @@
                             </div>
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-lg-6 col-l-12 col-sm-12">
                             <div class="form-group m-form__group row" th:each="compareParameterModelInList, iterator: ${compareParametersModels}">
 
                                     <input hidden="hidden" type="text" class="col-4" th:id="'fieldName_' + ${iterator.index}" name="fieldName" th:value="${compareParameterModelInList.fieldName}"  disabled="disabled">
