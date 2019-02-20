@@ -20,7 +20,7 @@
 
             $(document).ready(function() {
 
-                CKEDITOR.config.readOnly = [[${document.documentState.ordinal()}]] > 4;
+                CKEDITOR.config.readOnly = [[${document.documentState.ordinal()}]] > 1;
                 CKEDITOR.replace("description", {
                     language: 'ru',
                     uiColor: '#ffffff',
@@ -302,7 +302,6 @@
                 <th th:text="#{label.document.generalStatus}">Состояние</th>
                 <th th:text="#{label.document.executer}">Исполнитель</th>
                 <th th:text="#{label.document.receiver}">Получатель</th>
-                <th width="120px" th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|">Номер бланка</th>
             </tr>
             </thead>
             <tbody>
@@ -338,7 +337,6 @@
                     <p th:if="${document.receiverResponsible.responsibleType == 3}" th:each="ro : ${document.receiverResponsible.organizations}" th:utext="${ro.name}"> </p>
                     <p th:if="${document.receiverResponsible.responsibleType == 4}" th:each="rp : ${document.receiverResponsible.person}" th:utext="${rp.name}"> </p>
                 </td>
-                <td th:utext="${document.indexNo  + '<hr>' + document.pageCount}"></td>
             </tr>
             </tbody>
         </table>

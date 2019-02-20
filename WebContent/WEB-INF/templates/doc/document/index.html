@@ -81,12 +81,12 @@
 
                         <hr>
 
-                        <!--th:block th:replace="doc/layout::__${type + 'Index'}__"/-->
+                        <th:block th:replace="doc/layout::__${type + 'Index'}__"/>
 
-                        <table class="table table-bordered table-hover" id="incoming">
+                        <!--table class="table table-bordered table-hover" id="incoming">
                             <thead class="thead-default">
                                 <tr>
-                                    <th></th>
+                                    <th width="30px"></th>
                                     <th width="30px"></th>
                                     <th width="120px">К</th>
                                     <th width="80px">Вхд. №</th>
@@ -98,7 +98,7 @@
                                     <th width="150px" th:text="#{label.document.generalStatus}">Состояние</th>
                                 </tr>
                             </thead>
-                        </table>
+                        </table-->
                         <hr>
 
                     </div>
@@ -167,7 +167,92 @@
             },
             dom: "<'row'<'col-6'i><'col-6'l>>" +
             "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-4'i><'col-4'p><'col-4'l>>"
+            "<'row'<'col-4'i><'col-4'p><'col-4'l>>",
+            "deferRender": true,
+            /*
+            "ajax": {
+                url: "doc/documentList",
+                "dataSrc": ""
+            },
+
+            columns: [
+                {
+                    class: "details-control",
+                    searchable: false,
+                    orderable: false,
+                    data: null,
+                    defaultContent: ""
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    data: function (data, type, full, meta) {
+                        return "...";
+                    }
+                },
+                {
+                    searchable: false,
+                    orderable: true,
+                    name: 'documentDueDate',
+                    data: 'documentDueDate',
+                    render: function (data, type, full, meta) {
+                        return data.documentDueDate !== null ? '<span class="text-danger">KОНТРОЛЬ<br>' + data.documentDueDate + '</span>' : '';
+
+                    }
+                },
+                {
+                    searchable: true,
+                    orderable: true,
+                    name: 'docIndex',
+                    data: 'receiverRegisteredNumber',
+                    render: function (data) { return data; }
+                },
+                {
+                    searchable: false,
+                    orderable: true,
+                    name: 'receiverRegisteredDate',
+                    data: 'receiverRegisteredDate'
+                },
+                {
+                    searchable: true,
+                    orderable: true,
+                    name: 'senderRegisteredNumber',
+                    data: 'senderRegisteredNumber',
+                    render: function (data, type, full, meta) {
+                        return data.senderRegisteredNumber + "<hr>" + data.senderRegisteredDate;
+                    }
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'senderResponsible',
+                    data: 'senderResponsible',
+                    render: function (data, type, full, meta) {
+                        return data.senderResponsible !== null ? data.senderResponsible.join('') : null;
+                    }
+                },
+                {
+                    searchable: true,
+                    orderable: false,
+                    name: 'title',
+                    data: 'title'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'receiverResponsible',
+                    data: 'receiverResponsible'
+                        //function (data, type, full, meta) { return data.receiverResponsible !== null ? data.receiverResponsible.join('') : null; }
+                },
+                {
+                    searchable: false,
+                    orderable: true,
+                    name: 'documentState',
+                    data: 'documentState'
+                }
+            ]
+            */
+
         };
         var table = $('#documentTable').DataTable(dtOptions);
 
@@ -179,13 +264,13 @@
             </span>
         </div>
         */
-
+        /*
         var t1 = $('#incoming').DataTable({
             orderCellsTop: true,
             fixedHeader: true,
-            searching: false,
+            searching: true,
             paging: true,
-            processing: false,
+            processing: true,
             ajax: {
                 url: '/doc/documents',
                 data: function ( d ) {
@@ -193,6 +278,7 @@
                 }
             },
             serverSide: true,
+            order: [ [3, 'asc'] ],
             columns: [
                 {
                     class: "details-control",
@@ -220,13 +306,13 @@
                 {
                     searchable: true,
                     orderable: true,
-                    name: 'receiverRegisteredNumber',
+                    name: 'docIndex',
                     data: 'receiverRegisteredNumber',
-                    render: function (data) { return data + '$'; }
+                    render: function (data) { return data; }
                 },
                 {
-                    searchable: true,
-                    orderable: false,
+                    searchable: false,
+                    orderable: true,
                     name: 'receiverRegisteredDate',
                     data: function (data, type, full, meta) {
                         return data.receiverRegisteredDate;
@@ -235,7 +321,7 @@
                 },
                 {
                     searchable: true,
-                    orderable: false,
+                    orderable: true,
                     name: 'senderRegisteredNumber',
                     data: function (data, type, full, meta) {
                         return data.senderRegisteredNumber + "<hr>" + data.senderRegisteredDate;
@@ -243,12 +329,10 @@
                     }
                 },
                 {
-                    searchable: true,
+                    searchable: false,
                     orderable: false,
                     name: 'senderResponsible',
                     data: function (data, type, full, meta) {
-                        console.log(data)
-
                         var r = [];
 
                         if(data.senderResponsible !== null) {
@@ -277,7 +361,7 @@
                     data: 'title'
                 },
                 {
-                    searchable: true,
+                    searchable: false,
                     orderable: false,
                     name: 'receiverResponsible',
                     data: function (data, type, full, meta) {

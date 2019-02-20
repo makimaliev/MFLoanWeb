@@ -44,7 +44,6 @@
                                         <nav>
                                             <div class="nav nav-tabs justify-content-center" id="tabstages" role="tablist">
                                                 <a role="tab" data-toggle="tab" aria-selected="true"  class="nav-item nav-link active"  id="nav-main-tab"       href="#main" aria-controls="nav-main">Общие</a>
-                                                <!--a role="tab" data-toggle="tab" aria-selected="false" class="nav-item nav-link"         id="nav-stages-tab"     href="#stages" aria-controls="nav-stages">Этапы</a-->
                                                 <a role="tab" data-toggle="tab" aria-selected="false" class="nav-item nav-link"         id="nav-history-tab"    href="#history" aria-controls="nav-history">Журнал задач</a>
                                                 <a role="tab" data-toggle="tab" aria-selected="false" class="nav-item nav-link"         id="nav-journal-tab"    href="#journal" aria-controls="nav-journal">История</a>
                                             </div>
@@ -57,21 +56,6 @@
 
                                                 </div>
                                             </div>
-                                            <!--div class="tab-pane fade" id="stages" role="tabpanel" aria-labelledby="nav-stages-tab">
-                                                <div class="form-group m-form__group">
-                                                    <table class="table table-striped table-bordered">
-                                                        <tr th:each="stage : ${stages}">
-                                                            <td><label
-                                                                    class="align-middle m-2"
-                                                                    th:utext="${stage.text()}"></label></td>
-                                                            <td><label
-                                                                    class="align-middle m-2 text-success"
-                                                                    th:utext="${document.documentState.ordinal() >= stage.state().ordinal()} ? 'Выполнен' : '-'"></label>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                            </div-->
                                             <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="nav-history-tab">
                                                 <th:block th:replace="doc/layout::history"/>
                                             </div>
@@ -87,8 +71,7 @@
                         </div>
                         <div class="m-portlet__foot">
                             <button type="button" class="btn btn-primary float-none" onclick="window.history.back()"> Отмена </button>
-                            <button type="submit" name="action" th:if="*{id != 0 and documentState.ordinal() < 8}" value="UPDATE" class="btn btn-info float-none"> Сохранить </button>
-                            <button sec:authorize="hasAnyAuthority('ADMIN')" type="submit" name="action" value="UPDATE" class="btn btn-info float-none"> Сохранить </button>
+                            <button type="submit" name="action" th:if="*{id != 0 and documentState.ordinal() < 8}" value="UPDATE" class="btn btn-info float-none" sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')"> Сохранить </button>
                             <th:block th:replace="doc/layout::documentActions"/>
                         </div>
                     </form>
@@ -248,7 +231,7 @@
         */
         var soption = {
             minimumInputLength: 2,
-            placeholder: "Выбрать",
+            placeholder: "Поиск ...",
             language: {
                 inputTooShort: function () {
                     return "";
@@ -276,7 +259,7 @@
         }
         var ssoption = {
             minimumResultsForSearch: -1,
-            placeholder: "Выбрать",
+            placeholder: "Поиск ...",
             language: {
                 inputTooShort: function () {
                     return "";

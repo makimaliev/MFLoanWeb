@@ -12,11 +12,11 @@
             <div class="modal-body bg-light p-0" id="chat-page">
 
                 <!--*******************************-->
-                <select id="cu" style="width: 100%">
+                <!--select id="cu" style="width: 100%">
                     <option th:each="user : ${#lists.sort(@chatUserServiceImpl.list())}"
                             th:value="${user.username}"
                             th:text="${user.name}">Responsible</option>
-                </select>
+                </select-->
 
                 <!--div id="messageArea" class="m-3"></div-->
                 <!-- Start -->

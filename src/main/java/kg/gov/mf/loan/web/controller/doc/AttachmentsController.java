@@ -84,19 +84,18 @@ public class AttachmentsController extends BaseController {
     }
 
     @RequestMapping(value = "/download/{attachmentId}", method = RequestMethod.GET)
+    @ResponseBody
     public void download(HttpServletResponse response, @PathVariable("attachmentId") Long attachmentId) throws IOException {
 
         Attachment attachment = attachmentService.getById(attachmentId);
 
         File file = new File(path + attachment.getInternalName());
-        String mimeType = URLConnection.guessContentTypeFromName(file.getName());
-
-        if(mimeType==null){
-            mimeType = "application/octet-stream";
-        }
+        String mimeType = attachment.getMimeType() != null && !attachment.getMimeType().isEmpty()
+                ? attachment.getMimeType()
+                : "application/octet-stream";
 
         response.setContentType(mimeType);
-        response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + attachment.getName() +"\""));
+        response.setHeader("Content-Disposition", String.format("inline; filename=\"%s\"", attachment.getName()));
         response.setContentLength((int)file.length());
 
         InputStream inputStream = new BufferedInputStream(new FileInputStream(file));

@@ -12,53 +12,39 @@
 
     <!-- Receiver Responsible -->
     <div class="form-group m-form__group row">
+        <input type="hidden" name="receiverResponsible.responsibleType" value="1">
         <label class="col-3 col-form-label"> Кому : </label>
-        <div th:class="*{documentState.ordinal() > 4} or ${cu == #authentication.name} ? 'col-0' : 'col-3'" th:hidden="*{documentState.ordinal() > 4}">
-            <select class="s2s form-control" id="rrt_select" th:field="*{receiverResponsible.responsibleType}" style="width:100%">
-                <option value="1">Сотрудник</option>
-                <!--option value="2">Отдел</option-->
-            </select>
-        </div>
-        <div th:class="*{documentState.ordinal() > 4} ? 'col-9' : 'col-6'">
-            <div class="rdr" id="ri1" th:hidden="*{documentState.ordinal() > 4}">
+        <div class="col-9">
+            <div th:hidden="*{documentState.ordinal() > 1}">
                 <select class="s2 form-control" th:field="*{receiverResponsible.staff}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/staff">
                     <option th:each="r : *{receiverResponsible?.staff}"
                             th:value="${r.id}"
                             th:text="${r.name}">Responsible</option>
                 </select>
             </div>
-            <!--div class="rdr" id="ri2" th:hidden="*{documentState.ordinal() > 4}">
-                <select class="s2 form-control" th:field="*{receiverResponsible.departments}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/data/department">
-                    <option th:each="r : *{receiverResponsible?.departments}"
-                            th:value="${r.id}"
-                            th:text="${r.name}">Responsible</option>
-                </select>
-            </div-->
-            <label class="form-control" th:each="s : *{receiverResponsible.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 4}"> Staff </label>
-            <!--label class="form-control" th:each="d : *{receiverResponsible.departments}" th:text="${d.name}" th:if="*{documentState.ordinal() > 4}"> Staff </label-->
+            <label class="form-control" th:each="s : *{receiverResponsible.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
         </div>
     </div>
     <!-- Sender Responsible -->
     <div class="form-group m-form__group row">
-        <input type="hidden" id="senderResponsible.responsibleType" name="senderResponsible.responsibleType" value="1">
+        <input type="hidden" name="senderResponsible.responsibleType" value="1">
         <label class="col-3 col-form-label"> ОТ КОГО : </label>
         <div class="col-9">
-            <div th:hidden="*{documentState.ordinal() > 4}">
+            <div th:hidden="*{documentState.ordinal() > 1}">
                 <select class="s2 form-control m-input" th:field="*{senderResponsible.staff}" multiple="multiple" data-ajax--url="/doc/data/staff" style="width:100%" required>
                     <option th:each="r : *{senderResponsible?.staff}"
                             th:value="${r.id}"
                             th:text="${r.name}">Staff</option>
                 </select>
             </div>
-            <label class="form-control" th:each="s : *{senderResponsible.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 4}"> Staff </label>
+            <label class="form-control" th:each="s : *{senderResponsible.staff}" th:text="${s.name}" th:if="*{documentState.ordinal() > 1}"> Staff </label>
         </div>
     </div>
     <!-- TITLE -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label"> Относительно : </label>
         <div class="col-9">
-            <input class="form-control" required th:field="*{title}" autocomplete="off" th:type="*{documentState.ordinal() < 5} ? 'text' : 'hidden'">
-            <label class="form-control" th:text="*{title}" th:if="*{documentState.ordinal() > 4}"> Title </label>
+            <textarea class="form-control" required th:field="*{title}" th:readonly="*{documentState.ordinal() > 1}"></textarea>
         </div>
     </div>
     <!-- DESCRIPTION -->
@@ -85,15 +71,14 @@
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label"> Срок : </label>
         <div class="col-9">
-            <input class="dtp form-control" th:field="*{documentDueDate}" th:type="*{documentState.ordinal() < 4} ? 'text' : 'hidden'" autocomplete="off" readonly="readonly"/>
-            <label class="form-control" data-date-format="dd-mm-yyyy" th:text="*{documentDueDate} != null ? *{#dates.format(documentDueDate, 'dd-MM-yyyy HH:mm')} : 'Срок не установлен'" th:if="*{documentState.ordinal() > 4}"> Title </label>
+            <input class="form-control" th:field="*{documentDueDate}" type="text" autocomplete="off" readonly="readonly" th:classappend="*{documentState.ordinal() > 1} ? '' : 'dtp'"/>
         </div>
     </div>
     <!-- Receiver Executor -->
     <div class="form-group m-form__group row" th:if="*{documentState.ordinal() > 8}">
         <label class="col-3 col-form-label"> Испонитель : </label>
         <div class="col-9">
-            <input type="hidden" th:field="*{receiverExecutor.executorType}">
+            <input type="hidden" name="receiverExecutor.executorType" val="1">
             <select hidden th:field="*{receiverExecutor.staff}" multiple>
                 <option th:each="r : *{receiverExecutor?.staff}"
                         th:value="${r.id}"
