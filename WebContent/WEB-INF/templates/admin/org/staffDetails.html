@@ -309,7 +309,7 @@
 																							   role="button">
 																								<span th:text="#{label.table.view}"></span>
 																							</a>
-																							<a  sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_EMPLOYMENTHISTORYEVENT')"sec:authorize="hasRole('ADMIN')" class="dropdown-item"
+																							<a  sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_EMPLOYMENTHISTORYEVENT')" class="dropdown-item"
 																							   th:href="@{/employmentHistoryEvent/__${eventInList.id}__/edit}"
 																							   data-toggle="modal"
 																							   data-target="#eventFormModal">

@@ -29,6 +29,11 @@ public class StaffController {
 	StaffRepository staffRepository;
 
 	@Autowired
+	AddressService addressService;
+
+	@Autowired
+	EmploymentHistoryService employmentHistoryService;
+	@Autowired
 	EntityManager entityManager;
      
     public void setStaffService(StaffService rs)
@@ -73,8 +78,7 @@ public class StaffController {
         this.personService = rs;
     }
     
-	@Autowired
-    private EmploymentHistoryService employmentHistoryService;
+
 	
     public void setEmploymentHistoryService(EmploymentHistoryService ds)
     {
@@ -122,6 +126,16 @@ public class StaffController {
 	public String viewStaffDetailsById(@PathVariable("id") long id, Model model) {
 
 		Staff staff = this.staffService.findById(id);
+
+		Person person = this.personService.findById(staff.getPerson().getId());
+
+		Address address = this.addressService.findById(person.getAddress().getId());
+
+		person.setAddress(address);
+
+		staff.setEmploymentHistory(this.employmentHistoryService.findById(staff.getEmploymentHistory().getId()));
+
+		staff.setPerson(person);
 
 		if(staff.getEmploymentHistory()==null)
 		{
