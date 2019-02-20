@@ -15,6 +15,7 @@ import kg.gov.mf.loan.manage.repository.loan.PaymentRepository;
 import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
 import kg.gov.mf.loan.manage.service.collection.CollectionProcedureService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
+import kg.gov.mf.loan.process.service.JobItemService;
 import kg.gov.mf.loan.web.util.Pager;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -72,6 +73,9 @@ public class PaymentController {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+
+	@Autowired
+	JobItemService jobItemService;
 
 	public void setSessionFactory(SessionFactory sf){
 		this.sessionFactory = sf;
@@ -183,7 +187,11 @@ public class PaymentController {
 		}
 		session.getTransaction().begin();
 		runUpdateQueries(loan,session);
-		session.getTransaction().commit();}
+		session.getTransaction().commit();
+		this.jobItemService.runDailyCalculateProcedureForOneLoan(loanId,new Date());
+    	}
+
+
 
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
