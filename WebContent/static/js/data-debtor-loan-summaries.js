@@ -40,6 +40,9 @@ var DatatableDataLocalSummaries = function () {
                 field: "id",
                 title: "#",
                 responsive: {hidden: 'xl'},
+            },{
+                field: "counter",
+                title: "#"
             },  {
 				field: "onDate",
 				title: "На дату",
@@ -225,6 +228,7 @@ var DatatableDataLocalSummaries = function () {
             }
 		});
 
+		datatable.sort("counter","desc");
 		var query = datatable.getDataSourceQuery();
 
 		$('#m_form_search5').on('keyup', function (e) {

@@ -40,6 +40,9 @@ var DatatableDataLocalPaymentSchedules = function () {
                 title: "#",
                 responsive: {hidden: 'xl'},
             }, {
+                field: "counter",
+                title: "#"
+            }, {
 				field: "expectedDate",
 				title: "Дата"
 			},{
@@ -147,6 +150,8 @@ var DatatableDataLocalPaymentSchedules = function () {
                 }
             }
 		});
+
+		datatable.sort("counter","desc");
 
 		var query = datatable.getDataSourceQuery();
 

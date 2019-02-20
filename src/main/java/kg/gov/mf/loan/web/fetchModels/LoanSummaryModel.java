@@ -39,6 +39,7 @@ public class LoanSummaryModel implements Comparable<LoanSummaryModel>{
     private Double totalFeePaid;
     private LoanSummaryType loanSummaryType;
     private int record_status;
+    private int counter;
 
     @Override
     public int compareTo(LoanSummaryModel model)
@@ -244,5 +245,13 @@ public class LoanSummaryModel implements Comparable<LoanSummaryModel>{
 
     public void setRecord_status(int record_status) {
         this.record_status = record_status;
+    }
+
+    public int getCounter() {
+        return counter;
+    }
+
+    public void setCounter(int counter) {
+        this.counter = counter;
     }
 }

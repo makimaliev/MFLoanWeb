@@ -41,6 +41,9 @@ var DatatableDataLocalPayments = function () {
                 title: "#",
                 responsive: {hidden: 'xl'},
             }, {
+                field: "counter",
+                title: "#"
+            },{
 				field: "paymentDate",
 				title: "Дата",
                 width: 70
@@ -158,6 +161,7 @@ var DatatableDataLocalPayments = function () {
             }
 		});
 
+		datatable.sort("counter","desc");
 		var query = datatable.getDataSourceQuery();
 
 		$('#m_form_search3').on('keyup', function (e) {

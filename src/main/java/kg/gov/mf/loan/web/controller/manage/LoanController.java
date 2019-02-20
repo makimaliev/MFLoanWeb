@@ -939,6 +939,10 @@ public class LoanController {
         }
 
         Collections.sort(result);
+        int counter=1;
+        for(PaymentScheduleModel model:result){
+            model.setCounter(counter++);
+        }
 
         return result;
     }
@@ -973,6 +977,10 @@ public class LoanController {
         }
 
         Collections.sort(result);
+        int counter=1;
+        for(PaymentModel model:result){
+            model.setCounter(counter++);
+        }
         return result;
     }
 
@@ -1152,6 +1160,10 @@ public class LoanController {
 
 
         Collections.sort(result);
+        int counter=1;
+        for(LoanSummaryModel loanSummaryModel:result){
+            loanSummaryModel.setCounter(counter++);
+        }
         return result;
     }
 
