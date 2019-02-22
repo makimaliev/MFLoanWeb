@@ -2848,13 +2848,13 @@ begin
       set is_leaf_or_normal_loan = false;
     end if;
 
-    if is_leaf_or_normal_loan then
+    if type = 'SYSTEM' then
+      DELETE FROM loanDetailedSummary WHERE loanId = loan_id;
+      DELETE FROM loanSummary WHERE loanId = loan_id AND loanSummaryType IN ('SYSTEM', 'DAILY');
+      DELETE FROM accrue where loanId = loan_id;
+    end if;
 
-      if type = 'SYSTEM' then
-        DELETE FROM loanDetailedSummary WHERE loanId = loan_id;
-        DELETE FROM loanSummary WHERE loanId = loan_id AND loanSummaryType IN ('SYSTEM', 'DAILY');
-        DELETE FROM accrue where loanId = loan_id;
-      end if;
+    if is_leaf_or_normal_loan then
 
       CALL calculateLoanDetailedSummaryUntilOnDate(loan_id, in_date, 1, type);
       CALL updateBankruptInfoForLoan(loan_id);
@@ -3872,4 +3872,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-22 16:08:19
+-- Dump completed on 2019-02-22 16:29:52
