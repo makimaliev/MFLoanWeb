@@ -2895,8 +2895,8 @@ begin
 
         close t_cursor;
 
-        CALL updateRootLoanPayment(loan_id);
-        CALL updateRootLoanPaymentSchedule(loan_id);
+        CALL update_child_loan_payments(loan_id);
+        CALL update_child_loan_payment_schedules(loan_id);
 
         SELECT loan.loan_class_id into loan_class
         FROM loan loan
@@ -2942,6 +2942,9 @@ begin
               and loanStateId != 3)
         and p.record_status = 1
         group by p.onDate, p.loanSummaryType;
+
+        #create insert statement for accrue as well
+
       end;
     end if;
   end ;;
@@ -3862,6 +3865,92 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_child_loan_payments` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_child_loan_payments`(IN parent_loan_id bigint)
+BEGIN
+
+    delete from payment where loanId = parent_loan_id;
+
+    insert into payment (record_status, version, details, exchange_rate, fee, in_loan_currency, interest, number, paymentDate, penalty, principal, totalAmount, loanId, paymentTypeId)
+    select 1,
+          1,
+          pt.details,
+          pt.exchange_rate,
+          sum(pt.fee),
+          pt.in_loan_currency,
+          sum(pt.interest),
+          pt.number,
+          pt.paymentDate,
+          sum(pt.penalty),
+          sum(pt.principal),
+          sum(pt.totalAmount),
+          parent_loan_id,
+          pt.paymentTypeId
+    from payment pt
+    where pt.loanId in
+          (select id
+           from loan
+           where parent_id = parent_loan_id
+          and loanStateId != 3)
+        and pt.record_status = 1
+        group by pt.paymentDate;
+
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_child_loan_payment_schedules` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_child_loan_payment_schedules`(IN parent_loan_id bigint)
+BEGIN
+
+    delete from paymentSchedule where loanId = parent_loan_id;
+
+    insert into paymentSchedule (record_status, version, collectedInterestPayment, collectedPenaltyPayment, disbursement, expectedDate, interestPayment, principalPayment, installmentStateId, loanId)
+    select 1,
+          1,
+          sum(ps.collectedInterestPayment),
+          sum(ps.collectedPenaltyPayment),
+          sum(ps.disbursement),
+          ps.expectedDate,
+          sum(ps.interestPayment),
+          sum(ps.principalPayment),
+          ps.installmentStateId,
+          parent_loan_id
+    from paymentSchedule ps
+    where ps.loanId in
+          (select id
+           from loan
+           where parent_id = parent_loan_id
+          and loanStateId != 3)
+        and ps.record_status = 1
+        group by ps.expectedDate;
+
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -3872,4 +3961,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-22 16:58:19
+-- Dump completed on 2019-02-22 20:19:23
