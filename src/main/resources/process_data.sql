@@ -3789,7 +3789,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateTrancheeLoanData`(IN loan_id bigint)
 BEGIN
@@ -3843,8 +3843,8 @@ BEGIN
       UPDATE loanSummary AS dest,
           (
              select tSum.onDate as tDate, SUM(tSum.totalDisbursed) as tDisb, SUM(tSum.outstadingPrincipal) as tOut FROM loanSummary tSum
-              WHERE tSum.loanId IN (SELECT id FROM loan WHERE parent_id = loan_id AND loanStateId != 3)
-              group by onDate
+              WHERE tSum.loanId IN (SELECT id FROM loan WHERE parent_id = loan_id AND loanStateId != 3) and tSum.record_status = 1
+              group by tSum.onDate, tSum.loanSummaryType
           ) AS src
       SET
           dest.totalDisbursed = src.tDisb,
@@ -3872,4 +3872,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-22 16:29:52
+-- Dump completed on 2019-02-22 16:58:19
