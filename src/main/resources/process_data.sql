@@ -2836,6 +2836,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `run_calc_manual_summary_for_loan`(I
 begin
 
     declare is_leaf_or_normal_loan boolean default true;
+    declare loan_class int;
 
     #if parent loan then first calculate for all child loans then calculate loan itself else just calculate for loan
     if exists(
@@ -2845,6 +2846,12 @@ begin
       and loan.id = loan_id
     ) then
       set is_leaf_or_normal_loan = false;
+    end if;
+
+    if type = 'SYSTEM' then
+      DELETE FROM loanDetailedSummary WHERE loanId = loan_id;
+      DELETE FROM loanSummary WHERE loanId = loan_id AND loanSummaryType IN ('SYSTEM', 'DAILY');
+      DELETE FROM accrue where loanId = loan_id;
     end if;
 
     if is_leaf_or_normal_loan then
@@ -2880,6 +2887,17 @@ begin
           end loop run_calculate;
 
         close t_cursor;
+
+        CALL updateRootLoanPayment(loan_id);
+        CALL updateRootLoanPaymentSchedule(loan_id);
+
+        SELECT loan.loan_class_id into loan_class
+        FROM loan loan
+        WHERE loan.id = loan_id;
+
+        IF loan_class = 2 THEN
+          CALL updateTrancheeLoanData(loan_id);
+        END IF;
 
         insert into loanSummary (version, loanAmount, loanSummaryType, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty, overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalFeePaid, totalInterestPaid, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalPenaltyPaid, totalPrincipalPaid, loanId, createDate)
         select 1,
@@ -3848,4 +3866,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-17 17:04:56
+-- Dump completed on 2019-02-22 15:02:53
