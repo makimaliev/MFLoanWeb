@@ -14,6 +14,7 @@ import kg.gov.mf.loan.manage.model.orderterm.OrderTermCurrency;
 import kg.gov.mf.loan.manage.repository.loan.PaymentRepository;
 import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
 import kg.gov.mf.loan.manage.service.collection.CollectionProcedureService;
+import kg.gov.mf.loan.manage.service.collection.PhaseDetailsService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.process.service.JobItemService;
 import kg.gov.mf.loan.web.util.Pager;
@@ -58,6 +59,9 @@ public class PaymentController {
 
 	@Autowired
 	PaymentRepository paymentRepository;
+
+	@Autowired
+	PhaseDetailsService phaseDetailsService;
 
 //	@PersistenceContext
 //	private EntityManager entityManager;
@@ -186,7 +190,7 @@ public class PaymentController {
 			session = sessionFactory.openSession();
 		}
 		session.getTransaction().begin();
-		runUpdateQueries(loan,session);
+			runUpdateOfPhases(loan);
 		session.getTransaction().commit();
 		this.jobItemService.runDailyCalculateProcedureForOneLoan(loanId,new Date());
     	}
@@ -196,7 +200,65 @@ public class PaymentController {
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 
-    public void runUpdateQueries(Loan loan,Session session){
+	public void runUpdateOfPhases(Loan loan){
+
+
+		for(CollectionPhase phase1:loan.getCollectionPhases()){
+			CollectionPhase phase=collectionPhaseService.getById(phase1.getId());
+			SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
+			Date startDate=phase.getStartDate();
+			Date closeDate=new Date();
+			CollectionProcedure procedure=collectionProcedureService.getById(phase.getCollectionProcedure().getId());
+			if(phase.getCloseDate()!=null){
+				closeDate=phase.getCloseDate();
+			}
+			else if(procedure.getCloseDate()!=null){
+				closeDate=phase.getCollectionProcedure().getCloseDate();
+			}
+
+			Double sumFeeP=0.0;
+			Double sumPrincipalP=0.0;
+			Double sumInterestP=0.0;
+			Double sumPenaltyP=0.0;
+			Double sumTotalP=0.0;
+			for(PhaseDetails phaseDetails1: phase.getPhaseDetails()){
+
+				PhaseDetails phaseDetails=phaseDetailsService.getById(phaseDetails1.getId());
+
+				List<Payment> payments=paymentService.getFromToDate(loan.getId(),startDate,closeDate);
+				Double sumFeeD=0.0;
+				Double sumPrincipalD=0.0;
+				Double sumInterestD=0.0;
+				Double sumPenaltyD=0.0;
+				Double sumTotalD=0.0;
+				for(Payment payment:payments){
+					sumFeeD=sumFeeD+payment.getFee();
+					sumPenaltyD=sumPenaltyD+payment.getPenalty();
+					sumPrincipalD=sumPrincipalD+payment.getPrincipal();
+					sumInterestD=sumInterestD+payment.getInterest();
+					sumTotalD=sumTotalD+payment.getTotalAmount();
+				}
+				phaseDetails.setPaidFee(sumFeeD);
+				phaseDetails.setPaidPrincipal(sumPrincipalD);
+				phaseDetails.setPaidPenalty(sumPenaltyD);
+				phaseDetails.setPaidInterest(sumInterestD);
+				phaseDetails.setPaidTotalAmount(sumTotalD);
+
+				phaseDetailsService.update(phaseDetails);
+
+				sumFeeP=sumFeeP+phaseDetails.getPaidFee();
+				sumPenaltyP=sumPenaltyP+phaseDetails.getPaidPenalty();
+				sumPrincipalP=sumPrincipalP+phaseDetails.getPaidPrincipal();
+				sumInterestP=sumInterestP+phaseDetails.getPaidInterest();
+				sumTotalP=sumTotalP+phaseDetails.getPaidTotalAmount();
+			}
+			phase.setPaid(sumFeeP+sumPenaltyP+sumInterestP+sumPrincipalP+sumTotalP);
+
+			collectionPhaseService.update(phase);
+		}
+	}
+
+    /*public void runUpdateQueries(Loan loan,Session session){
 
 
 		for(CollectionPhase phase1:loan.getCollectionPhases()){
@@ -231,7 +293,7 @@ public class PaymentController {
 			}
 
         }
-	}
+	}*/
 	
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/payment/{paymentId}/delete", method=RequestMethod.GET)
     public String deletePayment(@PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, @PathVariable("paymentId")Long paymentId) {

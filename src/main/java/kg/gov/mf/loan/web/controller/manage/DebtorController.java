@@ -16,6 +16,7 @@ import kg.gov.mf.loan.manage.model.collection.CollectionProcedure;
 import kg.gov.mf.loan.manage.model.collection.PhaseDetails;
 import kg.gov.mf.loan.manage.model.debtor.*;
 import kg.gov.mf.loan.manage.model.loan.Loan;
+import kg.gov.mf.loan.manage.model.loan.Payment;
 import kg.gov.mf.loan.manage.model.loan.PaymentSchedule;
 import kg.gov.mf.loan.manage.model.process.LoanDetailedSummary;
 import kg.gov.mf.loan.manage.model.process.LoanSummary;
@@ -25,7 +26,9 @@ import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemService;
 import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
+import kg.gov.mf.loan.manage.service.collection.PhaseDetailsService;
 import kg.gov.mf.loan.manage.service.loan.LoanService;
+import kg.gov.mf.loan.manage.service.loan.PaymentService;
 import kg.gov.mf.loan.manage.service.orderterm.CurrencyRateService;
 import kg.gov.mf.loan.manage.service.process.LoanSummaryService;
 import kg.gov.mf.loan.output.report.model.LoanView;
@@ -166,6 +169,12 @@ public class DebtorController {
 
 	@Autowired
 	LoanViewService loanViewService;
+
+	@Autowired
+	PhaseDetailsService phaseDetailsService;
+
+	@Autowired
+	PaymentService paymentService;
 
 	/** The entity manager. */
 	@PersistenceContext
@@ -916,25 +925,71 @@ public class DebtorController {
 	public String updateCollectionPhases(@PathVariable("debtorId") Long debtorId){
 
 		Debtor debtor=debtorService.getById(debtorId);
-		Session session;
-		try
-		{
-			session = sessionFactory.getCurrentSession();
-		}
-		catch (HibernateException e)
-		{
-			session = sessionFactory.openSession();
-		}
-		session.getTransaction().begin();
 		for (Loan loan1:debtor.getLoans()){
 			Loan loan=loanService.getById(loan1.getId());
-			runUpdateQueries(loan,session);
+			runUpdateOfPhases(loan);
 		}
-		session.getTransaction().commit();
 		return "redirect: /manage/debtor/{debtorId}/view";
 	}
 
-	public void runUpdateQueries(Loan loan,Session session){
+	public void runUpdateOfPhases(Loan loan){
+
+
+		for(CollectionPhase phase1:loan.getCollectionPhases()){
+			CollectionPhase phase=collectionPhaseService.getById(phase1.getId());
+			SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
+			Date startDate=phase.getStartDate();
+			Date closeDate=new Date();
+			CollectionProcedure procedure=collectionProcedureService.getById(phase.getCollectionProcedure().getId());
+			if(phase.getCloseDate()!=null){
+				closeDate=phase.getCloseDate();
+			}
+			else if(procedure.getCloseDate()!=null){
+				closeDate=phase.getCollectionProcedure().getCloseDate();
+			}
+
+			Double sumFeeP=0.0;
+			Double sumPrincipalP=0.0;
+			Double sumInterestP=0.0;
+			Double sumPenaltyP=0.0;
+			Double sumTotalP=0.0;
+			for(PhaseDetails phaseDetails1: phase.getPhaseDetails()){
+
+				PhaseDetails phaseDetails=phaseDetailsService.getById(phaseDetails1.getId());
+
+				List<Payment> payments=paymentService.getFromToDate(loan.getId(),startDate,closeDate);
+				Double sumFeeD=0.0;
+				Double sumPrincipalD=0.0;
+				Double sumInterestD=0.0;
+				Double sumPenaltyD=0.0;
+				Double sumTotalD=0.0;
+				for(Payment payment:payments){
+					sumFeeD=sumFeeD+payment.getFee();
+					sumPenaltyD=sumPenaltyD+payment.getPenalty();
+					sumPrincipalD=sumPrincipalD+payment.getPrincipal();
+					sumInterestD=sumInterestD+payment.getInterest();
+					sumTotalD=sumTotalD+payment.getTotalAmount();
+				}
+				phaseDetails.setPaidFee(sumFeeD);
+				phaseDetails.setPaidPrincipal(sumPrincipalD);
+				phaseDetails.setPaidPenalty(sumPenaltyD);
+				phaseDetails.setPaidInterest(sumInterestD);
+				phaseDetails.setPaidTotalAmount(sumTotalD);
+
+				phaseDetailsService.update(phaseDetails);
+
+				sumFeeP=sumFeeP+phaseDetails.getPaidFee();
+				sumPenaltyP=sumPenaltyP+phaseDetails.getPaidPenalty();
+				sumPrincipalP=sumPrincipalP+phaseDetails.getPaidPrincipal();
+				sumInterestP=sumInterestP+phaseDetails.getPaidInterest();
+				sumTotalP=sumTotalP+phaseDetails.getPaidTotalAmount();
+			}
+			phase.setPaid(sumFeeP+sumPenaltyP+sumInterestP+sumPrincipalP+sumTotalP);
+
+			collectionPhaseService.update(phase);
+		}
+	}
+	/*public void runUpdateQueries(Loan loan,Session session){
 
 
 		for(CollectionPhase phase1:loan.getCollectionPhases()){
@@ -969,7 +1024,7 @@ public class DebtorController {
 			}
 
 		}
-	}
+	}*/
 
 	//END - WORK SECTOR
 
