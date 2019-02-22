@@ -2102,7 +2102,7 @@ BEGIN
         END IF;
 
         IF intAccrued + penAccrued + pOIO + pOPO > 0 THEN
-          if loan_summary_type_text = 'SYSTEM' or ((loan_summary_type_text = 'MANUAL' or loan_summary_type_text = 'FIXED') and tempDate = inDate) and pType != 'daily' then
+          if loan_summary_type_text = 'SYSTEM' or ((loan_summary_type_text = 'MANUAL' or loan_summary_type_text = 'FIXED') and tempDate = inDate) then
             INSERT INTO accrue(version, daysInPeriod, fromDate, interestAccrued, lastInstPassed, penaltyAccrued, penaltyOnInterestOverdue, penaltyOnPrincipalOverdue, toDate, loanId)
               VALUES (1, daysInPer, pDate, ROUND(intAccrued,2), FALSE , ROUND(penAccrued,2), ROUND(pOIO,2), ROUND(pOPO,2), tempDate, loan_id);
           end if;
@@ -2112,7 +2112,7 @@ BEGIN
 
         IF tempDate <= inDate THEN
 
-          IF loan_summary_type_text = 'MANUAL' AND isAlreadyInserted AND pType!='daily' THEN
+          IF loan_summary_type_text = 'MANUAL' AND isAlreadyInserted THEN
             UPDATE loanSummary SET record_status = 2 WHERE loanId = loan_id AND onDate = tempDate;
           END IF;
 
@@ -3866,4 +3866,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-22 15:02:53
+-- Dump completed on 2019-02-22 15:20:33
