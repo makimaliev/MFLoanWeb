@@ -2940,9 +2940,8 @@ begin
                from loan
                where parent_id = loan_id
               and loanStateId != 3)
-        and p.loanSummaryType = type
         and p.record_status = 1
-        group by p.onDate;
+        group by p.onDate, p.loanSummaryType;
       end;
     end if;
   end ;;
@@ -3873,4 +3872,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-22 15:55:12
+-- Dump completed on 2019-02-22 16:08:19
