@@ -297,8 +297,14 @@ public class CollectionPhaseController {
 		for (String value:selectedLoans.values()
 		) {
 			if(count == selectedLoans.size()-1) continue;
-//			Loan loan = loanRepository.findOne(Long.parseLong(value));
-			this.jobItemService.runDailyCalculateProcedureForOneLoan(Long.parseLong(value), initDate);
+			Loan loan = loanService.getById(Long.parseLong(value));
+			if(loan.getParent()!=null){
+
+				this.jobItemService.runDailyCalculateProcedureForOneLoan(loan.getParent().getId(), initDate);
+			}
+			else{
+				this.jobItemService.runDailyCalculateProcedureForOneLoan(loan.getId(), initDate);
+			}
 			count++;
 		}
 	}
