@@ -8,6 +8,7 @@ import kg.gov.mf.loan.output.printout.model.Printout;
 import kg.gov.mf.loan.output.printout.model.PrintoutTemplate;
 import kg.gov.mf.loan.output.printout.service.*;
 import kg.gov.mf.loan.output.printout.utils.*;
+import kg.gov.mf.loan.web.util.Utils;
 import org.apache.poi.ss.formula.ptg.MemAreaPtg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import static kg.gov.mf.loan.web.util.Utils.getPrincipal;
 
 @Controller
 public class PrintoutTemplateController {
@@ -484,4 +487,33 @@ public class PrintoutTemplateController {
 
 
     }
+	@RequestMapping("/printoutType/inspectionAct/objectId/{object_id}/generate")
+	public void generateSomething(@PathVariable("object_id") long object_id,
+										HttpServletResponse response) {
+		try {
+
+			PrintoutGeneratorInspectionAct printoutGeneratorInspectionAct= new PrintoutGeneratorInspectionAct();
+
+			Document document = new Document(PageSize.A4, 20, 20, 10, 10);
+
+			RtfWriter2 rtfWriter2 = RtfWriter2.getInstance(document,response.getOutputStream());
+
+			response.setContentType("application/rtf");
+			response.setHeader("Content-disposition","attachment; filename=xx.rtf");
+
+			String username= Utils.getPrincipal();
+
+			printoutGeneratorInspectionAct.generatePrintout(object_id,document,username);
+
+
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
+
+
+	}
 }
