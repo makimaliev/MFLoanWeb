@@ -16,6 +16,7 @@ import kg.gov.mf.loan.manage.model.collection.CollectionProcedure;
 import kg.gov.mf.loan.manage.model.collection.PhaseDetails;
 import kg.gov.mf.loan.manage.model.debtor.*;
 import kg.gov.mf.loan.manage.model.loan.Loan;
+import kg.gov.mf.loan.manage.model.loan.LoanSummaryAct;
 import kg.gov.mf.loan.manage.model.loan.Payment;
 import kg.gov.mf.loan.manage.model.loan.PaymentSchedule;
 import kg.gov.mf.loan.manage.model.process.LoanDetailedSummary;
@@ -27,8 +28,7 @@ import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemService;
 import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
 import kg.gov.mf.loan.manage.service.collection.PhaseDetailsService;
-import kg.gov.mf.loan.manage.service.loan.LoanService;
-import kg.gov.mf.loan.manage.service.loan.PaymentService;
+import kg.gov.mf.loan.manage.service.loan.*;
 import kg.gov.mf.loan.manage.service.orderterm.CurrencyRateService;
 import kg.gov.mf.loan.manage.service.process.LoanSummaryService;
 import kg.gov.mf.loan.output.report.model.LoanView;
@@ -57,8 +57,6 @@ import kg.gov.mf.loan.manage.service.debtor.DebtorTypeService;
 import kg.gov.mf.loan.manage.service.debtor.OrganizationFormService;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.manage.service.debtor.WorkSectorService;
-import kg.gov.mf.loan.manage.service.loan.LoanStateService;
-import kg.gov.mf.loan.manage.service.loan.LoanTypeService;
 import kg.gov.mf.loan.manage.service.order.CreditOrderService;
 import kg.gov.mf.loan.manage.service.orderterm.OrderTermCurrencyService;
 import kg.gov.mf.loan.web.util.Utils;
@@ -175,6 +173,12 @@ public class DebtorController {
 
 	@Autowired
 	PaymentService paymentService;
+
+	@Autowired
+	LoanSummaryActService loanSummaryActService;
+
+	@Autowired
+	LoanSummaryActStateService loanSummaryActStateService;
 
 	/** The entity manager. */
 	@PersistenceContext
@@ -498,6 +502,7 @@ public class DebtorController {
 	@RequestMapping(value = "/manage/debtor/{debtorId}/loan/summary/view",method = RequestMethod.GET)
 	public String getSelectedLoanSummary(ModelMap model, @PathVariable("debtorId") Long debtorId,String date,  String name) throws ParseException {
 
+		Set<LoanSummary> loanSummarySet=new HashSet<>();
 		LoanSummary sumLoanSummary=new LoanSummary();
         HashMap<LoanSummary,LoanSummary> summaries=new HashMap<>();
         for (String id:name.split("-")){
@@ -532,6 +537,7 @@ public class DebtorController {
                 Date newDate=new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).parse(date);
 
                 LoanSummary loanSummary=loanSummaryService.getByOnDateAndLoanId(newDate,Long.valueOf(id));
+				loanSummarySet.add(loanSummaryService.getById(loanSummary.getId()));
 
                 String name1="";
 
@@ -729,12 +735,20 @@ public class DebtorController {
 
         model.addAttribute("totals",sumLoanSummary);
         model.addAttribute("isSaved", "");
+
+		LoanSummaryAct loanSummaryAct=new LoanSummaryAct();
+		loanSummaryAct.setLoanSummaries(loanSummarySet);
+		loanSummaryAct.setLoanSummaryActState(loanSummaryActStateService.getById(Long.valueOf(1)));
+		loanSummaryActService.add(loanSummaryAct);
+
+
         return "/manage/debtor/loanSummary2";
 
 	}
 
 	@RequestMapping(value = "/manage/debtor/{debtorId}/summary/view",method = RequestMethod.GET)
-	public String getSelectedLoanSummariesView(ModelMap model, @PathVariable("debtorId") Long debtorId,String date,String name) throws ParseException {
+	public String getSelectedLoanSummariesView(ModelMap model, @PathVariable("debtorId") Long debtorId,String date,String name) throws ParseException
+	{
 
 		CalculationTool calculationTool=new CalculationTool();
 		LoanSummary sumLoanSummary=new LoanSummary();
