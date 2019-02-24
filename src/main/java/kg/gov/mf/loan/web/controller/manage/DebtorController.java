@@ -242,6 +242,8 @@ public class DebtorController {
 		}
 
 		model.addAttribute("isPerson",isPerson);
+
+		model.addAttribute("loanSummaryActList",this.loanSummaryActService.getLoanSummaryActByDebtor(debtor));
 //		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
 //		String jsonLoans = gson.toJson(getLoansByDebtorId(debtorId));
 //		model.addAttribute("loans", jsonLoans);
@@ -252,8 +254,8 @@ public class DebtorController {
 //        String jsonProcs = gson.toJson(getProcsByDebtorId(debtorId));
 //        model.addAttribute("procs", jsonProcs);
 
-		List<CreditOrder> orders = orderService.list();
-		model.addAttribute("orders", orders);
+//		List<CreditOrder> orders = orderService.list();
+//		model.addAttribute("orders", orders);
 
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
 
@@ -505,6 +507,9 @@ public class DebtorController {
 		Set<LoanSummary> loanSummarySet=new HashSet<>();
 		LoanSummary sumLoanSummary=new LoanSummary();
         HashMap<LoanSummary,LoanSummary> summaries=new HashMap<>();
+
+		Date newDate = new Date();
+
         for (String id:name.split("-")){
             if(!id.equals("")){
                 Loan loan=loanService.getById(Long.valueOf(id));
@@ -534,7 +539,7 @@ public class DebtorController {
 
 				if(srokDate==null) srokDate = loan.getRegDate();
 
-                Date newDate=new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).parse(date);
+                newDate=new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).parse(date);
 
                 LoanSummary loanSummary=loanSummaryService.getByOnDateAndLoanId(newDate,Long.valueOf(id));
 				loanSummarySet.add(loanSummaryService.getById(loanSummary.getId()));
@@ -739,6 +744,10 @@ public class DebtorController {
 		LoanSummaryAct loanSummaryAct=new LoanSummaryAct();
 		loanSummaryAct.setLoanSummaries(loanSummarySet);
 		loanSummaryAct.setLoanSummaryActState(loanSummaryActStateService.getById(Long.valueOf(1)));
+		loanSummaryAct.setDebtor(debtorService.getById(debtorId));
+		loanSummaryAct.setAmount(sumLoanSummary.getTotalOutstanding());
+		loanSummaryAct.setOnDate(newDate);
+
 		loanSummaryActService.add(loanSummaryAct);
 
 

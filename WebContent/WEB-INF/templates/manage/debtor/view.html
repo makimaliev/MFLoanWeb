@@ -1,26 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
 	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<!-- begin::Head -->
 <head>
 	<title th:text="${'Заемщик: ' + debtor.name}"></title>
 	<div th:replace="fragments/header :: header-css"/>
 </head>
-<!-- end::Head -->
+
 <body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
-<!-- begin:: Page -->
+
 <div class="m-grid m-grid--hor m-grid--root m-page">
-	<!-- BEGIN: Header -->
 	<div th:replace="layout/header"/>
-	<!-- END: Header -->
-	<!-- begin::Body -->
 	<div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
-		<!-- BEGIN: Left Aside -->
 		<div th:replace="layout/sidebar"/>
-		<!-- END: Left Aside -->
 		<div class="m-grid__item m-grid__item--fluid m-wrapper">
-			<!-- BEGIN: Subheader -->
-			<div class="m-subheader ">
+			<div id="breadcrumb_debtor" class="m-subheader ">
 				<div class="d-flex align-items-center">
 					<div class="mr-auto">
 						<h3 class="m-subheader__title m-subheader__title--separator">
@@ -54,10 +47,8 @@
 					</div>
 				</div>
 			</div>
-			<!-- END: Subheader -->
-			<div class="m-content">
-				<!--begin::Portlet-->
-				<div class="m-portlet m-portlet--full-height">
+			<div id="main_content" class="m-content">
+				<div id="debtor_short_information" class="m-portlet m-portlet--full-height">
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
@@ -66,10 +57,8 @@
 						</div>
 					</div>
 				</div>
-				<!--end::Portlet-->
-				<!--begin::Portlet-->
-				<div class="m-portlet m-portlet--mobile">
-					<div class="m-portlet__body" id="top-tabs">
+				<div id="debtor_information_content" class="m-portlet m-portlet--mobile">
+					<div id="top-tabs" class="m-portlet__body" >
 						<ul class="nav nav-tabs" role="tablist">
 							<li class="nav-item">
 								<a class="nav-link m--font-primary active" data-toggle="tab" href="#loanInfo" th:text="#{label.debtor.tab.loan.info}"></a>
@@ -83,9 +72,12 @@
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#procedureListOfDebtor" th:text="#{label.debtor.tab.procedures}" id="procedureListOfDebtorFunction"></a>
 							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanSummaryActListOfDebtor" id="loanSummaryActListOfDebtorFunction">Акты сверок</a>
+							</li>
 						</ul>
 						<div class="tab-content">
-							<div class="tab-pane active" id="loanInfo" role="tabpanel">
+							<div id="loanInfo" class="tab-pane active"  role="tabpanel">
                                 <div th:if="${isPerson=='false'}">
                                     <div class="m-portlet__body m-portlet__body--no-padding">
                                         <div class="row m-row--no-padding m-row--col-separator-xl">
@@ -278,7 +270,7 @@
                                     </div>
                                 </div>
 							</div>
-							<div class="tab-pane" id="loanListOfDebtor" role="tabpanel">
+							<div id="loanListOfDebtor" class="tab-pane"  role="tabpanel">
 								<!--begin: Search Form -->
 								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
 									<div class="row align-items-center">
@@ -351,7 +343,7 @@
 								<div class="m_datatable" id="loansTable"></div>
 								<!--end: Datatable -->
 							</div>
-							<div class="tab-pane" id="agreementListOfDebtor" role="tabpanel">
+							<div id="agreementListOfDebtor" class="tab-pane"  role="tabpanel">
 								<!--begin: Search Form -->
 								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
 									<div class="row align-items-center">
@@ -388,7 +380,7 @@
 								<div class="m_datatable" id="agreementsTable"></div>
 								<!--end: Datatable -->
 							</div>
-							<div class="tab-pane" id="procedureListOfDebtor" role="tabpanel">
+							<div id="procedureListOfDebtor" class="tab-pane" role="tabpanel">
 								<!--begin: Search Form -->
 								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
 									<div class="row align-items-center">
@@ -414,23 +406,49 @@
 								<div class="m_datatable" id="procsTable"></div>
 								<!--end: Datatable -->
 							</div>
+							<div id="loanSummaryActListOfDebtor" class="tab-pane" role="tabpanel">
+
+								<!--begin: Datatable -->
+								<div class="m_datatable" id="loanSummaryActsTable"></div>
+
+								<table class="table" id="loanSummaryActTable">
+									<thead class="thead-default">
+									<tr>
+										<th >Дата</th>
+										<th >Сумма</th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr th:each="actInList : ${loanSummaryActList}">
+										<td th:text="${#dates.format(actInList?.onDate,'dd.MM.yyyy')}" >Id</td>
+										<td th:text="${#numbers.formatDecimal(actInList?.amount, 0, 'DEFAULT', 2, 'DEFAULT')}">Id</td>
+
+
+									</tr>
+									</tbody>
+
+								</table>
+
+
+								<!--end: Datatable -->
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="collapse" id="phaseDetailsDiv">
-					<div class="m-portlet__body  m-portlet__body--no-padding">
-						<div class="col m-col--no-padding ">
+			</div>
+			<div id="phaseDetailsDiv" class="collapse" >
+				<div class="m-portlet__body  m-portlet__body--no-padding">
+					<div class="col m-col--no-padding ">
 						<div class="portlet">
 							<div class="m_datatable" id="phaseDetailsTable"></div>
 							<div >
 								<button class="btn btn-sm btn-accent" type="button" id="initPhaseSaveBtn" th:text="#{label.save}"></button>
 							</div>
 						</div>
-						</div>
 					</div>
 				</div>
-			<div class="row">
+			</div>
+			<div id="calculation_result_content" class="row">
 				<div class="col-md-12">
 					<div id="content"></div>
 				</div>
@@ -438,12 +456,8 @@
 			</div>
 		</div>
 	</div>
-	<!-- end:: Body -->
-	<!-- begin::Footer -->
-	<!--<div th:replace="layout/footer"/>-->
-	<!-- end::Footer -->
 </div>
-<!-- end:: Page -->
+
 
 <div th:replace="fragments/footer :: footer-js"/>
 
@@ -561,124 +575,21 @@
     $("#btn_show_loanSummary").on("click",function () {
 
         var stringSelecteds="";
-        for (var i in selectedLoans){
+        for (var i in selectedLoans)
+        {
             stringSelecteds=stringSelecteds+"-"+i.toString();
         }
         var initDate = $("#phaseInitDate").val();
         $("#selectedName").val(stringSelecteds.toString());
         $("#dateOfSelected").val(initDate);
-        // $("#showSummaries").submit();
 
         var sUrl ="/manage/debtor/"+debtorId+"/summary/view?"+"name="+$("#selectedName").val()+"&date="+$("#dateOfSelected").val();
-
-
 
         $.get(sUrl, function(data) {
             $('#content').html(data);
         });
-
-
-
     });
 
-</script>
-<script type="text/javascript">
-    $(document).ready(function() {
-
-        var table = $('#departmentTable').DataTable({
-            stateSave: true,
-            language: {
-                paginate: {
-                    previous: '<i class="la la-angle-left"></i>', // or '→'
-                    next: '<i class="la la-angle-right"></i>' // or '←'
-                },
-                lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
-            },
-            "info": false,
-            keys: {
-                focus: ':eq(0)'
-            },
-            "sDom": 'rtlip'
-        } );
-        $('#generalSearch').keyup(function(){
-            table.search($(this).val()).draw() ;
-        });
-
-        $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
-
-        table.on('key-focus', function(e, datatable, cell) {
-
-            var rowData = datatable.row(cell.index().row).data();
-
-            $("#department_id").val(rowData[0]);
-
-            var sUrl ="/department/"+rowData[0]+"/staff/list";
-
-            $.get(sUrl, function(data) {
-                $('#content').html(data);
-            });
-
-            var row = datatable.row( cell.index().row );
-
-            table.$('tr.info').removeClass('info');
-            $( row.node() ).addClass( "info" );
-
-            var rowData = row.data();
-
-            var colData = datatable.cell( { focused: true } ).data();
-
-        });
-
-
-
-    });
-</script>
-<script th:inline="javascript">
-
-        $("#organizationFormModal").on("show.bs.modal", function (e) {
-            var link = $(e.relatedTarget);
-            $(this).find(".modal-body").load(link.attr("href"));
-        });
-
-        $("#positionFormModal").on("show.bs.modal", function (e) {
-            var link = $(e.relatedTarget);
-            $(this).find(".modal-body").load(link.attr("href"));
-        });
-    /*]]>*/
-</script>
-<script th:inline="javascript">
-
-        /*<![CDATA[*/
-
-
-
-        $("#staffFormModal").on("show.bs.modal", function (e) {
-
-
-            var link = $(e.relatedTarget);
-            var departmentID = $("#department_id").val();
-                $(this).find(".modal-title").html(link.attr("href"));
-                $(this).find(".modal-body").load(link.attr("href"));
-        });
-
-        $("#personFormModal").on("show.bs.modal", function (e) {
-
-
-            var link = $(e.relatedTarget);
-
-            $(this).find(".modal-body").load(link.attr("href"));
-
-        });
-
-        $("#positionFormModal").on("show.bs.modal", function (e) {
-
-            var link = $(e.relatedTarget);
-
-            $(this).find(".modal-body").load(link.attr("href"));
-
-        });
-
-    /*]]>*/
 </script>
 <script>
     $("ul.nav-tabs a").click(function (e) {
@@ -711,6 +622,7 @@
 						delete selectedLoans[str[i]];
 					}
 				});
+
     });
     $("#agreementListOfDebtorFunction").on('click',function () {
         $.ajax({
@@ -721,8 +633,8 @@
                 $.getScript("/js/data-debtor-agreements.js");
             }
         });
-    });
 
+    });
     $("#procedureListOfDebtorFunction").on('click',function () {
         $.ajax({
             type:'post',

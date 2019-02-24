@@ -25,7 +25,7 @@ var DatatableDataLocalSummaries = function () {
 			},
 
 			// column sorting(refer to Kendo UI)
-			sortable: false,
+			sortable: true,
 
 			// column based filtering(refer to Kendo UI)
 			filterable: false,
@@ -42,7 +42,8 @@ var DatatableDataLocalSummaries = function () {
                 responsive: {hidden: 'xl'},
             },{
                 field: "counter",
-                title: "#"
+                title: "№",
+                sortable: "desc"
             },  {
 				field: "onDate",
 				title: "На дату",

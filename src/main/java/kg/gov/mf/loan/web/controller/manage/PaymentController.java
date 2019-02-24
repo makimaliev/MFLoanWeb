@@ -192,7 +192,19 @@ public class PaymentController {
 		session.getTransaction().begin();
 			runUpdateOfPhases(loan);
 		session.getTransaction().commit();
+
 		this.jobItemService.runDailyCalculateProcedureForOneLoan(loanId,new Date());
+
+
+
+			if(loan.getParent()!=null){
+
+				this.jobItemService.runDailyCalculateProcedureForOneLoan(loan.getParent().getId(), new Date());
+			}
+			else{
+				this.jobItemService.runDailyCalculateProcedureForOneLoan(loan.getId(), new Date());
+			}
+
     	}
 
 

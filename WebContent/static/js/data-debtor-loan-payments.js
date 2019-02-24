@@ -25,7 +25,7 @@ var DatatableDataLocalPayments = function () {
 			},
 
 			// column sorting(refer to Kendo UI)
-			sortable: false,
+			sortable: true,
 
 			// column based filtering(refer to Kendo UI)
 			filterable: false,
@@ -42,7 +42,7 @@ var DatatableDataLocalPayments = function () {
                 responsive: {hidden: 'xl'},
             }, {
                 field: "counter",
-                title: "#"
+                title: "№"
             },{
 				field: "paymentDate",
 				title: "Дата",
@@ -161,7 +161,7 @@ var DatatableDataLocalPayments = function () {
             }
 		});
 
-		datatable.sort("counter","desc");
+		datatable.sort("counter","asc");
 		var query = datatable.getDataSourceQuery();
 
 		$('#m_form_search3').on('keyup', function (e) {

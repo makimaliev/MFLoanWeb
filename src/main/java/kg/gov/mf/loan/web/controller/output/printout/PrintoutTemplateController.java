@@ -487,7 +487,7 @@ public class PrintoutTemplateController {
 
 
     }
-	@RequestMapping("/printoutType/inspectionAct/objectId/{object_id}/generate")
+	@RequestMapping("/printoutType/4/objectId/{object_id}/generate")
 	public void generateSomething(@PathVariable("object_id") long object_id,
 										HttpServletResponse response) {
 		try {

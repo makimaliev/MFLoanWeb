@@ -24,7 +24,7 @@ var DatatableDataLocalPaymentSchedules = function () {
 			},
 
 			// column sorting(refer to Kendo UI)
-			sortable: false,
+			sortable: true,
 
 			// column based filtering(refer to Kendo UI)
 			filterable: false,
@@ -41,7 +41,7 @@ var DatatableDataLocalPaymentSchedules = function () {
                 responsive: {hidden: 'xl'},
             }, {
                 field: "counter",
-                title: "#"
+                title: "№"
             }, {
 				field: "expectedDate",
 				title: "Дата"
@@ -151,7 +151,7 @@ var DatatableDataLocalPaymentSchedules = function () {
             }
 		});
 
-		datatable.sort("counter","desc");
+		datatable.sort("counter","asc");
 
 		var query = datatable.getDataSourceQuery();
 

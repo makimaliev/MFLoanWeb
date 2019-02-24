@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" >
-<!-- begin::Head -->
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
-	<title th:text="${'Кредит: ' + loan.regNumber}"></title>
-
+	<title th:text="${'Кредит: ' + loan.regNumber}">
+	</title>
 	<div th:replace="fragments/header :: header-css"/>
 </head>
-<!-- end::Head -->
 
-<!-- end::Body -->
+
 <body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
 <!-- begin:: Page -->
 <div class="m-grid m-grid--hor m-grid--root m-page">
@@ -22,8 +20,8 @@
 		<div th:replace="layout/sidebar"/>
 		<!-- END: Left Aside -->
 		<div class="m-grid__item m-grid__item--fluid m-wrapper">
-			<!-- BEGIN: Subheader -->
-			<div class="m-subheader ">
+
+			<div id="breadcrumb" class="m-subheader ">
 				<div class="d-flex align-items-center">
 					<div class="mr-auto">
 
@@ -69,10 +67,9 @@
 					</div>
 				</div>
 			</div>
-			<!-- END: Subheader -->
+
 			<div class="m-content">
-				<!--begin::Portlet-->
-				<div class="m-portlet m-portlet--full-height">
+				<div id="loan_short_information" class="m-portlet m-portlet--full-height">
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
@@ -81,14 +78,14 @@
 						</div>
 					</div>
 				</div>
-				<!--end::Portlet-->
-
-				<!--begin::Portlet-->
-				<div class="m-portlet m-portlet--mobile">
+				<div id="loan_information_content" class="m-portlet m-portlet--mobile">
 					<div class="m-portlet__body">
-						<ul class="nav nav-tabs" role="tablist">
+						<ul id="main_tab_list" class="nav nav-tabs" role="tablist">
 							<li class="nav-item">
 								<a class="nav-link m--font-primary active" data-toggle="tab" href="#main" th:text="#{label.loan.credit}" id="mainFunction"></a>
+							</li>
+							<li class="nav-item" id="childListe">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#childList" th:text="#{label.loan.childList}" id="childListFunction"></a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanSummary" th:text="#{label.loan.loanSummary}" id="loanSummaryFunction"></a>
@@ -99,24 +96,7 @@
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#payments" th:text="#{label.loan.payments}" id="paymentsFunction"></a>
 							</li>
-							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#supervisorPlans" th:text="#{label.loan.supervisorPlans}" id="supervisorPlansFunction"></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#writeOffs" th:text="#{label.loan.writeOffs}" id="writeOffsFunction"></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#creditTerms" th:text="#{label.loan.creditTerms}" id="creditTermsFunction"></a>
-							</li>
-                            <li class="nav-item" id="childListe">
-                                <a class="nav-link m--font-primary" data-toggle="tab" href="#childList" th:text="#{label.loan.childList}" id="childListFunction"></a>
-                            </li>
-							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#loanDetailedSummary" th:text="#{label.loan.loanDetailedSummary}" id="detailedLoanSummaryFunction"></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#accrue" th:text="#{label.loan.accrue}" id="accrueFunction"></a>
-							</li>
+
 							<!--<li class="nav-item" th:if="${hasParent}==false">-->
 								<!--<a class="nav-link m&#45;&#45;font-primary" data-toggle="tab" href="#initializaPhase" th:text="#{label.debtor.tab.initializaPhase}"></a>-->
 							<!--</li>-->
@@ -127,11 +107,14 @@
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#collectionPhases" th:text="#{label.collectionPhases}" id="collectionPhasesFunction"></a>
 							</li>
 							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#creditTerms" th:text="#{label.loan.creditTerms}" id="creditTermsFunction"></a>
+							</li>
+							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#additional" th:text="#{label.additional}"></a>
 							</li>
 						</ul>
-						<div class="tab-content">
-							<div class="tab-pane active" id="main" role="tabpanel">
+						<div id="main_tab_content" class="tab-content">
+							<div id="main" class="tab-pane active"  role="tabpanel">
                                 <div sec:authorize="hasAnyAuthority('ADMIN')" class="col-xl-12 order-3 order-xl-3 m--align-right">
                                     <div >
                                         <div>
@@ -265,7 +248,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="tab-pane" id="creditTerms" role="tabpanel">
+							<div id="creditTerms" class="tab-pane"  role="tabpanel">
                                 <!--begin: Search Form -->
                                 <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                                     <div class="row align-items-center">
@@ -302,49 +285,12 @@
                                 <div class="m_datatable" id="termsTable"></div>
                                 <!--end: Datatable -->
 							</div>
-                            <div class="tab-pane" id="childList" role="tabpanel">
+                            <div id="childList" class="tab-pane"  role="tabpanel">
                                 <!--begin: Datatable -->
                                 <div class="m_datatable" id="childTable"></div>
                                 <!--end: Datatable -->
                             </div>
-							<div class="tab-pane" id="writeOffs" role="tabpanel">
-                                <!--begin: Search Form -->
-                                <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-                                    <div class="row align-items-center">
-                                        <div class="col-xl-9 order-1 order-xl-1">
-                                            <div class="form-group m-form__group row align-items-center">
-                                                <div class="col-lg-6">
-                                                    <div class="m-input-icon m-input-icon--left">
-                                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search7">
-                                                        <span class="m-input-icon__icon m-input-icon__icon--left">
-															<span>
-																<i class="la la-search"></i>
-															</span>
-														</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-xl-3 order-3 order-xl-3 m--align-right" th:if="${isEmptyChild}==true">
-                                            <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_WRITEOFF')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/wo/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-												<span>
-													<i class="la la-plus"></i>
-													<span th:text="#{label.loan.add.writeOff}">
-														Добавить списание
-													</span>
-												</span>
-                                            </a>
-                                            <div class="m-separator m-separator--dashed d-xl-none"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--end: Search Form -->
-                                <!--begin: Datatable -->
-                                <div class="m_datatable" id="WOsTable"></div>
-                                <!--end: Datatable -->
-							</div>
-							<div class="tab-pane" id="paymentSchedules" role="tabpanel">
+							<div id="paymentSchedules" class="tab-pane"  role="tabpanel">
                                 <!--begin: Search Form -->
                                 <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                                     <div class="row align-items-center">
@@ -468,7 +414,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="tab-pane" id="payments" role="tabpanel">
+							<div id="payments" class="tab-pane"  role="tabpanel">
                                 <!--begin: Search Form -->
                                 <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                                     <div class="row align-items-center">
@@ -612,80 +558,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="tab-pane" id="supervisorPlans" role="tabpanel">
-                                <!--begin: Search Form -->
-                                <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-                                    <div class="row align-items-center">
-                                        <div class="col-xl-9 order-1 order-xl-1">
-                                            <div class="form-group m-form__group row align-items-center">
-                                                <div class="col-lg-6">
-                                                    <div class="m-input-icon m-input-icon--left">
-                                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search8">
-                                                        <span class="m-input-icon__icon m-input-icon__icon--left">
-															<span>
-																<i class="la la-search"></i>
-															</span>
-														</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-xl-3 order-3 order-xl-3 m--align-right" th:if="${isEmptyChild}==true">
-											<div th:switch="${loggedinuserId}">
-
-                                            <a th:case="${supervisorId}" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_SUPERVISORPLAN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-												<span>
-													<i class="la la-plus"></i>
-													<span th:text="#{label.loan.add.supervisorPlan}">
-														Добавить план
-													</span>
-												</span>
-                                            </a>
-                                                <a th:if="${loggedinuserId}==1" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_SUPERVISORPLAN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-												<span>
-													<i class="la la-plus"></i>
-													<span th:text="#{label.loan.add.supervisorPlan}">
-														Добавить план
-													</span>
-												</span>
-                                                </a>
-											</div>
-                                            <div class="m-separator m-separator--dashed d-xl-none"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--end: Search Form -->
-                                <!--begin: Datatable -->
-                                <div class="m_datatable" id="SPsTable"></div>
-                                <!--end: Datatable -->
-							</div>
-							<div class="tab-pane" id="loanDetailedSummary" role="tabpanel">
-                                <!--begin: Search Form -->
-                                <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-                                    <div class="row align-items-center">
-                                        <div class="col-xl-9 order-1 order-xl-1">
-                                            <div class="form-group m-form__group row align-items-center">
-                                                <div class="col-lg-6">
-                                                    <div class="m-input-icon m-input-icon--left">
-                                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search4">
-                                                        <span class="m-input-icon__icon m-input-icon__icon--left">
-															<span>
-																<i class="la la-search"></i>
-															</span>
-														</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--end: Search Form -->
-                                <!--begin: Datatable -->
-                                <div class="m_datatable" id="detailedSummariesTable"></div>
-                                <!--end: Datatable -->
-							</div>
-							<div class="tab-pane" id="loanSummary" role="tabpanel">
+							<div id="loanSummary" class="tab-pane"  role="tabpanel">
                                 <!--begin: Search Form -->
                                 <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                                     <div class="row align-items-center">
@@ -754,32 +627,7 @@
                                 <div class="m_datatable" id="summariesTable"></div>
                                 <!--end: Datatable -->
 							</div>
-							<div class="tab-pane" id="accrue" role="tabpanel">
-                                <!--begin: Search Form -->
-                                <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-                                    <div class="row align-items-center">
-                                        <div class="col-xl-9 order-1 order-xl-1">
-                                            <div class="form-group m-form__group row align-items-center">
-                                                <div class="col-lg-6">
-                                                    <div class="m-input-icon m-input-icon--left">
-                                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search6">
-                                                        <span class="m-input-icon__icon m-input-icon__icon--left">
-															<span>
-																<i class="la la-search"></i>
-															</span>
-														</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--end: Search Form -->
-                                <!--begin: Datatable -->
-                                <div class="m_datatable" id="accruesTable"></div>
-                                <!--end: Datatable -->
-							</div>
-							<div class="tab-pane" id="initializaPhase" role="tabpanel">
+							<div id="initializaPhase" class="tab-pane"  role="tabpanel">
 								<!--<div class="m-form__content">-->
 									<!--<div class="m-alert m-alert&#45;&#45;icon alert alert-danger m&#45;&#45;hide" role="alert" id="m_form_2_msg">-->
 										<!--<div class="m-alert__icon">-->
@@ -836,7 +684,7 @@
 								<!--</div>-->
 								<!--&lt;!&ndash;end: Selected Rows Group Action Form &ndash;&gt;-->
 							</div>
-							<div class="tab-pane" id="agreements" role="tabpanel">
+							<div id="agreements" class="tab-pane"  role="tabpanel">
 								<!--begin: Search Form -->
 								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
 									<div class="row align-items-center">
@@ -861,14 +709,14 @@
 													<span>
 														<i class="la la-plus"></i>
 														<span>
-															Добавить залоговое обеспечение
+															Добавить залог
 														</span>
 													</span>
 												</a>
-												<a th:href="@{/printoutType/inspectionAct/objectId/__${loan.id}__/generate}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill ml-1">
+												<a th:href="@{/printoutType/4/objectId/__${loan.id}__/generate}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill ml-1">
 													<span>
 														<span>
-															Акт
+															Форма акта обследования залога
 														</span>
 													</span>
 												</a>
@@ -881,7 +729,7 @@
 								<div class="m_datatable" id="agreementsTable"></div>
 								<!--end: Datatable -->
 							</div>
-							<div class="tab-pane" id="collectionPhases" role="tabpanel">
+							<div id="collectionPhases" class="tab-pane"  role="tabpanel">
 								<!--begin: Search Form -->
 								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
 									<div class="row align-items-center">
@@ -906,8 +754,8 @@
 								<div class="m_datatable" id="phasesTable"></div>
 								<!--end: Datatable -->
 							</div>
-							<div class="tab-pane" id="additional" role="tabpanel">
-								<ul class="nav nav-tabs" role="tablist">
+							<div id="additional" class="tab-pane"  role="tabpanel">
+								<ul id="additional_tab_list" class="nav nav-tabs" role="tablist">
 									<li class="nav-item">
 										<a class="nav-link m--font-primary active" data-toggle="tab" href="#loanGoods" th:text="#{label.loan.good}"></a>
 									</li>
@@ -923,9 +771,22 @@
 									<li class="nav-item">
 										<a class="nav-link m--font-primary" data-toggle="tab" href="#bankrupts" th:text="#{label.loan.bankrupt}"></a>
 									</li>
+									<li class="nav-item">
+										<a class="nav-link m--font-primary" data-toggle="tab" href="#writeOffs" th:text="#{label.loan.writeOffs}" id="writeOffsFunction"></a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link m--font-primary" data-toggle="tab" href="#loanDetailedSummary" th:text="#{label.loan.loanDetailedSummary}" id="detailedLoanSummaryFunction"></a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link m--font-primary" data-toggle="tab" href="#accrue" th:text="#{label.loan.accrue}" id="accrueFunction"></a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link m--font-primary" data-toggle="tab" href="#supervisorPlans" th:text="#{label.loan.supervisorPlans}" id="supervisorPlansFunction"></a>
+									</li>
+
 								</ul>
-								<div class="tab-content">
-									<div class="tab-pane active" id="loanGoods" role="tabpanel">
+								<div id="additional_tab_content" class="tab-content">
+									<div id="loanGoods" class="tab-pane active"  role="tabpanel">
 										<!--begin: Search Form -->
 										<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
 											<div class="row align-items-center">
@@ -962,7 +823,7 @@
 										<div class="m_datatable" id="goodsTable"></div>
 										<!--end: Datatable -->
 									</div>
-									<div class="tab-pane" id="debtTransfers" role="tabpanel">
+									<div id="debtTransfers" class="tab-pane"  role="tabpanel">
 										<!--begin: Search Form -->
 										<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
 											<div class="row align-items-center">
@@ -999,7 +860,7 @@
 										<div class="m_datatable" id="DTsTable"></div>
 										<!--end: Datatable -->
 									</div>
-									<div class="tab-pane" id="targetedUses" role="tabpanel">
+									<div id="targetedUses" class="tab-pane"  role="tabpanel">
 										<!--begin: Search Form -->
 										<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
 											<div class="row align-items-center">
@@ -1036,7 +897,7 @@
 										<div class="m_datatable" id="TUsTable"></div>
 										<!--end: Datatable -->
 									</div>
-									<div class="tab-pane" id="reconstructedLists" role="tabpanel">
+									<div id="reconstructedLists" class="tab-pane" role="tabpanel">
 										<!--begin: Search Form -->
 										<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
 											<div class="row align-items-center">
@@ -1073,7 +934,7 @@
 										<div class="m_datatable" id="RLsTable"></div>
 										<!--end: Datatable -->
 									</div>
-									<div class="tab-pane" id="bankrupts" role="tabpanel">
+									<div id="bankrupts" class="tab-pane"  role="tabpanel">
 										<!--begin: Search Form -->
 										<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
 											<div class="row align-items-center">
@@ -1110,18 +971,154 @@
 										<div class="m_datatable" id="bankruptsTable"></div>
 										<!--end: Datatable -->
 									</div>
+									<div id="writeOffs" class="tab-pane"  role="tabpanel">
+										<!--begin: Search Form -->
+										<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+											<div class="row align-items-center">
+												<div class="col-xl-9 order-1 order-xl-1">
+													<div class="form-group m-form__group row align-items-center">
+														<div class="col-lg-6">
+															<div class="m-input-icon m-input-icon--left">
+																<input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search7">
+																<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-xl-3 order-3 order-xl-3 m--align-right" th:if="${isEmptyChild}==true">
+													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_WRITEOFF')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/wo/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span>
+													<i class="la la-plus"></i>
+													<span th:text="#{label.loan.add.writeOff}">
+														Добавить списание
+													</span>
+												</span>
+													</a>
+													<div class="m-separator m-separator--dashed d-xl-none"></div>
+												</div>
+											</div>
+										</div>
+										<!--end: Search Form -->
+										<!--begin: Datatable -->
+										<div class="m_datatable" id="WOsTable"></div>
+										<!--end: Datatable -->
+									</div>
+									<div id="loanDetailedSummary" class="tab-pane"  role="tabpanel">
+										<!--begin: Search Form -->
+										<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+											<div class="row align-items-center">
+												<div class="col-xl-9 order-1 order-xl-1">
+													<div class="form-group m-form__group row align-items-center">
+														<div class="col-lg-6">
+															<div class="m-input-icon m-input-icon--left">
+																<input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search4">
+																<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!--end: Search Form -->
+										<!--begin: Datatable -->
+										<div class="m_datatable" id="detailedSummariesTable"></div>
+										<!--end: Datatable -->
+									</div>
+									<div id="accrue" class="tab-pane"  role="tabpanel">
+										<!--begin: Search Form -->
+										<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+											<div class="row align-items-center">
+												<div class="col-xl-9 order-1 order-xl-1">
+													<div class="form-group m-form__group row align-items-center">
+														<div class="col-lg-6">
+															<div class="m-input-icon m-input-icon--left">
+																<input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search6">
+																<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!--end: Search Form -->
+										<!--begin: Datatable -->
+										<div class="m_datatable" id="accruesTable"></div>
+										<!--end: Datatable -->
+									</div>
+									<div id="supervisorPlans" class="tab-pane"  role="tabpanel">
+										<!--begin: Search Form -->
+										<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+											<div class="row align-items-center">
+												<div class="col-xl-9 order-1 order-xl-1">
+													<div class="form-group m-form__group row align-items-center">
+														<div class="col-lg-6">
+															<div class="m-input-icon m-input-icon--left">
+																<input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search8">
+																<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-xl-3 order-3 order-xl-3 m--align-right" th:if="${isEmptyChild}==true">
+													<div th:switch="${loggedinuserId}">
+
+														<a th:case="${supervisorId}" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_SUPERVISORPLAN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span>
+													<i class="la la-plus"></i>
+													<span th:text="#{label.loan.add.supervisorPlan}">
+														Добавить план
+													</span>
+												</span>
+														</a>
+														<a th:if="${loggedinuserId}==1" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_SUPERVISORPLAN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span>
+													<i class="la la-plus"></i>
+													<span th:text="#{label.loan.add.supervisorPlan}">
+														Добавить план
+													</span>
+												</span>
+														</a>
+													</div>
+													<div class="m-separator m-separator--dashed d-xl-none"></div>
+												</div>
+											</div>
+										</div>
+										<!--end: Search Form -->
+										<!--begin: Datatable -->
+										<div class="m_datatable" id="SPsTable"></div>
+										<!--end: Datatable -->
+									</div>
+
 								</div>
 							</div>
 						</div>
-						<div class="modal fade bs-modal-lg in" id="loanFinGroupModal" tabindex="-1" role="dialog" aria-hidden="true">
+						<div id="loanFinGroupModal" class="modal fade bs-modal-lg in"  tabindex="-1" role="dialog" aria-hidden="true">
 							<div class="modal-dialog modal-lg" role="document">
 								<div class="modal-content">
 								</div>
 							</div>
 						</div>
 						</div>
-					</div>
-				<div class="collapse" id="phaseDetailsDiv">
+				</div>
+				<div id="phaseDetailsDiv" class="collapse" >
 					<div class="m-portlet__body  m-portlet__body--no-padding">
 						<div class="col m-col--no-padding ">
 							<div class="portlet">
@@ -1133,33 +1130,28 @@
 						</div>
 					</div>
 				</div>
-				<div class="row">
+				<div id="calculation_result_content" class="row">
 					<div class="col-md-12">
 						<div id="content"></div>
 					</div>
 				</div>
-				</div>
-				<!--end::Portlet-->
 			</div>
+
 		</div>
 	</div>
-	<!-- end:: Body -->
-	<!-- begin::Footer -->
-
-<div th:replace="fragments/footer :: footer-js"/>
-	<!-- end::Footer -->
 </div>
-<!-- end:: Page -->
 
-
+<div th:replace="fragments/footer :: footer-js"/></div>
 
 <!--begin::Page Resources -->
 <script>
     var d = document.getElementById('isEmptyChild').value;
-    if(d=="true"){
+    if(d=="true")
+    {
         document.getElementById("childListe").style.display = 'none';
 	}
 </script>
+
 <!--<script th:src="@{/js/data-debtor-loan-terms.js}" th:inline="javascript" type="text/javascript"></script>-->
 <!--<script th:src="@{/js/data-debtor-loan-children.js}" th:inline="javascript" type="text/javascript"></script>-->
 <!--<script th:src="@{/js/data-debtor-loan-paymentSchedules.js}" th:inline="javascript" type="text/javascript"></script>-->
@@ -1439,6 +1431,8 @@
 			// 	data:{"tabName":tabName}
 			//
 			// });
+
+			console
 		});
 	});
 	$(window).on("popstate", function() {
@@ -1792,7 +1786,6 @@
             $.map(obj, function(val, key) {
                 if(key=='loanId')
                 {
-                    console.log(val);
                     var startPrincInput ="#startPrinc" + val;
                     var startIntInput ="#startInt" + val;
                     var startPenInput ="#startPen" + val;
