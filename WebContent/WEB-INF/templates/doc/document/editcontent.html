@@ -257,7 +257,7 @@
     <input type="hidden" th:field="*{receiverRegisteredNumber}"/>
     <input type="hidden" th:field="*{receiverRegisteredDate}"/>
 </th:block>
-<th:block th:fragment="outgoing">
+<th:block th:fragment="outgoing"
     <!-- Outgoing -->
     <div class="form-group m-form__group row">
         <div class="col-3"></div>
@@ -268,7 +268,6 @@
         </div>
     </div>
     <!-- Sender Registration Data -->
-    <input type="hidden" th:field="*{docIndex}"/>
     <input type="hidden" th:field="*{received}"/>
     <input type="hidden" th:field="*{senderRegisteredNumber}"/>
     <input type="hidden" th:field="*{senderRegisteredDate}"/>
@@ -310,7 +309,7 @@
     </div>
     <!-- Sender Responsible -->
     <div class="form-group m-form__group row">
-        <input type="hidden" th:field="*{senderResponsible.responsibleType}"/>
+        <input type="hidden" name="senderResponsible.responsibleType" value="1"/>
         <label class="col-3 col-form-label">
             <span> От кого : </span>
         </label>

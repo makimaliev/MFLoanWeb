@@ -8,19 +8,25 @@
     <div th:replace="fragments/header :: header-css"/>
 
     <style type="text/css" th:inline="text">
+
+        input[type="search"] {
+            -webkit-appearance: searchfield;
+        }
+        input[type="search"]::-webkit-search-cancel-button {
+            -webkit-appearance: searchfield-cancel-button;
+        }
+
         .nopm {
             padding: 0;
             margin: 0;
         }
         .active-document {
-            background: #d9d9d9;
+            background: #ffbf80;
         }
         td.details-control {
-            background: url([[@{/doc/document/details_open.png}]]) no-repeat center center;
             cursor: pointer;
         }
         tr.details td.details-control {
-            background: url([[@{/doc/document/details_close.png}]]) no-repeat center center;
         }
     </style>
 
@@ -52,104 +58,6 @@
                         </div>
                     </div>
                     <div class="m-portlet__body">
-                        <div class="row">
-                            <div class="col-md-2">
-                                <div class="m-form__group m-form__group--inline">
-                                    <div class="m-form__label">
-                                        <label>
-                                            Название:
-                                        </label>
-                                    </div>
-                                    <div class="m-form__control">
-                                        <div class="m-input-icon m-input-icon--left mb-2">
-                                            <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="title">
-                                            <span class="m-input-icon__icon m-input-icon__icon--left">
-                                <span>
-                                    <i class="la la-search"></i>
-                                </span>
-                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2">
-                                <div class="m-form__group m-form__group--inline">
-                                    <div class="m-form__label">
-                                        <label>
-                                            Отправитель:
-                                        </label>
-                                    </div>
-                                    <div class="m-form__control">
-                                        <div class="m-input-icon m-input-icon--left mb-2">
-                                            <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="sender">
-                                            <span class="m-input-icon__icon m-input-icon__icon--left">
-                            <span>
-                                <i class="la la-search"></i>
-                            </span>
-                        </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2">
-                                <div class="m-form__group m-form__group--inline">
-                                    <div class="m-form__label">
-                                        <label>
-                                            Получатель:
-                                        </label>
-                                    </div>
-                                    <div class="m-form__control">
-                                        <div class="m-input-icon m-input-icon--left mb-2">
-                                            <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="receiver">
-                                            <span class="m-input-icon__icon m-input-icon__icon--left">
-                                <span>
-                                    <i class="la la-search"></i>
-                                </span>
-                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2">
-                                <div class="m-form__group m-form__group--inline">
-                                    <div class="m-form__label">
-                                        <label>
-                                            Виды:
-                                        </label>
-                                    </div>
-                                    <div class="m-form__control">
-                                        <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="sub_type">
-                                            <option value="">
-                                                Все
-                                            </option>
-                                            <option th:each="sub : ${documentSubTypes}" th:value="${sub.id}" th:text="${sub.name}"></option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2">
-                                <div class="input-group date m_datetimepicker mb-2" id="from_date">
-                                    <input  class="form-control m-input" th:placeholder="#{label.fromDate}" name="date" />
-                                    <span class="input-group-addon">
-                                                    <i class="la la-calendar glyphicon-th"></i>
-                                                </span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2">
-                                <div class="input-group date m_datetimepicker" id="to_date">
-                                    <input  class="form-control m-input" th:placeholder="#{label.toDate}" name="date" />
-                                    <span class="input-group-addon">
-                                                    <i class="la la-calendar glyphicon-th"></i>
-                                                </span>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30" sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')">
                             <div class="row align-items-center">
                                 <div class="col-12 m--align-right">
@@ -161,29 +69,11 @@
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                 </div>
                             </div>
+                            <hr>
                         </div>
 
-                        <hr>
-                        <div  class="m_datatable"></div>
 
-                        <!--<th:block th:replace="doc/layout::__${type + 'Index'}__"/>-->
-
-                        <!--table class="table table-bordered table-hover" id="incoming">
-                            <thead class="thead-default">
-                                <tr>
-                                    <th width="30px"></th>
-                                    <th width="30px"></th>
-                                    <th width="120px">К</th>
-                                    <th width="80px">Вхд. №</th>
-                                    <th width="120px">Вхд. Дата</th>
-                                    <th width="120px">Исх. № и Дата</th>
-                                    <th th:text="#{label.document.sender}">Отправитель</th>
-                                    <th th:text="#{label.document.title}">Относительно</th>
-                                    <th width="330px" th:text="#{label.document.receiver}">Исполнитель</th>
-                                    <th width="150px" th:text="#{label.document.generalStatus}">Состояние</th>
-                                </tr>
-                            </thead>
-                        </table-->
+                        <th:block th:replace="doc/layout::__${type + 'Index'}__"/>
                         <hr>
 
                     </div>
@@ -205,879 +95,506 @@
 
 <script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
 
-<script type="text/javascript" th:inline="javascript">
+<script type="text/javascript">
+    function flatten(params) {
+        params.columns.forEach(function (column, index) {
+            params['columns[' + index + '].data'] = column.data;
+            params['columns[' + index + '].name'] = column.name;
+            params['columns[' + index + '].searchable'] = column.searchable;
+            params['columns[' + index + '].orderable'] = column.orderable;
+            params['columns[' + index + '].search.regex'] = column.search.regex;
+            params['columns[' + index + '].search.value'] = column.search.value;
+        });
+        delete params.columns;
 
-    // $(".openact").click(function(event) {
-    //
-    //     event.preventDefault();
-    //
-    //     $.ajax({
-    //         url: $(this).attr('href'),
-    //         success: function(response) {
-    //             alert(response);
-    //             location.reload();
-    //         }
-    //     });
-    //
-    //     return false;
-    // });
-    //
-    // function format ( d ) {
-    //     return  'Content : ' + d.title + '<br>';
-    // }
-    //
-    // $(document).ready(function()
-    // {
-    //     var dtOptions = {
-    //         stateSave: true,
-    //         info: true,
-    //         language: {
-    //             lengthMenu: 'Показать <select>'+
-    //                     '<option value="10">10</option>'+
-    //                     '<option value="25">25</option>'+
-    //                     '<option value="50">50</option>'+
-    //                     '<option value="100">100</option>'+
-    //                     '<option value="-1">Все</option>'+
-    //                     '</select>',
-    //             emptyTable: "<center>Нет данных</center>",
-    //             search: "&nbsp;Поиск : &nbsp; ",
-    //             zeroRecords: "",
-    //             info: "Всего _TOTAL_ записей",
-    //             paginate: {
-    //                 first: '<i class="la la-angle-double-left"></i>',
-    //                 previous: '<i class="la la-angle-left"></i>',
-    //                 next: '<i class="la la-angle-right"></i>',
-    //                 last: '<i class="la la-angle-double-right"></i>'
-    //             }
-    //         },
-    //         dom: "<'row'<'col-6'i><'col-6'l>>" +
-    //         "<'row'<'col-sm-12'tr>>" +
-    //         "<'row'<'col-4'i><'col-4'p><'col-4'l>>",
-    //         "deferRender": true,
-    //         /*
-    //         "ajax": {
-    //             url: "doc/documentList",
-    //             "dataSrc": ""
-    //         },
-    //
-    //         columns: [
-    //             {
-    //                 class: "details-control",
-    //                 searchable: false,
-    //                 orderable: false,
-    //                 data: null,
-    //                 defaultContent: ""
-    //             },
-    //             {
-    //                 searchable: false,
-    //                 orderable: false,
-    //                 data: function (data, type, full, meta) {
-    //                     return "...";
-    //                 }
-    //             },
-    //             {
-    //                 searchable: false,
-    //                 orderable: true,
-    //                 name: 'documentDueDate',
-    //                 data: 'documentDueDate',
-    //                 render: function (data, type, full, meta) {
-    //                     return data.documentDueDate !== null ? '<span class="text-danger">KОНТРОЛЬ<br>' + data.documentDueDate + '</span>' : '';
-    //
-    //                 }
-    //             },
-    //             {
-    //                 searchable: true,
-    //                 orderable: true,
-    //                 name: 'docIndex',
-    //                 data: 'receiverRegisteredNumber',
-    //                 render: function (data) { return data; }
-    //             },
-    //             {
-    //                 searchable: false,
-    //                 orderable: true,
-    //                 name: 'receiverRegisteredDate',
-    //                 data: 'receiverRegisteredDate'
-    //             },
-    //             {
-    //                 searchable: true,
-    //                 orderable: true,
-    //                 name: 'senderRegisteredNumber',
-    //                 data: 'senderRegisteredNumber',
-    //                 render: function (data, type, full, meta) {
-    //                     return data.senderRegisteredNumber + "<hr>" + data.senderRegisteredDate;
-    //                 }
-    //             },
-    //             {
-    //                 searchable: false,
-    //                 orderable: false,
-    //                 name: 'senderResponsible',
-    //                 data: 'senderResponsible',
-    //                 render: function (data, type, full, meta) {
-    //                     return data.senderResponsible !== null ? data.senderResponsible.join('') : null;
-    //                 }
-    //             },
-    //             {
-    //                 searchable: true,
-    //                 orderable: false,
-    //                 name: 'title',
-    //                 data: 'title'
-    //             },
-    //             {
-    //                 searchable: false,
-    //                 orderable: false,
-    //                 name: 'receiverResponsible',
-    //                 data: 'receiverResponsible'
-    //                     //function (data, type, full, meta) { return data.receiverResponsible !== null ? data.receiverResponsible.join('') : null; }
-    //             },
-    //             {
-    //                 searchable: false,
-    //                 orderable: true,
-    //                 name: 'documentState',
-    //                 data: 'documentState'
-    //             }
-    //         ]
-    //         */
-    //
-    //     };
-    //     var table = $('#documentTable').DataTable(dtOptions);
-    //
-    //     /*
-    //     <div class="m-input-icon m-input-icon--left">
-    //         <input type="text" class="form-control m-input" th:placeholder="#{label.search}" id="generalSearch">
-    //         <span class="m-input-icon__icon m-input-icon__icon--left">
-    //             <span><i class="la la-search"></i></span>
-    //         </span>
-    //     </div>
-    //     */
-    //     /*
-    //     var t1 = $('#incoming').DataTable({
-    //         orderCellsTop: true,
-    //         fixedHeader: true,
-    //         searching: true,
-    //         paging: true,
-    //         processing: true,
-    //         ajax: {
-    //             url: '/doc/documents',
-    //             data: function ( d ) {
-    //                 d.documentType = [[${type}]];
-    //             }
-    //         },
-    //         serverSide: true,
-    //         order: [ [3, 'asc'] ],
-    //         columns: [
-    //             {
-    //                 class: "details-control",
-    //                 searchable: false,
-    //                 orderable: false,
-    //                 data: null,
-    //                 defaultContent: ""
-    //             },
-    //             {
-    //                 searchable: false,
-    //                 orderable: false,
-    //                 data: function (data, type, full, meta) {
-    //                     return "...";
-    //                 }
-    //             },
-    //             {
-    //                 searchable: false,
-    //                 orderable: true,
-    //                 name: 'documentDueDate',
-    //                 data: function (data, type, full, meta) {
-    //                     return data.documentDueDate !== null ? '<span class="text-danger">KОНТРОЛЬ<br>' + data.documentDueDate + '</span>' : '';
-    //
-    //                 }
-    //             },
-    //             {
-    //                 searchable: true,
-    //                 orderable: true,
-    //                 name: 'docIndex',
-    //                 data: 'receiverRegisteredNumber',
-    //                 render: function (data) { return data; }
-    //             },
-    //             {
-    //                 searchable: false,
-    //                 orderable: true,
-    //                 name: 'receiverRegisteredDate',
-    //                 data: function (data, type, full, meta) {
-    //                     return data.receiverRegisteredDate;
-    //
-    //                 }
-    //             },
-    //             {
-    //                 searchable: true,
-    //                 orderable: true,
-    //                 name: 'senderRegisteredNumber',
-    //                 data: function (data, type, full, meta) {
-    //                     return data.senderRegisteredNumber + "<hr>" + data.senderRegisteredDate;
-    //
-    //                 }
-    //             },
-    //             {
-    //                 searchable: false,
-    //                 orderable: false,
-    //                 name: 'senderResponsible',
-    //                 data: function (data, type, full, meta) {
-    //                     var r = [];
-    //
-    //                     if(data.senderResponsible !== null) {
-    //
-    //
-    //                         if (data.senderResponsible.organizations != null) {
-    //                             data.senderResponsible.organizations.forEach(function (element) {
-    //                                 r.push(element.name)
-    //                             });
-    //                         }
-    //
-    //                         if (data.senderResponsible.person != null) {
-    //                             data.senderResponsible.person.forEach(function (element) {
-    //                                 r.push(element.name)
-    //                             });
-    //                         }
-    //                     }
-    //
-    //                     return r.join('');
-    //                 }
-    //             },
-    //             {
-    //                 searchable: true,
-    //                 orderable: false,
-    //                 name: 'title',
-    //                 data: 'title'
-    //             },
-    //             {
-    //                 searchable: false,
-    //                 orderable: false,
-    //                 name: 'receiverResponsible',
-    //                 data: function (data, type, full, meta) {
-    //
-    //                     var r = [];
-    //
-    //                     data.receiverResponsible.staff.forEach(function(element) {
-    //                         r.push(element.name + '<br>')
-    //                     });
-    //
-    //                     return r.join('');
-    //                 }
-    //             },
-    //             {
-    //                 searchable: false,
-    //                 orderable: true,
-    //                 name: 'documentState',
-    //                 data: function (data, type, full, meta) {
-    //                     return data.documentState === "REGISTERED" || data.documentState === "DONE" ? "Зарегистрирован" : "";
-    //                 }
-    //             }
-    //         ],
-    //         language: {
-    //             emptyTable: "<center>Нет данных</center>",
-    //             info: "Всего _TOTAL_ записей",
-    //             lengthMenu: "_MENU_",
-    //             paginate: {
-    //                 first: '<i class="la la-angle-double-left"></i>',
-    //                 previous: '<i class="la la-angle-left"></i>',
-    //                 next: '<i class="la la-angle-right"></i>',
-    //                 last: '<i class="la la-angle-double-right"></i>'
-    //             }
-    //         },
-    //         dom: "<'row'<'col-6'i><'col-6'l>>" +
-    //         "<'row'<'col-sm-12'tr>>" +
-    //         "<'row'<'col-4'i><'col-4'p><'col-4'l>>"
-    //     });
-    //
-    //     var detailRows = [];
-    //
-    //     $('#incoming tbody').on( 'click', 'tr td.details-control', function () {
-    //         var tr = $(this).closest('tr');
-    //         var row = t1.row( tr );
-    //         var idx = $.inArray( tr.attr('id'), detailRows );
-    //
-    //         if ( row.child.isShown() ) {
-    //             tr.removeClass( 'details' );
-    //             row.child.hide();
-    //
-    //             // Remove from the 'open' array
-    //             detailRows.splice( idx, 1 );
-    //         }
-    //         else {
-    //             tr.addClass( 'details' );
-    //             row.child( format( row.data() ) ).show();
-    //
-    //             // Add to the 'open' array
-    //             if ( idx === -1 ) {
-    //                 detailRows.push( tr.attr('id') );
-    //             }
-    //         }
-    //     } );
-    //
-    //     t1.on( 'draw', function () {
-    //         $.each( detailRows, function ( i, id ) {
-    //             $('#'+id+' td.details-control').trigger( 'click' );
-    //         } );
-    //     } );
-    //
-    //     /*
-    //     $('#ddt thead tr').clone(true).appendTo( '#ddt thead' );
-    //     $('#ddt thead tr:eq(1) th').each( function (i) {
-    //
-    //         $(this).html('<input type="text" class="form-control m-input m-input--solid">');
-    //         $('input', this).on('keyup change', function (){
-    //
-    //             if (this.value.length > 2 && table.column(i).search() !== this.value) {
-    //                 table.column(i)
-    //                     .search(this.value)
-    //                     .draw();
-    //             }
-    //         });
-    //     });
-    //     */
-    //     /*
-    //     l - perpage
-    //     r - processing
-    //     t - table
-    //     i - info
-    //     p - paging
-    //     f - filter
-    //     */
-    //
-    //
-    //     $('#generalSearch').keyup(function(){
-    //         table.search($(this).val()).draw() ;
-    //     });
-    // });
+        params.order.forEach(function (order, index) {
+            params['order[' + index + '].column'] = order.column;
+            params['order[' + index + '].dir'] = order.dir;
+        });
+        delete params.order;
 
+        params['search.regex'] = params.search.regex;
+        params['search.value'] = params.search.value;
+        delete params.search;
+
+        return params;
+    }
 </script>
-
-
 <script type="text/javascript" th:inline="javascript">
-    var type = /*[[${type}]]*/ [];
 
-    $('#sub_type').selectpicker();
+    var tasks = [[${tasks}]];
+    var type = [[${type}]]
+    var states = [[${states}]];
+    var documentSubTypes = [[${dtypes}]];
 
-    var DatatableJsonRemoteDemo = function () {
-        //== Private functions
-        // basic demovar
-        var demo;
-        if(type=="internal"){
-            demo = function () {
-                var datatable = $('.m_datatable').mDatatable({
-                    // datasource definition
-                    data: {
-                        type: 'remote',
-                        source: {
-                            read: {
-                                url: '/doc/documents/'+type
-                            }
-                        },
-                        pageSize: 10,
-                        saveState: {
-                            cookie: false,
-                            webstorage: false
-                        },
-                        serverPaging: true,
-                        serverFiltering: true,
-                        serverSorting: true
-                    },
-
-                    // layout definition
-                    layout: {
-                        theme: 'default', // datatable theme
-                        class: '', // custom wrapper class
-                        scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
-                        footer: false // display/hide footer
-                    },
-                    // column sorting
-                    sortable: true,
-                    // column based filtering
-                    filterable: false,
-                    pagination: true,
-                    // columns definition
-                    columns:  [{
-                        field: "View",
-                        width: 80,
-                        textAlign: 'center',
-                        title: '[[#{label.view}]]',
-                        sortable: false,
-                        selector: false,
-                        overflow: 'visible',
-                        template: function (row) {
-                            var d='';
-                            if(row.hasTask=="false"){
-                                d=d+'\
-                                <a  href="/doc/view/'+ row.id +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Просмотр "><i class="la la-arrow-circle-o-right"></i></a>\
-                            ';
-                            }
-                            else{
-                                d=d+'\
-                                <a  href="/doc/edit/'+ row.id +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать "><i class="la la-edit"></i></a>\
-                            ';
-                            }
-                            return d;
-                        }
-                    },{
-                        field: "id",
-                        title: "#",
-                        sortable: 'desc',
-                        responsive: {hidden: 'xl'}
-                    },{
-                        field: "docIndex",
-                        title: "№",
-                        template:function (row) {
-                            return row.docIndex+1;
-                        }
-                    },{
-                        field: "documentDueDate",
-                        title: "Date"
-                    },{
-                        field: "title",
-                        title: 'title',
-                        template: function (row) {
-                            var d = row.title;
-                            var t=row.documentSubType;
-                            if(d.length>30){
-                                d= d.substring(0,30)+"...";
-                            }
-                            return t+" "+d;
-                        }
-                    },{
-                        field: "senderResponsible",
-                        title: 'Исх. № и Дата',
-                        template: function (row) {
-                            var d = row.senderRegisteredNumber;
-                            var t=row.senderRegisteredDate;
-                            if(d.length>30){
-                                d= d.substring(0,30)+"...";
-                            }
-                            return d+" "+t;
-                        }
-                    },{
-                        field: "senderResponsible",
-                        title: 'Отправитель'
-                    },{
-                        field: "receiverResponsible",
-                        title: 'Вхд. № и Дата',
-                        template: function (row) {
-                            var d = row.receiverRegisteredNumber;
-                            var t=row.receiverRegisteredDate;
-                            if(d.length>30){
-                                d= d.substring(0,30)+"...";
-                            }
-                            return d+" "+t;
-                        }
-                    }, {
-                        field: "receiverResponsible",
-                        title: 'Исполнитель',
-                    }, {
-                        field: "documentDueDate",
-                        title: 'Срок',
-                    }],
-                    translate: {
-                        records: {
-                            processing: 'Подождите пожалуйста...',
-                            noRecords: 'Записей не найдено'
-                        },
-                        toolbar: {
-                            pagination: {
-                                items: {
-                                    default: {
-                                        first: 'Первая страница',
-                                        prev: 'Предыдущая страница',
-                                        next: 'Следующая страница',
-                                        last: 'Последняя страница',
-                                        more: 'Другие страницы',
-                                        input: 'Номер страницы',
-                                        select: 'Выбрать размер страницы'
-                                    },
-                                    info: 'Отображение {{start}} - {{end}} из {{total}} записей'
-                                }
-                            }
-                        }
-                    }
-                });
-
-
-                var query = datatable.getDataSourceQuery();
-
-                $('#sub_type').on('change', function () {
-                    datatable.search($(this).val(), 'docType');
-                }).val(typeof query.docType !== 'undefined' ? query.docType : '');
-
-                $('#from_date').on('change', function () {
-                    datatable.search($(this).find("input").val(), 'fromDate');
-                }).val(typeof query.fromDate!== 'undefined' ? query.fromDate: '');
-
-                $('#to_date').on('change', function () {
-                    datatable.search($(this).find("input").val(), 'toDate');
-                }).val(typeof query.toDate!== 'undefined' ? query.toDate: '');
-
-                $('#title').on('keyup', function () {
-                    datatable.search($(this).val(), 'title');
-                }).val(typeof query.title!== 'undefined' ? query.title: '');
-
-                $('#sender').on('keyup', function () {
-                    datatable.search($(this).val(), 'sender');
-                }).val(typeof query.sender!== 'undefined' ? query.sender: '');
-
-                $('#receiver').on('keyup', function () {
-                    datatable.search($(this).val(), 'receiver');
-                }).val(typeof query.receiver!== 'undefined' ? query.receiver: '');
-            };
-        }
-        else if(type=="incoming"){
-            demo = function () {
-                var datatable = $('.m_datatable').mDatatable({
-                    // datasource definition
-                    data: {
-                        type: 'remote',
-                        source: {
-                            read: {
-                                url: '/doc/documents/'+type
-                            }
-                        },
-                        pageSize: 10,
-                        saveState: {
-                            cookie: false,
-                            webstorage: false
-                        },
-                        serverPaging: true,
-                        serverFiltering: true,
-                        serverSorting: true
-                    },
-
-                    // layout definition
-                    layout: {
-                        theme: 'default', // datatable theme
-                        class: '', // custom wrapper class
-                        scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
-                        footer: false // display/hide footer
-                    },
-                    // column sorting
-                    sortable: true,
-                    // column based filtering
-                    filterable: false,
-                    pagination: true,
-                    // columns definition
-                    columns:  [{
-                        field: "View",
-                        width: 50,
-                        textAlign: 'center',
-                        title: '[[#{label.view}]]',
-                        sortable: false,
-                        selector: false,
-                        overflow: 'visible',
-                        template: function (row) {
-                            var d='';
-                            console.log(row.hasTask=="false")
-                            if(row.hasTask=="false"){
-                                d=d+'\
-                                <a  href="/doc/view/'+ row.id +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Просмотр "><i class="la la-arrow-circle-o-right"></i></a>\
-                            ';
-                            }
-                            else{
-                                d=d+'\
-                                <a  href="/doc/edit/'+ row.id +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать "><i class="la la-edit"></i></a>\
-                            ';
-                            }
-                            return d;
-                        }
-                    },{
-                        field: "id",
-                        title: "#",
-                        sortable: 'desc',
-                        responsive: {hidden: 'xl'}
-                    },{
-                        field: "documentDueDate",
-                        title: "КОНТРОЛЬ",
-                        template:function(row){
-                            var date='';
-                            if(row.documentDueDate!=null)
-                                date = moment("/Date("+row.documentDueDate+")/").format("DD.MM.YYYY");
-                            return date;
-                        }
-                    },{
-                        field: "receiverRegisteredNumber",
-                        title: 'Вхд. №'
-                    },{
-                        field: "receiverRegisteredDate",
-                        title: "Вхд. Дата",
-                        width:80
-                    },{
-                        field: "senderRegisteredNumber",
-                        title: 'Исх. № '
-                    },{
-                        field: "senderRegisteredDate",
-                        title: "Исх. Дата",
-                        width:80
-                    },{
-                        field: "senderResponsible",
-                        title: 'Отправитель'
-                    },{
-                        field: "title",
-                        title: 'Относительно',
-                        width:270,
-                        template: function (row) {
-                            var d = row.title;
-                            var t=row.documentSubType;
-                            if(d.length>30){
-                                d= d.substring(0,30)+"...";
-                            }
-                            return t+" "+d;
-                        }
-                    }, {
-                        field: "receiverResponsible",
-                        title: 'Получатель',
-                        width:270
-                    },{
-                        field: "documentState",
-                        title: 'Состояние'
-                    }],
-                    translate: {
-                        records: {
-                            processing: 'Подождите пожалуйста...',
-                            noRecords: 'Записей не найдено'
-                        },
-                        toolbar: {
-                            pagination: {
-                                items: {
-                                    default: {
-                                        first: 'Первая страница',
-                                        prev: 'Предыдущая страница',
-                                        next: 'Следующая страница',
-                                        last: 'Последняя страница',
-                                        more: 'Другие страницы',
-                                        input: 'Номер страницы',
-                                        select: 'Выбрать размер страницы'
-                                    },
-                                    info: 'Отображение {{start}} - {{end}} из {{total}} записей'
-                                }
-                            }
-                        }
-                    }
-                });
-
-
-                var query = datatable.getDataSourceQuery();
-
-                $('#sub_type').on('change', function () {
-                    datatable.search($(this).val(), 'docType');
-                }).val(typeof query.docType !== 'undefined' ? query.docType : '');
-
-                $('#from_date').on('change', function () {
-                    datatable.search($(this).find("input").val(), 'fromDate');
-                }).val(typeof query.fromDate!== 'undefined' ? query.fromDate: '');
-
-                $('#to_date').on('change', function () {
-                    datatable.search($(this).find("input").val(), 'toDate');
-                }).val(typeof query.toDate!== 'undefined' ? query.toDate: '');
-
-                $('#title').on('keyup', function () {
-                    datatable.search($(this).val(), 'title');
-                }).val(typeof query.title!== 'undefined' ? query.title: '');
-
-                $('#sender').on('keyup', function () {
-                    datatable.search($(this).val(), 'sender');
-                }).val(typeof query.sender!== 'undefined' ? query.sender: '');
-
-                $('#receiver').on('keyup', function () {
-                    datatable.search($(this).val(), 'receiver');
-                }).val(typeof query.receiver!== 'undefined' ? query.receiver: '');
-            };
-        }
-        else{
-            demo = function () {
-                var datatable = $('.m_datatable').mDatatable({
-                    // datasource definition
-                    data: {
-                        type: 'remote',
-                        source: {
-                            read: {
-                                url: '/doc/documents/'+type
-                            }
-                        },
-                        pageSize: 10,
-                        saveState: {
-                            cookie: false,
-                            webstorage: false
-                        },
-                        serverPaging: true,
-                        serverFiltering: true,
-                        serverSorting: true
-                    },
-
-                    // layout definition
-                    layout: {
-                        theme: 'default', // datatable theme
-                        class: '', // custom wrapper class
-                        scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
-                        footer: false // display/hide footer
-                    },
-                    // column sorting
-                    sortable: true,
-                    // column based filtering
-                    filterable: false,
-                    pagination: true,
-                    // columns definition
-                    columns:  [{
-                        field: "View",
-                        width: 50,
-                        textAlign: 'center',
-                        title: '  ',
-                        sortable: false,
-                        selector: false,
-                        overflow: 'visible',
-                        template: function (row) {
-                            var d='';
-                            if(row.hasTask=="false"){
-                                d=d+'\
-                                <a  href="/doc/view/'+ row.id +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Просмотр "><i class="la la-arrow-circle-o-right"></i></a>\
-                            ';
-                            }
-                            else{
-                                d=d+'\
-                                <a  href="/doc/edit/'+ row.id +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать "><i class="la la-edit"></i></a>\
-                            ';
-                            }
-                            return d;
-                        }
-                    },{
-                        field: "id",
-                        title: "#",
-                        sortable: 'desc',
-                        responsive: {hidden: 'xl'}
-                    },{
-                        field: "title",
-                        title: "Относительно"
-                    },{
-                        field: "senderRegisteredNumber",
-                        title: 'Исх. № <br> Дата',
-                        template: function (row) {
-                            var d = row.senderRegisteredNumber;
-                            var t=row.senderRegisteredDate;
-                            if(d.length>30){
-                                d= d.substring(0,30)+"...";
-                            }
-                            return d+" "+t;
-                        }
-                    },{
-                        field: "senderRegisteredDate",
-                        title: "Исх. ",
-                        width:80
-                    },{
-                        field: "senderResponsible",
-                        title: 'Отправитель'
-                    },{
-                        field: "title",
-                        title: [[#{label.document.title}]],
-                        width:270,
-                        template: function (row) {
-                            var d = row.title;
-                            var t=row.documentSubType;
-                            if(d.length>30){
-                                d= d.substring(0,30)+"...";
-                            }
-                            return t+" "+d;
-                        }
-                    },{
-                        field: "documentState",
-                        title: [[#{label.document.generalStatus}]]
-                    },{
-                        field: "receiverResponsible",
-                        title: 'Исполнитель',
-                    },  {
-                        field: "receiverResponsible",
-                        title: 'Получатель',
-                        width:270
-                    }, {
-                        field: "pageCount",
-                        title: [[#{label.document.pageIndex}]]+"<br>"+[[#{label.document.pageCount}]],
-                        template:function (row) {
-                            return row.indexNo+" - "+row.pageCount;
-                        }
-                    }],
-                    translate: {
-                        records: {
-                            processing: 'Подождите пожалуйста...',
-                            noRecords: 'Записей не найдено'
-                        },
-                        toolbar: {
-                            pagination: {
-                                items: {
-                                    default: {
-                                        first: 'Первая страница',
-                                        prev: 'Предыдущая страница',
-                                        next: 'Следующая страница',
-                                        last: 'Последняя страница',
-                                        more: 'Другие страницы',
-                                        input: 'Номер страницы',
-                                        select: 'Выбрать размер страницы'
-                                    },
-                                    info: 'Отображение {{start}} - {{end}} из {{total}} записей'
-                                }
-                            }
-                        }
-                    }
-                });
-
-
-                var query = datatable.getDataSourceQuery();
-
-                $('#sub_type').on('change', function () {
-                    datatable.search($(this).val(), 'docType');
-                }).val(typeof query.docType !== 'undefined' ? query.docType : '');
-
-                $('#from_date').on('change', function () {
-                    datatable.search($(this).find("input").val(), 'fromDate');
-                }).val(typeof query.fromDate!== 'undefined' ? query.fromDate: '');
-
-                $('#to_date').on('change', function () {
-                    datatable.search($(this).find("input").val(), 'toDate');
-                }).val(typeof query.toDate!== 'undefined' ? query.toDate: '');
-
-                $('#title').on('keyup', function () {
-                    datatable.search($(this).val(), 'title');
-                }).val(typeof query.title!== 'undefined' ? query.title: '');
-
-                $('#sender').on('keyup', function () {
-                    datatable.search($(this).val(), 'sender');
-                }).val(typeof query.sender!== 'undefined' ? query.sender: '');
-
-                $('#receiver').on('keyup', function () {
-                    datatable.search($(this).val(), 'receiver');
-                }).val(typeof query.receiver!== 'undefined' ? query.receiver: '');
-            };
-        }
-        return {
-            // public functions
-            init: function () {
-                demo();
+    var incomingDocs = [
+        {
+            class: "details-control",
+            searchable: false,
+            orderable: false,
+            data: null,
+            defaultContent: '<i class="la la-chevron-right"></i>'
+        },
+        {
+            searchable: false,
+            orderable: false,
+            data: 'id',
+            name: 'id',
+            render: function (data) {
+                return tasks.includes(data)
+                    ? '<a  href="/doc/edit/'+ data +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать "><i class="la la-edit"></i></a>'
+                    : '<a  href="/doc/view/'+ data +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Просмотр "><i class="la la-arrow-circle-o-right"></i></a>';
             }
-        };
-    }();
-    jQuery(document).ready(function () {
-        DatatableJsonRemoteDemo.init();
+        },
+        {
+            searchable: true,
+            orderable: true,
+            name: 'documentDueDate',
+            data: 'documentDueDate',
+            render: function (data, type, full, meta) {
+                return data != null ? '<span class="text-danger">' + data + '</span>' : ' ';
+            }
+        },
+        {
+            searchable: true,
+            orderable: true,
+            name: 'docIndex',
+            data: 'docIndex'
+        },
+        {
+            searchable: true,
+            orderable: true,
+            name: 'receiverRegisteredDate',
+            data: 'receiverRegisteredDate'
+        },
+        {
+            searchable: true,
+            orderable: true,
+            name: 'senderRegisteredNumber',
+            data: 'senderRegisteredNumber'
+        },
+        {
+            searchable: true,
+            orderable: true,
+            name: 'senderRegisteredDate',
+            data: 'senderRegisteredDate'
+        },
+        {
+            searchable: false,
+            orderable: false,
+            name: 'senderResponsible',
+            data: 'senderResponsible',
+            render: function (data, type, full, meta) {
+
+                var r = [];
+                if(data != null) {
+                    r = data.split(',');
+                }
+                return r.join('<br>');
+            }
+        },
+        {
+            searchable: true,
+            orderable: false,
+            name: 'title',
+            data: 'title'
+        },
+        {
+            searchable: false,
+            orderable: false,
+            name: 'receiverResponsible',
+            data: 'receiverResponsible',
+            render: function (data, type, full, meta) {
+
+                var r = [];
+                if (data != null) {
+                    r = data.split(',');
+                }
+                return r.join('<br>');
+            }
+        },
+        {
+            searchable: false,
+            orderable: true,
+            name: 'documentState',
+            data: 'documentState',
+            render: function (data, type, full, meta) {
+                return states[data]
+            }
+        }
+    ];
+    var outgoingDocs = [
+        {
+            class: "details-control",
+            searchable: false,
+            orderable: false,
+            data: null,
+            defaultContent: '<i class="la la-chevron-right"></i>'
+        },
+        {
+            searchable: false,
+            orderable: false,
+            data: 'id',
+            name: 'id',
+            render: function (data) {
+                return tasks.includes(data)
+                    ? '<a href="/doc/edit/'+ data +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать "><i class="la la-edit"></i></a>'
+                    : '<a href="/doc/view/'+ data +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Просмотр "><i class="la la-arrow-circle-o-right"></i></a>';
+            }
+        },
+        {
+            searchable: false,
+            orderable: false,
+            visible: true,
+            name: 'id',
+            data: function (data) {
+                return (tasks.includes(data.id) && data.documentState === 'APPROVED')
+                    ? '<a class="openact" href="/doc/save/' + data.id + '"><i class="la la-floppy-o"></i></a>'
+                    : '';
+            }
+        },
+        {
+            searchable: true,
+            orderable: true,
+            name: 'docIndex',
+            data: 'docIndex'
+        },
+        {
+            searchable: true,
+            orderable: true,
+            name: 'senderRegisteredNumber',
+            data: 'senderRegisteredNumber'
+        },
+        {
+            searchable: true,
+            orderable: true,
+            name: 'senderRegisteredDate',
+            data: 'senderRegisteredDate'
+        },
+        {
+            searchable: true,
+            orderable: false,
+            name: 'documentSubType',
+            data: 'documentSubType'
+        },
+        {
+            searchable: true,
+            orderable: false,
+            name: 'title',
+            data: 'title'
+        },
+        {
+            searchable: false,
+            orderable: true,
+            name: 'documentState',
+            data: 'documentState',
+            render: function (data, type, full, meta) {
+                return states[data];
+            }
+        },
+        {
+            searchable: false,
+            orderable: false,
+            name: 'owner',
+            data: 'owner'
+        },
+        {
+            searchable: false,
+            orderable: false,
+            name: 'receiverResponsible',
+            data: 'receiverResponsible',
+            render: function (data, type, full, meta) {
+
+                var r = [];
+                if (data != null) {
+                    r = data.split(',');
+                }
+                return r.join('<br>');
+            }
+        },
+        {
+            searchable: false,
+            orderable: false,
+            name: 'indexNo',
+            data: function (data, type, full, meta) {
+                return '<p>' + data.indexNo + '</p><p>' + data.pageCount + '</p>';
+            }
+        }
+    ];
+    var internalDocs = [
+        {
+            class: "details-control",
+            searchable: false,
+            orderable: false,
+            data: null,
+            defaultContent: '<i class="la la-chevron-right"></i>'
+        },
+        {
+            searchable: false,
+            orderable: false,
+            data: 'id',
+            name: 'id',
+            render: function (data) {
+                return tasks.includes(data)
+                    ? '<a  href="/doc/edit/'+ data +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать "><i class="la la-edit"></i></a>'
+                    : '<a  href="/doc/view/'+ data +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Просмотр "><i class="la la-arrow-circle-o-right"></i></a>';
+            }
+        },
+        {
+            searchable: true,
+            orderable: true,
+            name: 'documentDueDate',
+            data: 'documentDueDate',
+            render: function (data, type, full, meta) {
+                return data != null ? '<span class="text-danger">KОНТРОЛЬ<br>' + data + '</span>' : ' ';
+            }
+        },
+        {
+            searchable: true,
+            orderable: true,
+            name: 'docIndex',
+            data: 'docIndex'
+        },
+        {
+            searchable: true,
+            orderable: true,
+            name: 'receiverRegisteredDate',
+            data: 'receiverRegisteredDate'
+        },
+        {
+            searchable: true,
+            orderable: true,
+            name: 'senderRegisteredNumber',
+            data: 'senderRegisteredNumber'
+        },
+        {
+            searchable: true,
+            orderable: true,
+            name: 'senderRegisteredDate',
+            data: 'senderRegisteredDate'
+        },
+        {
+            searchable: false,
+            orderable: false,
+            name: 'senderResponsible',
+            data: 'senderResponsible',
+            render: function (data, type, full, meta) {
+
+                var r = [];
+                if(data != null) {
+                    r = data.split(',');
+                }
+                return r.join('<br>');
+            }
+        },
+        {
+            searchable: true,
+            orderable: false,
+            name: 'title',
+            data: 'title'
+        },
+        {
+            searchable: false,
+            orderable: false,
+            name: 'receiverResponsible',
+            data: 'receiverResponsible',
+            render: function (data, type, full, meta) {
+
+                var r = [];
+                if (data != null) {
+                    r = data.split(',');
+                }
+                return r.join('<br>');
+            }
+        },
+        {
+            searchable: false,
+            orderable: true,
+            name: 'documentState',
+            data: 'documentState',
+            render: function (data, type, full, meta) {
+                return states[data];
+            }
+        }
+    ];
+
+    var columns = function() {
+        if(type === 'incoming') return incomingDocs;
+        if(type === 'outgoing') return outgoingDocs;
+        if(type === 'internal') return internalDocs;
+    }
+
+    $(document).ready(function() {
+
+        $('#documentTable thead tr').clone(true).appendTo('#documentTable thead');
+        $('#documentTable thead tr:eq(1) th').each(function (i){
+
+            if($(this).hasClass("searchable")) {
+
+                if($(this).hasClass("ti")) {
+                    $(this).html('<input type="search" class="form-control m-input--square" style="width: 100%">');
+                    $('input', this).on('change', function () {
+                        if (table.column(i).search() !== this.value) {
+                            table.column(i).search(this.value).draw();
+                        }
+                    });
+                }
+                if($(this).hasClass("di")) {
+                    $(this).html('<input type="text" readonly class="form-control dtp m-input--square" style="width: 100%;"/>');
+                    $('input', this).on('apply.daterangepicker', function(ev, picker) {
+                        if (table.column(i).search() !== this.value) {
+                            table.column(i).search(this.value).draw();
+                        }
+                        console.log(this.value)
+                    });
+                    $('input', this).on('cancel.daterangepicker', function(ev, picker) {
+                        $(this).val('');
+                        table.column(i).search(this.value).draw();
+                    });
+                }
+                if($(this).hasClass("sis")) {
+                    $(this).html('<select class="form-control m-input--square" id="states"><option value=""> Все </option></select>');
+                    $.each(states, function(element) {
+                        $("#states").append(new Option(this, element));
+                    });
+                    $('select', this).on('change', function () {
+                        if (table.column(i).search() !== this.value) {
+                            table.column(i).search(this.value).draw();
+                        }
+                    });
+                }
+                if($(this).hasClass("sid")) {
+                    $(this).html('<select class="form-control m-input--square" id="dtypes"><option value=""> Все </option></select>');
+                    $.each(documentSubTypes, function() {
+                        $("#dtypes").append(new Option(this, this));
+                    });
+                    $('select', this).on('change', function () {
+                        if (table.column(i).search() !== this.value) {
+                            table.column(i).search(this.value).draw();
+                        }
+                    });
+                }
+            }
+            else {
+                $(this).html('');
+            }
+        });
+
+        var table = $('#documentTable').DataTable({
+            orderCellsTop: true,
+            fixedHeader: true,
+            stateSave: true,
+            searching: true,
+            paging: true,
+            processing: false,
+            ajax: {
+                'url': '/doc/documents',
+                'data': function ( d ) {
+                    flatten(d)
+                    d.docType = [[${type}]];
+                }
+            },
+            serverSide: true,
+            order: [ [1, 'asc'] ],
+            createdRow: function ( row, data, index ) {
+                if (tasks.includes(data.id)) {
+                    $('td', row).addClass('active-document');
+                }
+            },
+            columns: columns(),
+            language: {
+                emptyTable: "<center>Нет данных</center>",
+                info: "Всего _TOTAL_ записей",
+                infoFiltered: "",
+                lengthMenu: 'Показать <select>'+
+                '<option value="5">5</option>'+
+                '<option value="10">10</option>'+
+                '<option value="25">25</option>'+
+                '<option value="50">50</option>'+
+                '<option value="100">100</option>'+
+                '<option value="-1">Все</option>'+
+                '</select>',
+                paginate: {
+                    first: '<i class="la la-angle-double-left"></i>',
+                    previous: '<i class="la la-angle-left"></i>',
+                    next: '<i class="la la-angle-right"></i>',
+                    last: '<i class="la la-angle-double-right"></i>'
+                }
+            },
+            dom: "<'row'<'col-6'i><'col-6'l>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        })
+            .search( '' )
+            .columns()
+            .search( '' )
+            .draw();
+
+        $('body').on('click','.openact',function(e) {
+            e.preventDefault()
+            $.ajax({
+                url: $(this).attr('href'),
+                success: function(response) {
+                    alert(response);
+                    table.draw();
+                }
+            });
+        });
+
+        var detailRows = [];
+        function format (data) {
+            var r = [];
+            if (data != null) {
+                r = data.receiverExecutor.split(',');
+            }
+            return '<p><b>Исполнители</b></p>' + r.join('<br>');
+            //return  'Content : ' + data.receiverExecutor + '<br>';
+        }
+        $('#documentTable tbody').on( 'click', 'tr td.details-control', function () {
+
+            var tr = $(this).closest('tr');
+            var row = table.row( tr );
+            var idx = $.inArray( tr.attr('id'), detailRows );
+
+            if ( row.child.isShown() ) {
+                this.innerHTML = '<i class="la la-chevron-right"></i>'
+                tr.removeClass( 'details' );
+                row.child.hide();
+                detailRows.splice( idx, 1 );
+            }
+            else {
+                this.innerHTML = '<i class="la la-chevron-down"></i>'
+                tr.addClass('details');
+                row.child(format(row.data())).show();
+                if ( idx === -1 ) {
+                    detailRows.push(tr.attr('id'));
+                }
+            }
+        } );
+        table.on( 'draw', function () {
+            $.each( detailRows, function ( i, id ) {
+                $('#' + id + ' td.details-control').trigger( 'click' );
+            });
+        });
     });
+
 </script>
+
 <script>
-    $('#from_date').datetimepicker({
-        format: "dd.mm.yyyy",
-        todayHighlight: true,
-        autoclose: true,
-        startView: 2,
-        minView: 2,
-        forceParse: 0,
-        pickerPosition: 'bottom-left'
-    });
-    $('#to_date').datetimepicker({
-        format: "dd.mm.yyyy",
-        todayHighlight: true,
-        autoclose: true,
-        startView: 2,
-        minView: 2,
-        forceParse: 0,
-        pickerPosition: 'bottom-left'
+
+    $(document).ready(function() {
+        $('.dtp').daterangepicker({
+            locale: {
+                format: 'DD.MM.YY',
+                applyLabel: 'Выбрать',
+                cancelLabel: 'Очистить'
+            }
+        });
     });
 </script>
+
 </body>
 <!-- end::Body -->
 </html>
+
 
