@@ -269,6 +269,8 @@ public class CollateralItemController {
 		else
 		{
 
+			if(item.getRisk_rate()==null) item.setRisk_rate((double)1);
+			if(item.getDemand_rate()==null) item.setDemand_rate((double)1);
 			item.setCollateralItemDetails(itemDetails);
 			date=date.replace(",","");
 			if(date.length()==10)
