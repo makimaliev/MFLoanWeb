@@ -2063,7 +2063,7 @@ BEGIN
       SET total_paid = total_paid + princPaid + intPaid + penPaid;
       SET total_paidKGS = total_paidKGS + princPaidKGS + intPaidKGS + penPaidKGS;
 
-      #IF tempDate <= inDate THEN
+      IF tempDate <= inDate THEN
 
         if loan_summary_type_text = 'SYSTEM' then
 
@@ -2072,13 +2072,13 @@ BEGIN
                                             principalOverdue, principalPaid, principalPayment, principalWriteOff, totalCollectedInterestPayment, totalCollectedPenaltyPayment, totalDisbursement,
                                             totalInterestAccrued, totalInterestAccruedOnInterestPayment, totalInterestPaid, totalInterestPayment, totalPenaltyAccrued, totalPenaltyPaid, totalPrincipalPaid,
                                             totalPrincipalPayment, totalPrincipalWriteOff, loanId)
-            VALUES (CASE WHEN afterSrokDate THEN 1 ELSE 0 END, ROUND(collIntDisbursed,2), ROUND(collIntPayment,2), ROUND(collPenDisbursed,2), ROUND(collPenPayment,2), daysInPer, ROUND(disb,2), ROUND(intAccrued,2), ROUND(intOutstanding,2),
-                       ROUND(intOverdue,2), ROUND(intPaid,2), ROUND(intPayment,2), ROUND(tempDate,2), ROUND(penAccrued,2), ROUND(penOutstanding,2), ROUND(penOverdue,2), ROUND(penPaid,2), ROUND(princOutstanding,2),
-                                                              ROUND(princOverdue,2), ROUND(princPaid,2), ROUND(princPayment,2), 0, ROUND(totalCollIntPayment,2), ROUND(totalCollPenPayment,2), ROUND(totalDisb,2), ROUND(totalIntAccrued,2), paymentSumAfterSpecDate,
-                                                                                                                                ROUND(totalIntPaid,2), ROUND(totalIntPayment,2), ROUND(totalPenAccrued,2), ROUND(totalPenPaid,2), ROUND(totalPrincPaid,2), ROUND(totalPrincPayment,2), total_paidKGS, loan_id);
+            VALUES (CASE WHEN afterSrokDate THEN 1 ELSE 0 END, collIntDisbursed, collIntPayment, collPenDisbursed, collPenPayment, daysInPer, disb, intAccrued, intOutstanding,
+                        intOverdue, intPaid, intPayment, tempDate, penAccrued, penOutstanding, penOverdue, penPaid, princOutstanding,
+                        princOverdue, princPaid, princPayment, 0, totalCollIntPayment, totalCollPenPayment, totalDisb, totalIntAccrued, paymentSumAfterSpecDate,
+                        totalIntPaid, totalIntPayment, totalPenAccrued, totalPenPaid, totalPrincPaid, totalPrincPayment, total_paidKGS, loan_id);
         end if;
 
-      #END IF;
+      END IF;
 
       if loan_summary_type_text = 'MANUAL' or loan_summary_type_text = 'FIXED' then
 
@@ -2104,7 +2104,7 @@ BEGIN
         IF intAccrued + penAccrued + pOIO + pOPO > 0 THEN
           if loan_summary_type_text = 'SYSTEM' or ((loan_summary_type_text = 'MANUAL' or loan_summary_type_text = 'FIXED') and tempDate = inDate) then
             INSERT INTO accrue(version, daysInPeriod, fromDate, interestAccrued, lastInstPassed, penaltyAccrued, penaltyOnInterestOverdue, penaltyOnPrincipalOverdue, toDate, loanId)
-              VALUES (1, daysInPer, pDate, ROUND(intAccrued,2), FALSE , ROUND(penAccrued,2), ROUND(pOIO,2), ROUND(pOPO,2), tempDate, loan_id);
+              VALUES (1, daysInPer, pDate, intAccrued, FALSE , penAccrued, pOIO, pOPO, tempDate, loan_id);
           end if;
         END IF;
 
@@ -3961,4 +3961,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-22 20:19:23
+-- Dump completed on 2019-02-26 21:59:49
