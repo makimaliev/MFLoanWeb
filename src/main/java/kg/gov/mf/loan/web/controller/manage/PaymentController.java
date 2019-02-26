@@ -136,11 +136,13 @@ public class PaymentController {
 		
 		List<PaymentType> pTypes = pTypeService.list();
         model.addAttribute("pTypes", pTypes);
-		
+
+        Loan loan=loanService.getById(loanId);
         model.addAttribute("debtorId", debtorId);
         model.addAttribute("debtor", debtorService.getById(debtorId));
         model.addAttribute("loanId", loanId);
-        model.addAttribute("loan", loanService.getById(loanId));
+        model.addAttribute("loan", loan);
+        model.addAttribute("loan_currency",loan.getCurrency().getId());
 			
 		return "/manage/debtor/loan/payment/save";
 	}
@@ -168,9 +170,9 @@ public class PaymentController {
 		if (loan.getCurrency().getId()==Long.valueOf(1)){
 			payment.setIn_loan_currency(true);
 		}
-		else{
-			payment.setIn_loan_currency(false);
-		}
+//		else{
+//			payment.setIn_loan_currency(false);
+//		}
 		payment.setLoan(loan);
 		
 		if(payment.getId() == 0){

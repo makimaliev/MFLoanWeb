@@ -83,7 +83,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="#{label.loan.payment}">Погашение</h3>
+								<h3 class="m-portlet__head-text" th:text="#{label.loan.payment}" id="magic_btn">Погашение</h3>
 							</div>
 						</div>
 					</div>
@@ -95,6 +95,7 @@
 						<input hidden="true" type="text" id="id" name="id" th:field="*{exchange_rate}"/>
 						<input hidden="true" type="text" id="id" name="id" th:field="*{details}"/>
 						<input hidden="true" type="text" id="record" name="id" th:field="*{record_status}"/>
+						<input hidden="true" type="text" id="currency" name="id" th:field="*{in_loan_currency}"/>
 
 						<div class="m-portlet__body">
 							<div class="m-form__section">
@@ -199,6 +200,20 @@
 									</div>
 								</div>
 
+								<div class="form-group m-form__group row m--hide" id="in_loan_currency">
+									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.inLoanCurrency}"></label>
+									<div class="col-3">
+										<div class="col-lg-4 col-md-9 col-sm-12">
+											<span class="m-switch m-switch--outline m-switch--primary">
+												<label>
+													<input type="checkbox" id="loan_currency" name="enabled">
+													<span></span>
+												</label>
+											</span>
+										</div>
+									</div>
+								</div>
+
 							</div>
 						</div>
 						<div class="m-portlet__foot m-portlet__foot--fit">
@@ -262,6 +277,42 @@
 			// alert(switchStatus);// To verify
 		}
 	});
+
+    if($("#currency").val()=='true'){
+        $("#loan_currency").trigger('click');
+    }
+    if($("#loan_currency").is(':checked')){
+        $("#currency").val('true');
+    }
+    else{
+        $("#currency").val('false');
+    }
+    $("#loan_currency").on('change', function() {
+        if ($(this).is(':checked')) {
+            switchStatus = $(this).is(':checked');
+            $("#currency").val('true');
+            // alert(switchStatus);// To verify
+        }
+        else {
+            switchStatus = $(this).is(':checked');
+            $("#currency").val('false');
+            // alert($("#record").val())
+            // alert(switchStatus);// To verify
+        }
+    });
+	// $("#in_loan").val($("#currency_checkbox").val());
+    // alert($("#in_loan").val())
+
+	var c=1;
+	$("#magic_btn").on("click",function () {
+	    if(c==3){
+			// $("#in_loan_currency").collapse("show");
+            var myDiv = $('#in_loan_currency');
+            myDiv.removeClass('m--hide').show();
+            mApp.scrollTo(alert, -200);
+		}
+		c++;
+    });
 </script>
 </body>
 <!-- end::Body -->
