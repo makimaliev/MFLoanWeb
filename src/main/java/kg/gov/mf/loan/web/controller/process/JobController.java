@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.*;
 
-@Controller
+//@Controller
 public class JobController {
 
     @Autowired

@@ -1,8 +1,6 @@
 package kg.gov.mf.loan.web.config;
 
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import kg.gov.mf.loan.admin.org.converter.*;
@@ -14,6 +12,7 @@ import kg.gov.mf.loan.manage.converter.*;
 import kg.gov.mf.loan.output.report.converter.*;
 
 import kg.gov.mf.loan.output.report.service.GroupTypeService;
+import kg.gov.mf.loan.process.job.CalculateDailyJob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -24,6 +23,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.CacheControl;
+import org.springframework.scheduling.quartz.*;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
@@ -348,5 +348,34 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     @Override
     public void configurePathMatch(PathMatchConfigurer matcher) {
         matcher.setUseRegisteredSuffixPatternMatch(true);
+    }
+
+    @Bean
+    public JobDetailFactoryBean jobDetailFactoryBean(){
+        JobDetailFactoryBean factory = new JobDetailFactoryBean();
+        factory.setJobClass(CalculateDailyJob.class);
+        Map<String,Object> map = new HashMap<>();
+        map.put("name", "RAM");
+        factory.setJobDataAsMap(map);
+        factory.setGroup("mygroup");
+        factory.setName("myjob");
+        return factory;
+    }
+    //Job is scheduled after every 1 minute
+    @Bean
+    public CronTriggerFactoryBean cronTriggerFactoryBean(){
+        CronTriggerFactoryBean stFactory = new CronTriggerFactoryBean();
+        stFactory.setJobDetail(jobDetailFactoryBean().getObject());
+        stFactory.setStartDelay(3000);
+        stFactory.setName("mytrigger");
+        stFactory.setGroup("mygroup");
+        stFactory.setCronExpression("0 0 2 ? * * *");
+        return stFactory;
+    }
+    @Bean
+    public SchedulerFactoryBean schedulerFactoryBean() {
+        SchedulerFactoryBean scheduler = new SchedulerFactoryBean();
+        scheduler.setTriggers(cronTriggerFactoryBean().getObject());
+        return scheduler;
     }
 }
