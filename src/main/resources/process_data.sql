@@ -3902,7 +3902,7 @@ BEGIN
            where parent_id = parent_loan_id
           and loanStateId != 3)
         and pt.record_status = 1
-        group by pt.paymentDate;
+        group by pt.paymentDate, pt.number;
 
   END ;;
 DELIMITER ;
@@ -3961,4 +3961,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-26 21:59:49
+-- Dump completed on 2019-02-27 10:57:49
