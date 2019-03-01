@@ -151,12 +151,14 @@ public class LoanViewController {
         List<ReferenceView> finGroups=referenceViewService.findByParameter("fin_group");
         model.addAttribute("finGroups",finGroups);
 
+        List<ReferenceView> districts=referenceViewService.findByParameter("district");
+        model.addAttribute("districts",districts);
+
 
         model.addAttribute("selectedFields",selectedFieldNames);
         model.addAttribute("selectedFieldsTranslated",selectedFieldNamesTranslated);
         model.addAttribute("selectedFieldNamesWithId",resultListOfReferenceView);
         model.addAttribute("regions",regionService.findAll());
-        model.addAttribute("districts",districtService.findAll());
 
         return "output/report/loanViewList";
     }

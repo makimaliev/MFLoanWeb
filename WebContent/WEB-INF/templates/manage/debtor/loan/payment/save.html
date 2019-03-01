@@ -120,7 +120,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="totalAmount" th:value="${payment.totalAmount}">
+										<input type="text" class="form-control m-input" name="totalAmount" th:value="${payment.totalAmount}" disabled="disabled" id="total">
 									</div>
 								</div>
 
@@ -130,7 +130,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="principal" th:value="${payment.principal}">
+										<input type="text" class="form-control m-input" name="principal" th:value="${payment.principal}" id="principal">
 									</div>
 								</div>
 
@@ -140,7 +140,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="interest" th:value="${payment.interest}">
+										<input type="text" class="form-control m-input" name="interest" th:value="${payment.interest}" id="interest">
 									</div>
 								</div>
 
@@ -150,7 +150,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="penalty" th:value="${payment.penalty}">
+										<input type="text" class="form-control m-input" name="penalty" th:value="${payment.penalty}" id="penalty">
 									</div>
 								</div>
 
@@ -313,6 +313,27 @@
 		}
 		c++;
     });
+</script>
+
+<script>
+    $("#principal").on('input', function () {
+        updateTotal();
+    });
+
+    $("#penalty").on('input', function () {
+        updateTotal();
+    });
+
+    $("#interest").on('input', function () {
+        updateTotal();
+    });
+
+    function updateTotal() {
+        var sum = 0.0;
+        sum = ((parseFloat($("#principal").val()) + parseFloat($("#interest").val()) + parseFloat($("#penalty").val())));
+        $("#total").val(sum.toFixed(2));
+
+    }
 </script>
 </body>
 <!-- end::Body -->

@@ -269,6 +269,7 @@
     var loanTypes=/*[[${loanTypes}]]*/ [];
     var supervisors=/*[[${supervisors}]]*/ [];
     var finGroups=/*[[${finGroups}]]*/ [];
+    var districts=/*[[${districts}]]*/ [];
     var sds=[[${selectedFieldsTranslated}]];
     var asaa=[[${selectedFieldNamesWithId}]];
     var lines="";
@@ -488,6 +489,17 @@
                             return d.substring(0,30)+"...";
                         }
                         return d;
+                    }
+                }, {
+                    field: "v_debtor_district_id",
+                    title: [[#{label.district}]],
+                    width:150,
+                    template:function (row) {
+                        for (var i in districts){
+                            if(row.v_debtor_district_id==districts[i].id){
+                                return districts[i].name;
+                            }
+                        }
                     }
                 },{
                     field: "v_loan_fin_group_id",

@@ -155,9 +155,6 @@ public class PaymentController {
 		if(payment.getPaymentDate()==null){
 			payment.setPaymentDate(new Date());
 		}
-		if(payment.getTotalAmount()==null){
-			payment.setTotalAmount(0.0);
-		}
 		if(payment.getInterest()==null){
 			payment.setInterest(0.0);
 		}
@@ -170,6 +167,7 @@ public class PaymentController {
 		if (loan.getCurrency().getId()==Long.valueOf(1)){
 			payment.setIn_loan_currency(true);
 		}
+		payment.setTotalAmount(payment.getInterest()+payment.getPenalty()+payment.getPrincipal());
 //		else{
 //			payment.setIn_loan_currency(false);
 //		}
