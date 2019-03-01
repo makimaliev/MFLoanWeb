@@ -32,6 +32,7 @@ public class CollateralItemModel {
 
     private long conditionTypeId;
     private String conditionTypeName;
+    private int status;
 
     public Long getId() {
         return id;
@@ -143,5 +144,13 @@ public class CollateralItemModel {
 
     public void setConditionTypeName(String conditionTypeName) {
         this.conditionTypeName = conditionTypeName;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

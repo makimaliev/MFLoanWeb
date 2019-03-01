@@ -96,6 +96,18 @@ var DatatableDataLocalAgreementItems = function () {
             }, {
                 field: "conditionTypeName",
                 title: "Состояние"
+            },{
+                field: "status",
+                title: "Статус",
+                template: function (row) {
+
+                    if(row.status==1){
+                        return '<span class="m-badge m-badge--danger m-badge--wide"> Действует</span>';
+                    }
+                    else{
+                        return '<span class="m-badge m-badge--success m-badge--wide">Снят</span>';
+                    }
+                }
             }, {
                 field: "action",
                 width: 110,

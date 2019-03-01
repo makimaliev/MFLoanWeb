@@ -1129,6 +1129,7 @@ public class DebtorController {
                     model.setQuantityTypeId(item.getQuantityType().getId());
                     model.setQuantityTypeName(item.getQuantityType().getName());
                     model.setCollateralValue(item.getCollateralValue());
+                    model.setStatus(item.getStatus());
 
                     if(!models.containsKey(model.getItemId()))
                         models.put(model.getItemId(), model);

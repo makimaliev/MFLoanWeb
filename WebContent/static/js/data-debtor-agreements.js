@@ -99,6 +99,18 @@ var DatatableDataLocalAgreements = function () {
                 template: function (row) {
                     return (row.collateralValue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
+            },{
+                field: "status",
+                title: "Статус",
+                template: function (row) {
+
+                    if(row.status==1){
+                        return '<span class="m-badge m-badge--danger m-badge--wide"> Действует</span>';
+                    }
+                    else{
+                        return '<span class="m-badge m-badge--success m-badge--wide">Снят</span>';
+                    }
+                }
             }, {
                 field: "action",
                 width: 110,

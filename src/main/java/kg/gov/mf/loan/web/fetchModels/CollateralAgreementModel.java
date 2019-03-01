@@ -46,6 +46,7 @@ public class CollateralAgreementModel implements Comparable<CollateralAgreementM
     private long quantityTypeId;
     private String quantityTypeName;
     private Double collateralValue;
+    private int status;
 
     @Override
     public int compareTo(CollateralAgreementModel model)
@@ -205,5 +206,13 @@ public class CollateralAgreementModel implements Comparable<CollateralAgreementM
 
     public void setCollateralValue(Double collateralValue) {
         this.collateralValue = collateralValue;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

@@ -110,6 +110,12 @@
 														<span th:text="#{label.table.edit}"></span>
 													</span>
 											</a>
+											<a th:href="@{/manage/debtor/__${debtor.id}__/collateralagreement/__${agreement.id}__/arrestFree}" class="btn btn-outline-danger" title="Снять все залоги">
+													<span>
+														<i class="fa fa-hand-stop-o"></i>
+														<span th:text="#{label.agreement.arrest.free}"></span>
+													</span>
+											</a>
 										</div>
 									</div>
 								</div>

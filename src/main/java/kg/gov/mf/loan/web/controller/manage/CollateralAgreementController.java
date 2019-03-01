@@ -6,16 +6,21 @@ import java.util.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lowagie.text.pdf.ArabicLigaturizer;
+import kg.gov.mf.loan.admin.sys.model.User;
+import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collateral.AdditionalAgreement;
 import kg.gov.mf.loan.manage.model.collateral.CollateralItem;
+import kg.gov.mf.loan.manage.model.collateral.CollateralItemArrestFree;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import kg.gov.mf.loan.manage.service.collateral.AdditionalAgreementService;
+import kg.gov.mf.loan.manage.service.collateral.CollateralItemArrestFreeService;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemService;
 import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.web.fetchModels.AdditionalAgreementModel;
 import kg.gov.mf.loan.web.fetchModels.CollateralItemModel;
 import kg.gov.mf.loan.web.fetchModels.LoanModel;
+import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -74,6 +79,12 @@ public class CollateralAgreementController {
 
 	@Autowired
 	LoanService loanService;
+
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	CollateralItemArrestFreeService collateralItemArrestFreeService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -203,6 +214,46 @@ public class CollateralAgreementController {
 		return "redirect:" + "/manage/debtor/{debtorId}/view";
     }
 
+    @RequestMapping(value = { "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/arrestFree"})
+	public String arrestFree(ModelMap model,@PathVariable("debtorId") Long debtorId,@PathVariable("agreementId") Long agreementId){
+
+		Debtor debtor=debtorService.getById(debtorId);
+		CollateralAgreement collateralAgreement=agreementService.getById(agreementId);
+
+		model.addAttribute("debtorId",debtorId);
+		model.addAttribute("debtor",debtor);
+
+		model.addAttribute("agreementId",agreementId);
+		model.addAttribute("agreement",collateralAgreement);
+
+		CollateralItemArrestFree collateralItemArrestFree=new CollateralItemArrestFree();
+		collateralItemArrestFree.setOnDate(new Date());
+		model.addAttribute("af", collateralItemArrestFree);
+
+
+		return "/manage/debtor/collateralagreement/arrestfree";
+	}
+
+	@RequestMapping(value = { "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/arrestFree/save"},method = RequestMethod.POST)
+	public String arrestFreeSave(@PathVariable("debtorId") Long debtorId,@PathVariable("agreementId") Long agreementId,CollateralItemArrestFree collateralItemArrestFree){
+
+		CollateralAgreement collateralAgreement=agreementService.getById(agreementId);
+//		List<CollateralItem> collateralItems=new
+		User user = userService.findByUsername(Utils.getPrincipal());
+		collateralItemArrestFree.setArrestFreeBy(user.getId());
+		for(CollateralItem item1:collateralAgreement.getCollateralItems()){
+			CollateralItem item=collateralItemService.getById(item1.getId());
+			if(item.getStatus()==1){
+				item.setCollateralItemArrestFree(collateralItemArrestFree);
+				item.setStatus(2);
+				collateralItemArrestFreeService.add(collateralItemArrestFree);
+				collateralItemService.update(item);
+			}
+		}
+
+		return "redirect: /manage/debtor/{debtorId}/collateralagreement/{agreementId}/view";
+	}
+
 	private List<CollateralItemModel> getItemsByAgreementId(long agreementId)
 	{
 		List<CollateralItemModel> result = new ArrayList<>();
@@ -217,6 +268,7 @@ public class CollateralAgreementController {
 			model.setItemTypeId(item.getItemType().getId());
 			model.setItemTypeName(item.getItemType().getName());
 			model.setQuantity(item.getQuantity());
+			model.setStatus(item.getStatus());
 			try{
 				model.setRisk_rate(item.getRisk_rate());
 			}
