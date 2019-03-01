@@ -266,7 +266,13 @@ public class PaymentController {
 				sumInterestP=sumInterestP+phaseDetails.getPaidInterest();
 				sumTotalP=sumTotalP+phaseDetails.getPaidTotalAmount();
 			}
-			phase.setPaid(sumFeeP+sumPenaltyP+sumInterestP+sumPrincipalP+sumTotalP);
+			phase.setPaid(sumFeeP+sumPenaltyP+sumInterestP+sumPrincipalP);
+
+			if(phase.getStart_amount()!=null)
+				if(phase.getStart_amount()<=phase.getPaid())
+				{
+					phase.setPaid(phase.getStart_amount());
+				}
 
 			collectionPhaseService.update(phase);
 		}

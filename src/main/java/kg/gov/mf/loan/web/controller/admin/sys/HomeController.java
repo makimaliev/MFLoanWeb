@@ -7,6 +7,8 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
+import kg.gov.mf.loan.output.report.utils.CollectionPhaseTool;
 import kg.gov.mf.loan.output.report.utils.MigrationTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,10 +113,16 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/startMigration", method = RequestMethod.GET)
-    public void startMigration()
+    public String startMigration()
     {
-        MigrationTool migrationTool = new MigrationTool();
-        migrationTool.doMigrate();
+//        MigrationTool migrationTool = new MigrationTool();
+//        migrationTool.doMigrate();
+
+
+        CollectionPhaseTool collectionPhaseTool = new CollectionPhaseTool();
+        collectionPhaseTool.doStartPhaseDetailsUpdate();
+
+        return "index";
 
     }
 	
