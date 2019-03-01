@@ -92,6 +92,15 @@ var Typeahead = function() {
                 name: 'owners',
                 source: bloodhound
             });
+        $('#guarantor_typeahead').typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 1
+            },
+            {
+                name: 'owners',
+                source: bloodhound
+            });
         $('#organization_typeahead').typeahead({
                 hint: true,
                 highlight: true,

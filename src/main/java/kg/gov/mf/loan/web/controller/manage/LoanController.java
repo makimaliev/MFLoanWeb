@@ -10,6 +10,7 @@ import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
 import kg.gov.mf.loan.manage.model.collateral.CollateralItem;
+import kg.gov.mf.loan.manage.model.collateral.GuarantorAgreement;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
 import kg.gov.mf.loan.manage.model.collection.CollectionProcedure;
 import kg.gov.mf.loan.manage.model.loan.*;
@@ -24,6 +25,7 @@ import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.repository.order.CreditOrderRepository;
 import kg.gov.mf.loan.manage.repository.org.StaffRepository;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemService;
+import kg.gov.mf.loan.manage.service.collateral.GuarantorAgreementService;
 import kg.gov.mf.loan.manage.service.collateral.QuantityTypeService;
 import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
@@ -170,6 +172,9 @@ public class LoanController {
 
     @Autowired
     LoanSummaryService loanSummaryService;
+
+    @Autowired
+    GuarantorAgreementService guarantorAgreementService;
 
     static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
 	
@@ -843,6 +848,30 @@ public class LoanController {
     public String getListOfPhases(@PathVariable("loanId") Long loanId){
         Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
         String result = gson.toJson(getPhasesByLoanId(loanId));
+        return result;
+    }
+
+    @PostMapping("/guarantor/{loanId}")
+    @ResponseBody
+    public String getListOfGuarantorAgreements(@PathVariable("loanId") Long loanId){
+
+	    Loan loan=loanService.getById(loanId);
+	    List<GuarantorAgreementModel> guarantorAgreementModels=new ArrayList<>();
+	    for(GuarantorAgreement guarantorAgreement1:loan.getGuarantorAgreements()){
+	        GuarantorAgreement guarantorAgreement=guarantorAgreementService.getById(guarantorAgreement1.getId());
+	        GuarantorAgreementModel guarantorAgreementModel=new GuarantorAgreementModel();
+	        guarantorAgreementModel.setId(guarantorAgreement.getId());
+	        guarantorAgreementModel.setNotary(guarantorAgreement.getNotary().getName());
+	        guarantorAgreementModel.setOwner(guarantorAgreement.getOwner().getName());
+	        guarantorAgreementModel.setNotaryOfficeRegDate(guarantorAgreement.getNotaryOfficeRegDate());
+	        guarantorAgreementModel.setNotaryOfficeRegNumber(guarantorAgreement.getNotaryOfficeRegNumber());
+	        guarantorAgreementModel.setRecord_status(guarantorAgreement.getRecord_status());
+	        guarantorAgreementModels.add(guarantorAgreementModel);
+        }
+
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+
+        String result = gson.toJson(guarantorAgreementModels);
         return result;
     }
 
