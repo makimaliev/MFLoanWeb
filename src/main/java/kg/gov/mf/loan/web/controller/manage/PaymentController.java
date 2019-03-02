@@ -172,13 +172,8 @@ public class PaymentController {
 //			payment.setIn_loan_currency(false);
 //		}
 		payment.setLoan(loan);
-		
-		if(payment.getId() == 0){
-			paymentService.add(payment);
-		}
-		else{
-			paymentService.update(payment);
-			}
+
+		paymentRepository.save(payment);
 
 		Session session;
 		try
