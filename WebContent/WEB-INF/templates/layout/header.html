@@ -340,6 +340,39 @@
                                             </a>
                                         </li-->
                                         <!-- BEGIN: CHAT -->
+
+                                        <!-- BEGIN: TASKS -->
+                                        <li class="m-nav__item m-dropdown m-dropdown--medium m-dropdown--arrow m-dropdown--header-bg-fill m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light" data-dropdown-toggle="click"
+                                            th:if="${not @taskService.getTasksByUserId(@userServiceJpaImpl.findByUsername(#authentication.name).id).isEmpty()}">
+                                            <a href="#" class="m-nav__link m-dropdown__toggle">
+                                                <span class="m-nav__link-icon">
+                                                    <i class="flaticon-alert"></i>
+                                                </span>
+                                                <span class="badge badge-light" th:text="${@taskService.getTasksByUserId(@userServiceJpaImpl.findByUsername(#authentication.name).id).size()}"></span>
+                                            </a>
+                                            <div class="m-dropdown__wrapper">
+                                                <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
+                                                <div class="m-dropdown__inner">
+                                                    <div class="m-dropdown__body">
+                                                        <div class="m-dropdown__content pre-scrollable">
+                                                            <ul class="m-nav m-nav--skin-light">
+                                                                <li class="m-nav__section" th:each="task, index : ${@taskService.getTasksByUserId(@userServiceJpaImpl.findByUsername(#authentication.name).id)}">
+                                                                    <div style="background: #d9d9d9;" class="p-3">
+                                                                        <p class="m--font-bold m-0 p-0" th:text="|№${index.count} - ${#dates.format(task.createdOn, 'dd.MM.yyyy')}|"></p>
+                                                                        <p class="m--font-bold m-0 p-0" th:utext="${task.createdBy?.staff?.name}"></p>
+                                                                        <p class="m-0 p-0"><i class="text-info" th:utext="${task.description}"></i></p>
+                                                                        <a th:href="@{/doc/edit/__${task.objectId}__}"><i class="la la-binoculars"></i></a>
+                                                                    </div>
+                                                                <div class="m-nav__separator m-nav__separator--fit"></div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <!-- BEGIN: TASKS -->
+
                                         <li class="m-nav__item m-dropdown m-dropdown--large m-dropdown--arrow m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light	m-list-search m-list-search--skin-light"
                                             m-dropdown-toggle="click" m-dropdown-persistent="true" id="m_quicksearch" m-search-type="dropdown">
                                             <a href="#" class="m-nav__link m-dropdown__toggle">

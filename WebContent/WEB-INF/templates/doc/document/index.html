@@ -72,7 +72,6 @@
                             <hr>
                         </div>
 
-
                         <th:block th:replace="doc/layout::__${type + 'Index'}__"/>
                         <hr>
 
@@ -261,7 +260,7 @@
         },
         {
             searchable: true,
-            orderable: true,
+            orderable: false,
             name: 'senderRegisteredNumber',
             data: 'senderRegisteredNumber'
         },
@@ -275,7 +274,10 @@
             searchable: true,
             orderable: false,
             name: 'documentSubType',
-            data: 'documentSubType'
+            data: 'documentSubType',
+            render: function (data, type, full, meta) {
+                return documentSubTypes[data]
+            }
         },
         {
             searchable: true,
@@ -427,59 +429,6 @@
     $(document).ready(function() {
 
         $('#documentTable thead tr').clone(true).appendTo('#documentTable thead');
-        $('#documentTable thead tr:eq(1) th').each(function (i){
-
-            if($(this).hasClass("searchable")) {
-
-                if($(this).hasClass("ti")) {
-                    $(this).html('<input type="search" class="form-control m-input--square" style="width: 100%">');
-                    $('input', this).on('change', function () {
-                        if (table.column(i).search() !== this.value) {
-                            table.column(i).search(this.value).draw();
-                        }
-                    });
-                }
-                if($(this).hasClass("di")) {
-                    $(this).html('<input type="text" readonly class="form-control dtp m-input--square" style="width: 100%;"/>');
-                    $('input', this).on('apply.daterangepicker', function(ev, picker) {
-                        if (table.column(i).search() !== this.value) {
-                            table.column(i).search(this.value).draw();
-                        }
-                        console.log(this.value)
-                    });
-                    $('input', this).on('cancel.daterangepicker', function(ev, picker) {
-                        $(this).val('');
-                        table.column(i).search(this.value).draw();
-                    });
-                }
-                if($(this).hasClass("sis")) {
-                    $(this).html('<select class="form-control m-input--square" id="states"><option value=""> Все </option></select>');
-                    $.each(states, function(element) {
-                        $("#states").append(new Option(this, element));
-                    });
-                    $('select', this).on('change', function () {
-                        if (table.column(i).search() !== this.value) {
-                            table.column(i).search(this.value).draw();
-                        }
-                    });
-                }
-                if($(this).hasClass("sid")) {
-                    $(this).html('<select class="form-control m-input--square" id="dtypes"><option value=""> Все </option></select>');
-                    $.each(documentSubTypes, function() {
-                        $("#dtypes").append(new Option(this, this));
-                    });
-                    $('select', this).on('change', function () {
-                        if (table.column(i).search() !== this.value) {
-                            table.column(i).search(this.value).draw();
-                        }
-                    });
-                }
-            }
-            else {
-                $(this).html('');
-            }
-        });
-
         var table = $('#documentTable').DataTable({
             orderCellsTop: true,
             fixedHeader: true,
@@ -512,7 +461,6 @@
                 '<option value="25">25</option>'+
                 '<option value="50">50</option>'+
                 '<option value="100">100</option>'+
-                '<option value="-1">Все</option>'+
                 '</select>',
                 paginate: {
                     first: '<i class="la la-angle-double-left"></i>',
@@ -524,11 +472,81 @@
             dom: "<'row'<'col-6'i><'col-6'l>>" +
             "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-        })
-            .search( '' )
-            .columns()
-            .search( '' )
-            .draw();
+        });
+        $('#documentTable thead tr:eq(1) th').each(function (i){
+
+            if($(this).hasClass("searchable")) {
+                var state = table.state.loaded();
+
+                if($(this).hasClass("ti")) {
+                    $(this).html('<input type="search" class="form-control m-input--square" style="width: 100%">');
+                    var tinput = $('input', this);
+                    tinput.on('change', function () {
+                        if (table.column(i).search() !== this.value) {
+                            table.column(i).search(this.value).draw();
+                        }
+                    });
+
+                    if (state) {
+                        var val = state.columns[i];
+                        tinput.val(val.search.search);
+                    }
+                }
+                if($(this).hasClass("di")) {
+                    $(this).html('<input type="text" readonly class="form-control dtp m-input--square" style="width: 100%;"/>');
+                    var dinput = $('input', this);
+                    dinput.on('apply.daterangepicker', function(ev, picker) {
+                        dinput.val(picker.startDate.format('DD.MM.YY') + ' - ' + picker.endDate.format('DD.MM.YY'));
+                        if (table.column(i).search() !== this.value) {
+                            table.column(i).search(this.value).draw();
+                        }
+                    });
+                    dinput.on('cancel.daterangepicker', function(ev, picker) {
+                        $(this).val('');
+                        table.column(i).search(this.value).draw();
+                    });
+                    if (state) {
+                        var val = state.columns[i];
+                        dinput.val(val.search.search);
+                    }
+                }
+                if($(this).hasClass("sis")) {
+                    $(this).html('<select class="form-control m-input--square" id="states"><option value=""> Все </option></select>');
+                    $.each(states, function(element) {
+                        $("#states").append(new Option(this, element));
+                    });
+                    var sselect = $('select', this).on('change', function () {
+                        if (table.column(i).search() !== this.value) {
+                            table.column(i).search(this.value).draw();
+                        }
+                    });
+
+                    if (state) {
+                        var val = state.columns[i];
+                        sselect.val(val.search.search);
+                    }
+                }
+                if($(this).hasClass("sid")) {
+                    $(this).html('<select class="form-control m-input--square" id="dtypes"><option value=""> Все </option></select>');
+                    $.each(documentSubTypes, function(element) {
+                        $("#dtypes").append(new Option(this, element));
+                    });
+                    var dselect = $('select', this).on('change', function () {
+
+                        if (table.column(i).search() !== this.value) {
+                            table.column(i).search(this.value).draw();
+                        }
+                    });
+                    if (state) {
+                        var val = state.columns[i];
+                        dselect.val(val.search.search);
+                    }
+                }
+            }
+            else {
+                $(this).html('');
+            }
+        });
 
         $('body').on('click','.openact',function(e) {
             e.preventDefault()
@@ -543,12 +561,59 @@
 
         var detailRows = [];
         function format (data) {
+
+            var t = '';
+            var r = [];
+            if (data.receiverExecutor)
+            {
+                r = data.receiverExecutor.split(',');
+                t += '<p><b>Исполнители</b></p>' + r.join('<br>');
+            }
+
+            t += '<div class="tasks"></div>'
+
+
+            $.ajax({
+                url: '/doc/tasks/' + data.id,
+                success: function(response) {
+
+                    var divc ='<br><table>' +
+                        '<thead><tr>' +
+                        '<th>Дата</th>' +
+                        '<th>От</th>' +
+                        '<th>Задача</th>' +
+                        '<th>Срок</th>' +
+                        '<th>Кому</th>' +
+                        '<th>Результат</th>' +
+                        '<th>Завершен</th>' +
+                        '</tr></thead><tbody>';
+
+                    $.each(response, function(index, element) {
+                        divc +='<tr>' +
+                            '<td>' + (element[0] !== null ? new Date(element[0]).toLocaleDateString("ru-RU") : '') + '</td>' +
+                            '<td>' + (element[1] !== null ? element[1] : '') + '</td>' +
+                            '<td>' + (element[2] !== null ? element[2] : '') + '</td>' +
+                            '<td>' + (element[3] !== null ? new Date(element[3]).toLocaleDateString("ru-RU") : '') + '</td>' +
+                            '<td>' + (element[4] !== null ? element[4] : '') + '</td>' +
+                            '<td>' + (element[5] !== null ? element[5] : '') + '</td>' +
+                            '<td>' + (element[6] !== null ? new Date(element[6]).toLocaleDateString("ru-RU") : '') + '</td>' +
+                            '</tr>';
+                    });
+                    divc += '</tbody></table><br>';
+                    $('div .tasks').html(divc);
+                }
+            });
+
+            return t;
+            /*
+
             var r = [];
             if (data != null) {
+
                 r = data.receiverExecutor.split(',');
             }
             return '<p><b>Исполнители</b></p>' + r.join('<br>');
-            //return  'Content : ' + data.receiverExecutor + '<br>';
+            */
         }
         $('#documentTable tbody').on( 'click', 'tr td.details-control', function () {
 
@@ -584,12 +649,14 @@
 
     $(document).ready(function() {
         $('.dtp').daterangepicker({
+            autoUpdateInput: false,
             locale: {
                 format: 'DD.MM.YY',
                 applyLabel: 'Выбрать',
                 cancelLabel: 'Очистить'
             }
         });
+
     });
 </script>
 

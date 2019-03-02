@@ -1,8 +1,5 @@
 package kg.gov.mf.loan.web.controller.doc;
 
-import kg.gov.mf.loan.admin.org.model.Department;
-import kg.gov.mf.loan.admin.org.model.Organization;
-import kg.gov.mf.loan.admin.org.model.Person;
 import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.org.service.StaffService;
 import kg.gov.mf.loan.admin.sys.model.User;
@@ -16,13 +13,8 @@ import kg.gov.mf.loan.task.service.ChatUserService;
 import kg.gov.mf.loan.task.service.SystemConstantService;
 import kg.gov.mf.loan.task.service.TaskService;
 import kg.gov.mf.loan.web.controller.doc.dto.SearchResult;
-import kg.gov.mf.loan.web.fetchModels.DocumentMetaModel;
-import kg.gov.mf.loan.web.fetchModels.DocumentModel;
-import kg.gov.mf.loan.web.util.Meta;
-import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Controller;
@@ -31,10 +23,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.validation.Valid;
-import java.math.BigInteger;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -113,7 +102,7 @@ public class DocumentFlowController extends BaseController {
                             {},                                                 // APPROVED
                             {},                                                 // REJECTED
                             { Transition.APPROVE },                             // REGISTERED
-                            { Transition.DONE, Transition.SEND },               // ACCEPTED
+                            { Transition.DONE, Transition.REJECT, Transition.SEND },               // ACCEPTED
                             { Transition.DONE, Transition.SEND },               // SENT
                             { Transition.DONE }                                 // STARTED
                     },
@@ -196,10 +185,10 @@ public class DocumentFlowController extends BaseController {
         }
         model.addAttribute("states", states);
 
-        List<String> dtypes = new ArrayList<>();
+        Map<String, String> dtypes = new HashMap<>(0);
         for(DocumentSubType documentSubType : documentTypeService.getByInternalName(type).getDocumentSubTypes())
         {
-            dtypes.add(documentSubType.getName());
+            dtypes.put(documentSubType.getInternalName(), documentSubType.getName());
         }
         model.addAttribute("dtypes", dtypes);
 
@@ -359,7 +348,7 @@ public class DocumentFlowController extends BaseController {
 
         model.addAttribute("tasks", taskService.getTasks(vars));
         //model.addAttribute("accounts", chatUserService.list(10,5));
-        model.addAttribute("stages", getStages(document.getDocumentType().getInternalName()));
+        //model.addAttribute("stages", getStages(document.getDocumentType().getInternalName()));
         model.addAttribute("document", document);
         model.addAttribute("responsible", responsible);
 
@@ -632,7 +621,7 @@ public class DocumentFlowController extends BaseController {
     }
     private Document saveIncomingDocument(Document document, String action) {
 
-        String description = document.getComment();
+        String description = document.getComment() != null || !document.getComment().isEmpty() ? document.getComment() : "Выполнен";
 
         //region New Document
         if(document.getId() == 0) {
@@ -675,8 +664,17 @@ public class DocumentFlowController extends BaseController {
 
                 for (Staff staff : document.getReceiverResponsible().getStaff())
                 {
-                    document.getUsers().add(getUser(staff));
-                    addTask(res, document.getId(), getUser(), document.getTaskDueDate(), getUser(staff), null, "");
+                    if(doc.getDocumentState().ordinal() > State.REGISTERED.ordinal())
+                    {
+                        if(!doc.getReceiverResponsible().getStaff().contains(staff)) {
+                            document.getUsers().add(getUser(staff));
+                            addTask(res, document.getId(), getUser(), document.getTaskDueDate(), getUser(staff), null, "");
+                        }
+                    }
+                    else {
+                        document.getUsers().add(getUser(staff));
+                        addTask(res, document.getId(), getUser(), document.getTaskDueDate(), getUser(staff), null, "");
+                    }
                 }
                 //endregion
             }
@@ -722,6 +720,16 @@ public class DocumentFlowController extends BaseController {
                 {
                     document.setDocumentState(State.DONE);
                 }
+                //endregion
+            }
+
+            if (action.equals("REJECT"))
+            {
+                //region DONE
+                taskService.completeTask(document.getId(), getUser(), "Отклонен " + document.getComment());
+                document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), description));
+
+                addTask("Переназначить", document.getId(), getUser(), document.getDocumentDueDate(), document.getOwner(), State.REGISTERED, "");
                 //endregion
             }
 
@@ -932,14 +940,14 @@ public class DocumentFlowController extends BaseController {
 
     @RequestMapping(value = "/documents")
     @ResponseBody
-    public DataTablesOutput<Document> getDocuments(@Valid DataTablesInput input, @RequestParam("docType") String docType) {
+    public DataTablesOutput<DocView> getDocuments(@Valid DataTablesInput input, @RequestParam("docType") String docType) {
 
         long dt = documentTypeService.getByInternalName(docType).getId();
         int count = documentViewDao.count(dt);
 
         DataTableResult dataTableResult = documentViewDao.list(dt, getUser().getId(), input);
 
-        DataTablesOutput<Document> docs = new DataTablesOutput<>();
+        DataTablesOutput<DocView> docs = new DataTablesOutput<>();
 
         docs.setDraw(input.getDraw());
         docs.setRecordsTotal(count);
@@ -947,6 +955,34 @@ public class DocumentFlowController extends BaseController {
         docs.setData(dataTableResult.getData());
 
         return docs;
+    }
+
+    @RequestMapping(value = "/dispatchData/{id}")
+    @ResponseBody
+    public List<DispatchData> getDispatchData(@PathVariable("id") long id) {
+
+        List<DispatchData> dispatchData = new ArrayList<>();
+        dispatchData.addAll(documentService.getById(id).getDispatchData());
+
+        return dispatchData;
+    }
+
+    @RequestMapping(value = "/tasks/{id}")
+    @ResponseBody
+    public List getTasks(@PathVariable("id") long id) {
+
+        String query = "select " +
+                " t.createdOn as createdOn," +
+                " t.createdBy.staff.name as createdBy," +
+                " t.description as description," +
+                " t.targetResolutionDate as targetResolutionDate," +
+                " t.assignedTo.staff.name as assignedTo," +
+                " t.resolutionSummary as resolutionSummary," +
+                " t.actualResolutionDate as actualResolutionDate" +
+                " from Task t where t.objectId = :objectId and t.objectType = 'Document'";
+        return entityManager.createQuery(query)
+                .setParameter("objectId", id)
+                .getResultList();
     }
 
     @RequestMapping("/incomingdocuments")
