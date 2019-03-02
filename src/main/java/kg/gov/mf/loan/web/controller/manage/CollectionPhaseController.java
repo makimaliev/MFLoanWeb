@@ -653,10 +653,22 @@ public class CollectionPhaseController {
 
 		CollectionPhase collectionPhase1=collectionPhaseService.getById(phaseId);
 		collectionPhase1.setCollectionPhaseGroup(collectionPhaseGroupService.getById(collectionPhase.getCollectionPhaseGroup().getId()));
-		collectionPhase1.setCollectionPhaseIndex(collectionPhaseIndexService.getById(collectionPhase.getCollectionPhaseIndex().getId()));
+		CollectionPhaseIndex collectionPhaseIndex=collectionPhaseIndexService.getById(collectionPhase.getCollectionPhaseIndex().getId());
+		collectionPhase1.setCollectionPhaseIndex(collectionPhaseIndex);
+
 		Set<CollectionPhaseSubIndex> lost= new HashSet<CollectionPhaseSubIndex>();
-		collectionPhase1.setSub_index_id(collectionPhase.getSub_index_id());
-		lost.add(collectionPhaseSubIndexService.getById(Long.valueOf(collectionPhase.getSub_index_id())));
+		try {
+			lost.add(collectionPhaseSubIndexService.getById(Long.valueOf(collectionPhase.getSub_index_id())));
+			collectionPhase1.setSub_index_id(collectionPhase.getSub_index_id());
+		}
+		catch (Exception e){
+			CollectionPhaseSubIndex collectionPhaseSubIndex=new CollectionPhaseSubIndex();
+			for(CollectionPhaseSubIndex collectionPhaseSubIndex1:collectionPhaseIndex.getCollectionPhaseSubIndices()){
+				collectionPhaseSubIndex=collectionPhaseSubIndexService.getById(collectionPhaseSubIndex1.getId());
+				collectionPhase1.setSub_index_id(collectionPhaseSubIndex.getId());
+				break;
+			}
+		}
 		collectionPhaseIndexService.getById(collectionPhase.getCollectionPhaseIndex().getId()).setCollectionPhaseSubIndices(lost);
 		collectionPhaseService.update(collectionPhase1);
 
