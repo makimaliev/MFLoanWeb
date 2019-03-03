@@ -416,14 +416,15 @@
 									<tr>
 										<th >Дата</th>
 										<th >Сумма</th>
+										<th> </th>
 									</tr>
 									</thead>
 									<tbody>
 									<tr th:each="actInList : ${loanSummaryActList}">
-										<td th:text="${#dates.format(actInList?.onDate,'dd.MM.yyyy')}" >Id</td>
-										<td th:text="${#numbers.formatDecimal(actInList?.amount, 0, 'DEFAULT', 2, 'DEFAULT')}">Id</td>
-
-
+										<!--<button role="button" th:id="${actInList.id}+'seeSummaryAct'" th:value="${actInList.id}"><i class="la la-arrow-circle-left"></i></button>-->
+										<td th:text="${#dates.format(actInList.onDate,'dd.MM.yyyy')}" >Id</td>
+										<td th:text="${#numbers.formatDecimal(actInList.amount, 0, 'DEFAULT', 2, 'DEFAULT')}">Id</td>
+										<td hidden="hidden" th:text="${actInList.id}"></td>
 									</tr>
 									</tbody>
 
@@ -501,6 +502,61 @@
         debtorURL = '/person/'+entityId + '/details';
 
 </script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        var table = $('#loanSummaryActTable').DataTable({
+            stateSave: true,
+            language: {
+                paginate: {
+                    previous: '<i class="la la-angle-left"></i>', // or '→'
+                    next: '<i class="la la-angle-right"></i>' // or '←'
+                },
+                lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
+            },
+            "info":     false,
+            keys: {
+                focus: ':eq(0)'
+            },
+            "sDom": 'rtlip'
+        });
+
+        $('#generalSearch').keyup(function(){
+            table.search($(this).val()).draw() ;
+        });
+
+        $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
+        $('.selectpicker').selectpicker('refresh');
+
+        table.on('key-focus', function(e, datatable, cell) {
+
+            var rowData = datatable.row(cell.index().row).data();
+            // console.log(rowData[2]);
+
+            var sUrl ="/manage/debtor/"+debtorId+"/loan/summary/act/" + rowData[2]+"/view";
+
+            $.get(sUrl, function(data) {
+                $('#content').html(data);
+            });
+
+            var row = datatable.row( cell.index().row );
+            table.$('tr.info').removeClass('info');
+            $( row.node() ).addClass( "info" );
+        });
+    });
+</script>
+<!--<script>-->
+	<!--var btn='#'+$("#seeSummaryAct").val()+'seeSummaryAct';-->
+	<!--alert(btn)-->
+    <!--$(btn).on("click",function (data) {-->
+        <!--var sUrl ="/manage/debtor/"+debtorId+"/loan/summary/act/"+$("#seeSummaryAct").val()+"/view";-->
+
+        <!--console.log($("#seeSummaryAct").val())-->
+        <!--$.get(sUrl, function(data) {-->
+            <!--$('#content').html(data);-->
+        <!--});-->
+    <!--});-->
+<!--</script>-->
 
 <script th:inline="javascript">
 	var selectedLoans = {};
