@@ -283,6 +283,9 @@ public class LoanController {
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         model.addAttribute("loggedinuserId",user.getId());
 
+        SimpleDateFormat sd=new SimpleDateFormat("dd.MM.yyyy");
+        model.addAttribute("today",sd.format(new Date()));
+
 
         return "/manage/debtor/loan/view";
     }
@@ -1418,6 +1421,7 @@ public class LoanController {
                 model.setQuantityTypeId(item.getQuantityType().getId());
                 model.setQuantityTypeName(item.getQuantityType().getName());
                 model.setCollateralValue(item.getCollateralValue());
+                model.setStatus(item.getStatus());
 
                 if(!models.containsKey(model.getItemId()))
                     models.put(model.getItemId(), model);

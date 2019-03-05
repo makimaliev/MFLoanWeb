@@ -259,6 +259,9 @@ public class DebtorController {
 
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
 
+		SimpleDateFormat sd=new SimpleDateFormat("dd.MM.yyyy");
+		model.addAttribute("today",sd.format(new Date()));
+
 		return "/manage/debtor/view";
 	}
 

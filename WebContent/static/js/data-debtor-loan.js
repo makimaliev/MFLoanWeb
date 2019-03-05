@@ -8,6 +8,14 @@ var DatatableDataLocalLoans = function () {
 
         var dataJSONArray = JSON.parse(jsonLoans);
 
+        var selectedLoans = {};
+
+        // console.log(jsonLoans[0].id);
+        for (var i = 0; i < dataJSONArray.length; i++) {
+            selectedLoans[dataJSONArray[i].id] = dataJSONArray[i].id;
+        }
+        // console.log(selectedLoans);
+
 		var datatable = $('#loansTable').mDatatable({
 			// datasource definition
 			data: {
@@ -154,9 +162,8 @@ var DatatableDataLocalLoans = function () {
 		});
 
 		var query = datatable.getDataSourceQuery();
-
 		// make datatable rows checkbox active
-        // datatable.setActiveAll('active');
+        datatable.setActiveAll('active');
 
 		$('#m_form_search').on('keyup', function (e) {
 			datatable.search($(this).val().toLowerCase());
@@ -174,7 +181,6 @@ var DatatableDataLocalLoans = function () {
 		$('#m_form_status, #m_form_type').selectpicker();
         */
 
-        var selectedLoans = {};
         // on checkbox checked event
         $('#loansTable')
             .on('m-datatable--on-check', function (e, args) {
@@ -187,6 +193,7 @@ var DatatableDataLocalLoans = function () {
                 if (count > 0) {
                     $('#m_datatable_group_action_form').collapse('show');
                 }
+                // console.log(selectedLoans);
             })
             .on('m-datatable--on-uncheck m-datatable--on-layout-updated', function (e, args) {
                 var str = args.toString().split(',')
@@ -200,6 +207,7 @@ var DatatableDataLocalLoans = function () {
                 //     $('#phaseDetailsDiv').collapse('hide');
                 //     selectedItems = [];
                 // }
+                // console.log(selectedLoans);
             });
 
         $('#bnt_init_phase')

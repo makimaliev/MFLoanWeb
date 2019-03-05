@@ -103,12 +103,13 @@ var DatatableDataLocalAgreements = function () {
                 field: "status",
                 title: "Статус",
                 template: function (row) {
+                    alert(row.status)
 
-                    if(row.status==1){
-                        return '<span class="m-badge m-badge--danger m-badge--wide"> Действует</span>';
+                    if(row.status!=2){
+                        return '<span class="m-badge m-badge--success m-badge--wide"> Действует</span>';
                     }
                     else{
-                        return '<span class="m-badge m-badge--success m-badge--wide">Снят</span>';
+                        return '<span class="m-badge m-badge--danger m-badge--wide">Снят</span>';
                     }
                 }
             }, {
