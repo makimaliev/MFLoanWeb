@@ -532,7 +532,8 @@ public class LoanController {
             loan.setSupervisorId(user.getId());
 
             loggerLoan.info("createLoan : {}", loan);
-            loanService.add(loan);
+            loanRepository.save(loan);
+            //loanService.add(loan);
         }
         else
         {
@@ -552,7 +553,8 @@ public class LoanController {
 
             loan.setSupervisorId(user.getId());
             loggerLoan.info("updateLoan : {}", loan);
-            loanService.update(loan);
+            loanRepository.save(loan);
+            //loanService.update(loan);
         }
     }
 	
