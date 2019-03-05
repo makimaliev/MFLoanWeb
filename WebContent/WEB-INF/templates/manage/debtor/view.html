@@ -301,7 +301,7 @@
 														<button class="btn btn-sm btn-accent" type="button" id="btn_show_loanSummary">
 															Расчет
 														</button>
-														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator">
+														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator_new">
 															Акт сверки
 														</button>
 														<button sec:authorize="hasAnyAuthority('ADMIN')" class="btn btn-sm btn-accent" type="button" id="bnt_init_dailyCalculator">
@@ -564,7 +564,7 @@
     {
         window.location.href = debtorURL;
     }
-    $("#bnt_init_manualCalculator").on('click',function () {
+    $("#bnt_init_manualCalculator_new").on('click',function () {
         // on checkbox checked event
         if (!$("#phaseInitDate").val())
         {
@@ -573,6 +573,8 @@
         {
             var initDate = $("#phaseInitDate").val();
             // console.log(selectedLoans);
+
+            console.log("second one ");
             $.ajax({
                 type : 'POST',
                 url : "/manage/debtor/"+debtorId+"/initializeManualCalculator",

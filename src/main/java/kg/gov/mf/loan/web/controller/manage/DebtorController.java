@@ -1210,44 +1210,6 @@ public class DebtorController {
 			collectionPhaseService.update(phase);
 		}
 	}
-	/*public void runUpdateQueries(Loan loan,Session session){
-
-
-		for(CollectionPhase phase1:loan.getCollectionPhases()){
-			CollectionPhase phase=collectionPhaseService.getById(phase1.getId());
-			SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
-			Date startDate=phase.getStartDate();
-			Date closeDate=new Date();
-			CollectionProcedure procedure=collectionProcedureService.getById(phase.getCollectionProcedure().getId());
-			if(phase.getCloseDate()!=null){
-				closeDate=phase.getCloseDate();
-			}
-			else if(procedure.getCloseDate()!=null){
-				closeDate=phase.getCollectionProcedure().getCloseDate();
-			}
-			String closingDate=dateFormat.format(closeDate);
-			try {
-				String updatePhaseDetailsQuery="update phaseDetails\n" +
-						"set phaseDetails.paidFee=(select sum(fee) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closingDate+"'),\n" +
-						"    phaseDetails.paidInterest=(select sum(interest) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closingDate+"'),\n" +
-						"    phaseDetails.paidPenalty=(select sum(penalty) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closingDate+"'),\n" +
-						"    phaseDetails.paidPrincipal=(select sum(principal) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closingDate+"'),\n" +
-						"    phaseDetails.paidTotalAmount=(select sum(totalAmount) from payment where loanId="+loan.getId()+" and paymentDate between '"+startDate+"' and '"+closingDate+"') " +
-						"where collectionPhaseId="+phase.getId()+" and loan_id="+loan.getId();
-
-				session.createSQLQuery(updatePhaseDetailsQuery).executeUpdate();
-				String updatePhaseQuery="update collectionPhase\n" +
-						" set collectionPhase.paid=(select paidTotalAmount from phaseDetails where loan_id="+loan.getId()+" and collectionPhaseId="+phase.getId()+") where id="+phase.getId();
-				session.createSQLQuery(updatePhaseQuery).executeUpdate();
-			}
-			catch (Exception e){
-				System.out.println(e);
-			}
-
-		}
-	}*/
-
-	//END - WORK SECTOR
 
     @PostMapping("/debtorLoans/{debtorId}")
     @ResponseBody
@@ -1281,7 +1243,7 @@ public class DebtorController {
 				"FROM loan loan, orderTermCurrency currency, loanType type, loanState state\n" +
 				"WHERE loan.currencyId = currency.id\n" +
 				"  AND loan.loanTypeId = type.id\n" +
-				"  AND loan.loanStateId = state.id\n" +
+				"  AND loan.loanStateId = state.id and loan.loanStateId = 2 \n" +
 				"  AND loan.debtorId =" + debtorId + "\n" +
 				"  AND  ISNULL(loan.parent_id) \n" +
                 "ORDER BY  loan.regDate DESC";
