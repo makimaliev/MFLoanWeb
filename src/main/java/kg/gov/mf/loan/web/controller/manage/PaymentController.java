@@ -150,56 +150,77 @@ public class PaymentController {
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/payment/save"}, method=RequestMethod.POST)
     public String savePayment(Payment payment, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId)
     {
-    	if(payment.getPaymentDate()!=null){
-		Loan loan = loanService.getById(loanId);
-		if(payment.getPaymentDate()==null){
-			payment.setPaymentDate(new Date());
+		Date onDate = new Date();
+
+		if(payment.getPaymentDate().after(onDate))
+		{
+			onDate= payment.getPaymentDate();
 		}
-		if(payment.getInterest()==null){
-			payment.setInterest(0.0);
-		}
-		if(payment.getPenalty()==null){
-			payment.setPenalty(0.0);
-		}
-		if(payment.getPrincipal()==null){
-			payment.setPrincipal(0.0);
-		}
-		if (loan.getCurrency().getId()==Long.valueOf(1)){
-			payment.setIn_loan_currency(true);
-		}
-		payment.setTotalAmount(payment.getInterest()+payment.getPenalty()+payment.getPrincipal());
+
+    	if(payment.getPaymentDate()!=null)
+    	{
+
+    		Loan loan = loanService.getById(loanId);
+
+			if(payment.getPaymentDate()==null)
+			{
+				payment.setPaymentDate(new Date());
+			}
+
+			if(payment.getInterest()==null)
+			{
+				payment.setInterest(0.0);
+			}
+
+			if(payment.getPenalty()==null)
+			{
+				payment.setPenalty(0.0);
+			}
+
+			if(payment.getPrincipal()==null)
+			{
+				payment.setPrincipal(0.0);
+			}
+
+			if (loan.getCurrency().getId()==Long.valueOf(1))
+			{
+				payment.setIn_loan_currency(true);
+			}
+
+			payment.setTotalAmount(payment.getInterest()+payment.getPenalty()+payment.getPrincipal());
 //		else{
 //			payment.setIn_loan_currency(false);
 //		}
-		payment.setLoan(loan);
+			payment.setLoan(loan);
 
-		paymentRepository.save(payment);
+			paymentRepository.save(payment);
 
-		Session session;
-		try
-		{
-			session = sessionFactory.getCurrentSession();
-		}
-		catch (HibernateException e)
-		{
-			session = sessionFactory.openSession();
-		}
-		session.getTransaction().begin();
+			Session session;
+			try
+			{
+				session = sessionFactory.getCurrentSession();
+			}
+			catch (HibernateException e)
+			{
+				session = sessionFactory.openSession();
+			}
+
+			session.getTransaction().begin();
 			runUpdateOfPhases(loan);
-		session.getTransaction().commit();
-
-		this.jobItemService.runDailyCalculateProcedureForOneLoan(loanId,new Date());
+			session.getTransaction().commit();
 
 
 
-			if(loan.getParent()!=null){
+//			this.jobItemService.runDailyCalculateProcedureForOneLoan(loanId,new Date());
 
-				this.jobItemService.runDailyCalculateProcedureForOneLoan(loan.getParent().getId(), new Date());
+			if(loan.getParent()!=null)
+			{
+				this.jobItemService.runDailyCalculateProcedureForOneLoan(loan.getParent().getId(), onDate);
 			}
-			else{
-				this.jobItemService.runDailyCalculateProcedureForOneLoan(loan.getId(), new Date());
+			else
+			{
+				this.jobItemService.runDailyCalculateProcedureForOneLoan(loan.getId(), onDate);
 			}
-
     	}
 
 
