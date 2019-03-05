@@ -350,6 +350,7 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         matcher.setUseRegisteredSuffixPatternMatch(true);
     }
 
+    /*
     @Bean
     public JobDetailFactoryBean jobDetailFactoryBean(){
         JobDetailFactoryBean factory = new JobDetailFactoryBean();
@@ -378,4 +379,5 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         scheduler.setTriggers(cronTriggerFactoryBean().getObject());
         return scheduler;
     }
+    */
 }
