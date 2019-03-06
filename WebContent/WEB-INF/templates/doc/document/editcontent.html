@@ -9,7 +9,6 @@
     <input type="hidden" th:field="*{senderRegisteredDate}"/>
     <input type="hidden" th:field="*{receiverRegisteredNumber}"/>
     <input type="hidden" th:field="*{receiverRegisteredDate}"/>
-
     <!-- Receiver Responsible -->
     <div class="form-group m-form__group row">
         <input type="hidden" name="receiverResponsible.responsibleType" value="1">
@@ -31,7 +30,7 @@
         <label class="col-3 col-form-label"> ОТ КОГО : </label>
         <div class="col-9">
             <div th:hidden="*{documentState.ordinal() > 1}">
-                <select class="s2 form-control m-input" th:field="*{senderResponsible.staff}" multiple="multiple" data-ajax--url="/doc/data/staff" style="width:100%" required>
+                <select class="s2 form-control m-input" th:field="*{senderResponsible.staff}" data-ajax--url="/doc/data/staff" style="width:100%" required>
                     <option th:each="r : *{senderResponsible?.staff}"
                             th:value="${r.id}"
                             th:text="${r.name}">Staff</option>
@@ -51,7 +50,7 @@
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label"> Краткое содержание : </label>
         <div class="col-9">
-            <textarea th:field="*{description}" required></textarea>
+            <textarea th:field="*{description}" required class="ckeditor"></textarea>
         </div>
     </div>
     <!-- Attachment -->
@@ -60,11 +59,7 @@
         <div class="col-9" id="attachmentList">
             <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
             <input type="hidden" name="files" value="0">
-            <table id="documentAttachments" class="form-control">
-                <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
-                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
-                </tr>
-            </table>
+            <table id="documentAttachments" class="atta" style="width: 100%"></table>
         </div>
     </div>
     <!-- Document Due Date -->
@@ -101,7 +96,7 @@
         <div class="col-3"></div>
         <div class="col-9">
             <br>
-            <h2 class="text-center" th:text="*{receiverRegisteredNumber != null ? documentSubType.name + ' № ' + receiverRegisteredNumber : documentSubType.name + ' № ' + __${no}__}"></h2>
+            <h2 class="text-center" th:text="*{documentSubType.name + ' № ' + docIndex}"></h2>
             <br>
         </div>
     </div>
@@ -228,10 +223,11 @@
             <span> Ссылка на документ : </span>
         </label>
         <div class="col-9" id="documentList">
+            <br>
             <select class="sds form-control" th:field="*{documentLinks}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/incomingdocuments">
                 <option th:each="d : *{documentLinks}"
                         th:value="${d}"
-                        th:utext="${@documentServiceImpl.getById(__${d}__).documentSubType.name + ' №' + @documentServiceImpl.getById(__${d}__).receiverRegisteredNumber}">Responsible</option>
+                        th:utext="${@documentServiceImpl.getById(__${d}__).documentSubType.name + ' №' + @documentServiceImpl.getById(__${d}__).senderRegisteredNumber}">Responsible</option>
             </select>
         </div>
     </div>
@@ -241,16 +237,7 @@
         <div class="col-9" id="attachmentList">
             <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
             <input type="hidden" name="files" value="0">
-            <table id="documentAttachments" class="form-control">
-                <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
-                    <td>
-                        <a th:href="@{/doc/attachments/download/__${attachment.id}__}">
-                            <label th:text="${attachment.name}"></label>
-                        </a>
-                        <i th:text="'/Автор - ' + ${@userServiceJpaImpl.findById(__${attachment.author}__).staff.name}+'/'"></i>
-                    </td>
-                </tr>
-            </table>
+            <table id="documentAttachments" class="atta" style="width: 100%"></table>
         </div>
     </div>
     <!-- Receiver Registration Data -->
@@ -336,7 +323,7 @@
             <span> Краткое содержание : </span>
         </label>
         <div class="col-sm-9">
-            <textarea th:field="*{description}"></textarea>
+            <textarea th:field="*{description}" class="ckeditor"></textarea>
         </div>
     </div>
     <!-- RECONCILER -->
@@ -374,11 +361,7 @@
         <div class="col-9" id="attachmentList">
             <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
             <input type="hidden" name="files" value="0">
-            <table id="documentAttachments" class="form-control">
-                <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
-                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
-                </tr>
-            </table>
+            <table id="documentAttachments" class="atta" style="width: 100%"></table>
         </div>
     </div>
     <!-- Comment -->

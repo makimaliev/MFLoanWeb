@@ -16,6 +16,12 @@
             -webkit-appearance: searchfield-cancel-button;
         }
 
+        .table thead th {
+            vertical-align: middle !important;
+            text-align: center;
+            color: #ffffff;
+        }
+
         .nopm {
             padding: 0;
             margin: 0;
@@ -23,24 +29,21 @@
         .active-document {
             background: #ffbf80;
         }
+        tr.viewed td {
+            font-weight:bold !important;
+        }
         td.details-control {
             cursor: pointer;
-        }
-        tr.details td.details-control {
         }
     </style>
 
 </head>
-<!-- end::Head -->
-<!-- end::Body -->
-<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
-<!-- begin:: Page -->
-<div class="m-grid m-grid--hor m-grid--root m-page">
-    <!-- BEGIN: Header -->
-    <div th:replace="layout/header"/>
-    <!-- END: Header -->
 
-    <!-- begin::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <div th:replace="layout/header"/>
+
     <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
         <!-- BEGIN: Left Aside -->
         <div th:replace="layout/sidebar"/>
@@ -48,7 +51,7 @@
         <div class="m-grid__item m-grid__item--fluid m-wrapper">
 
             <div class="m-content">
-                <!--Begin Portlet-->
+
                 <div class="m-portlet m-portlet--mobile">
                     <div class="m-portlet__head">
                         <div class="m-portlet__head-caption">
@@ -56,38 +59,52 @@
                                 <h3 class="m-portlet__head-text" th:text="${'Список документов : ' + title}"></h3>
                             </div>
                         </div>
-                    </div>
-                    <div class="m-portlet__body">
-                        <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30" sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')">
-                            <div class="row align-items-center">
-                                <div class="col-12 m--align-right">
+                        <div class="m-portlet__head-tools">
 
-                                    <span th:if="${type=='incoming'}" th:each="dst : ${documentSubTypes}">
-                                        <a th:href="@{/doc/new/__${dst.internalName}__}" class="btn btn-success" th:text="${dst.name}"> New Document </a>
-                                    </span>
-
-                                    <div class="m-separator m-separator--dashed d-xl-none"></div>
+                            <div class="dropdown" th:if="${type != 'incoming'}">
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Создать
+                                </button>
+                                <div class="dropdown-menu pre-scrollable" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" th:each="dst : ${documentSubTypes}" th:href="@{/doc/new/__${dst.internalName}__}" th:text="${dst.name}"> New Document </a>
                                 </div>
                             </div>
-                            <hr>
+
+                            <div class="row" th:if="${type == 'incoming'}" sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')">
+                                <div class="col-12 m--align-right">
+                                <span th:each="dst : ${documentSubTypes}">
+                                    <a th:href="@{/doc/new/__${dst.internalName}__}" class="btn btn-primary" th:text="${dst.name}"> New Document </a>
+                                </span>
+                                </div>
+                                <br>
+                            </div>
+
                         </div>
 
+                    </div>
+                    <div class="m-portlet__body">
+
                         <th:block th:replace="doc/layout::__${type + 'Index'}__"/>
-                        <hr>
 
                     </div>
                     <div class="m-portlet__foot">
-                        <span th:if="${type!='incoming'}" th:each="dst : ${documentSubTypes}">
-                            <a th:href="@{/doc/new/__${dst.internalName}__}" class="btn btn-success" th:text="${dst.name}"> New Document </a>
-                        </span>
+
+                        <div class="dropdown" th:if="${type != 'incoming'}">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Создать
+                            </button>
+                            <div class="dropdown-menu pre-scrollable" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" th:each="dst : ${documentSubTypes}" th:href="@{/doc/new/__${dst.internalName}__}" th:text="${dst.name}"> New Document </a>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- begin::Footer -->
+
     <div th:replace="layout/footer"/>
-    <!-- end::Footer -->
 </div>
 
 <div th:replace="fragments/footer :: footer-js"/>
@@ -122,6 +139,8 @@
 <script type="text/javascript" th:inline="javascript">
 
     var tasks = [[${tasks}]];
+    var tsList = [[${tsList}]];
+
     var type = [[${type}]]
     var states = [[${states}]];
     var documentSubTypes = [[${dtypes}]];
@@ -137,10 +156,11 @@
         {
             searchable: false,
             orderable: false,
-            data: 'id',
             name: 'id',
+            data: 'id',
             render: function (data) {
-                return tasks.includes(data)
+                var e = tsList.filter(function(t){ return t.id === data });
+                return e.length !== 0
                     ? '<a  href="/doc/edit/'+ data +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать "><i class="la la-edit"></i></a>'
                     : '<a  href="/doc/view/'+ data +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Просмотр "><i class="la la-arrow-circle-o-right"></i></a>';
             }
@@ -206,10 +226,15 @@
             render: function (data, type, full, meta) {
 
                 var r = [];
+                var result = [];
                 if (data != null) {
                     r = data.split(',');
+                    r.forEach(function(element) {
+                        var fio = element.split(' ');
+                        result.push(fio[0] + ' ' + fio[1].charAt(0).toUpperCase() + '.')
+                    });
                 }
-                return r.join('<br>');
+                return result.join('<br>');
             }
         },
         {
@@ -236,7 +261,8 @@
             data: 'id',
             name: 'id',
             render: function (data) {
-                return tasks.includes(data)
+                var e = tsList.filter(function(t){ return t.id === data });
+                return e.length !== 0
                     ? '<a href="/doc/edit/'+ data +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать "><i class="la la-edit"></i></a>'
                     : '<a href="/doc/view/'+ data +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Просмотр "><i class="la la-arrow-circle-o-right"></i></a>';
             }
@@ -247,9 +273,19 @@
             visible: true,
             name: 'id',
             data: function (data) {
-                return (tasks.includes(data.id) && data.documentState === 'APPROVED')
-                    ? '<a class="openact" href="/doc/save/' + data.id + '"><i class="la la-floppy-o"></i></a>'
-                    : '';
+                var e = tsList.filter(function(t){ return t.id === data.id });
+                if(e.length !== 0)
+                {
+                    if(data.documentState === 'APPROVED') {
+                        return '<a class="openact" href="/doc/save/' + data.id + '" data-action="REGISTER"><i class="la la-save"></i></a>';
+                    }
+                    if(data.documentState === 'REGISTERED') {
+                        return '<a class="openact" href="/doc/save/' + data.id + '" data-action="DONE"><i class="la la-thumbs-up"></i></a>';
+                    }
+                }
+                else {
+                    return '';
+                }
             }
         },
         {
@@ -298,7 +334,17 @@
             searchable: false,
             orderable: false,
             name: 'owner',
-            data: 'owner'
+            data: 'owner',
+            render: function (data, type, full, meta) {
+
+                var r = [];
+                var result = '';
+                if (data != null) {
+                    r = data.split(' ');
+                    result = r[0] + ' ' + r[1].charAt(0).toUpperCase() + '.';
+                }
+                return result;
+            }
         },
         {
             searchable: false,
@@ -319,7 +365,7 @@
             orderable: false,
             name: 'indexNo',
             data: function (data, type, full, meta) {
-                return '<p>' + data.indexNo + '</p><p>' + data.pageCount + '</p>';
+                return '<p>' + data.indexNo + '</p><p>' + data.pageCount + ' лст.</p>';
             }
         }
     ];
@@ -343,25 +389,22 @@
             }
         },
         {
-            searchable: true,
+            searchable: false,
+            orderable: false,
+            name: 'index',
+            data: null,
+            render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+            }
+        },
+        {
+            searchable: false,
             orderable: true,
             name: 'documentDueDate',
             data: 'documentDueDate',
             render: function (data, type, full, meta) {
-                return data != null ? '<span class="text-danger">KОНТРОЛЬ<br>' + data + '</span>' : ' ';
+                return data != null ? '<span class="text-danger">' + data + '</span>' : ' ';
             }
-        },
-        {
-            searchable: true,
-            orderable: true,
-            name: 'docIndex',
-            data: 'docIndex'
-        },
-        {
-            searchable: true,
-            orderable: true,
-            name: 'receiverRegisteredDate',
-            data: 'receiverRegisteredDate'
         },
         {
             searchable: true,
@@ -376,17 +419,31 @@
             data: 'senderRegisteredDate'
         },
         {
-            searchable: false,
+            searchable: true,
             orderable: false,
             name: 'senderResponsible',
             data: 'senderResponsible',
             render: function (data, type, full, meta) {
 
                 var r = [];
-                if(data != null) {
+                var result = [];
+                if (data != null) {
                     r = data.split(',');
+                    r.forEach(function(element) {
+                        var fio = element.split(' ');
+                        result.push(fio[0] + ' ' + fio[1].charAt(0).toUpperCase() + '.')
+                    });
                 }
-                return r.join('<br>');
+                return result.join('<br>');
+            }
+        },
+        {
+            searchable: true,
+            orderable: true,
+            name: 'documentSubType',
+            data: 'documentSubType',
+            render: function (data, type, full, meta) {
+                return documentSubTypes[data]
             }
         },
         {
@@ -396,21 +453,38 @@
             data: 'title'
         },
         {
-            searchable: false,
+            searchable: true,
+            orderable: true,
+            name: 'receiverRegisteredNumber',
+            data: 'receiverRegisteredNumber'
+        },
+        {
+            searchable: true,
+            orderable: true,
+            name: 'receiverRegisteredDate',
+            data: 'receiverRegisteredDate'
+        },
+        {
+            searchable: true,
             orderable: false,
             name: 'receiverResponsible',
             data: 'receiverResponsible',
             render: function (data, type, full, meta) {
 
                 var r = [];
+                var result = [];
                 if (data != null) {
                     r = data.split(',');
+                    r.forEach(function(element) {
+                        var fio = element.split(' ');
+                        result.push(fio[0] + ' ' + fio[1].charAt(0).toUpperCase() + '.')
+                    });
                 }
-                return r.join('<br>');
+                return result.join('<br>');
             }
         },
         {
-            searchable: false,
+            searchable: true,
             orderable: true,
             name: 'documentState',
             data: 'documentState',
@@ -421,14 +495,23 @@
     ];
 
     var columns = function() {
-        if(type === 'incoming') return incomingDocs;
-        if(type === 'outgoing') return outgoingDocs;
-        if(type === 'internal') return internalDocs;
+
+        if(type === 'internal')
+        {
+            return internalDocs;
+        }
+        else if(type === 'incoming')
+        {
+            return incomingDocs;
+        }
+        else
+        {
+            return outgoingDocs;
+        }
     }
 
     $(document).ready(function() {
 
-        $('#documentTable thead tr').clone(true).appendTo('#documentTable thead');
         var table = $('#documentTable').DataTable({
             orderCellsTop: true,
             fixedHeader: true,
@@ -446,8 +529,13 @@
             serverSide: true,
             order: [ [1, 'asc'] ],
             createdRow: function ( row, data, index ) {
-                if (tasks.includes(data.id)) {
-                    $('td', row).addClass('active-document');
+
+                var e = tsList.filter(function(t){ return t.id === data.id });
+                if (e.length !== 0)
+                {
+                    $(row).addClass('active-document');
+                    if(e[0].mod === 0)
+                        $(row).addClass('viewed');
                 }
             },
             columns: columns(),
@@ -473,17 +561,23 @@
             "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
         });
+
+        // Clone table headers
+        $('#documentTable thead tr').clone(true).appendTo('#documentTable thead');
+        // Add filter inputs into headers
         $('#documentTable thead tr:eq(1) th').each(function (i){
 
             if($(this).hasClass("searchable")) {
                 var state = table.state.loaded();
 
                 if($(this).hasClass("ti")) {
-                    $(this).html('<input type="search" class="form-control m-input--square" style="width: 100%">');
+                    $(this).html('<input type="search" class="form-control m-input--square" style="width: 100%; padding: 10px 5px;">');
                     var tinput = $('input', this);
-                    tinput.on('change', function () {
-                        if (table.column(i).search() !== this.value) {
-                            table.column(i).search(this.value).draw();
+                    tinput.on('keydown', function (e) {
+                        if (e.keyCode == 13) {
+                            if (table.column(i).search() !== this.value) {
+                                table.column(i).search(this.value).draw();
+                            }
                         }
                     });
 
@@ -491,9 +585,13 @@
                         var val = state.columns[i];
                         tinput.val(val.search.search);
                     }
+
+                    $(tinput, table.column(i).header()).on('click', function(e) {
+                        e.stopPropagation();
+                    });
                 }
                 if($(this).hasClass("di")) {
-                    $(this).html('<input type="text" readonly class="form-control dtp m-input--square" style="width: 100%;"/>');
+                    $(this).html('<input type="text" readonly class="form-control dtp m-input--square" style="width: 100%; padding: 10px 5px; background: #ffffff;"/>');
                     var dinput = $('input', this);
                     dinput.on('apply.daterangepicker', function(ev, picker) {
                         dinput.val(picker.startDate.format('DD.MM.YY') + ' - ' + picker.endDate.format('DD.MM.YY'));
@@ -509,6 +607,10 @@
                         var val = state.columns[i];
                         dinput.val(val.search.search);
                     }
+
+                    $(dinput, table.column(i).header()).on('click', function(e) {
+                        e.stopPropagation();
+                    });
                 }
                 if($(this).hasClass("sis")) {
                     $(this).html('<select class="form-control m-input--square" id="states"><option value=""> Все </option></select>');
@@ -525,6 +627,10 @@
                         var val = state.columns[i];
                         sselect.val(val.search.search);
                     }
+
+                    $(sselect, table.column(i).header()).on('click', function(e) {
+                        e.stopPropagation();
+                    });
                 }
                 if($(this).hasClass("sid")) {
                     $(this).html('<select class="form-control m-input--square" id="dtypes"><option value=""> Все </option></select>');
@@ -541,6 +647,10 @@
                         var val = state.columns[i];
                         dselect.val(val.search.search);
                     }
+
+                    $(dselect, table.column(i).header()).on('click', function(e) {
+                        e.stopPropagation();
+                    });
                 }
             }
             else {
@@ -548,18 +658,9 @@
             }
         });
 
-        $('body').on('click','.openact',function(e) {
-            e.preventDefault()
-            $.ajax({
-                url: $(this).attr('href'),
-                success: function(response) {
-                    alert(response);
-                    table.draw();
-                }
-            });
-        });
-
         var detailRows = [];
+        var activeCol = null;
+        // Detail row init method
         function format (data) {
 
             var t = '';
@@ -572,13 +673,12 @@
 
             t += '<div class="tasks"></div>'
 
-
             $.ajax({
                 url: '/doc/tasks/' + data.id,
                 success: function(response) {
 
                     var divc ='<br><table>' +
-                        '<thead><tr>' +
+                        '<thead class="bg-primary"><tr>' +
                         '<th>Дата</th>' +
                         '<th>От</th>' +
                         '<th>Задача</th>' +
@@ -605,48 +705,71 @@
             });
 
             return t;
-            /*
-
-            var r = [];
-            if (data != null) {
-
-                r = data.receiverExecutor.split(',');
-            }
-            return '<p><b>Исполнители</b></p>' + r.join('<br>');
-            */
         }
+        // Add Detail button click listener
+        table.on( 'draw', function () {
+            $.each( detailRows, function ( i, id ) {
+                $('#' + id + ' td.details-control').trigger( 'click' );
+            });
+        });
+        // Detail row click handler method
         $('#documentTable tbody').on( 'click', 'tr td.details-control', function () {
 
             var tr = $(this).closest('tr');
             var row = table.row( tr );
             var idx = $.inArray( tr.attr('id'), detailRows );
 
+            $('td', row).addClass('details-control');
+
             if ( row.child.isShown() ) {
                 this.innerHTML = '<i class="la la-chevron-right"></i>'
-                tr.removeClass( 'details' );
                 row.child.hide();
                 detailRows.splice( idx, 1 );
             }
             else {
+                if(activeCol) activeCol.innerHTML = '<i class="la la-chevron-right"></i>';
                 this.innerHTML = '<i class="la la-chevron-down"></i>'
-                tr.addClass('details');
+
+                table.rows().eq(0).each(function(idx) {
+                    var row = table.row(idx);
+                    if (row.child.isShown()) {
+                        row.child.hide();
+                    }
+                });
                 row.child(format(row.data())).show();
+
                 if ( idx === -1 ) {
                     detailRows.push(tr.attr('id'));
                 }
             }
+
+            activeCol = this;
         } );
-        table.on( 'draw', function () {
-            $.each( detailRows, function ( i, id ) {
-                $('#' + id + ' td.details-control').trigger( 'click' );
+
+        // Outgoing [register, done] buttons click handler
+        $('body').on('click','.openact',function(e) {
+            var action = $(this).data("action");
+            e.preventDefault()
+            $.ajax({
+                url: $(this).attr('href'),
+                data: jQuery.param({ action: action}) ,
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                success: function(response) {
+                    if(action === 'REGISTER')
+                    {
+                        alert(response);
+                        table.draw();
+                    }
+                    else {
+                        location.reload();
+                    }
+                }
             });
         });
     });
 
 </script>
-
 <script>
-
     $(document).ready(function() {
         $('.dtp').daterangepicker({
             autoUpdateInput: false,
@@ -656,7 +779,6 @@
                 cancelLabel: 'Очистить'
             }
         });
-
     });
 </script>
 

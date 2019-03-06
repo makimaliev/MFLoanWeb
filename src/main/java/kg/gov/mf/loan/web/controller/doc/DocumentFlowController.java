@@ -1,7 +1,6 @@
 package kg.gov.mf.loan.web.controller.doc;
 
 import kg.gov.mf.loan.admin.org.model.Staff;
-import kg.gov.mf.loan.admin.org.service.StaffService;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.doc.dao.DocViewDao;
 import kg.gov.mf.loan.doc.model.*;
@@ -13,6 +12,7 @@ import kg.gov.mf.loan.task.service.ChatUserService;
 import kg.gov.mf.loan.task.service.SystemConstantService;
 import kg.gov.mf.loan.task.service.TaskService;
 import kg.gov.mf.loan.web.controller.doc.dto.SearchResult;
+import kg.gov.mf.loan.web.controller.doc.dto.TS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -32,19 +32,6 @@ import java.util.*;
 @RequestMapping("/doc")
 public class DocumentFlowController extends BaseController {
 
-    @Autowired
-    EntityManager entityManager;
-
-
-    @Autowired
-    ResponsibleService responsibleService;
-
-    @Autowired
-    StaffService staffService;
-
-    @Autowired
-    DocViewDao documentViewDao;
-
     //region Dependencies
     private DocumentService documentService;
     private DocumentTypeService documentTypeService;
@@ -54,8 +41,8 @@ public class DocumentFlowController extends BaseController {
     private AccountService accountService;
     private SystemConstantService systemConstantService;
     private ChatUserService chatUserService;
-
-    //private DocumentRepository documentRepository;
+    private DocViewDao documentViewDao;
+    private EntityManager entityManager;
 
     @Autowired
     public DocumentFlowController(DocumentService documentService,
@@ -65,7 +52,9 @@ public class DocumentFlowController extends BaseController {
                                   CounterService registerService,
                                   AccountService accountService,
                                   SystemConstantService systemConstantService,
-                                  ChatUserService chatUserService) {
+                                  ChatUserService chatUserService,
+                                  DocViewDao documentViewDao,
+                                  EntityManager entityManager) {
 
         this.documentService = documentService;
         this.documentTypeService = documentTypeService;
@@ -75,9 +64,11 @@ public class DocumentFlowController extends BaseController {
         this.accountService = accountService;
         this.systemConstantService = systemConstantService;
         this.chatUserService = chatUserService;
+        this.documentViewDao = documentViewDao;
+        this.entityManager = entityManager;
     }
     //endregion
-    //region TYPE
+    //region ACTIONS
     private Transition[][][] ACTIONS =
             {
                     {   // Internal
@@ -86,7 +77,7 @@ public class DocumentFlowController extends BaseController {
                             { Transition.REJECT, Transition.RECONCILE },        // PENDING
                             { Transition.REQUEST, Transition.TORECONCILE },     // RECONCILED
                             { Transition.REJECT, Transition.APPROVE },          // REQUESTED
-                            { Transition.ACCEPT },                              // APPROVED
+                            { /*Transition.REJECT,*/ Transition.ACCEPT },           // APPROVED
                             {},                                                 // REJECTED
                             {},                                                 // REGISTERED
                             { Transition.DONE, Transition.SEND },               // ACCEPTED
@@ -136,15 +127,6 @@ public class DocumentFlowController extends BaseController {
                     },
             };
     //endregion
-    private final static Map<Integer, String> responsible = new HashMap<Integer, String>() {
-        {
-            put(1, "Сотрудник");
-            put(2, "Отдел");
-            put(3, "Организация");
-            put(4, "ФИЗ Лицо");
-        }
-    };
-    private enum CURRENTVIEW { INTERNAL, INCOMING, OUTGOING}
     private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
     @InitBinder
@@ -165,16 +147,18 @@ public class DocumentFlowController extends BaseController {
         vars.put("assignedTo", String.valueOf(getUser().getId()));
         vars.put("status", "OPEN");
         List<Task> t = taskService.getTasks(vars);
-        int[] tasks = new int[t.size()];
-        int i = 0;
+
+        List<TS> tsList = new ArrayList<>();
+
         for(Task task : t)
         {
-            tasks[i] = (int)task.getObjectId();
-            ++i;
+            TS ts = new TS();
+            ts.setId(task.getObjectId());
+            ts.setMod(task.getModifiedByUserId());
+            tsList.add(ts);
         }
 
-        model.addAttribute("tasks", tasks);
-        model.addAttribute("ACTIONS", ACTIONS);
+        model.addAttribute("tsList", tsList);
         model.addAttribute("title", documentType.getName());
         model.addAttribute("type", type);
 
@@ -192,7 +176,7 @@ public class DocumentFlowController extends BaseController {
         }
         model.addAttribute("dtypes", dtypes);
 
-        if(getUser().getStaff() != null)
+        if(getUser().getStaff() != null || type.equals("internal") || type.equals("incoming") || type.equals("outgoing"))
             model.addAttribute("documentSubTypes", documentType.getDocumentSubTypes());
 
         return "/doc/document/index";
@@ -201,13 +185,6 @@ public class DocumentFlowController extends BaseController {
     @RequestMapping(value = "/new/{subType}", method = RequestMethod.GET)
     public String add(@PathVariable("subType") String subType, Model model) {
 
-        /*
-        for(Document d : documentService.list())
-        {
-            documentService.remove(d);
-        }
-        */
-
         if(getUser() == null) return "/login/login";
 
         Document document = new Document();
@@ -215,27 +192,27 @@ public class DocumentFlowController extends BaseController {
         document.setDocumentType(documentSubTypeService.getByInternalName(subType).getDocumentType());
         document.setDocumentSubType(documentSubTypeService.getByInternalName(subType));
 
-        if(document.getDocumentType().getInternalName() == "incoming")
+        if(document.getDocumentType().getInternalName().equals("incoming"))
         {
             document.setDocIndex(registerService.getNumber());
-            document.getReceiverResponsible().setResponsibleType(1);
             document.setResolution("Обработать входящий документ");
-            model.addAttribute("dto", document.getDocumentType().getInternalName());
+            //model.addAttribute("dto", document.getDocumentType().getInternalName());
         }
 
-        if(document.getDocumentType().getInternalName() == "outgoing")
+        if(document.getDocumentType().getInternalName().equals("outgoing"))
         {
-            document.getSenderResponsible().setResponsibleType(1);
-            document.getSenderResponsible().getStaff().add(userService.findByUsername("ruk001").getStaff());
+            Responsible responsible = new Responsible();
+            responsible.setResponsibleType(1);
+            Set<Staff> staff = new HashSet<>(0);
+            staff.add(userService.findByUsername("ruk001").getStaff());
+            responsible.setStaff(staff);
+            document.setSenderResponsible(responsible);
         }
         //**************************************************************************************************************
 
-        model.addAttribute("no", registerService.getNumber());
         model.addAttribute("hasComment", hasComment(document));
         model.addAttribute("actions", getActions(document));
         model.addAttribute("document", document);
-        model.addAttribute("responsible", responsible);
-        model.addAttribute("documentState",  document.getDocumentState().toString());
 
         return "/doc/document/edit";
     }
@@ -247,36 +224,31 @@ public class DocumentFlowController extends BaseController {
 
         Document document = documentService.getById(id);
 
-        if(document.getDocumentType().getInternalName().equals("incoming") && document.getDocumentState().ordinal() > 7) {
-
-            Map<String, String> vars = new HashMap<>();
-            vars.put("objectId", String.valueOf(document.getId()));
-            vars.put("status", "OPEN");
-            Task task = taskService.getTask(getUser(), vars);
-            task.setModifiedByUserId(1);
-            taskService.update(task);
-        }
-
-        //region XTRA
         Map<String, String> vars = new HashMap<>();
         vars.put("objectId", String.valueOf(document.getId()));
         vars.put("status", "OPEN");
         Task task = taskService.getTask(getUser(), vars);
+        task.setModifiedByUserId(getUser().getId());
+        taskService.update(task);
+
+        //region XTRA
+        vars.clear();
+        vars.put("objectId", String.valueOf(document.getId()));
+        vars.put("status", "OPEN");
+        task = taskService.getTask(getUser(), vars);
 
         if(task != null && task.getProgress() != null)
             document.setDocumentState(State.valueOf(task.getProgress()));
 
         vars.clear();
-        vars.put("objectId", String.valueOf(document.getId()));
         //endregion
 
-        model.addAttribute("hasComment", hasComment(document));
+        vars.put("objectId", String.valueOf(document.getId()));
         model.addAttribute("tasks", taskService.getTasks(vars));
+        model.addAttribute("hasComment", hasComment(document));
         model.addAttribute("actions", getActions(document));
         model.addAttribute("document", document);
         model.addAttribute("documentState", document.getDocumentState().toString());
-
-        //model.addAttribute("mydocs", documentService.getDocuments(0,"incoming", null));
 
         return "/doc/document/edit";
     }
@@ -339,18 +311,13 @@ public class DocumentFlowController extends BaseController {
 
         if(getUser() == null) return "/login/login";
 
-        //List<Document> documents = documentService.list(null, null, 0L, 1, 20, "documentType", "asc", null, "");
-
         Document document = documentService.getById(id);
 
         Map<String, String> vars = new HashMap<>();
         vars.put("objectId", String.valueOf(document.getId()));
 
         model.addAttribute("tasks", taskService.getTasks(vars));
-        //model.addAttribute("accounts", chatUserService.list(10,5));
-        //model.addAttribute("stages", getStages(document.getDocumentType().getInternalName()));
         model.addAttribute("document", document);
-        model.addAttribute("responsible", responsible);
 
         return "/doc/document/view";
     }
@@ -498,6 +465,33 @@ public class DocumentFlowController extends BaseController {
             document.setUsers(doc.getUsers());
             document.setDispatchData(doc.getDispatchData());
 
+            if (action.equals("REQUEST") || action.equals("TORECONCILE"))
+            {
+                //region Description
+                taskService.completeTask(document.getId(), getUser(), Transition.valueOf(action).state().text());
+                document.setDocumentState(Transition.valueOf(action.toUpperCase()).state());
+
+                for(Staff staff : document.getReconciler())
+                {
+                    if(!doc.getUsers().contains(staff.getUser()))
+                    {
+                        document.getUsers().add(getUser(staff));
+                        addTask(State.PENDING.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), State.PENDING, "");
+                        document.getDispatchData().add(setDispatchData(State.PENDING, staff.getName()));
+                    }
+                }
+
+                for(Staff staff : document.getSenderResponsible().getStaff())
+                {
+                    document.getUsers().add(getUser(staff));
+                    addTask(State.REQUESTED.text(), document.getId(), getUser(), document.getDocumentDueDate(), getUser(staff), null, "");
+                    document.getDispatchData().add(setDispatchData(State.REQUESTED, staff.getName()));
+                }
+
+                document.setDocumentState(State.REQUESTED);
+                //endregion
+            }
+
             if (action.equals("RECONCILE"))
             {
                 //region Description
@@ -541,9 +535,17 @@ public class DocumentFlowController extends BaseController {
             if(action.equals("REJECT"))
             {
                 //region Description
-                taskService.completeTask(document.getId(), getUser(), State.REJECTED.text() + "<br>" + document.getComment());
-                addTask("Доработать", document.getId(), getUser(), document.getDocumentDueDate(), document.getOwner(), State.DRAFT, "");
-                document.getDispatchData().add(setDispatchData(State.REJECTED, description));
+                if(document.getDocumentState() == State.REQUESTED)
+                {
+                    taskService.completeTask(document.getId(), getUser(), State.REJECTED.text() + "<br>" + document.getComment());
+                    addTask(description, document.getId(), getUser(), document.getDocumentDueDate(), document.getOwner(), State.DRAFT, "");
+                    document.getDispatchData().add(setDispatchData(State.REJECTED, description));
+                }
+                if(document.getDocumentState() == State.APPROVED)
+                {
+                    taskService.completeTask(document.getId(), getUser(), State.REJECTED.text() + "<br>" + document.getComment());
+                    document.getDispatchData().add(setDispatchData(State.REJECTED, description));
+                }
                 //endregion
             }
 
@@ -621,7 +623,7 @@ public class DocumentFlowController extends BaseController {
     }
     private Document saveIncomingDocument(Document document, String action) {
 
-        String description = document.getComment() != null || !document.getComment().isEmpty() ? document.getComment() : "Выполнен";
+        String description = document.getComment() != null /*|| !document.getComment().isEmpty()*/ ? document.getComment() : "Выполнен";
 
         //region New Document
         if(document.getId() == 0) {
@@ -741,7 +743,7 @@ public class DocumentFlowController extends BaseController {
     }
     private Document saveOutgoingDocument(Document document, String action) {
 
-        String description = document.getComment();
+        String description;
 
         //region New Document
         if(document.getId() == 0)
@@ -870,14 +872,19 @@ public class DocumentFlowController extends BaseController {
 
     @RequestMapping(value = "/save/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public String register(@PathVariable("id") Long id) {
+    public String register(@PathVariable("id") Long id, @RequestParam("action") String action) {
 
         if(getUser() == null) return "/login/login";
 
         Document document = documentService.getById(id);
-        document = saveOutgoingDocument(document, "REGISTER");
-
-        return document.getSenderRegisteredNumber();
+        if(action.equals("REGISTER")) {
+            document = saveOutgoingDocument(document, "REGISTER");
+            return document.getSenderRegisteredNumber();
+        } else
+        {
+            saveOutgoingDocument(document, "DONE");
+            return "OK";
+        }
     }
 
     @RequestMapping("/data/staff")
@@ -994,6 +1001,20 @@ public class DocumentFlowController extends BaseController {
         for(Document document : (List<Document>)documentService.searchOutgoingDocuments(name))
         {
             data.add(new SearchResult(document.getId(), document.getDocumentSubType().getName() + " №" + document.getSenderRegisteredNumber()));
+        }
+
+        return data;
+    }
+
+    @RequestMapping("/documentattachments/{documentId}")
+    @ResponseBody
+    public List<Attachment> getDocAttachments(@PathVariable("documentId") long documentId) {
+
+        List<Attachment> data = new ArrayList<>();
+
+        for(Attachment attachment : documentService.getById(documentId).getAttachments())
+        {
+            data.add(attachment);
         }
 
         return data;

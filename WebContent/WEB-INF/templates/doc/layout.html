@@ -16,39 +16,128 @@
         </div>
     </th:block>
     <th:block th:fragment="script">
+
+        <div class="modal fade" id="attachment" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Прикрепление</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:action="@{/doc/attachments/upload(documentId=${document.id})}" class="dropzone" id="dz"></form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-secondary" form="dz" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script type="text/javascript" th:inline="javascript">
 
-            $(document).ready(function() {
+            var docid = [[${document.id}]]
 
-                CKEDITOR.config.readOnly = [[${document.documentState.ordinal()}]] > 1;
-                CKEDITOR.replace("description", {
-                    language: 'ru',
-                    uiColor: '#ffffff',
-                    toolbar: [
-                        { name: 'clipboard', groups: [ 'clipboard' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteFromWord' ] },
-                        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
-                        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
-                        { name: 'insert', items: [ 'Image', 'Table' ] },
-                        { name: 'styles', items: [ 'Font', 'FontSize' ] },
-                        { name: 'tools', items: [ 'Maximize' ] }
-                    ],
-                    toolbarGroups: [
-                        { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
-                        { name: 'forms' },
-                        '/',
-                        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-                        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align' ] },
-                        { name: 'insert' },
-                        '/',
-                        { name: 'styles' },
-                        { name: 'tools' }
-                    ]
+            Dropzone.autoDiscover = false;
+            var myDropzone = new Dropzone("#dz", {
+                createImageThumbnails: true,
+                dictDefaultMessage: "Добавить",
+                previewTemplate:
+                '<div class="row p-2">' +
+                '   <div class="col-7"><span data-dz-name></span></div>' +
+                '   <div class="col-3" data-dz-size></div>' +
+                '</div>',
+                success: function (file, response) {
+                    file.previewElement.classList.add("dz-success");
+                    file.previewElement.id = response.id;
+                    if(docid === 0)
+                        attachmentHandler(response);
+                    addFile(response);
+                },
+                error: function (file, response) {
+                    file.previewElement.classList.add("dz-error");
+                }
+            });
+
+            function drawAttachments(id) {
+                $.ajax({
+                    url: '/doc/documentattachments/' + id,
+                    success: function(response) {
+                        $("#documentAttachments tr").remove();
+                        $.each(response, function(i, item) {
+                            addFile(item)
+                        });
+                    }
                 });
+            }
+            function addFile(file) {
 
+                var infof = document.createElement("label");
+                infof.setAttribute("class", "text-danger");
+                infof.setAttribute("style", "cursor: pointer;");
+                infof.innerHTML = "Удалить";
+
+                var af = document.createElement("a");
+                af.setAttribute("href", "/doc/attachments/download/" + file.id);
+                af.appendChild(infof);
+
+                var tdf = document.createElement("td");
+                tdf.setAttribute("style", "width: 10%");
+                tdf.appendChild(af);
+
+                var infod = document.createElement("label");
+                infod.innerHTML = file.name;
+
+                var ad = document.createElement("a");
+                ad.setAttribute("href", "/doc/attachments/delete/" + docid + "/" + file.id);
+                ad.onclick = function (e) {
+                    var ctr = $(this).closest("tr");
+                    var cf =  $('#attachmentList #a' + file.id);
+                    e.preventDefault();
+                    $.ajax({
+                        url: $(this).attr('href'),
+                        success: function(response) {
+                            $(ctr).remove();
+                            $(cf).remove();
+                        }
+                    });
+                };
+                ad.appendChild(infod);
+
+                var tdd = document.createElement("td");
+                tdd.appendChild(ad);
+
+                var tr = document.createElement("tr");
+                tr.setAttribute("id", "tr" + file.id);
+                tr.appendChild(tdf);
+                tr.appendChild(tdd);
+
+                var da = document.getElementById("documentAttachments");
+                da.appendChild(tr);
+            }
+            function attachmentHandler(file) {
+                var a = document.createElement("input");
+                a.setAttribute("type", "hidden");
+                a.setAttribute("id", "a" + file.id);
+                a.setAttribute("name", "files");
+                a.setAttribute("value", file.id);
+                document.getElementById("attachmentList").appendChild(a);
+            }
+
+            $(document).ready(function() {
                 $('#tabstages a').on('click', function (e) {
                     e.currentTarget.id == "nav-main-tab" ? $(".act").show() : $(".act").hide()
                 })
             });
+
+            $('#attachment').on('hidden.bs.modal', function (e) {
+                myDropzone.removeAllFiles();
+            })
+
+            if(docid !== 0)
+                window.onload = drawAttachments(docid);
 
         </script>
     </th:block>
@@ -107,6 +196,7 @@
         <button style="margin: 3px"
                 class="act btn btn-success"
                 name="action"
+                form="document_form"
                 th:each="action : ${actions}"
                 th:value="${action.name()}"
                 th:text="${action.text()}"
@@ -116,307 +206,143 @@
     </th:block>
     <th:block th:fragment="internalIndex">
         <table class="table table-bordered table-hover" id="documentTable">
-            <thead class="thead-default">
+            <thead class="bg-info">
             <tr>
-                <th width="30px"></th>
-                <th width="30px">№</th>
+                <th width="33px"></th>
+                <th width="33px"></th>
                 <th width="50px"></th>
-                <th th:utext="|#{label.document.documentSubType} <br> #{label.document.title}|">Относительно</th>
-                <th width="120px">Исх. № и Дата</th>
-                <th th:text="#{label.document.sender}">Отправитель</th>
-                <th width="120px">Вхд. № и Дата</th>
-                <th th:text="#{label.document.receiver}">Исполнитель</th>
-                <th th:text="#{label.document.duedate}" width="100px">Срок</th>
+                <th width="50px">Срок</th>
+                <th width="120px" class="searchable ti">Исх. №</th>
+                <th width="120px" class="searchable di">Исх. Дата</th>
+                <th th:text="#{label.document.sender}" class="searchable ti">Отправитель</th>
+                <th th:utext="#{label.document.documentSubType}" class="searchable sid">Относительно</th>
+                <th th:utext="#{label.document.title}" class="searchable ti">Относительно</th>
+                <th width="120px" class="searchable ti">Вхд. №</th>
+                <th width="120px" class="searchable di">Вхд. Дата</th>
+                <th th:text="#{label.document.receiver}" class="searchable di">Получатель</th>
+                <th th:text="#{label.document.generalStatus}" class="searchable sis">Статус</th>
             </tr>
             </thead>
-            <tbody>
-            <tr th:each="document, i : ${documents}" th:classappend="${tasks.?[objectId == __${document.id}__].isEmpty() ? '' : ' m--bg-warning'}">
-                <td class="table-actions text-left">
-                    <span>
-                        <div class="dropdown">
-                            <a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown"><i class="la la-ellipsis-h"></i></a>
-                            <div class="dropdown-menu dropdown-menu-left">
-
-                                <a class="dropdown-item" th:if="${tasks.?[objectId == __${document.id}__].isEmpty()}" th:href="@{/doc/view/__${document.id}__}">
-                                    <span th:text="#{label.view}"></span>
-                                </a>
-
-                                <a class="dropdown-item" th:if="${!tasks.?[objectId == __${document.id}__].isEmpty()}" th:href="@{/doc/edit/__${document.id}__}">
-                                    <span th:text="#{label.open}"></span>
-                                </a>
-
-                            </div>
-                        </div>
-                    </span>
-                </td>
-                <td th:text="${i.index+1}"></td>
-                <td class="text-danger text-center"><span th:if="${document.documentDueDate}">K</span></td>
-                <td th:utext="|<b>${document.documentSubType.name}</b><br>${document.title}|"></td>
-                <td th:utext="${!document.senderRegisteredNumber.isEmpty() ? document.senderRegisteredNumber + '<hr>' + #dates.format(document.senderRegisteredDate, 'dd-MM-yyyy') : ''}"></td>
-                <td>
-                    <br>
-                    <p th:if="${document.senderResponsible.responsibleType == 1}" th:each="ss : ${document.senderResponsible.staff}" th:utext="${ss.name}"> </p>
-                    <p th:if="${document.senderResponsible.responsibleType == 2}" th:each="sd : ${document.senderResponsible.departments}" th:utext="${sd.name}"> </p>
-                    <p th:if="${document.senderResponsible.responsibleType == 3}" th:each="so : ${document.senderResponsible.organizations}" th:utext="${so.name}"> </p>
-                    <p th:if="${document.senderResponsible.responsibleType == 4}" th:each="sp : ${document.senderResponsible.person}" th:utext="${sp.name}"> </p>
-                </td>
-                <td th:utext="${!document.receiverRegisteredNumber.isEmpty() ? document.receiverRegisteredNumber + '<hr>' + #dates.format(document.receiverRegisteredDate, 'dd-MM-yyyy') : ''}"></td>
-                <td>
-                    <br>
-                    <p th:if="${document.receiverResponsible.responsibleType == 1}" th:each="rs : ${document.receiverResponsible.staff}" th:utext="${rs.name}"> </p>
-                    <p th:if="${document.receiverResponsible.responsibleType == 2}" th:each="rd : ${document.receiverResponsible.departments}" th:utext="${rd.name}"> </p>
-                    <p th:if="${document.receiverResponsible.responsibleType == 3}" th:each="ro : ${document.receiverResponsible.organizations}" th:utext="${ro.name}"> </p>
-                    <p th:if="${document.receiverResponsible.responsibleType == 4}" th:each="rp : ${document.receiverResponsible.person}" th:utext="${rp.name}"> </p>
-                </td>
-                <td th:text="${document.documentDueDate} != null ? ${#dates.format(document.documentDueDate, 'dd-MM-yyyy')} : ''">None</td>
-            </tr>
-            </tbody>
         </table>
     </th:block>
     <th:block th:fragment="incomingIndex">
-        <table class="table table-bordered table-hover" id="documentTable">
-            <thead class="bg-info text-center">
+        <table class="table table-bordered" id="documentTable">
+            <thead class="bg-info">
             <tr>
-                <th width="30px"></th>
-                <th width="30px"></th>
-                <th width="50px" class="searchable di">KОНТРОЛЬ</th>
+                <th width="33px"></th>
+                <th width="33px"></th>
+                <th width="40px" class="searchable di">KОНТРОЛЬ</th>
                 <th width="80px" class="searchable ti">Вхд. №</th>
-                <th width="90px" class="searchable di">Вхд. Дата</th>
-                <th width="120px" class="searchable ti">Исх. №</th>
-                <th width="90px" class="searchable di">Исх. Дата</th>
+                <th width="40px" class="searchable di">Вхд. Дата</th>
+                <th width="100px" class="searchable ti">Исх. №</th>
+                <th width="40px" class="searchable di">Исх. Дата</th>
                 <th th:text="#{label.document.sender}" class="searchable ti">Отправитель</th>
                 <th th:text="#{label.document.title}" class="searchable ti">Относительно</th>
-                <th width="330px" th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
-                <th width="50px" th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
+                <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
+                <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
             </tr>
             </thead>
         </table>
     </th:block>
     <th:block th:fragment="outgoingIndex">
         <table class="table table-bordered" id="documentTable">
-            <thead class="bg-info text-center">
+            <thead class="bg-info">
             <tr>
-                <th width="30px"></th>
-                <th width="30px"></th>
-                <th width="30px"></th>
-                <th width="30px">№</th>
+                <th width="33px"></th>
+                <th width="33px"></th>
+                <th width="33px"></th>
+                <th width="70px" class="searchable ti">№</th>
                 <th width="120px" class="searchable ti">Исх. №</th>
-                <th width="90px" class="searchable di">Дата</th>
+                <th width="50px" class="searchable di">Дата</th>
                 <th th:utext="#{label.document.documentSubType}" class="searchable sid">Тип документа</th>
                 <th th:utext="#{label.document.title}" class="searchable ti">Относительно</th>
                 <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
                 <th th:text="#{label.document.executer}" class="searchable ti">Исполнитель</th>
                 <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
-                <th width="120px" th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|" class="searchable ti">Номер бланка</th>
+                <th th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|" class="searchable ti">Номер бланка</th>
             </tr>
             </thead>
         </table>
     </th:block>
 
     <th:block th:fragment="reconciliationreportIndex">
-        <table class="table table-bordered table-hover" id="documentTable">
-            <thead class="thead-default">
+        <table class="table table-bordered" id="documentTable">
+            <thead class="bg-info text-center">
             <tr>
-                <th width="30px">*</th>
-                <th width="30px"></th>
-                <th width="120px">Исх. № <br> Дата</th>
-                <th th:utext="#{label.document.title}">Относительно</th>
-                <th th:text="#{label.document.generalStatus}">Состояние</th>
-                <th th:text="#{label.document.executer}">Исполнитель</th>
-                <th th:text="#{label.document.receiver}">Получатель</th>
+                <th width="33px"></th>
+                <th width="33px"></th>
+                <th width="33px"></th>
+                <th width="70px" class="searchable ti">№</th>
+                <th width="120px" class="searchable ti">Исх. №</th>
+                <th width="50px" class="searchable di">Дата</th>
+                <th th:utext="#{label.document.documentSubType}" class="searchable sid">Тип документа</th>
+                <th th:utext="#{label.document.title}" class="searchable ti">Относительно</th>
+                <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
+                <th th:text="#{label.document.executer}" class="searchable ti">Исполнитель</th>
+                <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
+                <th th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|" class="searchable ti">Номер бланка</th>
             </tr>
             </thead>
-            <tbody>
-            <tr th:each="document, i : ${documents}">
-                <td class="table-actions text-left">
-                    <span>
-                        <div class="dropdown">
-                            <a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown"><i class="la la-ellipsis-h"></i></a>
-                            <div class="dropdown-menu dropdown-menu-left">
-
-                                <a class="dropdown-item" th:if="${tasks.?[objectId == __${document.id}__].isEmpty()}" th:href="@{/doc/view/__${document.id}__}">
-                                    <span th:text="#{label.view}"></span>
-                                </a>
-
-                                <a class="dropdown-item" th:if="${!tasks.?[objectId == __${document.id}__].isEmpty()}" th:href="@{/doc/edit/__${document.id}__}">
-                                    <span th:text="#{label.open}"></span>
-                                </a>
-
-                                <a class="openact dropdown-item" th:if="${document.documentState.ordinal() == 5}" th:href="@{/doc/save/__${document.id}__}" sec:authorize="hasAnyAuthority('PERM_REGISTER_OUTGOINGDOC')">
-                                    <span>Зарегистрировать</span>
-                                </a>
-                            </div>
-                        </div>
-                    </span>
-                </td>
-                <td th:text="${document.docIndex}"></td>
-                <td th:utext="${!document.senderRegisteredNumber.isEmpty() ? document.senderRegisteredNumber + '<hr>' + #dates.format(document.senderRegisteredDate, 'dd-MM-yyyy') : ''}"></td>
-                <td th:text="${document.title}"></td>
-                <td th:text="${document.documentState.text()}"></td>
-                <td th:text="${document.owner.staff.name}">ГАУБК при МФ КР</td>
-                <td>
-                    <br>
-                    <p th:if="${document.receiverResponsible.responsibleType == 3}" th:each="ro : ${document.receiverResponsible.organizations}" th:utext="${ro.name}"> </p>
-                    <p th:if="${document.receiverResponsible.responsibleType == 4}" th:each="rp : ${document.receiverResponsible.person}" th:utext="${rp.name}"> </p>
-                </td>
-            </tr>
-            </tbody>
         </table>
     </th:block>
     <th:block th:fragment="complaintIndex">
-        <table class="table table-bordered table-hover" id="documentTable">
-            <thead class="thead-default">
+        <table class="table table-bordered" id="documentTable">
+            <thead class="bg-info text-center">
             <tr>
-                <th width="30px">*</th>
-                <th width="30px"></th>
-                <th width="120px">Исх. № <br> Дата</th>
-                <th th:utext="#{label.document.title}">Относительно</th>
-                <th th:text="#{label.document.generalStatus}">Состояние</th>
-                <th th:text="#{label.document.executer}">Исполнитель</th>
-                <th th:text="#{label.document.receiver}">Получатель</th>
-                <th width="120px" th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|">Номер бланка</th>
+                <th width="33px"></th>
+                <th width="33px"></th>
+                <th width="33px"></th>
+                <th width="70px" class="searchable ti">№</th>
+                <th width="120px" class="searchable ti">Исх. №</th>
+                <th width="50px" class="searchable di">Дата</th>
+                <th th:utext="#{label.document.documentSubType}" class="searchable sid">Тип документа</th>
+                <th th:utext="#{label.document.title}" class="searchable ti">Относительно</th>
+                <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
+                <th th:text="#{label.document.executer}" class="searchable ti">Исполнитель</th>
+                <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
+                <th th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|" class="searchable ti">Номер бланка</th>
             </tr>
             </thead>
-            <tbody>
-            <tr th:each="document, i : ${documents}">
-                <td class="table-actions text-left">
-                    <span>
-                        <div class="dropdown">
-                            <a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown"><i class="la la-ellipsis-h"></i></a>
-                            <div class="dropdown-menu dropdown-menu-left">
-
-                                <a class="dropdown-item" th:if="${tasks.?[objectId == __${document.id}__].isEmpty()}" th:href="@{/doc/view/__${document.id}__}">
-                                    <span th:text="#{label.view}"></span>
-                                </a>
-
-                                <a class="dropdown-item" th:if="${!tasks.?[objectId == __${document.id}__].isEmpty()}" th:href="@{/doc/edit/__${document.id}__}">
-                                    <span th:text="#{label.open}"></span>
-                                </a>
-
-                                <a class="openact dropdown-item" th:if="${document.documentState.ordinal() == 5}" th:href="@{/doc/save/__${document.id}__}" sec:authorize="hasAnyAuthority('PERM_REGISTER_OUTGOINGDOC')">
-                                    <span>Зарегистрировать</span>
-                                </a>
-                            </div>
-                        </div>
-                    </span>
-                </td>
-                <td th:text="${document.docIndex}"></td>
-                <td th:utext="${!document.senderRegisteredNumber.isEmpty() ? document.senderRegisteredNumber + '<hr>' + #dates.format(document.senderRegisteredDate, 'dd-MM-yyyy') : ''}"></td>
-                <td th:text="${document.title}"></td>
-                <td th:text="${document.documentState.text()}"></td>
-                <td th:text="${document.owner.staff.name}">ГАУБК при МФ КР</td>
-                <td>
-                    <br>
-                    <p th:if="${document.receiverResponsible.responsibleType == 3}" th:each="ro : ${document.receiverResponsible.organizations}" th:utext="${ro.name}"> </p>
-                    <p th:if="${document.receiverResponsible.responsibleType == 4}" th:each="rp : ${document.receiverResponsible.person}" th:utext="${rp.name}"> </p>
-                </td>
-                <td th:utext="${document.indexNo  + '<hr>' + document.pageCount}"></td>
-            </tr>
-            </tbody>
         </table>
     </th:block>
     <th:block th:fragment="notificationIndex">
-        <table class="table table-bordered table-hover" id="documentTable">
-            <thead class="thead-default">
+        <table class="table table-bordered" id="documentTable">
+            <thead class="bg-info text-center">
             <tr>
-                <th width="30px">*</th>
-                <th width="30px"></th>
-                <th width="120px">Исх. № <br> Дата</th>
-                <th th:utext="#{label.document.title}">Относительно</th>
-                <th th:text="#{label.document.generalStatus}">Состояние</th>
-                <th th:text="#{label.document.executer}">Исполнитель</th>
-                <th th:text="#{label.document.receiver}">Получатель</th>
-                <th width="120px" th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|">Номер бланка</th>
+                <th width="33px"></th>
+                <th width="33px"></th>
+                <th width="33px"></th>
+                <th width="70px" class="searchable ti">№</th>
+                <th width="120px" class="searchable ti">Исх. №</th>
+                <th width="50px" class="searchable di">Дата</th>
+                <th th:utext="#{label.document.documentSubType}" class="searchable sid">Тип документа</th>
+                <th th:utext="#{label.document.title}" class="searchable ti">Относительно</th>
+                <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
+                <th th:text="#{label.document.executer}" class="searchable ti">Исполнитель</th>
+                <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
+                <th th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|" class="searchable ti">Номер бланка</th>
             </tr>
             </thead>
-            <tbody>
-            <tr th:each="document, i : ${documents}">
-                <td class="table-actions text-left">
-                    <span>
-                        <div class="dropdown">
-                            <a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown"><i class="la la-ellipsis-h"></i></a>
-                            <div class="dropdown-menu dropdown-menu-left">
-
-                                <a class="dropdown-item" th:if="${tasks.?[objectId == __${document.id}__].isEmpty()}" th:href="@{/doc/view/__${document.id}__}">
-                                    <span th:text="#{label.view}"></span>
-                                </a>
-
-                                <a class="dropdown-item" th:if="${!tasks.?[objectId == __${document.id}__].isEmpty()}" th:href="@{/doc/edit/__${document.id}__}">
-                                    <span th:text="#{label.open}"></span>
-                                </a>
-
-                                <a class="openact dropdown-item" th:if="${document.documentState.ordinal() == 5}" th:href="@{/doc/save/__${document.id}__}" sec:authorize="hasAnyAuthority('PERM_REGISTER_OUTGOINGDOC')">
-                                    <span>Зарегистрировать</span>
-                                </a>
-                            </div>
-                        </div>
-                    </span>
-                </td>
-                <td th:text="${document.docIndex}"></td>
-                <td th:utext="${!document.senderRegisteredNumber.isEmpty() ? document.senderRegisteredNumber + '<hr>' + #dates.format(document.senderRegisteredDate, 'dd-MM-yyyy') : ''}"></td>
-                <td th:text="${document.title}"></td>
-                <td th:text="${document.documentState.text()}"></td>
-                <td th:text="${document.owner.staff.name}">ГАУБК при МФ КР</td>
-                <td>
-                    <br>
-                    <p th:if="${document.receiverResponsible.responsibleType == 3}" th:each="ro : ${document.receiverResponsible.organizations}" th:utext="${ro.name}"> </p>
-                    <p th:if="${document.receiverResponsible.responsibleType == 4}" th:each="rp : ${document.receiverResponsible.person}" th:utext="${rp.name}"> </p>
-                </td>
-                <td th:utext="${document.indexNo  + '<hr>' + document.pageCount}"></td>
-            </tr>
-            </tbody>
         </table>
     </th:block>
     <th:block th:fragment="contractIndex">
-        <table class="table table-bordered table-hover" id="documentTable">
-            <thead class="thead-default">
+        <table class="table table-bordered" id="documentTable">
+            <thead class="bg-info text-center">
             <tr>
-                <th width="30px">*</th>
-                <th width="30px"></th>
-                <th width="120px">Исх. № <br> Дата</th>
-                <th th:utext="#{label.document.title}">Относительно</th>
-                <th th:text="#{label.document.generalStatus}">Состояние</th>
-                <th th:text="#{label.document.executer}">Исполнитель</th>
-                <th th:text="#{label.document.receiver}">Получатель</th>
-                <th width="120px" th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|">Номер бланка</th>
+                <th width="33px"></th>
+                <th width="33px"></th>
+                <th width="33px"></th>
+                <th width="70px" class="searchable ti">№</th>
+                <th width="120px" class="searchable ti">Исх. №</th>
+                <th width="50px" class="searchable di">Дата</th>
+                <th th:utext="#{label.document.documentSubType}" class="searchable sid">Тип документа</th>
+                <th th:utext="#{label.document.title}" class="searchable ti">Относительно</th>
+                <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
+                <th th:text="#{label.document.executer}" class="searchable ti">Исполнитель</th>
+                <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
+                <th th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|" class="searchable ti">Номер бланка</th>
             </tr>
             </thead>
-            <tbody>
-            <tr th:each="document, i : ${documents}">
-                <td class="table-actions text-left">
-                    <span>
-                        <div class="dropdown">
-                            <a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown"><i class="la la-ellipsis-h"></i></a>
-                            <div class="dropdown-menu dropdown-menu-left">
-
-                                <a class="dropdown-item" th:if="${tasks.?[objectId == __${document.id}__].isEmpty()}" th:href="@{/doc/view/__${document.id}__}">
-                                    <span th:text="#{label.view}"></span>
-                                </a>
-
-                                <a class="dropdown-item" th:if="${!tasks.?[objectId == __${document.id}__].isEmpty()}" th:href="@{/doc/edit/__${document.id}__}">
-                                    <span th:text="#{label.open}"></span>
-                                </a>
-
-                                <a class="openact dropdown-item" th:if="${document.documentState.ordinal() == 5}" th:href="@{/doc/save/__${document.id}__}" sec:authorize="hasAnyAuthority('PERM_REGISTER_OUTGOINGDOC')">
-                                    <span>Зарегистрировать</span>
-                                </a>
-                            </div>
-                        </div>
-                    </span>
-                </td>
-                <td th:text="${document.docIndex}"></td>
-                <td th:utext="${!document.senderRegisteredNumber.isEmpty() ? document.senderRegisteredNumber + '<hr>' + #dates.format(document.senderRegisteredDate, 'dd-MM-yyyy') : ''}"></td>
-                <td th:text="${document.title}"></td>
-                <td th:text="${document.documentState.text()}"></td>
-                <td th:text="${document.owner.staff.name}">ГАУБК при МФ КР</td>
-                <td>
-                    <br>
-                    <p th:if="${document.receiverResponsible.responsibleType == 3}" th:each="ro : ${document.receiverResponsible.organizations}" th:utext="${ro.name}"> </p>
-                    <p th:if="${document.receiverResponsible.responsibleType == 4}" th:each="rp : ${document.receiverResponsible.person}" th:utext="${rp.name}"> </p>
-                </td>
-                <td th:utext="${document.indexNo  + '<hr>' + document.pageCount}"></td>
-            </tr>
-            </tbody>
         </table>
     </th:block>
 

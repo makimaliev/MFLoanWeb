@@ -6,7 +6,11 @@
 <head>
     <title>MFLoan | Docflow</title>
     <div th:replace="fragments/header :: header-css"/>
-
+    <style>
+        .atta td {
+            border-bottom: 1px dashed #ccc;
+        }
+    </style>
 </head>
 <!-- end::Head -->
 
@@ -26,16 +30,16 @@
             <div class="m-content">
                 <div class="m-portlet m-portlet--full-height m--bg-fill-light">
 
-                    <form th:action="@{/doc/save}" id="document_form" class="m-form m-form--fit m-form--label-align-right" th:object="${document}" method="POST" enctype="multipart/form-data">
                         <div class="m-portlet__head">
                             <div class="m-portlet__head-caption">
                                 <div class="m-portlet__head-title">
-                                    <h3 class="m-portlet__head-text" th:text="*{id == 0} ? 'Новый ' + *{documentType.name} + ' документ' : *{documentType.name} + ' документ'"></h3>
+                                    <h3 class="m-portlet__head-text" th:text="${document.id == 0} ? 'Новый ' + ${document.documentType.name} + ' документ' : ${document.documentType.name} + ' документ'"></h3>
                                 </div>
                             </div>
                         </div>
                         <div class="m-portlet__body">
-                            <div class="m-scrollable" data-scrollbar-shown="true"  data-axis="y"  data-height="200">
+                            <form th:action="@{/doc/save}" id="document_form" class="m-form m-form--fit m-form--label-align-right" th:object="${document}" method="POST" enctype="multipart/form-data">
+                                <div class="m-scrollable" data-scrollbar-shown="true"  data-axis="y"  data-height="200">
                                 <!--begin::Form-->
                                 <th:block th:replace="doc/layout::hiddenFields"/>
                                 <div class="row ">
@@ -51,9 +55,7 @@
                                         <div class="tab-content" id="nav-tabContent">
                                             <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="nav-main-tab">
                                                 <div class="col-10 justify-content-center">
-                                                    <!-- Document Subtype -->
                                                     <th:block th:replace="doc/document/editcontent::__${document.documentType.internalName}__"/>
-
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="nav-history-tab">
@@ -68,13 +70,13 @@
                                 </div>
                                 <!--end::Form-->
                             </div>
+                            </form>
                         </div>
                         <div class="m-portlet__foot">
                             <button type="button" class="btn btn-primary float-none" onclick="window.history.back()"> Отмена </button>
-                            <button type="submit" name="action" th:if="*{id != 0 and documentState.ordinal() < 8}" value="UPDATE" class="btn btn-info float-none" sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')"> Сохранить </button>
+                            <button type="submit" name="action" form="document_form" th:if="${document.id != 0 and document.documentState.ordinal() < 8}" value="UPDATE" class="btn btn-info float-none" sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')"> Сохранить </button>
                             <th:block th:replace="doc/layout::documentActions"/>
                         </div>
-                    </form>
 
                 </div>
             </div>
@@ -85,17 +87,12 @@
     <div th:replace="layout/footer"/>
     <!-- end::Footer -->
 </div>
-<div class="m-scroll-top m-scroll-top--skin-top" data-toggle="m-scroll-top" data-scroll-offset="500" data-scroll-speed="300">
-    <i class="la la-arrow-up"></i>
-</div>
-<div th:replace="fragments/footer :: footer-js"/>
 
+<div th:replace="fragments/footer :: footer-js"/>
 
 <script th:src="@{/assets/global/plugins/ckeditor/ckeditor.js}" type="text/javascript"></script>
 
 <th:block th:replace="doc/layout::script"/>
-
-<!--begin::Page Resources -->
 
 <div class="modal fade" id="pick" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -139,24 +136,6 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="attachment" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Прикрепление</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="/doc/attachments/upload" class="dropzone" id="dz"></form>
-            </div>
-            <div class="modal-footer">
-                <button type="reset" class="btn btn-secondary" form="dz" data-dismiss="modal">Закрыть</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script type="text/javascript" th:inline="javascript">
 
@@ -164,9 +143,33 @@
         $('#pick').modal('hide')
     }
 
-    var dto = [[${dto}]]
+    //var dto = [[${dto}]]
 
     $(document).ready(function() {
+
+        CKEDITOR.replaceClass = 'ckeditor';
+        CKEDITOR.config.readOnly = [[${document.documentState.ordinal()}]] > 1;
+        CKEDITOR.config.language = 'ru';
+        CKEDITOR.config.uiColor = '#ffffff';
+        CKEDITOR.config.toolbar = [
+            { name: 'clipboard', groups: [ 'clipboard' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteFromWord' ] },
+            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
+            { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+            { name: 'insert', items: [ 'Image', 'Table' ] },
+            { name: 'styles', items: [ 'Font', 'FontSize' ] },
+            { name: 'tools', items: [ 'Maximize' ] }
+        ];
+        CKEDITOR.config.toolbarGroups = [
+            { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+            { name: 'forms' },
+            '/',
+            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+            { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align' ] },
+            { name: 'insert' },
+            '/',
+            { name: 'styles' },
+            { name: 'tools' }
+        ];
 
         $('#documentLinks').select2();
 
@@ -187,12 +190,14 @@
 
             $('#si' + $('#srt_select').val()).show();
             $('#ri' + $('#rrt_select').val()).show();
-
+            /*
             if(dto !== "incoming" && $('#id').val() === 0) {
                 $('#si' + $('#srt_select').val() + ' .s2').prop('required', true);
             }
+            */
 
             $('#ri' + $('#rrt_select').val() + ' .s2').prop('required', true);
+
         }
 
         $('#srt_select').change(function(){
@@ -274,6 +279,7 @@
         }
 
         function formatState (state) {
+            console.log(state)
             if (!state.id) {
                 return state.text;
             }
@@ -307,7 +313,6 @@
                 processResults: function (data) {
 
                     return {
-
                         results : data
                     };
                 }
@@ -320,71 +325,6 @@
 
     });
 
-    Dropzone.autoDiscover = false;
-    var myDropzone = new Dropzone("#dz", {
-
-            createImageThumbnails: false,
-            dictDefaultMessage: "Добавить",
-            previewTemplate:
-            '<div class="row p-2">' +
-            '   <div class="col-7"><span data-dz-name></span></div>' +
-            '   <div class="col-3" data-dz-size></div>' +
-            '   <div class="col-2 dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>\n' +
-            '</div>',
-            init: function() {
-                /*
-                this.on("removedfile", function(file) {
-                    $.ajax({
-                        url: "/doc/attachments/delete/" + file.previewElement.id,
-                        success: function(result){
-                            $("#tr" + file.previewElement.id).remove();
-                            $("#a" + file.previewElement.id).remove();
-                        }
-                    });
-                });
-                */
-                /*
-                this.on("complete", function(file) {
-                    myDropzone.removeFile(file);
-                });
-                */
-            },
-            success: function (file, response) {
-                file.previewElement.classList.add("dz-success");
-                file.previewElement.id = response.id;
-                attachmentHandler(response);
-                addFile(response);
-            },
-            error: function (file, response) {
-                file.previewElement.classList.add("dz-error");
-            }
-        });
-
-    function attachmentHandler(file) {
-        var a = document.createElement("input");
-        a.setAttribute("type", "hidden");
-        a.setAttribute("id", "a" + file.id);
-        a.setAttribute("name", "files");
-        a.setAttribute("value", file.id);
-        document.getElementById("attachmentList").appendChild(a);
-    }
-    function addFile(file) {
-
-        var tr = document.createElement("tr");
-            tr.setAttribute("id", "tr" + file.id);
-        var td = document.createElement("td");
-        var a = document.createElement("a");
-            a.setAttribute("href", "/doc/attachments/download/" + file.id)
-        var info = document.createElement("label");
-            info.innerHTML = file.name;
-
-            tr.appendChild(td);
-            td.appendChild(a);
-            a.appendChild(info)
-
-        var da = document.getElementById("documentAttachments");
-            da.appendChild(tr);
-    }
     function documentLinkHandler(documentId) {
         var a = document.createElement("input");
         a.setAttribute("type", "hidden");
@@ -393,10 +333,6 @@
         a.setAttribute("value", documentId);
         document.getElementById("documentList").appendChild(a);
     }
-
-    $('#attachment').on('hidden.bs.modal', function (e) {
-        myDropzone.removeAllFiles();
-    })
 
 </script>
 

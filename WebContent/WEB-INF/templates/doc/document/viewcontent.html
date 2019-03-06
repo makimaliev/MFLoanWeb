@@ -42,12 +42,7 @@
         <label class="col-3 col-form-label"> Приложения : </label>
         <div class="col-9">
             <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
-            <table id="documentAttachments" class="form-control">
-                <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
-                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
-                </tr>
-            </table>
-
+            <table id="documentAttachments" class="atta" style="width: 100%"></table>
         </div>
     </div>
     <!-- Document Due Date -->
@@ -83,6 +78,7 @@
         <div class="col-sm-9">
             <label class="form-control" th:each="s : *{senderResponsible?.organizations}" th:text="${s?.name}"> Staff </label>
             <label class="form-control" th:each="s : *{senderResponsible?.person}" th:text="${s?.name}"> Staff </label>
+            <label class="form-control" th:text="*{senderResponsible?.responsibleName}" th:if="*{documentState.ordinal() != 0}"> Title </label>
         </div>
     </div>
     <div class="form-group m-form__group row">
@@ -90,7 +86,7 @@
             <span></span>
         </label>
         <div class="col-sm-9">
-            <label class="form-control" th:text="*{senderResponsible?.responsibleName}" th:if="*{documentState.ordinal() != 0}"> Title </label>
+
         </div>
     </div>
     <!-- Sender Registration Data -->
@@ -151,11 +147,7 @@
         <label class="col-3 col-form-label"> Приложения : </label>
         <div class="col-9">
             <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
-            <table id="documentAttachments" class="form-control">
-                <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
-                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
-                </tr>
-            </table>
+            <table id="documentAttachments" class="atta" style="width: 100%"></table>
         </div>
     </div>
     <!-- Document Link  sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')" -->
@@ -164,8 +156,8 @@
             <span> Ссылка на документ : </span>
         </label>
         <div class="col-9">
-            <p th:each="d : *{documentLinks}">
-                <a th:href="@{/doc/view/__${d}__}"+><span th:utext="${@documentServiceImpl.getById(__${d}__).documentSubType.name + ' №' + @documentServiceImpl.getById(__${d}__).senderRegisteredNumber + ' от :' + #dates.format(@documentServiceImpl.getById(__${d}__).senderRegisteredDate, 'dd-MM-yyyy')}"></span></a>
+            <p th:each="d : *{documentLinks}" style="border-bottom: 1px dashed #ccc;">
+                <a th:href="@{/doc/view/__${d}__}"+><span th:utext="${@documentServiceImpl.getById(__${d}__).documentSubType.name + ' №' + @documentServiceImpl.getById(__${d}__).senderRegisteredNumber}"></span></a>
             </p>
         </div>
     </div>
@@ -261,11 +253,7 @@
         <label class="col-3 col-form-label"> Приложения : </label>
         <div class="col-9">
             <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
-            <table id="documentAttachments" class="form-control">
-                <tr th:if="*{not #lists.isEmpty(attachments)}" th:each="attachment : *{attachments}">
-                    <td><a th:href="@{/doc/attachments/download/__${attachment.id}__}"><label th:text="${attachment.name}"></label></a></td>
-                </tr>
-            </table>
+            <table id="documentAttachments" class="atta" style="width: 100%"></table>
         </div>
     </div>
 </th:block>

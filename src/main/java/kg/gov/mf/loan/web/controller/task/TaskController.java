@@ -31,13 +31,10 @@ public class TaskController {
             put(">=", "Больше или Равно");
             put("<=", "Меньше или Равно");
             put("LIKE", "Like");
+            put("NOT LIKE", "NOT Like");
 
-            put("NOT", "Не");
-
-            put("ALL", "Все");
-            put("SOME", "Some");
-            put("ANY", "Any");
             put("EXISTS", "Exists");
+            put("NOT EXISTS", "NOT Exists");
 
             put("AND", "И");
             put("OR", "Или");

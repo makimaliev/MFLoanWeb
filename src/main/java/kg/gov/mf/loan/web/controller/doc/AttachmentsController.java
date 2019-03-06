@@ -18,8 +18,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLConnection;
-import java.util.Iterator;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @RequestMapping("/doc/attachments")
@@ -67,7 +66,7 @@ public class AttachmentsController extends BaseController {
 
                 attachmentService.add(attachment);
 
-                if(documentId != null)
+                if(documentId != 0)
                 {
                     Document document = documentService.getById(documentId);
                     document.getAttachments().add(attachment);
@@ -102,15 +101,31 @@ public class AttachmentsController extends BaseController {
         FileCopyUtils.copy(inputStream, response.getOutputStream());
     }
 
-    @RequestMapping(value = "/delete/{attachmentId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete/{docId}/{attachmentId}", method = RequestMethod.GET)
     @ResponseBody
-    public String delete(@PathVariable("attachmentId") Long attachmentId) {
+    public String delete(@PathVariable("docId") Long docId, @PathVariable("attachmentId") Long attachmentId) {
+
+        if(docId != 0) {
+            Document document = documentService.getById(docId);
+
+            Set<Attachment> attachments = document.getAttachments();
+            Set<Attachment> newAttachmentList = new HashSet<>();
+
+            for (Attachment a : attachments) {
+                if (a.getId() != attachmentId) {
+                    newAttachmentList.add(a);
+                }
+            }
+
+            document.setAttachments(newAttachmentList);
+            documentService.update(document);
+        }
 
         Attachment attachment = attachmentService.getById(attachmentId);
         File file = new File(path + attachment.getInternalName());
         file.delete();
-
         attachmentService.remove(attachment);
+
         return "OK";
     }
 }
