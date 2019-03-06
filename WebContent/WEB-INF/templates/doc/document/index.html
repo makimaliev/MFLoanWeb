@@ -138,9 +138,7 @@
 </script>
 <script type="text/javascript" th:inline="javascript">
 
-    var tasks = [[${tasks}]];
     var tsList = [[${tsList}]];
-
     var type = [[${type}]]
     var states = [[${states}]];
     var documentSubTypes = [[${dtypes}]];
@@ -383,7 +381,8 @@
             data: 'id',
             name: 'id',
             render: function (data) {
-                return tasks.includes(data)
+                var e = tsList.filter(function(t){ return t.id === data });
+                return e.length !== 0
                     ? '<a  href="/doc/edit/'+ data +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать "><i class="la la-edit"></i></a>'
                     : '<a  href="/doc/view/'+ data +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Просмотр "><i class="la la-arrow-circle-o-right"></i></a>';
             }
