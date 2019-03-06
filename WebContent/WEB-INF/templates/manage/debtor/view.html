@@ -342,6 +342,24 @@
 								<!--begin: Datatable -->
 								<div class="m_datatable" id="loansTable"></div>
 								<!--end: Datatable -->
+                                <div id="calculation_result_content" class="row">
+                                    <div class="col-md-12">
+                                        <div id="content"></div>
+                                    </div>
+                                </div>
+
+                                <div id="phaseDetailsDiv" class="collapse" >
+                                    <div class="m-portlet__body  m-portlet__body--no-padding">
+                                        <div class="col m-col--no-padding ">
+                                            <div class="portlet">
+                                                <div class="m_datatable" id="phaseDetailsTable"></div>
+                                                <div >
+                                                    <button class="btn btn-sm btn-accent" type="button" id="initPhaseSaveBtn" th:text="#{label.save}"></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 							</div>
 							<div id="agreementListOfDebtor" class="tab-pane"  role="tabpanel">
 								<!--begin: Search Form -->
@@ -431,27 +449,15 @@
 								</table>
 
 
+                                <div id="inspection_act_content" class="row">
+                                    <div class="col-md-12">
+                                        <div id="content_inspection"></div>
+                                    </div>
+                                </div>
 								<!--end: Datatable -->
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-			<div id="phaseDetailsDiv" class="collapse" >
-				<div class="m-portlet__body  m-portlet__body--no-padding">
-					<div class="col m-col--no-padding ">
-						<div class="portlet">
-							<div class="m_datatable" id="phaseDetailsTable"></div>
-							<div >
-								<button class="btn btn-sm btn-accent" type="button" id="initPhaseSaveBtn" th:text="#{label.save}"></button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div id="calculation_result_content" class="row">
-				<div class="col-md-12">
-					<div id="content"></div>
 				</div>
 			</div>
 			</div>
@@ -486,6 +492,8 @@
     // var jsonAgreements = /*[[${agreements}]]*/ [];
     // var jsonProcs = /*[[${procs}]]*/ [];
     var jsonLoans;
+
+    var summaryAct;
 
     var isCalculationSaved = false;
     var jsonAgreements;
@@ -532,11 +540,12 @@
 
             var rowData = datatable.row(cell.index().row).data();
             // console.log(rowData[2]);
+            summaryAct=rowData[2];
 
             var sUrl ="/manage/debtor/"+debtorId+"/loan/summary/act/" + rowData[2]+"/view";
 
             $.get(sUrl, function(data) {
-                $('#content').html(data);
+                $('#content_inspection').html(data);
             });
 
             var row = datatable.row( cell.index().row );

@@ -719,6 +719,7 @@ public class DebtorController {
 		model.addAttribute("totals", sumLoanSummary);
 		model.addAttribute("isSaved", "");
 
+		model.addAttribute("fromLoanList","true");
 		LoanSummaryAct loanSummaryAct = new LoanSummaryAct();
 		loanSummaryAct.setLoanSummaries(loanSummarySet);
 		loanSummaryAct.setLoanSummaryActState(loanSummaryActStateService.getById(Long.valueOf(1)));

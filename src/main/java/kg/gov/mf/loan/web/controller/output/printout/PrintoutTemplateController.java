@@ -4,6 +4,9 @@ import com.lowagie.text.Document;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.rtf.RtfWriter2;
+import kg.gov.mf.loan.manage.model.loan.LoanSummaryAct;
+import kg.gov.mf.loan.manage.model.process.LoanSummary;
+import kg.gov.mf.loan.manage.service.loan.LoanSummaryActService;
 import kg.gov.mf.loan.output.printout.model.Printout;
 import kg.gov.mf.loan.output.printout.model.PrintoutTemplate;
 import kg.gov.mf.loan.output.printout.service.*;
@@ -37,6 +40,9 @@ public class PrintoutTemplateController {
 
 	@Autowired
     private PrintoutService printoutService;
+
+	@Autowired
+	LoanSummaryActService loanSummaryActService;
 
     public void setPrintoutTemplateService(PrintoutTemplateService rs)
     {
@@ -319,7 +325,7 @@ public class PrintoutTemplateController {
 
 
 
-                        printoutGeneratorLoanSummary.generatePrintoutByTemplate(printoutTemplate, onDate, object_id,document);
+                        printoutGeneratorLoanSummary.generatePrintoutByTemplate(printoutTemplate, onDate, object_id,document,"false");
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -416,7 +422,7 @@ public class PrintoutTemplateController {
 			response.setContentType("application/pdf");
 			response.setHeader("Content-disposition","attachment; filename=xx.pdf");
 
-			printoutGeneratorRevisionDoc.generatePrintoutByTemplate(printoutTemplate, onDate, object_id,document);
+			printoutGeneratorRevisionDoc.generatePrintoutByTemplate(printoutTemplate, onDate, object_id,document,"loan");
 
 
 
@@ -516,4 +522,67 @@ public class PrintoutTemplateController {
 
 
 	}
+
+	@RequestMapping("/printoutType/act/{id}/generate")
+	public void printForAct(@PathVariable("id") long id,
+							HttpServletResponse response){
+
+		try {
+			PrintoutTemplate printoutTemplate = new PrintoutTemplate();
+
+			PrintoutGeneratorLoanSummary printoutGeneratorLoanSummary = new PrintoutGeneratorLoanSummary();
+
+			Document document = new Document(PageSize.A4.rotate(), 10, 10, 10, 10);
+
+			PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
+
+			response.setContentType("application/pdf");
+			response.setHeader("Content-disposition","attachment; filename=xx.pdf");
+
+			LoanSummaryAct loanSummaryAct=loanSummaryActService.getById(id);
+
+
+			printoutGeneratorLoanSummary.generatePrintoutByTemplate(printoutTemplate, loanSummaryAct.getOnDate(), id,document,"true");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@RequestMapping("/printoutType/summary/act/{id}/generate")
+	public void generatePrintoutByType1(@PathVariable("id") long id,
+										HttpServletResponse response) {
+		try {
+
+			PrintoutGeneratorRevisionDoc printoutGeneratorRevisionDoc= new PrintoutGeneratorRevisionDoc();
+
+			PrintoutTemplate printoutTemplate = new PrintoutTemplate();
+
+			SimpleDateFormat DateFormatShort = new SimpleDateFormat("dd.MM.yyyy");
+
+
+			Document document = new Document(PageSize.A4.rotate(), 10, 10, 10, 10);
+
+			PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
+
+			response.setContentType("application/pdf");
+			response.setHeader("Content-disposition","attachment; filename=xx.pdf");
+
+			LoanSummaryAct loanSummaryAct = loanSummaryActService.getById(id);
+
+			printoutGeneratorRevisionDoc.generatePrintoutByTemplate(printoutTemplate, loanSummaryAct.getOnDate(), id,document,"act");
+
+
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
+
+
+	}
+
 }

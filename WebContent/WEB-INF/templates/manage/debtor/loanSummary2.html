@@ -651,11 +651,18 @@
                     </div>
                     <div id="button_panel">
 
-                        <button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="btn_generate_type_4">
+                        <button th:if="${fromLoanList}=='true'" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="btn_generate_type_4">
                             Акт сверки
                         </button>
 
-                        <button class="btn btn-sm btn-accent" type="button" id="btn_generate_type_1">
+                        <button th:if="${fromLoanList}!='true'" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="btn_generate_type_5">
+                            Акт сверки
+                        </button>
+
+                        <button th:if="${fromLoanList}=='true'" class="btn btn-sm btn-accent" type="button" id="btn_generate_type_1">
+                            Расчет задолжности
+                        </button>
+                        <button th:if="${fromLoanList}!='true'" class="btn btn-sm btn-accent" type="button" id="btn_generate_type_6">
                             Расчет задолжности
                         </button>
                     </div>
@@ -778,6 +785,20 @@
 
     });
 
+    $("#btn_generate_type_5").on("click",function () {
+
+
+        // $("#showSummaries").submit();
+        var sUrl ="/printoutType/act/"+summaryAct+"/generate";
+
+        // $.get(sUrl, function(data) {
+        //     $('#content').html(data);
+        // });
+
+        window.location.href = sUrl;
+
+    });
+
     $("#btn_generate_type_1").on("click",function () {
 
         var initDate = $("#phaseInitDate").val();
@@ -794,6 +815,19 @@
         // $("#showSummaries").submit();
 
         var sUrl ="/printoutType/1/objectId/"+debtorId+"/generate?"+"name="+$("#selectedName").val()+"&date="+$("#dateOfSelected").val();
+
+        // $.get(sUrl, function(data) {
+        //     $('#content').html(data);
+        // });
+
+        window.location.href = sUrl;
+    });
+
+    $("#btn_generate_type_6").on("click",function () {
+
+
+
+        var sUrl ="/printoutType/summary/act/"+summaryAct+"/generate";
 
         // $.get(sUrl, function(data) {
         //     $('#content').html(data);

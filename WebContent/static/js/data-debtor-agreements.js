@@ -103,7 +103,6 @@ var DatatableDataLocalAgreements = function () {
                 field: "status",
                 title: "Статус",
                 template: function (row) {
-                    alert(row.status)
 
                     if(row.status!=2){
                         return '<span class="m-badge m-badge--success m-badge--wide"> Действует</span>';
