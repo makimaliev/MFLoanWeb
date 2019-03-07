@@ -310,6 +310,9 @@
 														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLECTIONPHASE')" class="btn btn-sm btn-accent" type="button" id="bnt_init_phase">
 															Претензия
 														</button>
+                                                    <button class="btn btn-sm btn-accent" type="button" id="bnt_init_debtor_info">
+                                                        Сведение
+                                                    </button>
 
 														<form id="checkedLoans" th:action="@{/manage/debtor/__${debtor.id}__/loan/summary/view}" method="get">
 															<input hidden="hidden" type="text" name="name" id="selectedLoanses">
@@ -573,6 +576,29 @@
     {
         window.location.href = debtorURL;
     }
+    $("#bnt_init_debtor_info").on("click",function () {
+
+        if (!$("#phaseInitDate").val())
+        {
+        }
+        else
+        {
+            var initDate = $("#phaseInitDate").val();
+            // console.log(selectedLoans);
+			var stringSelecteds="";
+			for (var i in selectedLoans){
+				stringSelecteds=stringSelecteds+"-"+i.toString();
+			}
+			$("#selectedLoanses").val(stringSelecteds.toString());
+			$("#selectedLoansesDate").val(initDate);
+			// $("#checkedLoans").submit();
+
+			var sUrl ="/printoutType/debtor/"+debtorId+"/generate?"+"name="+$("#selectedLoanses").val()+"&date="+$("#selectedLoansesDate").val();
+
+            window.location.href = sUrl;
+        }
+
+    });
     $("#bnt_init_manualCalculator_new").on('click',function () {
         // on checkbox checked event
         if (!$("#phaseInitDate").val())

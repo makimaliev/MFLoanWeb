@@ -585,4 +585,39 @@ public class PrintoutTemplateController {
 
 	}
 
+    @RequestMapping("/printoutType/debtor/{id}/generate")
+    public void generateDebtorInfo(@PathVariable("id") long id,  String date,  String name,
+                                        HttpServletResponse response) {
+        try {
+
+            PrintoutGeneratorRevisionDoc printoutGeneratorRevisionDoc= new PrintoutGeneratorRevisionDoc();
+
+            PrintoutTemplate printoutTemplate = new PrintoutTemplate();
+
+            SimpleDateFormat DateFormatShort = new SimpleDateFormat("dd.MM.yyyy");
+
+            printoutTemplate.setName(name);
+
+            Document document = new Document(PageSize.A4.rotate(), 25, 25, 10, 10);
+
+            PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
+
+            response.setContentType("application/pdf");
+            response.setHeader("Content-disposition","attachment; filename=xx.pdf");
+
+
+            printoutGeneratorRevisionDoc.generatePersonInfo(printoutTemplate, DateFormatShort.parse(date), id,document);
+
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+
+    }
+
 }

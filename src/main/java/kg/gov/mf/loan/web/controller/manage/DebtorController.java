@@ -947,6 +947,7 @@ public class DebtorController {
 		model.addAttribute("debtor",debtorService.getById(debtorId));
 		model.addAttribute("lists",summaries);
 		model.addAttribute("isCalculationSaved",true);
+		model.addAttribute("fromLoanList","false");
 
 		model.addAttribute("totals",sumLoanSummary);
 		model.addAttribute("isSaved", "");
@@ -1126,6 +1127,7 @@ public class DebtorController {
 			}
 			model.addAttribute("debtorId",debtorId);
 			model.addAttribute("debtor",debtorService.getById(debtorId));
+			model.addAttribute("fromLoanList","true");
 		model.addAttribute("lists",summaries);
 		model.addAttribute("isCalculationSaved",false);
 		model.addAttribute("totals",sumLoanSummary);
