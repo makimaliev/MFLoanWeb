@@ -103,17 +103,12 @@ public class PaymentController {
 			@PathVariable("debtorId")Long debtorId, 
 			@PathVariable("loanId")Long loanId,
 			@PathVariable("paymentId")Long paymentId) throws ParseException {
-		
+
+
+		Loan loan=loanService.getById(loanId);
+
 		if(paymentId == 0)
 		{
-			Loan loan=loanService.getById(loanId);
-			OrderTermCurrency orderTermCurrency=loan.getCurrency();
-			SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
-			Date today=new Date();
-			String currencyQuery="select c.id,c.rate,c.date,c.status,c.type_id,c.currency_type_id from currency_rate c where currency_type_id="+orderTermCurrency.getId()+" and date<='"+dt.format(today)+"' order by date desc";
-			Query query=entityManager.createNativeQuery(currencyQuery,CurrencyRate.class);
-			query.setMaxResults(1);
-			CurrencyRate currencyRate=(CurrencyRate) query.getSingleResult();
 			Payment payment=new Payment();
 			payment.setPaymentDate(new Date());
 			payment.setInterest(0.0);
@@ -123,7 +118,7 @@ public class PaymentController {
 			payment.setNumber("б/н");
 			payment.setDetails(" ");
 			payment.setFee(Double.valueOf(0));
-			payment.setExchange_rate(currencyRate.getRate());
+			payment.setExchange_rate(Double.valueOf(1));
 			payment.setPaymentType(pTypeService.getById(Long.valueOf(1)));
 			payment.setRecord_status(1);
 			model.addAttribute("payment", payment);
@@ -137,7 +132,6 @@ public class PaymentController {
 		List<PaymentType> pTypes = pTypeService.list();
         model.addAttribute("pTypes", pTypes);
 
-        Loan loan=loanService.getById(loanId);
         model.addAttribute("debtorId", debtorId);
         model.addAttribute("debtor", debtorService.getById(debtorId));
         model.addAttribute("loanId", loanId);
@@ -161,6 +155,20 @@ public class PaymentController {
     	{
 
     		Loan loan = loanService.getById(loanId);
+
+			if(loan.getCurrency().getId()>1)
+			{
+				OrderTermCurrency orderTermCurrency=loan.getCurrency();
+				SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+
+				String currencyQuery="select c.id,c.rate,c.date,c.status,c.type_id,c.currency_type_id from currency_rate c where currency_type_id="+orderTermCurrency.getId()+" and date<='"+dt.format(payment.getPaymentDate())+"' order by date desc";
+				Query query=entityManager.createNativeQuery(currencyQuery,CurrencyRate.class);
+				query.setMaxResults(1);
+				CurrencyRate currencyRate=(CurrencyRate) query.getSingleResult();
+
+				payment.setExchange_rate(currencyRate.getRate());
+
+			}
 
 			if(payment.getPaymentDate()==null)
 			{
@@ -208,8 +216,6 @@ public class PaymentController {
 			session.getTransaction().begin();
 			runUpdateOfPhases(loan);
 			session.getTransaction().commit();
-
-
 
 //			this.jobItemService.runDailyCalculateProcedureForOneLoan(loanId,new Date());
 
