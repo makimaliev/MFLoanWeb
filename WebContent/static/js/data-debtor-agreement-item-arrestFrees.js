@@ -44,9 +44,14 @@ var DatatableDataLocalItemArrestFrees = function () {
                 field: "onDate",
                 title: "Дата обследования"
             }, {
+                field: "document",
+                title: "Документ"
+            }, {
+                field: "based",
+                title: "На основании"
+            }, {
                 field: "details",
-                title: "Примечание",
-                width:450
+                title: "Примечание"
             }, {
                 field: "arrestFreeBy",
                 title: "Снято"

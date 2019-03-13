@@ -10,6 +10,8 @@ import java.util.Locale;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.admin.org.model.Staff;
+import kg.gov.mf.loan.admin.org.service.StaffService;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collateral.*;
@@ -76,6 +78,9 @@ public class CollateralItemController {
 
 	@Autowired
 	OwnerService ownerService;
+
+	@Autowired
+	StaffService staffService;
 
 
 	@InitBinder
@@ -628,11 +633,15 @@ public class CollateralItemController {
         CollateralItemArrestFree temp = item.getCollateralItemArrestFree();
         if(temp!=null)
 		{
+			User user=userService.findById(temp.getArrestFreeBy());
+			Staff staff=staffService.findById(user.getStaff().getId());
 			ItemArrestFreeModel model = new ItemArrestFreeModel();
 			model.setId(temp.getId());
 			model.setOnDate(temp.getOnDate());
-			model.setArrestFreeBy(temp.getArrestFreeBy());
+			model.setArrestFreeBy(staff.getName());
 			model.setDetails(temp.getDetails());
+			model.setBased(temp.getBased());
+			model.setDocument(temp.getDocument());
 			result.add(model);
 		}
 

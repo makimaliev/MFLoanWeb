@@ -15,9 +15,12 @@ public class ItemArrestFreeModel {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy", timezone = "Asia/Bishkek")
     private Date onDate;
 
-    private long arrestFreeBy;
+    private String arrestFreeBy;
 
     private String details;
+
+    private String document;
+    private String based;
 
     public Long getId() {
         return id;
@@ -35,11 +38,11 @@ public class ItemArrestFreeModel {
         this.onDate = onDate;
     }
 
-    public long getArrestFreeBy() {
+    public String getArrestFreeBy() {
         return arrestFreeBy;
     }
 
-    public void setArrestFreeBy(long arrestFreeBy) {
+    public void setArrestFreeBy(String arrestFreeBy) {
         this.arrestFreeBy = arrestFreeBy;
     }
 
@@ -49,5 +52,21 @@ public class ItemArrestFreeModel {
 
     public void setDetails(String details) {
         this.details = details;
+    }
+
+    public String getDocument() {
+        return document;
+    }
+
+    public void setDocument(String document) {
+        this.document = document;
+    }
+
+    public String getBased() {
+        return based;
+    }
+
+    public void setBased(String based) {
+        this.based = based;
     }
 }
