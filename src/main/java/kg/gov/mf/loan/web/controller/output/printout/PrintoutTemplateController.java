@@ -207,7 +207,7 @@ public class PrintoutTemplateController {
 
 						PrintoutGeneratorPaymentSummary printoutGeneratorPaymentSummary = new PrintoutGeneratorPaymentSummary();
 
-						Document document = new Document(PageSize.A4, 10, 10, 10, 10);
+						Document document = new Document(PageSize.A4, 25, 25, 10, 10);
 
 						PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
 
@@ -240,7 +240,7 @@ public class PrintoutTemplateController {
 
 						PrintoutGeneratorCreditNotification printoutGeneratorCreditNotification= new PrintoutGeneratorCreditNotification();
 
-						Document document = new Document(PageSize.A4, 10, 10, 10, 10);
+						Document document = new Document(PageSize.A4, 25, 25, 10, 10);
 
 						PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
 
@@ -266,7 +266,7 @@ public class PrintoutTemplateController {
 
 						PrintoutGeneratorLoanDetailedSummary printoutGeneratorLoanDetailedSummary= new PrintoutGeneratorLoanDetailedSummary();
 
-						Document document = new Document(PageSize.A4.rotate(), 10, 10, 10, 10);
+						Document document = new Document(PageSize.A4.rotate(), 25, 25, 10, 10);
 
 						PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
 
@@ -293,7 +293,7 @@ public class PrintoutTemplateController {
 
 						PrintoutGeneratorCreditClaim printoutGeneratorCreditClaim= new PrintoutGeneratorCreditClaim();
 
-						Document document = new Document(PageSize.A4.rotate(), 10, 10, 10, 10);
+						Document document = new Document(PageSize.A4.rotate(), 25, 25, 10, 10);
 
 						PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
 
@@ -316,7 +316,7 @@ public class PrintoutTemplateController {
 
                         PrintoutGeneratorLoanSummary printoutGeneratorLoanSummary = new PrintoutGeneratorLoanSummary();
 
-                        Document document = new Document(PageSize.A4.rotate(), 10, 10, 10, 10);
+                        Document document = new Document(PageSize.A4.rotate(), 25, 25, 10, 10);
 
                         PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
 
@@ -341,7 +341,7 @@ public class PrintoutTemplateController {
 
 						PrintoutGeneratorPhaseSummary printoutGeneratorPhaseSummary = new PrintoutGeneratorPhaseSummary();
 
-						Document document = new Document(PageSize.A4, 10, 10, 10, 10);
+						Document document = new Document(PageSize.A4, 25, 25, 10, 10);
 
 
 						RtfWriter2 rtfWriter2 = RtfWriter2.getInstance(document,response.getOutputStream());
@@ -379,7 +379,7 @@ public class PrintoutTemplateController {
 
 			PrintoutGeneratorCreditNotification printoutGeneratorCreditNotification= new PrintoutGeneratorCreditNotification();
 
-			Document document = new Document(PageSize.A4, 10, 10, 10, 10);
+			Document document = new Document(PageSize.A4, 25, 25, 10, 10);
 
 			PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
 
@@ -415,7 +415,7 @@ public class PrintoutTemplateController {
 			Date onDate = DateFormatShort.parse(date);
 
 
-			Document document = new Document(PageSize.A4.rotate(), 10, 10, 10, 10);
+			Document document = new Document(PageSize.A4.rotate(), 25, 25, 10, 10);
 
 			PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
 
@@ -443,7 +443,7 @@ public class PrintoutTemplateController {
 
             PrintoutGeneratorPhaseSummary printoutGeneratorPhaseSummary= new PrintoutGeneratorPhaseSummary();
 
-            Document document = new Document(PageSize.A4, 20, 20, 10, 10);
+            Document document = new Document(PageSize.A4, 25, 25, 10, 10);
 
 //            PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
 
@@ -473,7 +473,7 @@ public class PrintoutTemplateController {
 
             PrintoutGeneratorCreditClaim printoutGeneratorCreditClaim= new PrintoutGeneratorCreditClaim();
 
-            Document document = new Document(PageSize.A4, 20, 20, 10, 10);
+            Document document = new Document(PageSize.A4, 25, 25, 10, 10);
 
 			RtfWriter2 rtfWriter2 = RtfWriter2.getInstance(document,response.getOutputStream());
 
@@ -532,7 +532,7 @@ public class PrintoutTemplateController {
 
 			PrintoutGeneratorLoanSummary printoutGeneratorLoanSummary = new PrintoutGeneratorLoanSummary();
 
-			Document document = new Document(PageSize.A4.rotate(), 10, 10, 10, 10);
+			Document document = new Document(PageSize.A4.rotate(), 25, 25, 10, 10);
 
 			PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
 
@@ -562,7 +562,7 @@ public class PrintoutTemplateController {
 			SimpleDateFormat DateFormatShort = new SimpleDateFormat("dd.MM.yyyy");
 
 
-			Document document = new Document(PageSize.A4.rotate(), 10, 10, 10, 10);
+			Document document = new Document(PageSize.A4.rotate(), 25, 25, 10, 10);
 
 			PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
 
@@ -620,4 +620,57 @@ public class PrintoutTemplateController {
 
     }
 
+
+	@RequestMapping("/printoutTemplate/kg/objectId/{object_id}/generate")
+	public void generateKyrgyz(@PathVariable("object_id") long object_id, String date,  String name,
+							   HttpServletResponse response){
+
+		try
+		{
+
+
+			PrintoutTemplate printoutTemplate = this.printoutTemplateService.findById(Long.valueOf(4));
+
+
+			SimpleDateFormat DateFormatShort = new SimpleDateFormat("dd.MM.yyyy");
+
+			if(name!=null&& !name.equals("loanId"))
+			{
+				printoutTemplate.setName(name);
+			}
+
+
+			Date onDate = null;
+
+			if(date!=null)
+				onDate = DateFormatShort.parse(date);
+
+
+
+					try {
+
+						PrintoutGeneratorLoanSummary printoutGeneratorLoanSummary = new PrintoutGeneratorLoanSummary();
+
+						Document document = new Document(PageSize.A4.rotate(), 25, 25, 10, 10);
+
+						PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
+
+						response.setContentType("application/pdf");
+						response.setHeader("Content-disposition","attachment; filename=xx.pdf");
+
+
+
+						printoutGeneratorLoanSummary.generatePrintoutByTemplateInKg(printoutTemplate, onDate, object_id,document,"false");
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+		}
+		catch (Exception ex)
+		{
+
+		}
+
+	}
 }

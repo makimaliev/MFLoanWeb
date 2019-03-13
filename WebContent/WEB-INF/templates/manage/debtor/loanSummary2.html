@@ -653,7 +653,9 @@
                         <button  sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="btn_generate_type_4">
                             Акт сверки
                         </button>
-
+                        <button sec:authorize="hasAnyAuthority('ADMIN')"  class="btn btn-sm btn-accent" type="button" id="btn_generate_type_5kg">
+                            Акт сверки 2
+                        </button>
                         <button class="btn btn-sm btn-accent" type="button" id="btn_generate_type_1">
                             Расчет задолжности
                         </button>
@@ -792,6 +794,32 @@
 
         // $("#showSummaries").submit();
         var sUrl ="/printoutType/act/"+summaryAct+"/generate";
+
+        // $.get(sUrl, function(data) {
+        //     $('#content').html(data);
+        // });
+
+        window.location.href = sUrl;
+
+    });
+
+    $("#btn_generate_type_5kg").on("click",function () {
+
+        var initDate = $("#phaseInitDate").val();
+        if(fromLoan==true){
+            $("#selectedName").val(loanId);
+        }
+        else{
+            var stringSelecteds="";
+            for (var i in selectedLoans){
+                stringSelecteds=stringSelecteds+"-"+i.toString();
+            }
+            $("#selectedName").val(stringSelecteds.toString());
+        }
+        $("#dateOfSelected").val(initDate);
+        // $("#showSummaries").submit();
+
+        var sUrl ="/printoutTemplate/kg/objectId/"+debtorId+"/generate?"+"name="+$("#selectedName").val()+"&date="+$("#dateOfSelected").val();
 
         // $.get(sUrl, function(data) {
         //     $('#content').html(data);

@@ -264,6 +264,55 @@
         pickerPosition: 'bottom-left'
     });
 </script>
+<script th:inline="javascript">
+    var ttt;
+    // sessionStorage.SessionName = "detor_name";
+    $("#debtor_name").on('input',function () {
+        sessionStorage.SessionName = "nameee";
+        sessionStorage.setItem("nameee",$("#debtor_name").val());
+        console.log(sessionStorage.getItem("nameee"));
+
+    });
+
+    $("#m_form_region").on('change',function () {
+        sessionStorage.SessionName = "regione";
+        sessionStorage.setItem("regione",$("#m_form_region").val());
+        console.log(sessionStorage.getItem("regione"));
+
+    });
+
+    $("#m_form_district").on('change',function () {
+        sessionStorage.SessionName = "districte";
+        sessionStorage.setItem("districte",$("#m_form_district").val());
+        console.log(sessionStorage.getItem("districte"));
+    });
+
+    $("#m_form_finGroup").on('change',function () {
+        sessionStorage.SessionName = "groupe";
+        sessionStorage.setItem("groupe",$("#m_form_finGroup").val());
+        console.log(sessionStorage.getItem("groupe"));
+    });
+
+
+    // $(document).ready(function() {
+    //     if (sessionStorage.getItem("debtorTab")) {
+    //         // alert(location.hash)
+    //         ttt=sessionStorage.getItem("debtorTab");
+    //         // alert(ttt);
+    //         $("a[href='" + ttt + "']").tab("show");
+    //         $(ttt.toString()+"Function").click();
+    //     }
+    //     $(document.body).on("click", "a[data-toggle]", function(event) {
+    //         var tabName = this.getAttribute("href");
+    //         sessionStorage.SessionName = "debtorTab";
+    //         sessionStorage.setItem("debtorTab",tabName);
+    //     });
+    // });
+    // $(window).on("popstate", function() {
+    //     var anchor = ttt || $("a[data-toggle='tab']").first().attr("href");
+    //     $("a[href='" + anchor + "']").tab("show");
+    // });
+</script>
 <script th:inline="javascript" >
 
     var loanTypes=/*[[${loanTypes}]]*/ [];
@@ -585,16 +634,36 @@
 
             var query = datatable.getDataSourceQuery();
 
+            if (sessionStorage.getItem("nameee")) {
+                // alert(sessionStorage.getItem("nameee"))
+                $("#debtor_name").val(sessionStorage.getItem("nameee"));
+                datatable.search(sessionStorage.getItem("nameee"), 'debtorName');
+            }
+
             $('#debtor_name').on('keyup', function () {
-                var counterOfDebtor=$('#debtor_name').val().length;
-                if(counterOfDebtor>=3 || counterOfDebtor==0){
+                var counterOfDebtor = $('#debtor_name').val().length;
+                if (counterOfDebtor >= 3 || counterOfDebtor == 0) {
                     datatable.search($(this).val(), 'debtorName');
                 }
-            }).val(typeof query.debtorName !== 'undefined' ? query.debtorName: '');
+            }).val(typeof query.debtorName !== 'undefined' ? query.debtorName : '');
+
+            if (sessionStorage.getItem("regione")) {
+                $("#m_form_region").val(sessionStorage.getItem("regione"));
+                console.log($("#m_form_region"));
+                $("#m_form_region").prop('selected', sessionStorage.getItem("regione"));
+                datatable.search(sessionStorage.getItem("regione"), 'regionId');
+
+            }
 
             $('#m_form_region').on('change', function () {
                 datatable.search($(this).val(), 'regionId');
             }).val(typeof query.regionId !== 'undefined' ? query.regionId : '');
+
+            if (sessionStorage.getItem("districte")) {
+                $("#m_form_district").val(sessionStorage.getItem("districte"));
+                datatable.search(sessionStorage.getItem("districte"), 'districtId');
+
+            }
 
             $('#m_form_district').on('change', function () {
                 datatable.search($(this).val(), 'districtId');
@@ -611,6 +680,12 @@
             $('#reg_number').on('keyup', function () {
                 datatable.search($(this).val(), 'regNumber');
             }).val(typeof query.regNumber!== 'undefined' ? query.regNumber: '');
+
+            if (sessionStorage.getItem("groupe")) {
+                $("#m_form_finGroup").val(sessionStorage.getItem("groupe"));
+                datatable.search(sessionStorage.getItem("groupe"), 'finGroupId');
+
+            }
 
             $('#m_form_finGroup').on('change', function () {
                 datatable.search($(this).val(), 'finGroupId');
