@@ -39,6 +39,7 @@
         <script type="text/javascript" th:inline="javascript">
 
             var docid = [[${document.id}]]
+            var uid = [[${uid}]]
 
             Dropzone.autoDiscover = false;
             var myDropzone = new Dropzone("#dz", {
@@ -75,39 +76,44 @@
             function addFile(file) {
 
                 var infof = document.createElement("label");
-                infof.setAttribute("class", "text-danger");
-                infof.setAttribute("style", "cursor: pointer;");
-                infof.innerHTML = "Удалить";
+                infof.innerHTML = file.name;
 
                 var af = document.createElement("a");
                 af.setAttribute("href", "/doc/attachments/download/" + file.id);
                 af.appendChild(infof);
 
                 var tdf = document.createElement("td");
-                tdf.setAttribute("style", "width: 10%");
                 tdf.appendChild(af);
 
-                var infod = document.createElement("label");
-                infod.innerHTML = file.name;
-
-                var ad = document.createElement("a");
-                ad.setAttribute("href", "/doc/attachments/delete/" + docid + "/" + file.id);
-                ad.onclick = function (e) {
-                    var ctr = $(this).closest("tr");
-                    var cf =  $('#attachmentList #a' + file.id);
-                    e.preventDefault();
-                    $.ajax({
-                        url: $(this).attr('href'),
-                        success: function(response) {
-                            $(ctr).remove();
-                            $(cf).remove();
-                        }
-                    });
-                };
-                ad.appendChild(infod);
-
+                //********************* Delete*******************************
                 var tdd = document.createElement("td");
-                tdd.appendChild(ad);
+                tdd.setAttribute("style", "width: 10%");
+                tdd.setAttribute("align", "right");
+
+                if(file.author === uid)
+                {
+                    var infod = document.createElement("label");
+                    infod.setAttribute("class", "text-danger");
+                    infod.setAttribute("style", "cursor: pointer;");
+                    infod.innerHTML = "Удалить";
+
+                    var ad = document.createElement("a");
+                    ad.setAttribute("href", "/doc/attachments/delete/" + docid + "/" + file.id);
+                    ad.onclick = function (e) {
+                        var ctr = $(this).closest("tr");
+                        var cf = $('#attachmentList #a' + file.id);
+                        e.preventDefault();
+                        $.ajax({
+                            url: $(this).attr('href'),
+                            success: function (response) {
+                                $(ctr).remove();
+                                $(cf).remove();
+                            }
+                        });
+                    };
+                    ad.appendChild(infod);
+                    tdd.appendChild(ad);
+                }
 
                 var tr = document.createElement("tr");
                 tr.setAttribute("id", "tr" + file.id);
@@ -231,8 +237,8 @@
             <tr>
                 <th width="33px"></th>
                 <th width="33px"></th>
-                <th width="40px" class="searchable di">KОНТРОЛЬ</th>
-                <th width="80px" class="searchable ti">Вхд. №</th>
+                <th width="40px" class="searchable ni">KОНТРОЛЬ</th>
+                <th width="120px" class="searchable ti">Вхд. №</th>
                 <th width="40px" class="searchable di">Вхд. Дата</th>
                 <th width="100px" class="searchable ti">Исх. №</th>
                 <th width="40px" class="searchable di">Исх. Дата</th>
@@ -259,7 +265,7 @@
                 <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
                 <th th:text="#{label.document.executer}" class="searchable ti">Исполнитель</th>
                 <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
-                <th th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|" class="searchable ti">Номер бланка</th>
+                <th width="100px" th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|" class="searchable ti">Номер бланка</th>
             </tr>
             </thead>
         </table>

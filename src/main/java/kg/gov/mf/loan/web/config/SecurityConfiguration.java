@@ -3,6 +3,8 @@ package kg.gov.mf.loan.web.config;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 
+import kg.gov.mf.loan.web.components.MFLoginHandler;
+import kg.gov.mf.loan.web.components.MFLogoutHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +19,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
@@ -71,11 +75,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.antMatchers("/home").authenticated()
 			//.anyRequest().authenticated()
         .and()
-        .formLogin()
+        .formLogin().successHandler(authenticationSuccessHandler())
 			.loginPage("/login")
 			.permitAll()
 			.and()
-        .logout()
+        .logout().logoutSuccessHandler(logoutSuccessHandler())
 			.permitAll()
 			.and()
         .exceptionHandling().accessDeniedPage("/Access_Denied");
@@ -117,6 +121,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationTrustResolver getAuthenticationTrustResolver() {
         return new AuthenticationTrustResolverImpl();
+    }
+
+    @Bean
+    public LogoutSuccessHandler logoutSuccessHandler() {
+        return new MFLogoutHandler();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new MFLoginHandler();
     }
  
 }

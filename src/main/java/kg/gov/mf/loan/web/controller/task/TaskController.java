@@ -3,12 +3,14 @@ package kg.gov.mf.loan.web.controller.task;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.task.model.*;
-import kg.gov.mf.loan.task.service.LoggerService;
-import kg.gov.mf.loan.task.service.TaskService;
+import kg.gov.mf.loan.task.service.*;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -47,18 +50,24 @@ public class TaskController {
     TaskService taskService;
     UserService userService;
     LoggerService loggerService;
+    ChatUserService chatUserService;
+    TaskActionService taskActionService;
 
     @Autowired
-    public TaskController(TaskService taskService, UserService userService, LoggerService loggerService) {
+    public TaskController(TaskService taskService, UserService userService, LoggerService loggerService, ChatUserService chatUserService, TaskActionService taskActionService) {
         this.taskService = taskService;
         this.userService = userService;
         this.loggerService = loggerService;
+        this.chatUserService = chatUserService;
+        this.taskActionService = taskActionService;
     }
+
+    private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
-        binder.registerCustomEditor(Date.class, editor);
+        SimpleDateFormat dateFormat = DATE_FORMAT;
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 
     @RequestMapping(value = { "/log" }, method = RequestMethod.GET)
@@ -92,44 +101,19 @@ public class TaskController {
         return "/task/list";
     }
 
-    @RequestMapping(value = { "/task/list" }, method = RequestMethod.GET)
-    public String listTasks(ModelMap model) {
-        List<Task> tasks = taskService.list();
-        model.addAttribute("tasks", tasks);
-        return "/task/list";
+    @RequestMapping(value = "/task/taskaction/save")
+    public String saveTaskAction(@Valid TaskAction taskAction) {
+        taskActionService.add(taskAction);
+        return "redirect:" + "/task/list";
     }
 
-    @RequestMapping(value = { "/tasks" }, method = RequestMethod.GET)
-    public String tasks(ModelMap model) {
-
-        if(getUser() == null) return "/login/login";
-
-        String userId = String.valueOf(userService.findByUsername(Utils.getPrincipal()).getId());
-        Map<String, String> vars = new HashMap<>();
-        vars.put("assignedTo", userId);
-        vars.put("status", "OPEN");
-
-        List<Task> openTasks = taskService.getTasks(vars);
-
-        vars.clear();
-        vars.put("assignedTo", userId);
-        vars.put("status", "CLOSED");
-        List<Task> closedTasks = taskService.getTasks(vars);
-
-        /*
-        Map<String, String> atrs = new HashMap<String, String>()
-        {
-            {
-                put("objectId", "131");
-                put("status", "open");
-            }
-        };
-        List<Task> tasks = taskService.getTasks(userService.findByUsername(Utils.getPrincipal()).getId(), atrs);
-        */
-
-        model.addAttribute("openTasks", openTasks);
-        model.addAttribute("closedTasks", closedTasks);
-        return "/task/tasks";
+    @RequestMapping(value = { "/task/list" }, method = RequestMethod.GET)
+    public String listTasks(ModelMap model) {
+        model.addAttribute("users", chatUserService.list());
+        model.addAttribute("task", new Task());
+        model.addAttribute("taskAction", new TaskAction());
+        model.addAttribute("taskActions", taskActionService.list());
+        return "/task/list";
     }
 
     @RequestMapping(value = { "/task/listByUserId/{userId}" }, method = RequestMethod.GET)
@@ -162,8 +146,8 @@ public class TaskController {
         return "/task/save";
     }
 
-    @RequestMapping(value="/task/save", method=RequestMethod.POST)
-    public String saveTask(Task task) {
+    @RequestMapping(value="/task/save", method = RequestMethod.POST)
+    public String saveTask(@ModelAttribute("task") Task task) {
 
         if(task.getId() == 0)
         {
@@ -214,18 +198,24 @@ public class TaskController {
         return taskService.getTasksByUserId(getUser().getId());
     }
 
-
     // *****************************************************************************************************************
     // REST ************************************************************************************************************
     // *****************************************************************************************************************
-    @RequestMapping(value = { "/task/operators" }, method = RequestMethod.GET)
+
+    @RequestMapping(value = "/tasks")
+    @ResponseBody
+    public DataTablesOutput<Task> getTasks(@Valid DataTablesInput input) {
+        return  taskService.list(getUser().getId(), input);
+    }
+
+    @RequestMapping(value = "/task/operators", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, String> getOperators()
     {
         return operators;
     }
 
-    @RequestMapping(value = { "/task/to" }, method = RequestMethod.GET)
+    @RequestMapping(value = "/task/to", method = RequestMethod.GET)
     @ResponseBody
     public List<TaskObject> getTaskObject(@ModelAttribute("taskObject") TaskObject taskObject) {
         return taskService.queryBuilder(taskObject);

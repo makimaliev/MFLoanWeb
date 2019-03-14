@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<!-- begin::Head -->
+<head>
+    <title>MFLoan | Docflow</title>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<!-- end::Head -->
+
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <div class="m-content">
+                <div class="m-portlet m-portlet--full-height">
+
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text"></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-portlet__body">
+                        <div class="m-scrollable" data-scrollbar-shown="true" data-axis="y" data-height="200">
+                            <!--*********************************************************************************-->
+                            <form th:action="@{/task/add}" id="document_form" class="m-form m-form--fit m-form--label-align-right" th:object="${taskObject}" method="POST">
+                                <div class="container">
+
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <select class="form-control m-input" th:field="*{table}" style="width: 100%">
+                                                <option th:each="r :${objectTypes}"
+                                                        th:value="${r.className}"
+                                                        th:text="${r.object}"> Object </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div data-repeater-list="properties" id="container">
+                                        <div data-repeater-item class="r-group row m--padding-bottom-10">
+                                            <div class="col-6">
+                                                <select class="form-control m-input"
+                                                        style="width: 100%"
+                                                        onchange="setType(this)"
+                                                        id="properties_0_name"
+                                                        name="properties[0].property"
+                                                        data-pattern-name="properties[++].property"
+                                                        data-pattern-id="properties_++_property">
+                                                </select>
+                                            </div>
+                                            <div class="col-3">
+                                                <select class="form-control m-input"
+                                                        id="properties_0_operator"
+                                                        name="properties[0].operator"
+                                                        data-pattern-name="properties[++].operator"
+                                                        data-pattern-id="properties_++_operator">
+                                                    <option th:each="o : ${operators}"
+                                                            th:value="${o.getKey()}"
+                                                            th:text="${o.getValue()}"> Operator </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-2">
+                                                <input type="text"
+                                                       class="form-control m-input"
+                                                       id="properties_0_value"
+                                                       name="properties[0].value"
+                                                       data-pattern-name="properties[++].value"
+                                                       data-pattern-id="properties_++value"/>
+                                            </div>
+                                            <div class="col-1">
+                                                <button data-repeater-delete type="button" class="r-btnRemove btn btn-danger">Delete</button>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="r-btnAdd btn btn-primary">Add</button>
+                                    </div>
+
+                                </div>
+                            </form>
+                            <!--*********************************************************************************-->
+                        </div>
+                    </div>
+                    <div class="m-portlet__foot">
+                        <button type="submit" class="btn green" form="document_form">Save</button>
+                        <button type="button" class="btn btn-primary float-none" onclick="window.history.back()"> Отмена </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END CONTENT BODY -->
+    <!-- begin::Footer -->
+    <div th:replace="layout/footer"/>
+    <!-- end::Footer -->
+</div>
+<div th:replace="fragments/footer :: footer-js"/>
+<!--begin::Page Resources -->
+</body>
+</html>

@@ -61,7 +61,7 @@
                         </div>
                         <div class="m-portlet__head-tools">
 
-                            <div class="dropdown" th:if="${type != 'incoming'}">
+                            <div class="dropdown" th:if="${type != 'incoming'} and ${documentSubTypes != null}">
                                 <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Создать
                                 </button>
@@ -89,7 +89,7 @@
                     </div>
                     <div class="m-portlet__foot">
 
-                        <div class="dropdown" th:if="${type != 'incoming'}">
+                        <div class="dropdown" th:if="${type != 'incoming'} and ${documentSubTypes != null}">
                             <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Создать
                             </button>
@@ -167,16 +167,21 @@
             searchable: true,
             orderable: true,
             name: 'documentDueDate',
-            data: 'documentDueDate',
-            render: function (data, type, full, meta) {
-                return data != null ? '<span class="text-danger">' + data + '</span>' : ' ';
+            data: function (data, type, full, meta) {
+                var result = data.documentDueDate != null ? '<span class="text-danger">' + data.documentDueDate + '</span>' : '';
+                    result += data.closedWithDate != null ? '<br><span class="text-success">' + data.closedWithDate + '</span>' : ' ';
+                return result;
             }
         },
         {
             searchable: true,
             orderable: true,
             name: 'docIndex',
-            data: 'docIndex'
+            data: function (data, type, full, meta) {
+                var result =  data.documentDueDate != null ? '<span class="text-danger">' + data.docIndex + '</span>' : '<span>' + data.docIndex + '</span>';
+                    result +=  data.closedWithNo != null ? '<br><span class="text-success">' + data.closedWithNo + '</span>' : ' ';
+                return result;
+            }
         },
         {
             searchable: true,
@@ -556,9 +561,7 @@
                     last: '<i class="la la-angle-double-right"></i>'
                 }
             },
-            dom: "<'row'<'col-6'i><'col-6'l>>" +
-            "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            dom: '<<li><t><"text-center"p>>'
         });
 
         // Clone table headers
@@ -648,6 +651,23 @@
                     }
 
                     $(dselect, table.column(i).header()).on('click', function(e) {
+                        e.stopPropagation();
+                    });
+                }
+                if($(this).hasClass("ni")) {
+                    $(this).html('<select class="form-control m-input--square" id="ctrls"><option value=""> Все </option><option value="NOT"> КОНТРОЛЬ </option></select>');
+                    var nselect = $('select', this).on('change', function () {
+                        if (table.column(i).search() !== this.value) {
+                            table.column(i).search(this.value).draw();
+                        }
+                    });
+
+                    if (state) {
+                        var val = state.columns[i];
+                        nselect.val(val.search.search);
+                    }
+
+                    $(nselect, table.column(i).header()).on('click', function(e) {
                         e.stopPropagation();
                     });
                 }
@@ -744,7 +764,6 @@
 
             activeCol = this;
         } );
-
         // Outgoing [register, done] buttons click handler
         $('body').on('click','.openact',function(e) {
             var action = $(this).data("action");

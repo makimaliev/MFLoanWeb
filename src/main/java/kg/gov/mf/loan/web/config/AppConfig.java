@@ -13,6 +13,7 @@ import kg.gov.mf.loan.output.report.converter.*;
 
 import kg.gov.mf.loan.output.report.service.GroupTypeService;
 import kg.gov.mf.loan.process.job.CalculateDailyJob;
+import kg.gov.mf.loan.task.formater.TaskActionFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -149,6 +150,9 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 
     @Autowired
     GroupTypeFormatter groupTypeFormatter;
+
+    @Autowired
+    TaskActionFormatter taskActionFormatter;
 
 
     @Autowired
@@ -317,6 +321,9 @@ public class AppConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         registry.addFormatter(documentTypeFormatter);
         registry.addFormatter(documentSubTypeFormatter);
         registry.addFormatter(groupTypeFormatter);
+
+
+        registry.addFormatter(taskActionFormatter);
 
 
 

@@ -1,16 +1,145 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- begin::Head -->
 <head>
 	<title th:text="#{label.tasks}"></title>
 
 	<div th:replace="fragments/header :: header-css"/>
+
+	<style>
+		.table thead th {
+			vertical-align: middle !important;
+			text-align: center;
+		}
+	</style>
 </head>
 <!-- end::Head -->
 
 <!-- end::Body -->
 <body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
 <!-- begin:: Page -->
+<div class="modal fade" id="addTask" role="dialog" aria-labelledby="AddTaskLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Новая задача</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form th:action="@{/task/save}" id="task_form" class="m-form m-form--fit m-form--label-align-right" th:object="${task}" method="POST">
+					<div class="container">
+
+						<input type="hidden" th:field="*{summary}">
+						<input type="hidden" th:field="*{resolutionSummary}">
+						<input type="hidden" th:field="*{description}">
+						<input type="hidden" th:field="*{objectId}">
+						<input type="hidden" th:field="*{objectType}">
+						<input type="hidden" th:field="*{progress}">
+						<input type="hidden" th:field="*{status}">
+						<input type="hidden" th:field="*{priority}">
+						<input type="hidden" th:field="*{createdBy}">
+						<input type="hidden" th:field="*{identifiedByUserId}">
+						<input type="hidden" th:field="*{modifiedByUserId}">
+						<input type="hidden" th:field="*{assignedToUserId}">
+						<input type="hidden" th:field="*{identifiedDate}">
+						<input type="hidden" th:field="*{createdOn}">
+						<input type="hidden" th:field="*{modifiedOn}">
+						<input type="hidden" th:field="*{actualResolutionDate}">
+
+						<div class="form-group m-form__group row">
+							<label class="col-3 col-form-label">
+								<span> Кому : </span>
+							</label>
+							<div class="col-sm-9">
+								<select class="form-control m-input s2" th:field="*{assignedTo}" style="width: 100%" data-ajax--url="/doc/data/user">
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group m-form__group row">
+							<label class="col-3 col-form-label">
+								<span> Задача : </span>
+							</label>
+							<div class="col-sm-9">
+								<select class="form-control m-input" th:field="*{action}" style="width: 100%">
+									<option th:each="ta :${taskActions}"
+											th:value="${ta.id}"
+											th:text="${ta.name}"> Object </option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group m-form__group row">
+							<label class="col-3 col-form-label">
+								<span> Срок : </span>
+							</label>
+							<div class="col-sm-9">
+								<input class="form-control dtp" th:field="*{targetResolutionDate}" type="text" autocomplete="off" readonly="readonly"/>
+							</div>
+						</div>
+
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-success" form="task_form">Сохранить</button>
+				<button type="button" class="btn btn-primary float-none" data-dismiss="modal"> Отмена </button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="addTaskAction" role="dialog" aria-labelledby="AddTaskLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Новая</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form th:action="@{/task/taskaction/save}" id="task_action_form" class="m-form m-form--fit m-form--label-align-right" th:object="${taskAction}" method="POST">
+					<div class="container">
+
+						<input type="hidden" th:field="*{id}">
+						<input type="hidden" th:field="*{version}">
+						<input type="hidden" th:field="*{uuid}">
+						<input type="hidden" th:field="*{record_status}">
+						<input type="hidden" th:field="*{url}">
+
+						<div class="form-group m-form__group row">
+							<label class="col-3 col-form-label">
+								<span> Название : </span>
+							</label>
+							<div class="col-sm-9">
+								<input class="form-control m-input" type="text" th:field="*{name}">
+							</div>
+						</div>
+
+						<div class="form-group m-form__group row">
+							<label class="col-3 col-form-label">
+								<span> Описание : </span>
+							</label>
+							<div class="col-sm-9">
+								<input class="form-control m-input" type="text" th:field="*{description}">
+							</div>
+						</div>
+
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-success" form="task_action_form">Сохранить</button>
+				<button type="button" class="btn btn-primary float-none" data-dismiss="modal"> Отмена </button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
 <div class="m-grid m-grid--hor m-grid--root m-page">
 	<!-- BEGIN: Header -->
 	<div th:replace="layout/header"/>
@@ -35,8 +164,8 @@
 									<div class="m-input-icon m-input-icon--left">
 										<input type="text" class="form-control m-input" placeholder="Search..." id="generalSearchOpenTasks">
 										<span class="m-input-icon__icon m-input-icon__icon--left">
-												<span><i class="la la-search"></i></span>
-											</span>
+											<span><i class="la la-search"></i></span>
+										</span>
 									</div>
 								</li>
 							</ul>
@@ -44,51 +173,33 @@
 					</div>
 					<div class="m-portlet__body">
 						<div class="m-scrollable m-scrollable-no-margin" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+							<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#addTask">Добавить Задачу</button>
+							<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#addTaskAction">Добавить Действие</button>
+							<hr>
 							<div>
-								<table class="table" id="documentTable">
+								<table class="table table-bordered" id="taskTable">
 									<thead class="thead-default">
-									<tr>
-										<th>№</th>
-										<th>Заголовок</th>
-										<th>Описание</th>
-										<th th:if="${type == 'archived'}">Вид документа</th>
-										<th>Тип документа</th>
-										<th>Состояние</th>
-										<th>Отправитель</th>
-										<th>Получатель</th>
-										<th>Id</th>
-										<th>Просмотр</th>
-										<th th:if="${type != 'archived'}">Правка</th>
-										<th th:if="${type != 'archived'}">Удалить</th>
-									</tr>
+										<tr>
+											<th>№</th>
+											<th>action</th>
+											<th>actualResolutionDate</th>
+											<th>createdOn</th>
+											<th>createdByUser</th>
+											<th>assignedToUser</th>
+											<th>description</th>
+											<th>identifiedDate</th>
+											<th>modifiedOn</th>
+											<th>priority</th>
+											<th>progress</th>
+											<th>resolutionSummary</th>
+											<th>status</th>
+											<th>summary</th>
+											<th>targetResolutionDate</th>
+										</tr>
 									</thead>
-									<tbody>
-									<tr th:each="document : ${documents}">
-										<td th:text="${document.id}"></td>
-										<td th:text="${document.title}"></td>
-										<td th:text="${document.description}"></td>
-										<td th:text="${document.documentType.name}" th:if="${type == 'archived'}"></td>
-										<td th:text="${document.documentSubType.name}"></td>
-										<td th:text="${document.generalStatus?.name}"></td>
-										<td th:text="${responsible[__${document.senderResponsible?.responsibleType}__ ?: 0]}">None</td>
-										<td th:text="${responsible[__${document.receiverResponsible?.responsibleType}__ ?: 0]}">None</td>
-										<td><a th:href="@{/doc/view/__${document.id}__}" role='button' class='btn btn-success'> Просмотр </a></td>
-										<td th:if="${type != 'archived'}"><a th:href="@{/doc/edit/__${document.id}__}" role="button" class="btn btn-primary"> Правка </a></td>
-										<td th:if="${type != 'archived'}"><a th:href="@{/doc/delete/__${document.id}__}" role="button" class="btn danger" th:if="${document.documentState.toString() == 'DRAFT'}"> Удалить </a></td>
-									</tr>
-									</tbody>
 								</table>
 							</div>
 						</div>
-					</div>
-				</div>
-
-				<div class="row">
-					<div class="col-md-12" th:if="${type != 'archived'}">
-						<button class="btn btn-primary"> Filter </button>
-						<span th:each="dst : ${documentSubTypes}">
-                                                <a th:href="@{/doc/new(type=${type}, subtype=${dst.internalName})}" class="btn btn-success" th:text="${dst.name}"> New Document </a>
-                                            </span>
 					</div>
 				</div>
 
@@ -105,34 +216,204 @@
 </div>
 <div th:replace="fragments/footer :: footer-js"/>
 <script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
-<script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>
 
+<script type="text/javascript">
+    function flatten(params) {
+        params.columns.forEach(function (column, index) {
+            params['columns[' + index + '].data'] = column.data;
+            params['columns[' + index + '].name'] = column.name;
+            params['columns[' + index + '].searchable'] = column.searchable;
+            params['columns[' + index + '].orderable'] = column.orderable;
+            params['columns[' + index + '].search.regex'] = column.search.regex;
+            params['columns[' + index + '].search.value'] = column.search.value;
+        });
+        delete params.columns;
+
+        params.order.forEach(function (order, index) {
+            params['order[' + index + '].column'] = order.column;
+            params['order[' + index + '].dir'] = order.dir;
+        });
+        delete params.order;
+
+        params['search.regex'] = params.search.regex;
+        params['search.value'] = params.search.value;
+        delete params.search;
+
+        return params;
+    }
+</script>
 <script type="text/javascript">
     $(document).ready(function() {
 
-        var table = $('#documentTable').DataTable({
+        var table = $('#taskTable').DataTable({
             stateSave: true,
-            language: {
-                paginate: {
-                    previous: '<i class="la la-angle-left"></i>', // or '→'
-                    next: '<i class="la la-angle-right"></i>' // or '←'
+            paging: true,
+            processing: false,
+            ajax: {
+                'url': '/tasks',
+                'data': function ( d ) {
+                    flatten(d)
+                }
+            },
+            serverSide: true,
+            order: [ [0, 'asc'] ],
+            columns: [
+                {
+                    searchable: false,
+                    orderable: true,
+                    name: 'id',
+                    data: 'id'
                 },
-                lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'action',
+                    data: 'action',
+                    render: function (data, type, full, meta) {
+                        return data !== null ? data.name : '';
+                    }
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'actualResolutionDate',
+                    data: 'actualResolutionDate'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'createdOn',
+                    data: 'createdOn'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'createdByUser',
+                    data: 'createdByUser'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'assignedToUser',
+                    data: 'assignedToUser'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'description',
+                    data: 'description'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'identifiedDate',
+                    data: 'identifiedDate'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'modifiedOn',
+                    data: 'modifiedOn'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'priority',
+                    data: 'priority'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'progress',
+                    data: 'progress'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'resolutionSummary',
+                    data: 'resolutionSummary'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'status',
+                    data: 'status'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'summary',
+                    data: 'summary'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'targetResolutionDate',
+                    data: 'targetResolutionDate'
+                }
+            ],
+            language: {
+                emptyTable: "<center>Нет данных</center>",
+                info: "Всего _TOTAL_ записей",
+                infoFiltered: "",
+                lengthMenu: 'Показать <select>'+
+                '<option value="5">5</option>'+
+                '<option value="10">10</option>'+
+                '<option value="25">25</option>'+
+                '<option value="50">50</option>'+
+                '<option value="100">100</option>'+
+                '</select>',
+                paginate: {
+                    first: '<i class="la la-angle-double-left"></i>',
+                    previous: '<i class="la la-angle-left"></i>',
+                    next: '<i class="la la-angle-right"></i>',
+                    last: '<i class="la la-angle-double-right"></i>'
+                }
             },
-            "info": false,
-            keys: {
-                focus: ':eq(0)'
-            },
-            "sDom": 'rtlip'
-        } );
-        $('#generalSearch').keyup(function(){
-            table.search($(this).val()).draw() ;
+            dom: '<<li><t><"text-center"p>>'
         });
 
-        $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
-        $('.selectpicker').selectpicker('refresh');
+        var soption = {
+            minimumInputLength: 2,
+            placeholder: "Поиск ...",
+            language: {
+                inputTooShort: function () {
+                    return "";
+                },
+                noResults: function () {
+                    return "Не найден";
+                },
+                searching: function () {
+                    return "";
+                },
+            },
+            ajax: {
+                data: function (params) {
+                    var query = {
+                        name: params.term
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results : data
+                    };
+                }
+            }
+        };
+        $('.s2 ').select2(soption);
+
+        var dt_settings = {
+            autoclose: true,
+            minView : 2,
+            maxView : 2,
+            format : 'dd-mm-yyyy hh:ii'
+        };
+        $('.dtp').datetimepicker(dt_settings);
 
     });
+
+
 </script>
 
 </body>

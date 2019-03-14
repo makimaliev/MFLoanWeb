@@ -143,10 +143,7 @@ public class DocumentFlowController extends BaseController {
 
         DocumentType documentType = documentTypeService.getByInternalName(type);
 
-        Map<String, String> vars = new HashMap<>();
-        vars.put("assignedTo", String.valueOf(getUser().getId()));
-        vars.put("status", "OPEN");
-        List<Task> t = taskService.getTasks(vars);
+        List<Task> t = taskService.getDocumentTasks(getUser().getId());
 
         List<TS> tsList = new ArrayList<>();
 
@@ -176,7 +173,7 @@ public class DocumentFlowController extends BaseController {
         }
         model.addAttribute("dtypes", dtypes);
 
-        if(getUser().getStaff() != null || type.equals("internal") || type.equals("incoming") || type.equals("outgoing"))
+        if(getUser().getStaff() != null && (type.equals("internal") || type.equals("incoming") || type.equals("outgoing")))
             model.addAttribute("documentSubTypes", documentType.getDocumentSubTypes());
 
         return "/doc/document/index";
@@ -227,7 +224,9 @@ public class DocumentFlowController extends BaseController {
         Map<String, String> vars = new HashMap<>();
         vars.put("objectId", String.valueOf(document.getId()));
         vars.put("status", "OPEN");
+        vars.put("objectType", "Document");
         Task task = taskService.getTask(getUser(), vars);
+
         task.setModifiedByUserId(getUser().getId());
         taskService.update(task);
 
@@ -235,6 +234,7 @@ public class DocumentFlowController extends BaseController {
         vars.clear();
         vars.put("objectId", String.valueOf(document.getId()));
         vars.put("status", "OPEN");
+        vars.put("objectType", "Document");
         task = taskService.getTask(getUser(), vars);
 
         if(task != null && task.getProgress() != null)
@@ -244,7 +244,9 @@ public class DocumentFlowController extends BaseController {
         //endregion
 
         vars.put("objectId", String.valueOf(document.getId()));
+        vars.put("objectType", "Document");
         model.addAttribute("tasks", taskService.getTasks(vars));
+        model.addAttribute("uid", getUser().getId());
         model.addAttribute("hasComment", hasComment(document));
         model.addAttribute("actions", getActions(document));
         model.addAttribute("document", document);
@@ -315,8 +317,10 @@ public class DocumentFlowController extends BaseController {
 
         Map<String, String> vars = new HashMap<>();
         vars.put("objectId", String.valueOf(document.getId()));
+        vars.put("objectType", "Document");
 
         model.addAttribute("tasks", taskService.getTasks(vars));
+        model.addAttribute("uid", getUser().getId());
         model.addAttribute("document", document);
 
         return "/doc/document/view";
@@ -501,6 +505,7 @@ public class DocumentFlowController extends BaseController {
                 Map<String, String> vars = new HashMap<>();
                 vars.put("objectId", String.valueOf(document.getId()));
                 vars.put("status", "OPEN");
+                vars.put("objectType", "Document");
                 int taskCount = taskService.getTasks(vars).size();
 
                 if (document.getDocumentState().equals(State.ACCEPTED) && taskCount == 0)
@@ -601,6 +606,7 @@ public class DocumentFlowController extends BaseController {
                 Map<String, String> vars = new HashMap<>();
                 vars.put("objectId", String.valueOf(document.getId()));
                 vars.put("status", "OPEN");
+                vars.put("objectType", "Document");
                 int taskCount = taskService.getTasks(vars).size();
 
                 if (action.equals("DONE") && taskCount == 0)
@@ -657,6 +663,7 @@ public class DocumentFlowController extends BaseController {
                 Map<String, String> vars = new HashMap<>();
                 vars.put("objectId", String.valueOf(document.getId()));
                 vars.put("status", "OPEN");
+                vars.put("objectType", "Document");
                 Task task = taskService.getTask(getUser(), vars);
                 String res = !task.getSummary().isEmpty() ? task.getSummary() : "Обработать входящий документ";
 
@@ -716,6 +723,7 @@ public class DocumentFlowController extends BaseController {
                 Map<String, String> vars = new HashMap<>();
                 vars.put("objectId", String.valueOf(document.getId()));
                 vars.put("status", "OPEN");
+                vars.put("objectType", "Document");
                 int taskCount = taskService.getTasks(vars).size();
 
                 if (taskCount == 0)
@@ -727,7 +735,7 @@ public class DocumentFlowController extends BaseController {
 
             if (action.equals("REJECT"))
             {
-                //region DONE
+                //region REJECT
                 taskService.completeTask(document.getId(), getUser(), "Отклонен " + document.getComment());
                 document.getDispatchData().add(setDispatchData(Transition.valueOf(action).state(), description));
 

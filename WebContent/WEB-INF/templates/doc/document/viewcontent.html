@@ -156,7 +156,7 @@
             <span> Ссылка на документ : </span>
         </label>
         <div class="col-9">
-            <p th:each="d : *{documentLinks}" style="border-bottom: 1px dashed #ccc;">
+            <p th:each="d : *{closedWithId}" style="border-bottom: 1px dashed #ccc;">
                 <a th:href="@{/doc/view/__${d}__}"+><span th:utext="${@documentServiceImpl.getById(__${d}__).documentSubType.name + ' №' + @documentServiceImpl.getById(__${d}__).senderRegisteredNumber}"></span></a>
             </p>
         </div>

@@ -218,14 +218,14 @@
         </div>
     </div>
     <!-- Document Link  sec:authorize="hasAnyAuthority('PERM_ADD_INCOMEDOC')" -->
+    <br>
     <div class="form-group m-form__group row" th:hidden="${not hasComment}">
         <label class="col-3 col-form-label">
             <span> Ссылка на документ : </span>
         </label>
         <div class="col-9" id="documentList">
-            <br>
-            <select class="sds form-control" th:field="*{documentLinks}" multiple="multiple" style="width: 100%" data-ajax--url="/doc/incomingdocuments">
-                <option th:each="d : *{documentLinks}"
+            <select class="sds form-control" th:field="*{closedWithId}" style="width: 100%" data-ajax--url="/doc/incomingdocuments">
+                <option th:each="d : *{closedWithId}"
                         th:value="${d}"
                         th:utext="${@documentServiceImpl.getById(__${d}__).documentSubType.name + ' №' + @documentServiceImpl.getById(__${d}__).senderRegisteredNumber}">Responsible</option>
             </select>
