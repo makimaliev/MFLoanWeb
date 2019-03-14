@@ -315,7 +315,7 @@
                             <!-- BEGIN: Topbar -->
                             <div id="m_header_topbar" class="m-topbar  m-stack m-stack--ver m-stack--general">
                                 <div class="m-stack__item m-topbar__nav-wrapper">
-                                    <ul class="m-topbar__nav m-nav m-nav--inline">
+                                    <ul class="m-topbar__nav m-nav m-nav--inline" th:with="lvTasks=${@taskService.getDocumentTasks(@userServiceJpaImpl.findByUsername(#authentication.name).id)}">
 
                                         <!-- BEGIN: CHAT -->
                                         <!--li class="m-nav__item m-dropdown m-dropdown--large m-dropdown--arrow m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light  m-list-search m-list-search--skin-light"
@@ -330,12 +330,12 @@
 
                                         <!-- BEGIN: TASKS -->
                                         <li class="m-nav__item m-dropdown m-dropdown--medium m-dropdown--arrow m-dropdown--header-bg-fill m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light" data-dropdown-toggle="click"
-                                            th:if="${not @taskService.getDocumentTasks(@userServiceJpaImpl.findByUsername(#authentication.name).id).isEmpty()}">
+                                            th:if="${not lvTasks.isEmpty()}">
                                             <a href="#" class="m-nav__link m-dropdown__toggle">
                                                 <span class="m-nav__link-icon">
                                                     <i class="flaticon-alert"></i>
                                                 </span>
-                                                <span class="badge badge-light" th:text="${@taskService.getDocumentTasks(@userServiceJpaImpl.findByUsername(#authentication.name).id).size()}"></span>
+                                                <span class="badge badge-light" th:text="${lvTasks.size()}"></span>
                                             </a>
                                             <div class="m-dropdown__wrapper">
                                                 <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
@@ -343,7 +343,7 @@
                                                     <div class="m-dropdown__body">
                                                         <div class="m-dropdown__content pre-scrollable">
                                                             <ul class="m-nav m-nav--skin-light">
-                                                                <li class="m-nav__section" th:each="task, index : ${@taskService.getDocumentTasks(@userServiceJpaImpl.findByUsername(#authentication.name).id)}">
+                                                                <li class="m-nav__section" th:each="task, index : ${lvTasks}">
                                                                     <div style="background: #d9d9d9;" class="p-3">
                                                                         <p class="m--font-bold m-0 p-0" th:text="|№${index.count} - ${#dates.format(task.createdOn, 'dd.MM.yyyy')}|"></p>
                                                                         <p class="m--font-bold m-0 p-0" th:utext="${task.createdBy?.staff?.name}"></p>
