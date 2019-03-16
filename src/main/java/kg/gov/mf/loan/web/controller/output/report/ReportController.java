@@ -1,19 +1,17 @@
 package kg.gov.mf.loan.web.controller.output.report;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import kg.gov.mf.loan.admin.org.model.District;
 import kg.gov.mf.loan.admin.org.service.DistrictService;
-import kg.gov.mf.loan.admin.sys.model.Role;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.RoleService;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.output.report.model.Comparator;
+import kg.gov.mf.loan.output.report.model.*;
+import kg.gov.mf.loan.output.report.service.*;
 import kg.gov.mf.loan.output.report.utils.*;
 import kg.gov.mf.loan.web.fetchModels.CompareParametersModel;
 import kg.gov.mf.loan.web.fetchModels.ReportTemplateModel;
 import kg.gov.mf.loan.web.fetchModels.jsTreeModel;
-import kg.gov.mf.loan.web.fetchModels.jsTreeStateModel;
+import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.Authentication;
@@ -26,16 +24,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-
-import kg.gov.mf.loan.output.report.model.*;
-import kg.gov.mf.loan.output.report.service.*;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.logging.Filter;
 
 @Controller
 public class ReportController {
@@ -427,6 +420,9 @@ public class ReportController {
 		{
 			model.addAttribute("showAdditionalDate",false);
 		}
+		User user=userService.findByUsername(Utils.getPrincipal());
+		List<ObjectList> objectLists=objectListService.findAllByGroupTypeAndUser(groupTypeService.findById(8),user.getId());
+		model.addAttribute("objectLists",objectLists);
 
 
 //		model.addAttribute("additionalDate",reportTemplate.getAdditionalDate());
@@ -499,6 +495,7 @@ public class ReportController {
                                      @RequestParam(value = "showGroup6" , required = false) String showGroup6,
                                      @RequestParam(value = "fieldName" , required = false) String[] fieldName,
                                      @RequestParam(value = "comparator" , required = false) String[] comparator,
+                                     @RequestParam(value = "loanses" , required = false) String[] loanses,
                                      @RequestParam(value = "comparedValue" , required = false) String[] comparedValue,
                                      @RequestParam(value = "comparedDate" , required = false) Date[] comparedDate,
                                      HttpServletResponse response) {

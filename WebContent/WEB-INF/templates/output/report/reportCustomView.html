@@ -209,6 +209,21 @@
                             </div>
                         </div>
 
+                        <div class="form-group m-form__group row">
+                            <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.objectLists}">
+                                Loans <span class="m--font-danger">*</span>
+                            </label>
+                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                <select id="loanses" name="loanses" class="form-control m-bootstrap-select m_selectpicker" multiple >
+                                    <option th:each="l : ${objectLists}"
+                                            th:value="${l.id}"
+                                            th:text="${l.name}">
+                                            <!--th:selected="${loanIds.contains(loan.id)}"-->
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="col-6">
                             <div class="form-group m-form__group row">
                                 <button type="button" class="btn m-btn--square  btn-primary" id="submitBtn" th:text="#{label.table.generate}">SUBMIT</button>
@@ -312,6 +327,8 @@
             params=params+"&groupType6Select="+$("#groupType6select").val();
             params=params+"&showGroup6="+$("#showGroup6").prop('checked');
 
+            params=params+"&loanses="+$("#loanses").val();
+
 
 
 
@@ -329,6 +346,7 @@
                 {
                     params += '&comparedValue='+document.getElementById("comparedValue_"+Count).value;
                 }
+
 
                 var comparedDate = document.getElementById("comparedDate_"+Count);
                 if(comparedDate!=null)
