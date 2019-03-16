@@ -12,7 +12,9 @@ import kg.gov.mf.loan.output.printout.model.PrintoutTemplate;
 import kg.gov.mf.loan.output.printout.service.*;
 import kg.gov.mf.loan.output.printout.utils.*;
 import kg.gov.mf.loan.web.util.Utils;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.poi.ss.formula.ptg.MemAreaPtg;
+import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +23,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.ParseException;
@@ -44,7 +48,11 @@ public class PrintoutTemplateController {
 	@Autowired
 	LoanSummaryActService loanSummaryActService;
 
-    public void setPrintoutTemplateService(PrintoutTemplateService rs)
+
+	private static String UPLOADED_FOLDER =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "c://temp//";
+
+
+	public void setPrintoutTemplateService(PrintoutTemplateService rs)
     {
         this.printoutTemplateService = rs;
     }
@@ -673,4 +681,183 @@ public class PrintoutTemplateController {
 		}
 
 	}
+
+
+	@RequestMapping("/printout/{type_id}/objectId/{object_id}/generate")
+	public void generateDocByTypeAndPersonId(@PathVariable("object_id") long object_id,
+											 @PathVariable("type_id") long type_id,
+								  HttpServletResponse response) {
+		try
+		{
+
+
+
+			String filePath = UPLOADED_FOLDER+ "/"+"1. Договор займа.docx";
+
+			File file = new File(filePath);
+
+			FileInputStream fInput = new FileInputStream(file.getAbsolutePath());
+
+			XWPFDocument doc = new XWPFDocument(fInput);
+
+			for (XWPFParagraph p : doc.getParagraphs())
+			{
+				List<XWPFRun> runs = p.getRuns();
+
+				if (runs != null)
+				{
+					for (XWPFRun r : runs)
+					{
+						String text = r.getText(0);
+						if (text != null && text.contains("(="))
+						{
+							replace(r);
+//							text = text.replace("(=", "$");
+//							r.setText(text, 0);
+						}
+					}
+				}
+			}
+
+			for (XWPFTable tbl : doc.getTables())
+			{
+				for (XWPFTableRow row : tbl.getRows())
+				{
+					for (XWPFTableCell cell : row.getTableCells())
+					{
+						for (XWPFParagraph p : cell.getParagraphs())
+						{
+							for (XWPFRun r : p.getRuns()) {
+								String text = r.getText(0);
+								if (text != null && text.contains("(="))
+								{
+									replace(r);
+//									text = text.replace("(=", "$");
+//									r.setText(text,0);
+
+								}
+							}
+						}
+					}
+				}
+			}
+
+
+			response.setContentType("application/msword");
+			response.setHeader("Content-Disposition", "attachment; filename=filename.doc");
+
+			doc.write(response.getOutputStream());
+
+//                response.getOutputStream().flush();
+//                response.getOutputStream().close();
+
+			doc.close();
+
+		}
+		catch (Exception ex)
+		{
+			System.out.println(ex);
+		}
+
+
+
+
+
+	}
+
+	private void replace(XWPFRun run)
+	{
+		String text = run.getText(0);
+
+		try
+		{
+			int startPosition = 0;
+			int closePosition = 0;
+
+			if(text.contains("(="))
+			{
+				startPosition = text.lastIndexOf("(=")+2;
+				closePosition = text.lastIndexOf("=)");
+
+				try
+				{
+					String varIdString = text.substring(startPosition,closePosition);
+					int varId = Integer.parseInt(varIdString);
+
+					Date today = new Date();
+					String newText = "";
+					String oldText = "";
+
+					switch (varId)
+					{
+						case 1: System.out.println("1");
+
+							int day = today.getDay();
+							newText = " "+String.valueOf(day)+" ";
+
+
+							break;
+
+						case 2:
+							int month = today.getMonth()+1;
+
+
+							switch (month)
+							{
+								case 1: newText = "января"; break;
+								case 2: newText = "февраля"; break;
+								case 3: newText = "марта"; break;
+								case 4: newText = "апреля"; break;
+								case 5: newText = "мая"; break;
+								case 6: newText = "июня"; break;
+								case 7: newText = "июля"; break;
+								case 8: newText = "августа"; break;
+								case 9: newText = "сентября"; break;
+								case 10: newText = "октября"; break;
+								case 11: newText = "ноября"; break;
+								case 12: newText = "декабря"; break;
+							}
+
+
+							break;
+
+					}
+
+					oldText = "(="+varIdString+"=)";
+
+					if(text.contains(oldText))
+					{
+						text = text.replace(oldText,newText);
+					}
+
+					run.setText(text, 0);
+
+					System.out.println(run.getText(0));
+
+				}
+				catch (Exception ex)
+				{
+				}
+
+
+
+
+			}
+
+			if(text.contains("(="))
+			{
+				replace(run);
+			}
+
+
+		}
+		catch (Exception ex)
+		{
+
+		}
+
+	}
+
 }
+
+
