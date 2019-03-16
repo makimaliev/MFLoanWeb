@@ -1,0 +1,47 @@
+<form th:action="@{/manage/debtor/__${debtorId}__/objectList/values/save}" id="listLoanFormModal" class="form-horizontal"
+      method="post" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">
+				&times;
+			</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+
+        <div class="alert alert-danger alert-dismissible alert-hidden" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+            <span th:text="#{label.objectList.modal.error.name}"></span>
+        </div>
+
+        <input hidden="hidden" name="loans" id="listo">
+        <div class="form-group m-form__group row">
+            <label class="col-form-label col-lg-4 col-sm-12">
+                <span th:text="#{label.loan.objectList}"></span>
+                <span class="m--font-danger">*</span>
+            </label>
+            <div class="col-lg-4 col-md-9 col-sm-12">
+                <select class="form-control m-bootstrap-select m_selectpicker"  th:title="#{label.select}" name="objectList">
+                    <option th:each="objectList : ${objectLists}" th:value="${objectList.id}" th:text="${objectList.name}"></option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button th:text="#{label.form.cancel}" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button th:text="#{label.form.save}" type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+<script>
+    $('.m_selectpicker').selectpicker();
+    var listoSelecto="";
+    for (var i in selectedLoans){
+        listoSelecto=listoSelecto+"-"+i.toString();
+    }
+    $("#listo").val(listoSelecto);
+    console.log(listoSelecto)
+</script>

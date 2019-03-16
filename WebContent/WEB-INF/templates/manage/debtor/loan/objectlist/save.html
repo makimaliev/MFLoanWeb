@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- begin::Head -->
+<head>
+    <title th:text="#{label.loan.title.add.edit.payment}">Добавить/Редактировать погашение</title>
+
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<!-- end::Head -->
+
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <!-- BEGIN: Subheader -->
+            <div class="m-subheader ">
+                <div class="d-flex align-items-center">
+                    <div class="mr-auto">
+                        <h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.objectList}">
+                            Погашение
+                        </h3>
+                        <!--<ul class="m-subheader__breadcrumbs m-nav m-nav&#45;&#45;inline">-->
+                            <!--<li class="m-nav__item m-nav__item&#45;&#45;home">-->
+                                <!--<a th:href="@{/}" class="m-nav__link m-nav__link&#45;&#45;icon">-->
+                                    <!--<i class="m-nav__link-icon la la-home"></i>-->
+                                <!--</a>-->
+                            <!--</li>-->
+                            <!--<li class="m-nav__separator">-->
+                                <!-- - -->
+                            <!--</li>-->
+                            <!--<li class="m-nav__item">-->
+                                <!--<a th:href="@{/manage/debtor/list}" class="m-nav__link">-->
+											<!--<span class="m-nav__link-text" th:text="#{label.debtors}">-->
+												<!--Список заемщиков-->
+											<!--</span>-->
+                                <!--</a>-->
+                            <!--</li>-->
+                            <!--<li class="m-nav__separator">-->
+                                <!-- - -->
+                            <!--</li>-->
+                            <!--<li class="m-nav__item">-->
+                                <!--<a th:href="@{/manage/debtor/__${debtorId}__/view}" class="m-nav__link">-->
+											<!--<span class="m-nav__link-text" th:text="${debtor.name}">-->
+												<!--Заемщик-->
+											<!--</span>-->
+                                <!--</a>-->
+                            <!--</li>-->
+                            <!--<li class="m-nav__separator">-->
+                                <!-- - -->
+                            <!--</li>-->
+                            <!--<li class="m-nav__item">-->
+                                <!--<a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/view}" class="m-nav__link">-->
+											<!--<span class="m-nav__link-text" th:text="${loan.regNumber}">-->
+												<!--Заемщик-->
+											<!--</span>-->
+                                <!--</a>-->
+                            <!--</li>-->
+                            <!--<li class="m-nav__separator">-->
+                                <!-- - -->
+                            <!--</li>-->
+                            <!--<li class="m-nav__item">-->
+								<!--<span class="m-nav__link-text" th:text="#{label.loan.title.add.edit.payment}">-->
+												<!--Добавить/Редактировать погашение-->
+											<!--</span>-->
+                            <!--</li>-->
+                        <!--</ul>-->
+                    </div>
+                </div>
+            </div>
+            <!-- END: Subheader -->
+            <div class="m-content">
+                <!--begin::Portlet-->
+                <div class="m-portlet m-portlet--full-height">
+                    <!--begin::Form-->
+                    <form th:action="@{/objectList/save}" method="post" th:object="${objectList}" class="m-form m-form--fit m-form--label-align-right">
+
+                        <input hidden="true" type="text" id="id" name="id" th:field="*{id}"/>
+                        <input hidden="true" type="text" name="groupType" th:field="*{groupType}"/>
+                        <input hidden="true" type="text" name="user_id" th:field="*{user_id}"/>
+                        <input hidden="true" type="text" name="fromLoan" value="true"/>
+
+                        <div class="m-portlet__body">
+                            <div class="m-form__section">
+
+                                <div class="form-group m-form__group row">
+                                    <label class="col-form-label col-lg-4 col-sm-12">
+                                        <span th:text="#{label.loan.objectlist}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-4 col-md-9 col-sm-12">
+                                        <input type="text" class="form-control m-input" name="name" th:value="${objectList.name}">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="m-portlet__foot m-portlet__foot--fit">
+                            <div class="m-form__actions m-form__actions">
+                                <div class="row">
+                                    <div class="col-lg-4"></div>
+                                    <div class="col-lg-6">
+                                        <button sec:authorize="hasAnyAuthority('ADMIN')" type="submit" class="btn btn-primary">
+                                            <span th:text="#{label.form.save}"></span>
+                                        </button>
+                                        <button onclick="window.history.back()" type="button" class="btn btn-secondary">
+                                            <span th:text="#{label.form.cancel}"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!--end::Form-->
+                </div>
+                <!--end::Portlet-->
+            </div>
+        </div>
+    </div>
+    <!-- end:: Body -->
+    <!-- begin::Footer -->
+    <div th:replace="layout/footer"/>
+    <!-- end::Footer -->
+</div>
+<!-- end:: Page -->
+
+<div th:replace="fragments/footer :: footer-js"/>
+
+<!--begin::Page Resources -->
+<!--end::Page Resources -->
+</body>
+<!-- end::Body -->
+</html>

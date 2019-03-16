@@ -1,0 +1,34 @@
+<div class="m-content" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="m-portlet">
+        <div class="m-portlet__body">
+            <ul class="nav nav-tabs " id="objectListView" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link m--font-primary active" data-toggle="tab" href="#aokmotuListOfDistrict">Кредиты</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="objectListvalue" role="tabpanel">
+                    <table class="table" id="valueTable">
+                        <thead class="thead-default">
+                        <tr>
+                            <th>Заемщик</th>
+                            <th>Рег. номер</th>
+                            <!--<th>Code</th>-->
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        <tr th:each="l : ${list}">
+                            <td th:text="${l.debtorName}">Id</td>
+                            <td th:text="${l.districtName}">Name</td>
+                            <!--<td th:text="${aokmotuInList.code}">Code</td>-->
+                        </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -313,6 +313,9 @@
                                                     <button sec:authorize="hasAnyAuthority('ADMIN')" class="btn btn-sm btn-accent" type="button" id="bnt_init_debtor_info">
                                                         Сведение
                                                     </button>
+													<a sec:authorize="hasAnyAuthority('ADMIN')" data-remote="false" data-toggle="modal"
+													   data-target="#listLoanFormModal" th:href="@{/debtor/__${debtor.id}__/objectList/form}"
+													   role="button" class="btn btn-success" th:text="#{label.add.listOfLoan}"></a>
 
 														<form id="checkedLoans" th:action="@{/manage/debtor/__${debtor.id}__/loan/summary/view}" method="get">
 															<input hidden="hidden" type="text" name="name" id="selectedLoanses">
@@ -458,6 +461,15 @@
                                     </div>
                                 </div>
 								<!--end: Datatable -->
+							</div>
+							<div class="modal fade" id="listLoanFormModal" tabindex="-1"
+								 role="dialog" aria-labelledby="myModalLabel"
+								 aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-body">...</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -751,8 +763,10 @@
         }
         $(document.body).on("click", "a[data-toggle]", function(event) {
             var tabName = this.getAttribute("href");
-            sessionStorage.SessionName = "debtorTab";
-            sessionStorage.setItem("debtorTab",tabName);
+            if(tabName!='/debtor/'+debtorId+'/objectList/form') {
+                sessionStorage.SessionName = "debtorTab";
+                sessionStorage.setItem("debtorTab", tabName);
+            }
         });
     });
     $(window).on("popstate", function() {
@@ -760,8 +774,6 @@
         $("a[href='" + anchor + "']").tab("show");
     });
 </script>
-
-
 <script>
     var phaseDetailsTableInit = function (jsonInput) {
 
@@ -966,6 +978,15 @@
         */
 
     };
+</script>
+<script>
+    $("#listLoanFormModal").on("show.bs.modal", function(e) {
+
+        var link = $(e.relatedTarget);
+
+
+		$(this).find(".modal-body").load(link.attr("href"));
+    });
 </script>
 </body>
 <!-- end::Body -->

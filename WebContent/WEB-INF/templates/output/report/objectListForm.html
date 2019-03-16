@@ -1,4 +1,5 @@
-<form th:action="@{/objectList/save}" id="form_sample_2"  th:object="${objectList}"	class="form-horizontal" method="post">
+<form th:action="@{/objectList/save}" id="form_sample_2" th:object="${objectList}" class="form-horizontal" method="post"
+	  xmlns:th="http://www.w3.org/1999/xhtml">
 
 	<div class="modal-header">
 		<h5 class="modal-title"></h5>
@@ -22,6 +23,8 @@
 			<input hidden="true" type="text" th:field="*{groupType}" />
 			<input hidden="true" type="text" id="objectTypeId" name="objectTypeId" th:field="*{objectTypeId}" />
 			<input type="text" class="form-control" id="name" name="name" th:value="*{name}">
+			<input hidden="hidden" type="text" class="form-control" name="user_id" th:value="*{user_id}">
+			<input hidden="hidden" type="text" class="form-control" id="fromLoan" name="fromLoan" value="'true">
 		</div>
 
 		<!--<div class="form-group m-form__group row">-->
@@ -41,7 +44,7 @@
 		<!--</div>		-->
 
 
-		<div class="form-group ">
+		<div class="form-group " th:if="${fromLoan}=='false'">
 			<label class="form-control-label" th:text="#{label.objectList.contentType}">ContentType<span class="required"> * </span></label>
 			<div class="row">
 				<div class="col-12">
