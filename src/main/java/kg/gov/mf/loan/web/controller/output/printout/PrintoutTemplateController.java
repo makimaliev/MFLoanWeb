@@ -4,36 +4,42 @@ import com.lowagie.text.Document;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.rtf.RtfWriter2;
+import kg.gov.mf.loan.admin.org.model.IdentityDoc;
+import kg.gov.mf.loan.admin.org.model.Person;
+import kg.gov.mf.loan.admin.org.model.Staff;
+import kg.gov.mf.loan.admin.org.service.IdentityDocService;
+import kg.gov.mf.loan.admin.org.service.PersonService;
+import kg.gov.mf.loan.admin.org.service.StaffService;
+import kg.gov.mf.loan.admin.sys.model.User;
+import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.loan.LoanSummaryAct;
-import kg.gov.mf.loan.manage.model.process.LoanSummary;
 import kg.gov.mf.loan.manage.service.loan.LoanSummaryActService;
 import kg.gov.mf.loan.output.printout.model.Printout;
 import kg.gov.mf.loan.output.printout.model.PrintoutTemplate;
-import kg.gov.mf.loan.output.printout.service.*;
+import kg.gov.mf.loan.output.printout.service.PrintoutService;
+import kg.gov.mf.loan.output.printout.service.PrintoutTemplateService;
 import kg.gov.mf.loan.output.printout.utils.*;
 import kg.gov.mf.loan.web.util.Utils;
 import org.apache.commons.lang3.SystemUtils;
-import org.apache.poi.ss.formula.ptg.MemAreaPtg;
 import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-
-import static kg.gov.mf.loan.web.util.Utils.getPrincipal;
 
 @Controller
 public class PrintoutTemplateController {
@@ -47,6 +53,19 @@ public class PrintoutTemplateController {
 
 	@Autowired
 	LoanSummaryActService loanSummaryActService;
+
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	PersonService personService;
+
+	@Autowired
+	StaffService staffService;
+
+	@Autowired
+	IdentityDocService identityDocService;
+
 
 
 	private static String UPLOADED_FOLDER =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "c://temp//";
@@ -691,6 +710,11 @@ public class PrintoutTemplateController {
 		{
 
 
+            User user1=userService.findByUsername(Utils.getPrincipal());
+            User user=userService.findById(user1.getId());
+            Staff staff=staffService.findById(user.getStaff().getId());
+            Person person=personService.findById(Long.valueOf(object_id));
+            IdentityDoc identityDoc=identityDocService.findById(person.getIdentityDoc().getId());
 
 			String filePath = UPLOADED_FOLDER+ "/"+"1. Договор займа.docx";
 
@@ -711,7 +735,7 @@ public class PrintoutTemplateController {
 						String text = r.getText(0);
 						if (text != null && text.contains("(="))
 						{
-							replace(r);
+							replace(r,user,staff,person,identityDoc);
 //							text = text.replace("(=", "$");
 //							r.setText(text, 0);
 						}
@@ -729,9 +753,13 @@ public class PrintoutTemplateController {
 						{
 							for (XWPFRun r : p.getRuns()) {
 								String text = r.getText(0);
-								if (text != null && text.contains("(="))
+								if (text != null && text.contains("(=")&& text.contains("21")){
+                                    replace(r,user,staff,person,identityDoc);
+                                    writetable(tbl);
+                                }
+								else if (text != null && text.contains("(="))
 								{
-									replace(r);
+									replace(r,user,staff,person,identityDoc);
 //									text = text.replace("(=", "$");
 //									r.setText(text,0);
 
@@ -765,10 +793,391 @@ public class PrintoutTemplateController {
 
 	}
 
-	private void replace(XWPFRun run)
+	private void writetable(XWPFTable tbl){
+
+
+//        for (XWPFTableRow row : tbl.getRows())
+//        {
+//            for (XWPFTableCell cell : row.getTableCells())
+//            {
+//                System.out.println(cell.getParagraphs());
+//                for (XWPFParagraph p : cell.getParagraphs())
+//                {
+//                    for (XWPFRun r : p.getRuns()) {
+//                        String text = r.getText(0);
+//
+//                    }
+//                }
+//            }
+//        }
+        XWPFTableRow row;
+        XWPFTableCell cell;
+        XWPFParagraph paragraph;
+        XWPFRun run;
+
+        Date today = new Date();
+        LocalDate localDate = today.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        int smth=localDate.getYear()-1;
+        int kvartal=0;
+        for(int i=2;i<tbl.getRows().size()-1;i++){
+            row=tbl.getRows().get(i);
+            for(int j=1;j<row.getTableCells().size();j++){
+                cell=row.getTableCells().get(j);
+                if(j==1){
+                    smth=smth+1;
+                    cell.setText(String.valueOf(smth));
+                }
+
+            }
+        }
+        if((localDate.getMonthValue()<=1 && localDate.getDayOfMonth()<=15)||localDate.getMonthValue()<1){
+            kvartal=1;
+        }
+        else if((localDate.getMonthValue()<=4 && localDate.getDayOfMonth()<=15)||localDate.getMonthValue()<4){
+            kvartal=2;
+        }
+        else if((localDate.getMonthValue()<=7 && localDate.getDayOfMonth()<=15)||localDate.getMonthValue()<7){
+            kvartal=3;
+        }
+        else{
+            kvartal=4;
+        }
+        if(kvartal==1 ){
+            for(int i=5;i<tbl.getRows().size()-3;i++){
+                row=tbl.getRows().get(i);
+                for(int j=1;j<row.getTableCells().size();j++){
+                    cell=row.getTableCells().get(j);
+                    cell.removeParagraph(0);
+                    paragraph = cell.addParagraph();
+                    paragraph.setAlignment(ParagraphAlignment.RIGHT);
+                    run = paragraph.createRun();
+                    run.setText("3 000,00");
+                    cell.setParagraph(paragraph);
+//                    cell.setText("3 000,00");
+                    if(j==6){
+                        cell.removeParagraph(0);
+                        paragraph = cell.addParagraph();
+                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+                        run = paragraph.createRun();
+                        run.setText("12 000,00");
+                        cell.setParagraph(paragraph);
+                    }
+
+                }
+            }
+            row=tbl.getRows().get(tbl.getRows().size()-2);
+            cell=row.getTableCells().get(2);
+            cell.removeParagraph(0);
+            paragraph = cell.addParagraph();
+            paragraph.setAlignment(ParagraphAlignment.RIGHT);
+            run = paragraph.createRun();
+            run.setText("2 000,00");
+            cell.setParagraph(paragraph);
+
+            cell=row.getTableCells().get(3);
+            cell.removeParagraph(0);
+            paragraph = cell.addParagraph();
+            paragraph.setAlignment(ParagraphAlignment.RIGHT);
+            run = paragraph.createRun();
+            run.setText("2 000,00");
+            cell.setParagraph(paragraph);
+
+            cell=row.getTableCells().get(4);
+            cell.removeParagraph(0);
+            paragraph = cell.addParagraph();
+            paragraph.setAlignment(ParagraphAlignment.RIGHT);
+            run = paragraph.createRun();
+            run.setText("2 000,00");
+            cell.setParagraph(paragraph);
+
+            cell=row.getTableCells().get(5);
+            cell.removeParagraph(0);
+            paragraph = cell.addParagraph();
+            paragraph.setAlignment(ParagraphAlignment.RIGHT);
+            run = paragraph.createRun();
+            run.setText("2 000,00");
+            cell.setParagraph(paragraph);
+
+            cell=row.getTableCells().get(6);
+            cell.removeParagraph(0);
+            paragraph = cell.addParagraph();
+            paragraph.setAlignment(ParagraphAlignment.RIGHT);
+            run = paragraph.createRun();
+            run.setText("8 000,00");
+            cell.setParagraph(paragraph);
+
+        }
+        else if(kvartal==2 ){
+            for(int i=5;i<tbl.getRows().size()-2;i++){
+                row=tbl.getRows().get(i);
+                for(int j=2;j<row.getTableCells().size();j++){
+                    cell=row.getTableCells().get(j);
+                    if(i==5 && j==2){}
+                    else if(i==5 && j==6){
+                        cell.removeParagraph(0);
+                        paragraph = cell.addParagraph();
+                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+                        run = paragraph.createRun();
+                        run.setText("9 000,00");
+                        cell.setParagraph(paragraph);
+                    }
+                    else if(i==tbl.getRows().size()-3 && j==6){
+                        cell.removeParagraph(0);
+                        paragraph = cell.addParagraph();
+                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+                        run = paragraph.createRun();
+                        run.setText("9 000,00");
+                        cell.setParagraph(paragraph);
+                    }
+                    else if(j==6){
+                        cell.removeParagraph(0);
+                        paragraph = cell.addParagraph();
+                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+                        run = paragraph.createRun();
+                        run.setText("12 000,00");
+                        cell.setParagraph(paragraph);
+                    }
+                    else if(i==tbl.getRows().size()-3 && ((j==3)||(j==4)||(j==5))){
+                        cell.removeParagraph(0);
+                        paragraph = cell.addParagraph();
+                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+                        run = paragraph.createRun();
+                        run.setText("2 000,00");
+                        cell.setParagraph(paragraph);
+                    }
+                    else if(j!=6){
+                        cell.removeParagraph(0);
+                        paragraph = cell.addParagraph();
+                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+                        run = paragraph.createRun();
+                        run.setText("3 000,00");
+                        cell.setParagraph(paragraph);
+                    }
+
+                }
+            }
+            row=tbl.getRows().get(tbl.getRows().size()-2);
+            cell=row.getTableCells().get(2);
+            cell.removeParagraph(0);
+            paragraph = cell.addParagraph();
+            paragraph.setAlignment(ParagraphAlignment.RIGHT);
+            run = paragraph.createRun();
+            run.setText("2 000,00");
+            cell.setParagraph(paragraph);
+//            cell.setText("2 000,00");
+            cell=row.getTableCells().get(6);
+            cell.removeParagraph(0);
+            paragraph = cell.addParagraph();
+            paragraph.setAlignment(ParagraphAlignment.RIGHT);
+            run = paragraph.createRun();
+            run.setText("2 000,00");
+            cell.setParagraph(paragraph);
+//            cell.setText("2 000,00");
+
+        }
+        else if(kvartal==3 ){
+            for(int i=5;i<tbl.getRows().size()-2;i++){
+                row=tbl.getRows().get(i);
+                for(int j=2;j<row.getTableCells().size();j++){
+                    cell=row.getTableCells().get(j);
+                    if((i==5 && j==2)||(i==5 && j==3)){}
+                    else if(i==5 && j==6){
+                        cell.removeParagraph(0);
+                        paragraph = cell.addParagraph();
+                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+                        run = paragraph.createRun();
+                        run.setText("6 000,00");
+                        cell.setParagraph(paragraph);
+                    }
+                    else if(i==tbl.getRows().size()-3 && j==6){
+                        cell.removeParagraph(0);
+                        paragraph = cell.addParagraph();
+                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+                        run = paragraph.createRun();
+                        run.setText("10 000,00");
+                        cell.setParagraph(paragraph);
+                    }
+                    else if(j==6){
+                        cell.removeParagraph(0);
+                        paragraph = cell.addParagraph();
+                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+                        run = paragraph.createRun();
+                        run.setText("12 000,00");
+                        cell.setParagraph(paragraph);
+                    }
+                    else if(i==tbl.getRows().size()-3 && ((j==4)||(j==5))){
+                        cell.removeParagraph(0);
+                        paragraph = cell.addParagraph();
+                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+                        run = paragraph.createRun();
+                        run.setText("2 000,00");
+                        cell.setParagraph(paragraph);
+                    }
+                    else if(j!=6){
+                        paragraph = cell.addParagraph();
+                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+                        run = paragraph.createRun();
+                        run.setText("3 000,00");
+                        cell.setParagraph(paragraph);
+                    }
+
+                }
+            }
+            row=tbl.getRows().get(tbl.getRows().size()-2);
+            cell=row.getTableCells().get(2);
+            cell.getCTTc();
+            cell.removeParagraph(0);
+            paragraph = cell.addParagraph();
+            paragraph.setAlignment(ParagraphAlignment.RIGHT);
+            run = paragraph.createRun();
+            run.setText("2 000,00");
+            cell.setParagraph(paragraph);
+//            cell.setText("2 000,00");
+            cell=row.getTableCells().get(3);
+            cell.removeParagraph(0);
+            paragraph = cell.addParagraph();
+            paragraph.setAlignment(ParagraphAlignment.RIGHT);
+            run = paragraph.createRun();
+            run.setText("2 000,00");
+            cell.setParagraph(paragraph);
+
+            cell=row.getTableCells().get(6);
+            cell.removeParagraph(0);
+            paragraph = cell.addParagraph();
+            paragraph.setAlignment(ParagraphAlignment.RIGHT);
+            run = paragraph.createRun();
+            run.setText("4 000,00");
+            cell.setParagraph(paragraph);
+        }
+        else if(kvartal==4 ){
+            for(int i=5;i<tbl.getRows().size()-2;i++){
+                row=tbl.getRows().get(i);
+                for(int j=2;j<row.getTableCells().size();j++){
+                    cell=row.getTableCells().get(j);
+                    if((i==5 && j==2)||(i==5 && j==3)||(i==5 && j==4)){}
+                    else if(i==5 && j==6){
+                        cell.removeParagraph(0);
+                        paragraph = cell.addParagraph();
+                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+                        run = paragraph.createRun();
+                        run.setText("3 000,00");
+                        cell.setParagraph(paragraph);
+                    }
+                    else if(i==tbl.getRows().size()-2 && j==6){
+                        cell.removeParagraph(0);
+                        paragraph = cell.addParagraph();
+                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+                        run = paragraph.createRun();
+                        run.setText("11 000,00");
+                        cell.setParagraph(paragraph);
+                    }
+                    else if(j==6){
+                        cell.removeParagraph(0);
+                        paragraph = cell.addParagraph();
+                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+                        run = paragraph.createRun();
+                        run.setText("12 000,00");
+                        cell.setParagraph(paragraph);
+                    }
+                    else if(i==tbl.getRows().size()-2 && (j==5)){
+                        cell.removeParagraph(0);
+                        paragraph = cell.addParagraph();
+                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+                        run = paragraph.createRun();
+                        run.setText("2 000,00");
+                        cell.setParagraph(paragraph);
+                    }
+                    else if(j!=6){
+                        cell.removeParagraph(0);
+                        paragraph = cell.addParagraph();
+                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+                        run = paragraph.createRun();
+                        run.setText("3 000,00");
+                        cell.setParagraph(paragraph);
+                    }
+
+                }
+            }
+            row=tbl.getRows().get(tbl.getRows().size()-2);
+            cell=row.getTableCells().get(2);
+            cell.removeParagraph(0);
+            paragraph = cell.addParagraph();
+            paragraph.setAlignment(ParagraphAlignment.RIGHT);
+            run = paragraph.createRun();
+            run.setText("2 000,00");
+            cell.setParagraph(paragraph);
+
+            cell=row.getTableCells().get(3);
+            cell.removeParagraph(0);
+            paragraph = cell.addParagraph();
+            paragraph.setAlignment(ParagraphAlignment.RIGHT);
+            run = paragraph.createRun();
+            run.setText("2 000,00");
+            cell.setParagraph(paragraph);
+
+            cell=row.getTableCells().get(4);
+            cell.removeParagraph(0);
+            paragraph = cell.addParagraph();
+            paragraph.setAlignment(ParagraphAlignment.RIGHT);
+            run = paragraph.createRun();
+            run.setText("2 000,00");
+            cell.setParagraph(paragraph);
+
+            cell=row.getTableCells().get(6);
+            cell.removeParagraph(0);
+            paragraph = cell.addParagraph();
+            paragraph.setAlignment(ParagraphAlignment.RIGHT);
+            run = paragraph.createRun();
+            run.setText("6 000,00");
+            cell.setParagraph(paragraph);
+
+        }
+
+        row=tbl.getRows().get(tbl.getRows().size()-1);
+        cell=row.getTableCells().get(1);
+        cell.removeParagraph(0);
+        paragraph = cell.addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+        run = paragraph.createRun();
+        run.setText("50 000,00");
+        cell.setParagraph(paragraph);
+
+        cell=row.getTableCells().get(2);
+        cell.removeParagraph(0);
+        paragraph = cell.addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+        run = paragraph.createRun();
+        run.setText("50 000,00");
+        cell.setParagraph(paragraph);
+
+        cell=row.getTableCells().get(3);
+        cell.removeParagraph(0);
+        paragraph = cell.addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+        run = paragraph.createRun();
+        run.setText("50 000,00");
+        cell.setParagraph(paragraph);
+
+        cell=row.getTableCells().get(4);
+        cell.removeParagraph(0);
+        paragraph = cell.addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+        run = paragraph.createRun();
+        run.setText("50 000,00");
+        cell.setParagraph(paragraph);
+
+        cell=row.getTableCells().get(5);
+        cell.removeParagraph(0);
+        paragraph = cell.addParagraph();
+        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+        run = paragraph.createRun();
+        run.setText("200 000,00");
+        cell.setParagraph(paragraph);
+
+    }
+	private void replace(XWPFRun run,User user,Staff staff,Person person,IdentityDoc identityDoc)
 	{
 		String text = run.getText(0);
-
 		try
 		{
 			int startPosition = 0;
@@ -785,6 +1194,8 @@ public class PrintoutTemplateController {
 					int varId = Integer.parseInt(varIdString);
 
 					Date today = new Date();
+                    LocalDate localDate = today.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
 					String newText = "";
 					String oldText = "";
 
@@ -792,14 +1203,14 @@ public class PrintoutTemplateController {
 					{
 						case 1: System.out.println("1");
 
-							int day = today.getDay();
+							int day = localDate.getDayOfMonth();
 							newText = " "+String.valueOf(day)+" ";
 
 
 							break;
 
 						case 2:
-							int month = today.getMonth()+1;
+							int month = localDate.getMonthValue();
 
 
 							switch (month)
@@ -820,6 +1231,64 @@ public class PrintoutTemplateController {
 
 
 							break;
+						case 3:
+							newText=staff.getName();
+							break;
+						case 4:
+							newText=staff.getEmploymentHistory().getNumber();
+							break;
+						case 5:
+							newText=person.getName();
+							break;
+						case 6:
+							newText=identityDoc.getIdentityDocType().getName()+" "+identityDoc.getNumber();
+							break;
+						case 7:
+							newText=staff.getDepartment().getName();
+							break;
+						case 8:
+							newText=staff.getPerson().getAddress().getLine();
+							break;
+						case 9:
+							newText=staff.getPosition().getName();
+							break;
+						case 10:
+							String[] fullname=staff.getPerson().getName().split(" ");
+							String surname=fullname[0]+" "+fullname[1].charAt(0)+"."+fullname[2].charAt(0)+".";
+							newText=surname;
+							break;
+						case 11:
+							newText=person.getName();
+							break;
+						case 12:
+							newText=person.getAddress().getLine();
+							break;
+						case 13:
+						    if(person.getAddress_line2()!=null) {
+                                newText = person.getAddress_line2();
+                            }
+						    else{
+						        newText="";
+                            }
+							break;
+						case 14:
+							newText=person.getIdentityDoc().getPin();
+							break;
+						case 15:
+                            SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+                            String docDate=format.format(identityDoc.getDate());
+							newText=identityDoc.getNumber()+", "+docDate+", "+identityDoc.getGivenBy();
+							break;
+						case 16:
+							newText=staff.getPosition().getName();
+							break;
+						case 17:
+							newText=person.getName();
+							break;
+                        case 20:
+                            newText=String.valueOf(localDate.getYear());
+                            break;
+
 
 					}
 
@@ -846,7 +1315,7 @@ public class PrintoutTemplateController {
 
 			if(text.contains("(="))
 			{
-				replace(run);
+				replace(run,user,staff,person,identityDoc);
 			}
 
 
