@@ -296,7 +296,8 @@ public class ObjectListController {
 	@RequestMapping("/debtor/{debtorId}/objectList/form")
 	public String getForm(ModelMap model,@PathVariable("debtorId") Long debtorId){
 
-		List<ObjectList> objectLists=objectListService.findAllByGroupType(groupTypeService.findById(8));
+		User user = userService.findByUsername(Utils.getPrincipal());
+		List<ObjectList> objectLists=objectListService.findAllByGroupTypeAndUser(groupTypeService.findById(8),user.getId());
 		model.addAttribute("objectLists",objectLists);
 		model.addAttribute("debtorId",debtorId);
 

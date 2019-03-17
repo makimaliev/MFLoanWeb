@@ -548,6 +548,7 @@ public class ReportController {
 
         }
 
+		if(loanses!=null)
         if(loanses.length>0)
 		{
 			try

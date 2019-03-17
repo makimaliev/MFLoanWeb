@@ -41,7 +41,7 @@
 										</span>
                                     </div>
                                 </li>
-                                <a sec:authorize="hasAnyAuthority('ADMIN')" class="btn btn-sm btn-accent" type="button" th:href="@{/objectList/loan/save}" th:text="#{label.debtor.objectList.add}">
+                                <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN_LIST')" class="btn btn-sm btn-accent" type="button" th:href="@{/objectList/loan/save}" th:text="#{label.debtor.objectList.add}">
 
                                 </a>
                             </ul>

@@ -307,13 +307,13 @@
 														<button sec:authorize="hasAnyAuthority('ADMIN')" class="btn btn-sm btn-accent" type="button" id="bnt_init_dailyCalculator">
 															Обновить данные
 														</button>
-														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLECTIONPHASE')" class="btn btn-sm btn-accent" type="button" id="bnt_init_phase">
+														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLECTIONPHASE','PERM_INIT_COLLECTIONPHASE')" class="btn btn-sm btn-accent" type="button" id="bnt_init_phase">
 															Претензия
 														</button>
-                                                    <button sec:authorize="hasAnyAuthority('ADMIN')" class="btn btn-sm btn-accent" type="button" id="bnt_init_debtor_info">
-                                                        Сведение
+                                                    <button class="btn btn-sm btn-accent" type="button" id="bnt_init_debtor_info">
+                                                        Сведения о заемщике
                                                     </button>
-													<a sec:authorize="hasAnyAuthority('ADMIN')" data-remote="false" data-toggle="modal"
+													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN_LIST')" data-remote="false" data-toggle="modal"
 													   data-target="#listLoanFormModal" th:href="@{/debtor/__${debtor.id}__/objectList/form}"
 													   role="button" class="btn btn-success" th:text="#{label.add.listOfLoan}"></a>
 
