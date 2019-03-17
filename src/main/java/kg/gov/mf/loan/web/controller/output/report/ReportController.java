@@ -548,6 +548,42 @@ public class ReportController {
 
         }
 
+        if(loanses.length>0)
+		{
+			try
+			{
+				for (String objectListIdString: loanses)
+				{
+					long objectListId = Long.parseLong(objectListIdString);
+
+					if(objectListId > 0)
+					{
+						ObjectList objectList = this.objectListService.findById(objectListId);
+
+						if(objectList.getGroupType().getId() == 8)
+						{
+
+							FilterParameter filterParameter = new FilterParameter();
+
+							filterParameter.setId(c++);
+							filterParameter.setFilterParameterType(FilterParameterType.OBJECT_LIST);
+							filterParameter.setName("temp list of loans");
+							filterParameter.setObjectList(objectList);
+							filterParameters.add(filterParameter);
+						}
+
+					}
+
+				}
+
+
+			}
+			catch (Exception ex)
+			{
+
+			}
+		}
+
         int counter =0;
 		int counterDate =0;
 		int counterValue =0;

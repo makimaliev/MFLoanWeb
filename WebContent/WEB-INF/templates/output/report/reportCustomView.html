@@ -75,7 +75,6 @@
                                     </div>
                                     <div class="col-6">
                                         <select id="groupType1select" th:field="*{groupType1}" class="form-control m-bootstrap-select m_selectpicker">
-                                            <option th:value="null">-</option>
                                             <option th:each="groupType1InList : ${groupTypeList}"
                                                     th:value="${{groupType1InList}}"
                                                     th:text="${groupType1InList.name}">groupType</option>
@@ -93,7 +92,6 @@
                                     </div>
                                     <div class="col-6">
                                         <select id="groupType2select" th:field="*{groupType2}" class="form-control m-bootstrap-select m_selectpicker">
-                                            <option th:value="null">-</option>
                                             <option th:each="groupType2InList : ${groupTypeList}"
                                                     th:value="${{groupType2InList}}"
                                                     th:text="${groupType2InList.name}">groupType</option>
@@ -214,7 +212,8 @@
                                 Loans <span class="m--font-danger">*</span>
                             </label>
                             <div class="col-lg-4 col-md-9 col-sm-12">
-                                <select id="loanses" name="loanses" class="form-control m-bootstrap-select m_selectpicker" multiple >
+                                <select id="loanses" name="loanses" class="form-control m-bootstrap-select m_selectpicker">
+                                    <option th:value="null" selected="true" >-</option>
                                     <option th:each="l : ${objectLists}"
                                             th:value="${l.id}"
                                             th:text="${l.name}">
