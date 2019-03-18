@@ -531,6 +531,8 @@ public class DebtorController {
 
 					Double rate = currencyRateService.findByDateAndType(loanSummary.getOnDate(), loan.getCurrency()).getRate();
 
+					if(loan.getCloseRate()>0) rate = loan.getCloseRate();
+
 
 					name1 = loan.getCreditOrder().getRegNumber() + " №" + loan.getRegNumber() + " от " + new SimpleDateFormat("dd.MM.yyyy", new Locale("ru", "RU")).format(loan.getRegDate()) + "г. в тыс. " + loan.getCurrency().getName();
 
@@ -760,6 +762,8 @@ public class DebtorController {
 					String name1="";
 
 					Double rate=currencyRateService.findByDateAndType(loanSummary.getOnDate(),loan.getCurrency()).getRate();
+
+					if(loan.getCloseRate()>0) rate = loan.getCloseRate();
 
 
 					name1=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).format(loan.getRegDate())+"г. в тыс. "+loan.getCurrency().getName();
@@ -1009,6 +1013,8 @@ public class DebtorController {
 				LoanSummary loanSummary=calculationTool.getLoanSummaryCaluculatedByLoanIdAndOnDate(loanView,loanView.getV_loan_id(),newDate,null);
 
 				Double rate=currencyRateService.findByDateAndType(loanSummary.getOnDate(),loan.getCurrency()).getRate();
+
+				if(loan.getCloseRate()>0) rate = loan.getCloseRate();
 
                 loanSummary.setLoanAmount(conditional(loanSummary.getLoanAmount()));
                 loanSummary.setTotalDisbursed(conditional(loanSummary.getTotalDisbursed()));
