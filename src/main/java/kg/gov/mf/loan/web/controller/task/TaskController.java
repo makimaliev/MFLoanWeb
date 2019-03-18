@@ -3,14 +3,17 @@ package kg.gov.mf.loan.web.controller.task;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.task.model.*;
-import kg.gov.mf.loan.task.service.*;
+import kg.gov.mf.loan.task.service.ChatUserService;
+import kg.gov.mf.loan.task.service.LoggerService;
+import kg.gov.mf.loan.task.service.TaskActionService;
+import kg.gov.mf.loan.task.service.TaskService;
 import kg.gov.mf.loan.web.util.Utils;
+import kg.gov.mf.log.model.MFLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,19 +42,16 @@ public class TaskController {
             put("EXISTS", "Exists");
             put("NOT EXISTS", "NOT Exists");
 
-            put("AND", "И");
-            put("OR", "Или");
-
             put("IN", "Содержит");
             put("BETWEEN", "Между");
         }
     };
 
-    TaskService taskService;
-    UserService userService;
-    LoggerService loggerService;
-    ChatUserService chatUserService;
-    TaskActionService taskActionService;
+    private final TaskService taskService;
+    private final UserService userService;
+    private final LoggerService loggerService;
+    private final ChatUserService chatUserService;
+    private final TaskActionService taskActionService;
 
     @Autowired
     public TaskController(TaskService taskService, UserService userService, LoggerService loggerService, ChatUserService chatUserService, TaskActionService taskActionService) {
@@ -62,12 +62,11 @@ public class TaskController {
         this.taskActionService = taskActionService;
     }
 
-    private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        SimpleDateFormat dateFormat = DATE_FORMAT;
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(DATE_FORMAT, true));
     }
 
     @RequestMapping(value = { "/log" }, method = RequestMethod.GET)
@@ -80,9 +79,11 @@ public class TaskController {
     @RequestMapping(value = { "/task/edit" }, method = RequestMethod.GET)
     public String edit(Model model) {
 
+        if(getUser() == null) return "/login/login";
+
         List<ObjectType> objectTypes = taskService.getEntities();
 
-        Collections.sort(objectTypes, Comparator.comparing(ObjectType::getObject));
+        objectTypes.sort(Comparator.comparing(ObjectType::getObject));
 
         model.addAttribute("operators", operators);
         model.addAttribute("taskObject", new TaskObject());
@@ -93,9 +94,6 @@ public class TaskController {
 
     @RequestMapping(value = { "/task/add" }, method = RequestMethod.POST)
     public String addTask(@ModelAttribute("taskObject") TaskObject taskObject, Model model) {
-
-        List list = taskService.queryBuilder(taskObject);
-
         model.addAttribute("taskObject", taskObject);
 
         return "/task/list";
@@ -176,7 +174,7 @@ public class TaskController {
     }
 
     private String getPrincipal(){
-        String userName = null;
+        String userName;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof UserDetails) {
@@ -188,9 +186,8 @@ public class TaskController {
     }
 
     public User getUser() {
-        String userName = getPrincipal();
-        User user = userService.findByUsername(userName);
-        return user;
+
+        return userService.findByUsername(getPrincipal());
     }
 
     public List<Task> getUserTasks()
@@ -202,9 +199,17 @@ public class TaskController {
     // REST ************************************************************************************************************
     // *****************************************************************************************************************
 
+    @RequestMapping(value = "/logs")
+    @ResponseBody
+    public DataTablesOutput<MFLog> getLogs(@Valid DataTablesInput input) {
+
+        return null;
+    }
+
     @RequestMapping(value = "/tasks")
     @ResponseBody
     public DataTablesOutput<Task> getTasks(@Valid DataTablesInput input) {
+
         return  taskService.list(getUser().getId(), input);
     }
 
@@ -215,23 +220,17 @@ public class TaskController {
         return operators;
     }
 
-    @RequestMapping(value = "/task/to", method = RequestMethod.GET)
+    @RequestMapping(value = "/task/taskObject", method = RequestMethod.GET)
     @ResponseBody
-    public List<TaskObject> getTaskObject(@ModelAttribute("taskObject") TaskObject taskObject) {
+    public List getTaskObject(@ModelAttribute("taskObject") TaskObject taskObject) {
+
         return taskService.queryBuilder(taskObject);
     }
 
-    @RequestMapping(value = "/task/op")
+    @RequestMapping(value = "/task/properties")
     @ResponseBody
     public Map<String, Object> getObjectProperties(@RequestParam String name) {
-        Map<String, Object> result = new LinkedHashMap<>();
 
-        taskService.getFields(name)
-                .entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByKey())
-                .forEachOrdered(x -> result.put(x.getKey(), x.getValue()));
-
-        return result;
+        return new TreeMap<>(taskService.getFields(name));
     }
 }

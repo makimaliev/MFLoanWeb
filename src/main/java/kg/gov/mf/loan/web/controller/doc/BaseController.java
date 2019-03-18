@@ -12,14 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class BaseController {
 
     protected String path =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
-    protected long staticUser[] = {5, 7, 8};
     protected UserService userService;
-    protected AttachmentService attachmentService;
+
 
     @Autowired
-    protected void setUserService(UserService userService, AttachmentService attachmentService) {
+    protected void setUserService(UserService userService) {
         this.userService = userService;
-        this.attachmentService = attachmentService;
     }
 
     protected User getUser() {

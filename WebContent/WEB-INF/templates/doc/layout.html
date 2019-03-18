@@ -80,6 +80,8 @@
 
                 var af = document.createElement("a");
                 af.setAttribute("href", "/doc/attachments/download/" + file.id);
+                af.setAttribute("target", "_blank");
+                af.setAttribute("rel", "noopener noreferrer");
                 af.appendChild(infof);
 
                 var tdf = document.createElement("td");
@@ -214,17 +216,17 @@
         <table class="table table-bordered table-hover" id="documentTable">
             <thead class="bg-info">
             <tr>
-                <th width="33px"></th>
-                <th width="33px"></th>
-                <th width="50px"></th>
-                <th width="50px">Срок</th>
-                <th width="120px" class="searchable ti">Исх. №</th>
-                <th width="120px" class="searchable di">Исх. Дата</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th class="searchable ni">Срок</th>
+                <th class="searchable ti">Исх. №</th>
+                <th class="searchable di">Исх. Дата</th>
                 <th th:text="#{label.document.sender}" class="searchable ti">Отправитель</th>
                 <th th:utext="#{label.document.documentSubType}" class="searchable sid">Относительно</th>
                 <th th:utext="#{label.document.title}" class="searchable ti">Относительно</th>
-                <th width="120px" class="searchable ti">Вхд. №</th>
-                <th width="120px" class="searchable di">Вхд. Дата</th>
+                <th class="searchable ti">Вхд. №</th>
+                <th class="searchable di">Вхд. Дата</th>
                 <th th:text="#{label.document.receiver}" class="searchable di">Получатель</th>
                 <th th:text="#{label.document.generalStatus}" class="searchable sis">Статус</th>
             </tr>
@@ -234,39 +236,39 @@
     <th:block th:fragment="incomingIndex">
         <table class="table table-bordered" id="documentTable">
             <thead class="bg-info">
-            <tr>
-                <th width="33px"></th>
-                <th width="33px"></th>
-                <th width="40px" class="searchable ni">KОНТРОЛЬ</th>
-                <th width="120px" class="searchable ti">Вхд. №</th>
-                <th width="40px" class="searchable di">Вхд. Дата</th>
-                <th width="100px" class="searchable ti">Исх. №</th>
-                <th width="40px" class="searchable di">Исх. Дата</th>
-                <th th:text="#{label.document.sender}" class="searchable ti">Отправитель</th>
-                <th th:text="#{label.document.title}" class="searchable ti">Относительно</th>
-                <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
-                <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
-            </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th class="searchable ni">KОНТРОЛЬ</th>
+                    <th class="searchable ti">Вхд. №</th>
+                    <th class="searchable di">Вхд. Дата</th>
+                    <th class="searchable ti">Исх. №</th>
+                    <th class="searchable di">Исх. Дата</th>
+                    <th th:text="#{label.document.sender}" class="searchable ti">Отправитель</th>
+                    <th th:text="#{label.document.title}" class="searchable ti">Относительно</th>
+                    <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
+                    <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
+                </tr>
             </thead>
         </table>
     </th:block>
     <th:block th:fragment="outgoingIndex">
         <table class="table table-bordered" id="documentTable">
             <thead class="bg-info">
-            <tr>
-                <th width="33px"></th>
-                <th width="33px"></th>
-                <th width="33px"></th>
-                <th width="70px" class="searchable ti">№</th>
-                <th width="120px" class="searchable ti">Исх. №</th>
-                <th width="50px" class="searchable di">Дата</th>
-                <th th:utext="#{label.document.documentSubType}" class="searchable sid">Тип документа</th>
-                <th th:utext="#{label.document.title}" class="searchable ti">Относительно</th>
-                <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
-                <th th:text="#{label.document.executer}" class="searchable ti">Исполнитель</th>
-                <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
-                <th width="100px" th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|" class="searchable ti">Номер бланка</th>
-            </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th class="searchable ti">№</th>
+                    <th class="searchable ti">Исх. №</th>
+                    <th class="searchable di">Дата</th>
+                    <th th:utext="#{label.document.documentSubType}" class="searchable sid">Тип документа</th>
+                    <th th:utext="#{label.document.title}" class="searchable ti">Относительно</th>
+                    <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
+                    <th th:text="#{label.document.executer}" class="searchable ti">Исполнитель</th>
+                    <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
+                    <th th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|" class="searchable ti">Номер бланка</th>
+                </tr>
             </thead>
         </table>
     </th:block>
@@ -274,83 +276,82 @@
     <th:block th:fragment="reconciliationreportIndex">
         <table class="table table-bordered" id="documentTable">
             <thead class="bg-info text-center">
-            <tr>
-                <th width="33px"></th>
-                <th width="33px"></th>
-                <th width="33px"></th>
-                <th width="70px" class="searchable ti">№</th>
-                <th width="120px" class="searchable ti">Исх. №</th>
-                <th width="50px" class="searchable di">Дата</th>
-                <th th:utext="#{label.document.documentSubType}" class="searchable sid">Тип документа</th>
-                <th th:utext="#{label.document.title}" class="searchable ti">Относительно</th>
-                <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
-                <th th:text="#{label.document.executer}" class="searchable ti">Исполнитель</th>
-                <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
-                <th th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|" class="searchable ti">Номер бланка</th>
-            </tr>
+                <tr>
+                    <th width="33px"></th>
+                    <th width="33px"></th>
+                    <th width="33px"></th>
+                    <th width="70px" class="searchable ti">№</th>
+                    <th width="120px" class="searchable ti">Исх. №</th>
+                    <th width="50px" class="searchable di">Дата</th>
+                    <th th:utext="#{label.document.documentSubType}" class="searchable sid">Тип документа</th>
+                    <th th:utext="#{label.document.title}" class="searchable ti">Относительно</th>
+                    <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
+                    <th th:text="#{label.document.executer}" class="searchable ti">Исполнитель</th>
+                    <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
+                    <th th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|" class="searchable ti">Номер бланка</th>
+                </tr>
             </thead>
         </table>
     </th:block>
     <th:block th:fragment="complaintIndex">
         <table class="table table-bordered" id="documentTable">
             <thead class="bg-info text-center">
-            <tr>
-                <th width="33px"></th>
-                <th width="33px"></th>
-                <th width="33px"></th>
-                <th width="70px" class="searchable ti">№</th>
-                <th width="120px" class="searchable ti">Исх. №</th>
-                <th width="50px" class="searchable di">Дата</th>
-                <th th:utext="#{label.document.documentSubType}" class="searchable sid">Тип документа</th>
-                <th th:utext="#{label.document.title}" class="searchable ti">Относительно</th>
-                <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
-                <th th:text="#{label.document.executer}" class="searchable ti">Исполнитель</th>
-                <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
-                <th th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|" class="searchable ti">Номер бланка</th>
-            </tr>
+                <tr>
+                    <th width="33px"></th>
+                    <th width="33px"></th>
+                    <th width="33px"></th>
+                    <th width="70px" class="searchable ti">№</th>
+                    <th width="120px" class="searchable ti">Исх. №</th>
+                    <th width="50px" class="searchable di">Дата</th>
+                    <th th:utext="#{label.document.documentSubType}" class="searchable sid">Тип документа</th>
+                    <th th:utext="#{label.document.title}" class="searchable ti">Относительно</th>
+                    <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
+                    <th th:text="#{label.document.executer}" class="searchable ti">Исполнитель</th>
+                    <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
+                    <th th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|" class="searchable ti">Номер бланка</th>
+                </tr>
             </thead>
         </table>
     </th:block>
     <th:block th:fragment="notificationIndex">
         <table class="table table-bordered" id="documentTable">
             <thead class="bg-info text-center">
-            <tr>
-                <th width="33px"></th>
-                <th width="33px"></th>
-                <th width="33px"></th>
-                <th width="70px" class="searchable ti">№</th>
-                <th width="120px" class="searchable ti">Исх. №</th>
-                <th width="50px" class="searchable di">Дата</th>
-                <th th:utext="#{label.document.documentSubType}" class="searchable sid">Тип документа</th>
-                <th th:utext="#{label.document.title}" class="searchable ti">Относительно</th>
-                <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
-                <th th:text="#{label.document.executer}" class="searchable ti">Исполнитель</th>
-                <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
-                <th th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|" class="searchable ti">Номер бланка</th>
-            </tr>
+                <tr>
+                    <th width="33px"></th>
+                    <th width="33px"></th>
+                    <th width="33px"></th>
+                    <th width="70px" class="searchable ti">№</th>
+                    <th width="120px" class="searchable ti">Исх. №</th>
+                    <th width="50px" class="searchable di">Дата</th>
+                    <th th:utext="#{label.document.documentSubType}" class="searchable sid">Тип документа</th>
+                    <th th:utext="#{label.document.title}" class="searchable ti">Относительно</th>
+                    <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
+                    <th th:text="#{label.document.executer}" class="searchable ti">Исполнитель</th>
+                    <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
+                    <th th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|" class="searchable ti">Номер бланка</th>
+                </tr>
             </thead>
         </table>
     </th:block>
     <th:block th:fragment="contractIndex">
         <table class="table table-bordered" id="documentTable">
             <thead class="bg-info text-center">
-            <tr>
-                <th width="33px"></th>
-                <th width="33px"></th>
-                <th width="33px"></th>
-                <th width="70px" class="searchable ti">№</th>
-                <th width="120px" class="searchable ti">Исх. №</th>
-                <th width="50px" class="searchable di">Дата</th>
-                <th th:utext="#{label.document.documentSubType}" class="searchable sid">Тип документа</th>
-                <th th:utext="#{label.document.title}" class="searchable ti">Относительно</th>
-                <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
-                <th th:text="#{label.document.executer}" class="searchable ti">Исполнитель</th>
-                <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
-                <th th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|" class="searchable ti">Номер бланка</th>
-            </tr>
+                <tr>
+                    <th width="33px"></th>
+                    <th width="33px"></th>
+                    <th width="33px"></th>
+                    <th width="70px" class="searchable ti">№</th>
+                    <th width="120px" class="searchable ti">Исх. №</th>
+                    <th width="50px" class="searchable di">Дата</th>
+                    <th th:utext="#{label.document.documentSubType}" class="searchable sid">Тип документа</th>
+                    <th th:utext="#{label.document.title}" class="searchable ti">Относительно</th>
+                    <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
+                    <th th:text="#{label.document.executer}" class="searchable ti">Исполнитель</th>
+                    <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
+                    <th th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|" class="searchable ti">Номер бланка</th>
+                </tr>
             </thead>
         </table>
     </th:block>
-
 </body>
 </html>

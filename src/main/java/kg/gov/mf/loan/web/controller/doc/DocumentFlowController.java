@@ -9,6 +9,7 @@ import kg.gov.mf.loan.task.model.ChatUser;
 import kg.gov.mf.loan.task.model.SystemConstant;
 import kg.gov.mf.loan.task.model.Task;
 import kg.gov.mf.loan.task.service.ChatUserService;
+import kg.gov.mf.loan.task.service.LoggerService;
 import kg.gov.mf.loan.task.service.SystemConstantService;
 import kg.gov.mf.loan.task.service.TaskService;
 import kg.gov.mf.loan.web.controller.doc.dto.SearchResult;
@@ -43,6 +44,10 @@ public class DocumentFlowController extends BaseController {
     private ChatUserService chatUserService;
     private DocViewDao documentViewDao;
     private EntityManager entityManager;
+    private AttachmentService attachmentService;
+
+    @Autowired
+    private LoggerService loggerService;
 
     @Autowired
     public DocumentFlowController(DocumentService documentService,
@@ -54,7 +59,8 @@ public class DocumentFlowController extends BaseController {
                                   SystemConstantService systemConstantService,
                                   ChatUserService chatUserService,
                                   DocViewDao documentViewDao,
-                                  EntityManager entityManager) {
+                                  EntityManager entityManager,
+                                  AttachmentService attachmentService) {
 
         this.documentService = documentService;
         this.documentTypeService = documentTypeService;
@@ -66,6 +72,7 @@ public class DocumentFlowController extends BaseController {
         this.chatUserService = chatUserService;
         this.documentViewDao = documentViewDao;
         this.entityManager = entityManager;
+        this.attachmentService = attachmentService;
     }
     //endregion
     //region ACTIONS
@@ -135,27 +142,17 @@ public class DocumentFlowController extends BaseController {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 
+    // Document List
     @RequestMapping(method = RequestMethod.GET)
     public String index(@RequestParam("type") String type, Model model) {
 
         if(getUser() == null)
             return "/login/login";
 
+        loggerService.addLog("Nurlan", "AN", "LOG", "127.0.0.0");
+
         DocumentType documentType = documentTypeService.getByInternalName(type);
 
-        List<Task> t = taskService.getDocumentTasks(getUser().getId());
-
-        List<TS> tsList = new ArrayList<>();
-
-        for(Task task : t)
-        {
-            TS ts = new TS();
-            ts.setId(task.getObjectId());
-            ts.setMod(task.getModifiedByUserId());
-            tsList.add(ts);
-        }
-
-        model.addAttribute("tsList", tsList);
         model.addAttribute("title", documentType.getName());
         model.addAttribute("type", type);
 
@@ -179,6 +176,7 @@ public class DocumentFlowController extends BaseController {
         return "/doc/document/index";
     }
 
+    // Create New Document
     @RequestMapping(value = "/new/{subType}", method = RequestMethod.GET)
     public String add(@PathVariable("subType") String subType, Model model) {
 
@@ -191,7 +189,7 @@ public class DocumentFlowController extends BaseController {
 
         if(document.getDocumentType().getInternalName().equals("incoming"))
         {
-            document.setDocIndex(registerService.getNumber());
+            document.setDocIndex(registerService.getIncomingNumber());
             document.setResolution("Обработать входящий документ");
             //model.addAttribute("dto", document.getDocumentType().getInternalName());
         }
@@ -214,6 +212,7 @@ public class DocumentFlowController extends BaseController {
         return "/doc/document/edit";
     }
 
+    // Edit Document
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String edit(@PathVariable("id") Long id, Model model) {
 
@@ -243,8 +242,14 @@ public class DocumentFlowController extends BaseController {
         vars.clear();
         //endregion
 
+        if(document.getDocumentType().getInternalName().equals("outgoing") && document.getDocIndex() == 0)
+        {
+            document.setSenderRegisteredDate(new Date());
+        }
+
         vars.put("objectId", String.valueOf(document.getId()));
         vars.put("objectType", "Document");
+
         model.addAttribute("tasks", taskService.getTasks(vars));
         model.addAttribute("uid", getUser().getId());
         model.addAttribute("hasComment", hasComment(document));
@@ -255,6 +260,7 @@ public class DocumentFlowController extends BaseController {
         return "/doc/document/edit";
     }
 
+    // Save Document
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(@ModelAttribute("document") Document document,
                        @RequestParam("action") String action,
@@ -268,8 +274,7 @@ public class DocumentFlowController extends BaseController {
 
         if(document.getId() != 0)
         {
-            Document doc = documentService.getById(document.getId());
-            document.setAttachments(doc.getAttachments());
+            document.setAttachments(documentService.getById(document.getId()).getAttachments());
         }
 
         if(files.length != 0)
@@ -299,15 +304,7 @@ public class DocumentFlowController extends BaseController {
         return "redirect:/doc?type=" + docType;
     }
 
-    public void update(Document document) {
-
-        Document doc = documentService.getById(document.getId());
-
-        document.setUsers(doc.getUsers());
-        document.setDispatchData(doc.getDispatchData());
-        documentService.update(document);
-    }
-
+    // View Document
     @RequestMapping(value = "/view/{id}", method = RequestMethod.GET)
     public String view(@PathVariable("id") Long id, Model model) {
 
@@ -326,6 +323,7 @@ public class DocumentFlowController extends BaseController {
         return "/doc/document/view";
     }
 
+    // Delete Document
     @RequestMapping(value = "/admin/delete/{id}", method = RequestMethod.GET)
     public String delete(@PathVariable("id") Long id) {
 
@@ -342,37 +340,14 @@ public class DocumentFlowController extends BaseController {
         return "redirect:/doc?type=" + document.getDocumentType().getInternalName();
     }
 
-    private List<Transition> getStages(String docType) {
+    // Update Document without changing State
+    public void update(Document document) {
 
-        List<Transition> stages = new ArrayList<>();
+        Document doc = documentService.getById(document.getId());
 
-        if(docType.equals("internal"))
-        {
-            stages.add(Transition.CREATE);
-            stages.add(Transition.RECONCILE);
-            stages.add(Transition.APPROVE);
-            stages.add(Transition.ACCEPT);
-            stages.add(Transition.START);
-            stages.add(Transition.DONE);
-        }
-
-        if(docType.equals("incoming"))
-        {
-            stages.add(Transition.CREATE);
-            stages.add(Transition.REGISTER);
-            stages.add(Transition.START);
-            stages.add(Transition.DONE);
-        }
-
-        if(docType.equals("outgoing"))
-        {
-            stages.add(Transition.CREATE);
-            stages.add(Transition.APPROVE);
-            stages.add(Transition.REGISTER);
-            stages.add(Transition.DONE);
-        }
-
-        return stages;
+        document.setUsers(doc.getUsers());
+        document.setDispatchData(doc.getDispatchData());
+        documentService.update(document);
     }
     private List<Transition> getActions(Document document) {
         int row = document.getDocumentType().getId() < 4 ? (int)document.getDocumentType().getId()-1 : 3;
@@ -397,7 +372,6 @@ public class DocumentFlowController extends BaseController {
         }
         return hasComment;
     }
-
     private DispatchData setDispatchData(State state, String description) {
 
         DispatchData dispatchData = new DispatchData();
@@ -409,7 +383,6 @@ public class DocumentFlowController extends BaseController {
 
         return dispatchData;
     }
-
     private void addTask(String description, Long id, User user, Date dueDate, User toUser, State stateToBeginWith, String tmp) {
 
         Task task = new Task();
@@ -429,6 +402,7 @@ public class DocumentFlowController extends BaseController {
 
         taskService.add(task);
     }
+
     private Document saveInternalDocument(Document document, String action) {
 
         String description = document.getComment();
@@ -799,7 +773,7 @@ public class DocumentFlowController extends BaseController {
             {
                 //region [Description, User, AutoTask]
                 document.setSenderRegisteredNumber(registerService.generateRegistrationNumber(document, getUser().getId()));
-                document.setSenderRegisteredDate(new Date());
+                //document.setSenderRegisteredDate(new Date());
                 description = "Исходящий № : " + document.getSenderRegisteredNumber()
                         + "<br>Дата : " + DATE_FORMAT.format(document.getSenderRegisteredDate());
 
@@ -878,6 +852,7 @@ public class DocumentFlowController extends BaseController {
     // REST ************************************************************************************************************
     // *****************************************************************************************************************
 
+    // Ajax Register or Done
     @RequestMapping(value = "/save/{id}", method = RequestMethod.GET)
     @ResponseBody
     public String register(@PathVariable("id") Long id, @RequestParam("action") String action) {
@@ -886,6 +861,7 @@ public class DocumentFlowController extends BaseController {
 
         Document document = documentService.getById(id);
         if(action.equals("REGISTER")) {
+            document.setSenderRegisteredDate(new Date());
             document = saveOutgoingDocument(document, "REGISTER");
             return document.getSenderRegisteredNumber();
         } else
@@ -895,6 +871,8 @@ public class DocumentFlowController extends BaseController {
         }
     }
 
+    // Get Accounts by Type
+    // Begin ***********************************************************************************************************
     @RequestMapping("/data/staff")
     @ResponseBody
     public List<SearchResult> getStaff(@RequestParam String name) {
@@ -952,7 +930,9 @@ public class DocumentFlowController extends BaseController {
         }
         return data;
     }
+    // End *************************************************************************************************************
 
+    // Get Document List
     @RequestMapping(value = "/documents")
     @ResponseBody
     public DataTablesOutput<DocView> getDocuments(@Valid DataTablesInput input, @RequestParam("docType") String docType) {
@@ -972,16 +952,18 @@ public class DocumentFlowController extends BaseController {
         return docs;
     }
 
+    // Get Dispatch Data for selected Document
     @RequestMapping(value = "/dispatchData/{id}")
     @ResponseBody
     public List<DispatchData> getDispatchData(@PathVariable("id") long id) {
 
-        List<DispatchData> dispatchData = new ArrayList<>();
-        dispatchData.addAll(documentService.getById(id).getDispatchData());
+        List<DispatchData> dispatchDataList = new ArrayList<>();
+        dispatchDataList.addAll(documentService.getById(id).getDispatchData());
 
-        return dispatchData;
+        return dispatchDataList;
     }
 
+    // Get Tasks for selected Document
     @RequestMapping(value = "/tasks/{id}")
     @ResponseBody
     public List getTasks(@PathVariable("id") long id) {
@@ -1000,6 +982,25 @@ public class DocumentFlowController extends BaseController {
                 .getResultList();
     }
 
+    // Get Tasks for Current User
+    @RequestMapping(value = "/tasks/all")
+    @ResponseBody
+    public List getDocumentTasks() {
+
+        List<TS> tsList = new ArrayList<>();
+
+        for(Task task : taskService.getDocumentTasks(getUser().getId()))
+        {
+            TS ts = new TS();
+            ts.setId(task.getObjectId());
+            ts.setMod(task.getModifiedByUserId());
+            tsList.add(ts);
+        }
+
+        return tsList;
+    }
+
+    // Get Incoming Documents list for ClosedWithID
     @RequestMapping("/incomingdocuments")
     @ResponseBody
     public List<SearchResult> getDocs(@RequestParam String name) {
@@ -1014,6 +1015,7 @@ public class DocumentFlowController extends BaseController {
         return data;
     }
 
+    // Get Attachments for selected Document
     @RequestMapping("/documentattachments/{documentId}")
     @ResponseBody
     public List<Attachment> getDocAttachments(@PathVariable("documentId") long documentId) {

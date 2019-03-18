@@ -45,7 +45,7 @@
                     <div class="m-portlet__body">
                         <div class="m-scrollable m-scrollable-no-margin" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
                             <div>
-                                <table class="table table-bordered" id="openTasksTable">
+                                <table class="table table-bordered" id="logTable">
                                     <thead class="thead-default">
                                     <tr>
                                         <th>№</th>
@@ -57,22 +57,8 @@
                                         <th>IP</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                    <tr th:each="log : ${logs}">
-                                        <td th:text="${log.id}"></td>
-                                        <td th:text="${#dates.format(log.createdDate, 'dd-MM-yyyy - HH:mm:ss')}"></td>
-                                        <td th:text="${log.createdBy}"></td>
-                                        <td th:text="${log.action}"></td>
-                                        <td th:text="${log.entity}"></td>
-                                        <td th:text="${log.entityId}"></td>
-                                        <td th:text="${log.ip}"></td>
-                                    </tr>
-                                    </tbody>
                                 </table>
                             </div>
-                            <!--div>
-                                <form action="/doc/attachments/upload" class="dropzone" id="dz"></form>
-                            </div-->
                         </div>
                     </div>
                 </div>
@@ -89,59 +75,115 @@
 </div>
 <div th:replace="fragments/footer :: footer-js"/>
 <script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
-<!--script th:src="@{/assets/global/plugins/dropzone/dropzone.min.js}" type="text/javascript"></script-->
+
+<script type="text/javascript">
+    function flatten(params) {
+        params.columns.forEach(function (column, index) {
+            params['columns[' + index + '].data'] = column.data;
+            params['columns[' + index + '].name'] = column.name;
+            params['columns[' + index + '].searchable'] = column.searchable;
+            params['columns[' + index + '].orderable'] = column.orderable;
+            params['columns[' + index + '].search.regex'] = column.search.regex;
+            params['columns[' + index + '].search.value'] = column.search.value;
+        });
+        delete params.columns;
+
+        params.order.forEach(function (order, index) {
+            params['order[' + index + '].column'] = order.column;
+            params['order[' + index + '].dir'] = order.dir;
+        });
+        delete params.order;
+
+        params['search.regex'] = params.search.regex;
+        params['search.value'] = params.search.value;
+        delete params.search;
+
+        return params;
+    }
+</script>
 
 <script type="text/javascript">
 
-    /*
-    Dropzone.autoDiscover = false;
-    var myDropzone = new Dropzone("#dz",
-        {
-            createImageThumbnails: true,
-            addRemoveLinks: true,
-            thumbnailWidth: 50,
-            thumbnailHeight: 50,
-            dictRemoveFile: 'Удалить',
-            previewTemplate:
-            '<div class="row p-2 border-bottom border-primary">' +
-            '<div class="col-1"><span data-dz-uploadprogress></span></div>' +
-            '<div class="col-4"><span data-dz-name></span></div>' +
-            '<div class="col-1"><span data-dz-size></span></div>' +
-            '</div>',
-            init: function() {
-                this.on("removedfile", function(file) {
-                    $.ajax({
-
-                        url: "/doc/attachments/delete/" + file.previewElement.id,
-                        success: function(result){
-                            alert(result);
-                        }});
-                });
-            },
-            success: function (file, response) {
-                file.previewElement.classList.add("dz-success");
-                file.previewElement.id = response.id;
-            },
-            error: function (file, response) {
-                file.previewElement.classList.add("dz-error");
-            }
-        });
-        */
-
     $(document).ready(function() {
 
-        var logs = $('#openTasksTable').DataTable({
-            "ordering": false,
-            language: {
-                paginate: {
-                    previous: '<i class="la la-angle-left"></i>', // or '→'
-                    next: '<i class="la la-angle-right"></i>' // or '←'
-                },
-                lengthMenu: "Показать _MENU_",
+        var table = $('#logTable').DataTable({
+            stateSave: true,
+            searching: true,
+            paging: true,
+            processing: false,
+            ajax: {
+                'url': '/log',
+                'data': function ( d ) {
+                    flatten(d)
+                }
             },
-            "info": false,
-            "sDom": 'rtlip'
-        } );
+            serverSide: true,
+            order: [ [1, 'asc'] ],
+            columns: [
+                {
+                    searchable: false,
+                    orderable: false,
+                    data: 'id',
+                    name: 'id'
+                },
+                {
+                    searchable: true,
+                    orderable: true,
+                    name: 'createdDate',
+                    data: 'createdDate'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    visible: true,
+                    name: 'createdBy',
+                    data: 'createdBy'
+                },
+                {
+                    searchable: true,
+                    orderable: false,
+                    name: 'action',
+                    data: 'action'
+                },
+                {
+                    searchable: true,
+                    orderable: false,
+                    name: 'entity',
+                    data: 'entity'
+                },
+                {
+                    searchable: true,
+                    orderable: false,
+                    name: 'entityId',
+                    data: 'entityId'
+                },
+                {
+                    searchable: true,
+                    orderable: true,
+                    name: 'ip',
+                    data: 'ip'
+                }
+            ],
+            language: {
+                emptyTable: "<center>Нет данных</center>",
+                info: "Всего _TOTAL_ записей",
+                infoFiltered: "",
+                lengthMenu: 'Показать <select>'+
+                '<option value="5">5</option>'+
+                '<option value="10">10</option>'+
+                '<option value="25">25</option>'+
+                '<option value="50">50</option>'+
+                '<option value="100">100</option>'+
+                '</select>',
+                paginate: {
+                    first: '<i class="la la-angle-double-left"></i>',
+                    previous: '<i class="la la-angle-left"></i>',
+                    next: '<i class="la la-angle-right"></i>',
+                    last: '<i class="la la-angle-double-right"></i>'
+                }
+            },
+            dom: '<<li><t><"text-center"p>>'
+        });
 
     });
 </script>

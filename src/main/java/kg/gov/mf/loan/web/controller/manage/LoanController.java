@@ -191,10 +191,10 @@ public class LoanController {
 		Loan loan = loanService.getById(loanId);
         model.addAttribute("loan", loan);
         String name=loan.getClass().getSimpleName();
-        if(name == "NormalLoan"){
+        if(name.equals("NormalLoan")){
             model.addAttribute("classId",1);
         }
-        else if(name == "TrancheeLoan"){
+        else if(name.equals("TrancheeLoan")){
             model.addAttribute("classId",2);
         }
         else{

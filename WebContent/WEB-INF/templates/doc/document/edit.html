@@ -125,7 +125,7 @@
                 <div class="form-group m-form__group row" th:if="${document.documentState.ordinal() > 7}">
                     <label class="col-3 col-form-label"> Резолюция : </label>
                     <div class="col-sm-9">
-                        <textarea class="form-control" rows="5" th:field="${document.resolution}" form="document_form"></textarea>
+                        <textarea class="form-control" rows="5" th:field="${document.resolution}" form="document_form" th:text="${'Прошу рассмотреть в установленном порядке'}"></textarea>
                     </div>
                 </div>
             </div>

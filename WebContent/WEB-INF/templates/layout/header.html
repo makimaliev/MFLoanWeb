@@ -1,53 +1,5 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 
-<div class="modal fade" id="chat_window" role="dialog" aria-labelledby="chat_window" aria-hidden="true" >
-    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="chatModalTitle">&nbsp;</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body bg-light p-0" id="chat-page">
-
-                <!--*******************************-->
-                <!--select id="cu" style="width: 100%">
-                    <option th:each="user : ${#lists.sort(@chatUserServiceImpl.list())}"
-                            th:value="${user.username}"
-                            th:text="${user.name}">Responsible</option>
-                </select-->
-
-                <!--div id="messageArea" class="m-3"></div-->
-                <!-- Start -->
-                <div class="chat" style="height: 300px">
-                    <div class="chat-container">
-                        <div class="conversation">
-                            <div class="conversation-container p-3" id="messageArea"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End -->
-                <!--*******************************-->
-
-            </div>
-            <div class="modal-footer">
-                <div style="width: 100%">
-                    <form id="messageForm" name="messageForm">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
-                                <button type="submit" class="btn btn-primary">Send</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 <header class="m-grid__item    m-header "  data-minimize-mobile="hide" data-minimize-offset="200" data-minimize-mobile-offset="200" data-minimize="minimize" >
 <div class="m-container m-container--fluid m-container--full-height">
         <div class="m-stack m-stack--ver m-stack--desktop">

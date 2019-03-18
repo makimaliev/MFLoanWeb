@@ -246,18 +246,29 @@
 </th:block>
 <th:block th:fragment="outgoing">
     <!-- Outgoing -->
+    <!-- Sender Registration Data -->
+    <input type="hidden" th:field="*{received}"/>
+    <input type="hidden" th:field="*{senderRegisteredNumber}"/>
+
     <div class="form-group m-form__group row">
         <div class="col-3"></div>
         <div class="col-9">
             <br>
-            <h2 class="text-center" th:text="*{senderRegisteredNumber != null ? documentSubType.name + ' № ' + senderRegisteredNumber : documentSubType.name}"></h2>
+            <h2 class="text-center" th:text="*{documentSubType.name}"></h2>
             <br>
         </div>
     </div>
-    <!-- Sender Registration Data -->
-    <input type="hidden" th:field="*{received}"/>
-    <input type="hidden" th:field="*{senderRegisteredNumber}"/>
-    <input type="hidden" th:field="*{senderRegisteredDate}"/>
+
+    <div class="form-group m-form__group row" th:hidden="*{documentState.ordinal() < 5}">
+        <label class="col-3 col-form-label">
+            <span> Дата Исходящего документа  : </span>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control dtp" th:field="*{senderRegisteredDate}" type="text" autocomplete="off" readonly="readonly"/>
+        </div>
+    </div>
+    <br>
+
     <!-- Receiver Responsible -->
     <div class="form-group m-form__group row">
         <label class="col-3 col-form-label">
@@ -313,7 +324,7 @@
         <label class="col-3 col-form-label">
             <span> Относительно : </span>
         </label>
-        <div class="col-sm-9">
+        <div class="col-9">
             <input class="form-control m-input" th:field="*{title}" autocomplete="off" type="text" required>
         </div>
     </div>
@@ -369,7 +380,7 @@
         <label class="col-3 col-form-label">
             <span> Примечание : </span>
         </label>
-        <div class="col-sm-9">
+        <div class="col-9">
             <textarea class="form-control" rows="5" th:field="*{comment}" value=" "></textarea>
         </div>
     </div>

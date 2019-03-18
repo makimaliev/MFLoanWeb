@@ -6,6 +6,14 @@
 <head>
     <title>MFLoan | Docflow</title>
     <div th:replace="fragments/header :: header-css"/>
+    <style>
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            padding: 0px;
+        }
+    </style>
 </head>
 <!-- end::Head -->
 
@@ -40,7 +48,7 @@
 
                                         <div class="row">
                                             <div class="col-12">
-                                                <select class="form-control m-input" th:field="*{table}" style="width: 100%">
+                                                <select class="form-control m-input--square" th:field="*{table}" style="width: 100%">
                                                     <option th:each="r :${objectTypes}"
                                                             th:value="${r.className}"
                                                             th:text="${r.object}"> Object </option>
@@ -50,10 +58,10 @@
                                         <hr>
                                         <div data-repeater-list="properties" id="container">
                                             <div data-repeater-item class="r-group row m--padding-bottom-10">
-                                                <div class="col-6">
+                                                <div class="col-1 cond"></div>
+                                                <div class="col-5">
                                                     <select class="form-control m-input"
                                                             style="width: 100%"
-                                                            onchange="setType(this)"
                                                             id="properties_0_name"
                                                             name="properties[0].property"
                                                             data-pattern-name="properties[++].property"
@@ -73,6 +81,7 @@
                                                 </div>
                                                 <div class="col-2">
                                                     <input type="text"
+                                                           style="padding: 10px 5px;"
                                                            class="form-control m-input"
                                                            id="properties_0_value"
                                                            name="properties[0].value"
@@ -80,10 +89,10 @@
                                                            data-pattern-id="properties_++value"/>
                                                 </div>
                                                 <div class="col-1">
-                                                    <button data-repeater-delete type="button" class="r-btnRemove btn btn-danger">Delete</button>
+                                                    <button data-repeater-delete type="button" class="r-btnRemove btn btn-danger btn-block">Delete</button>
                                                 </div>
                                             </div>
-                                            <button type="button" class="r-btnAdd btn btn-primary">Add</button>
+                                            <button type="button" class="r-btnAdd btn btn-primary btn-block">Add</button>
                                         </div>
 
                                     </div>
@@ -113,21 +122,32 @@
     $(document).ready(function() {
 
         $('#container').repeater({
+            animation: null,
+            animationEasing: 'swing',
+            animationSpeed: 400,
             btnAddClass: 'r-btnAdd',
             btnRemoveClass: 'r-btnRemove',
+            clearValues: false,
             groupClass: 'r-group',
-            minItems: 1,
             maxItems: 0,
-            startingIndex: 0,
-            showMinItemsOnLoad: false,
+            minItems: 1,
             reindexOnDelete: true,
             repeatMode: 'insertAfterLast',
-            animation: null,
-            animationSpeed: 400,
-            animationEasing: 'swing',
-            clearValues: false,
+            showMinItemsOnLoad: false,
+            startingIndex: 0,
             afterAdd: function($doppleganger) {
+                console.log($doppleganger);
                 $("select[name='properties[0].property'] option").clone().appendTo($($doppleganger).find('select')[0]);
+                $($doppleganger).find(".cond").html(
+                    '<select class="form-control m-input--square"' +
+                    '       style="width: 100%"' +
+                    '       id="properties_0_condition"' +
+                    '       name="properties[0].condition"' +
+                    '       data-pattern-name="properties[++].condition"' +
+                    '       data-pattern-id="properties_++_condition">' +
+                    '   <option value="AND">И</option>' +
+                    '   <option value="OR">ИЛИ</option>' +
+                    '</select>');
             }
         });
         $("#table").change(function (){
@@ -140,7 +160,7 @@
     function loadProps() {
         $.ajax({
             type: "POST",
-            url: "/task/op?name=" + $('#table option:selected').val(),
+            url: "/task/properties?name=" + $('#table option:selected').val(),
             success: function(data)
             {
                 var $dropdown = $("select[name='properties[0].property']");
@@ -150,9 +170,6 @@
                 });
             }
         });
-    }
-    function setType(o) {
-        //console.log($(o).find('option:selected').data('type'))
     }
 
 </script>

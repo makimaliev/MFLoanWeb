@@ -153,8 +153,7 @@ public class PaymentScheduleController {
     }
 	
 	@RequestMapping(value="/manage/debtor/loan/paymentschedule/installmentstate/{stateId}/save", method=RequestMethod.GET)
-	public String formEState(ModelMap model, @PathVariable("stateId")Long stateId)
-	{
+	public String formEState(ModelMap model, @PathVariable("stateId")Long stateId) {
 		if(stateId == 0)
 		{
 			model.addAttribute("state", new InstallmentState());
@@ -200,15 +199,15 @@ public class PaymentScheduleController {
 
 //		Loan loan = this.loanService.getById(loanId);
 
+		//String seleteQuery="select p.id,p.record_status,p.version,p.uuid,p.collectedInterestPayment,p.collectedPenaltyPayment,p.disbursement,p.expectedDate,p.interestPayment,p.principalPayment,p.installmentStateId,p.loanId  from paymentSchedule p where p.loanId="+String.valueOf(loanId);
+		//Query deleteQuery=  entityManager.createNativeQuery(seleteQuery,PaymentSchedule.class);
+		//List<PaymentSchedule> paymentSchedules=deleteQuery.getResultList();
 
-		String seleteQuery="select p.id,p.record_status,p.version,p.uuid,p.collectedInterestPayment,p.collectedPenaltyPayment,p.disbursement,p.expectedDate,p.interestPayment,p.principalPayment,p.installmentStateId,p.loanId  from paymentSchedule p where p.loanId="+String.valueOf(loanId);
-
-		Query deleteQuery=  entityManager.createNativeQuery(seleteQuery,PaymentSchedule.class);
-
-		List<PaymentSchedule> paymentSchedules=deleteQuery.getResultList();
+		List<PaymentSchedule> paymentSchedules = entityManager
+				.createQuery("select p from PaymentSchedule p where p.loan.id = " + loanId, PaymentSchedule.class)
+				.getResultList();
 
 //		Set<PaymentSchedule> paymentSchedules=loan.getPaymentSchedules();
-
 
 		for (PaymentSchedule paymentSchedule1:paymentSchedules){
 			PaymentSchedule paymentSchedule=this.paymentScheduleService.getById(paymentSchedule1.getId());

@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <!-- begin::Head -->
+
 <head>
     <title th:text="#{label.identityDocType.page.title}">Loan view</title>
 
@@ -14,6 +15,13 @@
         }
         input[type="search"]::-webkit-search-cancel-button {
             -webkit-appearance: searchfield-cancel-button;
+        }
+
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            padding: 2px;
         }
 
         .table thead th {
@@ -35,11 +43,19 @@
         td.details-control {
             cursor: pointer;
         }
+
+        a .dropdown-item {
+        }
+
+        a:hover .dropdown-item {
+            background-color: #f1a417;
+        }
     </style>
 
 </head>
 
-<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"
+      onload="reloadTasks();">
 
 <div class="m-grid m-grid--hor m-grid--root m-page">
     <div th:replace="layout/header"/>
@@ -138,7 +154,8 @@
 </script>
 <script type="text/javascript" th:inline="javascript">
 
-    var tsList = [[${tsList}]];
+    //var tsList = [ [ ${tsList} ] ];
+    var tsList;
     var type = [[${type}]]
     var states = [[${states}]];
     var documentSubTypes = [[${dtypes}]];
@@ -165,7 +182,7 @@
         },
         {
             searchable: true,
-            orderable: true,
+            orderable: false,
             name: 'documentDueDate',
             data: function (data, type, full, meta) {
                 var result = data.documentDueDate != null ? '<span class="text-danger">' + data.documentDueDate + '</span>' : '';
@@ -179,7 +196,7 @@
             name: 'docIndex',
             data: function (data, type, full, meta) {
                 var result =  data.documentDueDate != null ? '<span class="text-danger">' + data.docIndex + '</span>' : '<span>' + data.docIndex + '</span>';
-                    result +=  data.closedWithNo != null ? '<br><span class="text-success">' + data.closedWithNo + '</span>' : ' ';
+                    result +=  data.closedWithNo != null ? '<br><a href="/doc/view/' + data.closedWithId + '" target="_blank" rel="noopener noreferrer"><span class="text-success">' + data.closedWithNo + '</span></a>' : ' ';
                 return result;
             }
         },
@@ -191,7 +208,7 @@
         },
         {
             searchable: true,
-            orderable: true,
+            orderable: false,
             name: 'senderRegisteredNumber',
             data: 'senderRegisteredNumber'
         },
@@ -202,7 +219,7 @@
             data: 'senderRegisteredDate'
         },
         {
-            searchable: false,
+            searchable: true,
             orderable: false,
             name: 'senderResponsible',
             data: 'senderResponsible',
@@ -222,7 +239,7 @@
             data: 'title'
         },
         {
-            searchable: false,
+            searchable: true,
             orderable: false,
             name: 'receiverResponsible',
             data: 'receiverResponsible',
@@ -241,8 +258,8 @@
             }
         },
         {
-            searchable: false,
-            orderable: true,
+            searchable: true,
+            orderable: false,
             name: 'documentState',
             data: 'documentState',
             render: function (data, type, full, meta) {
@@ -266,8 +283,8 @@
             render: function (data) {
                 var e = tsList.filter(function(t){ return t.id === data });
                 return e.length !== 0
-                    ? '<a href="/doc/edit/'+ data +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать "><i class="la la-edit"></i></a>'
-                    : '<a href="/doc/view/'+ data +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Просмотр "><i class="la la-arrow-circle-o-right"></i></a>';
+                    ? '<a href="/doc/edit/'+ data +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать"><i class="la la-edit"></i></a>'
+                    : '<a href="/doc/view/'+ data +'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Просмотр"><i class="la la-arrow-circle-o-right"></i></a>';
             }
         },
         {
@@ -280,10 +297,10 @@
                 if(e.length !== 0)
                 {
                     if(data.documentState === 'APPROVED') {
-                        return '<a class="openact" href="/doc/save/' + data.id + '" data-action="REGISTER"><i class="la la-save"></i></a>';
+                        return '<a class="openact" href="/doc/save/' + data.id + '" data-action="REGISTER" title="Зарегистрировать"><i class="la la-save"></i></a>';
                     }
                     if(data.documentState === 'REGISTERED') {
-                        return '<a class="openact" href="/doc/save/' + data.id + '" data-action="DONE"><i class="la la-thumbs-up"></i></a>';
+                        return '<a class="openact" href="/doc/save/' + data.id + '" data-action="DONE" title="Закрыть"><i class="la la-thumbs-up"></i></a>';
                     }
                 }
                 else {
@@ -767,7 +784,7 @@
         // Outgoing [register, done] buttons click handler
         $('body').on('click','.openact',function(e) {
             var action = $(this).data("action");
-            e.preventDefault()
+            e.preventDefault();
             $.ajax({
                 url: $(this).attr('href'),
                 data: jQuery.param({ action: action}) ,
@@ -779,12 +796,24 @@
                         table.draw();
                     }
                     else {
-                        location.reload();
+                        table.draw();
                     }
+
+                    reloadTasks();
                 }
             });
         });
     });
+
+    function reloadTasks()
+    {
+        $.ajax({
+            url: '/doc/tasks/all',
+            success: function(response) {
+                tsList = response;
+            }
+        });
+    }
 
 </script>
 <script>
@@ -793,9 +822,36 @@
             autoUpdateInput: false,
             locale: {
                 format: 'DD.MM.YY',
+                separator: " - ",
                 applyLabel: 'Выбрать',
-                cancelLabel: 'Очистить'
-            }
+                cancelLabel: 'Очистить',
+                fromLabel: "От",
+                toLabel: "По",
+                daysOfWeek: [
+                    "Вс",
+                    "Пн",
+                    "Вт",
+                    "Ср",
+                    "Чт",
+                    "Пт",
+                    "Сб"
+                ],
+                "monthNames": [
+                    "Январь",
+                    "Февраль",
+                    "Март",
+                    "Апрель",
+                    "Май",
+                    "Июнь",
+                    "Июль",
+                    "Август",
+                    "Сентябрь",
+                    "Октябрь",
+                    "Ноябрь",
+                    "Декабрь"
+                ],
+                firstDay: 1,
+            },
         });
     });
 </script>

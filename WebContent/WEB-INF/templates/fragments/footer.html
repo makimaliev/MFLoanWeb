@@ -17,7 +17,7 @@
         var messageArea = document.querySelector('#messageArea');
         var chatModalTitle = document.querySelector('#chatModalTitle');
         var stompClient = null;
-        var username = [[${#authentication.name}]];
+        var username = [ [${#authentication.name}] ];
         var receiver = null;
         var prevdate = null;
 
@@ -186,7 +186,7 @@
 
                 if (path[2] != "edit") {
 
-                    var tasks = [[${@taskService.getTasksByUserId(@userServiceJpaImpl.findByUsername(#authentication.name).id)}]];
+                    var tasks = [ [ ${@taskService.getTasksByUserId(@userServiceJpaImpl.findByUsername(#authentication.name).id)} ] ];
 
                     for (var i = 0; i < tasks.length; i++) {
 
