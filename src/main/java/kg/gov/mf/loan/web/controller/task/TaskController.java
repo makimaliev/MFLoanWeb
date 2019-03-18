@@ -8,7 +8,7 @@ import kg.gov.mf.loan.task.service.LoggerService;
 import kg.gov.mf.loan.task.service.TaskActionService;
 import kg.gov.mf.loan.task.service.TaskService;
 import kg.gov.mf.loan.web.util.Utils;
-import kg.gov.mf.log.model.MFLog;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
