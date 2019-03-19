@@ -653,9 +653,11 @@
                         <button  sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="btn_generate_type_4">
                             Акт сверки
                         </button>
-                        <button sec:authorize="hasAnyAuthority('ADMIN')"  class="btn btn-sm btn-accent" type="button" id="btn_generate_type_5kg">
-                            Акт сверки 2
+
+                        <button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')"  class="btn btn-sm btn-accent" type="button" id="btn_generate_type_5kg">
+                            Акт сверки (ГМР)
                         </button>
+
                         <button class="btn btn-sm btn-accent" type="button" id="btn_generate_type_1">
                             Расчет задолжности
                         </button>
