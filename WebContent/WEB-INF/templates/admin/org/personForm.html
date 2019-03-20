@@ -193,6 +193,15 @@
 								<input type="text" class="form-control" name="address.line" th:field="*{address.line}"/>
 							</div>
 						</div>
+						<div class="form-group m-form__group row">
+							<label class="col-form-label col-lg-4 col-sm-12">
+								<span th:text="#{label.person.addressLine2}"></span>
+								<span class="m--font-danger">*</span>
+							</label>
+							<div class="col-lg-8 col-md-9 col-sm-12">
+								<input type="text" class="form-control" name="address_line2" th:field="*{address_line2}"/>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="tab-pane " id="identityDocData" role="tabpanel">
@@ -211,6 +220,15 @@
 											th:selected="(${identityDocTypeInList.id} == *{identityDoc.identityDocType.id})"
 											th:text="${identityDocTypeInList.name}"></option>
 								</select>
+							</div>
+						</div>
+						<div class="form-group m-form__group row">
+							<label class="col-form-label col-lg-4 col-sm-12">
+								<span th:text="#{label.person.givenBy}"></span>
+								<span class="m--font-danger">*</span>
+							</label>
+							<div class="col-lg-8 col-md-9 col-sm-12">
+								<input type="text" class="form-control" name="givenBy" th:field="*{identityDoc.givenBy}"/>
 							</div>
 						</div>
 

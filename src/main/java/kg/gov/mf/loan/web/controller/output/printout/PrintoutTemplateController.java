@@ -1198,6 +1198,9 @@ public class PrintoutTemplateController {
 
 					String newText = "";
 					String oldText = "";
+					if(varId>=7 && varId!=21){
+                        run.getParagraph().setAlignment(ParagraphAlignment.CENTER);
+                    }
 
 					switch (varId)
 					{
@@ -1232,7 +1235,9 @@ public class PrintoutTemplateController {
 
 							break;
 						case 3:
-							newText=staff.getName();
+						    String[] splitted=staff.getName().split(" ");
+
+							newText=splitted[0]+"а"+" "+splitted[1]+"а"+" "+splitted[2]+"а";
 							break;
 						case 4:
 							newText=staff.getEmploymentHistory().getNumber();
@@ -1277,7 +1282,7 @@ public class PrintoutTemplateController {
 						case 15:
                             SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
                             String docDate=format.format(identityDoc.getDate());
-							newText=identityDoc.getNumber()+", "+docDate+", "+identityDoc.getGivenBy();
+							newText=identityDoc.getIdentityDocType().getName()+":"+identityDoc.getNumber()+", "+docDate+", "+identityDoc.getGivenBy();
 							break;
 						case 16:
 							newText=staff.getPosition().getName();
