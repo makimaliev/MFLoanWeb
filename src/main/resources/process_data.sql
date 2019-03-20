@@ -2763,8 +2763,12 @@ BEGIN
       SET l.amount = t.ss WHERE l.id = loan_id;
     END IF;
 
-    CALL updateRootLoanPayment(loan_id);
-    CALL updateRootLoanPaymentSchedule(loan_id);
+    #CALL updateRootLoanPayment(loan_id);
+    #CALL updateRootLoanPaymentSchedule(loan_id);
+
+    CALL update_child_loan_payments(loan_id);
+    CALL update_child_loan_payment_schedules(loan_id);
+
     IF loan_class = 2 THEN
       CALL updateTrancheeLoanData(loan_id);
     END IF;
@@ -3967,4 +3971,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-05 11:03:41
+-- Dump completed on 2019-03-20 14:41:20
