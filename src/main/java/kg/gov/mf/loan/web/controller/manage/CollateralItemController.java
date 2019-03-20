@@ -1,13 +1,5 @@
 package kg.gov.mf.loan.web.controller.manage;
 
-import java.lang.reflect.Method;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.admin.org.model.Staff;
@@ -16,29 +8,28 @@ import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collateral.*;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
-import kg.gov.mf.loan.manage.repository.collateral.CollateralItemArrestFreeRepository;
+import kg.gov.mf.loan.manage.service.collateral.*;
+import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
-import kg.gov.mf.loan.web.fetchModels.CollateralItemOwnerModel;
 import kg.gov.mf.loan.web.fetchModels.ItemArrestFreeModel;
 import kg.gov.mf.loan.web.fetchModels.ItemInspectionResultModel;
+import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
-import kg.gov.mf.loan.manage.service.collateral.CollateralItemArrestFreeService;
-import kg.gov.mf.loan.manage.service.collateral.CollateralItemDetailsService;
-import kg.gov.mf.loan.manage.service.collateral.CollateralItemInspectionResultService;
-import kg.gov.mf.loan.manage.service.collateral.CollateralItemService;
-import kg.gov.mf.loan.manage.service.collateral.ConditionTypeService;
-import kg.gov.mf.loan.manage.service.collateral.InspectionResultTypeService;
-import kg.gov.mf.loan.manage.service.collateral.ItemTypeService;
-import kg.gov.mf.loan.manage.service.collateral.QuantityTypeService;
-import kg.gov.mf.loan.manage.service.debtor.DebtorService;
-import kg.gov.mf.loan.web.util.Utils;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 @Controller
 public class CollateralItemController {
@@ -232,67 +223,67 @@ public class CollateralItemController {
     		@PathVariable("debtorId")Long debtorId,
     		@PathVariable("agreementId")Long agreementId,
     		ModelMap model) throws ParseException {
-		CollateralAgreement agreement = agreementService.getById(agreementId);
-		item.setCollateralAgreement(agreement);
+		if(item.getQuantityType().getId()!=0 && item.getItemType()!=null) {
+			CollateralAgreement agreement = agreementService.getById(agreementId);
+			item.setCollateralAgreement(agreement);
 
 
-		if(item.getOrganization()!=null)
-			if(item.getOrganization().getId()==0)
-				item.setOrganization(null);
+			if (item.getOrganization() != null)
+				if (item.getOrganization().getId() == 0)
+					item.setOrganization(null);
 
-		if(item.getId() == 0)
-		{
-			if(item.getRisk_rate()==null) item.setRisk_rate((double)1);
-			if(item.getDemand_rate()==null) item.setDemand_rate((double)1);
+			if (item.getId() == 0) {
+				if (item.getRisk_rate() == null) item.setRisk_rate((double) 1);
+				if (item.getDemand_rate() == null) item.setDemand_rate((double) 1);
 
-			ConditionType conditionTypeByDefault = cTypeService.getById(1L);
+				ConditionType conditionTypeByDefault = cTypeService.getById(1L);
 
-			if(item.getConditionType()==null) item.setConditionType(conditionTypeByDefault);
+				if (item.getConditionType() == null) item.setConditionType(conditionTypeByDefault);
 
-			date=date.replace(",","");
-			if(date.length()==10) {
-				itemDetails.setProdDate(new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).parse(date));
-			}
-
-			if(expl_date!=null)
-			{
-				expl_date=expl_date.replace(",","");
-				if(expl_date.length()==10) {
-					itemDetails.setExplDate(new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).parse(expl_date));
+				date = date.replace(",", "");
+				if (date.length() == 10) {
+					itemDetails.setProdDate(new SimpleDateFormat("dd.MM.yyyy", new Locale("ru", "RU")).parse(date));
 				}
-			}
 
-
-			if(itemDetails.getGoods_address()==null) itemDetails.setGoods_address("");
-
-			itemDetails.setCollateralItem(item);
-			item.setCollateralItemDetails(itemDetails);
-
-			if(item.getCollateralItemDetails()!=null)
-			itemService.add(item);
-		}
-		else
-		{
-
-			if(item.getRisk_rate()==null) item.setRisk_rate((double)1);
-			if(item.getDemand_rate()==null) item.setDemand_rate((double)1);
-			item.setCollateralItemDetails(itemDetails);
-			date=date.replace(",","");
-			if(date.length()==10)
-			itemDetails.setProdDate(new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).parse(date));
-
-			if(expl_date!=null)
-			{
-				expl_date=expl_date.replace(",","");
-				if(expl_date.length()==10) {
-					itemDetails.setExplDate(new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).parse(expl_date));
+				if (expl_date != null) {
+					expl_date = expl_date.replace(",", "");
+					if (expl_date.length() == 10) {
+						itemDetails.setExplDate(new SimpleDateFormat("dd.MM.yyyy", new Locale("ru", "RU")).parse(expl_date));
+					}
 				}
+
+
+				if (itemDetails.getGoods_address() == null) itemDetails.setGoods_address("");
+
+				itemDetails.setCollateralItem(item);
+				item.setCollateralItemDetails(itemDetails);
+
+				if (item.getCollateralItemDetails() != null)
+					itemService.add(item);
+			} else {
+
+				if (item.getRisk_rate() == null) item.setRisk_rate((double) 1);
+				if (item.getDemand_rate() == null) item.setDemand_rate((double) 1);
+				item.setCollateralItemDetails(itemDetails);
+				date = date.replace(",", "");
+				if (date.length() == 10)
+					itemDetails.setProdDate(new SimpleDateFormat("dd.MM.yyyy", new Locale("ru", "RU")).parse(date));
+
+				if (expl_date != null) {
+					expl_date = expl_date.replace(",", "");
+					if (expl_date.length() == 10) {
+						itemDetails.setExplDate(new SimpleDateFormat("dd.MM.yyyy", new Locale("ru", "RU")).parse(expl_date));
+					}
+				}
+
+				itemService.update(item);
 			}
 
-			itemService.update(item);
+			return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/view";
 		}
-
-		return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/view";
+		else{
+			return "redirect:" + "/manage/debtor/{debtorId}//view";
+		}
     }
 
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/delete"}, method=RequestMethod.POST)

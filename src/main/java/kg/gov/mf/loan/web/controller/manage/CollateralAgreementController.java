@@ -1,21 +1,26 @@
 package kg.gov.mf.loan.web.controller.manage;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.lowagie.text.pdf.ArabicLigaturizer;
+import kg.gov.mf.loan.admin.org.service.OrganizationService;
+import kg.gov.mf.loan.admin.org.service.PersonService;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collateral.AdditionalAgreement;
+import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
 import kg.gov.mf.loan.manage.model.collateral.CollateralItem;
 import kg.gov.mf.loan.manage.model.collateral.CollateralItemArrestFree;
+import kg.gov.mf.loan.manage.model.debtor.Debtor;
+import kg.gov.mf.loan.manage.model.debtor.Owner;
+import kg.gov.mf.loan.manage.model.debtor.OwnerType;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import kg.gov.mf.loan.manage.service.collateral.AdditionalAgreementService;
+import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemArrestFreeService;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemService;
+import kg.gov.mf.loan.manage.service.debtor.DebtorService;
+import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.web.fetchModels.AdditionalAgreementModel;
 import kg.gov.mf.loan.web.fetchModels.CollateralItemModel;
@@ -23,7 +28,6 @@ import kg.gov.mf.loan.web.fetchModels.LoanModel;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
@@ -32,20 +36,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import kg.gov.mf.loan.admin.org.model.Organization;
-import kg.gov.mf.loan.admin.org.model.Person;
-import kg.gov.mf.loan.admin.org.service.OrganizationService;
-import kg.gov.mf.loan.admin.org.service.PersonService;
-import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
-import kg.gov.mf.loan.manage.model.debtor.Debtor;
-import kg.gov.mf.loan.manage.model.debtor.Owner;
-import kg.gov.mf.loan.manage.model.debtor.OwnerType;
-import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
-import kg.gov.mf.loan.manage.service.debtor.DebtorService;
-import kg.gov.mf.loan.manage.service.debtor.OwnerService;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 public class CollateralAgreementController {
@@ -175,32 +169,38 @@ public class CollateralAgreementController {
 	}
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collateralagreement/save"}, method=RequestMethod.POST)
-    public String saveCollateralAgreement(CollateralAgreement agreement, 
-    		@PathVariable("debtorId")Long debtorId,String[] loanses,
+    public String saveCollateralAgreement(CollateralAgreement agreement,
+										  @PathVariable("debtorId")Long debtorId, String[] loanses,
     		ModelMap model)
     {
-    	if(agreement.getNotaryOfficeRegDate()!=null) {
-			Set<Loan> loanSet = new HashSet<>();
-			for (String l : loanses) {
-				loanSet.add(loanService.getById(Long.valueOf(l)));
-			}
-			if (agreement.getId() == 0) {
-				Owner owner = ownerRepository.findOne(debtorService.getById(debtorId).getOwner().getId());
-				agreement.setOwner(owner);
-				agreement.setAgreementDate(agreement.getNotaryOfficeRegDate());
-				agreement.setAgreementNumber(agreement.getNotaryOfficeRegNumber());
-				agreement.setLoans(loanSet);
-				agreementService.add(agreement);
-			} else {
-				Owner owner = ownerRepository.findOne(agreement.getOwner().getId());
-				agreement.setOwner(owner);
-				agreement.setLoans(loanSet);
-				agreementService.update(agreement);
-			}
-			return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/"+agreement.getId()+"/view";
-		}
-		else{
+    	if(agreement.getNotaryOfficeRegDate()==null||agreement.getNotaryOfficeRegNumber()==null||agreement.getOwner()==null||
+				agreement.getArrestRegDate()==null||agreement.getArrestRegNumber()==null||
+				agreement.getCollateralOfficeRegDate()==null||agreement.getCollateralOfficeRegNumber()==null||loanses.length==0){
 			return "redirect:" + "/manage/debtor/{debtorId}/view";
+		}
+    	else {
+			if (agreement.getNotaryOfficeRegDate() != null) {
+				Set<Loan> loanSet = new HashSet<>();
+				for (String l : loanses) {
+					loanSet.add(loanService.getById(Long.valueOf(l)));
+				}
+				if (agreement.getId() == 0) {
+					Owner owner = ownerRepository.findOne(debtorService.getById(debtorId).getOwner().getId());
+					agreement.setOwner(owner);
+					agreement.setAgreementDate(agreement.getNotaryOfficeRegDate());
+					agreement.setAgreementNumber(agreement.getNotaryOfficeRegNumber());
+					agreement.setLoans(loanSet);
+					agreementService.add(agreement);
+				} else {
+					Owner owner = ownerRepository.findOne(agreement.getOwner().getId());
+					agreement.setOwner(owner);
+					agreement.setLoans(loanSet);
+					agreementService.update(agreement);
+				}
+				return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/" + agreement.getId() + "/view";
+			} else {
+				return "redirect:" + "/manage/debtor/{debtorId}/view";
+			}
 		}
 
     }

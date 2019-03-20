@@ -1,10 +1,5 @@
 package kg.gov.mf.loan.web.controller.manage;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.admin.org.model.Staff;
@@ -13,33 +8,33 @@ import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collection.*;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
-import kg.gov.mf.loan.manage.model.process.LoanDetailedSummary;
+import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.model.process.LoanSummary;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.service.collection.*;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
+import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.manage.service.process.LoanDetailedSummaryService;
 import kg.gov.mf.loan.manage.service.process.LoanSummaryService;
 import kg.gov.mf.loan.output.report.model.ReferenceView;
 import kg.gov.mf.loan.output.report.service.ReferenceViewService;
 import kg.gov.mf.loan.process.service.JobItemService;
 import kg.gov.mf.loan.web.fetchModels.*;
+import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import kg.gov.mf.loan.manage.model.loan.Loan;
-import kg.gov.mf.loan.manage.service.loan.LoanService;
-import kg.gov.mf.loan.web.util.Utils;
-
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 public class CollectionPhaseController {
@@ -321,10 +316,10 @@ public class CollectionPhaseController {
         ) {
             PhaseDetails details = new PhaseDetails();
             details.setLoan_id(model.getLoanId());
-            details.setStartPrincipal(model.getStartPrincipal());
-            details.setStartInterest(model.getStartInterest());
-            details.setStartPenalty(model.getStartPenalty());
-            details.setStartTotalAmount(model.getStartTotalAmount());
+            details.setStartPrincipal(ifNullMakeZero(model.getStartPrincipal()));
+            details.setStartInterest(ifNullMakeZero(model.getStartInterest()));
+            details.setStartPenalty(ifNullMakeZero(model.getStartPenalty()));
+            details.setStartTotalAmount(ifNullMakeZero(model.getStartPrincipal())+ifNullMakeZero(model.getStartInterest())+ifNullMakeZero(model.getStartPenalty()));
             phaseDetailsList.add(details);
 
         }
@@ -745,16 +740,18 @@ public class CollectionPhaseController {
 			for (CollectionPhaseDetailsModel1 model: list.getCollectionPhaseDetailsModel1())
 			{
 				PhaseDetails details = phaseDetailsService.getById(model.getId());
-				details.setClosePrincipal(model.getClosePrincipal());
-				details.setCloseInterest(model.getCloseInterest());
-				details.setClosePenalty(model.getClosePenalty());
-				details.setCloseTotalAmount(model.getCloseTotalAmount());
+				details.setClosePrincipal(ifNullMakeZero(model.getClosePrincipal()));
+				details.setCloseInterest(ifNullMakeZero(model.getCloseInterest()));
+				details.setClosePenalty(ifNullMakeZero(model.getClosePenalty()));
+				details.setCloseTotalAmount(ifNullMakeZero(model.getClosePrincipal())+ifNullMakeZero(model.getCloseInterest())+ifNullMakeZero(model.getClosePenalty()));
 				phaseDetailsService.update(details);
+				phaseDetails.add(details);
 
 			}
 			String updateStart="(select sum(closeTotalAmount) from phaseDetails where collectionPhaseId="+phase.getId()+")";
 			Query query=entityManager.createNativeQuery(updateStart);
 			Double sumOfClose= (Double) query.getSingleResult();
+			phase.setPhaseDetails(phaseDetails);
 			phase.setClose_amount(sumOfClose);
 			phaseService.update(phase);
 
