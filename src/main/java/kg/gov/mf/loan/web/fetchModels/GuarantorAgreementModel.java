@@ -20,8 +20,13 @@ public class GuarantorAgreementModel implements Comparable<GuarantorAgreementMod
     private Date notaryOfficeRegDate;
 
     private String owner;
+    private Long ownerId;
 
     private String notary;
+
+    private String debtor;
+    private Long debtorId;
+    private String ownerType;
 
 
     public long getId() {
@@ -64,12 +69,44 @@ public class GuarantorAgreementModel implements Comparable<GuarantorAgreementMod
         this.owner = owner;
     }
 
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
     public String getNotary() {
         return notary;
     }
 
     public void setNotary(String notary) {
         this.notary = notary;
+    }
+
+    public String getDebtor() {
+        return debtor;
+    }
+
+    public void setDebtor(String debtor) {
+        this.debtor = debtor;
+    }
+
+    public Long getDebtorId() {
+        return debtorId;
+    }
+
+    public void setDebtorId(Long debtorId) {
+        this.debtorId = debtorId;
+    }
+
+    public String getOwnerType() {
+        return ownerType;
+    }
+
+    public void setOwnerType(String ownerType) {
+        this.ownerType = ownerType;
     }
 
     @Override

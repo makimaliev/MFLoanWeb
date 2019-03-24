@@ -9,16 +9,19 @@ import kg.gov.mf.loan.manage.service.collateral.GuarantorAgreementService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.manage.service.loan.LoanService;
+import kg.gov.mf.loan.web.fetchModels.GuarantorAgreementModel;
+import kg.gov.mf.loan.web.fetchModels.GuarantorMetaModel;
+import kg.gov.mf.loan.web.util.Meta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -37,6 +40,9 @@ public class GuarantorAgreementController {
     @Autowired
     OwnerService ownerService;
 
+    @Autowired
+    EntityManager entityManager;
+
     @InitBinder
     public void initBinder(WebDataBinder binder)
     {
@@ -44,6 +50,12 @@ public class GuarantorAgreementController {
         binder.registerCustomEditor(Date.class, editor);
     }
 
+    @RequestMapping(value = {"/manage/guarantoragreement/list"},method = RequestMethod.GET)
+    public String list(ModelMap model){
+
+        return "/manage/debtor/loan/guarantoragreement/list";
+
+    }
 
     @RequestMapping("/manage/debtor/{debtorId}/loan/{loanId}/guarantoragreement/{id}/save")
     public String saveGet(ModelMap model, @PathVariable("debtorId") Long debtorId,@PathVariable("loanId") Long loanId,@PathVariable("id") Long id){
@@ -126,5 +138,58 @@ public class GuarantorAgreementController {
         }
 
         return "redirect: /manage/debtor/{debtorId}/loan/{loanId}/view";
+    }
+
+    @PostMapping("/api/guarantoragreements")
+    @ResponseBody
+    public GuarantorMetaModel getListOfGuarantorAgreements(@RequestParam Map<String, String> datatable){
+
+        String pageStr = datatable.get("datatable[pagination][page]");
+        String perPageStr = datatable.get("datatable[pagination][perpage]");
+        String sortStr = datatable.get("datatable[sort][sort]");
+        String sortField = datatable.get("datatable[sort][field]");
+
+        String searchDebtor="";
+        String searchOwner="";
+
+        boolean searchByDebtor = datatable.containsKey("datatable[query][debtor]");
+        if(searchByDebtor){
+            String debtorStr = searchByDebtor?datatable.get("datatable[query][debtor]"):null;
+            searchDebtor="and d.name like \'%"+debtorStr+"%\' \n";
+        }
+
+        boolean searchByOwner = datatable.containsKey("datatable[query][owner]");
+        if(searchByOwner){
+            String ownerStr = searchByOwner?datatable.get("datatable[query][owner]"):null;
+            searchDebtor="and o.name like \'%"+ownerStr+"%\' \n";
+        }
+
+        Integer page = Integer.parseInt(pageStr);
+        Integer perPage = Integer.parseInt(perPageStr);
+        Integer offset = (page-1)*perPage;
+
+        String baseQuery="select ga.id,o.name as owner,n.name as notary," +
+                "ga.notaryOfficeRegDate,ga.notaryOfficeRegNumber,ga.record_status,d.name as debtor,d.id as debtorId,o.id as ownerId,o.ownerType \n" +
+                "from guarantor_agreement ga,loanGuarantorAgreement lga,owner o,owner n,debtor d,loan l where d.id=l.debtorId " +
+                "and l.id=lga.loanId and ga.id=lga.guarantorAgreementId and o.id=ga.ownerId and n.id=ga.notary "+
+                searchDebtor+searchOwner+
+                "order by " + sortField + " " + sortStr + " LIMIT " + offset +"," + perPage;
+
+        Query query=entityManager.createNativeQuery(baseQuery,GuarantorAgreementModel.class);
+        List<GuarantorAgreementModel> guarantorAgreementModels=query.getResultList();
+
+        String countQuery="select count(1)\n" +
+                "from guarantor_agreement ga,loanGuarantorAgreement lga,owner o,owner n,debtor d,loan l where d.id=l.debtorId and l.id=lga.loanId and ga.id=lga.guarantorAgreementId and o.id=ga.ownerId and n.id=ga.notary "+
+                searchDebtor+searchOwner;
+        BigInteger count = (BigInteger)entityManager.createNativeQuery(countQuery).getResultList().get(0);
+        Meta meta = new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, sortStr, sortField);
+
+        GuarantorMetaModel metaModel=new GuarantorMetaModel();
+        metaModel.setMeta(meta);
+        metaModel.setData(guarantorAgreementModels);
+
+
+
+        return metaModel;
     }
 }

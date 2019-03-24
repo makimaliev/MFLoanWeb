@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<!-- begin::Head -->
+<head>
+    <title th:text="#{label.guarantors}">Поручители</title>
+
+    <div th:replace="fragments/header :: header-css"/>
+    <link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/assets/global/plugins/jquery-multi-select/css/multi-select.css}" media="screen" rel="stylesheet" type="text/css">
+</head>
+<!-- end::Head -->
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+
+            <!-- BEGIN: Subheader -->
+            <div class="m-subheader ">
+                <div class="d-flex align-items-center">
+                    <div class="mr-auto">
+                        <h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.guarantors}">
+                            Поручители
+                        </h3>
+                        <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+                            <li class="m-nav__item m-nav__item--home">
+                                <a th:href="@{/}" class="m-nav__link m-nav__link--icon">
+                                    <i class="m-nav__link-icon la la-home"></i>
+                                </a>
+                            </li>
+                            <li class="m-nav__separator">
+                                -
+                            </li>
+                            <li class="m-nav__item">
+                                <span class="m-nav__link-text" th:text="#{label.guarantors}">Поручители</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- END: Subheader -->
+            <div class="m-content">
+                <!--Begin Portlet-->
+                <div class="m-portlet">
+                    <div class="m-portlet__body">
+                        <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                            <div class="form-group m-form__group row " style="margin-left: 10px">
+                                <div class="col-md-2">
+                                    <div class="m-input-icon m-input-icon--left mb-2">
+                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder=#{label.debtor.name} id="debtor_name">
+                                        <span class="m-input-icon__icon m-input-icon__icon--left">
+                                                    <span>
+                                                        <i class="la la-search"></i>
+                                                    </span>
+                                                </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="m-input-icon m-input-icon--left mb-2">
+                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder=#{label.guarantor.name} id="guarantor_name">
+                                        <span class="m-input-icon__icon m-input-icon__icon--left">
+                                                    <span>
+                                                        <i class="la la-search"></i>
+                                                    </span>
+                                                </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--begin: Datatable -->
+                        <div class="m_datatable" id="ajax_data"></div>
+                        <!--end: Datatable -->
+                        <!--begin::Modal-->
+                        <!--end::Modal-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- begin::Footer -->
+    <div th:replace="layout/footer"/>
+    <!-- end::Footer -->
+</div>
+
+<div th:replace="fragments/footer :: footer-js"/>
+<script th:inline="javascript" >
+
+    //== Class definition
+    var DatatableJsonRemoteDemo = function () {
+        //== Private functions
+        // basic demovar
+        var demo = function () {
+            // columnes.push();
+            var datatable = $('.m_datatable').mDatatable({
+                // datasource definition
+                data: {
+                    type: 'remote',
+                    source: {
+                        read: {
+                            url: '/api/guarantoragreements'
+                        }
+                    },
+                    pageSize: 10,
+                    saveState: {
+                        cookie: false,
+                        webstorage: false
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+
+                // layout definition
+                layout: {
+                    theme: 'default', // datatable theme
+                    class: '', // custom wrapper class
+                    scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+                    footer: false // display/hide footer
+                },
+                // column sorting
+                sortable: true,
+                // column based filtering
+                filterable: false,
+                pagination: true,
+                // columns definition
+                columns:  [  {
+                    field: "id",
+                    title: "#",
+                    sortable: 'desc',
+                    responsive: {hidden: 'xl'}
+                }, {
+                    field: "debtor",
+                    title: "Заемщик",
+                    template: function (row) {
+                        return '\
+                                <a href="/manage/debtor/'+row.debtorId+'/view">'+row.debtor+'</a>\
+                            ';
+                    }
+                }, {
+                    field: "notary",
+                    title: "Нотариус"
+                }, {
+                    field: "owner",
+                    title: "Поручитель",
+                    template: function (row) {
+                        if(row.ownerType="PERSON"){
+                            return '\
+                                <a href="/person/'+row.ownerId+'/details">'+row.owner+'</a>\
+                            ';
+                        }
+                        return '\
+                                <a href="/organization/'+row.ownerId+'/details">'+row.owner+'</a>\
+                            ';
+
+                    }
+                }],
+                translate: {
+                    records: {
+                        processing: 'Подождите пожалуйста...',
+                        noRecords: 'Записей не найдено'
+                    },
+                    toolbar: {
+                        pagination: {
+                            items: {
+                                default: {
+                                    first: 'Первая страница',
+                                    prev: 'Предыдущая страница',
+                                    next: 'Следующая страница',
+                                    last: 'Последняя страница',
+                                    more: 'Другие страницы',
+                                    input: 'Номер страницы',
+                                    select: 'Выбрать размер страницы'
+                                },
+                                info: 'Отображение {{start}} - {{end}} из {{total}} записей'
+                            }
+                        }
+                    }
+                }
+            });
+            var query = datatable.getDataSourceQuery();
+
+            $('#debtor_name').on('keyup', function () {
+                var counterOfDebtor = $('#debtor_name').val().length;
+                if (counterOfDebtor >= 3 || counterOfDebtor == 0) {
+                    datatable.search($(this).val(), 'debtor');
+                }
+            }).val(typeof query.debtor!== 'undefined' ? query.debtor: '');
+
+            $('#guarantor_name').on('keyup', function () {
+                var counterOf= $('#guarantor_name').val().length;
+                if (counterOf>= 3 || counterOf== 0) {
+                    datatable.search($(this).val(), 'owner');
+                }
+            }).val(typeof query.owner !== 'undefined' ? query.owner: '');
+
+        };
+        return {
+            // public functions
+            init: function () {
+                demo();
+            }
+        };
+    }();
+    jQuery(document).ready(function () {
+        DatatableJsonRemoteDemo.init();
+    });
+</script>
+</body>
+<!-- end::Body -->
+</html>
