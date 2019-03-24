@@ -1,11 +1,14 @@
 package kg.gov.mf.loan.web.controller.admin.org;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.admin.org.repository.PersonRepository;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.model.debtor.OwnerType;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
+import kg.gov.mf.loan.web.fetchModels.PersonOrganizationDocModel;
 import kg.gov.mf.loan.web.util.Pager;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,7 @@ import kg.gov.mf.loan.admin.org.service.*;
 
 import kg.gov.mf.loan.admin.sys.service.*;
 
+import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +36,9 @@ import java.util.Optional;
 
 @Controller
 public class PersonController {
+
+	@Autowired
+	EntityManager entityManager;
 	
 	@Autowired
     private PersonService personService;
@@ -235,6 +242,7 @@ public class PersonController {
 			hasDebtor="false";
 			model.addAttribute("debtorId",0);
 		}
+		model.addAttribute("docs",getDocs(id));
 		model.addAttribute("hasDebtor", hasDebtor);
 		model.addAttribute("person", person);
 //		model.addAttribute("positionList", this.positionService.findAll());
@@ -487,6 +495,22 @@ public class PersonController {
 	}
      
 
+
+	public String  getDocs(Long id){
+
+		String baseQuery="select d.title,d.id,dt.name as type\n" +
+				"from df_document d,person p,cat_responsible_person rp,cat_document_type dt\n" +
+				"where (d.receiverResponsible=rp.Responsible_id or d.senderResponsible=rp.Responsible_id) " +
+				"and dt.id=d.documentType and rp.person_id="+id+" group by d.id";
+		Query query=entityManager.createNativeQuery(baseQuery,PersonOrganizationDocModel.class);
+
+		List<PersonOrganizationDocModel> list=query.getResultList();
+
+		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+		String result = gson.toJson(list);
+
+		return result;
+	}
      
 
 }

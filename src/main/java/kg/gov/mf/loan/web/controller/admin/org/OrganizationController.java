@@ -1,11 +1,14 @@
 package kg.gov.mf.loan.web.controller.admin.org;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.admin.org.repository.OrganizationRepository;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.model.debtor.OwnerType;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
+import kg.gov.mf.loan.web.fetchModels.PersonOrganizationDocModel;
 import kg.gov.mf.loan.web.util.Pager;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,8 @@ import kg.gov.mf.loan.admin.org.service.*;
 
 import kg.gov.mf.loan.admin.sys.service.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +37,9 @@ import java.util.Optional;
 
 @Controller
 public class OrganizationController {
+
+	@Autowired
+	EntityManager entityManager;
 	
 	@Autowired
     private OrganizationService organizationService;
@@ -249,6 +257,7 @@ public class OrganizationController {
 			organizationPositionList.addAll(this.positionService.findByDepartment(department));
 		}
 
+		model.addAttribute("docs",getDocs(id));
 		model.addAttribute("organization", organization);
 		model.addAttribute("positionList", organizationPositionList);
 		model.addAttribute("informationList", this.informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2, organization.getId()));		
@@ -447,5 +456,20 @@ public class OrganizationController {
 		return "/admin/org/organizationList";
 	}
 	*/
+	public String  getDocs(Long id){
+
+		String baseQuery="select d.title,d.id,dt.name as type\n" +
+				"from df_document d,person p,cat_responsible_organization ro,cat_document_type dt\n" +
+				"where (d.receiverResponsible=ro.Responsible_id or d.senderResponsible=ro.Responsible_id) " +
+				"and dt.id=d.documentType and ro.organizations_id="+id+" group by d.id";
+		Query query=entityManager.createNativeQuery(baseQuery, PersonOrganizationDocModel.class);
+
+		List<PersonOrganizationDocModel> list=query.getResultList();
+
+		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+		String result = gson.toJson(list);
+
+		return result;
+	}
 
 }

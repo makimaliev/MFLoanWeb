@@ -234,7 +234,7 @@ public class CollateralItemController {
 
 			if (item.getId() == 0) {
 
-				if (item.getRisk_rate() == null) item.setRisk_rate((double) 1);
+				if (item.getRisk_rate() == null) item.setRisk_rate(0.7);
 				if (item.getDemand_rate() == null) item.setDemand_rate((double) 1);
 
 				ConditionType conditionTypeByDefault = cTypeService.getById(1L);
@@ -263,7 +263,7 @@ public class CollateralItemController {
 					itemService.add(item);
 			} else {
 
-				if (item.getRisk_rate() == null) item.setRisk_rate((double) 1);
+				if (item.getRisk_rate() == null) item.setRisk_rate(0.7);
 				if (item.getDemand_rate() == null) item.setDemand_rate((double) 1);
 				item.setCollateralItemDetails(itemDetails);
 				date = date.replace(",", "");

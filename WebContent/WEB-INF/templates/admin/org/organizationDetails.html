@@ -286,6 +286,7 @@
 											<li class="nav-item"><a class="nav-link m--font-primary" href="#tab_15_4" data-toggle="tab"> Банковские реквизиты </a></li>
 											<li class="nav-item"><a class="nav-link m--font-primary" href="#tab_15_5" data-toggle="tab"> Организационная структура </a></li>
 											<li hidden="hidden" class="nav-item"><a class="nav-link m--font-primary" href="#tab_15_6" data-toggle="tab"> Информация </a></li>
+											<li class="nav-item"><a class="nav-link m--font-primary" href="#tab_15_7" data-toggle="tab"> Документы</a></li>
 										</ul>
 										<div class="tab-content">
 
@@ -656,6 +657,11 @@
 
 											</div>
 
+											<!--DOCUMENTS-->
+
+											<div class="tab-pane" role="tabpanel" id="tab_15_7">
+												<div class="m_datatable" id="docTable"></div>
+											</div>
 										</div>
 									<!--</div>-->
 								</div>
@@ -888,7 +894,114 @@
 		window.location.href = organizationURL;
 	}
 </script>
+<script th:inline="javascript">
+    var jsonDocs=/*[[${docs}]]*/ [];
 
+    var DatatableDataLocalDocs= function () {
+        //== Private functions
+
+        // demo initializer
+        var mainTableInit = function () {
+
+            var dataJSONArray = JSON.parse(jsonDocs);
+
+            var datatable = $('#docTable').mDatatable({
+                // datasource definition
+                data: {
+                    type: 'local',
+                    source: dataJSONArray
+                },
+
+                // layout definition
+                layout: {
+                    theme: 'default', // datatable theme
+                    class: '', // custom wrapper class
+                    scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+                    height: 450, // datatable's body's fixed height
+                    footer: false // display/hide footer
+                },
+
+                // column sorting(refer to Kendo UI)
+                sortable: false,
+
+                // column based filtering(refer to Kendo UI)
+                filterable: false,
+
+                pagination: true,
+
+                // inline and bactch editing(cooming soon)
+                // editable: false,
+
+                // columns definition
+                columns: [{
+                    field: "id",
+                    title: "#",
+                    responsive: {hidden: 'xl'},
+                }, {
+                    field: "title",
+                    title: "Относительно",
+                    width:250,
+                    template: function (row) {
+                        var d = row.title;
+                        return '\
+                                <a href="/doc/view/'+row.id+'">'+d+'</a>\
+                            ';
+                    }
+                },{
+                    field: "type",
+                    title: "Вид документа"
+                }],
+                translate: {
+                    records: {
+                        processing: 'Подождите пожалуйста...',
+                        noRecords: 'Записей не найдено'
+                    },
+                    toolbar: {
+                        pagination: {
+                            items: {
+                                default: {
+                                    first: 'Первая страница',
+                                    prev: 'Предыдущая страница',
+                                    next: 'Следующая страница',
+                                    last: 'Последняя страница',
+                                    more: 'Другие страницы',
+                                    input: 'Номер страницы',
+                                    select: 'Выбрать размер страницы'
+                                },
+                                info: 'Отображение {{start}} - {{end}} из {{total}} записей'
+                            }
+                        }
+                    }
+                },
+
+                toolbar: {
+                    items: {
+                        // pagination
+                        pagination: {
+                            // page size select
+                            pageSizeSelect: [5, 10, 20, 50, 100]
+                        }
+                    }
+                }
+            });
+
+
+
+        };
+
+        return {
+            //== Public functions
+            init: function () {
+                // init dmeo
+                mainTableInit();
+            }
+        };
+    }();
+
+    jQuery(document).ready(function () {
+        DatatableDataLocalDocs.init();
+    });
+</script>
 </body>
 <!-- end::Body -->
 </html>
