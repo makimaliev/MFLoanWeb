@@ -940,9 +940,12 @@
                 }, {
                     field: "title",
                     title: "Относительно",
-                    width:250,
+                    width:800,
                     template: function (row) {
                         var d = row.title;
+                        if(d.length>100){
+                            d= d.substring(0,100)+"...";
+                        }
                         return '\
                                 <a href="/doc/view/'+row.id+'">'+d+'</a>\
                             ';
