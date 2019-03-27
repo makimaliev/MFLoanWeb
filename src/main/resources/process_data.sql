@@ -2812,6 +2812,24 @@ BEGIN
     GROUP BY p.onDate
     ORDER BY p.onDate;
 
+    INSERT INTO accrue (version, daysInPeriod, fromDate, interestAccrued, lastInstPassed, penaltyAccrued, penaltyOnInterestOverdue, penaltyOnPrincipalOverdue, toDate, loanId)
+    SELECT 1, acc.daysInPeriod,
+           acc.fromDate,
+           acc.interestAccrued,
+           acc.lastInstPassed,
+           acc.penaltyAccrued,
+           acc.penaltyOnInterestOverdue,
+           acc.penaltyOnPrincipalOverdue,
+           acc.toDate,
+           loan_id
+    FROM accrue acc
+    WHERE acc.loanId IN
+          (SELECT id
+           FROM loan
+           WHERE parent_id = loan_id
+             AND loanStateId != 3)
+    ORDER BY acc.fromDate;
+
     #CALL updateRootLoanSummary(loan_id);
 
   END LOOP run_calculate;
@@ -3971,4 +3989,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-20 14:41:20
+-- Dump completed on 2019-03-27 11:39:13
