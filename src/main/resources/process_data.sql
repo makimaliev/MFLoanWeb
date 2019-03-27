@@ -2909,11 +2909,13 @@ begin
           DELETE FROM accrue where loanId = t_loan_id;
         end if;
 
+        /*
         if type = 'MANUAL' then
           DELETE FROM loanDetailedSummary WHERE loanId = t_loan_id;
           DELETE FROM loanSummary WHERE loanId = t_loan_id AND loanSummaryType = 'MANUAL';
           DELETE FROM accrue where loanId = t_loan_id;
         end if;
+        */
 
         CALL calculateLoanDetailedSummaryUntilOnDate(t_loan_id, in_date, 1, type);
 
@@ -3989,4 +3991,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-27 11:39:13
+-- Dump completed on 2019-03-27 12:37:06
