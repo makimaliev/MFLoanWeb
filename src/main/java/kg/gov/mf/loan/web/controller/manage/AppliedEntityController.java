@@ -1,37 +1,23 @@
 package kg.gov.mf.loan.web.controller.manage;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.admin.org.model.Person;
+import kg.gov.mf.loan.admin.org.service.PersonService;
+import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.model.debtor.OwnerType;
-import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
-import kg.gov.mf.loan.manage.repository.entity.AppliedEntityRepository;
-import kg.gov.mf.loan.manage.service.orderdocumentpackage.OrderDocumentPackageService;
-import kg.gov.mf.loan.web.fetchModels.EntityDocumentPackageModel;
-import kg.gov.mf.loan.web.util.Pager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
 import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackage;
-import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackageState;
-import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackageType;
 import kg.gov.mf.loan.manage.model.entity.AppliedEntity;
 import kg.gov.mf.loan.manage.model.entity.AppliedEntityState;
 import kg.gov.mf.loan.manage.model.entitydocument.EntityDocument;
-import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentRegisteredBy;
-import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentState;
 import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityList;
 import kg.gov.mf.loan.manage.model.orderdocument.OrderDocument;
 import kg.gov.mf.loan.manage.model.orderdocumentpackage.OrderDocumentPackage;
+import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
+import kg.gov.mf.loan.manage.repository.entity.AppliedEntityRepository;
+import kg.gov.mf.loan.manage.service.debtor.DebtorService;
+import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageService;
 import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageStateService;
 import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageTypeService;
@@ -42,12 +28,21 @@ import kg.gov.mf.loan.manage.service.entitydocument.EntityDocumentService;
 import kg.gov.mf.loan.manage.service.entitydocument.EntityDocumentStateService;
 import kg.gov.mf.loan.manage.service.entitylist.AppliedEntityListService;
 import kg.gov.mf.loan.manage.service.order.CreditOrderService;
+import kg.gov.mf.loan.manage.service.orderdocumentpackage.OrderDocumentPackageService;
+import kg.gov.mf.loan.web.fetchModels.EntityDocumentPackageModel;
 import kg.gov.mf.loan.web.util.Utils;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.List;
+import java.util.Set;
 
 @Controller
 public class AppliedEntityController {
@@ -91,6 +86,15 @@ public class AppliedEntityController {
 	@Autowired
 	AppliedEntityRepository appliedEntityRepository;
 
+	@Autowired
+	PersonService personService;
+
+	@Autowired
+	OwnerService ownerService;
+
+	@Autowired
+	DebtorService debtorService;
+
 	/** The entity manager. */
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -100,6 +104,17 @@ public class AppliedEntityController {
 
 		AppliedEntity entity = entityService.getById(entityId);
         model.addAttribute("entity", entity);
+		Person person=personService.findById(ownerService.getById(entity.getOwner().getId()).getEntityId());
+		model.addAttribute("person",person);
+
+		try{
+			Owner owner=this.ownerService.getByEntityId(person.getId(),"PERSON");
+			Debtor debtor=debtorService.getByOwnerId(owner.getId());
+			model.addAttribute("hasDebtor",true);
+		}
+		catch (Exception e){
+			model.addAttribute("hasDebtor",false);
+		}
 
 		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
 		String jsonPackages = gson.toJson(getPackagesByEntityId(entityId));

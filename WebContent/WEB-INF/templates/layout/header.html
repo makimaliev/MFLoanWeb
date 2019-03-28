@@ -168,6 +168,7 @@
                                         <a th:href="@{/person/list}" role="button" class="dropdown-item " th:text="#{label.persons}"   sec:authorize="hasAnyAuthority('ADMIN','PERM_ORGANIZATION_PERSON_LIST')">Left</a>
                                         <a th:href="@{/organization/list}" role="button" class="dropdown-item " th:text="#{label.organizations}"  sec:authorize="hasAnyAuthority('ADMIN','PERM_ORGANIZATION_PERSON_LIST')">Left</a>
                                         <a th:href="@{/manage/debtor/list1}" role="button" class="dropdown-item " th:text="#{label.title.debtors}"  sec:authorize="hasAnyAuthority('ADMIN','PERM_DEBTOR_LIST')">Left</a>
+                                        <a th:href="@{/manage/order/list}" role="button" class="dropdown-item " sec:authorize="hasAnyAuthority('ADMIN','PERM_ORDER_LIST')">Список решений</a>
 
                                     </div>
                                 </div>

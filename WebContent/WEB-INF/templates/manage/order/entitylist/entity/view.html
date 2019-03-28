@@ -84,6 +84,46 @@
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
 								<h3 class="m-portlet__head-text" th:text="${entity.owner.name}"></h3>
+								<div class="col-md-12">
+
+									<!-- Default bootstrap modal example -->
+									<div class="modal fade" id="personFormModal" tabindex="-1"
+										 role="dialog" aria-labelledby="myModalLabel"
+										 aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<!--<div class="modal-header">-->
+												<!--<button type="button" class="close" data-dismiss="modal"-->
+												<!--aria-label="Close">-->
+												<!--<span aria-hidden="true">&times;</span>-->
+												<!--</button>-->
+												<!--<h4 class="modal-title" id="myModalLabel" >Добавить</h4>-->
+												<!--</div>-->
+												<div class="modal-body">...</div>
+												<!--<div class="modal-footer">-->
+												<!--<button type="button" class="btn btn-default"-->
+												<!--data-dismiss="modal">Close</button>-->
+												<!--<button type="button" class="btn btn-success">Save-->
+												<!--changes</button>-->
+												<!--</div>-->
+											</div>
+										</div>
+									</div>
+
+								</div>
+								<div class="row ml-3" th:if="${hasDebtor}!=true">
+									<div class="col-md-12">
+
+										<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_PERSON')" data-remote="false" data-toggle="modal"
+										   data-target="#personFormModal" th:href="@{/person/__${person.id}__/edit}"
+										   role="button" class="btn btn-outline-danger" th:text="#{label.table.edit}">Edit person </a>
+
+										<a sec:authorize="hasAnyAuthority('ADMIN','PERM_PRINT_PERSON')" th:href="@{/printout/1/objectId/__${person.id}__/generate}"
+										   role="button" class="btn btn-outline-success" th:text="#{label.table.print}">Edit person </a>
+
+
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -215,7 +255,17 @@
     var entityId = /*[[${entity.id}]]*/ [];
     /*]]>*/
 </script>
+<script th:inline="javascript">
+	$("#personFormModal").on("show.bs.modal", function(e) {
 
+
+
+    var link = $(e.relatedTarget);
+    var personID = /*[[${person.id}]]*/ '1';
+
+    $(this).find(".modal-body").load(link.attr("href"));
+
+});</script>
 </body>
 <!-- end::Body -->
 </html>
