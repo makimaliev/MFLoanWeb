@@ -4,9 +4,11 @@ import com.lowagie.text.Document;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.rtf.RtfWriter2;
+import kg.gov.mf.loan.admin.org.model.EmploymentHistory;
 import kg.gov.mf.loan.admin.org.model.IdentityDoc;
 import kg.gov.mf.loan.admin.org.model.Person;
 import kg.gov.mf.loan.admin.org.model.Staff;
+import kg.gov.mf.loan.admin.org.service.EmploymentHistoryService;
 import kg.gov.mf.loan.admin.org.service.IdentityDocService;
 import kg.gov.mf.loan.admin.org.service.PersonService;
 import kg.gov.mf.loan.admin.org.service.StaffService;
@@ -65,6 +67,9 @@ public class PrintoutTemplateController {
 
 	@Autowired
 	IdentityDocService identityDocService;
+
+	@Autowired
+	EmploymentHistoryService employmentHistoryService;
 
 
 
@@ -1237,10 +1242,16 @@ public class PrintoutTemplateController {
 						case 3:
 						    String[] splitted=staff.getName().split(" ");
 
-							newText=splitted[0]+"а"+" "+splitted[1]+"а"+" "+splitted[2]+"а";
+						    String words="";
+						    for(String word:splitted){
+						    	words=words+word+"a ";
+							}
+//							newText=splitted[0]+"а"+" "+splitted[1]+"а"+" "+splitted[2]+"а";
+							newText=words;
 							break;
 						case 4:
-							newText=staff.getEmploymentHistory().getNumber();
+							EmploymentHistory employmentHistory=employmentHistoryService.findById(staff.getEmploymentHistory().getId());
+							newText=employmentHistory.getNumber();
 							break;
 						case 5:
 							newText=person.getName();
@@ -1259,7 +1270,16 @@ public class PrintoutTemplateController {
 							break;
 						case 10:
 							String[] fullname=staff.getPerson().getName().split(" ");
-							String surname=fullname[0]+" "+fullname[1].charAt(0)+"."+fullname[2].charAt(0)+".";
+//							String surname=fullname[0]+" "+fullname[1].charAt(0)+"."+fullname[2].charAt(0)+".";
+							String surname="";
+							for(int i=0;i<fullname.length;i++){
+								if(i==0){
+									surname=fullname[i];
+								}
+								else{
+									surname=surname+" "+fullname[i].charAt(0)+". ";
+								}
+							}
 							newText=surname;
 							break;
 						case 11:
