@@ -1325,6 +1325,9 @@ BEGIN
   DECLARE intOutstanding DOUBLE DEFAULT 0;
   DECLARE collIntDisbursed DOUBLE;
   DECLARE totalIntAccruedOnIntPayment DOUBLE DEFAULT 0;
+
+  DECLARE interestAccruedInPeriod DOUBLE DEFAULT 0;
+
   DECLARE pOPO DOUBLE DEFAULT 0;
   DECLARE pOIO DOUBLE DEFAULT 0;
   DECLARE pDate DATE;
@@ -2101,12 +2104,20 @@ BEGIN
         SET pOPO = 0;
       END IF;
 
+
+      SET interestAccruedInPeriod = interestAccruedInPeriod+ intAccrued;
+
       IF intAccrued + penAccrued + pOIO + pOPO > 0 THEN
         if loan_summary_type_text = 'SYSTEM' or ((loan_summary_type_text = 'MANUAL' or loan_summary_type_text = 'FIXED') and tempDate = inDate) then
           INSERT INTO accrue(version, daysInPeriod, fromDate, interestAccrued, lastInstPassed, penaltyAccrued, penaltyOnInterestOverdue, penaltyOnPrincipalOverdue, toDate, loanId)
-          VALUES (1, daysInPer, pDate, intAccrued, FALSE , penAccrued, pOIO, pOPO, tempDate, loan_id);
+          VALUES (1, daysInPer, pDate, intAccrued, FALSE , penAccrued, interestAccruedInPeriod, pOPO, tempDate, loan_id);
         end if;
       END IF;
+
+      IF isPaymentSchedulePaymentDate(tempDate, loan_id)  THEN
+        SET interestAccruedInPeriod = 0;
+      END IF;
+
 
       SET pDate = tempDate;
 
