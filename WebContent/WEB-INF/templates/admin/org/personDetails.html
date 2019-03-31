@@ -147,7 +147,7 @@
 													   data-target="#personFormModal" th:href="@{/person/__${person.id}__/edit}"
 													   role="button" class="btn btn-outline-danger" th:text="#{label.table.edit}">Edit person </a>
 
-													<a sec:authorize="hasAnyAuthority('ADMIN')" th:href="@{/printout/1/objectId/__${person.id}__/generate}"
+													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_PRINT_PERSON')" th:href="@{/printout/1/objectId/__${person.id}__/generate}"
 													   role="button" class="btn btn-outline-success" th:text="#{label.table.print}">Edit person </a>
 
 
