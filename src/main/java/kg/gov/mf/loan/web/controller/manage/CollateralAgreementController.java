@@ -175,7 +175,7 @@ public class CollateralAgreementController {
     {
     	if(agreement.getNotaryOfficeRegDate()==null||agreement.getNotaryOfficeRegNumber()==null||agreement.getOwner()==null||
 				agreement.getArrestRegDate()==null||agreement.getArrestRegNumber()==null||
-				agreement.getCollateralOfficeRegDate()==null||agreement.getCollateralOfficeRegNumber()==null||loanses.length==0){
+				loanses.length==0){
 			return "redirect:" + "/manage/debtor/{debtorId}/view";
 		}
     	else {
@@ -190,6 +190,8 @@ public class CollateralAgreementController {
 					agreement.setAgreementDate(agreement.getNotaryOfficeRegDate());
 					agreement.setAgreementNumber(agreement.getNotaryOfficeRegNumber());
 					agreement.setLoans(loanSet);
+					if(agreement.getCollateralOfficeRegNumber()==null)
+						agreement.setCollateralOfficeRegNumber("");
 					agreementService.add(agreement);
 				} else {
 					Owner owner = ownerRepository.findOne(agreement.getOwner().getId());
