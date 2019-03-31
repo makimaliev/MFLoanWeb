@@ -823,7 +823,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `getCollectedPenDisbursed`(loanId bigint) RETURNS double
 BEGIN
@@ -834,7 +834,8 @@ BEGIN
     select sum(ps.collectedPenaltyPayment)
     from paymentSchedule ps
     where ps.loanId = loanId
-      and ps.record_status = 1;
+      and ps.record_status = 1
+      and ps.collectedPenaltyPayment >= 0;
 
   DECLARE CONTINUE HANDLER
     FOR NOT FOUND SET result = 0;
@@ -4002,4 +4003,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-27 12:37:06
+-- Dump completed on 2019-03-31 14:00:28
