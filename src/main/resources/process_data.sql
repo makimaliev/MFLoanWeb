@@ -2006,7 +2006,7 @@ BEGIN
     END IF;
 
     SET penOverdue = totalPenAccrued + totalCollPenPayment - totalPenPaid - total_wo_pen;
-    SET collPenDisbursed = getCollectedPenDisbursed(loan_id);
+    SET collPenDisbursed = getCollectedPenDisbursed(loan_id, tempDate);
 
     SET penOutstanding = totalPenAccrued + collPenDisbursed - totalPenPaid - total_wo_pen;
 
@@ -2026,7 +2026,7 @@ BEGIN
       END IF;
     END IF;
 
-    SET collIntDisbursed = getCollectedIntDisbursed(loan_id);
+    SET collIntDisbursed = getCollectedIntDisbursed(loan_id, tempDate);
     SET intOutstanding = totalIntAccrued + collIntDisbursed - totalIntPaid - total_wo_int;
     SET totalCollIntPayment = totalCollIntPayment + collIntPayment;
 
@@ -4020,4 +4020,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-31 15:56:47
+-- Dump completed on 2019-03-31 16:08:01
