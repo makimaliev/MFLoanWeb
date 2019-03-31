@@ -787,9 +787,9 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `getCollectedIntDisbursed`(loanId bigint) RETURNS double
+CREATE DEFINER=`root`@`localhost` FUNCTION `getCollectedIntDisbursed`(loanId bigint, in_date date) RETURNS double
 BEGIN
 
   DECLARE result DOUBLE DEFAULT 0;
@@ -798,7 +798,8 @@ BEGIN
     select sum(ps.collectedInterestPayment)
     from paymentSchedule ps
     where ps.loanId = loanId
-      and ps.record_status = 1;
+      and ps.record_status = 1
+      and ((ps.collectedInterestPayment > 0 and ps.expectedDate > in_date) or (ps.expectedDate <= in_date));
 
   DECLARE CONTINUE HANDLER
     FOR NOT FOUND SET result = 0;
@@ -825,7 +826,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `getCollectedPenDisbursed`(loanId bigint) RETURNS double
+CREATE DEFINER=`root`@`localhost` FUNCTION `getCollectedPenDisbursed`(loanId bigint, in_date date) RETURNS double
 BEGIN
 
   DECLARE result DOUBLE DEFAULT 0;
@@ -835,7 +836,7 @@ BEGIN
     from paymentSchedule ps
     where ps.loanId = loanId
       and ps.record_status = 1
-      and ps.collectedPenaltyPayment >= 0;
+      and ((ps.collectedPenaltyPayment > 0 and ps.expectedDate > in_date) or (ps.expectedDate <= in_date));
 
   DECLARE CONTINUE HANDLER
     FOR NOT FOUND SET result = 0;
@@ -2985,7 +2986,23 @@ begin
         and p.record_status = 1
       group by p.onDate, p.loanSummaryType;
 
-      #create insert statement for accrue as well
+      INSERT INTO accrue (version, daysInPeriod, fromDate, interestAccrued, lastInstPassed, penaltyAccrued, penaltyOnInterestOverdue, penaltyOnPrincipalOverdue, toDate, loanId)
+      SELECT 1, acc.daysInPeriod,
+             acc.fromDate,
+             acc.interestAccrued,
+             acc.lastInstPassed,
+             acc.penaltyAccrued,
+             acc.penaltyOnInterestOverdue,
+             acc.penaltyOnPrincipalOverdue,
+             acc.toDate,
+             loan_id
+      FROM accrue acc
+      WHERE acc.loanId IN
+            (SELECT id
+             FROM loan
+             WHERE parent_id = loan_id
+               AND loanStateId != 3)
+      ORDER BY acc.fromDate;
 
     end;
   end if;
@@ -4003,4 +4020,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-31 14:00:28
+-- Dump completed on 2019-03-31 15:56:47
