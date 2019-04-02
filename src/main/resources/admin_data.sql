@@ -1,3 +1,19 @@
+update phaseDetails phd, phase_amount_view v
+set phd.paidTotalAmount = v.paid_amount,
+  phd.paidPrincipal = v.paid_principal,
+  phd.paidInterest = v.paid_interest,
+  phd.paidPenalty = v.paid_penalty
+where phd.id = v.det_id;
+
+
+update collectionPhase cph
+set cph.paid = (select sum(distinct det.paidTotalAmount) from phaseDetails det where det.collectionPhaseId = cph.id group by det.collectionPhaseId)
+
+
+
+
+
+
 create view phase_amount_view as
   select  det.id det_id,
 
