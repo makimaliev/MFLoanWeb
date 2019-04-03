@@ -795,7 +795,7 @@ BEGIN
   DECLARE result DOUBLE DEFAULT 0;
 
   DECLARE cur CURSOR FOR
-    select sum(ps.collectedInterestPayment)
+    select ifnull(sum(ps.collectedInterestPayment),0)
     from paymentSchedule ps
     where ps.loanId = loanId
       and ps.record_status = 1
@@ -832,7 +832,7 @@ BEGIN
   DECLARE result DOUBLE DEFAULT 0;
 
   DECLARE cur CURSOR FOR
-    select sum(ps.collectedPenaltyPayment)
+    select ifnull(sum(ps.collectedPenaltyPayment),0)
     from paymentSchedule ps
     where ps.loanId = loanId
       and ps.record_status = 1
@@ -844,6 +844,8 @@ BEGIN
   OPEN cur;
   FETCH cur INTO result;
   CLOSE cur;
+
+
 
   RETURN result;
 
