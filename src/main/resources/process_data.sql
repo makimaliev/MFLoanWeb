@@ -1937,7 +1937,7 @@ BEGIN
     SET totalDisb = totalDisb + disb;
 
     IF NOT penalty_limit_flag THEN
-      IF penalty_limit > 0 AND totalPenAccrued >= totalDisb*penalty_limit/100+paymentSumBeforeSpecDate AND tempDate >= '2014-11-25' THEN
+      IF totalDisb > 0 and penalty_limit > 0 AND totalPenAccrued >= totalDisb*penalty_limit/100+paymentSumBeforeSpecDate AND tempDate >= '2014-11-25' THEN
         SET totalPenAccrued = totalDisb*penalty_limit/100+paymentSumBeforeSpecDate;
         SET penalty_limit_flag = TRUE;
         UPDATE creditTerm SET penaltyLimitEndDate = tempDate WHERE loanId = loan_id;
