@@ -166,17 +166,13 @@
 												<div class="modal-dialog">
 													<div class="modal-content">
 														<div class="m-alert m-alert--icon m-alert--outline alert alert-primary" role="alert" >
-															<form th:action="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phaseId}__/setPaymentFromDate}" method="post">
+															<form th:action="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phase.id}__/setPaymentFromDate}" method="post">
 																<div class="form-group m-form__group row">
-																	<label>
-																		<div class="m-alert__text" >
-																			<strong th:text="#{label.identityDoc.date}">Уверенны?</strong>
-																			<span class="m--font-danger">*</span>
-																		</div>
-																	</label>
-																	<div class="col-lg-8 col-md-9 col-sm-12">
+                                                                    <div class="col-lg-2 col-md-9 col-sm-6"><strong th:text="#{label.identityDoc.date}">Уверенны?</strong>
+                                                                        <span class="m--font-danger">*</span></div>
+																	<div class="col-lg-10 col-md-9 col-sm-6">
 																		<div class="input-group date m_datetimepicker_6">
-																			<input  class="form-control m-input" th:placeholder="#{label.select.date}" name="date" />
+																			<input  class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:value="${#dates.format(phase.startDate,'dd.MM.yyyy')}"/>
 																			<span class="input-group-addon">
 																			<i class="la la-calendar glyphicon-th"></i>
 																		</span>
