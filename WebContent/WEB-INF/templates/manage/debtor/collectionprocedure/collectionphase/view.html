@@ -134,6 +134,8 @@
                                             </a>
 											<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLECTIONPHASE')" data-remote="false" data-toggle="modal"
 											   data-target="#confirmModal" role="button" class="btn btn-outline-danger" th:text="#{label.phase.changeRecord}"></a>
+											<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLECTIONPHASE')" data-remote="false" data-toggle="modal"
+											   data-target="#fromDate" role="button" class="btn btn-outline-success" th:text="#{label.phase.setPaymentFromDate}"></a>
 											<div class="modal fade" id="confirmModal" tabindex="-1"
 												 role="dialog" aria-labelledby="myModalLabel"
 												 aria-hidden="true">
@@ -154,6 +156,38 @@
 																	</div>
 																</form>
 															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="modal fade" id="fromDate" tabindex="-1"
+												 role="dialog" aria-labelledby="myModalLabel"
+												 aria-hidden="true">
+												<div class="modal-dialog">
+													<div class="modal-content">
+														<div class="m-alert m-alert--icon m-alert--outline alert alert-primary" role="alert" >
+															<form th:action="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phaseId}__/setPaymentFromDate}" method="post">
+																<div class="form-group m-form__group row">
+																	<label>
+																		<div class="m-alert__text" >
+																			<strong th:text="#{label.identityDoc.date}">Уверенны?</strong>
+																			<span class="m--font-danger">*</span>
+																		</div>
+																	</label>
+																	<div class="col-lg-8 col-md-9 col-sm-12">
+																		<div class="input-group date m_datetimepicker_6">
+																			<input  class="form-control m-input" th:placeholder="#{label.select.date}" name="date" />
+																			<span class="input-group-addon">
+																			<i class="la la-calendar glyphicon-th"></i>
+																		</span>
+																		</div>
+																	</div>
+																</div>
+																<div class="modal-footer">
+																<button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.orgForm.button.cancel}"></button>
+																<button class="btn btn-primary" type="submit" th:text="#{label.button.save}"></button>
+																</div>
+															</form>
 														</div>
 													</div>
 												</div>
@@ -417,6 +451,17 @@
 
         $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
         $('.selectpicker').selectpicker('refresh');
+    });
+</script>
+<script>
+    $('.m_datetimepicker_6').datetimepicker({
+        format: "dd.mm.yyyy",
+        todayHighlight: true,
+        autoclose: true,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        pickerPosition: 'bottom-left'
     });
 </script>
 </body>

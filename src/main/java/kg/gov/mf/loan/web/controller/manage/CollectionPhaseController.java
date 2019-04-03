@@ -21,6 +21,9 @@ import kg.gov.mf.loan.output.report.service.ReferenceViewService;
 import kg.gov.mf.loan.process.service.JobItemService;
 import kg.gov.mf.loan.web.fetchModels.*;
 import kg.gov.mf.loan.web.util.Utils;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -98,6 +101,9 @@ public class CollectionPhaseController {
 
 	@Autowired
 	ReferenceViewService referenceViewService;
+
+	@Autowired
+	SessionFactory sessionFactory;
 
 	/** The entity manager. */
 	@PersistenceContext
@@ -541,7 +547,9 @@ public class CollectionPhaseController {
     		ModelMap model,String[] loanses)
     {
     	if(phase.getStartDate()!=null) {
-
+    		if(phase.getPaymentFromDate()==null){
+    			phase.setPaymentFromDate(phase.getStartDate());
+			}
 			CollectionProcedure procedure = procService.getById(procId);
 			phase.setCollectionProcedure(procedure);
 
@@ -627,6 +635,55 @@ public class CollectionPhaseController {
 		return "redirect:" + "/manage/debtor/{debtorId}/collectionprocedure/{procId}/view";
     }
 
+    @RequestMapping(value = "/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/setPaymentFromDate",method = RequestMethod.POST)
+	public String setPaymentfromDate(@PathVariable("debtorId") Long debtorId,
+									 @PathVariable("procId") Long procId,
+									 @PathVariable("phaseId") Long phaseId,String date) throws ParseException {
+		CollectionPhase collectionPhase = collectionPhaseService.getById(phaseId);
+		SimpleDateFormat sd=new SimpleDateFormat("dd.MM.yyyy");
+		Date paymentFromDate=sd.parse(date);
+		collectionPhase.setPaymentFromDate(paymentFromDate);
+		collectionPhaseService.update(collectionPhase);
+		Session session;
+		try
+		{
+			session = sessionFactory.getCurrentSession();
+		}
+		catch (HibernateException e)
+		{
+			session = sessionFactory.openSession();
+		}
+
+		session.getTransaction().begin();
+		runUpdateOfPhases(phaseId,session);
+		session.getTransaction().commit();
+
+		return "redirect:/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/view";
+	}
+
+	public void runUpdateOfPhases(Long phaseId,Session session){
+
+
+
+			try {
+				String phaseUpdateQuery = "update phaseDetails phd, phase_amount_view v\n" +
+						"set phd.paidTotalAmount = v.paid_amount,\n" +
+						"  phd.paidPrincipal = v.paid_principal,\n" +
+						"  phd.paidInterest = v.paid_interest,\n" +
+						"  phd.paidPenalty = v.paid_penalty\n" +
+						"where phd.id = v.det_id and phd.collectionPhaseId =" + phaseId;
+				session.createSQLQuery(phaseUpdateQuery).executeUpdate();
+
+				String phaseSetPaid = "update collectionPhase cph,phaseDetails det\n" +
+						"set cph.paid = (select sum(distinct det.paidTotalAmount) from phaseDetails det where det.collectionPhaseId = "+phaseId+" group by det.collectionPhaseId)\n" +
+						"where cph.id=det.collectionPhaseId and det.collectionPhaseId="+phaseId;
+
+				session.createSQLQuery(phaseSetPaid).executeUpdate();
+			}
+			catch (Exception e){
+				System.out.println(e);
+			}
+	}
 
 	@RequestMapping(value="/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/groupAndIndex/change", method=RequestMethod.GET)
 	public String  changeGroupAndIndex(ModelMap model,@PathVariable("debtorId") Long debtorId,@PathVariable("procId") Long procId,@PathVariable("phaseId") Long phaseId){

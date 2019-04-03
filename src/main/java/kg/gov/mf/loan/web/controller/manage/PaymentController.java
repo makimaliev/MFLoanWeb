@@ -1,14 +1,9 @@
 package kg.gov.mf.loan.web.controller.manage;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
-import kg.gov.mf.loan.manage.model.collection.CollectionProcedure;
-import kg.gov.mf.loan.manage.model.collection.PhaseDetails;
+import kg.gov.mf.loan.manage.model.loan.Loan;
+import kg.gov.mf.loan.manage.model.loan.Payment;
+import kg.gov.mf.loan.manage.model.loan.PaymentType;
 import kg.gov.mf.loan.manage.model.orderterm.CurrencyRate;
 import kg.gov.mf.loan.manage.model.orderterm.OrderTermCurrency;
 import kg.gov.mf.loan.manage.repository.loan.PaymentRepository;
@@ -16,31 +11,30 @@ import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
 import kg.gov.mf.loan.manage.service.collection.CollectionProcedureService;
 import kg.gov.mf.loan.manage.service.collection.PhaseDetailsService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
+import kg.gov.mf.loan.manage.service.loan.LoanService;
+import kg.gov.mf.loan.manage.service.loan.PaymentService;
+import kg.gov.mf.loan.manage.service.loan.PaymentTypeService;
 import kg.gov.mf.loan.process.service.JobItemService;
-import kg.gov.mf.loan.web.util.Pager;
+import kg.gov.mf.loan.web.util.Utils;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
-
-import kg.gov.mf.loan.manage.model.loan.InstallmentState;
-import kg.gov.mf.loan.manage.model.loan.Loan;
-import kg.gov.mf.loan.manage.model.loan.Payment;
-import kg.gov.mf.loan.manage.model.loan.PaymentType;
-import kg.gov.mf.loan.manage.service.loan.LoanService;
-import kg.gov.mf.loan.manage.service.loan.PaymentService;
-import kg.gov.mf.loan.manage.service.loan.PaymentTypeService;
-import kg.gov.mf.loan.web.util.Utils;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 public class PaymentController {
@@ -214,7 +208,7 @@ public class PaymentController {
 			}
 
 			session.getTransaction().begin();
-			runUpdateOfPhases(loan);
+			runUpdateOfPhases(loan,session);
 			session.getTransaction().commit();
 
 //			this.jobItemService.runDailyCalculateProcedureForOneLoan(loanId,new Date());
@@ -234,67 +228,41 @@ public class PaymentController {
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 
-	public void runUpdateOfPhases(Loan loan){
+	public void runUpdateOfPhases(Loan loan,Session session){
 
 
 		for(CollectionPhase phase1:loan.getCollectionPhases()){
-			CollectionPhase phase=collectionPhaseService.getById(phase1.getId());
-			SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
-			Date startDate=phase.getStartDate();
-			Date closeDate=new Date();
-			CollectionProcedure procedure=collectionProcedureService.getById(phase.getCollectionProcedure().getId());
-			if(phase.getCloseDate()!=null){
-				closeDate=phase.getCloseDate();
+//			CollectionPhase phase=collectionPhaseService.getById(phase1.getId());
+//			SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
+//			Date startDate=phase.getPaymentFromDate();
+//			Date closeDate=new Date();
+//			CollectionProcedure procedure=collectionProcedureService.getById(phase.getCollectionProcedure().getId());
+//			if(phase.getCloseDate()!=null){
+//				closeDate=phase.getCloseDate();
+//			}
+//			else if(procedure.getCloseDate()!=null){
+//				closeDate=phase.getCollectionProcedure().getCloseDate();
+//			}
+
+			try {
+				String phaseUpdateQuery = "update phaseDetails phd, phase_amount_view v\n" +
+						"set phd.paidTotalAmount = v.paid_amount,\n" +
+						"  phd.paidPrincipal = v.paid_principal,\n" +
+						"  phd.paidInterest = v.paid_interest,\n" +
+						"  phd.paidPenalty = v.paid_penalty\n" +
+						"where phd.id = v.det_id and phd.collectionPhaseId =" + phase1.getId();
+				session.createSQLQuery(phaseUpdateQuery).executeUpdate();
+
+				String phaseSetPaid = "update collectionPhase cph,phaseDetails det\n" +
+                        "set cph.paid = (select sum(distinct det.paidTotalAmount) from phaseDetails det where det.collectionPhaseId = "+phase1.getId()+" group by det.collectionPhaseId)\n" +
+                        "where cph.id=det.collectionPhaseId and det.collectionPhaseId="+phase1.getId();
+
+				session.createSQLQuery(phaseSetPaid).executeUpdate();
 			}
-			else if(procedure.getCloseDate()!=null){
-				closeDate=phase.getCollectionProcedure().getCloseDate();
+			catch (Exception e){
+				System.out.println(e);
 			}
 
-			Double sumFeeP=0.0;
-			Double sumPrincipalP=0.0;
-			Double sumInterestP=0.0;
-			Double sumPenaltyP=0.0;
-			Double sumTotalP=0.0;
-			for(PhaseDetails phaseDetails1: phase.getPhaseDetails()){
-
-				PhaseDetails phaseDetails=phaseDetailsService.getById(phaseDetails1.getId());
-
-				List<Payment> payments=paymentService.getFromToDate(loan.getId(),startDate,closeDate);
-				Double sumFeeD=0.0;
-				Double sumPrincipalD=0.0;
-				Double sumInterestD=0.0;
-				Double sumPenaltyD=0.0;
-				Double sumTotalD=0.0;
-				for(Payment payment:payments){
-					sumFeeD=sumFeeD+payment.getFee();
-					sumPenaltyD=sumPenaltyD+payment.getPenalty();
-					sumPrincipalD=sumPrincipalD+payment.getPrincipal();
-					sumInterestD=sumInterestD+payment.getInterest();
-					sumTotalD=sumTotalD+payment.getTotalAmount();
-				}
-				phaseDetails.setPaidFee(sumFeeD);
-				phaseDetails.setPaidPrincipal(sumPrincipalD);
-				phaseDetails.setPaidPenalty(sumPenaltyD);
-				phaseDetails.setPaidInterest(sumInterestD);
-				phaseDetails.setPaidTotalAmount(sumTotalD);
-
-				phaseDetailsService.update(phaseDetails);
-
-				sumFeeP=sumFeeP+phaseDetails.getPaidFee();
-				sumPenaltyP=sumPenaltyP+phaseDetails.getPaidPenalty();
-				sumPrincipalP=sumPrincipalP+phaseDetails.getPaidPrincipal();
-				sumInterestP=sumInterestP+phaseDetails.getPaidInterest();
-				sumTotalP=sumTotalP+phaseDetails.getPaidTotalAmount();
-			}
-			phase.setPaid(sumFeeP+sumPenaltyP+sumInterestP+sumPrincipalP);
-
-			if(phase.getStart_amount()!=null)
-				if(phase.getStart_amount()<=phase.getPaid())
-				{
-					phase.setPaid(phase.getStart_amount());
-				}
-
-			collectionPhaseService.update(phase);
 		}
 	}
 
