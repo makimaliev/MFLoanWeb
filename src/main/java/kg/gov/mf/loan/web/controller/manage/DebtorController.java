@@ -1,12 +1,11 @@
 package kg.gov.mf.loan.web.controller.manage;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import kg.gov.mf.loan.admin.org.model.*;
+import kg.gov.mf.loan.admin.org.model.Department;
+import kg.gov.mf.loan.admin.org.model.Organization;
+import kg.gov.mf.loan.admin.org.model.Person;
+import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.org.service.*;
 import kg.gov.mf.loan.admin.sys.service.InformationService;
 import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
@@ -26,46 +25,38 @@ import kg.gov.mf.loan.manage.repository.collateral.CollateralItemReposiory;
 import kg.gov.mf.loan.manage.repository.debtor.DebtorRepository;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
+import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemService;
 import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
+import kg.gov.mf.loan.manage.service.collection.CollectionProcedureService;
 import kg.gov.mf.loan.manage.service.collection.PhaseDetailsService;
+import kg.gov.mf.loan.manage.service.debtor.*;
 import kg.gov.mf.loan.manage.service.loan.*;
+import kg.gov.mf.loan.manage.service.order.CreditOrderService;
 import kg.gov.mf.loan.manage.service.orderterm.CurrencyRateService;
+import kg.gov.mf.loan.manage.service.orderterm.OrderTermCurrencyService;
 import kg.gov.mf.loan.manage.service.process.LoanSummaryService;
 import kg.gov.mf.loan.output.report.model.LoanView;
 import kg.gov.mf.loan.output.report.service.LoanViewService;
 import kg.gov.mf.loan.output.report.utils.CalculationTool;
 import kg.gov.mf.loan.process.service.JobItemService;
 import kg.gov.mf.loan.web.fetchModels.*;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
+import kg.gov.mf.loan.web.util.Utils;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
-import kg.gov.mf.loan.manage.model.order.CreditOrder;
-import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
-import kg.gov.mf.loan.manage.service.collection.CollectionProcedureService;
-import kg.gov.mf.loan.manage.service.debtor.DebtorService;
-import kg.gov.mf.loan.manage.service.debtor.DebtorTypeService;
-import kg.gov.mf.loan.manage.service.debtor.OrganizationFormService;
-import kg.gov.mf.loan.manage.service.debtor.OwnerService;
-import kg.gov.mf.loan.manage.service.debtor.WorkSectorService;
-import kg.gov.mf.loan.manage.service.order.CreditOrderService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermCurrencyService;
-import kg.gov.mf.loan.web.util.Utils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.validation.Valid;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 public class DebtorController {
@@ -1076,9 +1067,9 @@ public class DebtorController {
 						sumLoanSummary.setOutstadingPrincipal(sumLoanSummary.getOutstadingPrincipal() + newLoanSummary.getOutstadingPrincipal());
 						sumLoanSummary.setOutstadingInterest(sumLoanSummary.getOutstadingInterest() + newLoanSummary.getOutstadingInterest());
 						sumLoanSummary.setTotalOverdue(sumLoanSummary.getTotalOverdue() + newLoanSummary.getTotalOverdue());
-                        sumLoanSummary.setOverduePrincipal(loanSummary.getOverduePrincipal()*rate);
-                        sumLoanSummary.setOverdueInterest(loanSummary.getOverdueInterest()*rate);
-                        sumLoanSummary.setOverduePenalty(loanSummary.getOverduePenalty()*rate);
+                        sumLoanSummary.setOverduePrincipal(sumLoanSummary.getOverduePrincipal()+newLoanSummary.getOverduePrincipal());
+                        sumLoanSummary.setOverdueInterest(sumLoanSummary.getOverdueInterest()+newLoanSummary.getOverdueInterest());
+                        sumLoanSummary.setOverduePenalty(sumLoanSummary.getOverduePenalty()+newLoanSummary.getOverduePenalty());
 						sumLoanSummary.setTotalOutstanding(sumLoanSummary.getTotalOutstanding() + newLoanSummary.getTotalOutstanding());
 						sumLoanSummary.setTotalDisbursed(sumLoanSummary.getTotalDisbursed() + newLoanSummary.getTotalDisbursed());
 						sumLoanSummary.setLoanAmount(sumLoanSummary.getLoanAmount() + newLoanSummary.getLoanAmount());
@@ -1091,9 +1082,9 @@ public class DebtorController {
 						sumLoanSummary.setOutstadingInterest(newLoanSummary.getOutstadingInterest());
 						sumLoanSummary.setOutstadingFee(newLoanSummary.getOutstadingFee());
 						sumLoanSummary.setTotalOverdue(newLoanSummary.getTotalOverdue());
-                        sumLoanSummary.setOverduePrincipal(loanSummary.getOverduePrincipal()*rate);
-                        sumLoanSummary.setOverdueInterest(loanSummary.getOverdueInterest()*rate);
-                        sumLoanSummary.setOverduePenalty(loanSummary.getOverduePenalty()*rate);
+                        sumLoanSummary.setOverduePrincipal(newLoanSummary.getOverduePrincipal());
+                        sumLoanSummary.setOverdueInterest(newLoanSummary.getOverdueInterest());
+                        sumLoanSummary.setOverduePenalty(newLoanSummary.getOverduePenalty());
 						sumLoanSummary.setTotalOutstanding(newLoanSummary.getTotalOutstanding());
 						sumLoanSummary.setTotalDisbursed(newLoanSummary.getTotalDisbursed());
 						sumLoanSummary.setLoanAmount(newLoanSummary.getLoanAmount());
