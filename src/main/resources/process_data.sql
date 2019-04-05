@@ -1396,6 +1396,9 @@ BEGIN
   DECLARE has_libor_io BOOLEAN;
   DECLARE date_prev_loan_summary DATE;
   DECLARE loan_summary_type_text VARCHAR(20);
+  DECLARE futurePrincPaid DOUBLE DEFAULT 0;
+  DECLARE totalFuturePrincPaid DOUBLE DEFAULT 0;
+  DECLARE futureAccrued DOUBLE DEFAULT 0;
 
   DEClARE tCursor CURSOR FOR
 
@@ -1542,13 +1545,13 @@ BEGIN
           'future payment' as type,
           7 as orderType,
           ps.expectedDate AS onDate,
-          0 AS disbursement,
+          ps.disbursement AS disbursement,
           ps.principalPayment AS principalPaid,
-          0 AS principalPayment,
+          ps.principalPayment AS principalPayment,
           0 as interestPaid,
-          0,
+          ps.collectedInterestPayment,
           0 as penaltyPaid,
-          0,
+          ps.collectedPenaltyPayment,
           0 as pTotalAmount,
           1 as curRate
         FROM loan loan, paymentSchedule ps
@@ -1598,6 +1601,12 @@ BEGIN
     IF v_finished = 1 THEN
       LEAVE get_data;
     END IF;
+
+    if tempDate > inDate and pType = 'future payment' then
+      set futurePrincPaid = princPaid;
+      set totalFuturePrincPaid = totalFuturePrincPaid + futurePrincPaid;
+      set princPaid = 0;
+    end if;
 
     SET penalty_limit = getPenaltyLimitPercent(tempDate, loan_id);
 
@@ -1882,8 +1891,17 @@ BEGIN
 
     SET intAccrued = calculateInterestAccrued(princOutstanding, daysInPer, tempDate, loan_id);
 
+    if tempDate > inDate then
+      SET futureAccrued = calculateInterestAccrued(princOutstanding-totalFuturePrincPaid, daysInPer, tempDate, loan_id);
+    end if;
+
     IF has_libor THEN
       SET intAccrued = intAccrued + calculateLibor(princOutstanding, prevDate, tempDate, term_rate_type_id, term_diy_method_id, term_dim_method_id, loan_id, 0);
+
+      if tempDate > inDate then
+        SET futureAccrued = futureAccrued + calculateLibor(princOutstanding-totalFuturePrincPaid, prevDate, tempDate, term_rate_type_id, term_diy_method_id, term_dim_method_id, loan_id, 0);
+      end if;
+
     END IF;
 
     SET totalIntAccrued = totalIntAccrued + intAccrued;
@@ -2070,22 +2088,22 @@ BEGIN
     SET total_paid = total_paid + princPaid + intPaid + penPaid;
     SET total_paidKGS = total_paidKGS + princPaidKGS + intPaidKGS + penPaidKGS;
 
-    IF tempDate <= inDate THEN
+    #IF tempDate <= inDate THEN
 
-      if loan_summary_type_text = 'SYSTEM' then
+    if loan_summary_type_text = 'SYSTEM' then
 
-        INSERT INTO loanDetailedSummary(version, collectedInterestDisbursed, collectedInterestPayment, collectedPenaltyDisbursed, collectedPenaltyPayment, daysInPeriod, disbursement, interestAccrued,
-                                        interestOutstanding, interestOverdue, interestPaid, interestPayment, onDate, penaltyAccrued, penaltyOutstanding, penaltyOverdue, penaltyPaid, principalOutstanding,
-                                        principalOverdue, principalPaid, principalPayment, principalWriteOff, totalCollectedInterestPayment, totalCollectedPenaltyPayment, totalDisbursement,
-                                        totalInterestAccrued, totalInterestAccruedOnInterestPayment, totalInterestPaid, totalInterestPayment, totalPenaltyAccrued, totalPenaltyPaid, totalPrincipalPaid,
-                                        totalPrincipalPayment, totalPrincipalWriteOff, loanId)
-        VALUES (CASE WHEN afterSrokDate THEN 1 ELSE 0 END, collIntDisbursed, collIntPayment, collPenDisbursed, collPenPayment, daysInPer, disb, intAccrued, intOutstanding,
-                intOverdue, intPaid, intPayment, tempDate, penAccrued, penOutstanding, penOverdue, penPaid, princOutstanding,
-                princOverdue, princPaid, princPayment, 0, totalCollIntPayment, totalCollPenPayment, totalDisb, totalIntAccrued, paymentSumAfterSpecDate,
-                totalIntPaid, totalIntPayment, totalPenAccrued, totalPenPaid, totalPrincPaid, totalPrincPayment, total_paidKGS, loan_id);
-      end if;
+      INSERT INTO loanDetailedSummary(version, collectedInterestDisbursed, collectedInterestPayment, collectedPenaltyDisbursed, collectedPenaltyPayment, daysInPeriod, disbursement, interestAccrued,
+                                      interestOutstanding, interestOverdue, interestPaid, interestPayment, onDate, penaltyAccrued, penaltyOutstanding, penaltyOverdue, penaltyPaid, principalOutstanding,
+                                      principalOverdue, principalPaid, principalPayment, principalWriteOff, totalCollectedInterestPayment, totalCollectedPenaltyPayment, totalDisbursement,
+                                      totalInterestAccrued, totalInterestAccruedOnInterestPayment, totalInterestPaid, totalInterestPayment, totalPenaltyAccrued, totalPenaltyPaid, totalPrincipalPaid,
+                                      totalPrincipalPayment, totalPrincipalWriteOff, loanId)
+      VALUES (CASE WHEN afterSrokDate THEN 1 ELSE 0 END, collIntDisbursed, collIntPayment, collPenDisbursed, collPenPayment, daysInPer, disb, intAccrued, intOutstanding,
+              intOverdue, intPaid, intPayment, tempDate, penAccrued, penOutstanding, penOverdue, penPaid, princOutstanding,
+              princOverdue, princPaid, princPayment, 0, totalCollIntPayment, totalCollPenPayment, totalDisb, totalIntAccrued, paymentSumAfterSpecDate,
+              totalIntPaid, totalIntPayment, totalPenAccrued, totalPenPaid, totalPrincPaid, totalPrincPayment, total_paidKGS, loan_id);
+    end if;
 
-    END IF;
+    #END IF;
 
     if loan_summary_type_text = 'MANUAL' or loan_summary_type_text = 'FIXED' then
 
@@ -2108,20 +2126,27 @@ BEGIN
         SET pOPO = 0;
       END IF;
 
+      if tempDate < inDate then
+        SET interestAccruedInPeriod = interestAccruedInPeriod + intAccrued;
+      else
+        SET interestAccruedInPeriod = interestAccruedInPeriod + futureAccrued;
+      end if;
 
-      SET interestAccruedInPeriod = interestAccruedInPeriod+ intAccrued;
-
-      IF intAccrued + penAccrued + pOIO + pOPO > 0 THEN
+      IF intAccrued + penAccrued + pOIO + pOPO > 0 and tempDate < inDate THEN
         if loan_summary_type_text = 'SYSTEM' or ((loan_summary_type_text = 'MANUAL' or loan_summary_type_text = 'FIXED') and tempDate = inDate) then
           INSERT INTO accrue(version, daysInPeriod, fromDate, interestAccrued, lastInstPassed, penaltyAccrued, penaltyOnInterestOverdue, penaltyOnPrincipalOverdue, toDate, loanId)
           VALUES (1, daysInPer, pDate, intAccrued, FALSE , penAccrued, interestAccruedInPeriod, pOPO, tempDate, loan_id);
+        end if;
+      else
+        if loan_summary_type_text = 'SYSTEM' or ((loan_summary_type_text = 'MANUAL' or loan_summary_type_text = 'FIXED') and tempDate = inDate) then
+          INSERT INTO accrue(version, daysInPeriod, fromDate, interestAccrued, lastInstPassed, penaltyAccrued, penaltyOnInterestOverdue, penaltyOnPrincipalOverdue, toDate, loanId)
+          VALUES (1, daysInPer, pDate, futureAccrued, FALSE , penAccrued, interestAccruedInPeriod, pOPO, tempDate, loan_id);
         end if;
       END IF;
 
       IF isPaymentSchedulePaymentDate(tempDate, loan_id)  THEN
         SET interestAccruedInPeriod = 0;
       END IF;
-
 
       SET pDate = tempDate;
 
@@ -4022,4 +4047,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-31 16:08:01
+-- Dump completed on 2019-04-05 14:53:03
