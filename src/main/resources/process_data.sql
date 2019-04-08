@@ -1286,8 +1286,8 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `calculateLoanDetailedSummaryUntilOnDate`(IN loan_id           bigint, IN inDate date,
-                                                                                      IN includeToday      tinyint(1),
+CREATE DEFINER=`root`@`localhost` PROCEDURE `calculateLoanDetailedSummaryUntilOnDate`(IN loan_id bigint, IN inDate date,
+                                                                                      IN includeToday tinyint(1),
                                                                                       IN loan_summary_type varchar(20))
 BEGIN
   DECLARE tempDate DATE;
@@ -1557,7 +1557,7 @@ BEGIN
         FROM loan loan, paymentSchedule ps
         WHERE loan.id = ps.loanId
           AND loan.id = loan_id
-          AND ps.expectedDate > inDate
+          AND ps.expectedDate >= inDate
           AND ps.record_status = 1
           AND loan_summary_type = 'SYSTEM'
       ) pp
@@ -1602,7 +1602,7 @@ BEGIN
       LEAVE get_data;
     END IF;
 
-    if tempDate > inDate and pType = 'future payment' then
+    if tempDate >= inDate and pType = 'future payment' then
       set futurePrincPaid = princPaid;
       set totalFuturePrincPaid = totalFuturePrincPaid + futurePrincPaid;
       set princPaid = 0;
@@ -1891,14 +1891,14 @@ BEGIN
 
     SET intAccrued = calculateInterestAccrued(princOutstanding, daysInPer, tempDate, loan_id);
 
-    if tempDate > inDate then
+    if tempDate >= inDate then
       SET futureAccrued = calculateInterestAccrued(princOutstanding-totalFuturePrincPaid, daysInPer, tempDate, loan_id);
     end if;
 
     IF has_libor THEN
       SET intAccrued = intAccrued + calculateLibor(princOutstanding, prevDate, tempDate, term_rate_type_id, term_diy_method_id, term_dim_method_id, loan_id, 0);
 
-      if tempDate > inDate then
+      if tempDate >= inDate then
         SET futureAccrued = futureAccrued + calculateLibor(princOutstanding-totalFuturePrincPaid, prevDate, tempDate, term_rate_type_id, term_diy_method_id, term_dim_method_id, loan_id, 0);
       end if;
 
@@ -4047,4 +4047,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-05 14:53:03
+-- Dump completed on 2019-04-08 15:12:35
