@@ -1,18 +1,24 @@
 package kg.gov.mf.loan.web.controller.manage;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.lowagie.text.DocumentException;
+import kg.gov.mf.loan.admin.org.model.Address;
 import kg.gov.mf.loan.admin.org.model.Staff;
+import kg.gov.mf.loan.admin.org.service.AddressService;
+import kg.gov.mf.loan.admin.sys.model.Attachment;
+import kg.gov.mf.loan.admin.sys.model.Information;
+import kg.gov.mf.loan.admin.sys.model.SystemFile;
 import kg.gov.mf.loan.admin.sys.model.User;
+import kg.gov.mf.loan.admin.sys.service.AttachmentService;
+import kg.gov.mf.loan.admin.sys.service.InformationService;
+import kg.gov.mf.loan.admin.sys.service.SystemFileService;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
 import kg.gov.mf.loan.manage.model.collateral.CollateralItem;
 import kg.gov.mf.loan.manage.model.collateral.GuarantorAgreement;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
-import kg.gov.mf.loan.manage.model.collection.CollectionProcedure;
+import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.loan.*;
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
 import kg.gov.mf.loan.manage.model.orderterm.*;
@@ -24,40 +30,41 @@ import kg.gov.mf.loan.manage.repository.collateral.CollateralItemReposiory;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.repository.order.CreditOrderRepository;
 import kg.gov.mf.loan.manage.repository.org.StaffRepository;
+import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemService;
 import kg.gov.mf.loan.manage.service.collateral.GuarantorAgreementService;
 import kg.gov.mf.loan.manage.service.collateral.QuantityTypeService;
 import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
+import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.manage.service.loan.*;
+import kg.gov.mf.loan.manage.service.order.CreditOrderService;
 import kg.gov.mf.loan.manage.service.orderterm.*;
 import kg.gov.mf.loan.manage.service.process.LoanSummaryService;
-import kg.gov.mf.loan.output.report.service.ReferenceViewService;
 import kg.gov.mf.loan.web.fetchModels.*;
-import org.bouncycastle.ocsp.Req;
-import org.hibernate.boot.model.relational.Database;
+import kg.gov.mf.loan.web.util.Utils;
+import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
-import kg.gov.mf.loan.manage.model.debtor.Debtor;
-import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
-import kg.gov.mf.loan.manage.service.debtor.DebtorService;
-import kg.gov.mf.loan.manage.service.order.CreditOrderService;
-import kg.gov.mf.loan.web.util.Utils;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 public class LoanController {
@@ -176,8 +183,20 @@ public class LoanController {
     @Autowired
     GuarantorAgreementService guarantorAgreementService;
 
+    @Autowired
+    InformationService informationService;
+
+    @Autowired
+    AttachmentService attachmentService;
+
+    @Autowired
+    SystemFileService systemFileService;
+
+    @Autowired
+    AddressService addressService;
+
     static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
-	
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
@@ -206,8 +225,8 @@ public class LoanController {
         model.addAttribute("supervisorId",loan.getSupervisorId());
 
         Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
-//        String jsonTerms = gson.toJson(getTermsByLoanId(loanId));
-//        model.addAttribute("terms", jsonTerms);
+        String jsonSysFiles= gson.toJson(getSystemFilesByLoanId(loanId));
+        model.addAttribute("files", jsonSysFiles);
 //
 //        String jsonChildL = gson.toJson(getChildrenByLoanId(loanId));
 //        model.addAttribute("children", jsonChildList);
@@ -285,6 +304,15 @@ public class LoanController {
 
         SimpleDateFormat sd=new SimpleDateFormat("dd.MM.yyyy");
         model.addAttribute("today",sd.format(new Date()));
+
+        List<Information> informations= informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(4,loanId);
+        if(informations.size()>0){
+            model.addAttribute("hasInfo",true);
+        }
+        else{
+            model.addAttribute("hasInfo",false);
+        }
+        model.addAttribute("information",informations);
 
 
         return "/manage/debtor/loan/view";
@@ -740,6 +768,122 @@ public class LoanController {
 
         return "/manage/debtor/loanSummary";
     }
+
+    @RequestMapping("/manage/debtor/{debtorId}/loan/{loanId}/attachment/add")
+    public String addAttachment(MultipartHttpServletRequest request,@PathVariable("debtorId") Long debtorId,
+                                 @PathVariable("loanId") Long loanId,String name) {
+
+        String path =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
+
+	    Debtor debtor=debtorService.getById(debtorId);
+	    Address address =addressService.findById(debtor.getAddress_id());
+	    Long regionId=address.getRegion().getId();
+	    Long districtId=address.getDistrict().getId();
+        File folder = new File(path);
+        path=path+regionId+"/";
+        folder=new File(path);
+        boolean exists = folder.exists();
+        if(!exists){
+            folder.mkdir();
+        }
+        path=path+districtId+"/";
+        folder=new File(path);
+        exists = folder.exists();
+        if(!exists){
+            folder.mkdir();
+        }
+        path=path+debtorId+"/";
+        folder=new File(path);
+        exists = folder.exists();
+        if(!exists){
+            folder.mkdir();
+        }
+        path=path+loanId+"/";
+        folder=new File(path);
+        exists = folder.exists();
+        if(!exists){
+            folder.mkdir();
+        }
+        path=path+4+"/";
+        folder=new File(path);
+        exists = folder.exists();
+        if(!exists){
+            folder.mkdir();
+        }
+
+
+	    Information information;
+	    List<Information> informationList=informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(4,loanId);
+	    if(informationList.size()>0){
+	        information=informationList.get(0);
+        }
+        else{
+            information=new Information();
+            information.setDate(new Date());
+            information.setParentInformation(null);
+            information.setSystemObjectId(loanId);
+            information.setSystemObjectTypeId(4);
+            informationService.create(information);
+        }
+
+        Attachment attachment = new Attachment();
+        try {
+            Iterator<String> itr = request.getFileNames();
+
+            while (itr.hasNext()) {
+
+                SystemFile systemFile=new SystemFile();
+                String uploadedFile = itr.next();
+                MultipartFile part = request.getFile(uploadedFile);
+
+                String filename = part.getOriginalFilename();
+                folder=new File(path+filename);
+                exists = folder.exists();
+                if(exists){
+                }
+                else{
+
+//                String uuid = UUID.randomUUID().toString();
+//                String fsname = uuid + ".atach";
+
+                File file = new File(path + filename);
+
+                part.transferTo(file);
+
+                systemFile.setName(filename);
+                systemFile.setPath(path + filename);
+
+                attachment.setName(name);
+                attachment.setInformation(information);
+
+
+                systemFileService.create(systemFile);
+                systemFile.setAttachment(attachment);
+                attachmentService.create(attachment);
+                systemFileService.edit(systemFile);}
+            }
+            informationService.edit(information);
+        }
+        catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return "redirect:/manage/debtor/{debtorId}/loan/{loanId}/view";
+    }
+
+    @RequestMapping("/systemFile/{id}/download")
+    @ResponseBody
+    public void downloadSystemFile(@PathVariable("id") Long id, HttpServletResponse response) throws IOException, DocumentException {
+
+	    SystemFile systemFile=systemFileService.findById(id);
+        File file = new File(systemFile.getPath());
+        response.setContentType("application/pdf");
+        response.setHeader("Content-disposition","attachment; filename=xx.pdf");
+
+        InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+        FileCopyUtils.copy(inputStream, response.getOutputStream());
+    }
+
 
 //	if less than zero make zero
     public Double conditional(Double num){
@@ -1438,6 +1582,30 @@ public class LoanController {
 
     }
 
+    private List<SystemFileModel> getSystemFilesByLoanId(Long loanId){
+
+	    List<SystemFileModel> list=new ArrayList<>();
+	    List<Information> informations=informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(4,loanId);
+	    for (Information information1:informations){
+	        Information information=informationService.findById(information1.getId());
+	        Set<Attachment> attachments= information.getAttachment();
+	        for (Attachment attachment1:attachments){
+	            Attachment attachment=attachmentService.findById(attachment1.getId());
+                for (SystemFile systemFile1:attachment.getSystemFile()){
+                    SystemFile systemFile=systemFileService.findById(systemFile1.getId());
+                    SystemFileModel systemFileModel=new SystemFileModel();
+                    systemFileModel.setAttachment_id(attachment.getId());
+                    systemFileModel.setSys_name(systemFile.getName());
+                    systemFileModel.setSystem_file_id(systemFile.getId());
+                    systemFileModel.setAttachment_name(attachment.getName());
+                    systemFileModel.setPath(systemFile.getPath());
+                    list.add(systemFileModel);
+                }
+            }
+        }
+
+        return list;
+    }
 //    private List<CollectionPhaseModel> getPhasesByLoanId(long loanId)
 //    {
 //        List<CollectionPhaseModel> result = new ArrayList<>();

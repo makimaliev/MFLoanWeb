@@ -38,250 +38,8 @@
             <!-- END: Brand -->
 
             <!--<div class="container">-->
-                <div class="row">
-                    <div class="col-sm-7" >
-                        <div class="row">
-                            <div class="col-md-2">
-                                <div class="dropdown">
-                                    <button sec:authorize="hasAnyAuthority('ADMIN','LOAN_SUPERVISOR','PERM_VIEW_LAON_MENU')" class="btn btn-primary dropdown-toggle m-lg-2" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="m-menu__link-text">
-                                            Кредитование
-                                        </span>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                        <a th:href="@{/loanView/list}" class="dropdown-item">
-                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
-                                                <span></span>
-                                            </i>
-                                            <span class="m-menu__link-text">
-                                                Список кредитов
-                                            </span>
-                                        </a>
-                                        <a th:href="@{/paymentView/list}" class="dropdown-item">
-                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
-                                                <span></span>
-                                            </i>
-                                            <span class="m-menu__link-text">
-                                                Список погашений
-                                            </span>
-                                        </a>
-                                        <a th:href="@{/paymentScheduleView}" class="dropdown-item">
-                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
-                                                <span></span>
-                                            </i>
-                                            <span class="m-menu__link-text">
-                                                Список графиков
-                                            </span>
-                                        </a>
-                                        <a th:href="@{/supervisorPlanView}" class="dropdown-item">
-                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
-                                                <span></span>
-                                            </i>
-                                            <span class="m-menu__link-text">
-                                                Список плановых показателей
-                                            </span>
-                                        </a>
-                                        <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN_LIST')"
-                                           th:href="@{/list/users/objectLists}" class="dropdown-item">
-                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
-                                                <span></span>
-                                            </i>
-                                            <span class="m-menu__link-text">
-                                                Управление кредитными списками
-                                            </span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="dropdown">
-                                    <button sec:authorize="hasAnyAuthority('ADMIN','COLLATERAL_SUPERVISOR','PERM_COLLATERAL_LAON_MENU')" class="btn btn-primary dropdown-toggle m-lg-2" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="m-menu__link-text">
-                                            Залоговое обеспечение
-                                        </span>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                        <a th:href="@{/manage/collateralItemViews/list}" class="dropdown-item">
-                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
-                                                <span></span>
-                                            </i>
-                                            <span class="m-menu__link-text">
-                                                Список предметов залога
-                                            </span>
-                                        </a>
-                                        <a th:href="@{/collateralInspectionView}" class="dropdown-item ">
-                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
-                                                <span></span>
-                                            </i>
-                                            <span class="m-menu__link-text">
-                                                Список актов обследования залога
-                                            </span>
-                                        </a>
-                                        <a th:href="@{/collateralArrestFreeView}" class="dropdown-item ">
-                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
-                                                <span></span>
-                                            </i>
-                                            <span class="m-menu__link-text">
-                                                Список снятий залога с ареста
-                                            </span>
-                                        </a>
-                                        <a th:href="@{/manage/guarantoragreement/list}" class="dropdown-item ">
-                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
-                                                <span></span>
-                                            </i>
-                                            <span class="m-menu__link-text">
-                                                Список поручителей
-                                            </span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="dropdown">
-                                    <button sec:authorize="hasAnyAuthority('ADMIN','COLLECTION_SUPERVISOR','PERM_VIEW_COLLECTION_MENU')" class="btn btn-primary dropdown-toggle m-lg-2" type="button"
-                                            id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="m-menu__link-text">
-                                            Взыскание
-                                        </span>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenu3">
-                                        <a th:href="@{/collectionPhaseViews}" class="dropdown-item ">
-                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
-                                                <span></span>
-                                            </i>
-                                            <span class="m-menu__link-text">
-                                                Список стадий взыскания
-                                            </span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md">
-                                <div class="dropdown">
-                                    <button sec:authorize="hasAnyAuthority('ADMIN','PERM_ORGANIZATION_PERSON_LIST','PERM_ORGANIZATION_PERSON_LIST','PERM_DEBTOR_LIST')" class="btn btn-primary dropdown-toggle m-lg-2" type="button"
-                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="m-menu__link-text">
-                                            Список
-                                        </span>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenu3">
-                                        <a th:href="@{/person/list}" role="button" class="dropdown-item " th:text="#{label.persons}"   sec:authorize="hasAnyAuthority('ADMIN','PERM_ORGANIZATION_PERSON_LIST')">Left</a>
-                                        <a th:href="@{/organization/list}" role="button" class="dropdown-item " th:text="#{label.organizations}"  sec:authorize="hasAnyAuthority('ADMIN','PERM_ORGANIZATION_PERSON_LIST')">Left</a>
-                                        <a th:href="@{/manage/debtor/list1}" role="button" class="dropdown-item " th:text="#{label.title.debtors}"  sec:authorize="hasAnyAuthority('ADMIN','PERM_DEBTOR_LIST')">Left</a>
-                                        <a th:href="@{/manage/order/list}" role="button" class="dropdown-item " sec:authorize="hasAnyAuthority('ADMIN','PERM_ORDER_LIST')">Список решений</a>
 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
                         <div class="m-stack__item m-stack__item--fluid m-header-head" id="m_header_nav">
-                            <!-- BEGIN: Horizontal Menu -->
-
-                            <div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-light m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-dark m-aside-header-menu-mobile--submenu-skin-dark "  >
-                                <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
-                                    <!--<li class="m-menu__item m-menu__item&#45;&#45;submenu m-menu__item&#45;&#45;rel "  aria-haspopup="true" data-menu-submenu-toggle="click">-->
-                                    <!--<a href="javscript:;" class="m-menu__link m-menu__toggle" >-->
-                                    <!--<i class="m-menu__link-icon flaticon-add"></i>-->
-                                    <!--<span class="m-menu__link-text">Actions</span>-->
-                                    <!--<i class="m-menu__hor-arrow la la-angle-down"></i>-->
-                                    <!--<i class="m-menu__ver-arrow la la-angle-right"></i>-->
-                                    <!--</a>-->
-                                    <!--<div class="m-menu__submenu m-menu__submenu&#45;&#45;classic m-menu__submenu&#45;&#45;left">-->
-                                    <!--<span class="m-menu__arrow m-menu__arrow&#45;&#45;adjust" style="left: 71px;"></span>-->
-                                    <!--<ul class="m-menu__subnav" >-->
-                                    <!--<li id="first" class="m-menu__item  m-menu__item&#45;&#45;active " aria-haspopup="true" >-->
-                                    <!--<a href="?page=header/actions&amp;demo=default" class="m-menu__link ">-->
-                                    <!--<i class="m-menu__link-icon flaticon-file"></i>-->
-                                    <!--<span class="m-menu__link-text">Create New Post</span>-->
-                                    <!--</a>-->
-                                    <!--</li>-->
-                                    <!--</ul>-->
-                                    <!--</div>-->
-                                    <!--</li>-->
-                                    <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click" aria-haspopup="true" th:switch="__${#locale}__">
-                                        <a href="#" class="m-menu__link m-menu__toggle">
-                                            <span class="lang-img">
-                                                <img  alt="" th:src="@{/assets/global/img/flags/} + ${#locale} + '.png'" />
-                                            </span>
-                                            <span class="m-menu__link-text langname" th:text="${#strings.toUpperCase(#locale)}"></span>
-                                            <i class="m-menu__hor-arrow la la-angle-down"></i>
-                                            <i class="m-menu__ver-arrow la la-angle-right"></i>
-                                        </a>
-                                        <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--right">
-                                            <span class="m-menu__arrow m-menu__arrow--adjust"></span>
-                                            <ul class="m-menu__subnav" th:case="'kg'">
-                                                <li class="m-menu__item" aria-haspopup="true">
-                                                    <a th:href="'?language=ru'" class="m-menu__link ">
-                                                        <span class="lang-img">
-                                                            <img  alt="" th:src="@{/assets/global/img/flags/ru.png}"/>
-                                                        </span>
-                                                        <span class="m-menu__link-text">
-                                                            Русский
-                                                        </span>
-                                                    </a>
-                                                </li>
-                                                <li class="m-menu__item" aria-haspopup="true">
-                                                    <a th:href="'?language=en'" class="m-menu__link ">
-                                                        <span class="lang-img">
-                                                            <img  alt="" th:src="@{/assets/global/img/flags/en.png}"/>
-                                                        </span>
-                                                        <span class="m-menu__link-text">
-                                                            English
-                                                        </span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                            <ul class="m-menu__subnav" th:case="'ru'">
-                                                <li class="m-menu__item" aria-haspopup="true">
-                                                    <a th:href="'?language=kg'" class="m-menu__link ">
-                                                        <span class="lang-img">
-                                                            <img  alt="" th:src="@{/assets/global/img/flags/kg.png}"/>
-                                                        </span>
-                                                        <span class="m-menu__link-text">
-                                                            Кыргызча
-                                                        </span>
-                                                    </a>
-                                                </li>
-                                                <li class="m-menu__item" aria-haspopup="true">
-                                                    <a th:href="'?language=en'" class="m-menu__link ">
-                                                        <span class="lang-img">
-                                                            <img  alt="" th:src="@{/assets/global/img/flags/en.png}"/>
-                                                        </span>
-                                                        <span class="m-menu__link-text">
-                                                            English
-                                                        </span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                            <ul class="m-menu__subnav" th:case="*">
-                                                <li class="m-menu__item" aria-haspopup="true">
-                                                    <a th:href="'?language=kg'" class="m-menu__link ">
-                                                        <span class="lang-img">
-                                                            <img  alt="" th:src="@{/assets/global/img/flags/kg.png}"/>
-                                                        </span>
-                                                        <span class="m-menu__link-text">
-                                                            Кыргызча
-                                                        </span>
-                                                    </a>
-                                                </li>
-                                                <li class="m-menu__item" aria-haspopup="true">
-                                                    <a th:href="'?language=ru'" class="m-menu__link ">
-                                                        <span class="lang-img">
-                                                            <img  alt="" th:src="@{/assets/global/img/flags/ru.png}"/>
-                                                        </span>
-                                                        <span class="m-menu__link-text">
-                                                            Русский
-                                                        </span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                            <!-- END: Horizontal Menu -->
                             <!-- BEGIN: Topbar -->
                             <div id="m_header_topbar" class="m-topbar  m-stack m-stack--ver m-stack--general">
                                 <div class="m-stack__item m-topbar__nav-wrapper">
@@ -441,9 +199,322 @@
                                 </div>
                             </div>
                             <!-- END: Topbar -->
+                            <!-- BEGIN: Horizontal Menu -->
+                            <div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-light m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-dark m-aside-header-menu-mobile--submenu-skin-dark "  >
+
+                                <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
+                                    <li sec:authorize="hasAnyAuthority('ADMIN','LOAN_SUPERVISOR','PERM_VIEW_LAON_MENU')" class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click" aria-haspopup="true">
+                                        <a href="#" class="m-menu__link m-menu__toggle">
+                                            <i class="m-menu__link-icon flaticon-add"></i>
+                                            <span class="m-menu__link-text">
+                                                Кредитование
+                                            </span>
+                                            <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                            <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                        </a>
+                                        <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                                            <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                                            <ul class="m-menu__subnav">
+                                                <li class="m-menu__item " aria-haspopup="true">
+                                                    <a th:href="@{/loanView/list}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text">
+                                                            Список кредитов
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li class="m-menu__item " aria-haspopup="true">
+                                                    <a th:href="@{/paymentView/list}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text">
+                                                            Список погашений
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li class="m-menu__item " aria-haspopup="true">
+                                                    <a th:href="@{/paymentScheduleView}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text">
+                                                            Список графиков
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li class="m-menu__item " aria-haspopup="true">
+                                                    <a th:href="@{/supervisorPlanView}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text">
+                                                            Список плановых показателей
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li class="m-menu__item " aria-haspopup="true">
+                                                    <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN_LIST')"
+                                                       th:href="@{/list/users/objectLists}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text">
+                                                            Управление кредитными списками
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li sec:authorize="hasAnyAuthority('ADMIN','COLLATERAL_SUPERVISOR','PERM_COLLATERAL_LAON_MENU')" class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click" aria-haspopup="true">
+                                        <a href="#" class="m-menu__link m-menu__toggle">
+                                            <i class="m-menu__link-icon flaticon-add"></i>
+                                            <span class="m-menu__link-text">
+                                                Залоговое обеспечение
+                                            </span>
+                                            <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                            <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                        </a>
+                                        <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                                            <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                                            <ul class="m-menu__subnav">
+                                                <li class="m-menu__item " aria-haspopup="true">
+                                                    <a th:href="@{/manage/collateralItemViews/list}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text">
+                                                            Список предметов залога
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li class="m-menu__item " aria-haspopup="true">
+                                                    <a th:href="@{/paymentView/list}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text">
+                                                            Список погашений
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li class="m-menu__item " aria-haspopup="true">
+                                                    <a th:href="@{/collateralInspectionView}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text">
+                                                            Список актов обследования залога
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li class="m-menu__item " aria-haspopup="true">
+                                                    <a th:href="@{/collateralArrestFreeView}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text">
+                                                            Список снятий залога с ареста
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li class="m-menu__item " aria-haspopup="true">
+                                                    <a th:href="@{/manage/guarantoragreement/list}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text">
+                                                            Список поручителей
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li sec:authorize="hasAnyAuthority('ADMIN','COLLECTION_SUPERVISOR','PERM_VIEW_COLLECTION_MENU')" class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click" aria-haspopup="true">
+                                        <a href="#" class="m-menu__link m-menu__toggle">
+                                            <i class="m-menu__link-icon flaticon-add"></i>
+                                            <span class="m-menu__link-text">
+                                                Взыскание
+                                            </span>
+                                            <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                            <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                        </a>
+                                        <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                                            <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                                            <ul class="m-menu__subnav">
+                                                <li class="m-menu__item " aria-haspopup="true">
+                                                    <a th:href="@{/collectionPhaseViews}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text">
+                                                            Список стадий взыскания
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li sec:authorize="hasAnyAuthority('ADMIN','PERM_ORGANIZATION_PERSON_LIST','PERM_ORGANIZATION_PERSON_LIST','PERM_DEBTOR_LIST')" class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click" aria-haspopup="true">
+                                        <a href="#" class="m-menu__link m-menu__toggle">
+                                            <i class="m-menu__link-icon flaticon-add"></i>
+                                            <span class="m-menu__link-text">
+                                                Список
+                                            </span>
+                                            <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                            <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                        </a>
+                                        <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                                            <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                                            <ul class="m-menu__subnav">
+                                                <li class="m-menu__item " aria-haspopup="true" sec:authorize="hasAnyAuthority('ADMIN','PERM_ORGANIZATION_PERSON_LIST')">
+                                                    <a th:href="@{/person/list}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text" th:text="#{label.persons}"></span>
+                                                    </a>
+                                                </li>
+                                                <li class="m-menu__item " aria-haspopup="true" sec:authorize="hasAnyAuthority('ADMIN','PERM_ORGANIZATION_PERSON_LIST')">
+                                                    <a th:href="@{/organization/list}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text" th:text="#{label.organizations}"></span>
+                                                    </a>
+                                                </li>
+                                                <li class="m-menu__item " aria-haspopup="true" sec:authorize="hasAnyAuthority('ADMIN','PERM_DEBTOR_LIST')">
+                                                    <a th:href="@{/manage/debtor/list1}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text" th:text="#{label.title.debtors}"></span>
+                                                    </a>
+                                                </li>
+                                                <li class="m-menu__item " aria-haspopup="true" sec:authorize="hasAnyAuthority('ADMIN','PERM_ORDER_LIST')">
+                                                    <a th:href="@{/manage/order/list}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text">Список решений</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click" aria-haspopup="true">
+                                        <a href="#" class="m-menu__link m-menu__toggle">
+                                            <i class="m-menu__link-icon flaticon-add"></i>
+                                            <span class="m-menu__link-text">
+                                                Отчет
+                                            </span>
+                                            <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                            <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                        </a>
+                                        <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                                            <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                                            <ul class="m-menu__subnav">
+                                                <li class="m-menu__item " aria-haspopup="true" sec:authorize="hasAnyAuthority('ADMIN','PERM_ORGANIZATION_PERSON_LIST')">
+                                                    <a th:href="@{/report/list/}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text" >Отчеты</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click" aria-haspopup="true">
+                                        <a href="#" class="m-menu__link m-menu__toggle">
+                                            <i class="m-menu__link-icon flaticon-add"></i>
+                                            <span class="m-menu__link-text">
+                                                Документы
+                                            </span>
+                                            <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                            <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                        </a>
+                                        <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                                            <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                                            <ul class="m-menu__subnav">
+                                                <li class="m-menu__item " aria-haspopup="true">
+                                                    <a th:href="@{/doc(type=incoming)}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text" >	Внутренний</span>
+                                                    </a>
+                                                </li>
+                                                <li class="m-menu__item " aria-haspopup="true">
+                                                    <a th:href="@{/doc(type=internal)}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text" >	Входяший</span>
+                                                    </a>
+                                                </li>
+                                                <li class="m-menu__item " aria-haspopup="true">
+                                                    <a th:href="@{/doc(type=outgoing)}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text" >	Исходяший</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click" aria-haspopup="true" th:switch="__${#locale}__">
+                                        <a href="#" class="m-menu__link m-menu__toggle">
+                                            <span class="lang-img">
+                                                <img  alt="" th:src="@{/assets/global/img/flags/} + ${#locale} + '.png'" />
+                                            </span>
+                                            <span class="m-menu__link-text langname" th:text="${#strings.toUpperCase(#locale)}"></span>
+                                            <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                            <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                        </a>
+                                        <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--right">
+                                            <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                                            <ul class="m-menu__subnav" th:case="'kg'">
+                                                <li class="m-menu__item" aria-haspopup="true">
+                                                    <a th:href="'?language=ru'" class="m-menu__link ">
+                                                        <span class="lang-img">
+                                                            <img  alt="" th:src="@{/assets/global/img/flags/ru.png}"/>
+                                                        </span>
+                                                        <span class="m-menu__link-text">
+                                                            Русский
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li class="m-menu__item" aria-haspopup="true">
+                                                    <a th:href="'?language=en'" class="m-menu__link ">
+                                                        <span class="lang-img">
+                                                            <img  alt="" th:src="@{/assets/global/img/flags/en.png}"/>
+                                                        </span>
+                                                        <span class="m-menu__link-text">
+                                                            English
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            <ul class="m-menu__subnav" th:case="'ru'">
+                                                <li class="m-menu__item" aria-haspopup="true">
+                                                    <a th:href="'?language=kg'" class="m-menu__link ">
+                                                        <span class="lang-img">
+                                                            <img  alt="" th:src="@{/assets/global/img/flags/kg.png}"/>
+                                                        </span>
+                                                        <span class="m-menu__link-text">
+                                                            Кыргызча
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li class="m-menu__item" aria-haspopup="true">
+                                                    <a th:href="'?language=en'" class="m-menu__link ">
+                                                        <span class="lang-img">
+                                                            <img  alt="" th:src="@{/assets/global/img/flags/en.png}"/>
+                                                        </span>
+                                                        <span class="m-menu__link-text">
+                                                            English
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            <ul class="m-menu__subnav" th:case="*">
+                                                <li class="m-menu__item" aria-haspopup="true">
+                                                    <a th:href="'?language=kg'" class="m-menu__link ">
+                                                        <span class="lang-img">
+                                                            <img  alt="" th:src="@{/assets/global/img/flags/kg.png}"/>
+                                                        </span>
+                                                        <span class="m-menu__link-text">
+                                                            Кыргызча
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li class="m-menu__item" aria-haspopup="true">
+                                                    <a th:href="'?language=ru'" class="m-menu__link ">
+                                                        <span class="lang-img">
+                                                            <img  alt="" th:src="@{/assets/global/img/flags/ru.png}"/>
+                                                        </span>
+                                                        <span class="m-menu__link-text">
+                                                            Русский
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- END: Horizontal Menu -->
                         </div>
-                    </div>
-                </div>
+
+
             <!--</div>-->
         </div>
     </div>

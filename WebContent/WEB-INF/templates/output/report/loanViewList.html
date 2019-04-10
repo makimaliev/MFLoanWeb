@@ -57,7 +57,7 @@
                     <div class="m-portlet__body">
                         <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                             <div class="form-group m-form__group row " style="margin-left: 10px">
-                                <div class="col-md-2">
+                                <div class="col-sm">
                                     <div class="m-input-icon m-input-icon--left mb-2">
                                         <input type="text" class="form-control m-input m-input--solid" th:placeholder=#{label.debtor.name} id="debtor_name">
                                         <span class="m-input-icon__icon m-input-icon__icon--left">
@@ -78,32 +78,32 @@
                                 <!--<div class="col-md-2">-->
                                     <!---->
                                 <!--</div>-->
-                                <div class="col-md-2">
+                                <div class="col-sm">
                                     <div class="m-form__group m-form__group--inline mb-2">
-                                        <div class="m-form__label">
-                                            <label>
-                                                Область:
-                                            </label>
-                                        </div>
-                                        <div class="m-form__control">
+                                        <!--<div class="m-form__label">-->
+                                            <!--<label>-->
+                                                <!--Область:-->
+                                            <!--</label>-->
+                                        <!--</div>-->
+                                        <div class="m-form__control" style="width: 150px">
                                             <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_region">
                                                 <option value="">
-                                                    Все
+                                                    Область
                                                 </option>
                                                 <option th:each="region: ${regions}" th:value="${region.id}" th:text="${region.name}"></option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="m-form__group m-form__group--inline">
-                                        <div class="m-form__label">
-                                            <label>
-                                                Район:
-                                            </label>
-                                        </div>
-                                        <div class="m-form__control">
+                                        <!--<div class="m-form__label">-->
+                                            <!--<label>-->
+                                                <!--Район:-->
+                                            <!--</label>-->
+                                        <!--</div>-->
+                                        <div class="m-form__control" style="width: 150px">
                                             <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_district">
                                                 <option value="">
-                                                    Все
+                                                    Район
                                                 </option>
                                                 <option th:each="district : ${districts}" th:value="${district.id}" th:text="${district.name}"></option>
                                             </select>
@@ -111,7 +111,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-2">
+                                <div class="col-sm">
                                     <div class="input-group date m_datetimepicker mb-2" id="from_datepicker">
                                         <input  class="form-control m-input" th:placeholder="#{label.fromDate}" name="date" />
                                         <span class="input-group-addon">
@@ -125,39 +125,39 @@
                                                 </span>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <div class="m-form__group m-form__group--inline mb-2">
-                                        <div class="m-form__label">
-                                            <label>
-                                                Фин. группа:
-                                            </label>
-                                        </div>
+                                <div class="col-sm">
+                                    <div class="m-form__group m-form__group--inline mb-2" style="width: 150px">
+                                        <!--<div class="m-form__label">-->
+                                            <!--<label>-->
+                                                <!--Фин. группа:-->
+                                            <!--</label>-->
+                                        <!--</div>-->
                                         <div class="m-form__control">
                                             <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_finGroup">
                                                 <option value="">
-                                                    Все
+                                                    Фин. группа
                                                 </option>
                                                 <option th:each="finGroup: ${finGroups}" th:value="${finGroup.id}" th:text="${finGroup.name}"></option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="m-form__group m-form__group--inline mb-2">
-                                        <div class="m-form__label">
-                                            <label>
-                                                Вид кредита:
-                                            </label>
-                                        </div>
+                                    <div class="m-form__group m-form__group--inline mb-2" style="width: 150px">
+                                        <!--<div class="m-form__label">-->
+                                            <!--<label>-->
+                                                <!--Вид кредита:-->
+                                            <!--</label>-->
+                                        <!--</div>-->
                                         <div class="m-form__control">
                                             <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_loan_type">
                                                 <option value="">
-                                                    Все
+                                                    Вид кредита
                                                 </option>
                                                 <option th:each="loanType: ${loanTypes}" th:value="${loanType.id}" th:text="${loanType.name}"></option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-sm">
                                     <div class="m-input-icon m-input-icon--left mb-2">
                                         <input type="text" class="form-control m-input m-input--solid" th:placeholder=#{label.loan.creditNumber} id="credit_number">
                                         <span class="m-input-icon__icon m-input-icon__icon--left">
@@ -166,22 +166,24 @@
                                                     </span>
                                                 </span>
                                     </div>
-                                    <div class="m-form__group m-form__group--inline mb-2">
-                                        <div class="m-form__label">
-                                            <label>
-                                                Куратор:
-                                            </label>
-                                        </div>
+                                    <div class="m-form__group m-form__group--inline mb-2 " style="width: 150px">
+                                        <!--<div class="m-form__label">-->
+                                            <!--<label>-->
+                                                <!--Куратор:-->
+                                            <!--</label>-->
+                                        <!--</div>-->
                                         <div class="m-form__control">
                                             <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_supervisor">
                                                 <option value="">
-                                                    Все
+                                                    Куратор
                                                 </option>
                                                 <option th:each="supervisor: ${supervisors}" th:value="${supervisor.id}" th:text="${supervisor.name}"></option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-sm"></div>
+                                <div class="col-sm"></div>
                             </div>
                         </div>
                         <div hidden="hidden" class="col-md-5">
@@ -477,9 +479,9 @@
                 // columns definition
                 columns:  [{
                     field: "View",
-                    width: 80,
+                    width: 30,
                     textAlign: 'center',
-                    title: [[#{label.view}]],
+                    title: '#',
                     sortable: false,
                     selector: false,
                     overflow: 'visible',
@@ -497,7 +499,7 @@
                 },{
                     field: "v_debtor_name",
                     title: [[#{v_debtor_name}]],
-                    width:270,
+                    // width:230,
                     template: function (row) {
                         var d = row.v_debtor_name;
                         if(d.length>30){
@@ -510,7 +512,7 @@
                 }, {
                     field: "v_loan_reg_number",
                     title: [[#{v_loan_reg_number}]],
-                    width:230,
+                    // width:230,
                     template: function (row) {
                         var d = row.v_loan_reg_number;
                         if(d.length>30){
@@ -523,7 +525,7 @@
                 }, {
                     field: "v_loan_amount",
                     title: [[#{label.loan.amount}]],
-                    width:120,
+                    // width:120,
                     textAlign:'center',
                     template:function (row) {
                         return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_loan_amount);
@@ -531,7 +533,7 @@
                 }, {
                     field: "v_credit_order_reg_number",
                     title: [[#{label.loan.credit.order.reg.number}]],
-                    width:210,
+                    // width:210,
                     template: function (row) {
                         var d = row.v_credit_order_reg_number;
                         if(d.length>30){
@@ -542,7 +544,7 @@
                 }, {
                     field: "v_debtor_district_id",
                     title: [[#{label.district}]],
-                    width:150,
+                    // width:150,
                     template:function (row) {
                         for (var i in districts){
                             if(row.v_debtor_district_id==districts[i].id){
@@ -553,7 +555,7 @@
                 },{
                     field: "v_loan_fin_group_id",
                     title: [[#{label.loan.finGroup}]],
-                    width:250,
+                    // width:250,
                     template:function (row) {
                         for (var i in finGroups){
                             if(row.v_loan_fin_group_id==finGroups[i].id){
@@ -566,7 +568,7 @@
                             }
                         }
                     }
-                },{
+                },/*{
                     field: "v_loan_supervisor_id",
                     title: [[#{label.loan.supervisor}]],
                     width:250,
@@ -582,10 +584,10 @@
                             }
                         }
                     }
-                },{
+                },*/{
                     field: "v_loan_type_id",
                     title: [[#{label.loan.type}]],
-                    width:170,
+                    // width:170,
                     template:function (row) {
                         for (var i in loanTypes){
                             if(row.v_loan_type_id==loanTypes[i].id){

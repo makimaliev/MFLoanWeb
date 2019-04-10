@@ -1,6 +1,7 @@
 package kg.gov.mf.loan.web.controller.manage;
 
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
+import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.model.loan.Payment;
 import kg.gov.mf.loan.manage.model.loan.PaymentType;
@@ -38,7 +39,7 @@ import java.util.List;
 
 @Controller
 public class PaymentController {
-	
+
 	@Autowired
 	LoanService loanService;
 	
@@ -138,132 +139,128 @@ public class PaymentController {
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/payment/save"}, method=RequestMethod.POST)
     public String savePayment(Payment payment, @PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId)
     {
-		Date onDate = new Date();
+		Loan loan = loanService.getById(loanId);
+			Date onDate = new Date();
 
-		if(payment.getPaymentDate().after(onDate))
-		{
-			onDate= payment.getPaymentDate();
-		}
-
-    	if(payment.getPaymentDate()!=null)
-    	{
-
-    		Loan loan = loanService.getById(loanId);
-
-			if(loan.getCurrency().getId()>1)
+			if(payment.getPaymentDate().after(onDate))
 			{
-				OrderTermCurrency orderTermCurrency=loan.getCurrency();
-				SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
-
-				String currencyQuery="select c.id,c.rate,c.date,c.status,c.type_id,c.currency_type_id from currency_rate c where currency_type_id="+orderTermCurrency.getId()+" and date<='"+dt.format(payment.getPaymentDate())+"' order by date desc";
-				Query query=entityManager.createNativeQuery(currencyQuery,CurrencyRate.class);
-				query.setMaxResults(1);
-				CurrencyRate currencyRate=(CurrencyRate) query.getSingleResult();
-
-				payment.setExchange_rate(currencyRate.getRate());
-
+				onDate= payment.getPaymentDate();
 			}
 
-			if(payment.getPaymentDate()==null)
+			if(payment.getPaymentDate()!=null)
 			{
-				payment.setPaymentDate(new Date());
-			}
 
-			if(payment.getInterest()==null)
-			{
-				payment.setInterest(0.0);
-			}
+				if(loan.getCurrency().getId()>1)
+				{
+					OrderTermCurrency orderTermCurrency=loan.getCurrency();
+					SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
 
-			if(payment.getPenalty()==null)
-			{
-				payment.setPenalty(0.0);
-			}
+					String currencyQuery="select c.id,c.rate,c.date,c.status,c.type_id,c.currency_type_id from currency_rate c where currency_type_id="+orderTermCurrency.getId()+" and date<='"+dt.format(payment.getPaymentDate())+"' order by date desc";
+					Query query=entityManager.createNativeQuery(currencyQuery,CurrencyRate.class);
+					query.setMaxResults(1);
+					CurrencyRate currencyRate=(CurrencyRate) query.getSingleResult();
 
-			if(payment.getPrincipal()==null)
-			{
-				payment.setPrincipal(0.0);
-			}
+					payment.setExchange_rate(currencyRate.getRate());
 
-			if (loan.getCurrency().getId()==Long.valueOf(1))
-			{
-				payment.setIn_loan_currency(true);
-			}
+				}
 
-			payment.setTotalAmount(payment.getInterest()+payment.getPenalty()+payment.getPrincipal());
+				if(payment.getPaymentDate()==null)
+				{
+					payment.setPaymentDate(new Date());
+				}
+
+				if(payment.getInterest()==null)
+				{
+					payment.setInterest(0.0);
+				}
+
+				if(payment.getPenalty()==null)
+				{
+					payment.setPenalty(0.0);
+				}
+
+				if(payment.getPrincipal()==null)
+				{
+					payment.setPrincipal(0.0);
+				}
+
+				if (loan.getCurrency().getId()==Long.valueOf(1))
+				{
+					payment.setIn_loan_currency(true);
+				}
+
+				payment.setTotalAmount(payment.getInterest()+payment.getPenalty()+payment.getPrincipal());
 //		else{
 //			payment.setIn_loan_currency(false);
 //		}
-			payment.setLoan(loan);
+				payment.setLoan(loan);
 
-			paymentRepository.save(payment);
+				paymentRepository.save(payment);
 
-			Session session;
-			try
-			{
-				session = sessionFactory.getCurrentSession();
-			}
-			catch (HibernateException e)
-			{
-				session = sessionFactory.openSession();
-			}
-
-			session.getTransaction().begin();
-			runUpdateOfPhases(loan,session);
-			session.getTransaction().commit();
 
 //			this.jobItemService.runDailyCalculateProcedureForOneLoan(loanId,new Date());
 
-			if(loan.getParent()!=null)
-			{
-				this.jobItemService.runDailyCalculateProcedureForOneLoan(loan.getParent().getId(), onDate);
+				if(loan.getParent()!=null)
+				{
+					this.jobItemService.runDailyCalculateProcedureForOneLoan(loan.getParent().getId(), onDate);
+				}
+				else
+				{
+					this.jobItemService.runDailyCalculateProcedureForOneLoan(loan.getId(), onDate);
+				}
 			}
-			else
-			{
-				this.jobItemService.runDailyCalculateProcedureForOneLoan(loan.getId(), onDate);
+		new Thread(new Runnable() {
+			public void run() {
+				phaseUpdater(debtorId);
 			}
-    	}
+		}).start();
 
+			return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
 
-
-		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 
-	public void runUpdateOfPhases(Loan loan,Session session){
 
-
-		for(CollectionPhase phase1:loan.getCollectionPhases()){
-//			CollectionPhase phase=collectionPhaseService.getById(phase1.getId());
-//			SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
-//			Date startDate=phase.getPaymentFromDate();
-//			Date closeDate=new Date();
-//			CollectionProcedure procedure=collectionProcedureService.getById(phase.getCollectionProcedure().getId());
-//			if(phase.getCloseDate()!=null){
-//				closeDate=phase.getCloseDate();
-//			}
-//			else if(procedure.getCloseDate()!=null){
-//				closeDate=phase.getCollectionProcedure().getCloseDate();
-//			}
-
-			try {
-				String phaseUpdateQuery = "update phaseDetails phd, phase_amount_view v\n" +
-						"set phd.paidTotalAmount = v.paid_amount,\n" +
-						"  phd.paidPrincipal = v.paid_principal,\n" +
-						"  phd.paidInterest = v.paid_interest,\n" +
-						"  phd.paidPenalty = v.paid_penalty\n" +
-						"where phd.id = v.det_id and phd.collectionPhaseId =" + phase1.getId();
-				session.createSQLQuery(phaseUpdateQuery).executeUpdate();
-
-				String phaseSetPaid = "update collectionPhase cph,phaseDetails det\n" +
-                        "set cph.paid = (select sum(distinct det.paidTotalAmount) from phaseDetails det where det.collectionPhaseId = "+phase1.getId()+" group by det.collectionPhaseId)\n" +
-                        "where cph.id=det.collectionPhaseId and det.collectionPhaseId="+phase1.getId();
-
-				session.createSQLQuery(phaseSetPaid).executeUpdate();
-			}
-			catch (Exception e){
-				System.out.println(e);
-			}
-
+	public void phaseUpdater(Long debtorId) {
+		Session session;
+		try
+		{
+			session = sessionFactory.getCurrentSession();
 		}
+		catch (HibernateException e)
+		{
+			session = sessionFactory.openSession();
+		}
+
+		session.getTransaction().begin();
+		try{
+			String phaseUpdateQuery = "update phaseDetails phd, phase_amount_view v,loan l\n" +
+					"set phd.paidTotalAmount = v.paid_amount,\n" +
+					"    phd.paidPrincipal = v.paid_principal,\n" +
+					"    phd.paidInterest = v.paid_interest,\n" +
+					"    phd.paidPenalty = v.paid_penalty\n" +
+					"where phd.id = v.det_id and phd.loan_id=l.id and l.debtorId="+debtorId;
+			session.createSQLQuery(phaseUpdateQuery).executeUpdate();
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+		Debtor debtor=debtorService.getById(debtorId);
+		for(Loan loan1:debtor.getLoans()){
+			Loan loan=loanService.getById(loan1.getId());
+			for(CollectionPhase phase1:loan.getCollectionPhases()){
+				try {
+					String phaseSetPaid = "update collectionPhase cph,phaseDetails det\n" +
+							"set cph.paid = (select sum(paidTotalAmount) from phaseDetails d where d.collectionPhaseId="+phase1.getId()+")\n" +
+							"where cph.id=det.collectionPhaseId and det.collectionPhaseId="+phase1.getId();
+					session.createSQLQuery(phaseSetPaid).executeUpdate();
+				}
+				catch (Exception e){
+					System.out.println(e);
+				}
+			}
+		}
+
+		session.getTransaction().commit();
 	}
 
     /*public void runUpdateQueries(Loan loan,Session session){
