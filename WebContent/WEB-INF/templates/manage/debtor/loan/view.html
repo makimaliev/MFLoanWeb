@@ -205,9 +205,16 @@
 															<span class="m-widget1__desc m--font-brand" th:if="${loan.loanFinGroup!= null}" th:text="${loan.loanFinGroup.name}">someValue</span>
 															<span class="m-widget1__desc m--font-brand" th:unless="${loan.loanFinGroup!= null}" th:text="'?'">someValue</span>
 														</div>
-														<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal" data-target="#loanFinGroupModal" th:href="@{'/loanFinGroup/'+${loan.id}+'/save'}" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
+														<a sec:authorize="hasAnyAuthority('ADMIN')" data-remote="false" data-toggle="modal" data-target="#loanFinGroupModal" th:href="@{'/loanFinGroup/'+${loan.id}+'/save'}" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
 															<span>
 																<span th:text="#{label.change.loanFinGroup}">
+																Change Fin group
+																</span>
+															</span>
+														</a>
+														<a sec:authorize="hasAnyAuthority('PERM_CHANGE_FINGROUP')" th:if="${canChangeFinGroup}=='true'"  data-remote="false" data-toggle="modal" data-target="#loanFinGroupModal" th:href="@{'/loanFinGroup1/'+${loan.id}+'/save'}" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air ml-2">
+															<span>
+																<span th:text="#{label.change.loanFinGroup1}">
 																Change Fin group
 																</span>
 															</span>

@@ -349,6 +349,36 @@ public class LoanController {
 	    return "redirect:" + "/manage/debtor/"+debtorId+"/loan/{loanId}/view";
     }
 
+    //    update loans fin group for whom access is given
+    @GetMapping("/loanFinGroup1/{loanId}/save")
+    public String updateLoanFinGroup1(Model model,@PathVariable(value = "loanId") Long loanId){
+        Loan loan=loanService.getById(loanId);
+        if (loan.getLoanFinGroup()!=null){
+            model.addAttribute("loanFinGroup",loan.getLoanFinGroup());
+        }
+        else{
+            model.addAttribute("loanFinGroup",loanFinGroupService.getById(Long.valueOf(2)));
+        }
+
+        model.addAttribute("loanId",loanId);
+
+        List<LoanFinGroup> loanFinGroups=new ArrayList<>();
+        List<Long> finGrupIds= Arrays.asList(2L,3L,10L,12L,13L);
+        for(Long i:finGrupIds){
+            LoanFinGroup loanFinGroup=loanFinGroupService.getById(i);
+            loanFinGroups.add(loanFinGroup);
+        }
+        Long isId=loan.getLoanFinGroup().getId();
+        if(isId==2L||isId==3L||isId==10L||isId==12L||isId==13L){
+            model.addAttribute("canChangeFinGroup","true");
+        }
+        else{
+            model.addAttribute("canChangeFinGroup","false");
+        }
+        model.addAttribute("finGroupList",loanFinGroups);
+        return "/manage/debtor/loan/loanFinGroupForm";
+    }
+
     @GetMapping("/loanFund/{loanId}/save")
     public String updateLoanFund(Model model,@PathVariable(value = "loanId") Long loanId){
         Loan loan=loanService.getById(loanId);
