@@ -154,10 +154,11 @@ body{
 
 /*Header*/
 #m_header_menu{
-	float: right;
-	margin-right: 20px;
+	float: left;
+	margin-right: 10px;
 	margin-left: 0;
 	font-weight: 600;
+	max-height: 50px;
 }
 .m-header-menu .m-menu__nav > .m-menu__item .m-menu__link .lang-img{
 	display: table-cell;
@@ -670,7 +671,7 @@ table.dataTable th.focus, table.dataTable td.focus{
 
 
 /*MEDIA*/
-@media (min-width: 993px) {
+@media (min-width: 13px) {
 	.m-header {
 		height: 50px;
 	}
