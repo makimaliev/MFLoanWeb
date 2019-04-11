@@ -1,0 +1,735 @@
+/*General*/
+body{
+    font-family: 'Montserrat', sans-serif;
+    color: #000;
+}
+
+/*Icons*/
+[class^="la-"], [class*=" la-"]{
+    font-size: 14px;
+}
+
+
+/*Font Colors*/
+.m--font-primary,
+.m--font-brand{
+    color: #00119a !important;
+}
+.m-subheader .m-subheader__title,
+.m-portlet .m-portlet__body,
+.m-portlet .m-portlet__head .m-portlet__head-text,
+.m-subheader .m-subheader__breadcrumbs.m-nav > .m-nav__item > .m-nav__link > .m-nav__link-text,
+.m-subheader .m-subheader__breadcrumbs.m-nav > .m-nav__item > .m-nav__link > .m-nav__link-icon{
+    color: #000000;
+}
+
+/*Buttons*/
+.btn,
+.form-control,
+.btn.m-btn--custom{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+}
+.btn.m-btn--custom{
+    padding: 8px;
+}
+.btn{
+    padding: 8px;
+}
+.btn.btn-default,
+.btn.btn-secondary{
+    border-color: #ccc;
+}
+.btn-reset{
+    background: none;
+    border: none;
+    padding: 0;
+    color: #333;
+}
+.m-btn--icon.m-btn--icon-only{
+    width: 16px;
+    height: 16px;
+}
+.m-input-icon__icon{
+    cursor: pointer;
+}
+.btn.m-btn--pill{
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.btn-outline-accent.m-btn--air.focus,
+.btn-outline-accent.m-btn--air:focus,
+.btn-outline-accent.m-btn--air:hover,
+.btn-accent.m-btn--air.focus,
+.btn-accent.m-btn--air:focus,
+.btn-accent.m-btn--air:hover,
+.btn-outline-accent.m-btn--air,
+.btn-accent.m-btn--air,
+.btn-outline-focus.m-btn--air,
+.btn-focus.m-btn--air,
+.btn-outline-success.m-btn--air,
+.btn-success.m-btn--air,
+.btn-outline-success.m-btn--air.focus,
+.btn-outline-success.m-btn--air:focus,
+.btn-outline-success.m-btn--air:hover,
+.btn-success.m-btn--air.focus,
+.btn-success.m-btn--air:focus,
+.btn-success.m-btn--air:hover,
+.btn-outline-focus.m-btn--air.focus,
+.btn-outline-focus.m-btn--air:focus,
+.btn-outline-focus.m-btn--air:hover,
+.btn-focus.m-btn--air.focus,
+.btn-focus.m-btn--air:focus,
+.btn-focus.m-btn--air:hover{
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+.btn.m-btn--hover-accent:not(.btn-secondary):not(.btn-outline-light) i,
+.btn.m-btn--hover-danger:not(.btn-secondary):not(.btn-outline-light) i{
+    color: #000000;
+}
+
+/*Dropdown*/
+.dropdown-menu > li > a,
+.dropdown-menu > .dropdown-item{
+    color: #333;
+}
+
+/*Form*/
+.form-group{
+    margin-bottom: 12px;
+}
+.form-control{
+    line-height: 1.25;
+    padding: 6px 12px;
+}
+.form-control[readonly], .form-control{
+    border-color: #ccc;
+}
+.m-form.m-form--fit .m-form__content,
+.m-form.m-form--fit .m-form__heading,
+.m-form.m-form--fit .m-form__group{
+    padding-left: 16px;
+    padding-right: 16px;
+}
+.m-form .m-form__group{
+    padding-top: 0;
+    padding-bottom: 8px;
+}
+.m-form .m-form__group label{
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+.m-form .m-form__group label.col-form-label{
+    padding-top: 4px;
+}
+.m-form .m-form__group label.col-form-label > span:first-child{
+    word-break: break-word;
+}
+.m-form .m-form__actions{
+    padding: 8px;
+}
+.m-radio > span,
+.m-checkbox > span{
+    width: 16px;
+    height: 16px;
+}
+.m-form__group.row .m-checkbox-inline,
+.m-form__group.row .m-radio-inline{
+    margin-top: -10px;
+}
+.m-form__section + .m-form__section{
+    margin-top: 16px;
+}
+.m-form .m-form__heading{
+    margin-bottom: 16px;
+}
+.m-form .m-form__heading .m-form__heading-title{
+    font-size: 16px;
+    font-weight: 700;
+}
+
+/*Header*/
+#m_header_menu{
+    float: left;
+    margin-right: 10px;
+    margin-left: 0;
+    font-weight: 600;
+    max-height: 50px;
+}
+.m-header-menu .m-menu__nav > .m-menu__item .m-menu__link .lang-img{
+    display: table-cell;
+    vertical-align: middle;
+    padding-right: 8px;
+    width: 24px;
+}
+.lang-img img{
+    display: block;
+}
+.m-topbar .m-topbar__nav.m-nav{
+    margin-right: 0;
+}
+
+/*Icons*/
+.m-input-icon > .m-input-icon__icon > span > i.la-search{
+    line-height: 1;
+}
+
+/*Login*/
+.m-login.m-login--2.m-login-2--skin-1 .m-login__container .m-login__form .m-login__form-sub .m-link{
+    font-weight: 500;
+}
+
+/*Modal*/
+.modal{
+    font-size: 12px;
+}
+.modal .modal-content .modal-header,
+.modal .modal-content .modal-body,
+.modal .modal-content .modal-footer{
+    padding: 16px;
+}
+.modal .modal-content .modal-header .modal-title{
+    font-size: 14px;
+    line-height: 1.25;
+}
+.modal .modal-content .modal-header .close:before{
+    font-size: 12px;
+}
+.modal .alert{
+    margin-bottom: 16px;
+    padding: 8px 12px;
+}
+.modal .alert .close{
+    font-size: 12px;
+}
+.modal .alert-hidden{
+    display: none;
+}
+.modal .form-group:last-of-type{
+    margin-bottom: 0;
+}
+.modal label{
+    font-weight: 500;
+}
+.modal .m-switch{
+    margin-top: 8px;
+}
+.modal .m-switch label{
+    margin-bottom: 0;
+}
+.modal .m-portlet__body{
+    margin-top: 16px;
+}
+.modal .nav-tabs .nav-link{
+    color: #716aca;
+}
+.modal .tab-content{
+    padding: 16px 0;
+}
+
+/*Nav*/
+.m-brand.m-brand--skin-dark .m-brand__tools .m-brand__toggler span,
+.m-brand.m-brand--skin-dark .m-brand__tools .m-brand__toggler span::before,
+.m-brand.m-brand--skin-dark .m-brand__tools .m-brand__toggler span::after{
+    background: #ffffff;
+}
+.m-aside-menu .m-menu__nav > .m-menu__item > .m-menu__heading,
+.m-aside-menu .m-menu__nav > .m-menu__item > .m-menu__link,
+.m-aside-menu .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item > .m-menu__heading,
+.m-aside-menu .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item > .m-menu__link{
+    font-size: 12px;
+    height: 32px;
+}
+.m-aside-menu .m-menu__nav > .m-menu__item > .m-menu__link{
+    padding: 4px 24px;
+}
+.m-aside-menu .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item:last-child{
+    padding-bottom: 8px;
+}
+.m-aside-menu .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item > .m-menu__heading .m-menu__link-text,
+.m-aside-menu .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item > .m-menu__link .m-menu__link-text{
+    font-size: 0.75rem;
+    line-height: 1.25;
+}
+.m-aside-menu.m-aside-menu--skin-dark .m-menu__nav > .m-menu__item > .m-menu__heading .m-menu__link-text,
+.m-aside-menu.m-aside-menu--skin-dark .m-menu__nav > .m-menu__item > .m-menu__link .m-menu__link-text,
+.m-aside-menu.m-aside-menu--skin-dark .m-menu__nav > .m-menu__item > .m-menu__heading .m-menu__link-icon,
+.m-aside-menu.m-aside-menu--skin-dark .m-menu__nav > .m-menu__item > .m-menu__link .m-menu__link-icon,
+.m-aside-menu.m-aside-menu--skin-dark .m-menu__nav > .m-menu__item:hover > .m-menu__heading .m-menu__link-icon,
+.m-aside-menu.m-aside-menu--skin-dark .m-menu__nav > .m-menu__item:hover > .m-menu__link .m-menu__link-icon,
+.m-aside-menu.m-aside-menu--skin-dark .m-menu__nav > .m-menu__item:hover > .m-menu__heading .m-menu__link-text,
+.m-aside-menu.m-aside-menu--skin-dark .m-menu__nav > .m-menu__item:hover > .m-menu__link .m-menu__link-text,
+.m-aside-menu.m-aside-menu--skin-dark .m-menu__nav > .m-menu__item > .m-menu__heading .m-menu__ver-arrow,
+.m-aside-menu.m-aside-menu--skin-dark .m-menu__nav > .m-menu__item > .m-menu__link .m-menu__ver-arrow,
+.m-aside-menu.m-aside-menu--skin-dark .m-menu__nav > .m-menu__item:hover > .m-menu__heading .m-menu__ver-arrow,
+.m-aside-menu.m-aside-menu--skin-dark .m-menu__nav > .m-menu__item:hover > .m-menu__link .m-menu__ver-arrow,
+.m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item > .m-menu__heading .m-menu__link-text,
+.m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item > .m-menu__link .m-menu__link-text,
+.m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item:hover > .m-menu__heading .m-menu__link-text,
+.m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item:hover > .m-menu__link .m-menu__link-text,
+.m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item.m-menu__item--open > .m-menu__heading .m-menu__ver-arrow,
+.m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item.m-menu__item--open > .m-menu__link .m-menu__ver-arrow,
+.m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item > .m-menu__heading .m-menu__ver-arrow,
+.m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item > .m-menu__link .m-menu__ver-arrow,
+.m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item.m-menu__item--open > .m-menu__heading .m-menu__link-text,
+.m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item.m-menu__item--open > .m-menu__link .m-menu__link-text{
+    color: #fff;
+}
+.m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item.m-menu__item--open > .m-menu__heading .m-menu__link-bullet.m-menu__link-bullet--dot > span,
+.m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item.m-menu__item--open > .m-menu__link .m-menu__link-bullet.m-menu__link-bullet--dot > span{
+    background-color: #fff;
+}
+.m-aside-menu .m-menu__nav > .m-menu__item > .m-menu__heading .m-menu__link-text,
+.m-aside-menu .m-menu__nav > .m-menu__item > .m-menu__link .m-menu__link-text{
+    font-size: 0.75rem;
+}
+
+
+/*Topbar*/
+.m-topbar .m-topbar__nav.m-nav > .m-nav__item > .m-nav__link .m-nav__link-icon > i{
+    font-size: 1.25rem;
+}
+
+
+/*Content*/
+.m-subheader{
+    padding: 4px 16px 0 32px;
+}
+.m-subheader .m-subheader__title{
+    font-size: 14px;
+}
+.m-subheader .m-subheader__breadcrumbs.m-nav > .m-nav__item > span{
+    font-size: 12px;
+    font-weight: normal;
+}
+.m-subheader .m-subheader__breadcrumbs.m-nav > .m-nav__item > .m-nav__link > .m-nav__link-icon{
+    font-size: 14px;
+}
+.m-nav > .m-nav__item > .m-nav__link .m-nav__link-text{
+    font-size: 12px;
+}
+
+.m-body .m-content{
+    padding: 4px 16px;
+}
+
+
+/*Pagination*/
+.m-datatable.m-datatable--default > .m-datatable__pager{
+    margin-top: 0;
+}
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav,
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-info{
+    margin-top: 0;
+}
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link--first:hover,
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link--prev:hover,
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link--next:hover,
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link--last:hover,
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link-number:hover{
+    text-decoration: none;
+}
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li.disabled > .m-datatable__pager-link.m-datatable__pager-link--first:hover,
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li.disabled > .m-datatable__pager-link.m-datatable__pager-link--prev:hover,
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li.disabled > .m-datatable__pager-link.m-datatable__pager-link--next:hover,
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li.disabled > .m-datatable__pager-link.m-datatable__pager-link--last:hover,
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li.disabled > .m-datatable__pager-link.m-datatable__pager-link-number:hover{
+    cursor: not-allowed;
+    color: #716aca;
+    background: #edecf8;
+}
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link{
+    height: 24px;
+    width: 24px;
+    font-size: 12px;
+    font-weight: 500;
+}
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-info .m-datatable__pager-size{
+    margin-right: 0;
+    margin-left: 8px;
+}
+.m-datatable__pager-detail,
+.m-datatable__pager-size{
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 12px;
+    font-weight: 500;
+}
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-info .m-datatable__pager-size .btn.dropdown-toggle{
+    font-size: 12px;
+    font-weight: 500;
+    height: 24px;
+    padding: 0 12px;
+}
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-info .m-datatable__pager-size.bootstrap-select.btn-group .dropdown-menu.inner > li > a{
+    font-size: 12px;
+    padding: 8px 12px;
+}
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link--active{
+    background: #1300ff;
+}
+.m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__head .m-datatable__row
+, .m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__body .m-datatable__row,
+.m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__foot .m-datatable__row{
+    height: 32px !important;
+}
+
+/*Portlet*/
+.m-portlet{
+    margin-bottom: 12px;
+}
+.m-portlet .m-portlet__head{
+    padding: 0 8px;
+    height: 40px;
+    border-color: #ccc;
+}
+.m-portlet .m-portlet__head .m-portlet__head-caption .m-portlet__head-title .m-portlet__head-text{
+    font-size: 14px;
+}
+.m-portlet .m-portlet__body{
+    padding: 8px;
+}
+.m-portlet .m-portlet__body .m-form{
+    margin-bottom: 8px !important;
+    margin-top: 0 !important;
+}
+.m-portlet .m-portlet__foot{
+    padding: 8px;
+}
+
+/*Section*/
+.m-section{
+    margin-bottom: 0;
+}
+.m-section + .m-section{
+    margin-top: 16px;
+}
+.m-section .m-section__content{
+    margin-bottom: 0;
+}
+
+/*Scrollable*/
+.m-scrollable{
+}
+.m-scrollable .table{
+    margin-bottom: 136px;
+}
+.m-scrollable-no-margin .table{
+    margin-bottom: 16px;
+}
+.mCustomScrollBox,
+.mCSB_container{
+    overflow-y: visible;
+}
+
+/*Tabs*/
+.nav.nav-pills, .nav.nav-tabs{
+    margin-bottom: 8px;
+}
+.nav.nav-pills .nav-link,
+.nav.nav-tabs .nav-link{
+    padding: 6px 12px;
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link{
+    background: #00119a;
+    color: #ffffff !important;
+    border-color: #00119a;
+}
+
+/*Tables*/
+.table{
+    margin-bottom: 0;
+}
+.table td,
+.table th{
+    vertical-align: middle;
+    border-color: #ccc;
+}
+.table th{
+    padding: 8px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.table .thead-default th{
+    border: none;
+}
+.table td{
+    padding: 4px 8px;
+    color: #333;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.25;
+}
+.table-id{
+    max-width: 48px;
+}
+.table-actions .dropdown-item,
+.table-actions .btn-reset{
+    font-size: 12px;
+    font-weight: 500;
+}
+.thead-default th{
+    background: #6cacff;
+    color: #ffffff;
+}
+
+/*DataTables*/
+.table.dataTable{
+    margin-bottom: 8px;
+}
+.table.dataTable tr:last-child td{
+    border-bottom: 1px solid #ccc;
+}
+.dataTables_wrapper .dataTables_paginate{
+    display: inline-block;
+}
+.dataTables_paginate .paginate_button{
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    border-radius: 50%;
+    text-align: center;
+    position: relative;
+    line-height: 24px;
+    height: 24px;
+    width: 24px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #00119a;
+    background: #edecf8;
+    margin-right: 8px;
+}
+.dataTables_paginate .ellipsis{
+    margin-right: 8px;
+}
+.dataTables_paginate .paginate_button.previous,
+.dataTables_paginate .paginate_button.next{
+    line-height: 22px;
+}
+.dataTables_paginate .paginate_button.current{
+    background: #00119a;
+    color: #ffffff;
+}
+.dataTables_paginate .paginate_button i{
+    vertical-align: middle;
+    font-size: 1rem;
+}
+.dataTables_paginate .paginate_button:hover{
+    text-decoration: none;
+}
+.dataTables_wrapper .dataTables_length{
+    float: right;
+}
+.dataTables_length label{
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+.dataTables_length .bootstrap-select.btn-group:not(.input-group-btn),
+.dataTables_length  .bootstrap-select.btn-group[class*="col-"]{
+    margin-left: 8px;
+}
+.dataTables_length .bootstrap-select .btn.dropdown-toggle{
+    font-size: 12px;
+    font-weight: 500;
+    height: 24px;
+    padding: 0 12px;
+    -webkit-border-radius: 20px!important;
+    -moz-border-radius: 20px!important;
+    -ms-border-radius: 20px!important;
+    -o-border-radius: 20px!important;
+    border-radius: 20px!important;
+    background: #edecf8;
+    color: #3f4047;
+}
+.dataTables_length .bootstrap-select.btn-group .dropdown-menu.inner > li > a{
+    font-size: 12px;
+    padding: 8px 12px;
+}
+.dataTables_length .bootstrap-select.btn-group .dropdown-menu li a span.text{
+    display: inline-block;
+}
+.dataTables_length .bootstrap-select.btn-group .dropdown-menu.inner > li.selected > a span.check-mark{
+    margin-top: -0.6rem;
+}
+.dataTables_wrapper .dataTable .selected td,
+.dataTables_wrapper .dataTable .selected th{
+    background-color: #eff2f9;
+    color: #3f4047;
+}
+table.dataTable th.focus, table.dataTable td.focus{
+    outline: 2px solid #0275d8;
+    outline-offset: -1px;
+}
+.m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table{
+    margin-bottom: 8px;
+}
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__head .m-datatable__row > .m-datatable__cell,
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__body .m-datatable__row > .m-datatable__cell,
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__foot .m-datatable__row > .m-datatable__cell{
+    padding: 4px 8px;
+    font-size: 12px;
+}
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__body .m-datatable__row > .m-datatable__cell > span{
+    color: #000;
+    font-weight: 400;
+}
+.m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__head,
+.m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__body,
+.m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__foot{
+    font-size: 12px;
+}
+.m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link--first, .m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link--prev, .m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link--next, .m-datatable.m-datatable--default > .m-datatable__pager > .m-datatable__pager-nav > li > .m-datatable__pager-link.m-datatable__pager-link--last{
+    color: #00119a;
+}
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__head .m-datatable__row > .m-datatable__cell, .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__foot .m-datatable__row > .m-datatable__cell{
+    background: #6cacff;
+}
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__head .m-datatable__row > .m-datatable__cell > span,
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__foot .m-datatable__row > .m-datatable__cell > span{
+    color: #ffffff;
+}
+
+/*Widget*/
+.m-widget1{
+    padding: 8px;
+}
+.m-widget1 .m-widget1__item{
+    padding: 8px 0;
+}
+.m-widget1 .m-widget1__item:first-child{
+    padding-top: 0;
+}
+.m-widget1 .m-widget1__item:last-child{
+    padding-bottom: 0;
+}
+.m-widget1 .m-widget1__item .m-widget1__title{
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: 600;
+    color: #868e96;
+}
+.m-widget1 .m-widget1__item .m-widget1__title,
+.m-widget1 .m-widget1__item .m-widget1__desc{
+    word-break: break-word;
+}
+.m-widget1 .m-widget1__item .m-widget1__desc{
+    margin-top: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.m-widget12__text{
+    display: table-cell;
+    padding-right: 16px;
+    color: #6f727d;
+}
+.m-widget12__text > div{
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 500;
+}
+.m-widget12__text > span{
+    margin-top: 8px;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/*DatetimPicker*/
+.datetimepicker td, .datetimepicker th{
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/*Bootstrap Select*/
+.bootstrap-select.btn-group > .dropdown-toggle{
+    padding: 8px 12px;
+}
+.bootstrap-select.btn-group .dropdown-menu.inner > li > a{
+    font-size: 12px;
+    font-weight: 500;
+    padding: 8px 12px;
+}
+
+
+/*MEDIA*/
+@media (min-width: 13px) {
+    .m-header {
+        height: 50px;
+    }
+    .m-brand .m-brand__logo, .m-brand .m-brand__tools{
+        height: 50px !important;
+    }
+    .m-header--fixed .m-body{
+        padding-top: 50px !important;
+    }
+    .m-aside-left--minimize .m-aside-menu .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav,
+    .m-aside-menu.m-aside-menu--dropdown .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav{
+        padding: 8px 0;
+    }
+    .m-aside-left--minimize .m-aside-menu .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav > .m-menu__item .m-menu__link,
+    .m-aside-menu.m-aside-menu--dropdown .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav > .m-menu__item .m-menu__link{
+        padding: 4px 16px;
+    }
+    .m-aside-left--minimize .m-aside-menu .m-menu__nav > .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav > .m-menu__item--parent > .m-menu__link{
+        padding: 0 16px 8px 16px;
+    }
+    .m-aside-left--minimize .m-aside-menu .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav > .m-menu__item > .m-menu__heading,
+    .m-aside-left--minimize .m-aside-menu .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav > .m-menu__item > .m-menu__link,
+    .m-aside-menu.m-aside-menu--dropdown .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav > .m-menu__item > .m-menu__heading,
+    .m-aside-menu.m-aside-menu--dropdown .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav > .m-menu__item > .m-menu__link{
+        height: 32px;
+    }
+    .m-aside-left--minimize .m-aside-menu .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav > .m-menu__item .m-menu__submenu > .m-menu__subnav,
+    .m-aside-menu.m-aside-menu--dropdown .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav > .m-menu__item .m-menu__submenu > .m-menu__subnav{
+        padding: 8px 0;
+    }
+    .m-aside-menu .m-menu__nav > .m-menu__item .m-menu__submenu .m-menu__item:last-child{
+        padding-bottom: 0;
+    }
+    .m-aside-left--minimize .m-aside-menu.m-aside-menu--skin-dark .m-menu__nav > .m-menu__item > .m-menu__link > .m-menu__link-icon,
+    .m-aside-left--minimize .m-aside-menu .m-menu__nav > .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav > .m-menu__item--parent > .m-menu__link .m-menu__link-text,
+    .m-aside-left--minimize .m-aside-menu .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav > .m-menu__item > .m-menu__heading .m-menu__link-text,
+    .m-aside-left--minimize .m-aside-menu .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav > .m-menu__item > .m-menu__link .m-menu__link-text,
+    .m-aside-menu.m-aside-menu--dropdown .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav > .m-menu__item > .m-menu__heading .m-menu__link-text,
+    .m-aside-menu.m-aside-menu--dropdown .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav > .m-menu__item > .m-menu__link .m-menu__link-text,
+    .m-aside-left--minimize .m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav .m-menu__item:hover > .m-menu__heading .m-menu__link-text,
+    .m-aside-left--minimize .m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav .m-menu__item:hover > .m-menu__link .m-menu__link-text,
+    .m-aside-menu.m-aside-menu--dropdown.m-aside-menu--submenu-skin-dark .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav .m-menu__item:hover > .m-menu__heading .m-menu__link-text,
+    .m-aside-menu.m-aside-menu--dropdown.m-aside-menu--submenu-skin-dark .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav .m-menu__item:hover > .m-menu__link .m-menu__link-text,
+    .m-aside-left--minimize .m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav .m-menu__item > .m-menu__heading .m-menu__link-text,
+    .m-aside-left--minimize .m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav .m-menu__item > .m-menu__link .m-menu__link-text,
+    .m-aside-menu.m-aside-menu--dropdown.m-aside-menu--submenu-skin-dark .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav .m-menu__item > .m-menu__heading .m-menu__link-text,
+    .m-aside-menu.m-aside-menu--dropdown.m-aside-menu--submenu-skin-dark .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav .m-menu__item > .m-menu__link .m-menu__link-text,
+    .m-aside-left--minimize .m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav .m-menu__item > .m-menu__heading .m-menu__ver-arrow,
+    .m-aside-left--minimize .m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav .m-menu__item > .m-menu__link .m-menu__ver-arrow,
+    .m-aside-menu.m-aside-menu--dropdown.m-aside-menu--submenu-skin-dark .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav .m-menu__item > .m-menu__heading .m-menu__ver-arrow,
+    .m-aside-menu.m-aside-menu--dropdown.m-aside-menu--submenu-skin-dark .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav .m-menu__item > .m-menu__link .m-menu__ver-arrow{
+        color: #fff;
+    }
+    .m-aside-left--minimize .m-aside-menu .m-menu__nav > .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav > .m-menu__item--parent > .m-menu__link .m-menu__link-text,
+    .m-aside-left--minimize .m-aside-menu .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav > .m-menu__item > .m-menu__heading .m-menu__link-text,
+    .m-aside-left--minimize .m-aside-menu .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav > .m-menu__item > .m-menu__link .m-menu__link-text,
+    .m-aside-menu.m-aside-menu--dropdown .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav > .m-menu__item > .m-menu__heading .m-menu__link-text,
+    .m-aside-menu.m-aside-menu--dropdown .m-menu__nav .m-menu__item.m-menu__item--hover > .m-menu__submenu > .m-menu__subnav > .m-menu__item > .m-menu__link .m-menu__link-text{
+        font-size: 12px;
+    }
+}
