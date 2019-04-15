@@ -2156,7 +2156,7 @@ BEGIN
           UPDATE loanSummary SET record_status = 2 WHERE loanId = loan_id AND onDate = tempDate;
         END IF;
 
-        if loan_summary_type_text = 'SYSTEM' or (loan_summary_type_text = 'MANUAL' and tempDate = inDate) or (loan_summary_type_text = 'FIXED' and not isAlreadyInserted) then
+        if loan_summary_type_text = 'SYSTEM' or (loan_summary_type_text = 'MANUAL' and tempDate = inDate) or (loan_summary_type_text = 'FIXED' and not isAlreadyInserted and tempDate = inDate-1) then
 
           #select onDate into date_prev_loan_summary from loanSummary where loanId = loan_id order by onDate desc limit 1;
 
@@ -2195,7 +2195,7 @@ BEGIN
           UPDATE loanSummary SET record_status = 2 WHERE loanId = loan_id AND onDate = tempDate;
         END IF;
 
-        if loan_summary_type_text = 'SYSTEM' or (loan_summary_type_text = 'MANUAL' and tempDate = inDate) or (loan_summary_type_text = 'FIXED' and not isAlreadyInserted) then
+        if loan_summary_type_text = 'SYSTEM' or (loan_summary_type_text = 'MANUAL' and tempDate = inDate) or (loan_summary_type_text = 'FIXED' and not isAlreadyInserted and tempDate = inDate-1) then
 
           INSERT INTO loanSummary(version, loanSummaryType, loanAmount, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty,
                                   overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalInterestPaid, totalPenaltyPaid, totalPrincipalPaid, totalFeePaid, loanId, createDate)
@@ -4047,4 +4047,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-15 14:34:53
+-- Dump completed on 2019-04-15 15:03:51
