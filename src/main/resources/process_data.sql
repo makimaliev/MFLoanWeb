@@ -2152,11 +2152,11 @@ BEGIN
 
       IF tempDate <= inDate THEN
 
-        IF loan_summary_type_text = 'MANUAL' AND isAlreadyInserted THEN
+        IF (loan_summary_type_text = 'MANUAL' or loan_summary_type_text = 'FIXED') AND isAlreadyInserted THEN
           UPDATE loanSummary SET record_status = 2 WHERE loanId = loan_id AND onDate = tempDate;
         END IF;
 
-        if loan_summary_type_text = 'SYSTEM' or (loan_summary_type_text = 'MANUAL' and tempDate = inDate) or (loan_summary_type_text = 'FIXED' and not isAlreadyInserted and tempDate = inDate-1) then
+        if loan_summary_type_text = 'SYSTEM' or ((loan_summary_type_text = 'MANUAL' or loan_summary_type_text = 'FIXED') and tempDate = inDate) then
 
           #select onDate into date_prev_loan_summary from loanSummary where loanId = loan_id order by onDate desc limit 1;
 
@@ -2168,7 +2168,7 @@ BEGIN
             end if;
             */
 
-            if not (loan_summary_type_text = 'MANUAL') then
+            if not (loan_summary_type_text = 'MANUAL' or loan_summary_type_text = 'FIXED')  then
               if pType = 'dummy date'  then
                 set loan_summary_type_text = 'DAILY';
               end if;
@@ -2191,11 +2191,11 @@ BEGIN
 
       IF tempDate <= inDate THEN
 
-        IF loan_summary_type_text = 'MANUAL' AND isAlreadyInserted THEN
+        IF (loan_summary_type_text = 'MANUAL' or loan_summary_type_text = 'FIXED') AND isAlreadyInserted THEN
           UPDATE loanSummary SET record_status = 2 WHERE loanId = loan_id AND onDate = tempDate;
         END IF;
 
-        if loan_summary_type_text = 'SYSTEM' or (loan_summary_type_text = 'MANUAL' and tempDate = inDate) or (loan_summary_type_text = 'FIXED' and not isAlreadyInserted and tempDate = inDate-1) then
+        if loan_summary_type_text = 'SYSTEM' or ((loan_summary_type_text = 'MANUAL' or loan_summary_type_text = 'FIXED') and tempDate = inDate) then
 
           INSERT INTO loanSummary(version, loanSummaryType, loanAmount, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty,
                                   overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalInterestPaid, totalPenaltyPaid, totalPrincipalPaid, totalFeePaid, loanId, createDate)
@@ -4047,4 +4047,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-15 15:03:51
+-- Dump completed on 2019-04-15 17:13:27
