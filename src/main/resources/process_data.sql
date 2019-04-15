@@ -2415,11 +2415,11 @@ DELIMITER ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `runCalculateLoanDetailedSummaryForAllLoansFixed`(IN inDate date)
 BEGIN
@@ -2454,7 +2454,7 @@ BEGIN
 
   CLOSE tCursor;
 
-  #CALL runUpdateRootLoans();
+  CALL runUpdateRootLoansFixed();
 
   #CALL updateBankruptInfo();
 
@@ -2848,6 +2848,133 @@ BEGIN
            WHERE parent_id = loan_id
              AND loanStateId != 3)
       AND p.loanSummaryType = 'SYSTEM'
+      AND p.record_status = 1
+    GROUP BY p.onDate
+    ORDER BY p.onDate;
+
+    INSERT INTO accrue (version, daysInPeriod, fromDate, interestAccrued, lastInstPassed, penaltyAccrued, penaltyOnInterestOverdue, penaltyOnPrincipalOverdue, toDate, loanId)
+    SELECT 1, acc.daysInPeriod,
+           acc.fromDate,
+           acc.interestAccrued,
+           acc.lastInstPassed,
+           acc.penaltyAccrued,
+           acc.penaltyOnInterestOverdue,
+           acc.penaltyOnPrincipalOverdue,
+           acc.toDate,
+           loan_id
+    FROM accrue acc
+    WHERE acc.loanId IN
+          (SELECT id
+           FROM loan
+           WHERE parent_id = loan_id
+             AND loanStateId != 3)
+    ORDER BY acc.fromDate;
+
+    #CALL updateRootLoanSummary(loan_id);
+
+  END LOOP run_calculate;
+
+  CLOSE tCursor;
+
+  COMMIT;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `runUpdateRootLoansFixed` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `runUpdateRootLoansFixed`()
+BEGIN
+
+  DECLARE v_finished INTEGER DEFAULT 0;
+  DECLARE loan_id BIGINT;
+  DECLARE loan_class INT;
+  DECLARE loan_state INT;
+
+  DEClARE tCursor CURSOR FOR
+
+    SELECT loan.id, loan.loan_class_id, loan.loanStateId
+    FROM loan loan
+    WHERE loan.id IN (SELECT DISTINCT parent_id FROM loan WHERE parent_id IS NOT NULL)
+    ORDER BY loan.id;
+
+  DECLARE CONTINUE HANDLER
+    FOR NOT FOUND SET v_finished = 1;
+
+  START TRANSACTION;
+
+  OPEN tCursor;
+
+  run_calculate: LOOP
+
+    FETCH tCursor INTO loan_id, loan_class, loan_state;
+
+    IF v_finished = 1 THEN
+      LEAVE run_calculate;
+    END IF;
+
+    #update parent loan amount
+    IF loan_class = 2 THEN
+      UPDATE loan l, (select SUM(tLoan.amount) as ss FROM loan tLoan WHERE tLoan.parent_id = loan_id AND tLoan.loanStateId != 3) t
+      SET l.amount = t.ss WHERE l.id = loan_id;
+    END IF;
+
+    #CALL updateRootLoanPayment(loan_id);
+    #CALL updateRootLoanPaymentSchedule(loan_id);
+
+    CALL update_child_loan_payments(loan_id);
+    CALL update_child_loan_payment_schedules(loan_id);
+
+    IF loan_class = 2 THEN
+      CALL updateTrancheeLoanData(loan_id);
+    END IF;
+
+    INSERT INTO loanSummary (version, loanAmount, loanSummaryType, onDate, outstadingFee, outstadingInterest, outstadingPenalty, outstadingPrincipal, overdueFee, overdueInterest, overduePenalty, overduePrincipal, paidFee, paidInterest, paidPenalty, paidPrincipal, totalDisbursed, totalFeePaid, totalInterestPaid, totalOutstanding, totalOverdue, totalPaid, totalPaidKGS, totalPenaltyPaid, totalPrincipalPaid, loanId, createDate)
+    SELECT 1,
+           SUM(p.loanAmount),
+           p.loanSummaryType,
+           p.onDate,
+           SUM(p.outstadingFee),
+           SUM(p.outstadingInterest),
+           SUM(p.outstadingPenalty),
+           SUM(p.outstadingPrincipal),
+           SUM(p.overdueFee),
+           SUM(p.overdueInterest),
+           SUM(p.overduePenalty),
+           SUM(p.overduePrincipal),
+           SUM(p.paidFee),
+           SUM(p.paidInterest),
+           SUM(p.paidPenalty),
+           SUM(p.paidPrincipal),
+           SUM(p.totalDisbursed),
+           SUM(p.totalFeePaid),
+           SUM(p.totalInterestPaid),
+           SUM(p.totalOutstanding),
+           SUM(p.totalOverdue),
+           SUM(p.totalPaid),
+           SUM(p.totalPaidKGS),
+           SUM(p.totalPenaltyPaid),
+           SUM(p.totalPrincipalPaid),
+           loan_id,
+           CURDATE()
+    FROM loanSummary p
+    WHERE p.loanId IN
+          (SELECT id
+           FROM loan
+           WHERE parent_id = loan_id
+             AND loanStateId != 3)
+      AND p.loanSummaryType = 'FIXED'
       AND p.record_status = 1
     GROUP BY p.onDate
     ORDER BY p.onDate;
@@ -4047,4 +4174,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-15 17:13:27
+-- Dump completed on 2019-04-15 18:58:10
