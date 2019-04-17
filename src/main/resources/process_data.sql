@@ -22,11 +22,11 @@
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `calculateDays`(fromDate date, toDate date, method int) RETURNS int(11)
 BEGIN
@@ -63,18 +63,20 @@ DELIMITER ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `calculateInterestAccrued`(principalOutstanding double, daysInPeriod int, inDate date, loanId bigint) RETURNS double
+CREATE DEFINER=`root`@`localhost` FUNCTION `calculateInterestAccrued`(principalOutstanding double, daysInPeriod int,
+                                                                      inDate date, loanId bigint) RETURNS double
 BEGIN
 
   DECLARE rate DOUBLE DEFAULT 0;
   DECLARE dIYMethod INT DEFAULT 2;
   DECLARE nOD INT DEFAULT 365;
+  DECLARE result DOUBLE DEFAULT 0;
 
   DECLARE cur CURSOR FOR
     SELECT term.interestRateValue, term.daysInYearMethodId
@@ -101,7 +103,13 @@ BEGIN
     SET principalOutstanding = 0;
   END IF;
 
-  RETURN (principalOutstanding*rate/nOD)/100*daysInPeriod;
+  SET result = (principalOutstanding*rate/nOD)/100*daysInPeriod;
+
+  if result is null then
+    set result = 0;
+  end if;
+
+  RETURN result;
 
 END ;;
 DELIMITER ;
@@ -552,14 +560,15 @@ DELIMITER ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `calculatePenaltyAccrued`(principalOverdue double, interestOverdue double, daysInPeriod int, inDate date,
-                                                                     loan_id          bigint) RETURNS double
+CREATE DEFINER=`root`@`localhost` FUNCTION `calculatePenaltyAccrued`(principalOverdue double, interestOverdue double,
+                                                                     daysInPeriod int, inDate date,
+                                                                     loan_id bigint) RETURNS double
 BEGIN
 
   DECLARE pOIO DOUBLE DEFAULT 0;
@@ -679,6 +688,14 @@ BEGIN
   IF interestOverdue > 0 THEN SET result_pOIO = interestOverdue*pOIO/100*d_period_int/nOD;
   END IF;
 
+  if result_pOIO is null then
+    set result_pOIO = 0;
+  end if;
+
+  if result_pOPO is null then
+    set result_pOPO = 0;
+  end if;
+
   RETURN result_pOIO + result_pOPO;
 
 END ;;
@@ -691,11 +708,11 @@ DELIMITER ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `calculatePOIO`(interestOverdue double, daysInPeriod int, inDate date, loanId bigint) RETURNS double
 BEGIN
@@ -703,6 +720,7 @@ BEGIN
   DECLARE rate DOUBLE DEFAULT 0;
   DECLARE dIYMethod INT;
   DECLARE nOD INT DEFAULT 365;
+  DECLARE result DOUBLE DEFAULT 0;
 
   DECLARE cur CURSOR FOR
     SELECT term.penaltyOnInterestOverdueRateValue, term.daysInYearMethodId
@@ -725,7 +743,13 @@ BEGIN
     SET interestOverdue = 0;
   END IF;
 
-  RETURN (interestOverdue*rate/nOD)/100*daysInPeriod;
+  SET result = (interestOverdue*rate/nOD)/100*daysInPeriod;
+
+  if result is null then
+    set result = 0;
+  end if;
+
+  RETURN result;
 
 END ;;
 DELIMITER ;
@@ -737,11 +761,11 @@ DELIMITER ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `calculatePOPO`(principalOverdue double, daysInPeriod int, inDate date, loanId bigint) RETURNS double
 BEGIN
@@ -749,6 +773,7 @@ BEGIN
   DECLARE rate DOUBLE DEFAULT 0;
   DECLARE dIYMethod INT;
   DECLARE nOD INT DEFAULT 365;
+  DECLARE result DOUBLE DEFAULT 0;
 
   DECLARE cur CURSOR FOR
     SELECT term.penaltyOnPrincipleOverdueRateValue, term.daysInYearMethodId
@@ -771,7 +796,13 @@ BEGIN
     SET principalOverdue = 0;
   END IF;
 
-  RETURN (principalOverdue*rate/nOD)/100*daysInPeriod;
+  SET result = (principalOverdue*rate/nOD)/100*daysInPeriod;
+
+  if result is null then
+    set result = 0;
+  end if;
+
+  RETURN result;
 
 END ;;
 DELIMITER ;
@@ -1922,13 +1953,17 @@ BEGIN
 
 
       ELSE
-        SET penAccrued = penAccrued
-          + calculatePenaltyAccrued(0, (intAccrued*(daysInPer-1)/(2*daysInPer)), daysInPer, tempDate, loan_id);
-        IF has_libor_io THEN
-          SET penAccrued = penAccrued
-            + calculateLibor((intAccrued*(daysInPer-1)/(2*daysInPer)), prevDate, tempDate, term_rate_io_id, term_diy_method_id, term_dim_method_id, loan_id, 2);
-        END IF;
+        IF daysInPer > 0 THEN
 
+          SET penAccrued = penAccrued
+            + calculatePenaltyAccrued(0, (intAccrued*(daysInPer-1)/(2*daysInPer)), daysInPer, tempDate, loan_id);
+
+          IF has_libor_io THEN
+            SET penAccrued = penAccrued
+              + calculateLibor((intAccrued*(daysInPer-1)/(2*daysInPer)), prevDate, tempDate, term_rate_io_id, term_diy_method_id, term_dim_method_id, loan_id, 2);
+          END IF;
+
+        END IF;
       END IF;
 
 
@@ -4174,4 +4209,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-15 18:58:10
+-- Dump completed on 2019-04-17 14:28:43
