@@ -2491,6 +2491,8 @@ BEGIN
 
   CALL runUpdateRootLoansFixed();
 
+  UPDATE fixed_date set status = 2 where date = inDate;
+
   #CALL updateBankruptInfo();
 
 END ;;
@@ -4209,4 +4211,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-17 14:28:43
+-- Dump completed on 2019-04-18  3:01:25
