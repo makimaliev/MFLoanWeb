@@ -543,6 +543,7 @@ public class LoanController {
 		if(loan.getLoanType().getId()==10){
 		    loan.setCloseDate(null);
         }
+        loan.setDestinationAccount(destinationAccountService.getById(1L));
 
 		saveLoanData(loan);
 
@@ -561,6 +562,7 @@ public class LoanController {
         if(loan.getLoanType().getId()==10){
             loan.setCloseDate(null);
         }
+        loan.setDestinationAccount(destinationAccountService.getById(1L));
 
         saveLoanData(loan);
 
@@ -579,6 +581,7 @@ public class LoanController {
         if(loan.getLoanType().getId()==10){
             loan.setCloseDate(null);
         }
+        loan.setDestinationAccount(destinationAccountService.getById(1L));
 
         saveLoanData(loan);
 
