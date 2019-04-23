@@ -1,0 +1,31 @@
+<form th:action="@{/manage/destinationAccount/save}" class="form-horizontal" method="post" th:object="${destinationAccount}"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="modal-header">
+        <h5 class="modal-title"  th:text="#{label.destinationAccount}"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">
+				&times;
+			</span>
+        </button>
+    </div>
+    <div class="modal-body">
+
+
+        <div class="form-group">
+            <label for="name" class="form-control-label" th:text="#{label.cSystem.modal.name}">Name<span class="required"> * </span></label>
+            <input hidden="true" type="text" id="id" name="id" th:field="*{id}" />
+            <input type="text" class="form-control" id="name" name="name" th:field="*{name}">
+
+            <script th:inline="javascript">
+                /*<![CDATA[*/
+                /*]]>*/
+            </script>
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.cSystem.button.cancel}"></button>
+        <button type="submit" class="btn btn-primary" th:text="#{label.cSystem.button.submit}"></button>
+    </div>
+</form>

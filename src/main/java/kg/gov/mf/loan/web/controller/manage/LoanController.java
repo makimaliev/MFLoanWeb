@@ -195,6 +195,9 @@ public class LoanController {
     @Autowired
     AddressService addressService;
 
+    @Autowired
+    DestinationAccountService destinationAccountService;
+
     static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
 
 	@InitBinder
@@ -347,6 +350,37 @@ public class LoanController {
             loanService.update(loan);
         }
 	    return "redirect:" + "/manage/debtor/"+debtorId+"/loan/{loanId}/view";
+    }
+
+    @GetMapping("/destinationAccount/{loanId}/save")
+    public String updateDestinationAccount(Model model,@PathVariable(value = "loanId") Long loanId){
+        Loan loan=loanService.getById(loanId);
+        if (loan.getDestinationAccount()!=null){
+            model.addAttribute("destinationAccount",loan.getDestinationAccount());
+        }
+        else{
+            model.addAttribute("destinationAccount",destinationAccountService.getById(Long.valueOf(1)));
+        }
+        model.addAttribute("loanId",loanId);
+        model.addAttribute("destinationList",destinationAccountService.list());
+        return "/manage/debtor/loan/destinationAccountForm";
+    }
+
+    @PostMapping("/destinationAccount/{loanId}/save")
+    public String updateDestinationAccount(@PathVariable(value = "loanId") Long loanId ,@Validated @ModelAttribute(value = "destinationAccount") DestinationAccount destinationAccount, BindingResult result){
+
+        Long debtorId=null;
+        if(result.hasErrors()){
+            System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+        }
+        else {
+            DestinationAccount destinationAccount1=destinationAccountService.getById(destinationAccount.getId());
+            Loan loan=loanService.getById(loanId);
+            debtorId=loan.getDebtor().getId();
+            loan.setDestinationAccount(destinationAccount1);
+            loanService.update(loan);
+        }
+        return "redirect:" + "/manage/debtor/"+debtorId+"/loan/{loanId}/view";
     }
 
     //    update loans fin group for whom access is given

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<!-- begin::Head -->
+<head>
+    <title th:text="#{label.destinationAccount}"></title>
+
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<!-- end::Head -->
+
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <div class="m-content">
+                <!--begin::Portlet-->
+                <div class="m-portlet">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text" th:text="#{label.destinationAccount}"></h3>
+                            </div>
+                        </div>
+                        <div class="m-portlet__head-tools">
+                            <ul sec:authorize="hasAnyAuthority('ADMIN')" class="m-portlet__nav">
+                                <li class="m-portlet__nav-item">
+                                    <a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal" data-target="#destinationAccountModal" th:href="@{'/manage/destinationAccount/0/save'}" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
+                                        <span>
+                                            <span th:text="#{label.destinationAccount.add}">
+
+                                            </span>
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="m-portlet__body">
+                        <!--begin::Section-->
+                        <div class="m-section">
+                            <div class="m-section__content">
+                                <div class="m-scrollable m-scrollable-no-margin" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+                                    <!--begin::Modal-->
+                                    <div id="destinationAccountModal" class="modal fade bs-modal-lg in"  tabindex="-1" role="dialog" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg" role="document">
+                                            <div class="modal-content">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--end::Modal-->
+                                    <div>
+                                        <table class="table" id="destinationTable">
+                                            <thead class="thead-default">
+                                            <tr>
+                                                <th th:text="#{label.destinationAccount.name}">Name</th>
+                                                <th >Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="c : ${destinationAccounts}">
+                                                <td th:text="${c.name}"></td>
+                                                <td ><a sec:authorize="hasAnyAuthority('ADMIN')" class="dropdown-item"
+                                                        th:href="@{/manage/destinationAccount/__${c.id}__/save}"
+                                                        data-toggle="modal"
+                                                        data-target="#destinationAccountModal">
+                                                    <span th:text="#{label.table.edit}"></span>
+                                                </a></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end::Section-->
+                    </div>
+                </div>
+                <!--end::Portlet-->
+            </div>
+        </div>
+    </div>
+    <!-- end:: Body -->
+    <!-- begin::Footer -->
+    <div th:replace="layout/footer"/>
+    <!-- end::Footer -->
+</div>
+<!-- end:: Page -->
+
+<div th:replace="fragments/footer :: footer-js"/>
+<script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
+<script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>
+
+<script>
+    $('.m-portlet__head-tools .m-input-icon__icon').click(function(e){
+        $('.m-portlet__head-tools form').submit();
+    });
+    $("#destinationAccountModal").on("show.bs.modal", function(e)
+    {
+        var link = $(e.relatedTarget);
+        $(this).find(".modal-content").load(link.attr("href"));
+    });
+
+    var table = $('#destinationTable').DataTable({
+        stateSave: true,
+        language: {
+            paginate: {
+                previous: '<i class="la la-angle-left"></i>', // or '→'
+                next: '<i class="la la-angle-right"></i>' // or '←'
+            },
+            lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
+        },
+        "info":     false,
+        keys: {
+            focus: ':eq(0)'
+        },
+        sDom: 'rtlip',
+    } );
+
+    $('#generalSearch').keyup(function(){
+        table.search($(this).val()).draw() ;
+    });
+</script>
+
+</body>
+<!-- end::Body -->
+</html>

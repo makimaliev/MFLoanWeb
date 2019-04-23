@@ -224,6 +224,23 @@
 												<div class="m-widget1__item">
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.loan.destinationAccount}"></h3>
+															<!--<span class="m-widget1__desc m--font-brand" th:text="${loan.loanFinGroup.name}"></span>-->
+															<span class="m-widget1__desc m--font-brand" th:if="${loan.destinationAccount!= null}" th:text="${loan.destinationAccount.name}">someValue</span>
+															<span class="m-widget1__desc m--font-brand" th:unless="${loan.destinationAccount!= null}" th:text="'?'">someValue</span>
+														</div>
+														<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal" data-target="#destinationAccountModal" th:href="@{'/destinationAccount/'+${loan.id}+'/save'}" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
+															<span>
+																<span th:text="#{label.change.destinationAccount}">
+																Change Fin group
+																</span>
+															</span>
+														</a>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
 															<h3 class="m-widget1__title" th:text="#{label.loan.fund}"></h3>
 															<!--<span class="m-widget1__desc m&#45;&#45;font-brand" th:text="${loan.loanFinGroup.name}"></span>-->
 															<span class="m-widget1__desc m--font-brand" th:if="${loan.fund!= null}" th:text="${loan.fund.name}">someValue</span>
@@ -1237,6 +1254,12 @@
 								</div>
 							</div>
 						</div>
+						<div id="destinationAccountModal" class="modal fade bs-modal-lg in"  tabindex="-1" role="dialog" aria-hidden="true">
+							<div class="modal-dialog modal-lg" role="document">
+								<div class="modal-content">
+								</div>
+							</div>
+						</div>
 						</div>
 				</div>
 				<div id="phaseDetailsDiv" class="collapse" >
@@ -1739,6 +1762,10 @@
 </script>
 <script>
     $("#loanFinGroupModal").on("show.bs.modal", function(e) {
+        var link = $(e.relatedTarget);
+        $(this).find(".modal-content").load(link.attr("href"));
+    });
+    $("#destinationAccountModal").on("show.bs.modal", function(e) {
         var link = $(e.relatedTarget);
         $(this).find(".modal-content").load(link.attr("href"));
     });
