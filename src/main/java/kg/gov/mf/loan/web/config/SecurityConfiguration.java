@@ -1,12 +1,8 @@
 package kg.gov.mf.loan.web.config;
 
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletContext;
-
 import kg.gov.mf.loan.web.components.MFLoginHandler;
 import kg.gov.mf.loan.web.components.MFLogoutHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
@@ -21,9 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.filter.CharacterEncodingFilter;
  
 @Configuration
@@ -83,6 +78,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.permitAll()
 			.and()
         .exceptionHandling().accessDeniedPage("/Access_Denied");
+
+        http.sessionManagement()
+                .invalidSessionUrl("/login");
     	/*
         http.authorizeRequests().antMatchers("/", "/list").
                 .access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')")
@@ -92,6 +90,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository)
                 .tokenValiditySeconds(86400).and().csrf().and().exceptionHandling().accessDeniedPage("/Access_Denied");
                 */
+    }
+
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
     }
  
     @Bean

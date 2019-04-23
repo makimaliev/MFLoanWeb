@@ -1,9 +1,12 @@
 package kg.gov.mf.loan.web.config;
 
-import javax.servlet.MultipartConfigElement;
-import javax.servlet.ServletRegistration;
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
 
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
  
@@ -36,4 +39,10 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 	private static final long MAX_FILE_SIZE = 20971520; // 5MB : Max file size. Beyond that size spring will throw exception.
 	private static final long MAX_REQUEST_SIZE = 20971520; // 20MB : Total request size containing Multi part.
 	private static final int FILE_SIZE_THRESHOLD = 0; // Size threshold after which files will be written to disk
+
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        super.onStartup(servletContext);
+        servletContext.addListener(new SessionListener());
+    }
 }
