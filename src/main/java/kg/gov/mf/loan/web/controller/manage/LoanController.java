@@ -754,6 +754,31 @@ public class LoanController {
 
 	    Loan loan=loanService.getById(loanId);
 
+        Date srokDate = null;
+
+        for (PaymentSchedule schedule: loan.getPaymentSchedules())
+        {
+            if(schedule.getPrincipalPayment()>0)
+            {
+                if(srokDate==null)
+                {
+                    srokDate=schedule.getExpectedDate();
+                }
+                else
+                {
+                    if(schedule.getExpectedDate()!=null)
+                        if(schedule.getExpectedDate().after(srokDate));
+                    {
+                        srokDate = schedule.getExpectedDate();
+                    }
+                }
+
+            }
+
+        }
+
+        if(srokDate==null) srokDate = loan.getRegDate();
+
         LoanSummary loanSummary=loanSummaryService.getById(id);
         String name1="";
         if(loan.getCurrency().getId()!=17){
@@ -787,6 +812,7 @@ public class LoanController {
         loanSummary.setTotalFeePaid(conditional(loanSummary.getTotalFeePaid()));
         loanSummary.setTotalPaidKGS(conditional(loanSummary.getTotalPaidKGS()));
         loanSummary.setTotalPaid(conditional(loanSummary.getTotalPaid()));
+        loanSummary.setOnDate(srokDate);
 
         Double rate=currencyRateService.findByDateAndType(loanSummary.getOnDate(),loan.getCurrency()).getRate();
 
