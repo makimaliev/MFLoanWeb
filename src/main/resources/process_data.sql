@@ -1635,7 +1635,7 @@ BEGIN
 
     if tempDate >= inDate and pType = 'future payment' then
       set futurePrincPaid = princPaid;
-      set totalFuturePrincPaid = totalFuturePrincPaid + futurePrincPaid;
+#       set totalFuturePrincPaid = totalFuturePrincPaid + futurePrincPaid;
       set princPaid = 0;
     end if;
 
@@ -1922,18 +1922,23 @@ BEGIN
 
     SET intAccrued = calculateInterestAccrued(princOutstanding, daysInPer, tempDate, loan_id);
 
-    if tempDate >= inDate then
+    if tempDate > inDate then
       SET futureAccrued = calculateInterestAccrued(princOutstanding-totalFuturePrincPaid, daysInPer, tempDate, loan_id);
     end if;
 
     IF has_libor THEN
       SET intAccrued = intAccrued + calculateLibor(princOutstanding, prevDate, tempDate, term_rate_type_id, term_diy_method_id, term_dim_method_id, loan_id, 0);
 
-      if tempDate >= inDate then
+      if tempDate > inDate then
         SET futureAccrued = futureAccrued + calculateLibor(princOutstanding-totalFuturePrincPaid, prevDate, tempDate, term_rate_type_id, term_diy_method_id, term_dim_method_id, loan_id, 0);
       end if;
 
     END IF;
+
+
+    if tempDate >= inDate and pType = 'future payment' then
+      set totalFuturePrincPaid = totalFuturePrincPaid + futurePrincPaid;
+    end if;
 
     SET totalIntAccrued = totalIntAccrued + intAccrued;
 
@@ -2161,7 +2166,7 @@ BEGIN
         SET pOPO = 0;
       END IF;
 
-      if tempDate < inDate then
+      if (tempDate < inDate or (tempDate = inDate and (not (pType = 'future payment' )))) then
         SET interestAccruedInPeriod = interestAccruedInPeriod + intAccrued;
       else
         SET interestAccruedInPeriod = interestAccruedInPeriod + futureAccrued;
