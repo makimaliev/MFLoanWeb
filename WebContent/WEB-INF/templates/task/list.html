@@ -19,7 +19,7 @@
 <body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
 <!-- begin:: Page -->
 <div class="modal fade" id="addTask" role="dialog" aria-labelledby="AddTaskLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
+	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="exampleModalLabel">Новая задача</h5>
@@ -138,8 +138,6 @@
 	</div>
 </div>
 
-
-
 <div class="m-grid m-grid--hor m-grid--root m-page">
 	<!-- BEGIN: Header -->
 	<div th:replace="layout/header"/>
@@ -176,29 +174,64 @@
 							<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#addTask">Добавить Задачу</button>
 							<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#addTaskAction">Добавить Действие</button>
 							<hr>
+
 							<div>
-								<table class="table table-bordered" id="taskTable">
-									<thead class="thead-default">
-										<tr>
-											<th>№</th>
-											<th>action</th>
-											<th>actualResolutionDate</th>
-											<th>createdOn</th>
-											<th>createdByUser</th>
-											<th>assignedToUser</th>
-											<th>description</th>
-											<th>identifiedDate</th>
-											<th>modifiedOn</th>
-											<th>priority</th>
-											<th>progress</th>
-											<th>resolutionSummary</th>
-											<th>status</th>
-											<th>summary</th>
-											<th>targetResolutionDate</th>
-										</tr>
-									</thead>
-								</table>
+								<nav>
+									<div class="nav nav-tabs justify-content-center" id="tabstages" role="tablist">
+										<a role="tab" data-toggle="tab" aria-selected="true"  class="nav-item nav-link active"  id="nav-main-tab"       href="#main" aria-controls="nav-main">Задачи мне</a>
+										<a role="tab" data-toggle="tab" aria-selected="false" class="nav-item nav-link"         id="nav-history-tab"    href="#history" aria-controls="nav-history">Мои Задачи</a>
+									</div>
+								</nav>
+								<div class="tab-content" id="nav-tabContent">
+									<div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="nav-main-tab">
+										<table class="table table-bordered" id="taskTo">
+											<thead class="thead-default">
+											<tr>
+												<th>№</th>
+												<th>Задача</th>
+												<th>actualResolutionDate</th>
+												<th>Дата создания</th>
+												<th>Создан</th>
+												<th>Получатель</th>
+												<th>Описание</th>
+												<th>identifiedDate</th>
+												<th>Изменен</th>
+												<th>Приоритет</th>
+												<th>progress</th>
+												<th>resolutionSummary</th>
+												<th>Статус</th>
+												<th>summary</th>
+												<th>Срок</th>
+											</tr>
+											</thead>
+										</table>
+									</div>
+									<div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="nav-history-tab">
+										<table class="table table-bordered" id="taskFrom">
+											<thead class="thead-default">
+											<tr>
+												<th>№</th>
+												<th>action</th>
+												<th>actualResolutionDate</th>
+												<th>createdOn</th>
+												<th>createdByUser</th>
+												<th>assignedToUser</th>
+												<th>description</th>
+												<th>identifiedDate</th>
+												<th>modifiedOn</th>
+												<th>priority</th>
+												<th>progress</th>
+												<th>resolutionSummary</th>
+												<th>status</th>
+												<th>summary</th>
+												<th>targetResolutionDate</th>
+											</tr>
+											</thead>
+										</table>
+									</div>
+								</div>
 							</div>
+
 						</div>
 					</div>
 				</div>
@@ -245,12 +278,139 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-        var table = $('#taskTable').DataTable({
+        var tableTo = $('#taskTo').DataTable({
             stateSave: true,
             paging: true,
             processing: false,
             ajax: {
-                'url': '/tasks',
+                'url': '/tasks/to',
+                'data': function ( d ) {
+                    flatten(d)
+                }
+            },
+            serverSide: true,
+            order: [ [0, 'asc'] ],
+            columns: [
+                {
+                    searchable: false,
+                    orderable: true,
+                    name: 'id',
+                    data: 'id'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'action',
+                    data: 'action',
+                    render: function (data, type, full, meta) {
+                        return data !== null ? data.name : '';
+                    }
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'actualResolutionDate',
+                    data: 'actualResolutionDate'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'createdOn',
+                    data: 'createdOn'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'createdByUser',
+                    data: 'createdByUser'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'assignedToUser',
+                    data: 'assignedToUser'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'description',
+                    data: 'description'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'identifiedDate',
+                    data: 'identifiedDate'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'modifiedOn',
+                    data: 'modifiedOn'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'priority',
+                    data: 'priority'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'progress',
+                    data: 'progress'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'resolutionSummary',
+                    data: 'resolutionSummary'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'status',
+                    data: 'status'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'summary',
+                    data: 'summary'
+                },
+                {
+                    searchable: false,
+                    orderable: false,
+                    name: 'targetResolutionDate',
+                    data: 'targetResolutionDate'
+                }
+            ],
+            language: {
+                emptyTable: "<center>Нет данных</center>",
+                info: "Всего _TOTAL_ записей",
+                infoFiltered: "",
+                lengthMenu: 'Показать <select>'+
+                '<option value="5">5</option>'+
+                '<option value="10">10</option>'+
+                '<option value="25">25</option>'+
+                '<option value="50">50</option>'+
+                '<option value="100">100</option>'+
+                '</select>',
+                paginate: {
+                    first: '<i class="la la-angle-double-left"></i>',
+                    previous: '<i class="la la-angle-left"></i>',
+                    next: '<i class="la la-angle-right"></i>',
+                    last: '<i class="la la-angle-double-right"></i>'
+                }
+            },
+            dom: '<<li><t><"text-center"p>>'
+        });
+        var tableFrom = $('#taskFrom').DataTable({
+            stateSave: true,
+            paging: true,
+            processing: false,
+            ajax: {
+                'url': '/tasks/from',
                 'data': function ( d ) {
                     flatten(d)
                 }
@@ -412,7 +572,6 @@
         $('.dtp').datetimepicker(dt_settings);
 
     });
-
 
 </script>
 

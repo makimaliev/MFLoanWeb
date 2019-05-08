@@ -16,20 +16,17 @@
         input[type="search"]::-webkit-search-cancel-button {
             -webkit-appearance: searchfield-cancel-button;
         }
-
         select {
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
             padding: 2px;
         }
-
         .table thead th {
             vertical-align: middle !important;
             text-align: center;
             color: #ffffff;
         }
-
         .nopm {
             padding: 0;
             margin: 0;
@@ -42,13 +39,6 @@
         }
         td.details-control {
             cursor: pointer;
-        }
-
-        a .dropdown-item {
-        }
-
-        a:hover .dropdown-item {
-            background-color: #f1a417;
         }
     </style>
 
@@ -99,9 +89,7 @@
 
                     </div>
                     <div class="m-portlet__body">
-
                         <th:block th:replace="doc/layout::__${type + 'Index'}__"/>
-
                     </div>
                     <div class="m-portlet__foot">
 
@@ -126,6 +114,9 @@
 <div th:replace="fragments/footer :: footer-js"/>
 
 <script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
+<script th:src="@{/js/dataTables.buttons.min.js}" type="text/javascript"></script>
+<script th:src="@{/js/jszip.min.js}" type="text/javascript"></script>
+<script th:src="@{/js/buttons.html5.min.js}" type="text/javascript"></script>
 
 <script type="text/javascript">
     function flatten(params) {
@@ -154,7 +145,6 @@
 </script>
 <script type="text/javascript" th:inline="javascript">
 
-    //var tsList = [ [ ${tsList} ] ];
     var tsList;
     var type = [[${type}]]
     var states = [[${states}]];
@@ -162,13 +152,14 @@
 
     var incomingDocs = [
         {
-            class: "details-control",
+            class: "details-control noex",
             searchable: false,
             orderable: false,
             data: null,
             defaultContent: '<i class="la la-chevron-right"></i>'
         },
         {
+            class: "noex",
             searchable: false,
             orderable: false,
             name: 'id',
@@ -186,7 +177,7 @@
             name: 'documentDueDate',
             data: function (data, type, full, meta) {
                 var result = data.documentDueDate != null ? '<span class="text-danger">' + data.documentDueDate + '</span>' : '';
-                    result += data.closedWithDate != null ? '<br><span class="text-success">' + data.closedWithDate + '</span>' : ' ';
+                    result += data.closedWithDate != null ? '<br><span class="text-success">' + data.closedWithDate + '</span>' : '';
                 return result;
             }
         },
@@ -195,8 +186,8 @@
             orderable: true,
             name: 'docIndex',
             data: function (data, type, full, meta) {
-                var result =  data.documentDueDate != null ? '<span class="text-danger">' + data.docIndex + '</span>' : '<span>' + data.docIndex + '</span>';
-                    result +=  data.closedWithNo != null ? '<br><a href="/doc/view/' + data.closedWithId + '" target="_blank" rel="noopener noreferrer"><span class="text-success">' + data.closedWithNo + '</span></a>' : ' ';
+                var result =  data.documentDueDate != null ? '<span class="text-danger">' + data.docIndex + '</span>' : data.docIndex;
+                    result +=  data.closedWithNo != null ? '<br> <a href="/doc/view/' + data.closedWithId + '" target="_blank" rel="noopener noreferrer" class="text-success">' + data.closedWithNo + '</a>' : '';
                 return result;
             }
         },
@@ -247,11 +238,11 @@
 
                 var r = [];
                 var result = [];
-                if (data != null) {
+                if (data !== null) {
                     r = data.split(',');
                     r.forEach(function(element) {
                         var fio = element.split(' ');
-                        result.push(fio[0] + ' ' + fio[1].charAt(0).toUpperCase() + '.')
+                        result.push(fio[0] + ' ' + fio[1].charAt(0).toUpperCase() + '.,')
                     });
                 }
                 return result.join('<br>');
@@ -269,13 +260,14 @@
     ];
     var outgoingDocs = [
         {
-            class: "details-control",
+            class: "details-control noex",
             searchable: false,
             orderable: false,
             data: null,
             defaultContent: '<i class="la la-chevron-right"></i>'
         },
         {
+            class: "noex",
             searchable: false,
             orderable: false,
             data: 'id',
@@ -288,6 +280,7 @@
             }
         },
         {
+            class: "noex",
             searchable: false,
             orderable: false,
             visible: true,
@@ -354,13 +347,12 @@
             searchable: false,
             orderable: false,
             name: 'owner',
-            data: 'owner',
-            render: function (data, type, full, meta) {
+            data: function (data, type, full, meta) {
 
                 var r = [];
                 var result = '';
-                if (data != null) {
-                    r = data.split(' ');
+                if (data.owner !== null) {
+                    r = data.owner.split(' ');
                     result = r[0] + ' ' + r[1].charAt(0).toUpperCase() + '.';
                 }
                 return result;
@@ -381,11 +373,17 @@
             }
         },
         {
-            searchable: false,
+            searchable: true,
             orderable: false,
             name: 'indexNo',
+            data: 'indexNo'
+        },
+        {
+            searchable: false,
+            orderable: false,
+            name: 'pageCount',
             data: function (data, type, full, meta) {
-                return '<p>' + data.indexNo + '</p><p>' + data.pageCount + ' лст.</p>';
+                return data.pageCount + ' лст.';
             }
         }
     ];
@@ -533,6 +531,8 @@
 
     $(document).ready(function() {
 
+        var detailRows = [];
+        var activeCol = null;
         var table = $('#documentTable').DataTable({
             orderCellsTop: true,
             fixedHeader: true,
@@ -560,11 +560,35 @@
                 }
             },
             columns: columns(),
+            buttons: [
+                {
+                    extend: 'excel',
+                    text:' <i class="fa fa-file-excel-o"></i> Сохранить в Excel ',
+                    className: 'btn btn-secondary',
+                    exportOptions: {
+                        columns: ':visible:not(.noex)',
+                        stripHtml: false,
+                        format: {
+                            body: function ( data, column, row ) {
+                                return ("" + data).replace(/<br>/gmi, '\r\n' ).replace(/<.*?>/ig, "");
+                            }
+                        }
+                    },
+                    customize: function( xlsx ) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                        $('row c', sheet).attr( 's', '55' );
+                    }
+                }
+            ],
             language: {
                 emptyTable: "<center>Нет данных</center>",
                 info: "Всего _TOTAL_ записей",
                 infoFiltered: "",
+                zeroRecords: "Нет данных",
+                infoEmpty:"Всего 0 записей",
+                processing: "Загружается ...",
                 lengthMenu: 'Показать <select>'+
+                '<option value="-1">Все</option>'+
                 '<option value="5">5</option>'+
                 '<option value="10">10</option>'+
                 '<option value="25">25</option>'+
@@ -578,17 +602,75 @@
                     last: '<i class="la la-angle-double-right"></i>'
                 }
             },
-            dom: '<<li><t><"text-center"p>>'
+            dom: 'B<<li><t><"text-center"p>>'
+        }).on( 'draw', function () {
+            $.each( detailRows, function ( i, id ) {
+                $('#' + id + ' td.details-control').trigger( 'click' );
+            });
+
+            //table.search()
+            /*
+            var cols = table.state.loaded().columns;
+            var html = "";
+            $.each(cols, function( index, value ) {
+                //console.log(this.column(index).title())
+                if(value.search.search != '') {
+                    html += '<li>' + value.search.search + '</li>'
+                }
+            });
+            $('#filter').html(html);
+            */
         });
+
+        // Detail row init method
+        function format (data) {
+
+            var t = '';
+            var r = [];
+            if (data.receiverExecutor)
+            {
+                r = data.receiverExecutor.split(',');
+                t += '<p><b>Исполнители</b></p>' + r.join('<br>');
+            }
+            t += '<div class="tasks"></div>'
+            $.ajax({
+                url: '/doc/tasks/' + data.id,
+                success: function(response) {
+                    var divc ='<br><table><thead class="bg-primary"><tr>' +
+                        '<th>Дата</th>' +
+                        '<th>От</th>' +
+                        '<th>Задача</th>' +
+                        '<th>Срок</th>' +
+                        '<th>Кому</th>' +
+                        '<th>Результат</th>' +
+                        '<th>Завершен</th>' +
+                        '</tr></thead><tbody>';
+                    $.each(response, function(index, element) {
+                        divc +='<tr>' +
+                            '<td>' + (element.createdOn !== null ? element.createdOn : '') + '</td>' +
+                            '<td>' + (element.createdBy || '') + '</td>' +
+                            '<td>' + (element.description || '') + '</td>' +
+                            '<td>' + (element.targetResolutionDate !== null ? element.targetResolutionDate : '') + '</td>' +
+                            '<td>' + (element.assignedTo || '') + '</td>' +
+                            '<td>' + (element.resolutionSummary || '') + '</td>' +
+                            '<td>' + (element.actualResolutionDate !== null ? element.actualResolutionDate : '') + '</td>' +
+                            '</tr>';
+                    });
+                    divc += '</tbody></table><br>';
+                    $('div .tasks').html(divc);
+                }
+            });
+            return t;
+        }
 
         // Clone table headers
         $('#documentTable thead tr').clone(true).appendTo('#documentTable thead');
+
         // Add filter inputs into headers
         $('#documentTable thead tr:eq(1) th').each(function (i){
 
             if($(this).hasClass("searchable")) {
                 var state = table.state.loaded();
-
                 if($(this).hasClass("ti")) {
                     $(this).html('<input type="search" class="form-control m-input--square" style="width: 100%; padding: 10px 5px;">');
                     var tinput = $('input', this);
@@ -694,60 +776,6 @@
             }
         });
 
-        var detailRows = [];
-        var activeCol = null;
-        // Detail row init method
-        function format (data) {
-
-            var t = '';
-            var r = [];
-            if (data.receiverExecutor)
-            {
-                r = data.receiverExecutor.split(',');
-                t += '<p><b>Исполнители</b></p>' + r.join('<br>');
-            }
-
-            t += '<div class="tasks"></div>'
-
-            $.ajax({
-                url: '/doc/tasks/' + data.id,
-                success: function(response) {
-
-                    var divc ='<br><table>' +
-                        '<thead class="bg-primary"><tr>' +
-                        '<th>Дата</th>' +
-                        '<th>От</th>' +
-                        '<th>Задача</th>' +
-                        '<th>Срок</th>' +
-                        '<th>Кому</th>' +
-                        '<th>Результат</th>' +
-                        '<th>Завершен</th>' +
-                        '</tr></thead><tbody>';
-
-                    $.each(response, function(index, element) {
-                        divc +='<tr>' +
-                            '<td>' + (element[0] !== null ? new Date(element[0]).toLocaleDateString("ru-RU") : '') + '</td>' +
-                            '<td>' + (element[1] !== null ? element[1] : '') + '</td>' +
-                            '<td>' + (element[2] !== null ? element[2] : '') + '</td>' +
-                            '<td>' + (element[3] !== null ? new Date(element[3]).toLocaleDateString("ru-RU") : '') + '</td>' +
-                            '<td>' + (element[4] !== null ? element[4] : '') + '</td>' +
-                            '<td>' + (element[5] !== null ? element[5] : '') + '</td>' +
-                            '<td>' + (element[6] !== null ? new Date(element[6]).toLocaleDateString("ru-RU") : '') + '</td>' +
-                            '</tr>';
-                    });
-                    divc += '</tbody></table><br>';
-                    $('div .tasks').html(divc);
-                }
-            });
-
-            return t;
-        }
-        // Add Detail button click listener
-        table.on( 'draw', function () {
-            $.each( detailRows, function ( i, id ) {
-                $('#' + id + ' td.details-control').trigger( 'click' );
-            });
-        });
         // Detail row click handler method
         $('#documentTable tbody').on( 'click', 'tr td.details-control', function () {
 
@@ -781,6 +809,7 @@
 
             activeCol = this;
         } );
+
         // Outgoing [register, done] buttons click handler
         $('body').on('click','.openact',function(e) {
             var action = $(this).data("action");
@@ -798,26 +827,12 @@
                     else {
                         table.draw();
                     }
-
                     reloadTasks();
                 }
             });
         });
-    });
 
-    function reloadTasks()
-    {
-        $.ajax({
-            url: '/doc/tasks/all',
-            success: function(response) {
-                tsList = response;
-            }
-        });
-    }
-
-</script>
-<script>
-    $(document).ready(function() {
+        // Initialize DataRangePicker
         $('.dtp').daterangepicker({
             autoUpdateInput: false,
             locale: {
@@ -854,6 +869,16 @@
             },
         });
     });
+
+    function reloadTasks() {
+        $.ajax({
+            url: '/doc/tasks/all',
+            success: function(response) {
+                tsList = response;
+            }
+        });
+    }
+
 </script>
 
 </body>

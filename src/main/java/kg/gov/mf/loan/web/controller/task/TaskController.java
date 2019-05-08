@@ -36,11 +36,9 @@ public class TaskController {
             put("<", "Меньше");
             put(">=", "Больше или Равно");
             put("<=", "Меньше или Равно");
+
             put("LIKE", "Like");
             put("NOT LIKE", "NOT Like");
-
-            put("EXISTS", "Exists");
-            put("NOT EXISTS", "NOT Exists");
 
             put("IN", "Содержит");
             put("BETWEEN", "Между");
@@ -94,8 +92,12 @@ public class TaskController {
 
     @RequestMapping(value = { "/task/add" }, method = RequestMethod.POST)
     public String addTask(@ModelAttribute("taskObject") TaskObject taskObject, Model model) {
-        model.addAttribute("taskObject", taskObject);
 
+        model.addAttribute("list", taskService.queryBuilder(taskObject));
+        model.addAttribute("users", chatUserService.list());
+        model.addAttribute("task", new Task());
+        model.addAttribute("taskAction", new TaskAction());
+        model.addAttribute("taskActions", taskActionService.list());
         return "/task/list";
     }
 
@@ -107,7 +109,7 @@ public class TaskController {
 
     @RequestMapping(value = { "/task/list" }, method = RequestMethod.GET)
     public String listTasks(ModelMap model) {
-        model.addAttribute("users", chatUserService.list());
+        //model.addAttribute("users", chatUserService.list());
         model.addAttribute("task", new Task());
         model.addAttribute("taskAction", new TaskAction());
         model.addAttribute("taskActions", taskActionService.list());
@@ -206,11 +208,14 @@ public class TaskController {
         return null;
     }
 
-    @RequestMapping(value = "/tasks")
+    @RequestMapping(value = "/tasks/{dir}")
     @ResponseBody
-    public DataTablesOutput<Task> getTasks(@Valid DataTablesInput input) {
+    public DataTablesOutput<Task> getTasks(@Valid DataTablesInput input, @PathVariable("dir")String dir) {
 
-        return  taskService.list(getUser().getId(), input);
+        if(dir.equals("to"))
+            return taskService.list(0, getUser().getId(), input);
+        else
+            return taskService.list(getUser().getId(), 0, input);
     }
 
     @RequestMapping(value = "/task/operators", method = RequestMethod.GET)

@@ -251,21 +251,27 @@
                                             <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                                             <ul class="m-menu__subnav">
                                                 <li class="m-menu__item " aria-haspopup="true">
-                                                    <a th:href="@{/doc(type=incoming)}" class="m-menu__link ">
+                                                    <a th:href="@{/doc(type=internal)}" class="m-menu__link ">
                                                         <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
-                                                        <span class="m-menu__link-text" >	Внутренний</span>
+                                                        <span class="m-menu__link-text"><i class="fa fa-exchange"></i>&nbsp;&nbsp;Внутренний</span>
                                                     </a>
                                                 </li>
                                                 <li class="m-menu__item " aria-haspopup="true">
-                                                    <a th:href="@{/doc(type=internal)}" class="m-menu__link ">
+                                                    <a th:href="@{/doc(type=incoming)}" class="m-menu__link ">
                                                         <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
-                                                        <span class="m-menu__link-text" >	Входяший</span>
+                                                        <span class="m-menu__link-text"><i class="fa fa-sign-in"></i>&nbsp;&nbsp;Входяший</span>
                                                     </a>
                                                 </li>
                                                 <li class="m-menu__item " aria-haspopup="true">
                                                     <a th:href="@{/doc(type=outgoing)}" class="m-menu__link ">
                                                         <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
-                                                        <span class="m-menu__link-text" >	Исходяший</span>
+                                                        <span class="m-menu__link-text"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;Исходяший</span>
+                                                    </a>
+                                                </li>
+                                                <li class="m-menu__item " aria-haspopup="true">
+                                                    <a th:href="@{/doc/report}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text"><i class="fa fa-pie-chart"></i>&nbsp;&nbsp;Контроль исполнения</span>
                                                     </a>
                                                 </li>
                                             </ul>
@@ -370,7 +376,8 @@
                                         <!-- BEGIN: CHAT -->
 
                                         <!-- BEGIN: TASKS -->
-                                        <li class="m-nav__item m-dropdown m-dropdown--medium m-dropdown--arrow m-dropdown--header-bg-fill m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light" data-dropdown-toggle="click"
+                                        <li class="m-nav__item m-dropdown m-dropdown--medium m-dropdown--arrow m-dropdown--header-bg-fill m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light"
+                                            data-dropdown-toggle="click"
                                             th:if="${not lvTasks.isEmpty()}">
                                             <a href="#" class="m-nav__link m-dropdown__toggle">
                                                 <span class="m-nav__link-icon">

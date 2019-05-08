@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<!-- begin::Head -->
+
+<head>
+    <title th:text="#{label.identityDocType.page.title}">Loan view</title>
+
+    <div th:replace="fragments/header :: header-css"/>
+
+    <style type="text/css" th:inline="text">
+
+        input[type="search"] {
+            -webkit-appearance: searchfield;
+        }
+        input[type="search"]::-webkit-search-cancel-button {
+            -webkit-appearance: searchfield-cancel-button;
+        }
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            padding: 2px;
+        }
+        .table thead th {
+            vertical-align: middle !important;
+            text-align: center;
+            color: #ffffff;
+        }
+
+    </style>
+
+</head>
+
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize">
+
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <div th:replace="layout/header"/>
+
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+
+            <div class="m-content">
+
+                <div class="m-portlet m-portlet--mobile">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text"> Задачи </h3>
+                            </div>
+                        </div>
+                        <div class="m-portlet__head-tools"></div>
+
+                    </div>
+                    <div class="m-portlet__body">
+                        <table class="table table-bordered" id="taskReport" width="100%">
+                            <thead class="thead-default">
+                            <tr>
+                                <th></th>
+                                <th class="searchable ti">Дата</th>
+                                <th class="searchable ti">Кому</th>
+                                <th class="searchable ti">Задача</th>
+                                <th class="searchable ti">Срок</th>
+                                <th class="searchable ti">Результат</th>
+                                <th class="searchable ti">Завершен</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="m-portlet__foot">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="layout/footer"/>
+</div>
+
+<div th:replace="fragments/footer :: footer-js"/>
+
+<script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
+<script th:src="@{/js/dataTables.buttons.min.js}" type="text/javascript"></script>
+<script th:src="@{/js/jszip.min.js}" type="text/javascript"></script>
+<script th:src="@{/js/buttons.html5.min.js}" type="text/javascript"></script>
+
+<script type="text/javascript" th:inline="javascript">
+
+    $(document).ready(function() {
+
+        var table = $('#taskReport').DataTable({
+            orderCellsTop: true,
+            fixedHeader: true,
+            searching: true,
+            paging: true,
+            processing: false,
+            ajax: {
+                url: '/doc/tasks/report/closed',
+                dataSrc: ''
+            },
+            columns: [
+                {
+                    data: "objectId",
+                    width: "1%",
+                    render: function (data) {
+                        return '<a href="/doc/view/'+ data +'" target="_blank" rel="noopener noreferrer" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Просмотр"><i class="la la-arrow-circle-o-right"></i></a>';
+                    }
+                },
+                { data: "createdOn", width: "5%" },
+                { data: "assignedTo" },
+                { data: "description" },
+                { data: "targetResolutionDate", width: "5%" },
+                { data: "resolutionSummary" },
+                { data: "actualResolutionDate", width: "5%" }
+            ],
+            buttons: [
+                {
+                    extend: 'excel',
+                    text:' <i class="fa fa-file-excel-o"></i> Сохранить в Excel ',
+                    className: 'btn btn-secondary',
+                    exportOptions: {
+                        columns: ':visible:not(.noex)',
+                        stripHtml: false,
+                        format: {
+                            body: function ( data, column, row ) {
+                                return ("" + data).replace(/<br>/gmi, '\r\n' ).replace(/<.*?>/ig, "");
+                            }
+                        }
+                    },
+                    customize: function( xlsx ) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                        $('row c', sheet).attr( 's', '55' );
+                    }
+                }
+            ],
+            language: {
+                emptyTable: "<center>Нет данных</center>",
+                info: "Всего _TOTAL_ записей",
+                infoFiltered: "",
+                zeroRecords: "Нет данных",
+                infoEmpty:"Всего 0 записей",
+                processing: "Загружается ...",
+                lengthMenu: 'Показать <select>'+
+                '<option value="-1">Все</option>'+
+                '<option value="5">5</option>'+
+                '<option value="10">10</option>'+
+                '<option value="25">25</option>'+
+                '<option value="50">50</option>'+
+                '<option value="100">100</option>'+
+                '</select>',
+                paginate: {
+                    first: '<i class="la la-angle-double-left"></i>',
+                    previous: '<i class="la la-angle-left"></i>',
+                    next: '<i class="la la-angle-right"></i>',
+                    last: '<i class="la la-angle-double-right"></i>'
+                }
+            },
+            dom: 'B<<li><t><"text-center"p>>',
+        });
+
+        // Clone table headers
+        $('#taskReport thead tr').clone(true).appendTo('#taskReport thead');
+
+        // Add filter inputs into headers
+        $('#taskReport thead tr:eq(1) th').each(function (i){
+
+            if($(this).hasClass("searchable")) {
+                var state = table.state.loaded();
+                if($(this).hasClass("ti")) {
+                    $(this).html('<input type="search" class="form-control m-input--square" style="width: 100%; padding: 10px 5px;">');
+                    var tinput = $('input', this);
+                    tinput.on('keydown', function (e) {
+                        if (e.keyCode == 13) {
+                            if (table.column(i).search() !== this.value) {
+                                table.column(i).search(this.value).draw();
+                            }
+                        }
+                    });
+
+                    if (state) {
+                        var val = state.columns[i];
+                        tinput.val(val.search.search);
+                    }
+
+                    $(tinput, table.column(i).header()).on('click', function(e) {
+                        e.stopPropagation();
+                    });
+                }
+            }
+            else {
+                $(this).html('');
+            }
+        });
+    });
+
+</script>
+
+</body>
+<!-- end::Body -->
+</html>
+
+

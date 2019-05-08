@@ -151,7 +151,7 @@
     </th:block>
     <th:block th:fragment="history">
         <div class="form-group m-form__group">
-            <table class="table table-bordered table-striped">
+            <table id="tasks" class="table table-bordered table-striped display" style="width:100%">
                 <thead class="bg-info">
                 <tr>
                     <th class="align-middle m-2 text-white" width="auto">Дата</th>
@@ -234,7 +234,7 @@
         </table>
     </th:block>
     <th:block th:fragment="incomingIndex">
-        <table class="table table-bordered" id="documentTable">
+        <table class="table table-bordered table-hover" id="documentTable">
             <thead class="bg-info">
                 <tr>
                     <th></th>
@@ -253,7 +253,7 @@
         </table>
     </th:block>
     <th:block th:fragment="outgoingIndex">
-        <table class="table table-bordered" id="documentTable">
+        <table class="table table-bordered table-hover" id="documentTable">
             <thead class="bg-info">
                 <tr>
                     <th></th>
@@ -267,14 +267,15 @@
                     <th th:text="#{label.document.generalStatus}" class="searchable sis">Состояние</th>
                     <th th:text="#{label.document.executer}" class="searchable ti">Исполнитель</th>
                     <th th:text="#{label.document.receiver}" class="searchable ti">Получатель</th>
-                    <th th:utext="|#{label.document.pageIndex} <br> #{label.document.pageCount}|" class="searchable ti">Номер бланка</th>
+                    <th th:utext="#{label.document.pageIndex}" class="searchable ti">Номер бланка</th>
+                    <th width="20px" th:utext="#{label.document.pageCount}">Номер бланка</th>
                 </tr>
             </thead>
         </table>
     </th:block>
 
     <th:block th:fragment="reconciliationreportIndex">
-        <table class="table table-bordered" id="documentTable">
+        <table class="table table-bordered table-hover" id="documentTable">
             <thead class="bg-info text-center">
                 <tr>
                     <th width="33px"></th>
@@ -294,7 +295,7 @@
         </table>
     </th:block>
     <th:block th:fragment="complaintIndex">
-        <table class="table table-bordered" id="documentTable">
+        <table class="table table-bordered table-hover" id="documentTable">
             <thead class="bg-info text-center">
                 <tr>
                     <th width="33px"></th>
@@ -314,7 +315,7 @@
         </table>
     </th:block>
     <th:block th:fragment="notificationIndex">
-        <table class="table table-bordered" id="documentTable">
+        <table class="table table-bordered table-hover" id="documentTable">
             <thead class="bg-info text-center">
                 <tr>
                     <th width="33px"></th>
@@ -334,7 +335,7 @@
         </table>
     </th:block>
     <th:block th:fragment="contractIndex">
-        <table class="table table-bordered" id="documentTable">
+        <table class="table table-bordered table-hover" id="documentTable">
             <thead class="bg-info text-center">
                 <tr>
                     <th width="33px"></th>

@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<!-- begin::Head -->
+<head>
+    <title>MFLoan | Docflow</title>
+    <div th:replace="fragments/header :: header-css"/>
+    <style>
+        .atta td {
+            border-bottom: 1px dashed #ccc;
+        }
+
+        .table thead th {
+            vertical-align: middle !important;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<!-- end::Head -->
+
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <div class="m-content">
+                <div class="m-portlet m-portlet--full-height m--bg-fill-light">
+
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-portlet__body">
+                        <div class="m-scrollable" data-scrollbar-shown="true"  data-axis="y"  data-height="200">
+                            <!--begin::Form-->
+                            <form th:action="@{/doc/admin/save}" id="document_form" class="m-form m-form--fit m-form--label-align-right" th:object="${document}" method="POST" enctype="multipart/form-data">
+                                <input type="hidden" th:field="*{id}"/>
+                                <input type="hidden" th:field="*{version}"/>
+                                <input type="hidden" th:field="*{uuid}"/>
+                                <input type="hidden" th:field="*{record_status}"/>
+                                <input type="hidden" th:field="*{documentType}"/>
+                                <div class="row ">
+                                    <div class="col-12">
+                                        <nav>
+                                            <div class="nav nav-tabs justify-content-center" id="tabstages" role="tablist">
+                                                <a role="tab" data-toggle="tab" aria-selected="true"  class="nav-item nav-link active"  id="nav-main-tab"       href="#main" aria-controls="nav-main">Общие</a>
+                                                <a role="tab" data-toggle="tab" aria-selected="false" class="nav-item nav-link"         id="nav-dispatchData_tab-tab"    href="#dispatchData_tab" aria-controls="nav-journal">История</a>
+                                                <a role="tab" data-toggle="tab" aria-selected="false" class="nav-item nav-link"         id="nav-tasks_tab-tab"    href="#tasks_tab" aria-controls="nav-history">Журнал задач</a>
+                                            </div>
+                                        </nav>
+                                        <div class="tab-content" id="nav-tabContent">
+                                            <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="nav-main-tab">
+                                                <div class="col-10 justify-content-center">
+                                                    <fieldset>
+                                                        <legend>Main</legend>
+                                                        <!-- DOCUMENT -->
+                                                        <!-- Owner -->
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> Владелец : </span>
+                                                            </label>
+                                                            <div class="col-sm-9">
+                                                                <select class="s2 form-control" th:field="*{owner}" style="width:100%" data-ajax--url="/doc/data/user">
+                                                                    <option th:each="o : *{owner}"
+                                                                            th:value="${o.id}"
+                                                                            th:text="${o.staff.name}">Staff</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Users -->
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> Users : </span>
+                                                            </label>
+                                                            <div class="col-sm-9">
+                                                                <select class="s2 form-control" th:field="*{users}" multiple style="width:100%" data-ajax--url="/doc/data/user">
+                                                                    <option th:each="u : *{users}"
+                                                                            th:value="${u}"
+                                                                            th:text="${@chatUserServiceImpl.getById(__${u}__).getName()}">Staff</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <!-- TITLE -->
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> Относительно : </span>
+                                                            </label>
+                                                            <div class="col-sm-9">
+                                                                <textarea class="form-control" th:field="*{title}"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <!-- DESCRIPTION -->
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> Краткое содержание : </span>
+                                                            </label>
+                                                            <div class="col-sm-9">
+                                                                <textarea th:field="*{description}" class="ckeditor"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Document Due Date -->
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> Срок исполнения документа : </span>
+                                                            </label>
+                                                            <div class="col-sm-9">
+                                                                <input class="dtp form-control" th:field="*{documentDueDate}" type="text" autocomplete="off" readonly="readonly"/>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                        <!-- States -->
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> Статус : </span>
+                                                            </label>
+                                                            <div class="col-sm-9">
+                                                                <select class="form-control" th:field="*{documentState}" style="width:100%">
+                                                                    <option th:each="s : ${states}"
+                                                                            th:value="${s.name()}"
+                                                                            th:text="${s.text()}">Staff</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Document SubType -->
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> Вид документа : </span>
+                                                            </label>
+                                                            <div class="col-sm-9">
+                                                                <select class="form-control" th:field="*{documentSubType}" style="width:100%">
+                                                                    <option th:each="st : ${subTypes}"
+                                                                            th:value="${st.id}"
+                                                                            th:text="${st.name}">Staff</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Page Index -->
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> Номер бланка : </span>
+                                                            </label>
+                                                            <div class="col-sm-9">
+                                                                <input class="form-control" th:field="*{indexNo}" type="text"></input>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Page Count -->
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> Количество страниц : </span>
+                                                            </label>
+                                                            <div class="col-sm-9">
+                                                                <input class="form-control" th:field="*{pageCount}" type="number"></input>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Document Index -->
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> Doc Index : </span>
+                                                            </label>
+                                                            <div class="col-sm-9">
+                                                                <input class="form-control" th:field="*{docIndex}" type="text"></input>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Received -->
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> Доставлен : </span>
+                                                            </label>
+                                                            <div class="col-sm-9">
+                                                                <input class="form-control" th:field="*{received}" type="checkbox"></input>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Attachment -->
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label"> Приложения : </label>
+                                                            <div class="col-9" id="attachmentList">
+                                                                <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#attachment">Добавить</button>
+                                                                <input type="hidden" name="files" value="0">
+                                                                <table id="documentAttachments" class="atta" style="width: 100%"></table>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Closed With ID -->
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> Ссылка на документ : </span>
+                                                            </label>
+                                                            <div class="col-9" id="documentList">
+                                                                <select class="sds form-control" th:field="*{closedWithId}" style="width: 100%" data-ajax--url="/doc/incomingdocuments">
+                                                                    <option th:each="d : *{closedWithId}"
+                                                                            th:value="${d}"
+                                                                            th:utext="${@documentServiceImpl.getById(__${d}__).documentSubType.name + ' №' + @documentServiceImpl.getById(__${d}__).senderRegisteredNumber}">Responsible</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        </fieldset>
+                                                    <hr>
+                                                    <fieldset>
+                                                        <legend>Отправитель</legend>
+                                                        <!-- SENDER -->
+                                                        <!-- Sender Registration Data -->
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> № Исходящего документа : </span>
+                                                            </label>
+                                                            <div class="col-sm-9">
+                                                                <input class="form-control" th:field="*{senderRegisteredNumber}" autocomplete="off" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> Дата : </span>
+                                                            </label>
+                                                            <div class="col-sm-9">
+                                                                <input class="dtp form-control" th:field="*{senderRegisteredDate}" type="text" autocomplete="off" readonly="readonly"/>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Sender Responsible -->
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> От Кого :  </span>
+                                                            </label>
+                                                            <div class="col-3">
+                                                                <select class="s2s form-control" id="srt_select" th:field="*{senderResponsible.responsibleType}" style="width:100%">
+                                                                    <option value="1">Сотрудник</option>
+                                                                    <option value="2">Отдел</option>
+                                                                    <option value="3">Организация</option>
+                                                                    <option value="4">ФИЗ Лицо</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="sdr" id="sr1">
+                                                                    <select class="s2 form-control" th:field="*{senderResponsible.staff}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/staff">
+                                                                        <option th:each="s : *{senderResponsible?.staff}"
+                                                                                th:value="${s.id}"
+                                                                                th:text="${s.name}">Staff</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="sdr" id="sr2">
+                                                                    <select class="s2 form-control" th:field="*{senderResponsible.departments}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/department">
+                                                                        <option th:each="d : *{senderResponsible?.departments}"
+                                                                                th:value="${d.id}"
+                                                                                th:text="${d.name}">Departments</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="sdr" id="sr3">
+                                                                    <select class="s2 form-control" th:field="*{senderResponsible.organizations}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/organizations">
+                                                                        <option th:each="r : *{senderResponsible?.organizations}"
+                                                                                th:value="${r.id}"
+                                                                                th:text="${r.name}">Organizations</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="sdr" id="sr4">
+                                                                    <select class="s2 form-control" th:field="*{senderResponsible.person}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/person">
+                                                                        <option th:each="r : ${senderResponsible?.person}"
+                                                                                th:value="${r.id}"
+                                                                                th:text="${r.name}">Person</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span></span>
+                                                            </label>
+                                                            <div class="col-sm-9">
+                                                                <input class="form-control" th:field="*{senderResponsible.responsibleName}" autocomplete="off" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <!-- Sender Executor -->
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> Испонители :  </span>
+                                                            </label>
+                                                            <div class="col-3">
+                                                                <select class="s2s form-control" id="set_select" th:field="*{senderExecutor.executorType}" style="width:100%">
+                                                                    <option value="1">Сотрудник</option>
+                                                                    <option value="2">Отдел</option>
+                                                                    <option value="3">Организация</option>
+                                                                    <option value="4">ФИЗ Лицо</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="sde" id="se1">
+                                                                    <select class="s2 form-control" th:field="*{senderExecutor.staff}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/staff">
+                                                                        <option th:each="s : *{senderExecutor?.staff}"
+                                                                                th:value="${s.id}"
+                                                                                th:text="${s.name}">Staff</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="sde" id="se2">
+                                                                    <select class="s2 form-control" th:field="*{senderExecutor.departments}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/department">
+                                                                        <option th:each="d : *{senderExecutor?.departments}"
+                                                                                th:value="${d.id}"
+                                                                                th:text="${d.name}">Departments</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="sde" id="se3">
+                                                                    <select class="s2 form-control" th:field="*{senderExecutor.organizations}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/organizations">
+                                                                        <option th:each="r : *{senderExecutor?.organizations}"
+                                                                                th:value="${r.id}"
+                                                                                th:text="${r.name}">Organizations</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="sde" id="se4">
+                                                                    <select class="s2 form-control" th:field="*{senderExecutor.person}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/person">
+                                                                        <option th:each="r : ${senderExecutor?.person}"
+                                                                                th:value="${r.id}"
+                                                                                th:text="${r.name}">Person</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                    <hr>
+                                                    <fieldset>
+                                                        <legend>Получатель</legend>
+                                                        <!-- RECEIVER -->
+                                                        <!-- Receiver Registration Data -->
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> № Исходящего документа : </span>
+                                                            </label>
+                                                            <div class="col-sm-9">
+                                                                <input class="form-control" th:field="*{receiverRegisteredNumber}" autocomplete="off" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> Дата : </span>
+                                                            </label>
+                                                            <div class="col-sm-9">
+                                                                <input class="dtp form-control" th:field="*{receiverRegisteredDate}" type="text" autocomplete="off" readonly="readonly"/>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Receiver Responsible -->
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> От Кого :  </span>
+                                                            </label>
+                                                            <div class="col-3">
+                                                                <select class="s2s form-control" id="rrt_select" th:field="*{receiverResponsible.responsibleType}" style="width:100%">
+                                                                    <option value="1">Сотрудник</option>
+                                                                    <option value="2">Отдел</option>
+                                                                    <option value="3">Организация</option>
+                                                                    <option value="4">ФИЗ Лицо</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="rdr" id="rr1">
+                                                                    <select class="s2 form-control" th:field="*{receiverResponsible.staff}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/staff">
+                                                                        <option th:each="s : *{receiverResponsible?.staff}"
+                                                                                th:value="${s.id}"
+                                                                                th:text="${s.name}">Staff</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="rdr" id="rr2">
+                                                                    <select class="s2 form-control" th:field="*{receiverResponsible.departments}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/department">
+                                                                        <option th:each="d : *{receiverResponsible?.departments}"
+                                                                                th:value="${d.id}"
+                                                                                th:text="${d.name}">Departments</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="rdr" id="rr3">
+                                                                    <select class="s2 form-control" th:field="*{receiverResponsible.organizations}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/organizations">
+                                                                        <option th:each="r : *{receiverResponsible?.organizations}"
+                                                                                th:value="${r.id}"
+                                                                                th:text="${r.name}">Organizations</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="rdr" id="rr4">
+                                                                    <select class="s2 form-control" th:field="*{receiverResponsible.person}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/person">
+                                                                        <option th:each="r : ${receiverResponsible?.person}"
+                                                                                th:value="${r.id}"
+                                                                                th:text="${r.name}">Person</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span></span>
+                                                            </label>
+                                                            <div class="col-sm-9">
+                                                                <input class="form-control" th:field="*{receiverResponsible.responsibleName}" autocomplete="off" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <!-- Receiver Executor -->
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-3 col-form-label">
+                                                                <span> Испонители :  </span>
+                                                            </label>
+                                                            <div class="col-3">
+                                                                <select class="s2s form-control" id="ret_select" th:field="*{receiverExecutor.executorType}" style="width:100%">
+                                                                    <option value="1">Сотрудник</option>
+                                                                    <option value="2">Отдел</option>
+                                                                    <option value="3">Организация</option>
+                                                                    <option value="4">ФИЗ Лицо</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="rde" id="re1">
+                                                                    <select class="s2 form-control" th:field="*{receiverExecutor.staff}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/staff">
+                                                                        <option th:each="s : *{receiverExecutor?.staff}"
+                                                                                th:value="${s.id}"
+                                                                                th:text="${s.name}">Staff</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="rde" id="re2">
+                                                                    <select class="s2 form-control" th:field="*{receiverExecutor.departments}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/department">
+                                                                        <option th:each="d : *{receiverExecutor?.departments}"
+                                                                                th:value="${d.id}"
+                                                                                th:text="${d.name}">Departments</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="rde" id="re3">
+                                                                    <select class="s2 form-control" th:field="*{receiverExecutor.organizations}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/organizations">
+                                                                        <option th:each="r : *{receiverExecutor?.organizations}"
+                                                                                th:value="${r.id}"
+                                                                                th:text="${r.name}">Organizations</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="rde" id="re4">
+                                                                    <select class="s2 form-control" th:field="*{receiverExecutor.person}" multiple="multiple" style="width:100%" data-ajax--url="/doc/data/person">
+                                                                        <option th:each="r : ${receiverExecutor?.person}"
+                                                                                th:value="${r.id}"
+                                                                                th:text="${r.name}">Person</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="dispatchData_tab" role="tabpanel" aria-labelledby="nav-dispatchData_tab-tab">
+                                                <table width="100%" class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>id</th>
+                                                            <th>description</th>
+                                                            <th>dispatchType</th>
+                                                            <th>dispatchInitTime</th>
+                                                            <th>dispatchBy</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr th:each="dd : *{dispatchData}">
+                                                            <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editDispatchData" th:onclick="'fillDispatchData(\'' + ${dd.id} + '\');'" th:value="${dd.id}"></button></td>
+                                                            <td th:text="${dd.description}"></td>
+                                                            <td width="100px" th:text="${dd.dispatchType.text()}"></td>
+                                                            <td width="100px" th:text="${#dates.format(dd.dispatchInitTime, 'dd-MM-yyyy')}"></td>
+                                                            <td th:text="${dd.dispatchBy?.staff?.name}"></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="tab-pane fade" id="tasks_tab" role="tabpanel" aria-labelledby="nav-tasks_tab-tab">
+                                                <table width="100%" class="table table-bordered">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>id</th>
+                                                        <th>summary</th>
+                                                        <th>resolutionSummary</th>
+                                                        <th>description</th>
+                                                        <th>objectId</th>
+                                                        <th>objectType</th>
+                                                        <th>action</th>
+                                                        <th>progress</th>
+                                                        <th>status</th>
+                                                        <th>priority</th>
+                                                        <th>createdBy</th>
+                                                        <th>assignedTo</th>
+                                                        <th>modifiedByUserId</th>
+                                                        <th>targetResolutionDate</th>
+                                                        <th>createdOn</th>
+                                                        <th>modifiedOn</th>
+                                                        <th>actualResolutionDate</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr th:each="task : ${tasks}">
+                                                            <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" th:onclick="'loadTask(\'' + ${task.id} + '\');'" th:value="${task.id}"></button></td>
+                                                            <td th:text="${task.summary}"></td>
+                                                            <td th:text="${task.resolutionSummary}"></td>
+                                                            <td th:text="${task.description}"></td>
+                                                            <td th:text="${task.objectId}"></td>
+                                                            <td th:text="${task.objectType}"></td>
+                                                            <td th:text="${task.action}"></td>
+                                                            <td th:text="${task.progress}"></td>
+                                                            <td th:text="${task.status}"></td>
+                                                            <td th:text="${task.priority}"></td>
+                                                            <td th:text="${task.createdBy?.staff?.name}">Система</td>
+                                                            <td th:text="${task.assignedTo?.staff?.name}"></td>
+                                                            <td th:text="${task.modifiedByUserId}"></td>
+                                                            <td th:text="${#dates.format(task.targetResolutionDate, 'dd-MM-yyyy')}"></td>
+                                                            <td th:text="${#dates.format(task.createdOn, 'dd-MM-yyyy')}"></td>
+                                                            <td th:text="${#dates.format(task.modifiedOn, 'dd-MM-yyyy')}"></td>
+                                                            <td th:text="${#dates.format(task.actualResolutionDate, 'dd-MM-yyyy')}"></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                            <!--end::Form-->
+                        </div>
+                    </div>
+                    <div class="m-portlet__foot">
+                        <button type="button" class="btn btn-primary float-none" onclick="window.history.back()"> Отмена </button>
+                        <button type="submit" name="action" form="document_form" value="UPDATE" class="btn btn-info float-none"> Сохранить </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END CONTENT BODY -->
+    <!-- begin::Footer -->
+    <div th:replace="layout/footer"/>
+    <!-- end::Footer -->
+</div>
+
+<div th:replace="fragments/footer :: footer-js"/>
+
+<script th:src="@{/assets/global/plugins/ckeditor/ckeditor.js}" type="text/javascript"></script>
+
+<th:block th:replace="doc/layout::script"/>
+
+<div class="modal fade" id="pick" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Список сотрудников</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <div class="form-group m-form__group row">
+                    <label class="col-3 col-form-label"> Сотрудник : </label>
+                    <div class="col-sm-9">
+                        <select class="s2 form-control m-input" th:name="${document.documentState.ordinal() > 7} ? 'executor' : 'reconciler'" style="width:100%" data-ajax--url="/doc/data/staff" form="document_form" multiple>
+                            <option value="">Select</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group m-form__group row" th:if="${document.documentState.ordinal() > 7}">
+                    <label class="col-3 col-form-label"> Срок : </label>
+                    <div class="col-sm-9">
+                        <input th:field="${document.taskDueDate}" form="document_form" class="dtp form-control" autocomplete="off" readonly="readonly"/>
+                    </div>
+                </div>
+
+                <div class="form-group m-form__group row" th:if="${document.documentState.ordinal() > 7}">
+                    <label class="col-3 col-form-label"> Резолюция : </label>
+                    <div class="col-sm-9">
+                        <textarea class="form-control" rows="5" th:field="${document.resolution}" form="document_form" th:text="${'Прошу рассмотреть в установленном порядке'}"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                <button class="btn btn-primary" name="action" th:value="${document.documentState.ordinal() &lt; 5} ? 'TORECONCILE' : 'SEND'" type="submit" form="document_form" onclick="hide()">ОК</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editTask" role="dialog" aria-labelledby="Edit Task" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editTaskModal">Новая задача</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/task/save}" id="task_form" class="m-form m-form--fit m-form--label-align-right" th:object="${task}" method="POST">
+                    <div class="container">
+                        <input type="hidden" th:field="*{id}">
+                        <input type="hidden" th:field="*{version}">
+                        <input type="hidden" th:field="*{uuid}">
+                        <input type="hidden" th:field="*{record_status}">
+
+                        <input type="text" class="form-control m-input" th:field="*{summary}">
+                        <input type="text" class="form-control m-input" th:field="*{resolutionSummary}">
+                        <input type="text" class="form-control m-input" th:field="*{description}">
+                        <input type="text" class="form-control m-input" th:field="*{objectId}">
+                        <input type="text" class="form-control m-input" th:field="*{objectType}">
+                        <input type="text" class="form-control m-input" th:field="*{progress}">
+                        <input type="text" class="form-control m-input" th:field="*{status}">
+                        <input type="text" class="form-control m-input" th:field="*{priority}">
+                        <input type="text" class="form-control m-input" th:field="*{createdBy}">
+                        <input type="text" class="form-control m-input" th:field="*{identifiedByUserId}">
+                        <input type="text" class="form-control m-input" th:field="*{modifiedByUserId}">
+                        <input type="text" class="form-control m-input" th:field="*{assignedToUserId}">
+                        <input type="text" class="form-control m-input dtp" autocomplete="off" readonly="readonly" th:field="*{identifiedDate}">
+                        <input type="text" class="form-control m-input dtp" autocomplete="off" readonly="readonly" th:field="*{createdOn}">
+                        <input type="text" class="form-control m-input dtp" autocomplete="off" readonly="readonly" th:field="*{modifiedOn}">
+                        <input type="text" class="form-control m-input dtp" autocomplete="off" readonly="readonly" th:field="*{actualResolutionDate}">
+                        <div class="form-group m-form__group row">
+                            <label class="col-3 col-form-label">
+                                <span> Кому : </span>
+                            </label>
+                            <div class="col-sm-9">
+                                <select class="form-control m-input s2" th:field="*{assignedTo}" style="width: 100%" data-ajax--url="/doc/data/user">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group m-form__group row">
+                            <label class="col-3 col-form-label">
+                                <span> Задача : </span>
+                            </label>
+                            <div class="col-sm-9">
+                                <select class="form-control m-input" th:field="*{action}" style="width: 100%">
+                                    <option th:each="ta :${taskActions}"
+                                            th:value="${ta.id}"
+                                            th:text="${ta.name}"> Object </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group m-form__group row">
+                            <label class="col-3 col-form-label">
+                                <span> Срок : </span>
+                            </label>
+                            <div class="col-sm-9">
+                                <input class="form-control dtp" th:field="*{targetResolutionDate}" type="text" autocomplete="off" readonly="readonly"/>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success" form="task_form">Сохранить</button>
+                <button type="button" class="btn btn-primary float-none" data-dismiss="modal"> Отмена </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editDispatchData" role="dialog" aria-labelledby="Edit DispatchData" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editDispatchDataModal">Новая задача</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/doc/dispatchData/save}" id="dipatchdata_form" class="m-form m-form--fit m-form--label-align-right" th:object="${dispatch_data}" method="POST">
+                    <div class="container">
+                        <input type="hidden" th:field="*{id}"/>
+                        <input type="hidden" th:field="*{version}"/>
+                        <input type="hidden" th:field="*{uuid}"/>
+                        <input type="hidden" th:field="*{record_status}"/>
+
+                        <div class="form-group m-form__group row">
+                            <label class="col-3 col-form-label">
+                                <span> Description : </span>
+                            </label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control m-input" th:field="*{description}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group m-form__group row">
+                            <label class="col-3 col-form-label">
+                                <span> DispatchType : </span>
+                            </label>
+                            <div class="col-sm-9">
+                                <select class="form-control m-input" th:field="*{dispatchType}" style="width:100%">
+                                    <option th:each="s : ${states}"
+                                            th:value="${s.name()}"
+                                            th:text="${s.text()}">Staff</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group m-form__group row">
+                            <label class="col-3 col-form-label">
+                                <span> DispatchInitTime : </span>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control m-input dtp" autocomplete="off" readonly="readonly" th:field="*{dispatchInitTime}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group m-form__group row">
+                            <label class="col-3 col-form-label">
+                                <span> DispatchResponseTime: </span>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control m-input dtp" autocomplete="off" readonly="readonly" th:field="*{dispatchResponseTime}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group m-form__group row">
+                            <label class="col-3 col-form-label">
+                                <span> DispatchBy : </span>
+                            </label>
+                            <div class="col-sm-9">
+                                <select class="s2 form-control m-input" th:field="*{dispatchBy}" style="width:100%" data-ajax--url="/doc/data/user">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group m-form__group row">
+                            <label class="col-3 col-form-label">
+                                <span> DispatchTo : </span>
+                            </label>
+                            <div class="col-sm-9">
+                                <select class="s2 form-control m-input" th:field="*{dispatchTo}" style="width:100%" data-ajax--url="/doc/data/user">
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success" form="dipatchdata_form">Сохранить</button>
+                <button type="button" class="btn btn-primary float-none" data-dismiss="modal"> Отмена </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" th:inline="javascript">
+
+    $(document).ready(function() {
+
+        CKEDITOR.replaceClass = 'ckeditor';
+        CKEDITOR.config.language = 'ru';
+        CKEDITOR.config.uiColor = '#ffffff';
+        CKEDITOR.config.toolbar = [
+            { name: 'clipboard', groups: [ 'clipboard' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteFromWord' ] },
+            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
+            { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+            { name: 'insert', items: [ 'Image', 'Table' ] },
+            { name: 'styles', items: [ 'Font', 'FontSize' ] },
+            { name: 'tools', items: [ 'Maximize' ] }
+        ];
+        CKEDITOR.config.toolbarGroups = [
+            { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+            { name: 'forms' },
+            '/',
+            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+            { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align' ] },
+            { name: 'insert' },
+            '/',
+            { name: 'styles' },
+            { name: 'tools' }
+        ];
+
+        $('#documentLinks').select2();
+
+        var dt_settings = {
+            format : 'dd-mm-yyyy 10:00',
+            minView : 2,
+            maxView : 2
+        };
+        $('.dtp').datetimepicker(dt_settings);
+
+        $('.sdr').hide();
+        $('.sde').hide();
+        $('.rdr').hide();
+        $('.rde').hide();
+
+        if($('#id').val() > 0 || $('#id').val() != null) {
+
+            $('#sr' + $('#srt_select').val()).show();
+            $('#se' + $('#set_select').val()).show();
+            $('#rr' + $('#rrt_select').val()).show();
+            $('#re' + $('#ret_select').val()).show();
+        }
+
+        $('#srt_select').change(function(){
+            $('#sr' + $(this).val()).find( "select" ).val(null).trigger('change')
+            $('.sdr ').hide();
+            $('#sr' + $(this).val()).show();
+        });
+        $('#set_select').change(function(){
+            $('#se' + $(this).val()).find( "select" ).val(null).trigger('change')
+            $('.sde ').hide();
+            $('#se' + $(this).val()).show();
+        });
+        $('#rrt_select').change(function(){
+            $('#rr' + $(this).val()).find( "select" ).val(null).trigger('change')
+            $('.rdr ').hide();
+            $('#rr' + $(this).val()).show();
+        });
+        $('#ret_select').change(function(){
+            $('#re' + $(this).val()).find( "select" ).val(null).trigger('change')
+            $('.rde ').hide();
+            $('#re' + $(this).val()).show();
+        });
+
+        var soption = {
+            minimumInputLength: 2,
+            placeholder: "Поиск ...",
+            language: {
+                inputTooShort: function () {
+                    return "";
+                },
+                noResults: function () {
+                    return "Не найден";
+                },
+                searching: function () {
+                    return "";
+                },
+            },
+            ajax: {
+                data: function (params) {
+                    var query = {
+                        name: params.term
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results : data
+                    };
+                }
+            }
+        }
+        var ssoption = {
+            minimumResultsForSearch: -1,
+            placeholder: "Поиск ...",
+            language: {
+                inputTooShort: function () {
+                    return "";
+                },
+                noResults: function () {
+                    return "Не найден";
+                },
+                searching: function () {
+                    return "";
+                }
+            }
+        }
+
+        function formatState (state) {
+            if (!state.id) {
+                return state.text;
+            }
+            var $state = $(
+                '<a href="/doc/view/' + state.element.value + '"><span>' + state.text + '</span></a>'
+            );
+            return $state;
+        };
+        var sssoption = {
+            minimumInputLength: 1,
+            templateSelection: formatState,
+            placeholder: "Выбрать",
+            language: {
+                inputTooShort: function () {
+                    return "";
+                },
+                noResults: function () {
+                    return "Не найден";
+                },
+                searching: function () {
+                    return "";
+                },
+            },
+            ajax: {
+                data: function (params) {
+                    var query = {
+                        name: params.term
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+
+                    return {
+                        results : data
+                    };
+                }
+            }
+        }
+
+        $('.s2 ').select2(soption);
+        $('.s2s ').select2(ssoption);
+        $('.sds ').select2(sssoption);
+
+    });
+
+    function hide() {
+        $('#pick').modal('hide')
+    }
+    function documentLinkHandler(documentId) {
+        var a = document.createElement("input");
+        a.setAttribute("type", "hidden");
+        a.setAttribute("id", "docID" + documentId);
+        a.setAttribute("name", "documentLinks");
+        a.setAttribute("value", documentId);
+        document.getElementById("documentList").appendChild(a);
+    }
+    function fillDispatchData(dispatchDataId) {
+        $.ajax({
+            url: "/dispatchData/" + dispatchDataId,
+            success: function(response){
+                $("#dipatchdata_form #id").val(response.id);
+                $("#dipatchdata_form #record_status").val(response.record_status);
+                $("#dipatchdata_form #description").val(response.description);
+                $("#dipatchdata_form #dispatchType").val(response.dispatchType);
+
+                response.dispatchInitTime !== null ? $("input#dispatchInitTime").val(formatDate(new Date(response.dispatchInitTime))) : "";
+                response.dispatchResponseTime !== null ? $("input#dispatchResponseTime").val(formatDate(new Date(response.dispatchResponseTime))) : "";
+
+                var dispatchBy = new Option(response.dispatchBy.staff.name, response.dispatchBy.id, true, true);
+                $('#dipatchdata_form #dispatchBy').append(dispatchBy).trigger('change');
+
+                if(response.dispatchTo !== null) {
+                    var dispatchTo = new Option(response.dispatchTo.staff.name, response.dispatchTo.id, true, true);
+                    $('#dipatchdata_form #dispatchTo').append(dispatchTo).trigger('change');
+                }
+            }
+        });
+    }
+    function fllTask(taskId) {
+
+        $("#task_form #id").val(response.id);
+        $("#task_form #record_status").val(response.record_status);
+        $("#task_form #uuid").val(response.uuid);
+        $("#task_form #version").val(response.version);
+        $("#task_form #summary").val(response.summary);
+        $("#task_form #resolutionSummary").val(response.resolutionSummary);
+        $("#task_form #description").val(response.description);
+        $("#task_form #objectId").val(response.objectId);
+        $("#task_form #objectType").val(response.objectType);
+        $("#task_form #action").val(response.action);
+        $("#task_form #progress").val(response.progress);
+        $("#task_form #status").val(response.status);
+        $("#task_form #priority").val(response.priority);
+        $("#task_form #createdBy").val(response.createdBy);
+        $("#task_form #createdByUser").val(response.createdByUser);
+        $("#task_form #assignedTo").val(response.assignedTo);
+        $("#task_form #assignedToUser").val(response.assignedToUser);
+        $("#task_form #identifiedByUserId").val(response.identifiedByUserId);
+        $("#task_form #modifiedByUserId").val(response.modifiedByUserId);
+        $("#task_form #assignedToUserId").val(response.assignedToUserId);
+        response.createdOn !== null ? $("#task_form #createdOn").datetimepicker("setDate",  new Date(response.createdOn)) : "";
+        response.modifiedOn !== null ? $("#task_form #modifiedOn").datetimepicker("setDate",  new Date(response.modifiedOn)) : "";
+        response.identifiedDate !== null ? $("#task_form #identifiedDate").datetimepicker("setDate",  new Date(response.identifiedDate)) : "";
+        response.targetResolutionDate !== null ? $("#task_form #targetResolutionDate").datetimepicker("setDate",  new Date(response.targetResolutionDate)) : "";
+        response.actualResolutionDate !== null ? $("#task_form #actualResolutionDate").datetimepicker("setDate",  new Date(response.actualResolutionDate)) : "";
+    }
+    function formatDate(date) {
+        return date.getDate()  + "-" + (date.getMonth()+1) + "-" + date.getFullYear() + " 10:00";
+    }
+
+</script>
+
+</body>
+</html>

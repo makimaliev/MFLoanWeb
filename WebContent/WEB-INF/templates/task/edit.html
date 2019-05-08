@@ -58,7 +58,17 @@
                                         <hr>
                                         <div data-repeater-list="properties" id="container">
                                             <div data-repeater-item class="r-group row m--padding-bottom-10">
-                                                <div class="col-1 cond"></div>
+                                                <div class="col-1">
+                                                    <select class="form-control m-input"
+                                                            style="width: 100%"
+                                                            id="properties_0_condition"
+                                                            name="properties[0].condition"
+                                                            data-pattern-name="properties[++].condition"
+                                                            data-pattern-id="properties_++_condition">
+                                                        <option value="AND">И</option>
+                                                        <option value="OR">ИЛИ</option>
+                                                    </select>
+                                                </div>
                                                 <div class="col-5">
                                                     <select class="form-control m-input"
                                                             style="width: 100%"
@@ -81,6 +91,7 @@
                                                 </div>
                                                 <div class="col-2">
                                                     <input type="text"
+                                                           required="required"
                                                            style="padding: 10px 5px;"
                                                            class="form-control m-input"
                                                            id="properties_0_value"
@@ -136,18 +147,7 @@
             showMinItemsOnLoad: false,
             startingIndex: 0,
             afterAdd: function($doppleganger) {
-                console.log($doppleganger);
-                $("select[name='properties[0].property'] option").clone().appendTo($($doppleganger).find('select')[0]);
-                $($doppleganger).find(".cond").html(
-                    '<select class="form-control m-input--square"' +
-                    '       style="width: 100%"' +
-                    '       id="properties_0_condition"' +
-                    '       name="properties[0].condition"' +
-                    '       data-pattern-name="properties[++].condition"' +
-                    '       data-pattern-id="properties_++_condition">' +
-                    '   <option value="AND">И</option>' +
-                    '   <option value="OR">ИЛИ</option>' +
-                    '</select>');
+                $("select[name='properties[0].property'] option").clone().appendTo($($doppleganger).find('select')[1]);
             }
         });
         $("#table").change(function (){

@@ -109,8 +109,7 @@
                 <div class="form-group m-form__group row">
                     <label class="col-3 col-form-label"> Сотрудник : </label>
                     <div class="col-sm-9">
-                        <select class="s2 form-control m-input" th:name="${document.documentState.ordinal() > 7} ? 'executor' : 'reconciler'" style="width:100%" data-ajax--url="/doc/data/staff" form="document_form" multiple>
-                            <option value="">Select</option>
+                        <select class="s2 form-control m-input" id="sl_er" th:name="${document.documentState.ordinal() > 7} ? 'executor' : 'reconciler'" style="width:100%" data-ajax--url="/doc/data/staff" form="document_form" multiple>
                         </select>
                     </div>
                 </div>
@@ -131,7 +130,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                <button class="btn btn-primary" name="action" th:value="${document.documentState.ordinal() &lt; 5} ? 'TORECONCILE' : 'SEND'" type="submit" form="document_form" onclick="hide()">ОК</button>
+                <button class="btn btn-primary" id="submit" disabled name="action" th:value="${document.documentState.ordinal() &lt; 5} ? 'TORECONCILE' : 'SEND'" type="submit" form="document_form" onclick="hide()">ОК</button>
             </div>
         </div>
     </div>
@@ -144,6 +143,7 @@
     }
 
     //var dto = [[${dto}]]
+    var dtn = [[${document.documentType.internalName}]];
 
     $(document).ready(function() {
 
@@ -177,7 +177,7 @@
             autoclose: true,
             minView : 2,
             maxView : 2,
-            format : 'dd-mm-yyyy hh:ii'
+            format : 'dd-mm-yyyy 10:ii'
         };
         $('.dtp').datetimepicker(dt_settings);
 
@@ -323,7 +323,36 @@
         $('.s2s ').select2(ssoption);
         $('.sds ').select2(sssoption);
 
+        $("#sl_er").change(function () {
+            if ($(this).val() == "")
+                $('#submit').attr("disabled", true);
+            else
+                $('#submit').attr("disabled", false);
+        })
+        /*
+        $('#tasks').DataTable({
+            searching: false,
+            paging: false,
+            processing: false,
+            ordering: false,
+            info:     false,
+            ajax: {
+                'url': '/doc/tasks/' + [ [${document.id}] ],
+                "dataSrc": ""
+            },
+            columns: [
+                { data: 'createdOn' },
+                { data: 'createdBy' },
+                { data: 'description' },
+                { data: 'targetResolutionDate' },
+                { data: 'assignedTo' },
+                { data: 'resolutionSummary' },
+                { data: 'actualResolutionDate' }
+            ]
+        });
+        */
     });
+
 
     function documentLinkHandler(documentId) {
         var a = document.createElement("input");
