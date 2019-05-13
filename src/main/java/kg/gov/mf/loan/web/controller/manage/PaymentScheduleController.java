@@ -127,10 +127,14 @@ public class PaymentScheduleController {
 		if(paymentSchedule.getCollectedPenaltyPayment()==null){
 			paymentSchedule.setCollectedPenaltyPayment(0.0);
 		}
-		if(paymentSchedule.getId() == 0)
-			paymentScheduleService.add(paymentSchedule);
-		else
-			paymentScheduleService.update(paymentSchedule);
+		if(paymentSchedule.getId() == 0) {
+			//paymentScheduleService.add(paymentSchedule);
+			paymentScheduleRepository.save(paymentSchedule);
+		}
+		else {
+			paymentScheduleRepository.save(paymentSchedule);
+			//paymentScheduleService.update(paymentSchedule);
+		}
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#paymentSchedules";
     }
