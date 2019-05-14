@@ -2,6 +2,7 @@ package kg.gov.mf.loan.web.controller.admin.sys;
 
 import com.lowagie.text.DocumentException;
 import kg.gov.mf.loan.output.report.utils.CollectionPhaseTool;
+import kg.gov.mf.loan.output.report.utils.SecondMigrationTool;
 import kg.gov.mf.loan.web.components.FileSetter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,6 +126,14 @@ public class HomeController {
     public String doSomething() throws DocumentException {
         FileSetter fileSetter=new FileSetter();
         fileSetter.setFilesToDirectories();
+        return "index";
+    }
+
+
+    @RequestMapping("/doSecondMigrationTool")
+    public String doSecondMigrationtool() throws DocumentException {
+        SecondMigrationTool secondMigrationTool=new SecondMigrationTool();
+        secondMigrationTool.loanMigrate(43093L);
         return "index";
     }
 	
