@@ -214,6 +214,12 @@
                                                         <span class="m-menu__link-text">Список решений</span>
                                                     </a>
                                                 </li>
+                                                <li class="m-menu__item " aria-haspopup="true" sec:authorize="hasAnyAuthority('ADMIN','PERM_LOANSUMMARYACT_LIST')">
+                                                    <a th:href="@{/loanSummaryAct/list}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text" th:text="#{label.loanSummaryAct.list}"></span>
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </li>
