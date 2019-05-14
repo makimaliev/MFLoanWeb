@@ -14,15 +14,15 @@ import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.web.fetchModels.ItemArrestFreeModel;
 import kg.gov.mf.loan.web.fetchModels.ItemInspectionResultModel;
 import kg.gov.mf.loan.web.util.Utils;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -72,6 +72,9 @@ public class CollateralItemController {
 
 	@Autowired
 	StaffService staffService;
+
+	@Autowired
+	private SessionFactory sessionFactory;
 
 
 	@InitBinder
@@ -656,4 +659,90 @@ public class CollateralItemController {
 //
 //		return result;
 //	}
+
+	//    Make all items' of loan, inspection_needed=false
+	@GetMapping("/manage/debtor/{debtorId}/loan/{loanId}/inspectionNeeded/makeFalse")
+	public String changeInspectionNeededToFalse(@PathVariable("debtorId") Long debtorId,@PathVariable("loanId") Long loanId){
+
+		inspectionNeededChangerForLoan(false,loanId);
+
+		return "redirect:/manage/debtor/{debtorId}/loan/{loanId}/view";
+	}
+
+	//    Make all items' of loan, inspection_needed=true
+	@GetMapping("/manage/debtor/{debtorId}/loan/{loanId}/inspectionNeeded/makeTrue")
+	public String changeInspectionNeededToTrue(@PathVariable("debtorId") Long debtorId,@PathVariable("loanId") Long loanId){
+
+		inspectionNeededChangerForLoan(true,loanId);
+
+		return "redirect:/manage/debtor/{debtorId}/loan/{loanId}/view";
+	}
+
+	public void inspectionNeededChangerForLoan(boolean make,Long loanId){
+		Session session;
+		try
+		{
+			session = sessionFactory.getCurrentSession();
+		}
+		catch (HibernateException e)
+		{
+			session = sessionFactory.openSession();
+		}
+
+		session.getTransaction().begin();
+		try{
+			String itemUpdateQuery = "update collateralItem ci,loanCollateralAgreement lca,loan l\n" +
+					"set ci.inspection_needed="+make+" where ci.collateralAgreementId=lca.collateralAgreementId\n" +
+					"                                and l.id=lca.loanId and l.id="+loanId;
+			session.createSQLQuery(itemUpdateQuery).executeUpdate();
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+		session.getTransaction().commit();
+	}
+
+
+	//    Make all items' of debtor, inspection_needed=false
+	@GetMapping("/manage/debtor/{debtorId}/inspectionNeeded/makeFalse")
+	public String changeInspectionNeededFalse(@PathVariable("debtorId") Long debtorId){
+
+		inspectionNeededChangerForDebtor(false,debtorId);
+
+		return "redirect:/manage/debtor/{debtorId}/view";
+	}
+
+	//    Make all items' of debtor, inspection_needed=true
+	@GetMapping("/manage/debtor/{debtorId}/inspectionNeeded/makeTrue")
+	public String changeInspectionNeededTrue(@PathVariable("debtorId") Long debtorId){
+
+
+		inspectionNeededChangerForDebtor(true,debtorId);
+
+		return "redirect:/manage/debtor/{debtorId}/view";
+	}
+
+	public void inspectionNeededChangerForDebtor(boolean make,Long debtorId){
+		Session session;
+		try
+		{
+			session = sessionFactory.getCurrentSession();
+		}
+		catch (HibernateException e)
+		{
+			session = sessionFactory.openSession();
+		}
+
+		session.getTransaction().begin();
+		try{
+			String itemUpdateQuery = "update  collateralItem ci,loanCollateralAgreement lca,loan l,debtor d\n" +
+					"set ci.inspection_needed="+make+" where ci.collateralAgreementId=lca.collateralAgreementId\n" +
+					"                                and l.id=lca.loanId and l.debtorId=d.id and d.id="+debtorId;
+			session.createSQLQuery(itemUpdateQuery).executeUpdate();
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+		session.getTransaction().commit();
+	}
 }
