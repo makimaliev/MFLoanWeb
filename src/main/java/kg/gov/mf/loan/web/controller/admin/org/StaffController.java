@@ -133,8 +133,6 @@ public class StaffController {
 
 		person.setAddress(address);
 
-		staff.setEmploymentHistory(this.employmentHistoryService.findById(staff.getEmploymentHistory().getId()));
-
 		staff.setPerson(person);
 
 		if(staff.getEmploymentHistory()==null)
@@ -146,6 +144,9 @@ public class StaffController {
 
 			staffService.edit(staff);
 			staff = this.staffService.findById(id);
+		}
+		else{
+			staff.setEmploymentHistory(this.employmentHistoryService.findById(staff.getEmploymentHistory().getId()));
 		}
 
 		model.addAttribute("staff", staff);

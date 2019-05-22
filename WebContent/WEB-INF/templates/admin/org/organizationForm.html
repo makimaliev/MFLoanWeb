@@ -73,8 +73,335 @@
 				</select>
 			</div>
 		</div>
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg col-sm-12">
+				<span th:text="#{label.organization.person1}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-lg col-md-9 col-sm-12">
+				<input type="text" class="form-control" name="person1"  th:value="${person1Surname}"/>
+			</div>
+			<div class="col-lg col-md-9 col-sm-12">
+				<input type="text" class="form-control" name="person1" th:value="${person1Name}"/>
+			</div>
+			<div class="col-lg col-md-9 col-sm-12">
+				<input type="text" class="form-control" name="person1" th:value="${person1Lastname}"/>
+			</div>
+		</div>
+		<div class="form-group m-form__group row">
+			<label class="col-form-label col-lg col-sm-12">
+				<span th:text="#{label.organization.person2}"></span>
+				<span class="m--font-danger">*</span>
+			</label>
+			<div class="col-lg col-md-9 col-sm-12">
+				<input type="text" class="form-control" name="person2" th:value="${person2Surname}"/>
+			</div>
+			<div class="col-lg col-md-9 col-sm-12">
+				<input type="text" class="form-control" name="person2" th:value="${person2Name}"/>
+			</div>
+			<div class="col-lg col-md-9 col-sm-12">
+				<input type="text" class="form-control" name="person2" th:value="${person2Lastname}"/>
+			</div>
+		</div>
+		<!--<div class="row">-->
+			<!--<div class="col form-body">-->
+				<!--<h4>Person2</h4>-->
+				<!--<div class="row">-->
+					<!--<input type="text" class="form-control" name="person2"/>-->
+					<!--<input type="text" class="form-control" name="person2"/>-->
+					<!--<input type="text" class="form-control" name="person2"/>-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
 
 		<div class="m-portlet__body">
+
+			<div>
+				<!--<h3   th:text="#{label.identityDocData}"></h3>-->
+				<!--<div class="form-body">-->
+
+					<!--<div class="form-group m-form__group row">-->
+						<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+							<!--<span th:text="#{label.identityDoc.type}"></span>-->
+							<!--<span class="m&#45;&#45;font-danger">*</span>-->
+						<!--</label>-->
+						<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+							<!--<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.identityDoc.identityDocType}"  onchange="updateIdentityDocTypeId(this);" th:title="#{label.select}">-->
+								<!--<option-->
+										<!--th:each="identityDocTypeInList : ${identityDocTypeList}"-->
+										<!--th:value="${identityDocTypeInList.id}"-->
+										<!--th:selected="(${identityDocTypeInList.id} == *{identityDoc.identityDocType.id})"-->
+										<!--th:text="${identityDocTypeInList.name}"></option>-->
+							<!--</select>-->
+						<!--</div>-->
+					<!--</div>-->
+
+
+					<!--<div class="form-group m-form__group row">-->
+						<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+							<!--<span th:text="#{label.identityDoc.givenBy}"></span>-->
+							<!--<span class="m&#45;&#45;font-danger">*</span>-->
+						<!--</label>-->
+						<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+							<!--<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.identityDoc.identityDocGivenBy}" onchange="updateIdentityDocGivenById(this);" th:title="#{label.select}">-->
+								<!--<option-->
+										<!--th:each="identityDocGivenByInList : ${identityDocGivenByList}"-->
+										<!--th:value="${identityDocGivenByInList.id}"-->
+										<!--th:selected="(${identityDocGivenByInList.id} == *{identityDoc.identityDocGivenBy.id})"-->
+										<!--th:text="${identityDocGivenByInList.name}"></option>-->
+							<!--</select>-->
+						<!--</div>-->
+					<!--</div>-->
+
+
+					<!--<div class="form-group m-form__group row">-->
+						<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+							<!--<span th:text="#{label.identityDoc.number}"></span>-->
+							<!--<span class="m&#45;&#45;font-danger">*</span>-->
+						<!--</label>-->
+						<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+							<!--<input type="text" class="form-control" name="number" th:field="${organization.identityDoc.number}" th:value="${organization.identityDoc.number} "/>-->
+						<!--</div>-->
+					<!--</div>-->
+
+
+
+					<!--<div class="form-group m-form__group row">-->
+						<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+							<!--<span th:text="#{label.identityDoc.date}"></span>-->
+							<!--<span class="m&#45;&#45;font-danger">*</span>-->
+						<!--</label>-->
+						<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+							<!--<div class="input-group date m_datetimepicker_6">-->
+								<!--<input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:field="${organization.identityDoc.date}" th:value="${organization.identityDoc.date} "/>-->
+								<!--<span class="input-group-addon">-->
+													<!--<i class="la la-calendar glyphicon-th"></i>-->
+												<!--</span>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+
+
+					<!--<div class="form-group m-form__group row">-->
+						<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+							<!--<span th:text="#{label.identityDoc.pin}"></span>-->
+							<!--<span class="m&#45;&#45;font-danger">*</span>-->
+						<!--</label>-->
+						<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+							<!--<input type="text" class="form-control" name="pin" th:field="${organization.identityDoc.pin}"/>-->
+						<!--</div>-->
+					<!--</div>-->
+
+
+
+
+
+					<!--<input hidden="true" type="text" class="form-control" name="identityDoc.name" th:field="${organization.identityDoc.name}"/>-->
+					<!--<input hidden="true" type="text" class="form-control" name="enabled" th:field="${organization.identityDoc.enabled}"/>-->
+
+					<!--<input hidden="true" type="text" class="form-control" name="identityDocDetails.firstname"-->
+						   <!--th:field="${organization.identityDoc.identityDocDetails.firstname}"/>-->
+
+					<!--<input hidden="true" type="text" class="form-control" name="identityDocDetails.lastname"-->
+						   <!--th:field="${organization.identityDoc.identityDocDetails.lastname}"/>-->
+
+					<!--<input hidden="true" type="text" class="form-control" name="identityDocDetails.midname"-->
+						   <!--th:field="${organization.identityDoc.identityDocDetails.midname}"/>-->
+
+
+
+					<!--&lt;!&ndash;<div class="form-group m-form__group row">&ndash;&gt;-->
+					<!--&lt;!&ndash;<label class="col-form-label col-lg-4 col-sm-12">&ndash;&gt;-->
+					<!--&lt;!&ndash;<span th:text="#{label.identityDoc.name}"></span>&ndash;&gt;-->
+					<!--&lt;!&ndash;<span class="m&#45;&#45;font-danger">*</span>&ndash;&gt;-->
+					<!--&lt;!&ndash;</label>&ndash;&gt;-->
+					<!--&lt;!&ndash;<div class="col-lg-8 col-md-9 col-sm-12">&ndash;&gt;-->
+					<!--&lt;!&ndash;<input type="text" class="form-control" name="identityDoc.name" th:field="${organization.identityDoc.name}"/>&ndash;&gt;-->
+					<!--&lt;!&ndash;</div>&ndash;&gt;-->
+					<!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+
+					<!--&lt;!&ndash;<div class="form-group m-form__group row">&ndash;&gt;-->
+					<!--&lt;!&ndash;<label class="col-form-label col-lg-4 col-sm-12">&ndash;&gt;-->
+					<!--&lt;!&ndash;<span th:text="#{label.identityDoc.enabled}"></span>&ndash;&gt;-->
+					<!--&lt;!&ndash;<span class="m&#45;&#45;font-danger">*</span>&ndash;&gt;-->
+					<!--&lt;!&ndash;</label>&ndash;&gt;-->
+					<!--&lt;!&ndash;<div class="col-lg-8 col-md-9 col-sm-12">&ndash;&gt;-->
+					<!--&lt;!&ndash;<input type="text" class="form-control" name="enabled" th:field="${organization.identityDoc.enabled}"/>&ndash;&gt;-->
+					<!--&lt;!&ndash;</div>&ndash;&gt;-->
+					<!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+
+
+
+
+
+
+					<!--&lt;!&ndash;<div class="form-group m-form__group row" >&ndash;&gt;-->
+					<!--&lt;!&ndash;<label class="col-form-label col-lg-4 col-sm-12">&ndash;&gt;-->
+					<!--&lt;!&ndash;<span th:text="#{label.identityDoc.firstname}"></span>&ndash;&gt;-->
+					<!--&lt;!&ndash;<span class="m&#45;&#45;font-danger">*</span>&ndash;&gt;-->
+					<!--&lt;!&ndash;</label>&ndash;&gt;-->
+					<!--&lt;!&ndash;<div class="col-lg-8 col-md-9 col-sm-12">&ndash;&gt;-->
+					<!--&lt;!&ndash;<input type="text" class="form-control" name="identityDocDetails.firstname"&ndash;&gt;-->
+					<!--&lt;!&ndash;th:field="${organization.identityDoc.identityDocDetails.firstname}"/>&ndash;&gt;-->
+					<!--&lt;!&ndash;</div>&ndash;&gt;-->
+					<!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+
+					<!--&lt;!&ndash;<div class="form-group m-form__group row">&ndash;&gt;-->
+					<!--&lt;!&ndash;<label class="col-form-label col-lg-4 col-sm-12">&ndash;&gt;-->
+					<!--&lt;!&ndash;<span th:text="#{label.identityDoc.lastname}"></span>&ndash;&gt;-->
+					<!--&lt;!&ndash;<span class="m&#45;&#45;font-danger">*</span>&ndash;&gt;-->
+					<!--&lt;!&ndash;</label>&ndash;&gt;-->
+					<!--&lt;!&ndash;<div class="col-lg-8 col-md-9 col-sm-12">&ndash;&gt;-->
+					<!--&lt;!&ndash;<input type="text" class="form-control" name="identityDocDetails.lastname"&ndash;&gt;-->
+					<!--&lt;!&ndash;th:field="${organization.identityDoc.identityDocDetails.lastname}"/>&ndash;&gt;-->
+					<!--&lt;!&ndash;</div>&ndash;&gt;-->
+					<!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+
+					<!--&lt;!&ndash;<div class="form-group m-form__group row">&ndash;&gt;-->
+					<!--&lt;!&ndash;<label class="col-form-label col-lg-4 col-sm-12">&ndash;&gt;-->
+					<!--&lt;!&ndash;<span th:text="#{label.identityDoc.midname}"></span>&ndash;&gt;-->
+					<!--&lt;!&ndash;<span class="m&#45;&#45;font-danger">*</span>&ndash;&gt;-->
+					<!--&lt;!&ndash;</label>&ndash;&gt;-->
+					<!--&lt;!&ndash;<div class="col-lg-8 col-md-9 col-sm-12">&ndash;&gt;-->
+					<!--&lt;!&ndash;<input type="text" class="form-control" name="identityDocDetails.midname"&ndash;&gt;-->
+					<!--&lt;!&ndash;th:field="${organization.identityDoc.identityDocDetails.midname}"/>&ndash;&gt;-->
+					<!--&lt;!&ndash;</div>&ndash;&gt;-->
+					<!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+
+					<!--&lt;!&ndash;<div class="form-group m-form__group row">&ndash;&gt;-->
+					<!--&lt;!&ndash;<label class="col-form-label col-lg-4 col-sm-12">&ndash;&gt;-->
+					<!--&lt;!&ndash;<span th:text="#{label.identityDoc.fullname}"></span>&ndash;&gt;-->
+					<!--&lt;!&ndash;<span class="m&#45;&#45;font-danger">*</span>&ndash;&gt;-->
+					<!--&lt;!&ndash;</label>&ndash;&gt;-->
+					<!--&lt;!&ndash;<div class="col-lg-8 col-md-9 col-sm-12">&ndash;&gt;-->
+					<!--&lt;!&ndash;<input type="text" class="form-control" name="identityDocDetails.fullname"&ndash;&gt;-->
+					<!--&lt;!&ndash;th:field="${organization.identityDoc.identityDocDetails.fullname}"/>&ndash;&gt;-->
+					<!--&lt;!&ndash;</div>&ndash;&gt;-->
+					<!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+
+				<!--</div>-->
+				<!--<h3 th:text="#{label.addressData}"></h3>-->
+				<!--<div class="form-body">-->
+
+					<!--<div class="form-group m-form__group row">-->
+						<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+							<!--<span th:text="#{label.org.region}"></span>-->
+							<!--<span class="m&#45;&#45;font-danger">*</span>-->
+						<!--</label>-->
+						<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+							<!--&lt;!&ndash;<select class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.region}" onchange="updateRegionId(this);" th:title="#{label.select}">&ndash;&gt;-->
+							<!--&lt;!&ndash;<option th:each="regionInList : ${regionList}"&ndash;&gt;-->
+							<!--&lt;!&ndash;th:value="${regionInList.id}"&ndash;&gt;-->
+							<!--&lt;!&ndash;th:selected="(${regionInList.id} == *{address.region.id})"&ndash;&gt;-->
+							<!--&lt;!&ndash;th:text="${regionInList.name}"&ndash;&gt;-->
+
+							<!--&lt;!&ndash;&gt;</option>&ndash;&gt;-->
+							<!--&lt;!&ndash;</select>&ndash;&gt;-->
+
+							<!--<select id="regionSelect" class="form-control m-bootstrap-select m_selectpicker" th:field="*{address.region}" >-->
+								<!--<option th:each="regionInList : ${regionList}"-->
+										<!--th:value="${{regionInList.id}}"-->
+										<!--th:text="${regionInList.name}">-->
+								<!--</option>-->
+							<!--</select>-->
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class="form-group m-form__group row">-->
+						<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+							<!--<span th:text="#{label.org.district}"></span>-->
+							<!--<span class="m&#45;&#45;font-danger">*</span>-->
+						<!--</label>-->
+						<!--<div class="col-lg-8 col-md-9 col-sm-12" >-->
+							<!--<select id="districtSelect" class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.district}" onchange="updateDistrictId(this);" th:title="#{label.select}">-->
+
+								<!--<option th:each="districtInList : ${districtList}"-->
+
+										<!--th:value="${districtInList.id}"-->
+										<!--th:selected="(${districtInList.id} == *{address.district.id})"-->
+										<!--th:text="${districtInList.name}"></option>-->
+
+							<!--</select>-->
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class="form-group m-form__group row">-->
+						<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+							<!--<span th:text="#{label.org.aokmotu}"></span>-->
+						<!--</label>-->
+						<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+							<!--<select id="aokmotuSelect" class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.aokmotu}" onchange="updateAokmotuId(this);" th:title="#{label.select}">-->
+								<!--<option th:each="aokmotuInList : ${aokmotuList}"-->
+										<!--th:value="${aokmotuInList.id}"-->
+										<!--th:selected="(${aokmotuInList.id} == *{address.aokmotu.id})"-->
+										<!--th:text="${aokmotuInList.name}"></option>-->
+							<!--</select>-->
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class="form-group m-form__group row">-->
+						<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+							<!--<span th:text="#{label.org.village}"></span>-->
+						<!--</label>-->
+						<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+							<!--<select id="villageSelect" class="form-control m-bootstrap-select m_selectpicker" th:value="${organization.address.village}" onchange="updateVillageId(this);" th:title="#{label.select}">-->
+								<!--<option th:each="villageInList : ${villageList}"-->
+										<!--th:value="${villageInList.id}"-->
+										<!--th:selected="(${villageInList.id} == *{address.village.id})"-->
+										<!--th:text="${villageInList.name}"></option>-->
+							<!--</select>-->
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class="form-group m-form__group row">-->
+						<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+							<!--<span th:text="#{label.org.address}"></span>-->
+							<!--<span class="m&#45;&#45;font-danger">*</span>-->
+						<!--</label>-->
+						<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+							<!--<input type="text" class="form-control" name="address.line" th:field="*{address.line}"/>-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<h3 th:text="#{label.contacts}"></h3>-->
+				<!--<div class="form-body">-->
+					<!--<input hidden="true" type="text" id="contactID" name="contact.id" th:field="${organization.contact.id}" />-->
+					<!--<div class="form-group m-form__group row">-->
+						<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+							<!--<span th:text="#{label.contact.name}"></span>-->
+							<!--<span class="m&#45;&#45;font-danger">*</span>-->
+						<!--</label>-->
+						<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+							<!--<input type="text" class="form-control" name="contact.name" th:field="${organization.contact.name}"/>-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<br>-->
+				<!--<div class="row">-->
+					<!--<div class="col form-body">-->
+						<!--<h4>Person1</h4>-->
+						<!--<div class="row">-->
+							<!--<input class="form-control col" name="person1">-->
+							<!--<input class="form-control col" name="person1">-->
+							<!--<input class="form-control col" name="person1">-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="row">-->
+					<!--<div class="col form-body">-->
+						<!--<h4>Person2</h4>-->
+						<!--<div class="row">-->
+							<!--<input class="form-control col" name="person2">-->
+							<!--<input class="form-control col" name="person2">-->
+							<!--<input class="form-control col" name="person2">-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+			</div>
+
+			<div>
 			<ul class="nav nav-tabs nav-fill" role="tablist">
 
 				<li class="nav-item">
@@ -192,7 +519,7 @@
 						<!--<div class="form-group m-form__group row">-->
 							<!--<label class="col-form-label col-lg-4 col-sm-12">-->
 								<!--<span th:text="#{label.identityDoc.name}"></span>-->
-								<!--<span class="m&#45;&#45;font-danger">*</span>-->
+								<!--<span class="m--font-danger">*</span>-->
 							<!--</label>-->
 							<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
 								<!--<input type="text" class="form-control" name="identityDoc.name" th:field="${organization.identityDoc.name}"/>-->
@@ -203,7 +530,7 @@
 						<!--<div class="form-group m-form__group row">-->
 							<!--<label class="col-form-label col-lg-4 col-sm-12">-->
 								<!--<span th:text="#{label.identityDoc.enabled}"></span>-->
-								<!--<span class="m&#45;&#45;font-danger">*</span>-->
+								<!--<span class="m--font-danger">*</span>-->
 							<!--</label>-->
 							<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
 								<!--<input type="text" class="form-control" name="enabled" th:field="${organization.identityDoc.enabled}"/>-->
@@ -219,7 +546,7 @@
 						<!--<div class="form-group m-form__group row" >-->
 							<!--<label class="col-form-label col-lg-4 col-sm-12">-->
 								<!--<span th:text="#{label.identityDoc.firstname}"></span>-->
-								<!--<span class="m&#45;&#45;font-danger">*</span>-->
+								<!--<span class="m--font-danger">*</span>-->
 							<!--</label>-->
 							<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
 								<!--<input type="text" class="form-control" name="identityDocDetails.firstname"-->
@@ -231,7 +558,7 @@
 						<!--<div class="form-group m-form__group row">-->
 							<!--<label class="col-form-label col-lg-4 col-sm-12">-->
 								<!--<span th:text="#{label.identityDoc.lastname}"></span>-->
-								<!--<span class="m&#45;&#45;font-danger">*</span>-->
+								<!--<span class="m--font-danger">*</span>-->
 							<!--</label>-->
 							<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
 								<!--<input type="text" class="form-control" name="identityDocDetails.lastname"-->
@@ -243,7 +570,7 @@
 						<!--<div class="form-group m-form__group row">-->
 							<!--<label class="col-form-label col-lg-4 col-sm-12">-->
 								<!--<span th:text="#{label.identityDoc.midname}"></span>-->
-								<!--<span class="m&#45;&#45;font-danger">*</span>-->
+								<!--<span class="m--font-danger">*</span>-->
 							<!--</label>-->
 							<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
 								<!--<input type="text" class="form-control" name="identityDocDetails.midname"-->
@@ -255,7 +582,7 @@
 						<!--<div class="form-group m-form__group row">-->
 							<!--<label class="col-form-label col-lg-4 col-sm-12">-->
 								<!--<span th:text="#{label.identityDoc.fullname}"></span>-->
-								<!--<span class="m&#45;&#45;font-danger">*</span>-->
+								<!--<span class="m--font-danger">*</span>-->
 							<!--</label>-->
 							<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
 								<!--<input type="text" class="form-control" name="identityDocDetails.fullname"-->
@@ -364,6 +691,7 @@
 						</div>
 					</div>
 				</div>
+			</div>
 			</div>
 		</div>
 

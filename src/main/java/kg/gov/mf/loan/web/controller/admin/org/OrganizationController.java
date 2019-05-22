@@ -2,10 +2,14 @@ package kg.gov.mf.loan.web.controller.admin.org;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.admin.org.model.*;
 import kg.gov.mf.loan.admin.org.repository.OrganizationRepository;
+import kg.gov.mf.loan.admin.org.service.*;
+import kg.gov.mf.loan.admin.sys.service.InformationService;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.model.debtor.OwnerType;
+import kg.gov.mf.loan.manage.repository.org.StaffRepository;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.web.fetchModels.PersonOrganizationDocModel;
@@ -21,28 +25,34 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-
-import kg.gov.mf.loan.admin.org.model.*;
-import kg.gov.mf.loan.admin.org.service.*;
-
-import kg.gov.mf.loan.admin.sys.service.*;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class OrganizationController {
 
 	@Autowired
 	EntityManager entityManager;
+
+	@Autowired
+	PersonService personService;
+
+	@Autowired
+	DepartmentService departmentService;
 	
 	@Autowired
     private OrganizationService organizationService;
+
+	@Autowired
+	StaffService staffService;
+
+	@Autowired
+	IdentityDocDetailsService identityDocDetailsService;
+
+	@Autowired
+	StaffRepository staffRepository;
 	
     public void setOrganizationService(OrganizationService rs)
     {
@@ -322,7 +332,23 @@ public class OrganizationController {
 		model.addAttribute("identityDocTypeList", this.identityDocTypeService.findAll());
 		model.addAttribute("identityDocGivenByList", this.identityDocGivenByService.findAll());		
 		model.addAttribute("orgFormList", this.orgFormService.findAll());
-		
+
+		String person1Name=" ";
+		String person1Surname=" ";
+		String person1Lastname=" ";
+
+		model.addAttribute("person1Surname",person1Surname);
+		model.addAttribute("person1Name",person1Name);
+		model.addAttribute("person1Lastname",person1Lastname);
+
+		String person2Name=" ";
+		String person2Surname=" ";
+		String person2Lastname=" ";
+
+		model.addAttribute("person2Surname",person2Surname);
+		model.addAttribute("person2Name",person2Name);
+		model.addAttribute("person2Lastname",person2Lastname);
+
 		return "admin/org/organizationForm";
 	}
 	
@@ -356,20 +382,137 @@ public class OrganizationController {
 
 		model.addAttribute("identityDocTypeList", this.identityDocTypeService.findAll());
 		model.addAttribute("identityDocGivenByList", this.identityDocGivenByService.findAll());		
-		model.addAttribute("orgFormList", this.orgFormService.findAll());		
+		model.addAttribute("orgFormList", this.orgFormService.findAll());
+
+		Person person1=null;
+		Person person2=null;
+
+		Position position1=new Position();
+		Position position2=new Position();
+		for(Department department1:organization.getDepartment()){
+			Department department=departmentService.findById(department1.getId());
+			if(department.getPosition().size()!=2){
+				department.getPosition().clear();
+				//		add Positions
+
+				position1.setName("Руководитель");
+				position1.setDepartment(department);
+				positionService.create(position1);
+
+
+				position2.setName("Главный бухгалтер");
+				position2.setDepartment(department);
+				positionService.create(position2);
+				department.setOrganization(organization);
+				departmentService.edit(department);
+			}
+			List<Staff> staffList=staffService.findAllByDepartment(department);
+			Iterator iterator = department.getPosition().iterator();
+			List<Position> positions=new ArrayList<>();
+			while(iterator.hasNext()){
+				positions.add((Position)iterator.next());
+			}
+			if(staffList.size()>=2){
+				Staff staf1=staffList.get(0);
+				Staff staff1=staffService.findById(staf1.getId());
+				staff1.setPosition(positions.get(0));
+				person1=staff1.getPerson();
+				staffService.edit(staff1);
+
+				Staff staf2=staffList.get(1);
+				Staff staff2=staffService.findById(staf2.getId());
+				staff2.setPosition(positions.get(1));
+				person2=staff2.getPerson();
+				staffService.edit(staff2);
+			}
+			else if(staffList.size()==1){
+				Staff staf1=staffList.get(0);
+				Staff staff1=staffService.findById(staf1.getId());
+				person1=staff1.getPerson();
+
+				IdentityDoc accountantIdentityDoc=new IdentityDoc();
+				accountantIdentityDoc.setName(" ");
+				accountantIdentityDoc.setNumber(" ");
+				accountantIdentityDoc.setPin(" ");
+				accountantIdentityDoc.setIdentityDocDetails(identityDocDetailsService.findById(1L));
+				accountantIdentityDoc.setIdentityDocGivenBy(identityDocGivenByService.findById(1L));
+				accountantIdentityDoc.setIdentityDocType(identityDocTypeService.findById(1L));
+
+				person2=new Person();
+				person2.setIdentityDoc(accountantIdentityDoc);
+				person2.setContact(organization.getContact());
+				person2.setAddress(organization.getAddress());
+				person2.setName(" ");
+				person2.setDescription(organization.getName());
+				personService.create(person2);
+
+
+//    	add staff
+				Staff staff2=new Staff();
+				staff2.setName(" ");
+				staff2.setPerson(person2);
+				staff2.setDepartment(department);
+				staff2.setPosition(position2);
+				staff2.setOrganization(organization);
+				staffService.create(staff2);
+
+			}
+			break;
+		}
+		String[] personSplitted1=person1.getName().split("\\s+");
+		String person1Name=" ";
+		String person1Surname=" ";
+		String person1Lastname=" ";
+		if(personSplitted1.length>=3){
+			person1Surname=personSplitted1[0];
+			person1Name=personSplitted1[1];
+			person1Lastname=personSplitted1[2];
+		}
+		else if(personSplitted1.length==2){
+			person1Surname=personSplitted1[0];
+			person1Name=personSplitted1[1];
+		}
+		else if(personSplitted1.length==1){
+			person1Name=personSplitted1[0];
+		}
+		model.addAttribute("person1Surname",person1Surname);
+		model.addAttribute("person1Name",person1Name);
+		model.addAttribute("person1Lastname",person1Lastname);
+
+		String[] personSplitted2=person2.getName().split("\\s+");
+		String person2Name=" ";
+		String person2Surname=" ";
+		String person2Lastname=" ";
+		if(personSplitted2.length>=3){
+			person2Surname=personSplitted2[0];
+			person2Name=personSplitted2[1];
+			person2Lastname=personSplitted2[2];
+		}
+		else if(personSplitted2.length==2){
+			person2Surname=personSplitted2[0];
+			person2Name=personSplitted2[1];
+		}
+		else if(personSplitted2.length==1){
+			person2Name=personSplitted2[0];
+		}
+		model.addAttribute("person2Surname",person2Surname);
+		model.addAttribute("person2Name",person2Name);
+		model.addAttribute("person2Lastname",person2Lastname);
 		
 		return "admin/org/organizationForm";
 
 	}
 
 	@RequestMapping(value = "/organization/save", method = RequestMethod.POST)
-	public String saveOrganizationAndRedirectToOrganizationList(@Validated @ModelAttribute("organization") Organization organization, BindingResult result) {
+	public String saveOrganizationAndRedirectToOrganizationList(@Validated @ModelAttribute("organization") Organization organization,
+																BindingResult result,String person1,String person2) {
 
 		organization.setName(organization.getIdentityDoc().getIdentityDocDetails().getFullname());
 
 		if (result.hasErrors()) {
 			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
-		} else if (organization.getId() == 0) {
+		}
+		else if (organization.getId() == 0) {
 			
 //			organization.setAddress(this.addressService.findById(organization.getAddress().getId()));
 //			organization.setIdentityDoc(this.identityDocService.findById(organization.getIdentityDoc().getId()));
@@ -389,6 +532,8 @@ public class OrganizationController {
 
 			this.ownerService.add(newOwner);
 
+			addNewPersonAndEtc(organization,person1,person2);
+
 		} else {
 			this.organizationService.edit(organization);
 			Owner owner=this.ownerService.getByEntityId(organization.getId(),"ORGANIZATION");
@@ -402,12 +547,122 @@ public class OrganizationController {
 			catch (Exception e){
 				System.out.println(e);
 			}
+
+			Organization organization1=organizationService.findById(organization.getId());
+			if(organization1.getDepartment().size()==0){
+				addNewPersonAndEtc(organization1,person1,person2);
+			}
+			else{
+				for(Department department1:organization1.getDepartment()){
+					Department department=departmentService.findById(department1.getId());
+					List<Staff> staffList=staffService.findAllByDepartment(department);
+					if(staffList.size()==2){
+						int counter=0;
+						for(Staff staff1:staffList){
+							counter++;
+							Staff staff=staffService.findById(staff1.getId());
+							Person person=staff.getPerson();
+							if(counter==1){
+								String sd =person1.replaceAll("\\s+","");
+								person.setName(sd.replaceAll(","," "));
+							}
+							else{
+								String sd= person2.replaceAll("\\s+","");
+								person.setName(sd.replaceAll(","," "));
+							}
+							staff1.setName(person.getName());
+							staffService.edit(staff1);
+							personService.edit(person);
+						}
+						break;
+					}
+
+				}
+			}
+
 		}
-
-
 
 		return "redirect:/organization/"+organization.getId()+"/details";
 
+	}
+
+	public void addNewPersonAndEtc(Organization organization,String person1,String person2){
+		//    	add Department
+		Department department=new Department();
+		department.setName("Руководство");
+		department.setOrganization(organization);
+		Set<Department> departmentList=organization.getDepartment();
+		departmentService.create(department);
+		departmentList.add(department);
+		organization.setDepartment(departmentList);
+		organizationRepository.save(organization);
+
+//		add Positions
+		Position position1=new Position();
+		position1.setName("Руководитель");
+		position1.setDepartment(department);
+		positionService.create(position1);
+
+		Position position2=new Position();
+		position2.setName("Главный бухгалтер");
+		position2.setDepartment(department);
+		positionService.create(position2);
+
+
+//    	add director
+		IdentityDoc directorIdentityDoc=new IdentityDoc();
+		directorIdentityDoc.setName(" ");
+		directorIdentityDoc.setNumber(" ");
+		directorIdentityDoc.setPin(" ");
+		directorIdentityDoc.setIdentityDocDetails(identityDocDetailsService.findById(1L));
+		directorIdentityDoc.setIdentityDocGivenBy(identityDocGivenByService.findById(1L));
+		directorIdentityDoc.setIdentityDocType(identityDocTypeService.findById(1L));
+
+		Person director=new Person();
+		director.setIdentityDoc(directorIdentityDoc);
+		director.setAddress(organization.getAddress());
+		director.setContact(organization.getContact());
+		String directorName=person1.replaceAll(","," ");
+		director.setName(directorName);
+		director.setDescription(organization.getName()+"  Руководитель");
+		personService.create(director);
+
+
+//    	add accountant
+		IdentityDoc accountantIdentityDoc=new IdentityDoc();
+		accountantIdentityDoc.setName(" ");
+		accountantIdentityDoc.setNumber(" ");
+		accountantIdentityDoc.setPin(" ");
+		accountantIdentityDoc.setIdentityDocDetails(identityDocDetailsService.findById(1L));
+		accountantIdentityDoc.setIdentityDocGivenBy(identityDocGivenByService.findById(1L));
+		accountantIdentityDoc.setIdentityDocType(identityDocTypeService.findById(1L));
+
+		Person accountant=new Person();
+		accountant.setIdentityDoc(accountantIdentityDoc);
+		accountant.setContact(organization.getContact());
+		accountant.setAddress(organization.getAddress());
+		String accountantName=person2.replaceAll(","," ");
+		accountant.setName(accountantName);
+		accountant.setDescription(organization.getName()+"  Главный бухгалтер");
+		personService.create(accountant);
+
+//    	add director staff
+		Staff staff1=new Staff();
+		staff1.setName(directorName);
+		staff1.setPerson(director);
+		staff1.setDepartment(department);
+		staff1.setPosition(position1);
+		staff1.setOrganization(organization);
+		staffService.create(staff1);
+
+//    	add accountant staff
+		Staff staff2=new Staff();
+		staff2.setName(accountantName);
+		staff2.setPerson(accountant);
+		staff2.setDepartment(department);
+		staff2.setPosition(position2);
+		staff2.setOrganization(organization);
+		staffService.create(staff2);
 	}
 
 	@RequestMapping("/organization/{id}/remove")
