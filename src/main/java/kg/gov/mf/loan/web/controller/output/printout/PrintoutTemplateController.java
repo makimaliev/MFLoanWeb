@@ -757,17 +757,21 @@ public class PrintoutTemplateController {
 						for (XWPFParagraph p : cell.getParagraphs())
 						{
 							for (XWPFRun r : p.getRuns()) {
-								String text = r.getText(0);
-								if (text != null && text.contains("(=")&& text.contains("21")){
-                                    replace(r,user,staff,person,identityDoc);
-                                    writetable(tbl);
-                                }
-								else if (text != null && text.contains("(="))
-								{
-									replace(r,user,staff,person,identityDoc);
+								try {
+									String text = r.getText(0);
+									if (text != null && text.contains("(=") && text.contains("21")) {
+										replace(r, user, staff, person, identityDoc);
+										writetable(tbl);
+									} else if (text != null && text.contains("(=")) {
+										replace(r, user, staff, person, identityDoc);
 //									text = text.replace("(=", "$");
 //									r.setText(text,0);
 
+									}
+								}
+								catch (Exception e){
+									System.out.println(e);
+									break;
 								}
 							}
 						}
@@ -1019,6 +1023,7 @@ public class PrintoutTemplateController {
                         cell.setParagraph(paragraph);
                     }
                     else if(j!=6){
+						cell.removeParagraph(0);
                         paragraph = cell.addParagraph();
                         paragraph.setAlignment(ParagraphAlignment.RIGHT);
                         run = paragraph.createRun();
@@ -1301,8 +1306,14 @@ public class PrintoutTemplateController {
 							break;
 						case 15:
                             SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-                            String docDate=format.format(identityDoc.getDate());
-							newText=identityDoc.getIdentityDocType().getName()+":"+identityDoc.getNumber()+", "+docDate+", "+identityDoc.getGivenBy();
+							String docDate=" ";
+							String givenBY=" ";
+                            if(identityDoc.getDate()!=null)
+                            	docDate=format.format(identityDoc.getDate());
+                            if(identityDoc.getGivenBy()!=null)
+                            	givenBY=identityDoc.getGivenBy();
+
+							newText=identityDoc.getIdentityDocType().getName()+":"+identityDoc.getNumber()+", "+docDate+", "+givenBY;
 							break;
 						case 16:
 							newText=staff.getPosition().getName();
