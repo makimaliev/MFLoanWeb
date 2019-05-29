@@ -714,81 +714,130 @@ public class PrintoutTemplateController {
 		try
 		{
 
-
             User user1=userService.findByUsername(Utils.getPrincipal());
             User user=userService.findById(user1.getId());
             Staff staff=staffService.findById(user.getStaff().getId());
             Person person=personService.findById(Long.valueOf(object_id));
             IdentityDoc identityDoc=identityDocService.findById(person.getIdentityDoc().getId());
+            XWPFDocument doc=new XWPFDocument();
 
-			String filePath = UPLOADED_FOLDER+ "/"+"1. Договор займа.docx";
+		    switch ((int) type_id){
 
-			File file = new File(filePath);
+                case 1:
 
-			FileInputStream fInput = new FileInputStream(file.getAbsolutePath());
+                    String filePath = UPLOADED_FOLDER+ "/"+"1. Договор займа.docx";
 
-			XWPFDocument doc = new XWPFDocument(fInput);
+                    File file = new File(filePath);
 
-			for (XWPFParagraph p : doc.getParagraphs())
-			{
-				List<XWPFRun> runs = p.getRuns();
+                    FileInputStream fInput = new FileInputStream(file.getAbsolutePath());
+                    doc = new XWPFDocument(fInput);
 
-				if (runs != null)
-				{
-					for (XWPFRun r : runs)
-					{
-						String text = r.getText(0);
-						if (text != null && text.contains("(="))
-						{
-							replace(r,user,staff,person,identityDoc);
+                    for (XWPFParagraph p : doc.getParagraphs())
+                    {
+                        List<XWPFRun> runs = p.getRuns();
+
+                        if (runs != null)
+                        {
+                            for (XWPFRun r : runs)
+                            {
+                                String text = r.getText(0);
+                                if (text != null && text.contains("(="))
+                                {
+                                    replace(r,user,staff,person,identityDoc);
 //							text = text.replace("(=", "$");
 //							r.setText(text, 0);
-						}
-					}
-				}
-			}
+                                }
+                            }
+                        }
+                    }
 
-			for (XWPFTable tbl : doc.getTables())
-			{
-				for (XWPFTableRow row : tbl.getRows())
-				{
-					for (XWPFTableCell cell : row.getTableCells())
-					{
-						for (XWPFParagraph p : cell.getParagraphs())
-						{
-							for (XWPFRun r : p.getRuns()) {
-								try {
-									String text = r.getText(0);
-									if (text != null && text.contains("(=") && text.contains("21")) {
-										replace(r, user, staff, person, identityDoc);
-										writetable(tbl);
-									} else if (text != null && text.contains("(=")) {
-										replace(r, user, staff, person, identityDoc);
+                    for (XWPFTable tbl : doc.getTables())
+                    {
+                        for (XWPFTableRow row : tbl.getRows())
+                        {
+                            for (XWPFTableCell cell : row.getTableCells())
+                            {
+                                for (XWPFParagraph p : cell.getParagraphs())
+                                {
+                                    for (XWPFRun r : p.getRuns()) {
+                                        try {
+                                            String text = r.getText(0);
+                                            if (text != null && text.contains("(=") && text.contains("21")) {
+                                                replace(r, user, staff, person, identityDoc);
+                                                writetable(tbl);
+                                            } else if (text != null && text.contains("(=")) {
+                                                replace(r, user, staff, person, identityDoc);
 //									text = text.replace("(=", "$");
 //									r.setText(text,0);
 
-									}
-								}
-								catch (Exception e){
-									System.out.println(e);
-									break;
-								}
-							}
-						}
-					}
-				}
-			}
+                                            }
+                                        }
+                                        catch (Exception e){
+                                            System.out.println(e);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
 
+                case 2:
+                    filePath = UPLOADED_FOLDER+ "/"+"2. Договор бп (finish).docx";
 
-			response.setContentType("application/msword");
-			response.setHeader("Content-Disposition", "attachment; filename=filename.doc");
+                    file = new File(filePath);
 
-			doc.write(response.getOutputStream());
+                    fInput = new FileInputStream(file.getAbsolutePath());
+                    doc = new XWPFDocument(fInput);
+
+                    for (XWPFParagraph p : doc.getParagraphs())
+                    {
+                        List<XWPFRun> runs = p.getRuns();
+
+                        if (runs != null)
+                        {
+                            for (XWPFRun r : runs)
+                            {
+                                String text = r.getText(0);
+                                if (text != null && text.contains("(="))
+                                {
+                                    replace(r,user,staff,person,identityDoc);
+                                }
+                            }
+                        }
+                    }
+
+                    for (XWPFTable tbl : doc.getTables())
+                    {
+                        for (XWPFTableRow row : tbl.getRows())
+                        {
+                            for (XWPFTableCell cell : row.getTableCells())
+                            {
+                                for (XWPFParagraph p : cell.getParagraphs())
+                                {
+                                    for (XWPFRun r : p.getRuns()) {
+                                        String text = r.getText(0);
+                                        if (text != null && text.contains("(=")) {
+                                            replace(r, user, staff, person, identityDoc);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+            }
+
+            response.setContentType("application/msword");
+            response.setHeader("Content-Disposition", "attachment; filename=filename.doc");
+
+            doc.write(response.getOutputStream());
 
 //                response.getOutputStream().flush();
 //                response.getOutputStream().close();
 
-			doc.close();
+            doc.close();
 
 		}
 		catch (Exception ex)

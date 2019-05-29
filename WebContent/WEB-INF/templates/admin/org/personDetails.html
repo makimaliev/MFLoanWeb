@@ -150,6 +150,9 @@
 													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_PRINT_PERSON')" th:href="@{/printout/1/objectId/__${person.id}__/generate}"
 													   role="button" class="btn btn-outline-success" th:text="#{label.table.print}">Edit person </a>
 
+													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_PRINT_PERSON')" th:href="@{/printout/2/objectId/__${person.id}__/generate}"
+													   role="button" class="btn btn-outline-success" th:text="#{label.table.print1}">Edit person </a>
+
 
 												</div>
 											</div>
