@@ -851,20 +851,6 @@ public class PrintoutTemplateController {
 	private void writetable(XWPFTable tbl){
 
 
-//        for (XWPFTableRow row : tbl.getRows())
-//        {
-//            for (XWPFTableCell cell : row.getTableCells())
-//            {
-//                System.out.println(cell.getParagraphs());
-//                for (XWPFParagraph p : cell.getParagraphs())
-//                {
-//                    for (XWPFRun r : p.getRuns()) {
-//                        String text = r.getText(0);
-//
-//                    }
-//                }
-//            }
-//        }
         XWPFTableRow row;
         XWPFTableCell cell;
         XWPFParagraph paragraph;
@@ -902,64 +888,29 @@ public class PrintoutTemplateController {
                 row=tbl.getRows().get(i);
                 for(int j=1;j<row.getTableCells().size();j++){
                     cell=row.getTableCells().get(j);
-                    cell.removeParagraph(0);
-                    paragraph = cell.addParagraph();
-                    paragraph.setAlignment(ParagraphAlignment.RIGHT);
-                    run = paragraph.createRun();
-                    run.setText("3 000,00");
-                    cell.setParagraph(paragraph);
+					cell.getParagraphs().get(0).getRuns().get(0).setText("3 000,00",0);
 //                    cell.setText("3 000,00");
                     if(j==6){
-                        cell.removeParagraph(0);
-                        paragraph = cell.addParagraph();
-                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-                        run = paragraph.createRun();
-                        run.setText("12 000,00");
-                        cell.setParagraph(paragraph);
+						cell.getParagraphs().get(0).getRuns().get(0).setText("12 000,00",0);
                     }
 
                 }
             }
             row=tbl.getRows().get(tbl.getRows().size()-2);
             cell=row.getTableCells().get(2);
-            cell.removeParagraph(0);
-            paragraph = cell.addParagraph();
-            paragraph.setAlignment(ParagraphAlignment.RIGHT);
-            run = paragraph.createRun();
-            run.setText("2 000,00");
-            cell.setParagraph(paragraph);
+			cell.getParagraphs().get(0).getRuns().get(0).setText("2 000,00",0);
 
             cell=row.getTableCells().get(3);
-            cell.removeParagraph(0);
-            paragraph = cell.addParagraph();
-            paragraph.setAlignment(ParagraphAlignment.RIGHT);
-            run = paragraph.createRun();
-            run.setText("2 000,00");
-            cell.setParagraph(paragraph);
+			cell.getParagraphs().get(0).getRuns().get(0).setText("2 000,00",0);
 
             cell=row.getTableCells().get(4);
-            cell.removeParagraph(0);
-            paragraph = cell.addParagraph();
-            paragraph.setAlignment(ParagraphAlignment.RIGHT);
-            run = paragraph.createRun();
-            run.setText("2 000,00");
-            cell.setParagraph(paragraph);
+			cell.getParagraphs().get(0).getRuns().get(0).setText("2 000,00",0);
 
             cell=row.getTableCells().get(5);
-            cell.removeParagraph(0);
-            paragraph = cell.addParagraph();
-            paragraph.setAlignment(ParagraphAlignment.RIGHT);
-            run = paragraph.createRun();
-            run.setText("2 000,00");
-            cell.setParagraph(paragraph);
+			cell.getParagraphs().get(0).getRuns().get(0).setText("2 000,00",0);
 
             cell=row.getTableCells().get(6);
-            cell.removeParagraph(0);
-            paragraph = cell.addParagraph();
-            paragraph.setAlignment(ParagraphAlignment.RIGHT);
-            run = paragraph.createRun();
-            run.setText("8 000,00");
-            cell.setParagraph(paragraph);
+			cell.getParagraphs().get(0).getRuns().get(0).setText("8 000,00",0);
 
         }
         else if(kvartal==2 ){
@@ -969,64 +920,29 @@ public class PrintoutTemplateController {
                     cell=row.getTableCells().get(j);
                     if(i==5 && j==2){}
                     else if(i==5 && j==6){
-                        cell.removeParagraph(0);
-                        paragraph = cell.addParagraph();
-                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-                        run = paragraph.createRun();
-                        run.setText("9 000,00");
-                        cell.setParagraph(paragraph);
+						cell.getParagraphs().get(0).getRuns().get(0).setText("9 000,00",0);
                     }
                     else if(i==tbl.getRows().size()-3 && j==6){
-                        cell.removeParagraph(0);
-                        paragraph = cell.addParagraph();
-                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-                        run = paragraph.createRun();
-                        run.setText("9 000,00");
-                        cell.setParagraph(paragraph);
+						cell.getParagraphs().get(0).getRuns().get(0).setText("9 000,00",0);
                     }
                     else if(j==6){
-                        cell.removeParagraph(0);
-                        paragraph = cell.addParagraph();
-                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-                        run = paragraph.createRun();
-                        run.setText("12 000,00");
-                        cell.setParagraph(paragraph);
+						cell.getParagraphs().get(0).getRuns().get(0).setText("12 000,00",0);
                     }
                     else if(i==tbl.getRows().size()-3 && ((j==3)||(j==4)||(j==5))){
-                        cell.removeParagraph(0);
-                        paragraph = cell.addParagraph();
-                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-                        run = paragraph.createRun();
-                        run.setText("2 000,00");
-                        cell.setParagraph(paragraph);
+						cell.getParagraphs().get(0).getRuns().get(0).setText("2 000,00",0);
                     }
                     else if(j!=6){
-                        cell.removeParagraph(0);
-                        paragraph = cell.addParagraph();
-                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-                        run = paragraph.createRun();
-                        run.setText("3 000,00");
-                        cell.setParagraph(paragraph);
+						cell.getParagraphs().get(0).getRuns().get(0).setText("3 000,00",0);
                     }
 
                 }
             }
             row=tbl.getRows().get(tbl.getRows().size()-2);
             cell=row.getTableCells().get(2);
-            cell.removeParagraph(0);
-            paragraph = cell.addParagraph();
-            paragraph.setAlignment(ParagraphAlignment.RIGHT);
-            run = paragraph.createRun();
-            run.setText("2 000,00");
-            cell.setParagraph(paragraph);
+			cell.getParagraphs().get(0).getRuns().get(0).setText("2 000,00",0);
 //            cell.setText("2 000,00");
             cell=row.getTableCells().get(6);
-            cell.removeParagraph(0);
-            paragraph = cell.addParagraph();
-            paragraph.setAlignment(ParagraphAlignment.RIGHT);
-            run = paragraph.createRun();
-            run.setText("2 000,00");
-            cell.setParagraph(paragraph);
+			cell.getParagraphs().get(0).getRuns().get(0).setText("2 000,00",0);
 //            cell.setText("2 000,00");
 
         }
@@ -1037,73 +953,32 @@ public class PrintoutTemplateController {
                     cell=row.getTableCells().get(j);
                     if((i==5 && j==2)||(i==5 && j==3)){}
                     else if(i==5 && j==6){
-                        cell.removeParagraph(0);
-                        paragraph = cell.addParagraph();
-                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-                        run = paragraph.createRun();
-                        run.setText("6 000,00");
-                        cell.setParagraph(paragraph);
+						cell.getParagraphs().get(0).getRuns().get(0).setText("6 000,00",0);
                     }
                     else if(i==tbl.getRows().size()-3 && j==6){
-                        cell.removeParagraph(0);
-                        paragraph = cell.addParagraph();
-                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-                        run = paragraph.createRun();
-                        run.setText("10 000,00");
-                        cell.setParagraph(paragraph);
+						cell.getParagraphs().get(0).getRuns().get(0).setText("10 000,00",0);
                     }
                     else if(j==6){
-                        cell.removeParagraph(0);
-                        paragraph = cell.addParagraph();
-                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-                        run = paragraph.createRun();
-                        run.setText("12 000,00");
-                        cell.setParagraph(paragraph);
+						cell.getParagraphs().get(0).getRuns().get(0).setText("12 000,00",0);
                     }
                     else if(i==tbl.getRows().size()-3 && ((j==4)||(j==5))){
-                        cell.removeParagraph(0);
-                        paragraph = cell.addParagraph();
-                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-                        run = paragraph.createRun();
-                        run.setText("2 000,00");
-                        cell.setParagraph(paragraph);
+						cell.getParagraphs().get(0).getRuns().get(0).setText("2 000,00",0);
                     }
                     else if(j!=6){
-						cell.removeParagraph(0);
-                        paragraph = cell.addParagraph();
-                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-                        run = paragraph.createRun();
-                        run.setText("3 000,00");
-                        cell.setParagraph(paragraph);
+						cell.getParagraphs().get(0).getRuns().get(0).setText("3 000,00",0);
                     }
 
                 }
             }
             row=tbl.getRows().get(tbl.getRows().size()-2);
-            cell=row.getTableCells().get(2);
-            cell.getCTTc();
-            cell.removeParagraph(0);
-            paragraph = cell.addParagraph();
-            paragraph.setAlignment(ParagraphAlignment.RIGHT);
-            run = paragraph.createRun();
-            run.setText("2 000,00");
-            cell.setParagraph(paragraph);
+			cell=row.getTableCells().get(2);
+			cell.getParagraphs().get(0).getRuns().get(0).setText("2 000,00",0);
 //            cell.setText("2 000,00");
             cell=row.getTableCells().get(3);
-            cell.removeParagraph(0);
-            paragraph = cell.addParagraph();
-            paragraph.setAlignment(ParagraphAlignment.RIGHT);
-            run = paragraph.createRun();
-            run.setText("2 000,00");
-            cell.setParagraph(paragraph);
+			cell.getParagraphs().get(0).getRuns().get(0).setText("2 000,00",0);
 
             cell=row.getTableCells().get(6);
-            cell.removeParagraph(0);
-            paragraph = cell.addParagraph();
-            paragraph.setAlignment(ParagraphAlignment.RIGHT);
-            run = paragraph.createRun();
-            run.setText("4 000,00");
-            cell.setParagraph(paragraph);
+			cell.getParagraphs().get(0).getRuns().get(0).setText("4 000,00",0);
         }
         else if(kvartal==4 ){
             for(int i=5;i<tbl.getRows().size()-2;i++){
@@ -1112,12 +987,7 @@ public class PrintoutTemplateController {
                     cell=row.getTableCells().get(j);
                     if((i==5 && j==2)||(i==5 && j==3)||(i==5 && j==4)){}
                     else if(i==5 && j==6){
-                        cell.removeParagraph(0);
-                        paragraph = cell.addParagraph();
-                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-                        run = paragraph.createRun();
-                        run.setText("3 000,00");
-                        cell.setParagraph(paragraph);
+						cell.getParagraphs().get(0).getRuns().get(0).setText("3 000,00",0);
                     }
                     else if(i==tbl.getRows().size()-2 && j==6){
                         cell.removeParagraph(0);
@@ -1128,107 +998,47 @@ public class PrintoutTemplateController {
                         cell.setParagraph(paragraph);
                     }
                     else if(j==6){
-                        cell.removeParagraph(0);
-                        paragraph = cell.addParagraph();
-                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-                        run = paragraph.createRun();
-                        run.setText("12 000,00");
-                        cell.setParagraph(paragraph);
+						cell.getParagraphs().get(0).getRuns().get(0).setText("12 000,00",0);
                     }
                     else if(i==tbl.getRows().size()-2 && (j==5)){
-                        cell.removeParagraph(0);
-                        paragraph = cell.addParagraph();
-                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-                        run = paragraph.createRun();
-                        run.setText("2 000,00");
-                        cell.setParagraph(paragraph);
+						cell.getParagraphs().get(0).getRuns().get(0).setText("2 000,00",0);
                     }
                     else if(j!=6){
-                        cell.removeParagraph(0);
-                        paragraph = cell.addParagraph();
-                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-                        run = paragraph.createRun();
-                        run.setText("3 000,00");
-                        cell.setParagraph(paragraph);
+						cell.getParagraphs().get(0).getRuns().get(0).setText("3 000,00",0);
                     }
 
                 }
             }
             row=tbl.getRows().get(tbl.getRows().size()-2);
             cell=row.getTableCells().get(2);
-            cell.removeParagraph(0);
-            paragraph = cell.addParagraph();
-            paragraph.setAlignment(ParagraphAlignment.RIGHT);
-            run = paragraph.createRun();
-            run.setText("2 000,00");
-            cell.setParagraph(paragraph);
+			cell.getParagraphs().get(0).getRuns().get(0).setText("2 000,00",0);
 
             cell=row.getTableCells().get(3);
-            cell.removeParagraph(0);
-            paragraph = cell.addParagraph();
-            paragraph.setAlignment(ParagraphAlignment.RIGHT);
-            run = paragraph.createRun();
-            run.setText("2 000,00");
-            cell.setParagraph(paragraph);
+			cell.getParagraphs().get(0).getRuns().get(0).setText("2 000,00",0);
 
             cell=row.getTableCells().get(4);
-            cell.removeParagraph(0);
-            paragraph = cell.addParagraph();
-            paragraph.setAlignment(ParagraphAlignment.RIGHT);
-            run = paragraph.createRun();
-            run.setText("2 000,00");
-            cell.setParagraph(paragraph);
+			cell.getParagraphs().get(0).getRuns().get(0).setText("2 000,00",0);
 
             cell=row.getTableCells().get(6);
-            cell.removeParagraph(0);
-            paragraph = cell.addParagraph();
-            paragraph.setAlignment(ParagraphAlignment.RIGHT);
-            run = paragraph.createRun();
-            run.setText("6 000,00");
-            cell.setParagraph(paragraph);
+			cell.getParagraphs().get(0).getRuns().get(0).setText("6 000,00",0);
 
         }
 
         row=tbl.getRows().get(tbl.getRows().size()-1);
         cell=row.getTableCells().get(1);
-        cell.removeParagraph(0);
-        paragraph = cell.addParagraph();
-        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-        run = paragraph.createRun();
-        run.setText("50 000,00");
-        cell.setParagraph(paragraph);
+		cell.getParagraphs().get(0).getRuns().get(0).setText("50 000,00",0);
 
         cell=row.getTableCells().get(2);
-        cell.removeParagraph(0);
-        paragraph = cell.addParagraph();
-        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-        run = paragraph.createRun();
-        run.setText("50 000,00");
-        cell.setParagraph(paragraph);
+		cell.getParagraphs().get(0).getRuns().get(0).setText("50 000,00",0);
 
         cell=row.getTableCells().get(3);
-        cell.removeParagraph(0);
-        paragraph = cell.addParagraph();
-        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-        run = paragraph.createRun();
-        run.setText("50 000,00");
-        cell.setParagraph(paragraph);
+		cell.getParagraphs().get(0).getRuns().get(0).setText("50 000,00",0);
 
         cell=row.getTableCells().get(4);
-        cell.removeParagraph(0);
-        paragraph = cell.addParagraph();
-        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-        run = paragraph.createRun();
-        run.setText("50 000,00");
-        cell.setParagraph(paragraph);
+		cell.getParagraphs().get(0).getRuns().get(0).setText("50 000,00",0);
 
         cell=row.getTableCells().get(5);
-        cell.removeParagraph(0);
-        paragraph = cell.addParagraph();
-        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-        run = paragraph.createRun();
-        run.setText("200 000,00");
-        cell.setParagraph(paragraph);
+		cell.getParagraphs().get(0).getRuns().get(0).setText("200 000,00",0);
 
     }
 	private void replace(XWPFRun run,User user,Staff staff,Person person,IdentityDoc identityDoc)
@@ -1271,6 +1081,17 @@ public class PrintoutTemplateController {
 						else
 							addressText=addressText+address.getDistrict().getName()+" р. ";
 					}
+
+					String passportInfo="";
+					SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+					String docDate=" ";
+					String givenBY=" ";
+					if(identityDoc.getDate()!=null)
+						docDate=format.format(identityDoc.getDate());
+					if(identityDoc.getGivenBy()!=null)
+						givenBY=identityDoc.getGivenBy();
+
+					passportInfo=identityDoc.getIdentityDocType().getName()+":"+identityDoc.getNumber()+",выдан  "+givenBY+" от "+docDate+" г.";
 
 					switch (varId)
 					{
@@ -1318,7 +1139,7 @@ public class PrintoutTemplateController {
 							newText=person.getName();
 							break;
 						case 6:
-							newText=identityDoc.getIdentityDocType().getName()+" "+identityDoc.getNumber();
+							newText=passportInfo;
 							break;
 						case 7:
 							newText=staff.getDepartment().getName();
@@ -1365,15 +1186,7 @@ public class PrintoutTemplateController {
 							newText=person.getIdentityDoc().getPin();
 							break;
 						case 15:
-                            SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-							String docDate=" ";
-							String givenBY=" ";
-                            if(identityDoc.getDate()!=null)
-                            	docDate=format.format(identityDoc.getDate());
-                            if(identityDoc.getGivenBy()!=null)
-                            	givenBY=identityDoc.getGivenBy();
-
-							newText=identityDoc.getIdentityDocType().getName()+":"+identityDoc.getNumber()+", "+docDate+", "+givenBY;
+							newText=passportInfo;
 							break;
 						case 16:
 							newText=staff.getPosition().getName();
