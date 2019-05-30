@@ -1384,6 +1384,10 @@ public class PrintoutTemplateController {
                         case 20:
                             newText=String.valueOf(localDate.getYear());
                             break;
+                        case 22:
+                            if(person.getContact()!=null){
+                                newText=person.getContact().getName();
+                            }
 
 
 					}
