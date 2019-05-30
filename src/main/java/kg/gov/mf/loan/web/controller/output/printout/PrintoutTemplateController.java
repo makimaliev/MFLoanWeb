@@ -4,14 +4,8 @@ import com.lowagie.text.Document;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.rtf.RtfWriter2;
-import kg.gov.mf.loan.admin.org.model.EmploymentHistory;
-import kg.gov.mf.loan.admin.org.model.IdentityDoc;
-import kg.gov.mf.loan.admin.org.model.Person;
-import kg.gov.mf.loan.admin.org.model.Staff;
-import kg.gov.mf.loan.admin.org.service.EmploymentHistoryService;
-import kg.gov.mf.loan.admin.org.service.IdentityDocService;
-import kg.gov.mf.loan.admin.org.service.PersonService;
-import kg.gov.mf.loan.admin.org.service.StaffService;
+import kg.gov.mf.loan.admin.org.model.*;
+import kg.gov.mf.loan.admin.org.service.*;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.loan.LoanSummaryAct;
@@ -45,6 +39,9 @@ import java.util.List;
 
 @Controller
 public class PrintoutTemplateController {
+
+	@Autowired
+	AddressService addressService;
 	
 	@Autowired
     private PrintoutTemplateService printoutTemplateService;
@@ -1260,6 +1257,20 @@ public class PrintoutTemplateController {
 					if(varId>=7 && varId!=21){
                         run.getParagraph().setAlignment(ParagraphAlignment.CENTER);
                     }
+                    String addressText="";
+					Address address=new Address();
+                    if(person.getAddress()!=null){
+						 address= addressService.findById(person.getAddress().getId());
+						if(address.getRegion().getName().contains("г.")){
+//							addressText=address.getRegion().getName()+", ";
+ 						}
+						else
+							addressText=address.getRegion().getName()+" обл. ";
+						if(address.getDistrict().getName().contains("г."))
+							addressText=addressText+address.getDistrict().getName()+", ";
+						else
+							addressText=addressText+address.getDistrict().getName()+" р. ";
+					}
 
 					switch (varId)
 					{
@@ -1295,12 +1306,8 @@ public class PrintoutTemplateController {
 							break;
 						case 3:
 						    String[] splitted=staff.getName().split(" ");
-
 						    String words="";
-						    for(String word:splitted){
-						    	words=words+word+"a ";
-							}
-//							newText=splitted[0]+"а"+" "+splitted[1]+"а"+" "+splitted[2]+"а";
+						    words=splitted[0]+"a "+splitted[1]+" "+splitted[2]+"a";
 							newText=words;
 							break;
 						case 4:
@@ -1340,14 +1347,18 @@ public class PrintoutTemplateController {
 							newText=person.getName();
 							break;
 						case 12:
-							newText=person.getAddress().getLine();
+							if(person.getAddress()!=null) {
+								newText =addressText+ address.getLine();
+							}
+							else
+								newText=addressText;
 							break;
 						case 13:
-						    if(person.getAddress_line2()!=null) {
-                                newText = person.getAddress_line2();
+						    if(person.getAddress_line2()!=null&&person.getAddress_line2().length()>3) {
+                                newText =addressText+" "+person.getAddress_line2();
                             }
 						    else{
-						        newText="";
+								newText=addressText+" "+person.getAddress().getLine();
                             }
 							break;
 						case 14:
@@ -1391,6 +1402,7 @@ public class PrintoutTemplateController {
 				}
 				catch (Exception ex)
 				{
+					System.out.println(ex);
 				}
 
 
