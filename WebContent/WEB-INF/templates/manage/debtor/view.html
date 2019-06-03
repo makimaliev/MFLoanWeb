@@ -368,6 +368,15 @@
                                 </div>
 							</div>
 							<div id="agreementListOfDebtor" class="tab-pane"  role="tabpanel">
+								<!--begin::Modal-->
+								<div class="modal fade" id="makeInspectionFalseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+									<div class="modal-dialog" role="document">
+										<div class="modal-content">
+										</div>
+									</div>
+								</div>
+								<!--end::Modal-->
+
 								<!--begin: Search Form -->
 								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
 									<div class="row align-items-center">
@@ -387,9 +396,13 @@
 										</div>
 
 										<div class="col-xl-7 order-3 order-xl-3 m--align-right">
-											<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLATERALITEM')" th:href="@{/manage/debtor/__${debtor.id}__/inspectionNeeded/makeFalse}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-													<span th:text="#{label.debtor.change.inspection.makeFalse}">
-													</span>
+											<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLATERALITEM')" data-remote="false"
+											   data-toggle="modal"
+											   data-target="#makeInspectionFalseModal"
+											   th:href="@{/manage/debtor/__${debtor.id}__/inspectionNeeded/makeFalse}"
+											   role="button"
+											   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+											   th:text="#{label.loan.change.inspection.makeFalse}">
 											</a>
 											<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLATERALITEM')" th:href="@{/manage/debtor/__${debtor.id}__/inspectionNeeded/makeTrue}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill ml-1">
 													<span th:text="#{label.debtor.change.inspection.makeTrue}">
@@ -994,6 +1007,14 @@
 
 
 		$(this).find(".modal-body").load(link.attr("href"));
+    });
+    $("#makeInspectionFalseModal").on("show.bs.modal", function(e)
+    {
+        var link = $(e.relatedTarget);
+
+        $(this).find(".modal-content").load(link.attr("href"));
+
+
     });
 </script>
 </body>

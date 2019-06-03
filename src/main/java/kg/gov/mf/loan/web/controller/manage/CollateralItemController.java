@@ -8,9 +8,11 @@ import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collateral.*;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
+import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.service.collateral.*;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
+import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.web.fetchModels.ItemArrestFreeModel;
 import kg.gov.mf.loan.web.fetchModels.ItemInspectionResultModel;
 import kg.gov.mf.loan.web.util.Utils;
@@ -20,6 +22,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -75,6 +78,9 @@ public class CollateralItemController {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+
+	@Autowired
+	LoanService loanService;
 
 
 	@InitBinder
@@ -661,25 +667,36 @@ public class CollateralItemController {
 //	}
 
 	//    Make all items' of loan, inspection_needed=false
-	@GetMapping("/manage/debtor/{debtorId}/loan/{loanId}/inspectionNeeded/makeFalse")
-	public String changeInspectionNeededToFalse(@PathVariable("debtorId") Long debtorId,@PathVariable("loanId") Long loanId){
+	@GetMapping("/manage/loan/{loanId}/inspectionNeeded/makeFalse")
+	public String changeInspectionNeededToFalse(@PathVariable("loanId") Long loanId,Model model){
 
-		inspectionNeededChangerForLoan(false,loanId);
+		model.addAttribute("loanId",loanId);
 
-		return "redirect:/manage/debtor/{debtorId}/loan/{loanId}/view";
+		return "/manage/debtor/loan/inspectionNeededFormLoan";
+	}
+
+	@PostMapping("/manage/loan/{loanId}/inspectionNeeded/makeFalse")
+	public String changeInspectionNeededToFalsePost(@PathVariable("loanId") Long loanId,String description){
+
+		Loan loan=loanService.getById(loanId);
+
+		inspectionNeededChangerForLoan(false,loanId,description);
+
+		return "redirect:/manage/debtor/"+loan.getDebtor().getId()+"/loan/{loanId}/view";
 	}
 
 	//    Make all items' of loan, inspection_needed=true
 	@GetMapping("/manage/debtor/{debtorId}/loan/{loanId}/inspectionNeeded/makeTrue")
 	public String changeInspectionNeededToTrue(@PathVariable("debtorId") Long debtorId,@PathVariable("loanId") Long loanId){
 
-		inspectionNeededChangerForLoan(true,loanId);
+		inspectionNeededChangerForLoan(true,loanId,null);
 
 		return "redirect:/manage/debtor/{debtorId}/loan/{loanId}/view";
 	}
 
-	public void inspectionNeededChangerForLoan(boolean make,Long loanId){
+	public void inspectionNeededChangerForLoan(boolean make,Long loanId,String description){
 		Session session;
+		String itemUpdateQuery="";
 		try
 		{
 			session = sessionFactory.getCurrentSession();
@@ -691,9 +708,16 @@ public class CollateralItemController {
 
 		session.getTransaction().begin();
 		try{
-			String itemUpdateQuery = "update collateralItem ci,loanCollateralAgreement lca,loan l\n" +
-					"set ci.inspection_needed="+make+" where ci.collateralAgreementId=lca.collateralAgreementId\n" +
-					"                                and l.id=lca.loanId and l.id="+loanId;
+			if(description==null){
+				itemUpdateQuery = "update collateralItem ci,loanCollateralAgreement lca,loan l\n" +
+						"set ci.inspection_needed="+make+",ci.inspection_needed_description=null  where ci.collateralAgreementId=lca.collateralAgreementId\n" +
+						"                                and l.id=lca.loanId and l.id="+loanId;
+			}
+			else {
+				itemUpdateQuery = "update collateralItem ci,loanCollateralAgreement lca,loan l\n" +
+						"set ci.inspection_needed=" + make + ",ci.inspection_needed_description='" + description + "' where ci.collateralAgreementId=lca.collateralAgreementId\n" +
+						"                                and l.id=lca.loanId and l.id=" + loanId;
+			}
 			session.createSQLQuery(itemUpdateQuery).executeUpdate();
 		}
 		catch (Exception e){
@@ -705,24 +729,74 @@ public class CollateralItemController {
 
 	//    Make all items' of debtor, inspection_needed=false
 	@GetMapping("/manage/debtor/{debtorId}/inspectionNeeded/makeFalse")
-	public String changeInspectionNeededFalse(@PathVariable("debtorId") Long debtorId){
+	public String changeInspectionNeededFalse(@PathVariable("debtorId") Long debtorId, Model model){
 
-		inspectionNeededChangerForDebtor(false,debtorId);
+		model.addAttribute("debtorId",debtorId);
+
+		return "manage/debtor/inspectionNeededForm";
+	}
+
+	@PostMapping("/manage/debtor/{debtorId}/inspectionNeeded/makeFalse")
+	public String changeInspectionNeededFalsePost(String description,@PathVariable("debtorId") Long debtorId){
+		inspectionNeededChangerForDebtor(false,debtorId,description);
 
 		return "redirect:/manage/debtor/{debtorId}/view";
+
+
 	}
+
 
 	//    Make all items' of debtor, inspection_needed=true
 	@GetMapping("/manage/debtor/{debtorId}/inspectionNeeded/makeTrue")
 	public String changeInspectionNeededTrue(@PathVariable("debtorId") Long debtorId){
 
 
-		inspectionNeededChangerForDebtor(true,debtorId);
+		inspectionNeededChangerForDebtor(true,debtorId,null);
 
 		return "redirect:/manage/debtor/{debtorId}/view";
 	}
 
-	public void inspectionNeededChangerForDebtor(boolean make,Long debtorId){
+	public void inspectionNeededChangerForDebtor(boolean make,Long debtorId,String description){
+		Session session;
+		String itemUpdateQuery="";
+		try
+		{
+			session = sessionFactory.getCurrentSession();
+		}
+		catch (HibernateException e)
+		{
+			session = sessionFactory.openSession();
+		}
+
+		session.getTransaction().begin();
+		try{
+			if(description==null){
+				itemUpdateQuery = "update  collateralItem ci,loanCollateralAgreement lca,loan l,debtor d\n" +
+						"set ci.inspection_needed="+make+",ci.inspection_needed_description=null where ci.collateralAgreementId=lca.collateralAgreementId\n" +
+						"                                and l.id=lca.loanId and l.debtorId=d.id and d.id="+debtorId;
+			}
+			else {
+				itemUpdateQuery = "update  collateralItem ci,loanCollateralAgreement lca,loan l,debtor d\n" +
+						"set ci.inspection_needed=" + make + ",ci.inspection_needed_description='" + description + "' where ci.collateralAgreementId=lca.collateralAgreementId\n" +
+						"                                and l.id=lca.loanId and l.debtorId=d.id and d.id=" + debtorId;
+			}
+			session.createSQLQuery(itemUpdateQuery).executeUpdate();
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+		session.getTransaction().commit();
+	}
+
+	@PostMapping("/inspectionDescription/instantUpdate")
+	@ResponseBody
+	public String updateInspectionDescription(String data,Long id){
+		inspectionNeededEditorForLoan(id,data);
+		return "OK";
+	}
+
+	public void inspectionNeededEditorForLoan(Long loanId,String description){
+		String itemUpdateQuery="";
 		Session session;
 		try
 		{
@@ -735,9 +809,16 @@ public class CollateralItemController {
 
 		session.getTransaction().begin();
 		try{
-			String itemUpdateQuery = "update  collateralItem ci,loanCollateralAgreement lca,loan l,debtor d\n" +
-					"set ci.inspection_needed="+make+" where ci.collateralAgreementId=lca.collateralAgreementId\n" +
-					"                                and l.id=lca.loanId and l.debtorId=d.id and d.id="+debtorId;
+			if(description.equals("") || description==null){
+				itemUpdateQuery = "update collateralItem ci,loanCollateralAgreement lca,loan l\n" +
+						"set ci.inspection_needed_description=null where ci.collateralAgreementId=lca.collateralAgreementId\n" +
+						"                                and l.id=lca.loanId and l.id="+loanId;
+			}
+			else {
+				itemUpdateQuery = "update collateralItem ci,loanCollateralAgreement lca,loan l\n" +
+						"set ci.inspection_needed_description='" + description + "' where ci.collateralAgreementId=lca.collateralAgreementId\n" +
+						"                                and l.id=lca.loanId and l.id=" + loanId;
+			}
 			session.createSQLQuery(itemUpdateQuery).executeUpdate();
 		}
 		catch (Exception e){

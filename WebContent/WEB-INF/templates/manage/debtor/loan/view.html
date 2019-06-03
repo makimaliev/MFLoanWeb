@@ -287,6 +287,44 @@
 												</div>
 											</div>
 											<!--begin:: Widgets/Stats2-2 -->
+											<div class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.collateralItem.inspection}"></h3>
+															<button data-toggle="modal" data-target="#inspectionDescriptionModal" id="editInspectionDescription" class="m-widget1__desc m--font-brand" th:text="${itemDescription}"></button>
+														</div>
+													</div>
+												</div>
+											</div>
+											<!-- Modal -->
+											<div id="inspectionDescriptionModal" class="modal" role="dialog">
+												<div class="modal-dialog">
+
+													<!-- Modal content-->
+													<div class="modal-content">
+														<form>
+															<div class="modal-body">
+																<div class="form-group m-form__group row">
+																	<label class="col-form-label col-lg-4 col-sm-12">
+																		<span th:text="#{label.collectionItem.inspection.description}"></span>
+																		<span class="m--font-danger">*</span>
+																	</label>
+																	<div class="col-lg-7 col-md-9 col-sm-12">
+																		<input id = "inspectionDescription" type="text" class="form-control m-input" th:value="${itemDescription}" />
+																	</div>
+																</div>
+															</div>
+															<div class="modal-footer">
+																<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+																<button onclick="saveInspectiondescription()" type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+															</div>
+														</form>
+													</div>
+
+												</div>
+											</div>
+											<!--end Modal-->
 										</div>
 										<div class="col-md-12 col-lg-12 col-xl-4">
 											<!--begin:: Widgets/Stats2-3 -->
@@ -767,13 +805,29 @@
 												</div>
 											</div>
 										</div>
+										<!--begin::Modal-->
+										<div class="modal fade" id="makeInspectionFalseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+											<div class="modal-dialog" role="document">
+												<div class="modal-content">
+												</div>
+											</div>
+										</div>
+										<!--end::Modal-->
 
 										<div class="col-xl-7 order-3 order-xl-3 m--align-right">
 											<div class="row">
-												<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLATERALITEM')" th:href="@{/manage/debtor/__${debtor.id}__/loan/__${loan.id}__/inspectionNeeded/makeFalse}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-													<span th:text="#{label.loan.change.inspection.makeFalse}">
-													</span>
+												<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLATERALITEM')" data-remote="false"
+												   data-toggle="modal"
+												   data-target="#makeInspectionFalseModal"
+												   th:href="@{/manage/loan/__${loan.id}__/inspectionNeeded/makeFalse}"
+												   role="button"
+												   class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+												   th:text="#{label.loan.change.inspection.makeFalse}">
 												</a>
+												<!--<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLATERALITEM')" th:href="@{/manage/debtor/__${debtor.id}__/loan/__${loan.id}__/inspectionNeeded/makeFalse}" class="btn btn-accent m-btn m-btn&#45;&#45;custom m-btn&#45;&#45;icon m-btn&#45;&#45;air m-btn&#45;&#45;pill">-->
+													<!--<span th:text="#{label.loan.change.inspection.makeFalse}">-->
+													<!--</span>-->
+												<!--</a>-->
 												<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLATERALITEM')" th:href="@{/manage/debtor/__${debtor.id}__/loan/__${loan.id}__/inspectionNeeded/makeTrue}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill ml-1">
 													<span th:text="#{label.loan.change.inspection.makeTrue}">
 													</span>
@@ -1574,7 +1628,8 @@
 			ttt=sessionStorage.getItem("tab");
 			// alert(ttt);
 			$("a[href='" + ttt + "']").tab("show");
-			$(ttt.toString()+"Function").click();
+			if(!ttt.includes("inspectionNeeded"))
+				$(ttt.toString()+"Function").click();
 		}
 		$(document.body).on("click", "a[data-toggle]", function(event) {
 			var tabName = this.getAttribute("href");
@@ -2246,6 +2301,29 @@
     jQuery(document).ready(function () {
         DatatableDataLocalFiles.init();
     });
+
+    // inspection not needed description
+    $("#makeInspectionFalseModal").on("show.bs.modal", function(e)
+    {
+        var link = $(e.relatedTarget);
+
+        $(this).find(".modal-content").load(link.attr("href"));
+
+
+    });
+
+    // editting inspection description
+    function saveInspectiondescription() {
+        var description=$("#inspectionDescription").val();
+        $.ajax({
+            type:'post',
+            data:{id:loanId,data:description},
+            url:"/inspectionDescription/instantUpdate",
+            success:function (data) {
+                location.reload();
+            }
+        });
+    }
 </script>
 </body>
 <!-- end::Body -->

@@ -1,0 +1,33 @@
+<form th:action="@{/manage/loan/__${loanId}__/inspectionNeeded/makeFalse}" class="form-horizontal" method="post"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <div class="modal-header">
+        <h5 class="modal-title"  th:text="#{label.region.modal.title}"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">
+				&times;
+			</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+
+        <div class="alert alert-danger alert-dismissible alert-hidden" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+            <span th:text="#{label.region.modal.error.name}"></span>
+        </div>
+
+
+        <div class="form-group">
+            <label class="form-control-label" th:text="#{label.description}">Name<span class="required"> * </span></label>
+            <input type="text" class="form-control" name="description">
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.}"></button>
+        <button type="submit" class="btn btn-primary" th:text="#{label.submit}"></button>
+    </div>
+
+</form>

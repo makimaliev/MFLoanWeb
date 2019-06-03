@@ -290,6 +290,22 @@ public class LoanController {
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtor", debtor);
 
+        for(CollateralAgreement agreement1: loan.getCollateralAgreements())
+        {
+            CollateralAgreement agreement=collateralAgreementService.getById(agreement1.getId());
+            for(CollateralItem item1:agreement.getCollateralItems()){
+                CollateralItem item=collateralItemService.getById(item1.getId());
+                if(item.getInspection_needed_description()!=null ){
+                    model.addAttribute("itemDescription",item.getInspection_needed_description());
+                }
+                else{
+                    model.addAttribute("itemDescription","Подлежит");
+                }
+                break;
+            }
+            break;
+        }
+
 //        String jsonDetailedSummaries = gson.toJson(getDetailedSummariesByLoanId(loanId));
 //        model.addAttribute("detailedSummaries", jsonDetailedSummaries);
 
@@ -1116,6 +1132,7 @@ public class LoanController {
         String result = gson.toJson(guarantorAgreementModels);
         return result;
     }
+
 
     private List<CreditTermModel> getTermsByLoanId(long loanId)
     {
