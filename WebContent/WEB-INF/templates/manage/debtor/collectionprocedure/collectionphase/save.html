@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <!-- begin::Head -->
 <head>
 	<title th:text="#{label.title.collection.add.edit.phase}">Добавить/Редактировать фазу взыскания</title>
@@ -187,11 +187,11 @@
 										</div>
 									</div>
 									<div class="form-group m-form__group row">
-											<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.collection.phase.resultDocNumber}">
+											<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.collection.phase.docNumber}">
 												<span class="m--font-danger">*</span>
 											</label>
 										<div class="col-lg-4 col-md-9 col-sm-12">
-											<input type="text" class="form-control m-input" th:field="*{resultDocNumber}">
+											<input type="text" class="form-control m-input" th:field="*{docNumber}">
 										</div>
 									</div>
 
