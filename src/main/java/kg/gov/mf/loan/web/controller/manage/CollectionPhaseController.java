@@ -1248,6 +1248,12 @@ public class CollectionPhaseController {
 
         CollectionPhase collectionPhase=collectionPhaseService.getById(id);
         CollectionPhaseIndex index=collectionPhaseIndexService.getById(data);
+        if ((collectionPhase.getSub_index_id()!=null) && !index.getCollectionPhaseSubIndices().contains(collectionPhaseSubIndexService.getById(collectionPhase.getSub_index_id()))){
+            for(CollectionPhaseSubIndex pSI:index.getCollectionPhaseSubIndices()){
+                collectionPhase.setSub_index_id(pSI.getId());
+                break;
+            }
+        }
 
         collectionPhase.setCollectionPhaseIndex(index);
         collectionPhaseService.update(collectionPhase);
@@ -1256,20 +1262,24 @@ public class CollectionPhaseController {
     }
 
 
-    @GetMapping("/phase/{id}/getIndex2")
-    public String getPhaseIndex2(Model model,@PathVariable("id") Long id){
+    @GetMapping("/phase/{id}/index/{indexId}/getIndex2")
+    public String getPhaseIndex2(Model model,@PathVariable("id") Long id,@PathVariable("indexId") Long indexId){
 
         CollectionPhase phase=collectionPhaseService.getById(id);
+        CollectionPhaseIndex index=collectionPhaseIndexService.getById(indexId);
         CollectionPhaseSubIndex index2=new CollectionPhaseSubIndex();
         if(phase.getSub_index_id()==null){
-            index2=collectionPhaseSubIndexService.getById(1L);
+            for(CollectionPhaseSubIndex pSI:index.getCollectionPhaseSubIndices()){
+                index2=collectionPhaseSubIndexService.getById(pSI.getId());
+                break;
+            }
         }
         else {
             index2=collectionPhaseSubIndexService.getById(phase.getSub_index_id());
         }
 
         model.addAttribute("index2",index2);
-        model.addAttribute("index2s",collectionPhaseSubIndexService.list());
+        model.addAttribute("index2s",index.getCollectionPhaseSubIndices());
 
         return "manage/debtor/collectionprocedure/collectionphase/phaseIndex2";
     }

@@ -162,6 +162,7 @@ public class RestCollectionPhaseViewController {
             List<String> searchList=Arrays.asList(searchMap.get(s));
             parameters.put(s,searchList);
         }
+        parameters.put("orderBy",Arrays.asList("v_debtor_name"));
 
 
         Set<CollectionPhaseModel1> list=new HashSet<>();
@@ -180,6 +181,7 @@ public class RestCollectionPhaseViewController {
             model.setV_debtor_name(phaseView.getV_debtor_name());
             model.setV_cph_collectionProcedureId(phaseView.getV_cph_collectionProcedureId());
             model.setV_debtor_owner_id(phaseView.getV_debtor_owner_id());
+            model.setV_cph_index_id(phaseView.getV_cph_index_id());
             list.add(model);
         }
         CollectionPhaseMetaModel metaModel=new CollectionPhaseMetaModel();

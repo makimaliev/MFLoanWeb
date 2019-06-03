@@ -26,6 +26,7 @@ public class CollectionPhaseModel1 implements Comparable<CollectionPhaseModel1> 
     private Double v_cph_start_total_amount;
     private Double v_cph_close_total_amount;
     private Long v_debtor_owner_id;
+    private Long v_cph_index_id;
 
     @Override
     public int compareTo(CollectionPhaseModel1 model)
@@ -119,5 +120,13 @@ public class CollectionPhaseModel1 implements Comparable<CollectionPhaseModel1> 
 
     public void setV_debtor_owner_id(Long v_debtor_owner_id) {
         this.v_debtor_owner_id = v_debtor_owner_id;
+    }
+
+    public Long getV_cph_index_id() {
+        return v_cph_index_id;
+    }
+
+    public void setV_cph_index_id(Long v_cph_index_id) {
+        this.v_cph_index_id = v_cph_index_id;
     }
 }

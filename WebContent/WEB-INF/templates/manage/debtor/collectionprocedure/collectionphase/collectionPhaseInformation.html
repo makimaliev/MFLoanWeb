@@ -164,7 +164,7 @@
         var pSUrl ="/phase/"+pId+"/getProcedureStatus";
         var gUrl ="/phase/"+pId+"/getGroup";
         var iUrl ="/phase/"+pId+"/getIndex";
-        var i2Url ="/phase/"+pId+"/getIndex2";
+        var i2Url ="/phase/"+pId+"/index/"+indexId+"/getIndex2";
 
         $.get(stUrl, function(data) {
 
@@ -181,20 +181,22 @@
             $('#proc_status_content').html(data);
         });
 
-        $.get(gUrl, function(data) {
+        if(phaseTypeId==13){
+            $.get(gUrl, function(data) {
 
-            $('#group_content').html(data);
-        });
+                $('#group_content').html(data);
+            });
 
-        $.get(iUrl, function(data) {
+            $.get(iUrl, function(data) {
 
-            $('#index_content').html(data);
-        });
+                $('#index_content').html(data);
+            });
 
-        $.get(i2Url, function(data) {
+            $.get(i2Url, function(data) {
 
-            $('#index2_content').html(data);
-        });
+                $('#index2_content').html(data);
+            });
+        }
     }
 
 
@@ -250,6 +252,7 @@
     // update index, reload content
     function savePhaseIndex() {
         var dataId=$("#indexOfPhase :selected").val();
+        indexId=dataId;
         $.ajax({
             type:'post',
             data:{id:pId,data:dataId},

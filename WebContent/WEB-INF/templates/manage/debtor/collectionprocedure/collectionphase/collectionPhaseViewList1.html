@@ -190,10 +190,8 @@
                                 <th th:text="#{v_debtor_name}"></th>
                                 <th>Начал. дата</th>
                                 <th>Начал. сумма</th>
-                                <th>Конеч. сумма</th>
                                 <th>Вид</th>
                                 <th>Статус</th>
-                                <th>Конеч. дата</th>
                             </tr>
                             </thead>
                         </table>
@@ -236,6 +234,8 @@
     });
 </script>
 <script type="text/javascript" th:inline="javascript">
+    var typeList=[[${typeList}]];
+    var statusList=[[${statusList}]];
     var searchStr={};
     var contentUrl="";
     var ownerId;
@@ -260,6 +260,8 @@
         filterColumn(searchStr);
     } );
 
+    var phaseTypeId="";
+    var indexId="";
     var table=$('#example').DataTable( {
         keys:true,
         scrollY: 200,
@@ -280,13 +282,17 @@
             {
                 data: 'v_cph_start_total_amount'},
             {
-                data: 'v_cph_close_total_amount'},
+                // data: 'v_cph_phaseTypeId',
+                data:function (d) {
+                    return typeList[d["v_cph_phaseTypeId"]];
+                }
+            },
             {
-                data: 'v_cph_phaseTypeId' },
-            {
-                data: 'v_cph_phaseStatusId'},
-            {
-                data: 'v_cph_closeDate'},
+                // data: 'v_cph_phaseStatusId'},
+                data: function (d) {
+                    return statusList[d["v_cph_phaseStatusId"]];
+                }
+            },
             {
                 data: 'v_debtor_id',
                 visible:false},
@@ -295,6 +301,9 @@
                 visible: false},
             {
                 data: "v_debtor_owner_id",
+                visible: false},
+            {
+                data: "v_cph_index_id",
                 visible: false}
         ],
         language:{
@@ -321,12 +330,24 @@
             }
         }
     } );
+    table.rows().every( function () {
+        var d = this.data();
+        table.draw();
+    } );
+    table.columns(4)
+        .data()
+        .reduce(function (a) {
+            return a+"asdasd";
+        });
+    table.draw();
     table.on('key-focus', function(e, datatable, cell) {
 
         var debtorId = datatable.row(cell.index().row).data()["v_debtor_id"];
         var procId = datatable.row(cell.index().row).data()["v_cph_collectionProcedureId"];
         var phaseId = datatable.row(cell.index().row).data()["v_cph_id"];
         ownerId= datatable.row(cell.index().row).data()["v_debtor_owner_id"];
+        phaseTypeId=datatable.row(cell.index().row).data()["v_cph_phaseTypeId"];
+        indexId=datatable.row(cell.index().row).data()["v_cph_index_id"];
 
         var sUrl ="/debtor/"+debtorId+"/procedure/"+procId+"/phase/"+phaseId+"/details";
         contentUrl=sUrl;

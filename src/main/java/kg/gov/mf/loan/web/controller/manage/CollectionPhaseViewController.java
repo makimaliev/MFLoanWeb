@@ -12,6 +12,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -40,6 +41,9 @@ public class CollectionPhaseViewController {
 
     @Autowired
     CollectionPhaseSubIndexService collectionPhaseSubIndexService;
+
+    @Autowired
+    ProcedureStatusService procedureStatusService;
 
     @RequestMapping("/collectionPhaseViews")
     public String collectionPhaseViewList(ModelMap model){
@@ -79,10 +83,25 @@ public class CollectionPhaseViewController {
         List<ReferenceView> finGroups=referenceViewService.findByParameter("fin_group");
         model.addAttribute("finGroups",finGroups);
 
+        List<ReferenceView> phaseTypes=referenceViewService.findByParameter("collection_phase_type");
+        List<ReferenceView> phaseStatuses=referenceViewService.findByParameter("collection_phase_status");
+
+        HashMap<Long,String> typeNames=new HashMap<>();
+        for (ReferenceView r:phaseTypes){
+            typeNames.put(r.getId(),r.getName());
+        }
+        HashMap<Long,String> statusNames=new HashMap<>();
+        for (ReferenceView r:phaseStatuses){
+            statusNames.put(r.getId(),r.getName());
+        }
+        model.addAttribute("typeList",typeNames);
+        model.addAttribute("statusList",statusNames);
+
+
         model.addAttribute("regions",regionService.findAll());
         model.addAttribute("districts",districtService.findAll());
-        model.addAttribute("phaseTypes",phaseTypeService.list());
-        model.addAttribute("procedures",phaseStatusService.list());
+        model.addAttribute("phaseTypes",phaseTypes);
+        model.addAttribute("procedures",procedureStatusService.list());
 
         model.addAttribute("loggedinuser", Utils.getPrincipal());
 
