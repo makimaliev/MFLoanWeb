@@ -196,6 +196,17 @@ public class CollectionPhaseController {
 
 		CollectionPhase phase = phaseService.getById(phaseId);
 		model.addAttribute("phase", phase);
+
+		if(phase.getCollectionPhaseIndex()==null){
+			phase.setSub_index_id(1L);
+			phase.setCollectionPhaseIndex(collectionPhaseIndexService.getById(1L));
+			phaseService.update(phase);
+			model.addAttribute("indexId", 1);
+		}
+		else{
+			model.addAttribute("indexId", phase.getCollectionPhaseIndex().getId());
+		}
+
 		model.addAttribute("phaseTypes",typeService.list() );
 		model.addAttribute("phaseStatuses", phaseStatusService.list());
 
