@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.admin.org.model.Person;
 import kg.gov.mf.loan.admin.org.service.PersonService;
+import kg.gov.mf.loan.admin.sys.model.User;
+import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.model.debtor.OwnerType;
@@ -41,6 +43,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -94,6 +97,9 @@ public class AppliedEntityController {
 
 	@Autowired
 	DebtorService debtorService;
+
+	@Autowired
+	UserService userService;
 
 	/** The entity manager. */
 	@PersistenceContext
@@ -234,6 +240,42 @@ public class AppliedEntityController {
 			entityStateService.remove(entityStateService.getById(id));
 		return "redirect:" + "/manage/order/entitylist/entity/state/list";
     }
+
+    @RequestMapping("/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/completeAll")
+	public String completeAlls(@PathVariable("orderId")Long orderId, @PathVariable("listId")Long listId, @PathVariable("entityId")Long entityId){
+
+		User user=userService.findByUsername(Utils.getPrincipal());
+
+		AppliedEntity entity=entityService.getById(entityId);
+		if(entity.getAppliedEntityState().getId()!=2) {
+			entity.setAppliedEntityState(entityStateService.getById(2L));
+			entityService.update(entity);
+			for (DocumentPackage dp : entity.getDocumentPackages()) {
+				DocumentPackage documentPackage = dpService.getById(dp.getId());
+				if(documentPackage.getDocumentPackageState().getId()!=2) {
+					documentPackage.setDocumentPackageState(dpStateService.getById(2L));
+					documentPackage.setApprovedRatio(1.0);
+					documentPackage.setApprovedDate(new Date());
+					documentPackage.setCompletedRatio(1.0);
+					documentPackage.setCompletedDate(new Date());
+					dpService.update(documentPackage);
+					for (EntityDocument ed : documentPackage.getEntityDocuments()) {
+						EntityDocument entityDocument = edService.getById(ed.getId());
+						if(entityDocument.getEntityDocumentState().getId()!=4) {
+							entityDocument.setEntityDocumentState(edStateService.getById(4L));
+							entityDocument.setApprovedBy(user.getId());
+							entityDocument.setCompletedBy(user.getId());
+							entityDocument.setApprovedDate(new Date());
+							entityDocument.setCompletedDate(new Date());
+							edService.update(entityDocument);
+						}
+
+					}
+				}
+			}
+		}
+ 		return "redirect:/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/view";
+	}
 	
 	private void addPackagesAndDocuments(Long orderId, AppliedEntity entity) {
 		Set<OrderDocumentPackage> oDPs = orderService.getById(orderId).getOrderDocumentPackages();
@@ -285,6 +327,19 @@ public class AppliedEntityController {
 		Query query = entityManager.createNativeQuery(baseQuery, EntityDocumentPackageModel.class);
 
 		List<EntityDocumentPackageModel> packages = query.getResultList();
+		AppliedEntity entity = entityService.getById(entityId);
+		if(entity.getAppliedEntityState().getId()!=2) {
+			int counter = 0;
+			for (EntityDocumentPackageModel p : packages) {
+				if (p.getApprovedRatio() == 1) {
+					counter++;
+				}
+			}
+			if (counter == packages.size()) {
+				entity.setAppliedEntityState(entityStateService.getById(2L));
+				entityService.update(entity);
+			}
+		}
 		return packages;
 	}
 }

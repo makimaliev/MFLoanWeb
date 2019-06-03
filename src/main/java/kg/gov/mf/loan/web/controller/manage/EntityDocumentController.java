@@ -1,21 +1,23 @@
 package kg.gov.mf.loan.web.controller.manage;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
 import kg.gov.mf.loan.admin.org.service.DistrictService;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
+import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackage;
+import kg.gov.mf.loan.manage.model.entitydocument.EntityDocument;
+import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentRegisteredBy;
+import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentState;
 import kg.gov.mf.loan.manage.model.orderdocument.OrderDocumentType;
+import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageService;
 import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageStateService;
 import kg.gov.mf.loan.manage.service.entity.AppliedEntityService;
+import kg.gov.mf.loan.manage.service.entitydocument.EntityDocumentRegisteredByService;
+import kg.gov.mf.loan.manage.service.entitydocument.EntityDocumentService;
+import kg.gov.mf.loan.manage.service.entitydocument.EntityDocumentStateService;
 import kg.gov.mf.loan.manage.service.entitylist.AppliedEntityListService;
 import kg.gov.mf.loan.manage.service.order.CreditOrderService;
 import kg.gov.mf.loan.manage.service.orderdocument.OrderDocumentTypeService;
-import kg.gov.mf.loan.web.util.Pager;
+import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,15 +26,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import kg.gov.mf.loan.manage.model.documentpackage.DocumentPackage;
-import kg.gov.mf.loan.manage.model.entitydocument.EntityDocument;
-import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentRegisteredBy;
-import kg.gov.mf.loan.manage.model.entitydocument.EntityDocumentState;
-import kg.gov.mf.loan.manage.service.documentpackage.DocumentPackageService;
-import kg.gov.mf.loan.manage.service.entitydocument.EntityDocumentRegisteredByService;
-import kg.gov.mf.loan.manage.service.entitydocument.EntityDocumentService;
-import kg.gov.mf.loan.manage.service.entitydocument.EntityDocumentStateService;
-import kg.gov.mf.loan.web.util.Utils;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class EntityDocumentController {
@@ -219,7 +217,7 @@ public class EntityDocumentController {
 				document.setRegisteredBy(edRBService.getById(regId));
 				document.setRegisteredDate(registeredDate);
 				document.setRegisteredDescription(description);
-				document.setEntityDocumentState(edStateService.getById(6L));
+				document.setEntityDocumentState(edStateService.getById(2L));
 			}
 
 		}
@@ -241,10 +239,10 @@ public class EntityDocumentController {
 			dp.setApprovedDate(date);
 
 		if(dp.getCompletedRatio() == 1.0)
-			dp.setDocumentPackageState(dpStateService.getById(3L));
+			dp.setDocumentPackageState(dpStateService.getById(1L));
 
 		if(dp.getApprovedRatio() == 1.0)
-			dp.setDocumentPackageState(dpStateService.getById(4L));
+			dp.setDocumentPackageState(dpStateService.getById(2L));
 
 		/*
 		if(dp.getRegisteredRatio() == 1.0)

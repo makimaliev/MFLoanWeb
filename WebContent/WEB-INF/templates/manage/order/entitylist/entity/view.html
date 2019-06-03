@@ -150,7 +150,7 @@
 										<div class="row m-row--no-padding align-items-center">
 											<div class="col">
 												<h3 class="m-widget1__title" th:text="#{label.entity.state}"></h3>
-												<span class="m-widget1__desc m--font-brand" th:text="${entity.appliedEntityState.name}"></span>
+												<a th:method="post" type="button" th:href="@{/manage/order/__${orderId}__/entitylist/__${listId}__/entity/__${entity.id}__/completeAll}"  class="btn m-widget1__desc m--font-brand" th:text="${entity.appliedEntityState.name}"></a>
 											</div>
 										</div>
 									</div>
