@@ -1,0 +1,448 @@
+<div class="col-md-12" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+    <ul class="nav nav-tabs" role="tablist" id="organization_tabs">
+        <li class="nav-item">
+            <a class="nav-link m--font-primary active" smth1="tab" href="#addressTab" data-toggle="tab">
+                Адрес </a>
+        </li>
+        <li class="nav-item"><a class="nav-link m--font-primary" smth1="tab" href="#identityDocTab" data-toggle="tab"> Идентификационные данные </a></li>
+        <li class="nav-item"><a class="nav-link m--font-primary" smth1="tab" href="#contactTab" data-toggle="tab"> Контактные данные </a></li>
+        <li class="nav-item"><a class="nav-link m--font-primary" smth1="tab" href="#bankDataTab" data-toggle="tab"> Банковские реквизиты </a></li>
+        <li class="nav-item"><a class="nav-link m--font-primary" smth1="tab" href="#departmentTab" data-toggle="tab"> Организационная структура </a></li>
+        <li class="nav-item"><a class="nav-link m--font-primary" smth1="tab" href="#documentTab" data-toggle="tab"> Документы</a></li>
+    </ul>
+    <div class="tab-content">
+
+        <!--ADDRESS TAB-->
+        <div class="tab-pane active" role="tabpanel" id="addressTab">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="m-widget1">
+                        <div class="m-widget1__item">
+                            <div class="row m-row--no-padding align-items-center">
+                                <div class="col">
+                                    <h3 class="m-widget1__title">Область</h3>
+                                    <span class="m-widget1__desc m--font-brand" th:text="${organization?.address?.region?.name}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-widget1__item">
+                            <div class="row m-row--no-padding align-items-center">
+                                <div class="col">
+                                    <h3 class="m-widget1__title" >Район</h3>
+                                    <span class="m-widget1__desc m--font-brand" th:text="${organization?.address?.district?.name}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-widget1__item">
+                            <div class="row m-row--no-padding align-items-center">
+                                <div class="col">
+                                    <h3 class="m-widget1__title">А.окмоту</h3>
+                                    <span class="m-widget1__desc m--font-brand" th:text="${organization?.address?.aokmotu?.name}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-widget1__item">
+                            <div class="row m-row--no-padding align-items-center">
+                                <div class="col">
+                                    <h3 class="m-widget1__title">Село</h3>
+                                    <span class="m-widget1__desc m--font-brand" th:text="${organization?.address?.village?.name}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-widget1__item">
+                            <div class="row m-row--no-padding align-items-center">
+                                <div class="col">
+                                    <h3 class="m-widget1__title">Адрес</h3>
+                                    <span class="m-widget1__desc m--font-brand" th:text="${organization?.address?.line}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!--IDENTITY DOC TAB-->
+        <div class="tab-pane" role="tabpanel" id="identityDocTab">
+            <div class="m-widget1">
+                <div class="m-widget1__item">
+                    <div class="row m-row--no-padding align-items-center">
+                        <div class="col">
+                            <h3 class="m-widget1__title">Полное наименование</h3>
+                            <span class="m-widget1__desc m--font-brand" th:text="${organization?.identityDoc?.identityDocDetails?.fullname}"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-widget1__item">
+                    <div class="row m-row--no-padding align-items-center">
+                        <div class="col">
+                            <h3 class="m-widget1__title" >Вид документа</h3>
+                            <span class="m-widget1__desc m--font-brand" th:text="${organization?.identityDoc?.identityDocType?.name}"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-widget1__item">
+                    <div class="row m-row--no-padding align-items-center">
+                        <div class="col">
+                            <h3 class="m-widget1__title">Номер документа</h3>
+                            <span class="m-widget1__desc m--font-brand" th:text="${organization?.identityDoc?.number}"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-widget1__item">
+                    <div class="row m-row--no-padding align-items-center">
+                        <div class="col">
+                            <h3 class="m-widget1__title">Дата выдачи</h3>
+                            <span class="m-widget1__desc m--font-brand" th:text="${#dates.format(organization?.identityDoc?.date, 'dd.MM.yyyy')}"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-widget1__item">
+                    <div class="row m-row--no-padding align-items-center">
+                        <div class="col">
+                            <h3 class="m-widget1__title">Кем выдано</h3>
+                            <span class="m-widget1__desc m--font-brand" th:text="${organization?.identityDoc?.identityDocGivenBy?.name}"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-widget1__item">
+                    <div class="row m-row--no-padding align-items-center">
+                        <div class="col">
+                            <h3 class="m-widget1__title">ИНН</h3>
+                            <span class="m-widget1__desc m--font-brand" th:text="${organization?.identityDoc?.pin}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--CONTACTS TAB-->
+        <div class="tab-pane" role="tabpanel" id="contactTab">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="m-widget1">
+                        <div class="m-widget1__item">
+                            <div class="row m-row--no-padding align-items-center">
+                                <div class="col">
+                                    <h3 class="m-widget1__title" th:text="#{label.tel.number}">Номер телефона</h3>
+                                    <loop th:each="contactInList : ${organization.contact}">
+                                        <span class="m-widget1__desc m--font-brand" th:text="${contactInList?.name}"></span>
+                                    </loop>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--BANK DATA TAB-->
+        <div class="tab-pane" role="tabpanel" id="bankDataTab">
+            <div class="row">
+                <div class="col-md-12">
+                    <!--begin::Section-->
+                    <div class="m-section">
+                        <div class="m-section__content">
+                            <div class="m-scrollable" data-scrollbar-shown="true"  data-axis="x" data-scrollable="true" data-height="200">
+                                <div>
+                                    <table class="table">
+                                        <thead class="thead-default">
+                                        <tr>
+                                            <th>Наименование банка</th>
+                                            <th>Примечание</th>
+                                            <th>БИК</th>
+                                            <th>Расчетный счет</th>
+                                            <th>&nbsp;</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="bankDataInList : ${organization.bankData}">
+                                            <td th:text="${bankDataInList?.name}">Name</td>
+                                            <td th:text="${bankDataInList?.description}">Description</td>
+                                            <td th:text="${bankDataInList?.bik}">bik</td>
+                                            <td th:text="${bankDataInList?.account_number}">account number</td>
+                                            <td class="table-actions text-right" sec:authorize="hasRole('ADMIN')">
+                                                <span>
+                                                    <div class="dropdown">
+                                                        <a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+                                                            <i class="la la-ellipsis-h"></i>
+                                                        </a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+
+                                                            <a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_BANKDATA')" data-remote="false" data-toggle="modal"
+                                                               data-target="#organizationFormModal"
+                                                               th:href="@{/bankData/__${bankDataInList.id}__/edit}" role="button"
+                                                               class="dropdown-item"> Edit </a>
+                                                            <a hidden="hidden" sec:authorize="hasRole('ADMIN')" class="dropdown-item" href="#">
+                                                                <span>
+                                                                    <form th:action="@{/organization/__${bankDataInList.getOrganization().getId()}__/bankData/__${bankDataInList.id}__/remove}"
+                                                                          method="post">
+                                                                        <button type="submit" class="btn btn-xs red-stripe">Delete</button>
+                                                                    </form>
+                                                                </span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end::Section-->
+                </div>
+            </div>
+        </div>
+
+        <!--DEPARTMENTS TAB-->
+        <div class="tab-pane" role="tabpanel" id="departmentTab">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="m-portlet m-portlet--mobile">
+                        <div class="m-portlet__head">
+                            <div class="m-portlet__head-caption">
+                                <div class="m-portlet__head-title">
+                                    <h3 class="m-portlet__head-text" th:text="#{label.organization.department}"></h3>
+                                </div>
+                            </div>
+                            <div class="m-portlet__head-tools">
+                                <ul class="m-portlet__nav">
+                                    <li class="m-portlet__nav-item">
+                                        <div class="m-input-icon m-input-icon--left">
+                                            <input type="text" class="form-control m-input" th:placeholder="#{label.search}" id="generalSearch">
+                                            <span class="m-input-icon__icon m-input-icon__icon--left">
+                                                <span><i class="la la-search"></i></span>
+                                            </span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="m-portlet__body">
+                            <table class="table" id="departmentTable">
+                                <thead class="thead-default">
+                                <tr>
+                                    <th>ID</th>
+                                    <th th:text="#{label.department.name}"></th>
+                                    <th th:text="#{label.department.description}"></th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="departmentInList : ${organization.department}">
+                                    <td th:text="${departmentInList?.id}">ID</td>
+                                    <td th:text="${departmentInList?.name}">name</td>
+                                    <td th:text="${departmentInList?.description}">Description</td>
+
+                                    <td class="table-actions text-right">
+                                        <span></span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <input hidden="true" type="text" id="department_id" name="department_id" />
+                    <div id="staffContent"></div>
+                </div>
+            </div>
+        </div>
+
+        <!--DOCUMENTS-->
+        <div class="tab-pane" role="tabpanel" id="documentTab">
+            <div class="m_datatable" id="docTable"></div>
+        </div>
+    </div>
+    <!--scripts for document and department table-->
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            var table = $('#departmentTable').DataTable({
+                stateSave: true,
+                language: {
+                    paginate: {
+                        previous: '<i class="la la-angle-left"></i>', // or '→'
+                        next: '<i class="la la-angle-right"></i>' // or '←'
+                    },
+                    lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
+                },
+                "info": false,
+                keys: {
+                    focus: ':eq(0)'
+                },
+                "sDom": 'rtlip'
+            } );
+            $('#generalSearch').keyup(function(){
+                table.search($(this).val()).draw() ;
+            });
+
+            $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
+
+            table.on('key-focus', function(e, datatable, cell) {
+
+                var rowData = datatable.row(cell.index().row).data();
+
+                $("#department_id").val(rowData[0]);
+
+                var sUrl ="/department/"+rowData[0]+"/staff/list";
+
+                $.get(sUrl, function(data) {
+                    $('#staffContent').html(data);
+                });
+
+                var row = datatable.row( cell.index().row );
+
+                table.$('tr.info').removeClass('info');
+                $( row.node() ).addClass( "info" );
+
+                var rowData = row.data();
+
+                var colData = datatable.cell( { focused: true } ).data();
+
+            });
+
+
+
+        });
+    </script>
+    <script th:inline="javascript">
+        var jsonDocs=/*[[${docs}]]*/ [];
+
+        var DatatableDataLocalDocs= function () {
+            //== Private functions
+
+            // demo initializer
+            var mainTableInit = function () {
+
+                var dataJSONArray = JSON.parse(jsonDocs);
+
+                var datatable = $('#docTable').mDatatable({
+                    // datasource definition
+                    data: {
+                        type: 'local',
+                        source: dataJSONArray
+                    },
+
+                    // layout definition
+                    layout: {
+                        theme: 'default', // datatable theme
+                        class: '', // custom wrapper class
+                        scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+                        height: 450, // datatable's body's fixed height
+                        footer: false // display/hide footer
+                    },
+
+                    // column sorting(refer to Kendo UI)
+                    sortable: false,
+
+                    // column based filtering(refer to Kendo UI)
+                    filterable: false,
+
+                    pagination: true,
+
+                    // inline and bactch editing(cooming soon)
+                    // editable: false,
+
+                    // columns definition
+                    columns: [{
+                        field: "id",
+                        title: "#",
+                        responsive: {hidden: 'xl'},
+                    }, {
+                        field: "title",
+                        title: "Относительно",
+                        width:800,
+                        template: function (row) {
+                            var d = row.title;
+                            if(d.length>100){
+                                d= d.substring(0,100)+"...";
+                            }
+                            return '\
+                                <a href="/doc/view/'+row.id+'">'+d+'</a>\
+                            ';
+                        }
+                    },{
+                        field: "type",
+                        title: "Вид документа"
+                    }],
+                    translate: {
+                        records: {
+                            processing: 'Подождите пожалуйста...',
+                            noRecords: 'Записей не найдено'
+                        },
+                        toolbar: {
+                            pagination: {
+                                items: {
+                                    default: {
+                                        first: 'Первая страница',
+                                        prev: 'Предыдущая страница',
+                                        next: 'Следующая страница',
+                                        last: 'Последняя страница',
+                                        more: 'Другие страницы',
+                                        input: 'Номер страницы',
+                                        select: 'Выбрать размер страницы'
+                                    },
+                                    info: 'Отображение {{start}} - {{end}} из {{total}} записей'
+                                }
+                            }
+                        }
+                    },
+
+                    toolbar: {
+                        items: {
+                            // pagination
+                            pagination: {
+                                // page size select
+                                pageSizeSelect: [5, 10, 20, 50, 100]
+                            }
+                        }
+                    }
+                });
+
+
+
+            };
+
+            return {
+                //== Public functions
+                init: function () {
+                    // init dmeo
+                    mainTableInit();
+                }
+            };
+        }();
+
+        jQuery(document).ready(function () {
+            DatatableDataLocalDocs.init();
+        });
+    </script>
+
+    <!--save state of tabs-->
+    <script>
+        // save state of tabs
+        var listOfOrganizationTabs=['#addressTab','#identityDocTab','#contactTab','#documentTab','#bankDataTab','#departmentTab'];
+        var organizationTabName;
+        $(document).ready(function() {
+            if (sessionStorage.getItem("phaseOrganizationTab")) {
+                organizationTabName=sessionStorage.getItem("phaseOrganizationTab");
+                $("a[href='" + organizationTabName + "']").tab("show");
+            }
+            $(document.body).on("click", "a[smth1]", function(event) {
+                if(listOfOrganizationTabs.includes(this.getAttribute("href"))) {
+                    var tabName1 = this.getAttribute("href");
+                    sessionStorage.setItem("phaseOrganizationTab", tabName1);
+                }
+            });
+        });
+        $(window).on("popstate", function() {
+            var anchor = organizationTabName || $("a[data-toggle='tab']").first().attr("href");
+            $("a[href='" + anchor + "']").tab("show");
+        });
+    </script>
+</div>

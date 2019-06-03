@@ -1,0 +1,41 @@
+<div xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="m-widget1__item">
+        <div class="row m-row--no-padding align-items-center">
+            <div class="col-md-7">
+                <h3 class="m-widget1__title" th:text="#{label.collection.phase.sub.index}"></h3>
+                <button data-toggle="modal" data-target="#index2Modal" class="m-widget1__desc m--font-brand" th:text="${index2.name}"></button>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div id="index2Modal" class="modal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <form>
+                    <div class="modal-body">
+                        <div class="form-group m-form__group row">
+                            <label class="col-form-label col-lg-4 col-sm-12">
+                                <span th:text="#{label.collection.phase.sub.index}"></span>
+                                <span class="m--font-danger">*</span>
+                            </label>
+                            <div class="col-lg-7 col-md-9 col-sm-12">
+                                <select id="index2OfPhase" class="form-control m-bootstrap-select m_selectpicker" th:field="${index2.id}" th:title="#{label.select}">
+                                    <option th:each="i : ${index2s}" th:value="${i.id}" th:text="${i.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button onclick="savePhaseIndex2()" type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <!--end Modal-->
+
+</div>

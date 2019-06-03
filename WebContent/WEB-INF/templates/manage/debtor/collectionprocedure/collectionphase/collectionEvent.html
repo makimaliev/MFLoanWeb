@@ -1,0 +1,109 @@
+<div class="m-content" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <div class="m-portlet m-portlet--mobile">
+        <div class="m-portlet__head">
+            <div class="m-portlet__head-tools">
+                <ul class="m-portlet__nav">
+                    <li class="m-portlet__nav-item">
+                        <div class="m-input-icon m-input-icon--left">
+                            <input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
+                            <span class="m-input-icon__icon m-input-icon__icon--left">
+                                <span>
+                                    <i class="la la-search"></i>
+                                </span>
+                            </span>
+                        </div>
+                    </li>
+                    <li sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLECTION_EVENT')"  class="m-portlet__nav-item">
+                        <a data-remote="false"
+                           data-toggle="modal"
+                           data-target="#eventModal"
+                           th:href="@{/phase/__${id}__/event/0/save}"
+                           role="button"
+                           class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+                           th:text="#{label.orgForm.button.add}">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="m-portlet__body">
+            <table class="table" id="eventTable">
+                <thead class="thead-default">
+                <tr>
+                    <th>Вид</th>
+                    <th>Дата</th>
+                    <th>Статус</th>
+                    <th>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="s : ${events}">
+                    <td th:text="${s.eventType.name}"></td>
+                    <td th:text="${#dates.format(s.startDate,'dd.MM.yyyy')}"></td>
+                    <td th:text="${s.eventStatus.name}"></td>
+                    <td class="table-actions text-right">
+                        <span>
+                            <div class="dropdown">
+                                <a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
+                                    <i class="la la-ellipsis-h"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLECTION_EVENT')" class="dropdown-item"
+                                       th:href="@{/phase/__${id}__/event/__${s.id}__/save}"
+                                       data-toggle="modal"
+                                       data-target="#eventModal">
+                                        <span th:text="#{label.table.edit}"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--begin::Modal-->
+    <div class="modal" id="eventModal" role="dialog" aria-labelledby="CollectionEvent" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+    <!--end::Modal-->
+    <script type="text/javascript">
+        $(document).ready(function()
+        {
+            var table = $('#eventTable').DataTable({
+                stateSave: 	true,
+                info: false,
+                sDom: 'rtlip',
+                language: {
+                    paginate: {
+                        previous: '<i class="la la-angle-left"></i>', // or '→'
+                        next: '<i class="la la-angle-right"></i>' // or '←'
+                    },
+                    lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
+                }
+            });
+            table
+                .order( [ 1, 'desc' ] )
+                .draw();
+
+            $('#generalSearch').keyup(function(){
+                table.search($(this).val()).draw() ;
+            });
+
+            $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
+            $('.selectpicker').selectpicker('refresh');
+
+            $("#eventModal").on("show.bs.modal", function(e)
+            {
+                var link = $(e.relatedTarget);
+                $(this).find(".modal-content").load(link.attr("href"));
+            });
+
+        });
+    </script>
+
+</div>

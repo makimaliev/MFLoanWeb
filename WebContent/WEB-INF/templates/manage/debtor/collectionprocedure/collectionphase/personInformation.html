@@ -1,0 +1,291 @@
+<div class="col " xmlns:th="http://www.w3.org/1999/xhtml">
+
+
+    <ul class="nav nav-tabs " role="tablist" id="person_tabs">
+        <li class="nav-item" ><a class="nav-link m--font-primary active" href="#addressTab" smth="tab" data-toggle="tab" >
+            Адрес </a></li>
+        <li class="nav-item"><a class="nav-link m--font-primary" href="#identityDocTab" smth="tab" data-toggle="tab"> Идентификационные данные </a></li>
+        <li class="nav-item"><a class="nav-link m--font-primary" href="#contactTab" smth="tab" data-toggle="tab"> Контактные данные </a></li>
+        <li class="nav-item"><a class="nav-link m--font-primary" href="#documentTab" smth="tab" data-toggle="tab"> Документы </a></li>
+    </ul>
+    <div class="tab-content">
+
+        <!--ADDRESS TAB-->
+        <div class="tab-pane active" id="addressTab">
+
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="m-widget1">
+                        <div class="m-widget1__item">
+                            <div class="row m-row--no-padding align-items-center">
+                                <div class="col">
+                                    <h3 class="m-widget1__title">Область</h3>
+                                    <span class="m-widget1__desc m--font-brand" th:text="${person?.address?.region?.name}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-widget1__item">
+                            <div class="row m-row--no-padding align-items-center">
+                                <div class="col">
+                                    <h3 class="m-widget1__title" >Район</h3>
+                                    <span class="m-widget1__desc m--font-brand" th:text="${person?.address?.district?.name}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-widget1__item">
+                            <div class="row m-row--no-padding align-items-center">
+                                <div class="col">
+                                    <h3 class="m-widget1__title">А.окмоту</h3>
+                                    <span class="m-widget1__desc m--font-brand" th:text="${person?.address?.aokmotu?.name}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-widget1__item">
+                            <div class="row m-row--no-padding align-items-center">
+                                <div class="col">
+                                    <h3 class="m-widget1__title">Село</h3>
+                                    <span class="m-widget1__desc m--font-brand" th:text="${person?.address?.village?.name}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-widget1__item">
+                            <div class="row m-row--no-padding align-items-center">
+                                <div class="col">
+                                    <h3 class="m-widget1__title">Адрес</h3>
+                                    <span class="m-widget1__desc m--font-brand" th:text="${person?.address?.line}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!--IDENTITY DOC TAB-->
+        <div class="tab-pane" id="identityDocTab">
+            <div class="m-widget1">
+                <div class="m-widget1__item">
+                    <div class="row m-row--no-padding align-items-center">
+                        <div class="col">
+                            <h3 class="m-widget1__title">Полное наименование</h3>
+                            <span class="m-widget1__desc m--font-brand" th:text="${person?.identityDoc?.identityDocDetails?.fullname}"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-widget1__item">
+                    <div class="row m-row--no-padding align-items-center">
+                        <div class="col">
+                            <h3 class="m-widget1__title" >Вид документа</h3>
+                            <span class="m-widget1__desc m--font-brand" th:text="${person?.identityDoc?.identityDocType?.name}"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-widget1__item">
+                    <div class="row m-row--no-padding align-items-center">
+                        <div class="col">
+                            <h3 class="m-widget1__title">Номер документа</h3>
+                            <span class="m-widget1__desc m--font-brand" th:text="${person?.identityDoc?.number}"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-widget1__item">
+                    <div class="row m-row--no-padding align-items-center">
+                        <div class="col">
+                            <h3 class="m-widget1__title">Дата выдачи</h3>
+                            <span class="m-widget1__desc m--font-brand" th:text="${#dates.format(person?.identityDoc?.date, 'dd.MM.yyyy')}"></span>
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="m-widget1__item">
+                    <div class="row m-row--no-padding align-items-center">
+                        <div class="col">
+                            <h3 class="m-widget1__title">Кем выдано</h3>
+                            <span class="m-widget1__desc m--font-brand" th:text="${person?.identityDoc?.identityDocGivenBy?.name}"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-widget1__item">
+                    <div class="row m-row--no-padding align-items-center">
+                        <div class="col">
+                            <h3 class="m-widget1__title">ИНН</h3>
+                            <span class="m-widget1__desc m--font-brand" th:text="${person?.identityDoc?.pin}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--CONTACTS TAB-->
+        <div class="tab-pane" id="contactTab">
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="m-widget1">
+                        <div class="m-widget1__item">
+                            <div class="row m-row--no-padding align-items-center">
+                                <div class="col">
+                                    <h3 class="m-widget1__title">Номер телефона</h3>
+
+                                    <loop th:each="contactInList : ${person.contact}">
+                                        <span class="m-widget1__desc m--font-brand" th:text="${contactInList?.name}"></span>
+                                    </loop>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--DOCUMENTS-->
+        <div class="tab-pane" id="documentTab">
+            <div class="m_datatable" id="docTable"></div>
+        </div>
+
+    </div>
+    <!--script for document table-->
+    <script th:inline="javascript">
+        var jsonDocs=/*[[${docs}]]*/ [];
+
+        var DatatableDataLocalDocs= function () {
+            //== Private functions
+
+            // demo initializer
+            var mainTableInit = function () {
+
+                var dataJSONArray = JSON.parse(jsonDocs);
+
+                var datatable = $('#docTable').mDatatable({
+                    // datasource definition
+                    data: {
+                        type: 'local',
+                        source: dataJSONArray
+                    },
+
+                    // layout definition
+                    layout: {
+                        theme: 'default', // datatable theme
+                        class: '', // custom wrapper class
+                        scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+                        height: 450, // datatable's body's fixed height
+                        footer: false // display/hide footer
+                    },
+
+                    // column sorting(refer to Kendo UI)
+                    sortable: false,
+
+                    // column based filtering(refer to Kendo UI)
+                    filterable: false,
+
+                    pagination: true,
+
+                    // inline and bactch editing(cooming soon)
+                    // editable: false,
+
+                    // columns definition
+                    columns: [{
+                        field: "id",
+                        title: "#",
+                        responsive: {hidden: 'xl'},
+                    }, {
+                        field: "title",
+                        title: "Относительно",
+                        width:800,
+                        template: function (row) {
+                            var d = row.title;
+                            if(d.length>100){
+                                d= d.substring(0,100)+"...";
+                            }
+                            return '\
+                                <a href="/doc/view/'+row.id+'">'+d+'</a>\
+                            ';
+                        }
+                    },{
+                        field: "type",
+                        title: "Вид документа"
+                    }],
+                    translate: {
+                        records: {
+                            processing: 'Подождите пожалуйста...',
+                            noRecords: 'Записей не найдено'
+                        },
+                        toolbar: {
+                            pagination: {
+                                items: {
+                                    default: {
+                                        first: 'Первая страница',
+                                        prev: 'Предыдущая страница',
+                                        next: 'Следующая страница',
+                                        last: 'Последняя страница',
+                                        more: 'Другие страницы',
+                                        input: 'Номер страницы',
+                                        select: 'Выбрать размер страницы'
+                                    },
+                                    info: 'Отображение {{start}} - {{end}} из {{total}} записей'
+                                }
+                            }
+                        }
+                    },
+
+                    toolbar: {
+                        items: {
+                            // pagination
+                            pagination: {
+                                // page size select
+                                pageSizeSelect: [5, 10, 20, 50, 100]
+                            }
+                        }
+                    }
+                });
+
+
+
+            };
+
+            return {
+                //== Public functions
+                init: function () {
+                    // init dmeo
+                    mainTableInit();
+                }
+            };
+        }();
+
+        jQuery(document).ready(function () {
+            DatatableDataLocalDocs.init();
+        });
+    </script>
+
+    <!--save state of tabs-->
+    <script>
+        // save state of tabs
+        var listOfPersonTabs=['#addressTab','#identityDocTab','#contactTab','#documentTab'];
+        var personTabName;
+        $(document).ready(function() {
+            if (sessionStorage.getItem("phasePersonTab")) {
+                personTabName=sessionStorage.getItem("phasePersonTab");
+                $("a[href='" + personTabName + "']").tab("show");
+            }
+            $(document.body).on("click", "a[smth]", function(event) {
+                if(listOfPersonTabs.includes(this.getAttribute("href"))) {
+                    var tabName1 = this.getAttribute("href");
+                    sessionStorage.setItem("phasePersonTab", tabName1);
+                }
+            });
+        });
+        $(window).on("popstate", function() {
+            var anchor = personTabName || $("a[data-toggle='tab']").first().attr("href");
+            $("a[href='" + anchor + "']").tab("show");
+        });
+    </script>
+</div>

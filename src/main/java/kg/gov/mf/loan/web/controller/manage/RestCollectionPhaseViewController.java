@@ -1,27 +1,30 @@
 package kg.gov.mf.loan.web.controller.manage;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kg.gov.mf.loan.output.report.model.CollectionPhaseView;
 import kg.gov.mf.loan.output.report.service.CollectionPhaseViewService;
+import kg.gov.mf.loan.web.fetchModels.CollectionPhaseMetaModel;
+import kg.gov.mf.loan.web.fetchModels.CollectionPhaseModel1;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import javax.persistence.EntityManager;
+import java.io.IOException;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api")
 public class RestCollectionPhaseViewController {
 
     @Autowired
+    EntityManager entityManager;
+
+    @Autowired
     CollectionPhaseViewService collectionPhaseViewService;
 
     @PostMapping("/collectionPhaseViews")
-    public List<CollectionPhaseView> getAll(@RequestParam Map<String,String> datatable){
+    public Set<CollectionPhaseView> getAll(@RequestParam Map<String,String> datatable){
 
         LinkedHashMap<String,List<String>> parameters=new LinkedHashMap<>();
 
@@ -126,9 +129,67 @@ public class RestCollectionPhaseViewController {
         }
 
 
-        List<CollectionPhaseView> all=collectionPhaseViewService.findByParameter(parameters,offset,perPage,sortStr,sortField);
+        Set<CollectionPhaseView> all=collectionPhaseViewService.findByParameter(parameters,offset,perPage,sortStr,sortField);
 
         return all;
+    }
+
+    @GetMapping("/collectionPhaseViews/second")
+    public CollectionPhaseMetaModel getAllSecond(@RequestParam Map<String,String> datatable){
+
+        LinkedHashMap<String,List<String>> parameters=new LinkedHashMap<>();
+
+
+        String perPageStr= datatable.get("length");
+        String sortStr = datatable.get("order[0][dir]");
+        String sortField = datatable.get("order[0][column]");
+
+        Integer perPage = Integer.parseInt(perPageStr);
+        Integer offset = Integer.valueOf(datatable.get("start"));
+        String draw=datatable.get("draw");
+
+        String searchStrs=datatable.get("search[value]");
+        ObjectMapper mapper = new ObjectMapper();
+
+        Map<String, String> searchMap=new HashMap<>();
+        try {
+            searchMap= mapper.readValue(searchStrs, new TypeReference<Map<String, String>>() {
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (String s:searchMap.keySet()){
+            List<String> searchList=Arrays.asList(searchMap.get(s));
+            parameters.put(s,searchList);
+        }
+
+
+        Set<CollectionPhaseModel1> list=new HashSet<>();
+        Set<CollectionPhaseView> all=collectionPhaseViewService.findByParameter(parameters,offset,perPage,"asc","v_debtor_name");
+        int total=collectionPhaseViewService.findByParameter(parameters).size();
+        for (CollectionPhaseView phaseView:all) {
+            CollectionPhaseModel1 model=new CollectionPhaseModel1();
+            model.setV_cph_close_total_amount(Double.valueOf(phaseView.getV_cph_close_total_amount()));
+            model.setV_cph_start_total_amount(Double.valueOf(phaseView.getV_cph_start_total_amount()));
+            model.setV_cph_closeDate(phaseView.getV_cph_closeDate());
+            model.setV_cph_startDate(phaseView.getV_cph_startDate());
+            model.setV_cph_id(phaseView.getV_cph_id());
+            model.setV_cph_phaseStatusId(phaseView.getV_cph_phaseStatusId());
+            model.setV_cph_phaseTypeId(phaseView.getV_cph_phaseTypeId());
+            model.setV_debtor_id(phaseView.getV_debtor_id());
+            model.setV_debtor_name(phaseView.getV_debtor_name());
+            model.setV_cph_collectionProcedureId(phaseView.getV_cph_collectionProcedureId());
+            model.setV_debtor_owner_id(phaseView.getV_debtor_owner_id());
+            list.add(model);
+        }
+        CollectionPhaseMetaModel metaModel=new CollectionPhaseMetaModel();
+        metaModel.setDraw(Integer.valueOf(draw));
+        metaModel.setRecordsTotal(total);
+        metaModel.setRecordsFiltered(total);
+        metaModel.setData(list);
+
+
+        return metaModel;
     }
 
 }

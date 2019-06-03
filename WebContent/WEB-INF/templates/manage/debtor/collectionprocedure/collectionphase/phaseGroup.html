@@ -1,0 +1,41 @@
+<div xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="m-widget1__item">
+        <div class="row m-row--no-padding align-items-center">
+            <div class="col-md-7">
+                <h3 class="m-widget1__title" th:text="#{label.collection.phase.group}"></h3>
+                <button data-toggle="modal" data-target="#groupModal" class="m-widget1__desc m--font-brand" th:text="${group.name}"></button>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div id="groupModal" class="modal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <form>
+                    <div class="modal-body">
+                        <div class="form-group m-form__group row">
+                            <label class="col-form-label col-lg-4 col-sm-12">
+                                <span th:text="#{label.collection.phase.group}"></span>
+                                <span class="m--font-danger">*</span>
+                            </label>
+                            <div class="col-lg-7 col-md-9 col-sm-12">
+                                <select id="groupOfPhase" class="form-control m-bootstrap-select m_selectpicker" th:field="${group.id}" th:title="#{label.select}">
+                                    <option th:each="status : ${groups}" th:value="${status.id}" th:text="${status.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button onclick="savePhaseGroup()" type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <!--end Modal-->
+
+</div>

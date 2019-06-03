@@ -2,17 +2,23 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import kg.gov.mf.loan.admin.org.model.Staff;
+import kg.gov.mf.loan.admin.org.model.*;
+import kg.gov.mf.loan.admin.org.service.OrganizationService;
+import kg.gov.mf.loan.admin.org.service.PersonService;
+import kg.gov.mf.loan.admin.org.service.PositionService;
 import kg.gov.mf.loan.admin.org.service.StaffService;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collection.*;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
+import kg.gov.mf.loan.manage.model.debtor.Owner;
+import kg.gov.mf.loan.manage.model.debtor.OwnerType;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.model.process.LoanSummary;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.service.collection.*;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
+import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.manage.service.process.LoanDetailedSummaryService;
 import kg.gov.mf.loan.manage.service.process.LoanSummaryService;
@@ -27,6 +33,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -115,6 +122,24 @@ public class CollectionPhaseController {
 	@Autowired
 	StaffService staffService;
 
+	@Autowired
+    OwnerService ownerService;
+
+	@Autowired
+    PositionService positionService;
+
+	@Autowired
+    OrganizationService organizationService;
+
+	@Autowired
+    PersonService personService;
+
+	@Autowired
+    EventStatusService eventStatusService;
+
+	@Autowired
+    EventTypeService eventTypeService;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
@@ -155,6 +180,26 @@ public class CollectionPhaseController {
         model.addAttribute("jsonLoans", jsonLoans);
 
 		return "/manage/debtor/collectionprocedure/collectionphase/view";
+
+	}
+
+	@RequestMapping(value = { "debtor/{debtorId}/procedure/{procId}/phase/{phaseId}/details"})
+	public String viewPhaseInformation(ModelMap model,
+									 @PathVariable("debtorId")Long debtorId,
+									 @PathVariable("procId")Long procId,
+									 @PathVariable("phaseId")Long phaseId) {
+
+		model.addAttribute("debtorId", debtorId);
+		model.addAttribute("debtor", debtorService.getById(debtorId));
+		model.addAttribute("procId", procId);
+		model.addAttribute("proc", procService.getById(procId));
+
+		CollectionPhase phase = phaseService.getById(phaseId);
+		model.addAttribute("phase", phase);
+		model.addAttribute("phaseTypes",typeService.list() );
+		model.addAttribute("phaseStatuses", phaseStatusService.list());
+
+		return "/manage/debtor/collectionprocedure/collectionphase/collectionPhaseInformation";
 
 	}
 
@@ -1049,5 +1094,335 @@ public class CollectionPhaseController {
 		List<LoanModel> loans = query.getResultList();
 		return loans;
 	}
-	
+
+
+//	update collectionPhase instanly
+	@PostMapping("/phase/instantUpdate")
+    @ResponseBody
+    public void dododo(int type,Long data,Long id){
+	    CollectionPhase collectionPhase=collectionPhaseService.getById(id);
+	    if(type==1){
+            PhaseStatus phaseStatus=phaseStatusService.getById(data);
+            collectionPhase.setPhaseStatus(phaseStatus);
+        }
+	    else if(type==2){
+            PhaseType phaseType=typeService.getById(data);
+            collectionPhase.setPhaseType(phaseType);
+        }
+	    collectionPhaseService.update(collectionPhase);
+
+    }
+
+	@GetMapping("/phase/{id}/getType")
+	public String getPhaseType(Model model,@PathVariable("id") Long id){
+
+		CollectionPhase phase=collectionPhaseService.getById(id);
+		PhaseType type=typeService.getById(phase.getPhaseType().getId());
+
+		model.addAttribute("type",type);
+		return "/manage/debtor/collectionprocedure/collectionphase/phaseType";
+	}
+
+
+    @GetMapping("/phase/{id}/getStatus")
+    public String getPhaseStatus(Model model,@PathVariable("id") Long id){
+
+	    CollectionPhase phase=collectionPhaseService.getById(id);
+	    PhaseStatus status=phaseStatusService.getById(phase.getPhaseStatus().getId());
+
+	    model.addAttribute("status",status);
+	    model.addAttribute("statuses",phaseStatusService.list());
+	    model.addAttribute("phase",phase);
+	    return "/manage/debtor/collectionprocedure/collectionphase/phaseStatus";
+    }
+
+    @PostMapping("/phaseStatus/instantUpdate")
+    @ResponseBody
+    public String updateTheStatus(Long id,Long stat,String date,String res) throws ParseException {
+        SimpleDateFormat sf=new SimpleDateFormat("dd.mm.yyyy");
+
+        CollectionPhase collectionPhase=collectionPhaseService.getById(id);
+        PhaseStatus status=phaseStatusService.getById(stat);
+        collectionPhase.setPhaseStatus(status);
+        try{
+            collectionPhase.setCloseDate(sf.parse(date));
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+        collectionPhase.setResultDocNumber(res);
+
+        collectionPhaseService.update(collectionPhase);
+
+        return "OK";
+    }
+
+
+    @GetMapping("/phase/{id}/getProcedureStatus")
+    public String getPhaseProcStatus(Model model,@PathVariable("id") Long id){
+
+        CollectionPhase phase=collectionPhaseService.getById(id);
+        ProcedureStatus procedureStatus=procedureStatusService.getById(phase.getCollectionProcedure().getProcedureStatus().getId());
+		CollectionProcedure procedure=procService.getById(phase.getCollectionProcedure().getId());
+
+        model.addAttribute("closeDate",procedure.getCloseDate());
+        model.addAttribute("procedureS",procedureStatus);
+        model.addAttribute("statuses",procedureStatusService.list());
+        return "manage/debtor/collectionprocedure/collectionphase/phaseProcedureStatus";
+    }
+
+    @PostMapping("/phaseProcStatus/instantUpdate")
+    @ResponseBody
+    public String updateTheProcedureStatus(Long id,Long stat,String date) throws ParseException {
+		SimpleDateFormat sf=new SimpleDateFormat("dd.mm.yyyy");
+
+        CollectionPhase collectionPhase=collectionPhaseService.getById(id);
+        ProcedureStatus status=procedureStatusService.getById(stat);
+
+        CollectionProcedure procedure=procService.getById(collectionPhase.getCollectionProcedure().getId());
+        procedure.setProcedureStatus(status);
+        try{
+			procedure.setCloseDate(sf.parse(date));
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+
+        procService.update(procedure);
+
+        return "OK";
+    }
+
+
+    @GetMapping("/phase/{id}/getGroup")
+    public String getPhaseGroup(Model model,@PathVariable("id") Long id){
+
+        CollectionPhase phase=collectionPhaseService.getById(id);
+        CollectionPhaseGroup group=new CollectionPhaseGroup();
+        if(phase.getCollectionPhaseGroup()==null){
+            group=collectionPhaseGroupService.getById(1L);
+        }
+        else{
+            group=collectionPhaseGroupService.getById(phase.getCollectionPhaseGroup().getId());
+        }
+
+        model.addAttribute("groups",collectionPhaseGroupService.list());
+        model.addAttribute("group",group);
+        return "manage/debtor/collectionprocedure/collectionphase/phaseGroup";
+    }
+
+    @PostMapping("/phaseGroup/instantUpdate")
+    @ResponseBody
+    public String updateTheGroup(Long id,Long data){
+
+        CollectionPhase collectionPhase=collectionPhaseService.getById(id);
+        CollectionPhaseGroup group=collectionPhaseGroupService.getById(data);
+
+        collectionPhase.setCollectionPhaseGroup(group);
+        collectionPhaseService.update(collectionPhase);
+
+        return "OK";
+    }
+
+
+    @GetMapping("/phase/{id}/getIndex")
+    public String getPhaseIndex(Model model,@PathVariable("id") Long id){
+
+        CollectionPhase phase=collectionPhaseService.getById(id);
+        CollectionPhaseIndex index=new CollectionPhaseIndex();
+        if(phase.getCollectionPhaseIndex()==null){
+            index=collectionPhaseIndexService.getById(1L);
+        }
+        else{
+            index=collectionPhaseIndexService.getById(phase.getCollectionPhaseIndex().getId());
+        }
+
+        model.addAttribute("index",index);
+        model.addAttribute("indexes",collectionPhaseIndexService.list());
+        return "manage/debtor/collectionprocedure/collectionphase/phaseIndex";
+    }
+
+    @PostMapping("/phaseIndex/instantUpdate")
+    @ResponseBody
+    public String updateTheIndex(Long id,Long data){
+
+        CollectionPhase collectionPhase=collectionPhaseService.getById(id);
+        CollectionPhaseIndex index=collectionPhaseIndexService.getById(data);
+
+        collectionPhase.setCollectionPhaseIndex(index);
+        collectionPhaseService.update(collectionPhase);
+
+        return "OK";
+    }
+
+
+    @GetMapping("/phase/{id}/getIndex2")
+    public String getPhaseIndex2(Model model,@PathVariable("id") Long id){
+
+        CollectionPhase phase=collectionPhaseService.getById(id);
+        CollectionPhaseSubIndex index2=new CollectionPhaseSubIndex();
+        if(phase.getSub_index_id()==null){
+            index2=collectionPhaseSubIndexService.getById(1L);
+        }
+        else {
+            index2=collectionPhaseSubIndexService.getById(phase.getSub_index_id());
+        }
+
+        model.addAttribute("index2",index2);
+        model.addAttribute("index2s",collectionPhaseSubIndexService.list());
+
+        return "manage/debtor/collectionprocedure/collectionphase/phaseIndex2";
+    }
+
+    @PostMapping("/phaseIndex2/instantUpdate")
+    @ResponseBody
+    public String updateTheIndex2(Long id,Long data){
+
+        CollectionPhase collectionPhase=collectionPhaseService.getById(id);
+        CollectionPhaseIndex index=collectionPhaseIndexService.getById(collectionPhase.getCollectionPhaseIndex().getId());
+        CollectionPhaseSubIndex index2=collectionPhaseSubIndexService.getById(data);
+
+        Set<CollectionPhaseSubIndex> set=new HashSet<>();
+        set.clear();
+        set.add(index2);
+
+        index.setCollectionPhaseSubIndices(set);
+        collectionPhaseIndexService.update(index);
+
+        collectionPhase.setSub_index_id(index2.getId());
+        collectionPhaseService.update(collectionPhase);
+
+        return "OK";
+    }
+
+
+    @PostMapping("/phasePaymentFromDate/instantUpdate")
+    @ResponseBody
+    public String updateThePaymentFromDate(Long id,String data){
+	    SimpleDateFormat sf=new SimpleDateFormat("dd.mm.yyyy");
+
+        CollectionPhase collectionPhase=collectionPhaseService.getById(id);
+        try {
+            collectionPhase.setPaymentFromDate(sf.parse(data));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        collectionPhaseService.update(collectionPhase);
+
+        return "OK";
+    }
+
+
+    @GetMapping("/owner/{id}/getInformation")
+    public String getOwnerInformation(Model model,@PathVariable("id") Long id){
+
+	    Owner owner=ownerService.getById(id);
+	    if(owner.getOwnerType().equals(OwnerType.ORGANIZATION)){
+            Organization organization = this.organizationService.findById(owner.getEntityId());
+
+            String hasDebtor="true";
+            try{
+                Debtor debtor=debtorService.getByOwnerId(owner.getId());
+                model.addAttribute("debtorId",debtor.getId());
+            }
+            catch (Exception e){
+                hasDebtor="false";
+                model.addAttribute("debtorId",0);
+            }
+            model.addAttribute("hasDebtor", hasDebtor);
+            List<Position> organizationPositionList = new ArrayList<Position>();
+
+            for (Department department:organization.getDepartment())
+            {
+                organizationPositionList.addAll(this.positionService.findByDepartment(department));
+            }
+
+            model.addAttribute("docs",getDocs(id));
+            model.addAttribute("organization", organization);
+            model.addAttribute("positionList", organizationPositionList);
+            return "manage/debtor/collectionprocedure/collectionphase/organizationInformation";
+        }
+	    else{
+            Person person = this.personService.findById(owner.getEntityId());
+            String hasDebtor="true";
+            try{
+                Debtor debtor=debtorService.getByOwnerId(owner.getId());
+                model.addAttribute("debtorId",debtor.getId());
+            }
+            catch (Exception e){
+                hasDebtor="false";
+                model.addAttribute("debtorId",0);
+            }
+            model.addAttribute("docs",getDocs(id));
+            model.addAttribute("hasDebtor", hasDebtor);
+            model.addAttribute("person", person);
+
+            return "manage/debtor/collectionprocedure/collectionphase/personInformation";
+        }
+    }
+
+
+    @GetMapping("/phase/{id}/getEvents")
+    public String getPhaseEvents(Model model,@PathVariable("id") Long id){
+
+        CollectionPhase phase=collectionPhaseService.getById(id);
+        Set<CollectionEvent> events=phase.getCollectionEvents();
+
+        model.addAttribute("id",phase.getId());
+        model.addAttribute("events",events);
+
+        return "/manage/debtor/collectionprocedure/collectionphase/collectionEvent";
+    }
+
+    @GetMapping("/phase/{phaseId}/event/{id}/save")
+    public String savePhaseEventGet(Model model,@PathVariable("id") Long id,@PathVariable("phaseId") Long phaseId){
+
+        if(id==0){
+            CollectionPhase phase=collectionPhaseService.getById(phaseId);
+            CollectionEvent event=new CollectionEvent();
+            event.setCollectionPhase(phase);
+            model.addAttribute("event",event);
+        }
+        else if(id>0){
+            CollectionEvent event=collectionEventService.getById(id);
+            model.addAttribute("event",event);
+        }
+
+        model.addAttribute("types",eventTypeService.list());
+        model.addAttribute("statuses",eventStatusService.list());
+
+        return "/manage/debtor/collectionprocedure/collectionphase/collectionEventForm";
+    }
+
+    @PostMapping("/event/save")
+    @ResponseBody
+    public String savePhaseEventPost(CollectionEvent event){
+
+        if(event.getId()==0){
+            collectionEventService.add(event);
+        }
+        else if(event.getId()>0){
+            collectionEventService.update(event);
+        }
+
+
+        return "OK";
+    }
+
+    public String  getDocs(Long id){
+
+        String baseQuery="select d.title,d.id,dt.name as type\n" +
+                "from df_document d,person p,cat_responsible_organization ro,cat_document_type dt\n" +
+                "where (d.receiverResponsible=ro.Responsible_id or d.senderResponsible=ro.Responsible_id) " +
+                "and dt.id=d.documentType and ro.organizations_id="+id+" group by d.id";
+        Query query=entityManager.createNativeQuery(baseQuery, PersonOrganizationDocModel.class);
+
+        List<PersonOrganizationDocModel> list=query.getResultList();
+
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String result = gson.toJson(list);
+
+        return result;
+    }
 }

@@ -1,0 +1,331 @@
+<!--begin::Portlet-->
+<div class="m-portlet m-portlet--mobile" xmlns:th="http://www.w3.org/1999/xhtml"
+     xmlns:sec="http://www.w3.org/1999/xhtml">
+    <div class="m-portlet__body">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link m--font-primary active" data-toggle="tab" href="#main" th:text="#{label.collection.info.phase}" id="mainFunction"></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link m--font-primary" data-toggle="tab" href="#debtorInfo" th:text="#{label.debtor}" id="debtorInfoFunction"></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link m--font-primary" data-toggle="tab" href="#phaseEvent" th:text="#{label.collection.event}" id="phaseEventFunction"></a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="main">
+                <div class="m-portlet__body m-portlet__body--no-padding">
+                    <div class="row m-row--no-padding m-row--col-separator-xl">
+                        <div class="col-md-12 col-lg-12 col-xl-4">
+                            <!--begin:: Widgets/Stats2-1 -->
+                            <div class="m-widget1">
+                                <div class="m-widget1__item">
+                                    <div class="row m-row--no-padding align-items-center">
+                                        <div class="col">
+                                            <h3 class="m-widget1__title" th:text="#{label.collection.phase.start.date}"></h3>
+                                            <span class="m-widget1__desc m--font-brand" th:text="${#dates.format(phase.startDate, 'dd.MM.yyyy')}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-widget1__item">
+                                    <div class="row m-row--no-padding align-items-center">
+                                        <div class="col">
+                                            <h3 class="m-widget1__title" th:text="#{label.collection.phase.paid}"></h3>
+                                            <span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(phase.paid, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-widget1__item">
+                                    <div class="row m-row--no-padding align-items-center">
+                                        <div class="col">
+                                            <h3 class="m-widget1__title" th:text="#{label.collection.phase.start.amount}"></h3>
+                                            <span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(phase.start_amount, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-widget1__item">
+                                    <div class="row m-row--no-padding align-items-center">
+                                        <div class="col">
+                                            <h3 class="m-widget1__title" th:text="#{label.collection.phase.doc.number}"></h3>
+                                            <span class="m-widget1__desc m--font-brand" th:text="${phase.docNumber}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-widget1__item">
+                                    <div class="row m-row--no-padding align-items-center">
+                                        <div class="col">
+                                            <h3 class="m-widget1__title" th:text="#{label.phase.paymentFromDate}"></h3>
+
+                                            <button th:if="${phase.paymentFromDate!=null}" data-toggle="modal" data-target="#paymentFromDateModal" class="m-widget1__desc m--font-brand" th:text="${#dates.format(phase.paymentFromDate,'dd.MM.yyyy')}"></button>
+                                            <button th:unless="${phase.paymentFromDate!=null}" data-toggle="modal" data-target="#paymentFromDateModal" class="m-widget1__desc m--font-brand" th:text="#{label.phase.setPaymentFromDate}"></button>
+                                        </div>
+                                    </div>
+                                    <!-- Modal -->
+                                    <div id="paymentFromDateModal" class="modal" role="dialog">
+                                        <div class="modal-dialog">
+
+                                            <!-- Modal content-->
+                                            <div class="modal-content">
+                                                <form>
+                                                    <div class="modal-body">
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                                <span th:text="#{label.phase.paymentFromDate}"></span>
+                                                            </label>
+                                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                                <div class="input-group date m_datetimepicker_6">
+                                                                    <input id="paymentFromDate" type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:value="${#dates.format(phase.paymentFromDate,'dd.MM.yyyy')}"/>
+                                                                    <span class="input-group-addon">
+                                                            <i class="la la-calendar glyphicon-th"></i>
+                                                        </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                        <button onclick="savePhasePaymentFromDate()" type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <!--end Modal-->
+                                </div>
+                            </div>
+                            <!--end:: Widgets/Stats2-1 -->
+                        </div>
+
+                        <div class="col-md-12 col-lg-12 col-xl-4">
+                            <!--begin:: Widgets/Stats2-2 -->
+
+                            <input id="phaseId" hidden="hidden" type="text" name="id" th:value="${phase.id}">
+                            <div class="m-widget1">
+                                <div id="type_content"></div>
+                                <div id="status_content"></div>
+                                <div id="proc_status_content"></div>
+                                <div id="group_content"></div>
+                                <div id="index_content"></div>
+                                <div id="index2_content"></div>
+                            </div>
+                            <!--end:: Widgets/Stats2-2 -->
+                        </div>
+
+                        <div class="col-md-12 col-lg-12 col-xl-4">
+                            <!--begin:: Widgets/Stats2-2 -->
+                            <div class="m-widget1">
+                                <div class="m-widget1__item" th:if="${phase.close_amount!= null}">
+                                    <div class="row m-row--no-padding align-items-center">
+                                        <div class="col"  >
+                                            <h3 class="m-widget1__title" th:text="#{label.collection.phase.close.amount}"></h3>
+                                            <span class="m-widget1__desc m--font-brand"th:text="${#numbers.formatDecimal(phase.close_amount, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-widget1__item" th:if="${phase.resultDocNumber!= null}">
+                                    <div class="row m-row--no-padding align-items-center">
+                                        <div class="col" >
+                                            <h3 class="m-widget1__title" th:text="#{label.collection.phase.resultDocNumber}"></h3>
+                                            <span class="m-widget1__desc m--font-brand" th:text="${phase.resultDocNumber}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--begin:: Widgets/Stats2-2 -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="debtorInfo" class="tab-pane"  role="tabpanel">
+                <div id="information_content"></div>
+            </div>
+            <div id="phaseEvent" class="tab-pane"  role="tabpanel">
+                <div id="event_content"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+
+    $('.my-select').selectpicker();
+
+    var pId=$("#phaseId").val();
+
+
+    contentLoad();
+    // load phase information htmls
+    function contentLoad() {
+        var stUrl ="/phase/"+pId+"/getStatus";
+        var tUrl ="/phase/"+pId+"/getType";
+        var pSUrl ="/phase/"+pId+"/getProcedureStatus";
+        var gUrl ="/phase/"+pId+"/getGroup";
+        var iUrl ="/phase/"+pId+"/getIndex";
+        var i2Url ="/phase/"+pId+"/getIndex2";
+
+        $.get(stUrl, function(data) {
+
+            $('#status_content').html(data);
+        });
+
+        $.get(tUrl, function(data) {
+
+            $('#type_content').html(data);
+        });
+
+        $.get(pSUrl, function(data) {
+
+            $('#proc_status_content').html(data);
+        });
+
+        $.get(gUrl, function(data) {
+
+            $('#group_content').html(data);
+        });
+
+        $.get(iUrl, function(data) {
+
+            $('#index_content').html(data);
+        });
+
+        $.get(i2Url, function(data) {
+
+            $('#index2_content').html(data);
+        });
+    }
+
+
+    // reload information content
+    function reloadContent(){
+        $.get(contentUrl, function(data) {
+            $('#content').html(data);
+        });
+    }
+
+    // update status, reload content
+    function savePhaseStatus() {
+        var pSt=$("#statusOfPhase :selected").val();
+        var pDate=$("#dateOfPhase").val();
+        var pResDoc=$("#resultDocOfPhase").val();
+        $.ajax({
+            type:'post',
+            data:{id:pId,stat:pSt,date:pDate,res:pResDoc},
+            url:"/phaseStatus/instantUpdate",
+            success:function (data) {
+                reloadContent();
+            }
+        });
+    }
+
+    // update procedure status, reload content
+    function savePhaseProcStatus() {
+        var pDate=$("#dateOfProc").val();
+        var pSt=$("#procStatusOfPhase :selected").val();
+        $.ajax({
+            type:'post',
+            data:{id:pId,stat:pSt,date:pDate},
+            url:"/phaseProcStatus/instantUpdate",
+            success:function (data) {
+                reloadContent();
+            }
+        });
+    }
+
+    // update group, reload content
+    function savePhaseGroup() {
+        var dataId=$("#groupOfPhase :selected").val();
+        $.ajax({
+            type:'post',
+            data:{id:pId,data:dataId},
+            url:"/phaseGroup/instantUpdate",
+            success:function (data) {
+                reloadContent();
+            }
+        });
+    }
+
+    // update index, reload content
+    function savePhaseIndex() {
+        var dataId=$("#indexOfPhase :selected").val();
+        $.ajax({
+            type:'post',
+            data:{id:pId,data:dataId},
+            url:"/phaseIndex/instantUpdate",
+            success:function (data) {
+                reloadContent();
+            }
+        });
+    }
+
+    // update index2, reload content
+    function savePhaseIndex2() {
+        var dataId=$("#index2OfPhase :selected").val();
+        $.ajax({
+            type:'post',
+            data:{id:pId,data:dataId},
+            url:"/phaseIndex2/instantUpdate",
+            success:function (data) {
+                reloadContent();
+            }
+        });
+    }
+
+    // update paymentFromDate, reload content
+    function savePhasePaymentFromDate() {
+        var dataId=$("#paymentFromDate").val();
+        $.ajax({
+            type:'post',
+            data:{id:pId,data:dataId},
+            url:"/phasePaymentFromDate/instantUpdate",
+            success:function (data) {
+                reloadContent();
+            }
+        });
+    }
+
+    //load person tab
+    $("#debtorInfoFunction").on("click",function () {
+        var contentUrl="/owner/"+ownerId+"/getInformation";
+
+        $.get(contentUrl, function(data) {
+
+            $('#information_content').html(data);
+        });
+    });
+
+    // load phase events
+    $("#phaseEventFunction").on("click",function () {
+        var eventUrl="/phase/"+pId+"/getEvents";
+
+        $.get(eventUrl, function(data) {
+
+            $('#event_content').html(data);
+        });
+    });
+
+    // save state of tabs
+    var listOfTabs=['#debtorInfo','#main','#phaseEvent'];
+    var tabName;
+    $(document).ready(function() {
+        if (sessionStorage.getItem("phaseTab")) {
+            tabName=sessionStorage.getItem("phaseTab");
+            $("a[href='" + tabName + "']").tab("show");
+            $(tabName.toString()+"Function").click();
+        }
+        $(document.body).on("click", "a[data-toggle]", function(event) {
+            if(listOfTabs.includes(this.getAttribute("href"))){
+                var tabName1 = this.getAttribute("href");
+                sessionStorage.setItem("phaseTab",tabName1);
+            }
+        });
+    });
+    $(window).on("popstate", function() {
+        var anchor = tabName || $("a[data-toggle='tab']").first().attr("href");
+        $("a[href='" + anchor + "']").tab("show");
+    });
+
+</script>
+<!--end::Portlet-->

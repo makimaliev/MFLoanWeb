@@ -1,0 +1,87 @@
+<form id="myForm" th:action="@{/event/save}" class="form-horizontal" method="post" th:object="${event}"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="modal-header">
+        <h5 class="modal-title" id="orgFormFormModalTitle" th:text="#{label.phase.event}"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">
+				&times;
+			</span>
+        </button>
+    </div>
+    <div class="modal-body">
+
+        <div class="alert alert-danger alert-dismissible alert-hidden" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+            <span th:text="#{label.orgForm.modal.error.name}"></span>
+        </div>
+
+        <input hidden="true" type="text" name="id" th:value="${event.id}" />
+        <input hidden="true" type="text" name="collectionPhase" th:field="*{collectionPhase.id}" />
+        <div class="form-group m-form__group row">
+            <label class="col-form-label col-lg-4 col-sm-12">
+                <span th:text="#{label.collection.phase.closeDate}"></span>
+            </label>
+            <div class="col-lg-7 col-md-9 col-sm-12">
+                <div class="input-group date m_datetimepicker_6">
+                    <!--#dates.format(,'dd.MM.yyyy')-->
+                    <input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{startDate}"/>
+                    <span class="input-group-addon">
+                        <i class="la la-calendar glyphicon-th"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group m-form__group row">
+            <label class="col-form-label col-lg-4 col-sm-12">
+                <span th:text="#{label.collection.phase.status}"></span>
+                <span class="m--font-danger">*</span>
+            </label>
+            <div class="col-lg-7 col-md-9 col-sm-12">
+                <select class="form-control m-bootstrap-select m_selectpicker my-select"  th:field="${event.eventStatus.id}" th:title="#{label.select}">
+                    <option th:each="status : ${statuses}" th:value="${status.id}" th:text="${status.name}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group m-form__group row">
+            <label class="col-form-label col-lg-4 col-sm-12">
+                <span th:text="#{label.collection.phase.status}"></span>
+                <span class="m--font-danger">*</span>
+            </label>
+            <div class="col-lg-7 col-md-9 col-sm-12">
+                <select class="form-control m-bootstrap-select m_selectpicker my-select" th:field="${event.eventType.id}" th:title="#{label.select}">
+                    <option th:each="status : ${types}" th:value="${status.id}" th:text="${status.name}"></option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.orgForm.button.cancel}"></button>
+        <button type="submit" class="btn btn-primary" th:text="#{label.orgForm.button.submit}"></button>
+    </div>
+    <!--begin::Page Resources -->
+    <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
+    <!--end::Page Resources -->
+    <script>
+        $("#myForm").submit(function(e) {
+
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+
+            var form = $(this);
+            var url = form.attr('action');
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    $("#eventModal").modal("hide");
+                    reloadContent();
+                }
+            });
+
+
+        });
+    </script>
+</form>
