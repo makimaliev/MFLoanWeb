@@ -621,8 +621,6 @@ public class LoanController {
 
         if (rate != null)
             loan.setCloseRate(rate.getRate());
-        else
-            loan.setCloseRate(1.0);
     }
 
     private void saveLoanData(Loan loan)
