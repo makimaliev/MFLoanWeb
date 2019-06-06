@@ -95,6 +95,25 @@
                                     </div>
                                     <!--end Modal-->
                                 </div>
+
+                            </div>
+                            <div class="m-widget1">
+                                <div class="m-widget1__item" th:if="${phase.close_amount!= null}">
+                                    <div class="row m-row--no-padding align-items-center">
+                                        <div class="col"  >
+                                            <h3 class="m-widget1__title" th:text="#{label.collection.phase.close.amount}"></h3>
+                                            <span class="m-widget1__desc m--font-brand"th:text="${#numbers.formatDecimal(phase.close_amount, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-widget1__item" th:if="${phase.resultDocNumber!= null}">
+                                    <div class="row m-row--no-padding align-items-center">
+                                        <div class="col" >
+                                            <h3 class="m-widget1__title" th:text="#{label.collection.phase.resultDocNumber}"></h3>
+                                            <span class="m-widget1__desc m--font-brand" th:text="${phase.resultDocNumber}"></span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <!--end:: Widgets/Stats2-1 -->
                         </div>
@@ -117,21 +136,9 @@
                         <div class="col-md-12 col-lg-12 col-xl-4">
                             <!--begin:: Widgets/Stats2-2 -->
                             <div class="m-widget1">
-                                <div class="m-widget1__item" th:if="${phase.close_amount!= null}">
-                                    <div class="row m-row--no-padding align-items-center">
-                                        <div class="col"  >
-                                            <h3 class="m-widget1__title" th:text="#{label.collection.phase.close.amount}"></h3>
-                                            <span class="m-widget1__desc m--font-brand"th:text="${#numbers.formatDecimal(phase.close_amount, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="m-widget1__item" th:if="${phase.resultDocNumber!= null}">
-                                    <div class="row m-row--no-padding align-items-center">
-                                        <div class="col" >
-                                            <h3 class="m-widget1__title" th:text="#{label.collection.phase.resultDocNumber}"></h3>
-                                            <span class="m-widget1__desc m--font-brand" th:text="${phase.resultDocNumber}"></span>
-                                        </div>
-                                    </div>
+                                <div class="m-widget1__item">
+                                    <span id="phaseSpanDescription" class="m-widget1__desc m--font-brand" th:placeholder="#{label.description}" th:text="${phase.description}"></span>
+                                    <textarea rows="5" id="phaseTxtDescription" class="form-control" onblur="savePhaseDescription()"></textarea>
                                 </div>
                             </div>
                             <!--begin:: Widgets/Stats2-2 -->
@@ -140,10 +147,10 @@
                     </div>
                 </div>
             </div>
-            <div id="debtorInfo" class="tab-pane"  role="tabpanel">
+            <div id="debtorInfo" class="tab-pane" >
                 <div id="information_content"></div>
             </div>
-            <div id="phaseEvent" class="tab-pane"  role="tabpanel">
+            <div id="phaseEvent" class="tab-pane" >
                 <div id="event_content"></div>
             </div>
         </div>
@@ -294,9 +301,44 @@
         });
     }
 
+    // hide/show phase description fields
+    if($("#phaseSpanDescription").text()=="" || $("#phaseSpanDescription").text()==null){
+        $("#phaseSpanDescription").text("Примечание")
+        $("#phaseTxtDescription").val();
+    }
+    else{
+        $("#phaseTxtDescription").val($("#phaseSpanDescription").text());
+    }
+    $("#phaseTxtDescription").hide();
+    $("#phaseSpanDescription").on("click",function () {
+        $("#phaseTxtDescription").show();
+
+        $(this).hide();
+    });
+
+    // edit/add phaseDescription
+    function savePhaseDescription(){
+        var txtAreaData=$('#phaseTxtDescription').val();
+        console.log(txtAreaData)
+        $.ajax({
+            type:'post',
+            data:{id:pId,data:txtAreaData},
+            url:"/phaseDescription/save",
+            success:function () {
+                $('#phaseTxtDescription').val("");
+                reloadContent();
+            }
+        });
+    }
+    // main tab
+    $("#mainFunction").on("click",function () {
+        $("#phaseEvent").hide();
+    });
+
     //load person tab
     $("#debtorInfoFunction").on("click",function () {
         var contentUrl="/owner/"+ownerId+"/getInformation";
+        $("#phaseEvent").hide();
 
         $.get(contentUrl, function(data) {
 
@@ -307,6 +349,7 @@
     // load phase events
     $("#phaseEventFunction").on("click",function () {
         var eventUrl="/phase/"+pId+"/getEvents";
+        $("#phaseEvent").show();
 
         $.get(eventUrl, function(data) {
 
@@ -322,6 +365,10 @@
             tabName=sessionStorage.getItem("phaseTab");
             $("a[href='" + tabName + "']").tab("show");
             $(tabName.toString()+"Function").click();
+            $(window).on("popstate", function() {
+                var anchor = tabName || $("a[data-toggle='tab']").first().attr("href");
+                $("a[href='" + anchor + "']").tab("show");
+            });
         }
         $(document.body).on("click", "a[data-toggle]", function(event) {
             if(listOfTabs.includes(this.getAttribute("href"))){
@@ -329,10 +376,6 @@
                 sessionStorage.setItem("phaseTab",tabName1);
             }
         });
-    });
-    $(window).on("popstate", function() {
-        var anchor = tabName || $("a[data-toggle='tab']").first().attr("href");
-        $("a[href='" + anchor + "']").tab("show");
     });
 
 </script>

@@ -1431,6 +1431,16 @@ public class CollectionPhaseController {
         return "OK";
     }
 
+	@PostMapping("/phaseDescription/save")
+	@ResponseBody
+	public String savePhaseDescription(Long id,String data){
+
+		CollectionPhase phase=collectionPhaseService.getById(id);
+		phase.setDescription(data);
+		collectionPhaseService.update(phase);
+		return "OK";
+	}
+
     public String  getDocs(Long id){
 
         String baseQuery="select d.title,d.id,dt.name as type\n" +
