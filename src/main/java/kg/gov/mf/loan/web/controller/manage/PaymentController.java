@@ -36,6 +36,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 public class PaymentController {
@@ -209,13 +212,25 @@ public class PaymentController {
 					this.jobItemService.runDailyCalculateProcedureForOneLoan(loan.getId(), onDate);
 				}
 			}
-		new Thread(new Runnable() {
+		int x = 1; // However many threads you want
+		System.out.println("=========================================================");
+		System.out.println(new Date());
+		System.out.println("=========================================================");
+		ScheduledExecutorService someScheduler = Executors.newScheduledThreadPool(x);
+		Runnable runnable = new Runnable() {
 			public void run() {
 				phaseUpdater(debtorId);
 			}
-		}).start();
+		};
+		long timeDelay = 30; // You can specify 1 what
+		someScheduler.schedule(runnable, timeDelay, TimeUnit.SECONDS);
+//		new Thread(new Runnable() {
+//			public void run() {
+//				phaseUpdater(debtorId);
+//			}
+//		}).start();
 
-			return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
+		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
 
     }
 
@@ -261,6 +276,10 @@ public class PaymentController {
 		}
 
 		session.getTransaction().commit();
+
+		System.out.println("=========================================================");
+		System.out.println("THis is sparTA");
+		System.out.println("=========================================================");
 	}
 
     /*public void runUpdateQueries(Loan loan,Session session){
