@@ -288,6 +288,7 @@
             searchStr[$(this)[0].id] = strValues;
         }
         else{
+            strOfContent[$(this)[0].id]="";
             delete searchStr[$(this)[0].id];
         }
         setCookie($(this)[0].id,$(this).val());
@@ -352,7 +353,11 @@
         },
         columns: [
             {
-                data: 'v_cph_id'},
+                data: function (d) {
+                    return '\
+                                <a href="/manage/debtor/'+d["v_debtor_id"]+'/collectionprocedure/'+d["v_cph_collectionProcedureId"]+'/collectionphase/'+d["v_cph_id"]+'/view">'+d["v_cph_id"]+'</a>\
+                            ';
+                }},
             {
                 data: 'v_debtor_name'},
             {

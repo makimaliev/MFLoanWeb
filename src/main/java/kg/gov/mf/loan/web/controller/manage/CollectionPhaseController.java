@@ -149,7 +149,7 @@ public class CollectionPhaseController {
 
 //	private final ThreadLocal<List<PhaseDetails>> threadLocal=new ThreadLocal<>();
 //	private List<PhaseDetails> phaseDetailsList=new ArrayList<>();
-	private HashMap<String,List<PhaseDetails>> phaseDetailsLists=new HashMap<>();
+	private static HashMap<String,List<PhaseDetails>> phaseDetailsLists=new HashMap<>();
 
 	private List<CollectionPhaseSubIndexModel> collectionPhaseSubIndexModelList=new ArrayList<CollectionPhaseSubIndexModel>();
 	
@@ -196,6 +196,7 @@ public class CollectionPhaseController {
 
 		CollectionPhase phase = phaseService.getById(phaseId);
 		model.addAttribute("phase", phase);
+		model.addAttribute("phaseRecordStatus",phase.getRecord_status());
 
 		if(phase.getCollectionPhaseIndex()==null){
 			phase.setSub_index_id(1L);
@@ -1440,6 +1441,78 @@ public class CollectionPhaseController {
 		collectionPhaseService.update(phase);
 		return "OK";
 	}
+
+
+	@PostMapping("/delete/phase/phaseType1")
+	@ResponseBody
+	public String deleteThePhase(Long id){
+		CollectionPhase phase=collectionPhaseService.getById(id);
+		collectionPhaseService.remove(phase);
+		return "OK";
+	}
+
+
+	@GetMapping("/phase/{id}/getEdit")
+	public String getEditForm(@PathVariable("id") Long id,Model model){
+		CollectionPhase phase=collectionPhaseService.getById(id);
+		model.addAttribute("phase",phase);
+		model.addAttribute("types",typeService.list());
+
+		List<Long> loanIds=new ArrayList<>();
+		for (Loan l:phase.getLoans()) {
+			loanIds.add(l.getId());
+		}
+		model.addAttribute("loanIds", loanIds);
+
+		return "/manage/debtor/collectionprocedure/collectionphase/editForm";
+	}
+
+	@PostMapping("/collectionphase/save")
+	@ResponseBody
+	public void postEditForm(CollectionPhase phase){
+		if(phase.getStartDate()!=null){
+			CollectionPhase oldPhase = phaseService.getById(phase.getId());
+			oldPhase.setStartDate(phase.getStartDate());
+			oldPhase.setPhaseType(phase.getPhaseType());
+			oldPhase.setDocNumber(phase.getDocNumber());
+
+			if (phaseDetailsLists.get(Utils.getPrincipal()) == null) {
+			}
+			else {
+				Set<PhaseDetails> listOfDetails = oldPhase.getPhaseDetails();
+				for (PhaseDetails phaseDetail : phaseDetailsLists.get(Utils.getPrincipal())) {
+					phaseDetail.setCollectionPhase(oldPhase);
+					for (PhaseDetails phaseDetail1 : listOfDetails) {
+						if (phaseDetail.getLoan_id() == phaseDetail1.getLoan_id()) {
+							phaseDetail1.setStartInterest(phaseDetail.getStartInterest());
+							phaseDetail1.setStartPenalty(phaseDetail.getStartPenalty());
+							phaseDetail1.setStartPrincipal(phaseDetail.getStartPrincipal());
+							phaseDetail1.setStartTotalAmount(phaseDetail.getStartTotalAmount());
+							phaseDetail1.setCollectionPhase(oldPhase);
+							phaseDetailsService.update(phaseDetail1);
+						}
+					}
+				}
+				String updateStart = "(select sum(startTotalAmount) from phaseDetails where collectionPhaseId=" + phase.getId() + ")";
+				Query query = entityManager.createNativeQuery(updateStart);
+				Double sumOfStart = (Double) query.getSingleResult();
+				oldPhase.setStart_amount(sumOfStart);
+			}
+			phaseService.update(oldPhase);
+			phaseDetailsLists.remove(Utils.getPrincipal());
+			}
+//		return "OK";
+	}
+
+	@PostMapping("/phase/changeRecordStatus")
+	@ResponseBody
+	public String postChangeStatus(Long id){
+		CollectionPhase phase=collectionPhaseService.getById(id);
+		phase.setRecord_status(2);
+		collectionPhaseService.update(phase);
+		return "OK";
+	}
+
 
     public String  getDocs(Long id){
 

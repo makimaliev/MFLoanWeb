@@ -176,6 +176,7 @@ public class RestCollectionPhaseViewController {
             }
         }
         parameters.put("orderBy",Arrays.asList("v_debtor_name"));
+        parameters.put("orderBy",Arrays.asList("v_cph_startDate"));
 
 
         Set<CollectionPhaseModel1> list=new HashSet<>();

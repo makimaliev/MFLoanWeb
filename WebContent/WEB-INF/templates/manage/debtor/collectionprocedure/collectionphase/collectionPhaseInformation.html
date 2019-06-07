@@ -41,7 +41,7 @@
                                     <div class="row m-row--no-padding align-items-center">
                                         <div class="col">
                                             <h3 class="m-widget1__title" th:text="#{label.collection.phase.start.amount}"></h3>
-                                            <span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(phase.start_amount, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                                            <span id="startAmount" class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(phase.start_amount, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -123,12 +123,81 @@
 
                             <input id="phaseId" hidden="hidden" type="text" name="id" th:value="${phase.id}">
                             <div class="m-widget1">
+                                <div class="modal fade" id="confirmModal" tabindex="-1"
+                                     role="dialog" aria-labelledby="myModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="m-alert m-alert--icon m-alert--outline alert alert-primary" role="alert" >
+                                                <div class="m-alert__icon">
+                                                    <i class="la la-warning"></i>
+                                                </div>
+                                                <div class="m-alert__text" >
+                                                    <strong>Уверенны?</strong>
+                                                </div>
+                                                <div class="m-alert__actions" style="width: 200px;">
+                                                    <!--<form>-->
+                                                        <div class="col">
+                                                            <button id="deleter" onclick="deletePhase()" class="btn btn-brand btn-sm m-btn m-btn--pill m-btn--wide mb-2" data-dismiss="modal" type="submit" th:text="#{label.phase.delete}"></button>
+                                                            <button class="btn btn-danger btn-sm m-btn m-btn--pill m-btn--wide"  type="button" th:text="#{label.cancel}" data-dismiss="modal"></button>
+                                                        </div>
+                                                    <!--</form>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLECTIONPHASE')" data-remote="false" data-toggle="modal"
+                                   data-target="#confirmModal" role="button" class="btn btn-outline-danger" th:text="#{label.phase.delete}"></a>
                                 <div id="type_content"></div>
                                 <div id="status_content"></div>
                                 <div id="proc_status_content"></div>
                                 <div id="group_content"></div>
                                 <div id="index_content"></div>
                                 <div id="index2_content"></div>
+                                <div class="m-widget1__item">
+                                    <div class="row m-row--no-padding align-items-center">
+                                        <div class="col-md-7">
+                                            <h3 class="m-widget1__title" th:text="#{label.collection.phase.edit}"></h3>
+                                            <button id="edit_btn" data-toggle="modal" data-target="#editModal" class="m-widget1__desc m--font-brand" th:text="#{label.collection.phase.edit}"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Modal -->
+                                <div id="editModal" class="modal" role="dialog" >
+                                    <div class="modal-dialog modal-full modal-lg">
+
+                                        <!-- Modal content-->
+                                        <div id="edit_content"></div>
+
+                                    </div>
+                                </div>
+                                <a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLECTIONPHASE')" data-remote="false" data-toggle="modal"
+                                   data-target="#confirmChangeRecordModal" role="button" class="btn btn-outline-danger" th:text="#{label.phase.changeRecord}"></a>
+                                <div class="modal" id="confirmChangeRecordModal" tabindex="-1"
+                                     role="dialog" aria-labelledby="myModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="m-alert m-alert--icon m-alert--outline alert alert-primary" role="alert" >
+                                                <div class="m-alert__icon">
+                                                    <i class="la la-warning"></i>
+                                                </div>
+                                                <div class="m-alert__text" >
+                                                    <strong>Уверенны?</strong>
+                                                </div>
+                                                <div class="m-alert__actions" style="width: 200px;">
+                                                    <!--<form method="post" >-->
+                                                        <div class="row">
+                                                            <button onclick="changeRecordStatus()" class="btn btn-brand btn-sm m-btn m-btn--pill m-btn--wide mb-2" data-dismiss="modal" th:text="#{label.phase.change.recordStatus}"></button>
+                                                            <button class="btn btn-danger btn-sm m-btn m-btn--pill m-btn--wide"  type="button" th:text="#{label.cancel}" data-dismiss="modal"></button>
+                                                        </div>
+                                                    <!--</form>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <!--end:: Widgets/Stats2-2 -->
                         </div>
@@ -192,6 +261,7 @@
 
             $('#proc_status_content').html(data);
         });
+
 
         if(phaseTypeId==13){
             $.get(gUrl, function(data) {
@@ -319,7 +389,6 @@
     // edit/add phaseDescription
     function savePhaseDescription(){
         var txtAreaData=$('#phaseTxtDescription').val();
-        console.log(txtAreaData)
         $.ajax({
             type:'post',
             data:{id:pId,data:txtAreaData},
@@ -377,6 +446,52 @@
             }
         });
     });
+
+    // show/hide delete button
+    $("#deleter").hide();
+    if(phaseTypeId==1){
+        $("#deleter").show();
+    }
+
+    // delete phase if phaseTypeId==1
+    function deletePhase() {
+        $.ajax({
+            type: "post",
+            data: {id: pId},
+            url: "/delete/phase/phaseType1",
+            success:function (data) {
+                location.reload();
+            }
+        });
+    }
+
+    // change record status
+    function changeRecordStatus() {
+        $.ajax({
+            type:"post",
+            data:{id:pId},
+            url:"/phase/changeRecordStatus",
+            success:function (data) {
+                reloadContent();
+            }
+        });
+    }
+
+    // edit phase
+    $("#edit_btn").on("click",function () {
+        var editUrl="/phase/"+pId+"/getEdit";
+        $.get(editUrl, function(data) {
+            $('#edit_content').html(data);
+        });
+    });
+
+    // make start amount red if record status ==2
+    if([[${phaseRecordStatus}]]==2){
+        $("#startAmount").addClass("alert alert-danger");
+    }
+    else{
+        $("#startAmount").removeClass("alert alert-danger");
+    }
 
 </script>
 <!--end::Portlet-->
