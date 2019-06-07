@@ -49,6 +49,12 @@
                             <li class="m-nav__item">
                                 <span class="m-nav__link-text" th:text="#{label.collection.phases}">List of CollectionPhaseViews</span>
                             </li>
+                            <li class="m-nav__separator">
+                                -
+                            </li>
+                            <li class="m-nav__item">
+                                <span class="m-nav__link-text" id="smallContentOfSearchForm">List of CollectionPhaseViews</span>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -60,11 +66,14 @@
                     <div class="m-portlet__body">
                         <!--Begin Search Form-->
                         <div class="">
-                            <div class="col">
-                                <div class="form-group m-form__group row " style="margin-left: 10px">
+                            <!--<button type="button" class="close"  aria-label="Close"></button>-->
+                            <span id="hider" type="submit" onclick="closeSearchForm()" class="kt-badge kt-badge--brand kt-badge--md">СКРЫТЬ</span>
+                            <span id="shower" type="submit" onclick="openSearchForm()" class="kt-badge kt-badge--brand kt-badge--md">ОТКРЫТЬ</span>
+                            <div class="col" id="searchForm">
+                                <div class="form-group m-form__group row "  style="margin-left: 10px">
                                     <div class="col-md-2">
                                         <div class="m-input-icon m-input-icon--left mb-1" data-column="v_debtor_name">
-                                            <input type="text" class="form-control m-input m-input--solid column_filter" th:placeholder="#{v_debtor_name}"  id="r=ycv_debtor_name">
+                                            <input type="text" class="form-control m-input m-input--solid column_filter" th:placeholder="#{v_debtor_name}"  id="ycv_debtor_name">
                                             <span class="m-input-icon__icon m-input-icon__icon--left">
                                                 <span>
                                                     <i class="la la-search"></i>
@@ -73,7 +82,7 @@
                                         </div>
                                         <div class="m-form__group m-form__group--block">
                                             <div class="m-form__control">
-                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid column_filter my-select" id="r=inv_loan_fin_group_id">
+                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid column_filter my-select" multiple id="inv_loan_fin_group_id">
                                                     <option value="" th:text="#{label.loan.finGroup}">
                                                         Группа плат.
                                                     </option>
@@ -84,7 +93,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="m-input-icon m-input-icon--left mb-1">
-                                            <input type="text" class="form-control m-input m-input--solid column_filter" th:placeholder="#{label.doc.number}" id="r=ycv_cph_doc_number">
+                                            <input type="text" class="form-control m-input m-input--solid column_filter" th:placeholder="#{label.doc.number}" id="ycv_cph_doc_number">
                                             <span class="m-input-icon__icon m-input-icon__icon--left">
                                                 <span>
                                                     <i class="la la-search"></i>
@@ -93,7 +102,7 @@
                                         </div>
                                         <div class="m-form__group m-form__group--block">
                                             <div class="m-form__control">
-                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid column_filter my-select" id="r=inv_cph_phaseTypeId">
+                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid column_filter my-select" multiple id="inv_cph_phaseTypeId">
                                                     <option value="" th:text="#{label.collection.phase.type}">
                                                     </option>
                                                     <option th:each="phaseType: ${phaseTypes}" th:value="${phaseType.id}" th:text="${phaseType.name}"></option>
@@ -104,7 +113,7 @@
                                     <div class="col-md-2">
                                         <div class="m-form__group m-form__group--block">
                                             <div class="m-form__control">
-                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid column_filter my-select" id="r=inv_debtor_region_id">
+                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid column_filter my-select" multiple id="inv_debtor_region_id">
                                                     <option value="">
                                                         Область
                                                     </option>
@@ -114,7 +123,7 @@
                                         </div>
                                         <div class="m-form__group m-form__group--block">
                                             <div class="m-form__control">
-                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid column_filter my-select" id="r=inv_debtor_district_id">
+                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid column_filter my-select" multiple id="inv_debtor_district_id">
                                                     <option value="">
                                                         Район
                                                     </option>
@@ -140,7 +149,7 @@
                                     <div class="col-md-2">
                                         <div class="m-form__group m-form__group--block">
                                             <div class="m-form__control">
-                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid column_filter my-select" id="r=inv_cph_group_id">
+                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid column_filter my-select" id="inv_cph_group_id">
                                                     <option value="">
                                                         Группа
                                                     </option>
@@ -150,7 +159,7 @@
                                         </div>
                                         <div class="m-form__group m-form__group--block">
                                             <div class="m-form__control">
-                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid column_filter my-select" id="r=inv_cp_procedureStatusId">
+                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid column_filter my-select" id="inv_cp_procedureStatusId">
                                                     <option value="" th:text="#{label.collection.procedure.status}">
                                                     </option>
                                                     <option th:each="procedure: ${procedures}" th:value="${procedure.id}" th:text="${procedure.name}"></option>
@@ -162,7 +171,7 @@
                                         <div class="m-form__group m-form__group--block">
                                             <div class="m-form__group m-form__group--block">
                                                 <div class="m-form__control">
-                                                    <select class="form-control m-bootstrap-select m-bootstrap-select--solid column_filter my-select" id="r=inv_cph_index_id">
+                                                    <select class="form-control m-bootstrap-select m-bootstrap-select--solid column_filter my-select" id="inv_cph_index_id">
                                                         <option value="">
                                                             Индекс
                                                         </option>
@@ -171,7 +180,7 @@
                                                 </div>
                                             </div>
                                             <div class="m-form__control">
-                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid column_filter my-select" id="r=inv_cph_sub_index_id">
+                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid column_filter my-select" id="inv_cph_sub_index_id">
                                                     <option value="" th:text="#{label.collection.phase.sub.index}">
                                                         Все
                                                     </option>
@@ -234,36 +243,105 @@
     });
 </script>
 <script type="text/javascript" th:inline="javascript">
+    var shortContentOfSearchForm=new Map();
     var typeList=[[${typeList}]];
     var statusList=[[${statusList}]];
-    var searchStr={};
+    var searchStr=new Map();
     var contentUrl="";
     var ownerId;
+    var strOfContent={};
+    // search in datatable
     function filterColumn () {
         $('#example').DataTable().search(
             JSON.stringify(searchStr)
         ).draw();
     }
 
+    // filter inputs
     $('input.column_filter').on( 'input', function () {
         searchStr[$(this)[0].id]=$(this).val();
+        strOfContent[$(this)[0].id]=$(this).val();
         filterColumn(searchStr);
     } );
-
+    // filter select pickers
+    var temporaryStrSave="";
     $('select.column_filter').on( 'change', function () {
         if($(this).val()!="") {
-            searchStr[$(this)[0].id] = $(this).val();
+            var values=$(this).val();
+            var texts=$(this).children("option:selected").text();
+            temporaryStrSave="";
+            $("#"+$(this)[0].id+"  > option").each(function() {
+                // strOfContent=strOfContent+$(this).text()+":";
+                if(texts.includes($(this).text())){
+                    temporaryStrSave=temporaryStrSave+$(this).text()+" , ";
+                }
+                else{
+                    temporaryStrSave.replace($(this).text()+",","");
+                }
+            });
+            strOfContent[$(this)[0].id]=temporaryStrSave;
+            shortContentOfSearchForm[$(this)[0].id]=texts;
+            var strValues="";
+            for(var i =0;i<values.length;i++){
+                strValues=strValues+values[i]+"?";
+            }
+            searchStr[$(this)[0].id] = strValues;
         }
         else{
             delete searchStr[$(this)[0].id];
         }
-        filterColumn(searchStr);
+        setCookie($(this)[0].id,$(this).val());
+        filterColumn(JSON.stringify(searchStr));
     } );
+
+    // make selects by default selected
+    var selectPickersList=['inv_debtor_region_id','inv_loan_fin_group_id','inv_debtor_district_id','inv_cph_phaseTypeId'];
+    jQuery(document).ready(function () {
+        $('select.my-select').each(function() {
+            if(selectPickersList.includes($(this)[0].id)){
+                if(get_cookie($(this)[0].id).includes(",")){
+                    var splittedSelectValue=get_cookie($(this)[0].id).split(",");
+                        $(this).val(splittedSelectValue).change();
+                }
+                else{
+                    $(this).val(get_cookie($(this)[0].id)).change();
+                }
+                $(this).selectpicker('refresh');
+            }
+        });
+    });
+
+    // set/get cookies
+    function setCookie(cname, cvalue) {
+        var d = new Date();
+        d.setTime(d.getTime() + (30*24*60*60*1000));
+        var expires = "expires="+ d.toUTCString()+";";
+        document.cookie =cname + "=" + cvalue + ";"+expires;
+    }
+
+    function get_cookie ( cookie_name )
+    {
+        var cookie_string = document.cookie ;
+        if (cookie_string.length != 0) {
+            var cookie_array = cookie_string.split( '; ' );
+            for (i = 0 ; i < cookie_array.length ; i++) {
+                var cookie_value = cookie_array[i].match ( cookie_name + '=(.*)' );
+                if (cookie_value != null) {
+                    return decodeURIComponent ( cookie_value[1].split("i")[0]);
+                }
+            }
+        }
+        return '' ;
+    }
 
     var phaseTypeId="";
     var indexId="";
+
+    // datatable
     var table=$('#example').DataTable( {
-        keys:true,
+        keys:{
+            blurable: false
+        },
         scrollY: 200,
         "lengthChange": false,
         serverSide:true,
@@ -330,16 +408,6 @@
             }
         }
     } );
-    table.rows().every( function () {
-        var d = this.data();
-        table.draw();
-    } );
-    table.columns(4)
-        .data()
-        .reduce(function (a) {
-            return a+"asdasd";
-        });
-    table.draw();
     table.on('key-focus', function(e, datatable, cell) {
 
         var debtorId = datatable.row(cell.index().row).data()["v_debtor_id"];
@@ -358,6 +426,27 @@
         });
 
     });
+
+    // hide/show search form
+    $("#smallContentOfSearchForm").hide();
+    $("#shower").hide();
+    function closeSearchForm(){
+        $("#hider").hide();
+        $("#shower").show();
+        $("#searchForm").hide();
+        var result="";
+        for (let value of Object.values(strOfContent)) {
+            result=result+":"+value;
+        }
+        $("#smallContentOfSearchForm").text(result)
+        $("#smallContentOfSearchForm").show();
+    }
+    function openSearchForm(){
+        $("#hider").show();
+        $("#shower").hide();
+        $("#searchForm").show();
+        $("#smallContentOfSearchForm").hide();
+    }
 
 </script>
 </body>

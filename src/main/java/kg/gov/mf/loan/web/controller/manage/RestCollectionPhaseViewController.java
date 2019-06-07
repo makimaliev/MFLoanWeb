@@ -159,8 +159,21 @@ public class RestCollectionPhaseViewController {
             e.printStackTrace();
         }
         for (String s:searchMap.keySet()){
-            List<String> searchList=Arrays.asList(searchMap.get(s));
-            parameters.put(s,searchList);
+            List<String> searchList=new ArrayList<>();
+            String valueOfMap= searchMap.get(s);
+            String[] splitedMapValues;
+            if(valueOfMap!="") {
+                if (valueOfMap.charAt(0) == '?') {
+                    splitedMapValues = valueOfMap.substring(1).split("\\?");
+                } else {
+                    splitedMapValues = valueOfMap.split("\\?");
+                }
+                for (String searchWord : splitedMapValues) {
+                    if (!searchWord.equals("") || searchWord != null)
+                        searchList.add(searchWord);
+                }
+                parameters.put("r=" + s, searchList);
+            }
         }
         parameters.put("orderBy",Arrays.asList("v_debtor_name"));
 
