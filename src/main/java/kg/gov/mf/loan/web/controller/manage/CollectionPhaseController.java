@@ -14,6 +14,7 @@ import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.model.debtor.OwnerType;
 import kg.gov.mf.loan.manage.model.loan.Loan;
+import kg.gov.mf.loan.manage.model.loan.Payment;
 import kg.gov.mf.loan.manage.model.process.LoanSummary;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.service.collection.*;
@@ -718,30 +719,6 @@ public class CollectionPhaseController {
 		return "redirect:/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/view";
 	}
 
-	public void runUpdateOfPhases(Long phaseId,Session session){
-
-
-
-			try {
-				String phaseUpdateQuery = "update phaseDetails phd, phase_amount_view v\n" +
-						"set phd.paidTotalAmount = v.paid_amount,\n" +
-						"  phd.paidPrincipal = v.paid_principal,\n" +
-						"  phd.paidInterest = v.paid_interest,\n" +
-						"  phd.paidPenalty = v.paid_penalty\n" +
-						"where phd.id = v.det_id and phd.collectionPhaseId =" + phaseId;
-				session.createSQLQuery(phaseUpdateQuery).executeUpdate();
-
-				String phaseSetPaid = "update collectionPhase cph,phaseDetails det\n" +
-						"set cph.paid = (select sum(distinct det.paidTotalAmount) from phaseDetails det where det.collectionPhaseId = "+phaseId+" group by det.collectionPhaseId)\n" +
-						"where cph.id=det.collectionPhaseId and det.collectionPhaseId="+phaseId;
-
-				session.createSQLQuery(phaseSetPaid).executeUpdate();
-			}
-			catch (Exception e){
-				System.out.println(e);
-			}
-	}
-
 	@RequestMapping(value="/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/groupAndIndex/change", method=RequestMethod.GET)
 	public String  changeGroupAndIndex(ModelMap model,@PathVariable("debtorId") Long debtorId,@PathVariable("procId") Long procId,@PathVariable("phaseId") Long phaseId){
 
@@ -1329,8 +1306,21 @@ public class CollectionPhaseController {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
         collectionPhaseService.update(collectionPhase);
+
+        Session session;
+        try
+        {
+            session = sessionFactory.getCurrentSession();
+        }
+        catch (HibernateException e)
+        {
+            session = sessionFactory.openSession();
+        }
+
+        session.getTransaction().begin();
+        runUpdateOfPhases(id,session);
+        session.getTransaction().commit();
 
         return "OK";
     }
@@ -1528,5 +1518,122 @@ public class CollectionPhaseController {
         String result = gson.toJson(list);
 
         return result;
+    }
+
+	public void phaseUpdater(Long debtorId) {
+		Session session;
+		try
+		{
+			session = sessionFactory.getCurrentSession();
+		}
+		catch (HibernateException e)
+		{
+			session = sessionFactory.openSession();
+		}
+
+		session.getTransaction().begin();
+		try{
+			String phaseUpdateQuery = "update phaseDetails phd, phase_amount_view v,loan l\n" +
+					"set phd.paidTotalAmount = v.paid_amount,\n" +
+					"    phd.paidPrincipal = v.paid_principal,\n" +
+					"    phd.paidInterest = v.paid_interest,\n" +
+					"    phd.paidPenalty = v.paid_penalty\n" +
+					"where phd.id = v.det_id and phd.loan_id=l.id and l.debtorId="+debtorId;
+			session.createSQLQuery(phaseUpdateQuery).executeUpdate();
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+		Debtor debtor=debtorService.getById(debtorId);
+		for(Loan loan1:debtor.getLoans()){
+			Loan loan=loanService.getById(loan1.getId());
+			for(CollectionPhase phase1:loan.getCollectionPhases()){
+				try {
+					String phaseSetPaid = "update collectionPhase cph,phaseDetails det\n" +
+							"set cph.paid = (select sum(paidTotalAmount) from phaseDetails d where d.collectionPhaseId="+phase1.getId()+")\n" +
+							"where cph.id=det.collectionPhaseId and det.collectionPhaseId="+phase1.getId();
+					session.createSQLQuery(phaseSetPaid).executeUpdate();
+				}
+				catch (Exception e){
+					System.out.println(e);
+				}
+			}
+		}
+
+		session.getTransaction().commit();
+
+	}
+
+	public void phaseAndPhaseDetailsUpdate(CollectionPhase phase) {
+		Double totalPaid = 0.0;
+		Date closeDate = new Date();
+		if (phase.getCloseDate() != null) {
+			closeDate = phase.getCloseDate();
+		}
+		for (PhaseDetails details : phase.getPhaseDetails()) {
+			HashMap<String, Double> totals = getPaids( details.getLoan_id(),phase.getPaymentFromDate(), closeDate);
+				details.setPaidTotalAmount(totals.get("totalAmount"));
+				details.setPaidPrincipal(totals.get("principal"));
+				details.setPaidPenalty(totals.get("penalty"));
+				details.setPaidInterest(totals.get("interest"));
+				details.setPaidFee(totals.get("fee"));
+				phaseDetailsService.update(details);
+				totalPaid = totalPaid + totals.get("totalAmount");
+		}
+		phase.setPaid(totalPaid);
+		collectionPhaseService.update(phase);
+
+	}
+
+	public HashMap<String, Double> getPaids(Long loanId, Date fromDate, Date toDate) {
+		HashMap<String, Double> result = new HashMap<>();
+		Double totalAmount = 0.0;
+		Double principal = 0.0;
+		Double penalty = 0.0;
+		Double interest = 0.0;
+		Double fee = 0.0;
+		Loan loan=loanService.getById(loanId);
+		for (Payment payment : loan.getPayments()) {
+			Date paymentDate = payment.getPaymentDate();
+			if (payment.getRecord_status() == 1 && paymentDate.after(fromDate) && paymentDate.before(toDate) && (payment.equals(fromDate) || payment.equals(toDate))) {
+				totalAmount = totalAmount + payment.getTotalAmount();
+				principal = principal + payment.getPrincipal();
+				penalty = penalty + payment.getPenalty();
+				interest = interest + payment.getInterest();
+				fee = fee + payment.getFee();
+			}
+		}
+		result.put("totalAmount", totalAmount);
+		result.put("principal", principal);
+		result.put("penalty", penalty);
+		result.put("interest", interest);
+		result.put("fee", fee);
+
+		return result;
+
+	}
+
+    public void runUpdateOfPhases(Long phaseId,Session session){
+
+
+
+        try {
+            String phaseUpdateQuery = "update phaseDetails phd, phase_amount_view v\n" +
+                    "set phd.paidTotalAmount = v.paid_amount,\n" +
+                    "  phd.paidPrincipal = v.paid_principal,\n" +
+                    "  phd.paidInterest = v.paid_interest,\n" +
+                    "  phd.paidPenalty = v.paid_penalty\n" +
+                    "where phd.id = v.det_id and phd.collectionPhaseId =" + phaseId;
+            session.createSQLQuery(phaseUpdateQuery).executeUpdate();
+
+            String phaseSetPaid = "update collectionPhase cph,phaseDetails det\n" +
+                    "set cph.paid = (select sum(distinct det.paidTotalAmount) from phaseDetails det where det.collectionPhaseId = "+phaseId+" group by det.collectionPhaseId)\n" +
+                    "where cph.id=det.collectionPhaseId and det.collectionPhaseId="+phaseId;
+
+            session.createSQLQuery(phaseSetPaid).executeUpdate();
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
     }
 }
