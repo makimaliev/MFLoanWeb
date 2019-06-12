@@ -267,6 +267,7 @@ public class CollectionPhaseController {
 			date1=new SimpleDateFormat("dd.MM.yyyy").parse(initDater);
 		} catch (ParseException e) {
 			e.printStackTrace();
+			return null;
 		}
 		Date initDate=date1;
 		List<PhaseDetailsModel> result = new ArrayList<>();
