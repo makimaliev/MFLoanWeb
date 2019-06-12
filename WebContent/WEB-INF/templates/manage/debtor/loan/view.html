@@ -78,6 +78,7 @@
 						</div>
 					</div>
 				</div>
+				<!--begin modal add attachment to loan -->
 				<div class="modal fade" id="attachment" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog" role="document">
 						<div class="modal-content">
@@ -116,6 +117,7 @@
 						</div>
 					</div>
 				</div>
+				<!--end modal add attachment to loan -->
 				<div id="loan_information_content" class="m-portlet m-portlet--mobile">
 					<div class="m-portlet__body">
 						<ul id="main_tab_list" class="nav nav-tabs" role="tablist">
@@ -535,7 +537,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="col-xl-3 order-3 order-xl-3 m--align-right" th:if="${isEmptyChild}==true">
                                             <!--<div>-->
 												<!--<form th:action="@{/printoutTemplate/1/objectId/1/generate}" method="post">-->
@@ -948,7 +949,7 @@
 									<li class="nav-item">
 										<a class="nav-link m--font-primary" data-toggle="tab" href="#supervisorPlans" th:text="#{label.loan.supervisorPlans}" id="supervisorPlansFunction"></a>
 									</li>
-									<li class="nav-item" th:if="${hasInfo}==true">
+									<li class="nav-item">
 										<a class="nav-link m--font-primary" data-toggle="tab" href="#information" th:text="#{label.information}"></a>
 									</li>
 								</ul>

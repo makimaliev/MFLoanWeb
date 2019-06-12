@@ -39,11 +39,12 @@ var DatatableDataLocalPayments = function () {
 			columns: [{
                 field: "id",
                 title: "#",
-                responsive: {hidden: 'xl'},
+                template: function (row) {
+                    return '\
+						<a href="/manage/debtor/'+debtorId+'/loan/'+loanId+'/payment/'+row.id+'/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
+					';
+                }
             }, {
-                field: "counter",
-                title: "№"
-            },{
 				field: "paymentDate",
 				title: "Дата",
                 width: 70

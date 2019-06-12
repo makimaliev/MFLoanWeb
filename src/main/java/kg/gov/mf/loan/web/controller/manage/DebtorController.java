@@ -482,8 +482,8 @@ public class DebtorController {
 	{
 
 		Set<LoanSummary> loanSummarySet = new HashSet<>();
-		LoanSummary sumLoanSummary = new LoanSummary();
-		HashMap<LoanSummary, LoanSummary> summaries = new HashMap<>();
+		LoanSummaryModel1 sumLoanSummary = new LoanSummaryModel1();
+		HashMap<LoanSummaryModel1, LoanSummaryModel1> summaries = new HashMap<>();
 
 		Date newDate = new Date();
 
@@ -514,6 +514,7 @@ public class DebtorController {
 				newDate = new SimpleDateFormat("dd.MM.yyyy", new Locale("ru", "RU")).parse(date);
 
 				LoanSummary loanSummary = loanSummaryService.getByOnDateAndLoanId(newDate, Long.valueOf(id));
+				LoanSummaryModel1 loanSummary1=new LoanSummaryModel1();
 				if (loanSummary.getRecord_status() == 1 && loanSummary.getLoanSummaryType() == LoanSummaryType.MANUAL) {
 
 					loanSummarySet.add(loanSummaryService.getById(loanSummary.getId()));
@@ -534,38 +535,38 @@ public class DebtorController {
 						name1 = loan.getCreditOrder().getRegNumber() + " №" + loan.getRegNumber() + " от " + new SimpleDateFormat("dd.MM.yyyy", new Locale("ru", "RU")).format(loan.getRegDate()) + "г. в тоннах " + loan.getCurrency().getName();
 					}
 
-					loanSummary.setUuid(name1);
-					loanSummary.setVersion(loan.getId());
-					loanSummary.setId(debtorId);
-					loanSummary.setOnDate(srokDate);
+					loanSummary1.setUuid(name1);
+					loanSummary1.setVersion(loan.getId());
+					loanSummary1.setId(debtorId);
+					loanSummary1.setOnDate(srokDate);
 
 
-					loanSummary.setLoanAmount(conditional(loanSummary.getLoanAmount()));
-					loanSummary.setTotalDisbursed(conditional(loanSummary.getTotalDisbursed()));
-					loanSummary.setPaidPrincipal(conditional(loanSummary.getPaidPrincipal()));
-					loanSummary.setPaidInterest(conditional(loanSummary.getPaidInterest()));
-					loanSummary.setPaidPenalty(conditional(loanSummary.getPaidPenalty()));
-					loanSummary.setPaidFee(conditional(loanSummary.getPaidFee()));
-					loanSummary.setTotalOutstanding(conditional(loanSummary.getTotalOutstanding()));
-					loanSummary.setOutstadingPrincipal(conditional(loanSummary.getOutstadingPrincipal()));
-					loanSummary.setOutstadingInterest(conditional(loanSummary.getOutstadingInterest()));
-					loanSummary.setOutstadingPenalty(conditional(loanSummary.getOutstadingPenalty()));
-					loanSummary.setOutstadingFee(conditional(loanSummary.getOutstadingFee()));
-					loanSummary.setTotalOverdue(conditional(loanSummary.getTotalOverdue()));
-					loanSummary.setOverduePrincipal(conditional(loanSummary.getOverduePrincipal()));
-					loanSummary.setOverdueInterest(conditional(loanSummary.getOverdueInterest()));
-					loanSummary.setOverduePenalty(conditional(loanSummary.getOverduePenalty()));
-					loanSummary.setOverdueFee(conditional(loanSummary.getOverdueFee()));
-					loanSummary.setTotalPrincipalPaid(conditional(loanSummary.getTotalPrincipalPaid()));
-					loanSummary.setTotalInterestPaid(conditional(loanSummary.getTotalInterestPaid()));
-					loanSummary.setTotalPenaltyPaid(conditional(loanSummary.getTotalPenaltyPaid()));
-					loanSummary.setTotalFeePaid(conditional(loanSummary.getTotalFeePaid()));
-					loanSummary.setTotalPaidKGS(conditional(loanSummary.getTotalPaidKGS()));
-					loanSummary.setTotalPaid(conditional(loanSummary.getTotalPaid()));
+					loanSummary1.setLoanAmount(conditional(loanSummary.getLoanAmount()));
+					loanSummary1.setTotalDisbursed(conditional(loanSummary.getTotalDisbursed()));
+					loanSummary1.setPaidPrincipal(conditional(loanSummary.getPaidPrincipal()));
+					loanSummary1.setPaidInterest(conditional(loanSummary.getPaidInterest()));
+					loanSummary1.setPaidPenalty(conditional(loanSummary.getPaidPenalty()));
+					loanSummary1.setPaidFee(conditional(loanSummary.getPaidFee()));
+					loanSummary1.setTotalOutstanding(conditional(loanSummary.getTotalOutstanding()));
+					loanSummary1.setOutstadingPrincipal(conditional(loanSummary.getOutstadingPrincipal()));
+					loanSummary1.setOutstadingInterest(conditional(loanSummary.getOutstadingInterest()));
+					loanSummary1.setOutstadingPenalty(conditional(loanSummary.getOutstadingPenalty()));
+					loanSummary1.setOutstadingFee(conditional(loanSummary.getOutstadingFee()));
+					loanSummary1.setTotalOverdue(conditional(loanSummary.getTotalOverdue()));
+					loanSummary1.setOverduePrincipal(conditional(loanSummary.getOverduePrincipal()));
+					loanSummary1.setOverdueInterest(conditional(loanSummary.getOverdueInterest()));
+					loanSummary1.setOverduePenalty(conditional(loanSummary.getOverduePenalty()));
+					loanSummary1.setOverdueFee(conditional(loanSummary.getOverdueFee()));
+					loanSummary1.setTotalPrincipalPaid(conditional(loanSummary.getTotalPrincipalPaid()));
+					loanSummary1.setTotalInterestPaid(conditional(loanSummary.getTotalInterestPaid()));
+					loanSummary1.setTotalPenaltyPaid(conditional(loanSummary.getTotalPenaltyPaid()));
+					loanSummary1.setTotalFeePaid(conditional(loanSummary.getTotalFeePaid()));
+					loanSummary1.setTotalPaidKGS(conditional(loanSummary.getTotalPaidKGS()));
+					loanSummary1.setTotalPaid(conditional(loanSummary.getTotalPaid()));
 
 					Boolean notKGS = false;
 
-					LoanSummary newLoanSummary = new LoanSummary();
+					LoanSummaryModel1 newLoanSummary = new LoanSummaryModel1();
 
 					if (loan.getCurrency().getId() != 1) {
 						notKGS = true;
@@ -597,7 +598,7 @@ public class DebtorController {
 
 						model.addAttribute("newSummary", newLoanSummary);
 
-						summaries.put(loanSummary, newLoanSummary);
+						summaries.put(loanSummary1, newLoanSummary);
 
 						if (sumLoanSummary.getLoanAmount() != null) {
 							sumLoanSummary.setTotalPaidKGS(sumLoanSummary.getTotalPaidKGS() + newLoanSummary.getTotalPaidKGS());
@@ -648,53 +649,53 @@ public class DebtorController {
 						}
 					} else {
 //                    loanSummary.setVersion(Long.valueOf(0));
-						summaries.put(loanSummary, loanSummary);
+						summaries.put(loanSummary1, loanSummary1);
 						if (sumLoanSummary.getLoanAmount() != null) {
-							sumLoanSummary.setTotalPaidKGS(sumLoanSummary.getTotalPaidKGS() + loanSummary.getTotalPaidKGS());
-							sumLoanSummary.setTotalPaid(sumLoanSummary.getTotalPaid() + loanSummary.getTotalPaid());
-							sumLoanSummary.setTotalFeePaid(sumLoanSummary.getTotalFeePaid() + loanSummary.getTotalFeePaid());
-							sumLoanSummary.setTotalInterestPaid(sumLoanSummary.getTotalInterestPaid() + loanSummary.getTotalInterestPaid());
-							sumLoanSummary.setTotalPrincipalPaid(sumLoanSummary.getTotalPrincipalPaid() + loanSummary.getTotalPrincipalPaid());
-							sumLoanSummary.setTotalPenaltyPaid(sumLoanSummary.getTotalPenaltyPaid() + loanSummary.getTotalPenaltyPaid());
-							sumLoanSummary.setOverdueInterest(sumLoanSummary.getOverdueInterest() + loanSummary.getOverdueInterest());
-							sumLoanSummary.setOverduePrincipal(sumLoanSummary.getOverduePrincipal() + loanSummary.getOverduePrincipal());
-							sumLoanSummary.setOverduePenalty(sumLoanSummary.getOverduePenalty() + loanSummary.getOverduePenalty());
-							sumLoanSummary.setOverdueFee(sumLoanSummary.getOverdueFee() + loanSummary.getOverdueFee());
-							sumLoanSummary.setOutstadingPenalty(sumLoanSummary.getOutstadingPenalty() + loanSummary.getOutstadingPenalty());
-							sumLoanSummary.setOutstadingPrincipal(sumLoanSummary.getOutstadingPrincipal() + loanSummary.getOutstadingPrincipal());
-							sumLoanSummary.setOutstadingInterest(sumLoanSummary.getOutstadingInterest() + loanSummary.getOutstadingInterest());
-							sumLoanSummary.setOutstadingFee(sumLoanSummary.getOutstadingFee() + loanSummary.getOutstadingFee());
-							sumLoanSummary.setTotalOverdue(sumLoanSummary.getTotalOverdue() + loanSummary.getTotalOverdue());
-							sumLoanSummary.setTotalOutstanding(sumLoanSummary.getTotalOutstanding() + loanSummary.getTotalOutstanding());
-							sumLoanSummary.setPaidFee(sumLoanSummary.getPaidFee() + loanSummary.getPaidFee());
-							sumLoanSummary.setPaidInterest(sumLoanSummary.getPaidInterest() + loanSummary.getPaidInterest());
-							sumLoanSummary.setPaidPenalty(sumLoanSummary.getPaidPenalty() + loanSummary.getPaidPenalty());
-							sumLoanSummary.setPaidPrincipal(sumLoanSummary.getPaidPrincipal() + loanSummary.getPaidPrincipal());
-							sumLoanSummary.setTotalDisbursed(sumLoanSummary.getTotalDisbursed() + loanSummary.getTotalDisbursed());
-							sumLoanSummary.setLoanAmount(sumLoanSummary.getLoanAmount() + loanSummary.getLoanAmount());
+							sumLoanSummary.setTotalPaidKGS(sumLoanSummary.getTotalPaidKGS() + loanSummary1.getTotalPaidKGS());
+							sumLoanSummary.setTotalPaid(sumLoanSummary.getTotalPaid() + loanSummary1.getTotalPaid());
+							sumLoanSummary.setTotalFeePaid(sumLoanSummary.getTotalFeePaid() + loanSummary1.getTotalFeePaid());
+							sumLoanSummary.setTotalInterestPaid(sumLoanSummary.getTotalInterestPaid() + loanSummary1.getTotalInterestPaid());
+							sumLoanSummary.setTotalPrincipalPaid(sumLoanSummary.getTotalPrincipalPaid() + loanSummary1.getTotalPrincipalPaid());
+							sumLoanSummary.setTotalPenaltyPaid(sumLoanSummary.getTotalPenaltyPaid() + loanSummary1.getTotalPenaltyPaid());
+							sumLoanSummary.setOverdueInterest(sumLoanSummary.getOverdueInterest() + loanSummary1.getOverdueInterest());
+							sumLoanSummary.setOverduePrincipal(sumLoanSummary.getOverduePrincipal() + loanSummary1.getOverduePrincipal());
+							sumLoanSummary.setOverduePenalty(sumLoanSummary.getOverduePenalty() + loanSummary1.getOverduePenalty());
+							sumLoanSummary.setOverdueFee(sumLoanSummary.getOverdueFee() + loanSummary1.getOverdueFee());
+							sumLoanSummary.setOutstadingPenalty(sumLoanSummary.getOutstadingPenalty() + loanSummary1.getOutstadingPenalty());
+							sumLoanSummary.setOutstadingPrincipal(sumLoanSummary.getOutstadingPrincipal() + loanSummary1.getOutstadingPrincipal());
+							sumLoanSummary.setOutstadingInterest(sumLoanSummary.getOutstadingInterest() + loanSummary1.getOutstadingInterest());
+							sumLoanSummary.setOutstadingFee(sumLoanSummary.getOutstadingFee() + loanSummary1.getOutstadingFee());
+							sumLoanSummary.setTotalOverdue(sumLoanSummary.getTotalOverdue() + loanSummary1.getTotalOverdue());
+							sumLoanSummary.setTotalOutstanding(sumLoanSummary.getTotalOutstanding() + loanSummary1.getTotalOutstanding());
+							sumLoanSummary.setPaidFee(sumLoanSummary.getPaidFee() + loanSummary1.getPaidFee());
+							sumLoanSummary.setPaidInterest(sumLoanSummary.getPaidInterest() + loanSummary1.getPaidInterest());
+							sumLoanSummary.setPaidPenalty(sumLoanSummary.getPaidPenalty() + loanSummary1.getPaidPenalty());
+							sumLoanSummary.setPaidPrincipal(sumLoanSummary.getPaidPrincipal() + loanSummary1.getPaidPrincipal());
+							sumLoanSummary.setTotalDisbursed(sumLoanSummary.getTotalDisbursed() + loanSummary1.getTotalDisbursed());
+							sumLoanSummary.setLoanAmount(sumLoanSummary.getLoanAmount() + loanSummary1.getLoanAmount());
 						} else {
-							sumLoanSummary.setTotalPaidKGS(loanSummary.getTotalPaidKGS());
-							sumLoanSummary.setTotalPaid(loanSummary.getTotalPaid());
-							sumLoanSummary.setTotalFeePaid(loanSummary.getTotalFeePaid());
-							sumLoanSummary.setTotalInterestPaid(loanSummary.getTotalInterestPaid());
-							sumLoanSummary.setTotalPrincipalPaid(loanSummary.getTotalPrincipalPaid());
-							sumLoanSummary.setTotalPenaltyPaid(loanSummary.getTotalPenaltyPaid());
-							sumLoanSummary.setOverdueInterest(loanSummary.getOverdueInterest());
-							sumLoanSummary.setOverduePrincipal(loanSummary.getOverduePrincipal());
-							sumLoanSummary.setOverduePenalty(loanSummary.getOverduePenalty());
-							sumLoanSummary.setOverdueFee(loanSummary.getOverdueFee());
-							sumLoanSummary.setOutstadingPenalty(loanSummary.getOutstadingPenalty());
-							sumLoanSummary.setOutstadingPrincipal(loanSummary.getOutstadingPrincipal());
-							sumLoanSummary.setOutstadingInterest(loanSummary.getOutstadingInterest());
-							sumLoanSummary.setOutstadingFee(loanSummary.getOutstadingFee());
-							sumLoanSummary.setTotalOverdue(loanSummary.getTotalOverdue());
-							sumLoanSummary.setTotalOutstanding(loanSummary.getTotalOutstanding());
-							sumLoanSummary.setPaidFee(loanSummary.getPaidFee());
-							sumLoanSummary.setPaidInterest(loanSummary.getPaidInterest());
-							sumLoanSummary.setPaidPenalty(loanSummary.getPaidPenalty());
-							sumLoanSummary.setPaidPrincipal(loanSummary.getPaidPrincipal());
-							sumLoanSummary.setTotalDisbursed(loanSummary.getTotalDisbursed());
-							sumLoanSummary.setLoanAmount(loanSummary.getLoanAmount());
+							sumLoanSummary.setTotalPaidKGS(loanSummary1.getTotalPaidKGS());
+							sumLoanSummary.setTotalPaid(loanSummary1.getTotalPaid());
+							sumLoanSummary.setTotalFeePaid(loanSummary1.getTotalFeePaid());
+							sumLoanSummary.setTotalInterestPaid(loanSummary1.getTotalInterestPaid());
+							sumLoanSummary.setTotalPrincipalPaid(loanSummary1.getTotalPrincipalPaid());
+							sumLoanSummary.setTotalPenaltyPaid(loanSummary1.getTotalPenaltyPaid());
+							sumLoanSummary.setOverdueInterest(loanSummary1.getOverdueInterest());
+							sumLoanSummary.setOverduePrincipal(loanSummary1.getOverduePrincipal());
+							sumLoanSummary.setOverduePenalty(loanSummary1.getOverduePenalty());
+							sumLoanSummary.setOverdueFee(loanSummary1.getOverdueFee());
+							sumLoanSummary.setOutstadingPenalty(loanSummary1.getOutstadingPenalty());
+							sumLoanSummary.setOutstadingPrincipal(loanSummary1.getOutstadingPrincipal());
+							sumLoanSummary.setOutstadingInterest(loanSummary1.getOutstadingInterest());
+							sumLoanSummary.setOutstadingFee(loanSummary1.getOutstadingFee());
+							sumLoanSummary.setTotalOverdue(loanSummary1.getTotalOverdue());
+							sumLoanSummary.setTotalOutstanding(loanSummary1.getTotalOutstanding());
+							sumLoanSummary.setPaidFee(loanSummary1.getPaidFee());
+							sumLoanSummary.setPaidInterest(loanSummary1.getPaidInterest());
+							sumLoanSummary.setPaidPenalty(loanSummary1.getPaidPenalty());
+							sumLoanSummary.setPaidPrincipal(loanSummary1.getPaidPrincipal());
+							sumLoanSummary.setTotalDisbursed(loanSummary1.getTotalDisbursed());
+							sumLoanSummary.setLoanAmount(loanSummary1.getLoanAmount());
 						}
 					}
 
@@ -731,14 +732,15 @@ public class DebtorController {
 	public String getLoanSummaryActsSummaries(ModelMap model, @PathVariable("debtorId") Long debtorId,@PathVariable("id") Long id){
 
 		Set<LoanSummary> loanSummarySet=new HashSet<>();
-		LoanSummary sumLoanSummary=new LoanSummary();
-		HashMap<LoanSummary,LoanSummary> summaries=new HashMap<>();
+		LoanSummaryModel1 sumLoanSummary=new LoanSummaryModel1();
+		HashMap<LoanSummaryModel1,LoanSummaryModel1> summaries=new HashMap<>();
 
 		Date newDate = new Date();
 
 		LoanSummaryAct loanSummaryAct=loanSummaryActService.getById(id);
 		for (LoanSummary summary1:loanSummaryAct.getLoanSummaries()){
 			LoanSummary loanSummary=loanSummaryService.getById(summary1.getId());
+			LoanSummaryModel1 loanSummary1=new LoanSummaryModel1();
 			if(!(Long.valueOf(id)==0)){
 
 				Date srokDate = loanSummary.getOnDate();
@@ -768,39 +770,39 @@ public class DebtorController {
 						name1=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).format(loan.getRegDate())+"г. в тоннах "+loan.getCurrency().getName();
 					}
 
-					loanSummary.setUuid(name1);
-					loanSummary.setVersion(loan.getId());
-					loanSummary.setId(debtorId);
-					loanSummary.setOnDate(srokDate);
+					loanSummary1.setUuid(name1);
+					loanSummary1.setVersion(loan.getId());
+					loanSummary1.setId(debtorId);
+					loanSummary1.setOnDate(srokDate);
 
 
 
-					loanSummary.setLoanAmount(conditional(loanSummary.getLoanAmount()));
-					loanSummary.setTotalDisbursed(conditional(loanSummary.getTotalDisbursed()));
-					loanSummary.setPaidPrincipal(conditional(loanSummary.getPaidPrincipal()));
-					loanSummary.setPaidInterest(conditional(loanSummary.getPaidInterest()));
-					loanSummary.setPaidPenalty(conditional(loanSummary.getPaidPenalty()));
-					loanSummary.setPaidFee(conditional(loanSummary.getPaidFee()));
-					loanSummary.setTotalOutstanding(conditional(loanSummary.getTotalOutstanding()));
-					loanSummary.setOutstadingPrincipal(conditional(loanSummary.getOutstadingPrincipal()));
-					loanSummary.setOutstadingInterest(conditional(loanSummary.getOutstadingInterest()));
-					loanSummary.setOutstadingPenalty(conditional(loanSummary.getOutstadingPenalty()));
-					loanSummary.setOutstadingFee(conditional(loanSummary.getOutstadingFee()));
-					loanSummary.setTotalOverdue(conditional(loanSummary.getTotalOverdue()));
-					loanSummary.setOverduePrincipal(conditional(loanSummary.getOverduePrincipal()));
-					loanSummary.setOverdueInterest(conditional(loanSummary.getOverdueInterest()));
-					loanSummary.setOverduePenalty(conditional(loanSummary.getOverduePenalty()));
-					loanSummary.setOverdueFee(conditional(loanSummary.getOverdueFee()));
-					loanSummary.setTotalPrincipalPaid(conditional(loanSummary.getTotalPrincipalPaid()));
-					loanSummary.setTotalInterestPaid(conditional(loanSummary.getTotalInterestPaid()));
-					loanSummary.setTotalPenaltyPaid(conditional(loanSummary.getTotalPenaltyPaid()));
-					loanSummary.setTotalFeePaid(conditional(loanSummary.getTotalFeePaid()));
-					loanSummary.setTotalPaidKGS(conditional(loanSummary.getTotalPaidKGS()));
-					loanSummary.setTotalPaid(conditional(loanSummary.getTotalPaid()));
+					loanSummary1.setLoanAmount(conditional(loanSummary.getLoanAmount()));
+					loanSummary1.setTotalDisbursed(conditional(loanSummary.getTotalDisbursed()));
+					loanSummary1.setPaidPrincipal(conditional(loanSummary.getPaidPrincipal()));
+					loanSummary1.setPaidInterest(conditional(loanSummary.getPaidInterest()));
+					loanSummary1.setPaidPenalty(conditional(loanSummary.getPaidPenalty()));
+					loanSummary1.setPaidFee(conditional(loanSummary.getPaidFee()));
+					loanSummary1.setTotalOutstanding(conditional(loanSummary.getTotalOutstanding()));
+					loanSummary1.setOutstadingPrincipal(conditional(loanSummary.getOutstadingPrincipal()));
+					loanSummary1.setOutstadingInterest(conditional(loanSummary.getOutstadingInterest()));
+					loanSummary1.setOutstadingPenalty(conditional(loanSummary.getOutstadingPenalty()));
+					loanSummary1.setOutstadingFee(conditional(loanSummary.getOutstadingFee()));
+					loanSummary1.setTotalOverdue(conditional(loanSummary.getTotalOverdue()));
+					loanSummary1.setOverduePrincipal(conditional(loanSummary.getOverduePrincipal()));
+					loanSummary1.setOverdueInterest(conditional(loanSummary.getOverdueInterest()));
+					loanSummary1.setOverduePenalty(conditional(loanSummary.getOverduePenalty()));
+					loanSummary1.setOverdueFee(conditional(loanSummary.getOverdueFee()));
+					loanSummary1.setTotalPrincipalPaid(conditional(loanSummary.getTotalPrincipalPaid()));
+					loanSummary1.setTotalInterestPaid(conditional(loanSummary.getTotalInterestPaid()));
+					loanSummary1.setTotalPenaltyPaid(conditional(loanSummary.getTotalPenaltyPaid()));
+					loanSummary1.setTotalFeePaid(conditional(loanSummary.getTotalFeePaid()));
+					loanSummary1.setTotalPaidKGS(conditional(loanSummary.getTotalPaidKGS()));
+					loanSummary1.setTotalPaid(conditional(loanSummary.getTotalPaid()));
 
 					Boolean notKGS=false;
 
-					LoanSummary newLoanSummary=new LoanSummary();
+					LoanSummaryModel1 newLoanSummary=new LoanSummaryModel1();
 
 					if(loan.getCurrency().getId()!=1)
 					{
@@ -832,7 +834,7 @@ public class DebtorController {
 						newLoanSummary.setTotalPaid((loanSummary.getTotalPaid()));
 
 
-						summaries.put(loanSummary,newLoanSummary);
+						summaries.put(loanSummary1,newLoanSummary);
 
 						if(sumLoanSummary.getLoanAmount()!=null) {
 							sumLoanSummary.setTotalPaidKGS(sumLoanSummary.getTotalPaidKGS() + newLoanSummary.getTotalPaidKGS());
@@ -884,54 +886,54 @@ public class DebtorController {
 						}
 					}
 					else{
-						summaries.put(loanSummary,loanSummary);
+						summaries.put(loanSummary1,loanSummary1);
 						if(sumLoanSummary.getLoanAmount()!=null) {
-							sumLoanSummary.setTotalPaidKGS(sumLoanSummary.getTotalPaidKGS() + loanSummary.getTotalPaidKGS());
-							sumLoanSummary.setTotalPaid(sumLoanSummary.getTotalPaid()+loanSummary.getTotalPaid());
-							sumLoanSummary.setTotalFeePaid(sumLoanSummary.getTotalFeePaid() + loanSummary.getTotalFeePaid());
-							sumLoanSummary.setTotalInterestPaid(sumLoanSummary.getTotalInterestPaid() + loanSummary.getTotalInterestPaid());
-							sumLoanSummary.setTotalPrincipalPaid(sumLoanSummary.getTotalPrincipalPaid() + loanSummary.getTotalPrincipalPaid());
-							sumLoanSummary.setTotalPenaltyPaid(sumLoanSummary.getTotalPenaltyPaid() + loanSummary.getTotalPenaltyPaid());
-							sumLoanSummary.setOverdueInterest(sumLoanSummary.getOverdueInterest() + loanSummary.getOverdueInterest());
-							sumLoanSummary.setOverduePrincipal(sumLoanSummary.getOverduePrincipal() + loanSummary.getOverduePrincipal());
-							sumLoanSummary.setOverduePenalty(sumLoanSummary.getOverduePenalty() + loanSummary.getOverduePenalty());
-							sumLoanSummary.setOverdueFee(sumLoanSummary.getOverdueFee() + loanSummary.getOverdueFee());
-							sumLoanSummary.setOutstadingPenalty(sumLoanSummary.getOutstadingPenalty() + loanSummary.getOutstadingPenalty());
-							sumLoanSummary.setOutstadingPrincipal(sumLoanSummary.getOutstadingPrincipal() + loanSummary.getOutstadingPrincipal());
-							sumLoanSummary.setOutstadingInterest(sumLoanSummary.getOutstadingInterest() + loanSummary.getOutstadingInterest());
-							sumLoanSummary.setOutstadingFee(sumLoanSummary.getOutstadingFee() + loanSummary.getOutstadingFee());
-							sumLoanSummary.setTotalOverdue(sumLoanSummary.getTotalOverdue() + loanSummary.getTotalOverdue());
-							sumLoanSummary.setTotalOutstanding(sumLoanSummary.getTotalOutstanding() + loanSummary.getTotalOutstanding());
-							sumLoanSummary.setPaidFee(sumLoanSummary.getPaidFee() + loanSummary.getPaidFee());
-							sumLoanSummary.setPaidInterest(sumLoanSummary.getPaidInterest() + loanSummary.getPaidInterest());
-							sumLoanSummary.setPaidPenalty(sumLoanSummary.getPaidPenalty() + loanSummary.getPaidPenalty());
-							sumLoanSummary.setPaidPrincipal(sumLoanSummary.getPaidPrincipal() + loanSummary.getPaidPrincipal());
-							sumLoanSummary.setTotalDisbursed(sumLoanSummary.getTotalDisbursed() + loanSummary.getTotalDisbursed());
-							sumLoanSummary.setLoanAmount(sumLoanSummary.getLoanAmount() + loanSummary.getLoanAmount());
+							sumLoanSummary.setTotalPaidKGS(sumLoanSummary.getTotalPaidKGS() + loanSummary1.getTotalPaidKGS());
+							sumLoanSummary.setTotalPaid(sumLoanSummary.getTotalPaid()+loanSummary1.getTotalPaid());
+							sumLoanSummary.setTotalFeePaid(sumLoanSummary.getTotalFeePaid() + loanSummary1.getTotalFeePaid());
+							sumLoanSummary.setTotalInterestPaid(sumLoanSummary.getTotalInterestPaid() + loanSummary1.getTotalInterestPaid());
+							sumLoanSummary.setTotalPrincipalPaid(sumLoanSummary.getTotalPrincipalPaid() + loanSummary1.getTotalPrincipalPaid());
+							sumLoanSummary.setTotalPenaltyPaid(sumLoanSummary.getTotalPenaltyPaid() + loanSummary1.getTotalPenaltyPaid());
+							sumLoanSummary.setOverdueInterest(sumLoanSummary.getOverdueInterest() + loanSummary1.getOverdueInterest());
+							sumLoanSummary.setOverduePrincipal(sumLoanSummary.getOverduePrincipal() + loanSummary1.getOverduePrincipal());
+							sumLoanSummary.setOverduePenalty(sumLoanSummary.getOverduePenalty() + loanSummary1.getOverduePenalty());
+							sumLoanSummary.setOverdueFee(sumLoanSummary.getOverdueFee() + loanSummary1.getOverdueFee());
+							sumLoanSummary.setOutstadingPenalty(sumLoanSummary.getOutstadingPenalty() + loanSummary1.getOutstadingPenalty());
+							sumLoanSummary.setOutstadingPrincipal(sumLoanSummary.getOutstadingPrincipal() + loanSummary1.getOutstadingPrincipal());
+							sumLoanSummary.setOutstadingInterest(sumLoanSummary.getOutstadingInterest() + loanSummary1.getOutstadingInterest());
+							sumLoanSummary.setOutstadingFee(sumLoanSummary.getOutstadingFee() + loanSummary1.getOutstadingFee());
+							sumLoanSummary.setTotalOverdue(sumLoanSummary.getTotalOverdue() + loanSummary1.getTotalOverdue());
+							sumLoanSummary.setTotalOutstanding(sumLoanSummary.getTotalOutstanding() + loanSummary1.getTotalOutstanding());
+							sumLoanSummary.setPaidFee(sumLoanSummary.getPaidFee() + loanSummary1.getPaidFee());
+							sumLoanSummary.setPaidInterest(sumLoanSummary.getPaidInterest() + loanSummary1.getPaidInterest());
+							sumLoanSummary.setPaidPenalty(sumLoanSummary.getPaidPenalty() + loanSummary1.getPaidPenalty());
+							sumLoanSummary.setPaidPrincipal(sumLoanSummary.getPaidPrincipal() + loanSummary1.getPaidPrincipal());
+							sumLoanSummary.setTotalDisbursed(sumLoanSummary.getTotalDisbursed() + loanSummary1.getTotalDisbursed());
+							sumLoanSummary.setLoanAmount(sumLoanSummary.getLoanAmount() + loanSummary1.getLoanAmount());
 						}
 						else{
-							sumLoanSummary.setTotalPaidKGS(loanSummary.getTotalPaidKGS());
-							sumLoanSummary.setTotalPaid(loanSummary.getTotalPaid());
-							sumLoanSummary.setTotalFeePaid(loanSummary.getTotalFeePaid());
-							sumLoanSummary.setTotalInterestPaid(loanSummary.getTotalInterestPaid());
-							sumLoanSummary.setTotalPrincipalPaid(loanSummary.getTotalPrincipalPaid());
-							sumLoanSummary.setTotalPenaltyPaid(loanSummary.getTotalPenaltyPaid());
-							sumLoanSummary.setOverdueInterest(loanSummary.getOverdueInterest());
-							sumLoanSummary.setOverduePrincipal(loanSummary.getOverduePrincipal());
-							sumLoanSummary.setOverduePenalty(loanSummary.getOverduePenalty());
-							sumLoanSummary.setOverdueFee(loanSummary.getOverdueFee());
-							sumLoanSummary.setOutstadingPenalty(loanSummary.getOutstadingPenalty());
-							sumLoanSummary.setOutstadingPrincipal(loanSummary.getOutstadingPrincipal());
-							sumLoanSummary.setOutstadingInterest(loanSummary.getOutstadingInterest());
-							sumLoanSummary.setOutstadingFee(loanSummary.getOutstadingFee());
-							sumLoanSummary.setTotalOverdue(loanSummary.getTotalOverdue());
-							sumLoanSummary.setTotalOutstanding(loanSummary.getTotalOutstanding());
-							sumLoanSummary.setPaidFee(loanSummary.getPaidFee());
-							sumLoanSummary.setPaidInterest(loanSummary.getPaidInterest());
-							sumLoanSummary.setPaidPenalty(loanSummary.getPaidPenalty());
-							sumLoanSummary.setPaidPrincipal(loanSummary.getPaidPrincipal());
-							sumLoanSummary.setTotalDisbursed(loanSummary.getTotalDisbursed());
-							sumLoanSummary.setLoanAmount(loanSummary.getLoanAmount());
+							sumLoanSummary.setTotalPaidKGS(loanSummary1.getTotalPaidKGS());
+							sumLoanSummary.setTotalPaid(loanSummary1.getTotalPaid());
+							sumLoanSummary.setTotalFeePaid(loanSummary1.getTotalFeePaid());
+							sumLoanSummary.setTotalInterestPaid(loanSummary1.getTotalInterestPaid());
+							sumLoanSummary.setTotalPrincipalPaid(loanSummary1.getTotalPrincipalPaid());
+							sumLoanSummary.setTotalPenaltyPaid(loanSummary1.getTotalPenaltyPaid());
+							sumLoanSummary.setOverdueInterest(loanSummary1.getOverdueInterest());
+							sumLoanSummary.setOverduePrincipal(loanSummary1.getOverduePrincipal());
+							sumLoanSummary.setOverduePenalty(loanSummary1.getOverduePenalty());
+							sumLoanSummary.setOverdueFee(loanSummary1.getOverdueFee());
+							sumLoanSummary.setOutstadingPenalty(loanSummary1.getOutstadingPenalty());
+							sumLoanSummary.setOutstadingPrincipal(loanSummary1.getOutstadingPrincipal());
+							sumLoanSummary.setOutstadingInterest(loanSummary1.getOutstadingInterest());
+							sumLoanSummary.setOutstadingFee(loanSummary1.getOutstadingFee());
+							sumLoanSummary.setTotalOverdue(loanSummary1.getTotalOverdue());
+							sumLoanSummary.setTotalOutstanding(loanSummary1.getTotalOutstanding());
+							sumLoanSummary.setPaidFee(loanSummary1.getPaidFee());
+							sumLoanSummary.setPaidInterest(loanSummary1.getPaidInterest());
+							sumLoanSummary.setPaidPenalty(loanSummary1.getPaidPenalty());
+							sumLoanSummary.setPaidPrincipal(loanSummary1.getPaidPrincipal());
+							sumLoanSummary.setTotalDisbursed(loanSummary1.getTotalDisbursed());
+							sumLoanSummary.setLoanAmount(loanSummary1.getLoanAmount());
 						}
 					}
 
@@ -962,7 +964,7 @@ public class DebtorController {
 		CalculationTool calculationTool=new CalculationTool();
 		LoanSummary sumLoanSummary=new LoanSummary();
 		LinkedHashSet<LoanView> loanViews = new LinkedHashSet<LoanView>(0);
-		HashMap<LoanSummary,LoanSummary> summaries=new HashMap<>();
+		HashMap<LoanSummaryModel1,LoanSummaryModel1> summaries=new HashMap<>();
 		Date newDate=new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).parse(date);
 		LinkedHashMap<Long, LoanDetailedSummary> loanDetailedSummaryList = new LinkedHashMap<>();
 
@@ -1002,6 +1004,7 @@ public class DebtorController {
 			}
 
 			if(srokDate==null) srokDate = loan.getRegDate();
+			LoanSummaryModel1 loanSummary1=new LoanSummaryModel1();
 
 				LoanSummary loanSummary=calculationTool.getLoanSummaryCaluculatedByLoanIdAndOnDate(loanView,loanView.getV_loan_id(),newDate,null);
 
@@ -1011,19 +1014,19 @@ public class DebtorController {
 				if(loan.getCloseRate()!=null)
 				if(loan.getCloseRate()>0) rate = loan.getCloseRate();
 
-                loanSummary.setLoanAmount(conditional(loanSummary.getLoanAmount()));
-                loanSummary.setTotalDisbursed(conditional(loanSummary.getTotalDisbursed()));
-                loanSummary.setTotalOutstanding(conditional(loanSummary.getTotalOutstanding()));
-                loanSummary.setOutstadingPrincipal(conditional(loanSummary.getOutstadingPrincipal()));
-                loanSummary.setOutstadingInterest(conditional(loanSummary.getOutstadingInterest()));
-                loanSummary.setOutstadingPenalty(conditional(loanSummary.getOutstadingPenalty()));
-                loanSummary.setTotalOverdue(conditional(loanSummary.getTotalOverdue()));
-                loanSummary.setOverduePrincipal(conditional(loanSummary.getOverduePrincipal()));
-                loanSummary.setOverdueInterest(conditional(loanSummary.getOverdueInterest()));
-                loanSummary.setOverduePenalty(conditional(loanSummary.getOverduePenalty()));
-                loanSummary.setOnDate(srokDate);
-                loanSummary.setTotalPaidKGS(conditional(loanSummary.getTotalPaidKGS()));
-                loanSummary.setTotalPaid(conditional(loanSummary.getTotalPaid()));
+                loanSummary1.setLoanAmount(conditional(loanSummary.getLoanAmount()));
+                loanSummary1.setTotalDisbursed(conditional(loanSummary.getTotalDisbursed()));
+                loanSummary1.setTotalOutstanding(conditional(loanSummary.getTotalOutstanding()));
+                loanSummary1.setOutstadingPrincipal(conditional(loanSummary.getOutstadingPrincipal()));
+                loanSummary1.setOutstadingInterest(conditional(loanSummary.getOutstadingInterest()));
+                loanSummary1.setOutstadingPenalty(conditional(loanSummary.getOutstadingPenalty()));
+                loanSummary1.setTotalOverdue(conditional(loanSummary.getTotalOverdue()));
+                loanSummary1.setOverduePrincipal(conditional(loanSummary.getOverduePrincipal()));
+                loanSummary1.setOverdueInterest(conditional(loanSummary.getOverdueInterest()));
+                loanSummary1.setOverduePenalty(conditional(loanSummary.getOverduePenalty()));
+                loanSummary1.setOnDate(srokDate);
+                loanSummary1.setTotalPaidKGS(conditional(loanSummary.getTotalPaidKGS()));
+                loanSummary1.setTotalPaid(conditional(loanSummary.getTotalPaid()));
 
 				String name1="";
 				if(loan.getCurrency().getId()!=17){
@@ -1032,33 +1035,33 @@ public class DebtorController {
 				else{
 					name1=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).format(loan.getRegDate())+"г. в тоннах "+loan.getCurrency().getName();
 				}
-				loanSummary.setUuid(name1);
-				loanSummary.setVersion(loan.getId());
-				loanSummary.setId(debtorId);
+				loanSummary1.setUuid(name1);
+				loanSummary1.setVersion(loan.getId());
+				loanSummary1.setId(debtorId);
 
 
 
-				LoanSummary newLoanSummary=new LoanSummary();
+				LoanSummaryModel1 newLoanSummary=new LoanSummaryModel1();
 				if(loan.getCurrency().getId()!=1){
 					newLoanSummary.setVersion(Long.valueOf(1));
 					newLoanSummary.setUuid("в тыс. сомах по курсу "+rate);
-					newLoanSummary.setLoanAmount((loanSummary.getLoanAmount()*rate));
-					newLoanSummary.setTotalDisbursed((loanSummary.getTotalDisbursed()*rate));
-					newLoanSummary.setTotalOutstanding((loanSummary.getTotalOutstanding()*rate));
-					newLoanSummary.setOutstadingPrincipal((loanSummary.getOutstadingPrincipal()*rate));
-					newLoanSummary.setOutstadingInterest((loanSummary.getOutstadingInterest()*rate));
-					newLoanSummary.setOutstadingPenalty((loanSummary.getOutstadingPenalty()*rate));
-					newLoanSummary.setTotalOverdue((loanSummary.getTotalOverdue()*rate));
-                    newLoanSummary.setOverduePrincipal((loanSummary.getOverduePrincipal()*rate));
-                    newLoanSummary.setOverdueInterest((loanSummary.getOverdueInterest()*rate));
-                    newLoanSummary.setOverduePenalty((loanSummary.getOverduePenalty()*rate));
-					newLoanSummary.setOnDate(loanSummary.getOnDate());
-					newLoanSummary.setTotalPaidKGS((loanSummary.getTotalPaidKGS()));
-					newLoanSummary.setTotalPaid((loanSummary.getTotalPaid()));
+					newLoanSummary.setLoanAmount((loanSummary1.getLoanAmount()*rate));
+					newLoanSummary.setTotalDisbursed((loanSummary1.getTotalDisbursed()*rate));
+					newLoanSummary.setTotalOutstanding((loanSummary1.getTotalOutstanding()*rate));
+					newLoanSummary.setOutstadingPrincipal((loanSummary1.getOutstadingPrincipal()*rate));
+					newLoanSummary.setOutstadingInterest((loanSummary1.getOutstadingInterest()*rate));
+					newLoanSummary.setOutstadingPenalty((loanSummary1.getOutstadingPenalty()*rate));
+					newLoanSummary.setTotalOverdue((loanSummary1.getTotalOverdue()*rate));
+                    newLoanSummary.setOverduePrincipal((loanSummary1.getOverduePrincipal()*rate));
+                    newLoanSummary.setOverdueInterest((loanSummary1.getOverdueInterest()*rate));
+                    newLoanSummary.setOverduePenalty((loanSummary1.getOverduePenalty()*rate));
+					newLoanSummary.setOnDate(loanSummary1.getOnDate());
+					newLoanSummary.setTotalPaidKGS((loanSummary1.getTotalPaidKGS()));
+					newLoanSummary.setTotalPaid((loanSummary1.getTotalPaid()));
 
 					model.addAttribute("newSummary",newLoanSummary);
 
-					summaries.put(loanSummary,newLoanSummary);
+					summaries.put(loanSummary1,newLoanSummary);
 
 					if(sumLoanSummary.getLoanAmount()!=null) {
 						sumLoanSummary.setTotalPaidKGS(sumLoanSummary.getTotalPaidKGS() + newLoanSummary.getTotalPaidKGS());
@@ -1093,36 +1096,36 @@ public class DebtorController {
 				else{
 //					loanSummary.setVersion(Long.valueOf(0));
 //					loanSummary.setUuid(loanSummary.getUuid()+" в тыс. сомах по курсу "+rate);
-					summaries.put(loanSummary,loanSummary);
+					summaries.put(loanSummary1,loanSummary1);
 					if(sumLoanSummary.getLoanAmount()!=null) {
-						sumLoanSummary.setTotalPaidKGS(sumLoanSummary.getTotalPaidKGS() + loanSummary.getTotalPaidKGS());
-						sumLoanSummary.setTotalPaid(sumLoanSummary.getTotalPaid()+loanSummary.getTotalPaid());
-						sumLoanSummary.setOutstadingPenalty(sumLoanSummary.getOutstadingPenalty() + loanSummary.getOutstadingPenalty());
-						sumLoanSummary.setOutstadingPrincipal(sumLoanSummary.getOutstadingPrincipal() + loanSummary.getOutstadingPrincipal());
-						sumLoanSummary.setOutstadingInterest(sumLoanSummary.getOutstadingInterest() + loanSummary.getOutstadingInterest());
+						sumLoanSummary.setTotalPaidKGS(sumLoanSummary.getTotalPaidKGS() + loanSummary1.getTotalPaidKGS());
+						sumLoanSummary.setTotalPaid(sumLoanSummary.getTotalPaid()+loanSummary1.getTotalPaid());
+						sumLoanSummary.setOutstadingPenalty(sumLoanSummary.getOutstadingPenalty() + loanSummary1.getOutstadingPenalty());
+						sumLoanSummary.setOutstadingPrincipal(sumLoanSummary.getOutstadingPrincipal() + loanSummary1.getOutstadingPrincipal());
+						sumLoanSummary.setOutstadingInterest(sumLoanSummary.getOutstadingInterest() + loanSummary1.getOutstadingInterest());
 //						sumLoanSummary.setOutstadingFee(sumLoanSummary.getOutstadingFee() + loanSummary.getOutstadingFee());
-						sumLoanSummary.setTotalOverdue(sumLoanSummary.getTotalOverdue() + loanSummary.getTotalOverdue());
-                        sumLoanSummary.setOverduePrincipal(sumLoanSummary.getOverduePrincipal()+ loanSummary.getOverduePrincipal());
-                        sumLoanSummary.setOverdueInterest(sumLoanSummary.getOverdueInterest()+ loanSummary.getOverdueInterest());
-                        sumLoanSummary.setOverduePenalty(sumLoanSummary.getOverduePenalty()+ loanSummary.getOverduePenalty());
-						sumLoanSummary.setTotalOutstanding(sumLoanSummary.getTotalOutstanding() + loanSummary.getTotalOutstanding());
-						sumLoanSummary.setTotalDisbursed(sumLoanSummary.getTotalDisbursed() + loanSummary.getTotalDisbursed());
-						sumLoanSummary.setLoanAmount(sumLoanSummary.getLoanAmount() + loanSummary.getLoanAmount());
+						sumLoanSummary.setTotalOverdue(sumLoanSummary.getTotalOverdue() + loanSummary1.getTotalOverdue());
+                        sumLoanSummary.setOverduePrincipal(sumLoanSummary.getOverduePrincipal()+ loanSummary1.getOverduePrincipal());
+                        sumLoanSummary.setOverdueInterest(sumLoanSummary.getOverdueInterest()+ loanSummary1.getOverdueInterest());
+                        sumLoanSummary.setOverduePenalty(sumLoanSummary.getOverduePenalty()+ loanSummary1.getOverduePenalty());
+						sumLoanSummary.setTotalOutstanding(sumLoanSummary.getTotalOutstanding() + loanSummary1.getTotalOutstanding());
+						sumLoanSummary.setTotalDisbursed(sumLoanSummary.getTotalDisbursed() + loanSummary1.getTotalDisbursed());
+						sumLoanSummary.setLoanAmount(sumLoanSummary.getLoanAmount() + loanSummary1.getLoanAmount());
 					}
 					else{
-						sumLoanSummary.setTotalPaidKGS(loanSummary.getTotalPaidKGS());
-						sumLoanSummary.setTotalPaid(loanSummary.getTotalPaid());
-						sumLoanSummary.setOutstadingPenalty(loanSummary.getOutstadingPenalty());
-						sumLoanSummary.setOutstadingPrincipal(loanSummary.getOutstadingPrincipal());
-						sumLoanSummary.setOutstadingInterest(loanSummary.getOutstadingInterest());
-						sumLoanSummary.setOutstadingFee(loanSummary.getOutstadingFee());
-						sumLoanSummary.setTotalOverdue(loanSummary.getTotalOverdue());
-                        sumLoanSummary.setOverduePrincipal(loanSummary.getOverduePrincipal()*rate);
-                        sumLoanSummary.setOverdueInterest(loanSummary.getOverdueInterest()*rate);
-                        sumLoanSummary.setOverduePenalty(loanSummary.getOverduePenalty()*rate);
-						sumLoanSummary.setTotalOutstanding(loanSummary.getTotalOutstanding());
-						sumLoanSummary.setTotalDisbursed(loanSummary.getTotalDisbursed());
-						sumLoanSummary.setLoanAmount(loanSummary.getLoanAmount());
+						sumLoanSummary.setTotalPaidKGS(loanSummary1.getTotalPaidKGS());
+						sumLoanSummary.setTotalPaid(loanSummary1.getTotalPaid());
+						sumLoanSummary.setOutstadingPenalty(loanSummary1.getOutstadingPenalty());
+						sumLoanSummary.setOutstadingPrincipal(loanSummary1.getOutstadingPrincipal());
+						sumLoanSummary.setOutstadingInterest(loanSummary1.getOutstadingInterest());
+						sumLoanSummary.setOutstadingFee(loanSummary1.getOutstadingFee());
+						sumLoanSummary.setTotalOverdue(loanSummary1.getTotalOverdue());
+                        sumLoanSummary.setOverduePrincipal(loanSummary1.getOverduePrincipal()*rate);
+                        sumLoanSummary.setOverdueInterest(loanSummary1.getOverdueInterest()*rate);
+                        sumLoanSummary.setOverduePenalty(loanSummary1.getOverduePenalty()*rate);
+						sumLoanSummary.setTotalOutstanding(loanSummary1.getTotalOutstanding());
+						sumLoanSummary.setTotalDisbursed(loanSummary1.getTotalDisbursed());
+						sumLoanSummary.setLoanAmount(loanSummary1.getLoanAmount());
 					}
 				}
 			}

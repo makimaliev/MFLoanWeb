@@ -13,7 +13,7 @@
                         <tr>
                             <th>Заемщик</th>
                             <th>Рег. номер</th>
-                            <!--<th>Code</th>-->
+                            <th></th>
                         </tr>
                         </thead>
 
@@ -22,7 +22,13 @@
                         <tr th:each="l : ${list}">
                             <td th:text="${l.debtorName}">Id</td>
                             <td th:text="${l.districtName}">Name</td>
-                            <!--<td th:text="${aokmotuInList.code}">Code</td>-->
+                            <td>
+                                <span>
+                                    <form th:action="@{/objectListValue/__${l.id}__/delete}" method="post">
+                                        <button type="submit" class="btn btn-reset" th:text="#{label.table.delete}"></button>
+                                    </form>
+                                </span>
+                            </td>
                         </tr>
                         </tbody>
 

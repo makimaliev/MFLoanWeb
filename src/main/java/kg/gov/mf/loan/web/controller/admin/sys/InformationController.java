@@ -1,28 +1,52 @@
 package kg.gov.mf.loan.web.controller.admin.sys;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import org.hibernate.validator.internal.util.privilegedactions.GetClassLoader;
+import com.lowagie.text.DocumentException;
+import kg.gov.mf.loan.admin.org.model.Address;
+import kg.gov.mf.loan.admin.org.service.AddressService;
+import kg.gov.mf.loan.admin.sys.model.Attachment;
+import kg.gov.mf.loan.admin.sys.model.Information;
+import kg.gov.mf.loan.admin.sys.model.SystemFile;
+import kg.gov.mf.loan.admin.sys.service.AttachmentService;
+import kg.gov.mf.loan.admin.sys.service.InformationService;
+import kg.gov.mf.loan.admin.sys.service.SystemFileService;
+import kg.gov.mf.loan.admin.sys.service.cSystemService;
+import kg.gov.mf.loan.manage.model.debtor.Debtor;
+import kg.gov.mf.loan.manage.service.debtor.DebtorService;
+import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import kg.gov.mf.loan.admin.org.model.District;
-import kg.gov.mf.loan.admin.sys.model.*;
-import kg.gov.mf.loan.admin.sys.service.*;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.nio.file.Files;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 @Controller
 public class InformationController {
 	
 	@Autowired
     private InformationService informationService;
+
+	@Autowired
+	DebtorService debtorService;
+
+	@Autowired
+	SystemFileService systemFileService;
+
+	@Autowired
+	AttachmentService attachmentService;
+
+	@Autowired
+	AddressService addressService;
 	
     public void setInformationService(InformationService rs)
     {
@@ -236,8 +260,158 @@ public class InformationController {
 		return "redirect:/information/list";
 	}
 
-     
 
-     
+	@RequestMapping("/manage/debtor/{debtorId}/loan/{loanId}/object/{objectId}/attachment/{type}/add")
+	public String addAttachment(MultipartHttpServletRequest request, @PathVariable("debtorId") Long debtorId, @PathVariable("type") int type,
+								@PathVariable("loanId") String loanId,@PathVariable("objectId") Long objectId, String name) {
+
+		String path =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
+
+		Debtor debtor=debtorService.getById(debtorId);
+		Address address =addressService.findById(debtor.getAddress_id());
+		Long regionId=address.getRegion().getId();
+		Long districtId=address.getDistrict().getId();
+		File folder = new File(path);
+		path=path+regionId+"/";
+		folder=new File(path);
+		boolean exists = folder.exists();
+		if(!exists){
+			folder.mkdir();
+		}
+		path=path+districtId+"/";
+		folder=new File(path);
+		exists = folder.exists();
+		if(!exists){
+			folder.mkdir();
+		}
+		path=path+debtorId+"/";
+		folder=new File(path);
+		exists = folder.exists();
+		if(!exists){
+			folder.mkdir();
+		}
+		path=path+loanId+"/";
+		folder=new File(path);
+		exists = folder.exists();
+		if(!exists){
+			folder.mkdir();
+		}
+		path=path+type+"/";
+		folder=new File(path);
+		exists = folder.exists();
+		if(!exists){
+			folder.mkdir();
+		}
+
+
+		Information information;
+		List<Information> informationList=informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(type,objectId);
+		if(informationList.size()>0){
+			information=informationList.get(0);
+		}
+		else{
+			information=new Information();
+			information.setName(name);
+			information.setDate(new Date());
+			information.setParentInformation(null);
+			information.setSystemObjectId(objectId);
+			information.setSystemObjectTypeId(type);
+			informationService.create(information);
+		}
+
+		Attachment attachment = new Attachment();
+		try {
+			Iterator<String> itr = request.getFileNames();
+
+			while (itr.hasNext()) {
+
+				SystemFile systemFile=new SystemFile();
+				String uploadedFile = itr.next();
+				MultipartFile part = request.getFile(uploadedFile);
+
+				String filename = part.getOriginalFilename();
+				folder=new File(path+filename);
+				exists = folder.exists();
+				if(exists){
+				}
+				else{
+
+//                String uuid = UUID.randomUUID().toString();
+//                String fsname = uuid + ".atach";
+
+					File file = new File(path + filename);
+
+					part.transferTo(file);
+
+					systemFile.setName(filename);
+					systemFile.setPath(path + filename);
+
+					attachment.setName(name);
+					attachment.setInformation(information);
+
+
+					systemFileService.create(systemFile);
+					systemFile.setAttachment(attachment);
+					attachmentService.create(attachment);
+					systemFileService.edit(systemFile);
+				}
+			}
+			informationService.edit(information);
+		}
+		catch (Exception e) {
+			System.out.println(e);
+		}
+
+		if(type==5){
+			return "redirect:/manage/debtor/{debtorId}/loan/{loanId}/payment/"+objectId+"/view";
+		}
+		else if(type==6){
+			return "redirect:/manage/debtor/{debtorId}/collateralagreement/"+objectId+"/view";
+		}
+		else{
+			return "redirect:/manage/debtor/{debtorId}/loan/{loanId}/view";
+		}
+	}
+
+	@RequestMapping("/systemFile/{id}/download")
+	@ResponseBody
+	public void downloadSystemFile(@PathVariable("id") Long id, HttpServletResponse response) throws IOException, DocumentException {
+
+		SystemFile systemFile=systemFileService.findById(id);
+		File file = new File(systemFile.getPath());
+		String fileExtension=systemFile.getName().split("\\.")[1];
+		String smth=Files.probeContentType(file.toPath());
+
+		/*
+		if(fileExtension.equals("pdf")){
+			response.setHeader("Content-disposition","attachment; filename=xx.pdf");
+		}
+		else if(fileExtension.equals("doc") || fileExtension.equals("docx")){
+//			response.setContentType("application/msword");
+			response.setHeader("Content-Disposition", "attachment; filename=xx"+fileExtension);
+		}
+		else if(fileExtension.equals("rtf")){
+//			response.setContentType("application/rtf");
+			response.setHeader("Content-disposition","attachment; filename=xx.rtf");
+		}
+		else if(fileExtension.equals("png")){
+//			response.setContentType("application/png");
+			response.setHeader("Content-disposition","attachment; filename=xx.png");
+		}
+
+		else if(fileExtension.equals("png")){
+//			response.setContentType("application/png");
+			response.setHeader("Content-disposition","attachment; filename=xx.png");
+		}
+*/
+
+		response.setContentType(smth);
+		response.setHeader("Content-Disposition", "attachment; filename=xx."+fileExtension);
+		InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+		FileCopyUtils.copy(inputStream, response.getOutputStream());
+	}
+
+
+
 
 }

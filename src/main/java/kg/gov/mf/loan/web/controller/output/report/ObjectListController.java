@@ -25,10 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -343,9 +340,23 @@ public class ObjectListController {
    			DebtorModel debtorModel=new DebtorModel();
    			debtorModel.setDistrictName(loan.getRegNumber());
    			debtorModel.setDebtorName(loan.getDebtor().getName());
+   			debtorModel.setId(objectListValue.getId());
    			list.add(debtorModel);
 		}
 		model.addAttribute("list",list);
 		return "/manage/debtor/loan/objectlist/view";
 	}
+
+	@PostMapping("/objectListValue/{id}/delete")
+	public String deleteObjectListValue(@PathVariable("id") Long id){
+       ObjectListValue objectListValue=objectListValueService.findById(id);
+       ObjectList objectList=objectListValue.getObjectList();
+       Set<ObjectListValue> objectListValueSet=objectList.getObjectListValues();
+       if(objectListValueSet.contains(objectListValue)){
+           objectListValueSet.remove(objectListValue);
+       }
+       objectListService.edit(objectList);
+       return "redirect:/list/users/objectLists";
+	}
 }
+

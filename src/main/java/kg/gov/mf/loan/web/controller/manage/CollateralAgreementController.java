@@ -4,7 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.admin.org.service.OrganizationService;
 import kg.gov.mf.loan.admin.org.service.PersonService;
+import kg.gov.mf.loan.admin.sys.model.Attachment;
+import kg.gov.mf.loan.admin.sys.model.Information;
+import kg.gov.mf.loan.admin.sys.model.SystemFile;
 import kg.gov.mf.loan.admin.sys.model.User;
+import kg.gov.mf.loan.admin.sys.service.AttachmentService;
+import kg.gov.mf.loan.admin.sys.service.InformationService;
+import kg.gov.mf.loan.admin.sys.service.SystemFileService;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collateral.AdditionalAgreement;
 import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
@@ -25,6 +31,7 @@ import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.web.fetchModels.AdditionalAgreementModel;
 import kg.gov.mf.loan.web.fetchModels.CollateralItemModel;
 import kg.gov.mf.loan.web.fetchModels.LoanModel;
+import kg.gov.mf.loan.web.fetchModels.SystemFileModel;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -78,6 +85,15 @@ public class CollateralAgreementController {
 	UserService userService;
 
 	@Autowired
+	InformationService informationService;
+
+	@Autowired
+	AttachmentService attachmentService;
+
+	@Autowired
+	SystemFileService systemFileService;
+
+	@Autowired
 	CollateralItemArrestFreeService collateralItemArrestFreeService;
 
 	@InitBinder
@@ -97,6 +113,10 @@ public class CollateralAgreementController {
 		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
 		String jsonItems = gson.toJson(getItemsByAgreementId(agreementId));
 		model.addAttribute("items", jsonItems);
+
+
+		String jsonFiles= gson.toJson(getSystemFilesByPaymentId(agreementId));
+		model.addAttribute("files", jsonFiles);
 
 		String jsonAdditionalAgreements=gson.toJson(getAdditionalsByAgreementId(agreementId));
 		model.addAttribute("additionalAgreements",jsonAdditionalAgreements);
@@ -335,6 +355,31 @@ public class CollateralAgreementController {
 
 		List<LoanModel> loans = query.getResultList();
 		return loans;
+	}
+
+	private List<SystemFileModel> getSystemFilesByPaymentId(Long agreementId){
+
+		List<SystemFileModel> list=new ArrayList<>();
+		List<Information> informations=informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(6,agreementId);
+		for (Information information1:informations){
+			Information information=informationService.findById(information1.getId());
+			Set<Attachment> attachments= information.getAttachment();
+			for (Attachment attachment1:attachments){
+				Attachment attachment=attachmentService.findById(attachment1.getId());
+				for (SystemFile systemFile1:attachment.getSystemFile()){
+					SystemFile systemFile=systemFileService.findById(systemFile1.getId());
+					SystemFileModel systemFileModel=new SystemFileModel();
+					systemFileModel.setAttachment_id(attachment.getId());
+					systemFileModel.setSys_name(systemFile.getName());
+					systemFileModel.setSystem_file_id(systemFile.getId());
+					systemFileModel.setAttachment_name(attachment.getName());
+					systemFileModel.setPath(systemFile.getPath());
+					list.add(systemFileModel);
+				}
+			}
+		}
+
+		return list;
 	}
 	
 	/*

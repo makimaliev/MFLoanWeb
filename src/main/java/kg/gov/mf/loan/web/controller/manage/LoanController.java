@@ -2,7 +2,6 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.lowagie.text.DocumentException;
 import kg.gov.mf.loan.admin.org.model.Address;
 import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.org.service.AddressService;
@@ -51,7 +50,6 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
@@ -61,8 +59,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -876,7 +873,7 @@ public class LoanController {
         return "/manage/debtor/loanSummary";
     }
 
-    @RequestMapping("/manage/debtor/{debtorId}/loan/{loanId}/attachment/add")
+    @RequestMapping("/manage/debtor/{debtorId}/loan/{loanId}/attachment/4/add")
     public String addAttachment(MultipartHttpServletRequest request,@PathVariable("debtorId") Long debtorId,
                                  @PathVariable("loanId") Long loanId,String name) {
 
@@ -926,6 +923,7 @@ public class LoanController {
         }
         else{
             information=new Information();
+            information.setName(name);
             information.setDate(new Date());
             information.setParentInformation(null);
             information.setSystemObjectId(loanId);
@@ -977,20 +975,6 @@ public class LoanController {
 
         return "redirect:/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
-
-    @RequestMapping("/systemFile/{id}/download")
-    @ResponseBody
-    public void downloadSystemFile(@PathVariable("id") Long id, HttpServletResponse response) throws IOException, DocumentException {
-
-	    SystemFile systemFile=systemFileService.findById(id);
-        File file = new File(systemFile.getPath());
-        response.setContentType("application/pdf");
-        response.setHeader("Content-disposition","attachment; filename=xx.pdf");
-
-        InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
-        FileCopyUtils.copy(inputStream, response.getOutputStream());
-    }
-
 
 //	if less than zero make zero
     public Double conditional(Double num){

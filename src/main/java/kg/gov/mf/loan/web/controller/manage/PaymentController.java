@@ -1,5 +1,13 @@
 package kg.gov.mf.loan.web.controller.manage;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.admin.sys.model.Attachment;
+import kg.gov.mf.loan.admin.sys.model.Information;
+import kg.gov.mf.loan.admin.sys.model.SystemFile;
+import kg.gov.mf.loan.admin.sys.service.AttachmentService;
+import kg.gov.mf.loan.admin.sys.service.InformationService;
+import kg.gov.mf.loan.admin.sys.service.SystemFileService;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.loan.Loan;
@@ -16,6 +24,7 @@ import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.manage.service.loan.PaymentService;
 import kg.gov.mf.loan.manage.service.loan.PaymentTypeService;
 import kg.gov.mf.loan.process.service.JobItemService;
+import kg.gov.mf.loan.web.fetchModels.SystemFileModel;
 import kg.gov.mf.loan.web.util.Utils;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -35,10 +44,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -63,6 +69,15 @@ public class PaymentController {
 
     @Autowired
     PhaseDetailsService phaseDetailsService;
+
+    @Autowired
+    InformationService informationService;
+
+    @Autowired
+    AttachmentService attachmentService;
+
+    @Autowired
+    SystemFileService systemFileService;
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -94,6 +109,25 @@ public class PaymentController {
     public void initBinder(WebDataBinder binder) {
         CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
         binder.registerCustomEditor(Date.class, editor);
+    }
+
+
+    @RequestMapping(value = "/manage/debtor/{debtorId}/loan/{loanId}/payment/{paymentId}/view")
+    public String view(ModelMap model,
+                       @PathVariable("debtorId") Long debtorId,
+                       @PathVariable("loanId") Long loanId,
+                       @PathVariable("paymentId") Long paymentId){
+
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String jsonSysFiles= gson.toJson(getSystemFilesByPaymentId(paymentId));
+        model.addAttribute("files", jsonSysFiles);
+
+        Payment payment=paymentService.getById(paymentId);
+        model.addAttribute("payment",payment);
+        model.addAttribute("loanId",loanId);
+        model.addAttribute("debtorId",debtorId);
+
+        return "/manage/debtor/loan/payment/view";
     }
 
     @RequestMapping(value = "/manage/debtor/{debtorId}/loan/{loanId}/payment/{paymentId}/save", method = RequestMethod.GET)
@@ -379,5 +413,30 @@ public class PaymentController {
         catch (Exception e){
             System.out.println(e);
         }
+    }
+
+    private List<SystemFileModel> getSystemFilesByPaymentId(Long paymentId){
+
+        List<SystemFileModel> list=new ArrayList<>();
+        List<Information> informations=informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(5,paymentId);
+        for (Information information1:informations){
+            Information information=informationService.findById(information1.getId());
+            Set<Attachment> attachments= information.getAttachment();
+            for (Attachment attachment1:attachments){
+                Attachment attachment=attachmentService.findById(attachment1.getId());
+                for (SystemFile systemFile1:attachment.getSystemFile()){
+                    SystemFile systemFile=systemFileService.findById(systemFile1.getId());
+                    SystemFileModel systemFileModel=new SystemFileModel();
+                    systemFileModel.setAttachment_id(attachment.getId());
+                    systemFileModel.setSys_name(systemFile.getName());
+                    systemFileModel.setSystem_file_id(systemFile.getId());
+                    systemFileModel.setAttachment_name(attachment.getName());
+                    systemFileModel.setPath(systemFile.getPath());
+                    list.add(systemFileModel);
+                }
+            }
+        }
+
+        return list;
     }
 }
