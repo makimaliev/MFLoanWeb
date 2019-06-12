@@ -286,6 +286,7 @@ public class LoanController {
         model.addAttribute("debtorId", debtorId);
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtor", debtor);
+		model.addAttribute("finGroupId",loan.getLoanFinGroup().getId());
 
         for(CollateralAgreement agreement1: loan.getCollateralAgreements())
         {

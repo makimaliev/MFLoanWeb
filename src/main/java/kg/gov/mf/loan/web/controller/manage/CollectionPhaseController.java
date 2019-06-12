@@ -1412,6 +1412,7 @@ public class CollectionPhaseController {
     public String savePhaseEventPost(CollectionEvent event){
 
         if(event.getId()==0){
+			event.setEventStatus(eventStatusService.getById(1L));
             collectionEventService.add(event);
         }
         else if(event.getId()>0){

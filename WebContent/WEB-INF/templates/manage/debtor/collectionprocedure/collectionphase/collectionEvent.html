@@ -30,17 +30,17 @@
             <table class="table" id="eventTable">
                 <thead class="thead-default">
                 <tr>
-                    <th>Вид</th>
+                    <th>Имя</th>
+                    <th>Примечание</th>
                     <th>Дата</th>
-                    <th>Статус</th>
                     <th>&nbsp;</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="s : ${events}">
-                    <td th:text="${s.eventType.name}"></td>
+                    <td th:text="${#strings.abbreviate(s.name,40)}"></td>
+                    <td th:text="${#strings.abbreviate(s.description,100)}"></td>
                     <td th:text="${#dates.format(s.startDate,'dd.MM.yyyy')}"></td>
-                    <td th:text="${s.eventStatus.name}"></td>
                     <td class="table-actions text-right">
                         <span>
                             <div class="dropdown">

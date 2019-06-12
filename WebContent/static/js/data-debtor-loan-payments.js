@@ -110,8 +110,9 @@ var DatatableDataLocalPayments = function () {
                     var result = '';
 
                     if(isEmptyChild==true){
-                        if(loggedInUserId==supervisorId || loggedInUserId==1){
-                        result = result + '\
+                        if(finGroupId!=9){
+                            if(loggedInUserId==supervisorId || loggedInUserId==1){
+                                result = result + '\
                             <a sec:authorize="hasAnyAuthority(ADMIN,PERM_UPDATE_PAYMENT)" href="/manage/debtor/'+ debtorId + '/loan/'+ loanId + '/payment/' + row.id +'/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
                                 <i class="la la-edit"></i>\
                             </a>\
@@ -119,6 +120,19 @@ var DatatableDataLocalPayments = function () {
                                 <i class="la la-trash"></i>\
                             </a>\
                         ';
+                            }
+                        }
+                        else {
+                            if (loggedInUserId == 1) {
+                                result = result + '\
+                            <a sec:authorize="hasAnyAuthority(ADMIN,PERM_UPDATE_PAYMENT)" href="/manage/debtor/' + debtorId + '/loan/' + loanId + '/payment/' + row.id + '/save" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+                                <i class="la la-edit"></i>\
+                            </a>\
+                            <a hidden="hidden" href="/manage/debtor/' + debtorId + '/loan/' + loanId + '/payment/' + row.id + '/delete" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Удалить">\
+                                <i class="la la-trash"></i>\
+                            </a>\
+                        ';
+                            }
                         }
                     }
 

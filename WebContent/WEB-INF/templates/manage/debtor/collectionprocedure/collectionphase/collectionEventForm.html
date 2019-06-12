@@ -33,24 +33,37 @@
         </div>
         <div class="form-group m-form__group row">
             <label class="col-form-label col-lg-4 col-sm-12">
-                <span th:text="#{label.collection.phase.status}"></span>
-                <span class="m--font-danger">*</span>
-            </label>
-            <div class="col-lg-7 col-md-9 col-sm-12">
-                <select class="form-control m-bootstrap-select m_selectpicker my-select"  th:field="${event.eventStatus.id}" th:title="#{label.select}">
-                    <option th:each="status : ${statuses}" th:value="${status.id}" th:text="${status.name}"></option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group m-form__group row">
-            <label class="col-form-label col-lg-4 col-sm-12">
-                <span th:text="#{label.collection.phase.status}"></span>
+                <span th:text="#{label.collection.phase.type}"></span>
                 <span class="m--font-danger">*</span>
             </label>
             <div class="col-lg-7 col-md-9 col-sm-12">
                 <select class="form-control m-bootstrap-select m_selectpicker my-select" th:field="${event.eventType.id}" th:title="#{label.select}">
                     <option th:each="status : ${types}" th:value="${status.id}" th:text="${status.name}"></option>
                 </select>
+            </div>
+        </div>
+        <div class="form-group m-form__group row">
+            <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.collection.phase.docNumber}">
+                <span class="m--font-danger">*</span>
+            </label>
+            <div class="col-lg-7 col-md-9 col-sm-12">
+                <input type="text" class="form-control m-input" th:field="${event.docNumber}">
+            </div>
+        </div>
+        <div class="form-group m-form__group row">
+            <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.name}">
+                <span class="m--font-danger">*</span>
+            </label>
+            <div class="col-lg-7 col-md-9 col-sm-12">
+                <input type="text" class="form-control m-input" th:field="${event.name}">
+            </div>
+        </div>
+        <div class="form-group m-form__group row">
+            <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.description}">
+                <span class="m--font-danger">*</span>
+            </label>
+            <div class="col-lg-7 col-md-9 col-sm-12">
+                <textarea rows="4" type="text" class="form-control m-input" th:field="${event.description}"></textarea>
             </div>
         </div>
     </div>
