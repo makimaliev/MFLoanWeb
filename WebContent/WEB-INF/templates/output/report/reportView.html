@@ -16,6 +16,7 @@
 									<thead  class="thead-default">
 									<tr>
 										<th>Id</th>
+										<th>Просмотр</th>
 										<th th:text="#{label.report.name}"></th>
 										<th th:text="#{label.report.type}"></th>
 										<th>&nbsp;</th>
@@ -25,6 +26,7 @@
 									<tbody>
 									<tr th:each="reportTemplateInList : ${report.reportTemplate}">
 										<td th:text="${reportTemplateInList.id}"></td>
+										<td><a th:href="@{/reportTemplate/__${reportTemplateInList.id}__/customView}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a></td>
 										<td th:text="${reportTemplateInList.name}"></td>
 										<td th:text="${reportTemplateInList.report.name}"></td>
 										<td class="table-actions text-right">
