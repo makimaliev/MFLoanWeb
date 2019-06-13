@@ -71,6 +71,7 @@
 					<form th:action="@{/manage/debtor/save}" th:object="${debtor}" method="post" class="m-form m-form--fit m-form--label-align-right">
 						<input hidden="true" type="text" name="id" th:field="*{id}" />
 						<input hidden="true" type="text" id="ownerId" name="owner.id" th:field="*{owner.id}" />
+						<input hidden="true" type="text" id="addressId" name="address_id" th:field="*{address_id}" />
 
 						<div class="m-portlet__body">
 							<div class="m-form__section">
