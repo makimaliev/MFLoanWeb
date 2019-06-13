@@ -288,20 +288,23 @@ public class LoanController {
 		model.addAttribute("debtor", debtor);
 		model.addAttribute("finGroupId",loan.getLoanFinGroup().getId());
 
-        for(CollateralAgreement agreement1: loan.getCollateralAgreements())
-        {
-            CollateralAgreement agreement=collateralAgreementService.getById(agreement1.getId());
-            for(CollateralItem item1:agreement.getCollateralItems()){
-                CollateralItem item=collateralItemService.getById(item1.getId());
-                if(item.getInspection_needed_description()!=null ){
-                    model.addAttribute("itemDescription",item.getInspection_needed_description());
-                }
-                else{
-                    model.addAttribute("itemDescription","Подлежит");
+		if(loan.getCollateralAgreements().size()>0) {
+            for (CollateralAgreement agreement1 : loan.getCollateralAgreements()) {
+                CollateralAgreement agreement = collateralAgreementService.getById(agreement1.getId());
+                for (CollateralItem item1 : agreement.getCollateralItems()) {
+                    CollateralItem item = collateralItemService.getById(item1.getId());
+                    if (item.getInspection_needed_description() != null) {
+                        model.addAttribute("itemDescription", item.getInspection_needed_description());
+                    } else {
+                        model.addAttribute("itemDescription", "Подлежит");
+                    }
+                    break;
                 }
                 break;
             }
-            break;
+        }
+        else{
+            model.addAttribute("itemDescription", "false");
         }
 
 //        String jsonDetailedSummaries = gson.toJson(getDetailedSummariesByLoanId(loanId));

@@ -181,7 +181,7 @@ public class RestCollectionPhaseViewController {
 
         Set<CollectionPhaseModel1> list=new HashSet<>();
         Set<CollectionPhaseView> all=collectionPhaseViewService.findByParameter(parameters,offset,perPage,"asc","v_debtor_name");
-        int total=collectionPhaseViewService.findByParameter(parameters).size();
+        int total=1000;
         for (CollectionPhaseView phaseView:all) {
             CollectionPhaseModel1 model=new CollectionPhaseModel1();
             model.setV_cph_close_total_amount(Double.valueOf(phaseView.getV_cph_close_total_amount()));

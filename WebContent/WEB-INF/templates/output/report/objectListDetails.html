@@ -37,12 +37,12 @@
 										</span>
 									</div>
 								</li>
-								<li sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_OBJECTLIST')" class="m-portlet__nav-item">
-									<a data-remote="false" data-toggle="modal"
-									   data-target="#contentParameterFormModal" th:href="@{/objectList/__${objectList.id}__/objectList/add}"
-									   role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" th:text="#{label.objectList.add}"> Add
-										ObjectList</a>
-								</li>
+								<!--<li sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_OBJECTLIST')" class="m-portlet__nav-item">-->
+									<!--<a data-remote="false" data-toggle="modal"-->
+									   <!--data-target="#contentParameterFormModal" th:href="@{/objectList/add}"-->
+									   <!--role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn&#45;&#45;air" th:text="#{label.objectList.add}"> Add-->
+										<!--ObjectList</a>-->
+								<!--</li>-->
 							</ul>
 						</div>
 					</div>
@@ -102,11 +102,11 @@
 				</div>
 			</div>
 			<!-- END BORDERED TABLE PORTLET-->
-		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<input hidden="true" type="text" id="objectList_id" name="objectList_id" th:value="${objectList.id}" />
-				<div id="content"></div>
+			<div class="row">
+				<div class="col-md-12">
+					<input hidden="true" type="text" id="objectList_id" name="objectList_id" th:value="${objectList.id}" />
+					<div id="content"></div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -150,7 +150,7 @@
 
 			var rowData = datatable.row(cell.index().row).data();
 			$("#objectList_id").val(rowData[0]);
-			var sUrl ="/MFLoanWeb/objectList/" + rowData[0]+"/view";
+			var sUrl ="/debtor/objectList/" + rowData[0]+"/view";
 			$.get(sUrl, function(data) {
 				$('#content').html(data);
 			});
