@@ -7,7 +7,6 @@ import kg.gov.mf.loan.doc.dao.DocViewDao;
 import kg.gov.mf.loan.doc.model.*;
 import kg.gov.mf.loan.doc.service.*;
 import kg.gov.mf.loan.task.model.ChatUser;
-import kg.gov.mf.loan.task.model.SystemConstant;
 import kg.gov.mf.loan.task.model.Task;
 import kg.gov.mf.loan.task.model.TaskStatus;
 import kg.gov.mf.loan.task.service.ChatUserService;
@@ -34,20 +33,20 @@ import java.util.*;
 public class DocumentFlowController extends BaseController {
 
     //region Dependencies
-    private final DocumentService documentService;
-    private final DocumentTypeService documentTypeService;
-    private final DocumentSubTypeService documentSubTypeService;
-    private final TaskService taskService;
-    private final CounterService registerService;
-    private final AccountService accountService;
-    private final SystemConstantService systemConstantService;
-    private final ChatUserService chatUserService;
-    private final DocViewDao documentViewDao;
-    private final EntityManager entityManager;
-    private final AttachmentService attachmentService;
-    private final TaskActionService taskActionService;
-    private final StaffService staffService;
-    private final DispatchDataService dispatchDataService;
+    final DocumentService documentService;
+    final DocumentTypeService documentTypeService;
+    final DocumentSubTypeService documentSubTypeService;
+    final TaskService taskService;
+    final CounterService registerService;
+    final AccountService accountService;
+    final SystemConstantService systemConstantService;
+    final ChatUserService chatUserService;
+    final DocViewDao documentViewDao;
+    final EntityManager entityManager;
+    final AttachmentService attachmentService;
+    final TaskActionService taskActionService;
+    final StaffService staffService;
+    final DispatchDataService dispatchDataService;
 
     @Autowired
     public DocumentFlowController(DocumentService documentService,
@@ -82,7 +81,7 @@ public class DocumentFlowController extends BaseController {
     }
     //endregion
     //region ACTIONS
-    private final Transition[][][] ACTIONS =
+    final Transition[][][] ACTIONS =
             {
                     {   // Internal
                             { Transition.REQUEST, Transition.TORECONCILE },     // NEW
@@ -141,7 +140,7 @@ public class DocumentFlowController extends BaseController {
             };
     //endregion
 
-    // Document List
+    // Index
     @RequestMapping(method = RequestMethod.GET)
     public String index(@RequestParam("type") String type, Model model) {
 
@@ -171,16 +170,6 @@ public class DocumentFlowController extends BaseController {
             model.addAttribute("documentSubTypes", documentType.getDocumentSubTypes());
 
         return "/doc/document/index";
-    }
-
-    // Document List
-    @RequestMapping(value = "/report", method = RequestMethod.GET)
-    public String report() {
-
-        if(getUser() == null)
-            return "/login/login";
-
-        return "/doc/document/taskReport";
     }
 
     // Create New Document
@@ -231,22 +220,19 @@ public class DocumentFlowController extends BaseController {
         vars.put("objectId", String.valueOf(id));
         vars.put("status", "OPEN");
         vars.put("objectType", "Document");
+
         Task task = taskService.getTask(getUser(), vars);
 
         if(task != null) {
+
             task.setModifiedByUserId(getUser().getId());
             taskService.update(task);
+
+            if(task.getProgress() != null)
+            {
+                document.setDocumentState(State.valueOf(task.getProgress()));
+            }
         }
-
-        //region XTRA
-        task = taskService.getTask(getUser(), vars);
-
-        if(task != null && task.getProgress() != null) {
-            document.setDocumentState(State.valueOf(task.getProgress()));
-        }
-
-        vars.clear();
-        //endregion
 
         if(document.getDocumentType().getInternalName().equals("outgoing") && document.getDocIndex() == 0)
         {
@@ -277,19 +263,17 @@ public class DocumentFlowController extends BaseController {
 
         if(document.getId() != 0)
         {
-            document.setAttachments(documentService.getById(document.getId()).getAttachments());
-            document.setUsers(documentService.getDocumentUsers(document.getId()));
+            Document doc = documentService.getById(document.getId());
+            document.setAttachments(doc.getAttachments());
+            document.setUsers(doc.getUsers());
         }
 
         document.getUsers().add(getUser().getId());
 
-        if(files.length != 0)
+        for(long file : files)
         {
-            for(long file : files)
-            {
-                if(file != 0)
-                    document.getAttachments().add(attachmentService.getById(file));
-            }
+            if(file != 0)
+                document.getAttachments().add(attachmentService.getById(file));
         }
 
         if(action.equals("UPDATE"))
@@ -316,83 +300,29 @@ public class DocumentFlowController extends BaseController {
 
         if(getUser() == null) return "/login/login";
 
-        Document document = documentService.getById(id);
-
         //hqlTester();
 
         Map<String, Object> vars = new HashMap<>();
-        vars.put("objectId", document.getId());
+        vars.put("objectId", id);
         vars.put("objectType", "Document");
 
         model.addAttribute("tasks", taskService.getTasks(vars));
         model.addAttribute("uid", getUser().getId());
-        model.addAttribute("document", document);
+        model.addAttribute("document", documentService.getById(id));
         return "/doc/document/view";
     }
 
-    // Admin Edit Document
-    @RequestMapping(value = "/admin/edit/{id}", method = RequestMethod.GET)
-    public String adminEdit(@PathVariable("id") Long id, Model model) {
+    // User Task List
+    @RequestMapping(value = "/report", method = RequestMethod.GET)
+    public String report() {
 
-        if(getUser() == null) return "/login/login";
+        if(getUser() == null)
+            return "/login/login";
 
-        Document document = documentService.getById(id);
-        document.setUsers(documentService.getDocumentUsers(id));
-
-        Map<String, Object> vars = new HashMap<>();
-        vars.put("objectId", document.getId());
-        vars.put("objectType", "Document");
-        model.addAttribute("tasks", taskService.getTasks(vars));
-        model.addAttribute("taskActions", taskActionService.list());
-
-        model.addAttribute("task", new Task());
-        model.addAttribute("dispatch_data", new DispatchData());
-        model.addAttribute("states", State.values());
-        model.addAttribute("subTypes", document.getDocumentType().getDocumentSubTypes());
-        model.addAttribute("uid", getUser().getId());
-        model.addAttribute("document", document);
-
-        return "/doc/document/adminedit";
+        return "/doc/document/taskReport";
     }
 
-    // Admin Save Document
-    @RequestMapping("/admin/save")
-    public String adminSave(@Valid Document document) {
-
-        if(getUser() == null) return "/login/login";
-
-        documentService.update(document);
-
-        return "redirect:/doc?type=" + document.getDocumentType().getInternalName();
-    }
-
-    // Delete Document
-    @RequestMapping(value = "/admin/delete/{id}", method = RequestMethod.GET)
-    public String adminDelete(@PathVariable("id") Long id) {
-
-        if(getUser() == null) return "/login/login";
-
-        Document document = documentService.getById(id);
-        documentService.remove(document);
-
-        for(Task task : taskService.getTasksByObjectId(id))
-        {
-            taskService.remove(task);
-        }
-
-        return "redirect:/doc?type=" + document.getDocumentType().getInternalName();
-    }
-
-    // Update Document without changing State
-    public void update(Document document) {
-
-        Document doc = documentService.getById(document.getId());
-
-        document.setUsers(doc.getUsers());
-        document.setDispatchData(doc.getDispatchData());
-        documentService.update(document);
-    }
-    private List<Transition> getActions(Document document) {
+    List<Transition> getActions(Document document) {
         int row = document.getDocumentType().getId() < 4 ? (int)document.getDocumentType().getId()-1 : 3;
         int col = document.getDocumentState().ordinal();
 
@@ -403,7 +333,7 @@ public class DocumentFlowController extends BaseController {
         }
         return actions;
     }
-    private boolean hasComment(Document document) {
+    boolean hasComment(Document document) {
 
         boolean hasComment = false;
 
@@ -415,7 +345,7 @@ public class DocumentFlowController extends BaseController {
         }
         return hasComment;
     }
-    private DispatchData setDispatchData(State state, String description) {
+    DispatchData setDispatchData(State state, String description) {
 
         DispatchData dispatchData = new DispatchData();
 
@@ -426,7 +356,7 @@ public class DocumentFlowController extends BaseController {
 
         return dispatchData;
     }
-    private void addTask(String description, Long id, User user, Date dueDate, User toUser, State stateToBeginWith, String tmp) {
+    void addTask(String description, Long id, User user, Date dueDate, User toUser, State stateToBeginWith, String tmp) {
 
         Task task = new Task();
         task.setDescription(description);
@@ -445,7 +375,8 @@ public class DocumentFlowController extends BaseController {
 
         taskService.add(task);
     }
-    private void runTask(Long objectId, User user, String result) {
+
+    void runTask(Long objectId, User user, String result) {
 
         Map<String, String> vars = new HashMap<>();
         vars.put("status", "OPEN");
@@ -462,7 +393,7 @@ public class DocumentFlowController extends BaseController {
             taskService.update(task);
         }
     }
-    private void closeTask(Long objectId, User user, String result) {
+    void closeTask(Long objectId, User user, String result) {
 
         Map<String, String> vars = new HashMap<>();
         vars.put("status", "RUNNING");
@@ -480,8 +411,7 @@ public class DocumentFlowController extends BaseController {
             taskService.update(task);
         }
     }
-
-    private Integer taskCount(long documentId, User createdBy) {
+    Integer taskCount(long documentId, User createdBy) {
 
         Map<String, Object> vars = new HashMap<>();
         vars.put("objectType", "Document");
@@ -492,7 +422,7 @@ public class DocumentFlowController extends BaseController {
         return taskService.getTasks(vars).size();
     }
 
-    private void hqlTester() {
+    void hqlTester() {
 
         String department = "19-02-02";
         String q = "select t from Task t where t.assignedTo.staff.department.description = :department and t.status = 'OPEN'";
@@ -502,7 +432,7 @@ public class DocumentFlowController extends BaseController {
         Integer size = list.size();
     }
 
-    private Document saveInternalDocument(Document document, String action) {
+    Document saveInternalDocument(Document document, String action) {
 
         String description = document.getComment();
 
@@ -731,7 +661,7 @@ public class DocumentFlowController extends BaseController {
 
         return document;
     }
-    private Document saveIncomingDocument(Document document, String action) {
+    Document saveIncomingDocument(Document document, String action) {
 
         String description = document.getComment() != null /*|| !document.getComment().isEmpty()*/ ? document.getComment() : "Выполнен";
 
@@ -850,7 +780,7 @@ public class DocumentFlowController extends BaseController {
 
         return document;
     }
-    private Document saveOutgoingDocument(Document document, String action) {
+    Document saveOutgoingDocument(Document document, String action) {
 
         String description;
 
@@ -936,41 +866,14 @@ public class DocumentFlowController extends BaseController {
 
         return document;
     }
+    // Update Document without changing State
+    public void update(Document document) {
 
-    // *****************************************************************************************************************
-    @RequestMapping(value = "/constants", method = RequestMethod.GET)
-    public String constants(Model model) {
+        Document doc = documentService.getById(document.getId());
 
-        if(getUser() == null)
-            return "/login/login";
-
-        SystemConstant systemConstant = systemConstantService.list().isEmpty()
-                ? new SystemConstant()
-                : systemConstantService.list().get(0);
-
-        model.addAttribute("systemConstant", systemConstant);
-
-        return "/doc/document/constants";
-    }
-
-    @RequestMapping(value = "/constants/save", method = RequestMethod.POST)
-    public String saveConstants(@ModelAttribute("systemConstant") SystemConstant systemConstant, Model model) {
-
-        if(getUser() == null)
-            return "/login/login";
-
-        if(systemConstant.getId() == 0)
-        {
-            systemConstantService.add(systemConstant);
-        }
-        else
-        {
-            systemConstantService.update(systemConstant);
-        }
-
-        model.addAttribute("systemConstant", systemConstant);
-
-        return "/doc/document/constants";
+        document.setUsers(doc.getUsers());
+        document.setDispatchData(doc.getDispatchData());
+        documentService.update(document);
     }
 
     // *****************************************************************************************************************
@@ -994,18 +897,6 @@ public class DocumentFlowController extends BaseController {
             saveOutgoingDocument(document, "DONE");
             return "OK";
         }
-    }
-
-    // Save DispatchData
-    @RequestMapping("/dispatchData/save")
-    @ResponseBody
-    public String dispatchDataSave(@Valid DispatchData dispatchData) {
-
-        if(getUser() == null) return "/login/login";
-
-        dispatchDataService.update(dispatchData);
-
-        return "OK";
     }
 
     // Get Accounts by Type
@@ -1110,21 +1001,22 @@ public class DocumentFlowController extends BaseController {
 
         String query =
                 "select \n" +
-                "DATE_FORMAT(t.createdOn, '%d.%m.%Y') as createdOn, \n" +
-                "COALESCE(s1.name, 'Система') as createdBy, \n" +
-                "t.description as description, \n" +
-                "DATE_FORMAT(t.targetResolutionDate, '%d.%m.%Y') as targetResolutionDate, \n" +
-                "s2.name as assignedTo, \n" +
-                "t.resolutionSummary as resolutionSummary, \n" +
-                "DATE_FORMAT(t.actualResolutionDate, '%d.%m.%Y') as actualResolutionDate \n" +
-                "from task t \n" +
-                "LEFT JOIN users ucb ON t.createdByUserId = ucb.id \n" +
-                "LEFT JOIN staff s1 ON ucb.staff_id = s1.id \n" +
-                "LEFT JOIN users uat ON t.assignedTo = uat.id \n" +
-                "LEFT JOIN staff s2 ON uat.staff_id = s2.id \n" +
-                "where t.objectType = 'Document' and t.objectId = " + id;
+                        "DATE_FORMAT(t.createdOn, '%d.%m.%Y') as createdOn, \n" +
+                        "COALESCE(s1.name, 'Система') as createdBy, \n" +
+                        "t.description as description, \n" +
+                        "DATE_FORMAT(t.targetResolutionDate, '%d.%m.%Y') as targetResolutionDate, \n" +
+                        "s2.name as assignedTo, \n" +
+                        "t.resolutionSummary as resolutionSummary, \n" +
+                        "DATE_FORMAT(t.actualResolutionDate, '%d.%m.%Y') as actualResolutionDate \n" +
+                        "from task t \n" +
+                        "LEFT JOIN users ucb ON t.createdByUserId = ucb.id \n" +
+                        "LEFT JOIN staff s1 ON ucb.staff_id = s1.id \n" +
+                        "LEFT JOIN users uat ON t.assignedTo = uat.id \n" +
+                        "LEFT JOIN staff s2 ON uat.staff_id = s2.id \n" +
+                        "where t.objectType = 'Document' and t.objectId = :objectId";
 
         List<Map<String,Object>> result = entityManager.createNativeQuery(query)
+                .setParameter("objectId", id)
                 .unwrap(Query.class)
                 .setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE)
                 .list();
@@ -1132,15 +1024,46 @@ public class DocumentFlowController extends BaseController {
         return result;
     }
 
-    // Get Tasks for Current User
+    // Get Tasks assigned to Current User
     @RequestMapping("/tasks/all")
     @ResponseBody
     public List getDocumentTasks() {
 
-        String query = "select t.objectId as id, t.modifiedByUserId as mod from Task t where (t.assignedToUserId = :userId or t.assignedTo.id = :userId) and t.status = 'OPEN' and t.objectType = 'Document'";
+        String query = "select " +
+                "t.objectId as id, " +
+                "t.modifiedByUserId as mod " +
+                "from Task t " +
+                "where (t.assignedToUserId = :userId or t.assignedTo.id = :userId) and t.status = 'OPEN' and t.objectType = 'Document'";
 
         List<Map<String,Object>> result = entityManager.createQuery(query)
                 .setParameter("userId", getUser().getId())
+                .unwrap(Query.class)
+                .setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE)
+                .list();
+
+        return result;
+    }
+
+    // Get Tasks created by Current User
+    @RequestMapping(value = "/tasks/report/{status}")
+    @ResponseBody
+    public List getTaskReport(@PathVariable("status") String status) {
+
+        //Staff staff = staffService.findById(getUser().getStaff().getId());
+        String query = "select " +
+                "t.objectId as objectId, " +
+                "DATE_FORMAT(t.createdOn, '%d.%m.%Y') as createdOn, " +
+                "t.assignedTo.staff.name as assignedTo, " +
+                "t.description as description, " +
+                "DATE_FORMAT(t.targetResolutionDate, '%d.%m.%Y') as targetResolutionDate, " +
+                "t.resolutionSummary as resolutionSummary, " +
+                "DATE_FORMAT(t.actualResolutionDate, '%d.%m.%Y') as actualResolutionDate " +
+                "from Task t " +
+                "where t.createdBy = :createdBy " +
+                "and t.objectType = 'Document' ";
+
+        List<Map<String,Object>> result = entityManager.createQuery(query)
+                .setParameter("createdBy", getUser())
                 .unwrap(Query.class)
                 .setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE)
                 .list();
@@ -1169,32 +1092,5 @@ public class DocumentFlowController extends BaseController {
         }
 
         return data;
-    }
-
-    // Get Tasks for Current User
-    @RequestMapping(value = "/tasks/report/{status}")
-    @ResponseBody
-    public List getTaskReport(@PathVariable("status") String status) {
-
-        //Staff staff = staffService.findById(getUser().getStaff().getId());
-        String query = "select " +
-                "t.objectId as objectId, " +
-                "DATE_FORMAT(t.createdOn, '%d.%m.%Y') as createdOn, " +
-                "t.assignedTo.staff.name as assignedTo, " +
-                "t.description as description, " +
-                "DATE_FORMAT(t.targetResolutionDate, '%d.%m.%Y') as targetResolutionDate, " +
-                "t.resolutionSummary as resolutionSummary, " +
-                "DATE_FORMAT(t.actualResolutionDate, '%d.%m.%Y') as actualResolutionDate " +
-                "from Task t " +
-                "where t.createdBy = :createdBy " +
-                "and t.objectType = 'Document' ";
-
-        List<Map<String,Object>> result = entityManager.createQuery(query)
-                .setParameter("createdBy", getUser())
-                .unwrap(Query.class)
-                .setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE)
-                .list();
-
-        return result;
     }
 }

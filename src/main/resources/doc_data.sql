@@ -32,9 +32,6 @@ VIEW mfloan.account
 AS
 SELECT
   `data`.`id` AS `id`,
-  1 AS `record_status`,
-  (SELECT UUID()) AS `uuid`,
-  1 AS `version`,
   `data`.`internalName` AS `internalName`,
   `data`.`name` AS `name`
 FROM (SELECT
@@ -55,15 +52,15 @@ FROM (SELECT
     `mfloan`.`staff`.`name` AS `name`,
     'staff' AS `internalName`
   FROM `mfloan`.`staff`
-  WHERE (`mfloan`.`staff`.`organization_id` = 1)
+  WHERE ((`mfloan`.`staff`.`organization_id` = 1)
+  AND (`mfloan`.`staff`.`enabled` = TRUE))
   UNION ALL
   SELECT
     `mfloan`.`person`.`id` AS `id`,
     `mfloan`.`person`.`name` AS `name`,
     'person' AS `internalName`
   FROM `mfloan`.`person`
-  WHERE (`mfloan`.`person`.`name` <> '')) `data`
-ORDER BY `data`.`id`;
+  WHERE (`mfloan`.`person`.`name` <> '')) `data`;
 
 
 DROP TABLE IF EXISTS chat_users;

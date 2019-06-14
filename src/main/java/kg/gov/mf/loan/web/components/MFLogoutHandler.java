@@ -23,13 +23,19 @@ public class MFLogoutHandler extends SimpleUrlLogoutSuccessHandler implements Lo
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
-        MFLog log = new MFLog();
-        log.setCreatedBy(authentication.getName());
-        log.setCreatedDate(new Date());
-        log.setIp(((WebAuthenticationDetails)authentication.getDetails()).getRemoteAddress());
-        log.setAction("Logged Out");
-        log.setUuid(UUID.randomUUID().toString());
-        loggerService.add(log);
+
+        try {
+            MFLog log = new MFLog();
+            log.setCreatedBy(authentication.getName());
+            log.setCreatedDate(new Date());
+            log.setIp(((WebAuthenticationDetails)authentication.getDetails()).getRemoteAddress());
+            log.setAction("Logged Out");
+            log.setUuid(UUID.randomUUID().toString());
+            loggerService.add(log);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         super.onLogoutSuccess(request, response, authentication);
     }
 }
