@@ -138,7 +138,7 @@
                                                 <div class="m-alert__actions" style="width: 200px;">
                                                     <!--<form>-->
                                                         <div class="col">
-                                                            <button id="deleter" onclick="deletePhase()" class="btn btn-brand btn-sm m-btn m-btn--pill m-btn--wide mb-2" data-dismiss="modal" type="submit" th:text="#{label.phase.delete}"></button>
+                                                            <button onclick="deletePhase()" class="btn btn-brand btn-sm m-btn m-btn--pill m-btn--wide mb-2" data-dismiss="modal" type="submit" th:text="#{label.phase.delete}"></button>
                                                             <button class="btn btn-danger btn-sm m-btn m-btn--pill m-btn--wide"  type="button" th:text="#{label.cancel}" data-dismiss="modal"></button>
                                                         </div>
                                                     <!--</form>-->
@@ -147,7 +147,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLECTIONPHASE')" data-remote="false" data-toggle="modal"
+                                <a id="deleter" sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLECTIONPHASE')" data-remote="false" data-toggle="modal"
                                    data-target="#confirmModal" role="button" class="btn btn-outline-danger" th:text="#{label.phase.delete}"></a>
                                 <div id="type_content"></div>
                                 <div id="status_content"></div>
