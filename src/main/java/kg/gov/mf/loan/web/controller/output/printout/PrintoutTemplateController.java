@@ -1184,10 +1184,10 @@ public class PrintoutTemplateController {
 							break;
 						case 13:
 						    if(person.getAddress_line2()!=null&&person.getAddress_line2().length()>3) {
-                                newText =addressText+" "+person.getAddress_line2();
+                                newText ="Адрес проживания: "+addressText+" "+person.getAddress_line2();
                             }
 						    else{
-								newText=addressText+" "+person.getAddress().getLine();
+								newText="";
                             }
 							break;
 						case 14:
