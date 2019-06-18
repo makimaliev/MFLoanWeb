@@ -358,12 +358,19 @@ public class PersonController {
 
 		if (result.hasErrors()) {
 			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
-		} else if (person.getId() == 0) {
+		}
+		else if (person.getId() == 0) {
 			
 //			person.setAddress(this.addressService.findById(person.getAddress().getId()));
 //			person.setIdentityDoc(this.identityDocService.findById(person.getIdentityDoc().getId()));
 			
 			//person.setOrgForm(this.orgFormService.findById(person.getOrgForm().getId()));
+			if(person.getIdentityDoc().getIdentityDocType().getId()==1){
+				person.getIdentityDoc().setIdentityDocGivenBy(identityDocGivenByService.findById(2));
+			}
+			else if(person.getIdentityDoc().getIdentityDocType().getId()==2){
+				person.getIdentityDoc().setIdentityDocGivenBy(identityDocGivenByService.findById(1));
+			}
 
 
 			this.personService.create(person);
@@ -377,9 +384,16 @@ public class PersonController {
 
 			this.ownerService.add(newOwner);
 
-		} else {
+		}
+		else {
+			if(person.getIdentityDoc().getIdentityDocType().getId()==1){
+				person.getIdentityDoc().setIdentityDocGivenBy(identityDocGivenByService.findById(2));
+			}
+			else if(person.getIdentityDoc().getIdentityDocType().getId()==2){
+				person.getIdentityDoc().setIdentityDocGivenBy(identityDocGivenByService.findById(1));
+			}
 			Owner owner;
-			this.personService.edit(person);
+			personService.edit(person);
 			try{
 				owner=this.ownerService.getByEntityId(person.getId(),"PERSON");
 				owner.setName(person.getName());

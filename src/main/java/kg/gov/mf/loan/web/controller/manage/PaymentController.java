@@ -5,9 +5,11 @@ import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.admin.sys.model.Attachment;
 import kg.gov.mf.loan.admin.sys.model.Information;
 import kg.gov.mf.loan.admin.sys.model.SystemFile;
+import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.AttachmentService;
 import kg.gov.mf.loan.admin.sys.service.InformationService;
 import kg.gov.mf.loan.admin.sys.service.SystemFileService;
+import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.loan.Loan;
@@ -32,6 +34,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -95,6 +98,9 @@ public class PaymentController {
     @Autowired
     JobItemService jobItemService;
 
+    @Autowired
+    UserService userService;
+
     public void setSessionFactory(SessionFactory sf) {
         this.sessionFactory = sf;
     }
@@ -118,6 +124,8 @@ public class PaymentController {
                        @PathVariable("loanId") Long loanId,
                        @PathVariable("paymentId") Long paymentId){
 
+        User user=userService.findByUsername(Utils.getPrincipal());
+
         Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
         String jsonSysFiles= gson.toJson(getSystemFilesByPaymentId(paymentId));
         model.addAttribute("files", jsonSysFiles);
@@ -126,6 +134,10 @@ public class PaymentController {
         model.addAttribute("payment",payment);
         model.addAttribute("loanId",loanId);
         model.addAttribute("debtorId",debtorId);
+        model.addAttribute("userId",user.getId());
+
+        Attachment attachment=new Attachment();
+        model.addAttribute("attachment",attachment);
 
         return "/manage/debtor/loan/payment/view";
     }
@@ -341,6 +353,21 @@ public class PaymentController {
         return "redirect:" + "/manage/debtor/loan/payment/type/list";
     }
 
+//    add information form
+    @RequestMapping("/manage/debtor/{debtorId}/loan/{loanId}/payment/{paymentId}/addInformation")
+    public String getAddInformationForm(Model model, @PathVariable("debtorId") Long debtorId, @PathVariable("loanId") Long loanId, @PathVariable("paymentId") Long paymentId){
+
+        model.addAttribute("debtorId",debtorId);
+        model.addAttribute("loanId",loanId);
+
+        Payment payment=paymentService.getById(paymentId);
+        model.addAttribute("payment",payment);
+
+        model.addAttribute("attachment",new Attachment());
+
+        return "/manage/debtor/loan/payment/addInformationForm";
+
+    }
 
     public void phaseAndPhaseDetailsUpdate(Loan loan) {
         Set<Payment> payments = loan.getPayments();

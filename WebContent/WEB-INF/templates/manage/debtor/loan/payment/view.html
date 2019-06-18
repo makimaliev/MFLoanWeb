@@ -159,52 +159,10 @@
 
                                         <div class="col-xl-3 order-3 order-xl-3 m--align-right">
                                             <div class="row">
-                                                <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_INFORMATION_PAYMENT')" data-remote="false" data-toggle="modal"
-                                                   data-target="#paymentAttachment"
-                                                   role="button" class="btn btn-success" th:text="#{label.add.attachment}"> Add
+                                                <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_INFORMATION_PAYMENT')" class="btn btn-success" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/payment/__${payment.id}__/addInformation}" th:text="#{label.add.attachment}"> Add
                                                     Attachment</a>
                                             </div>
                                         </div>
-                                        <!--begin modal add attachment to payment -->
-                                        <div class="modal fade" id="paymentAttachment" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" >Прикрепление</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form method="POST" th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/object/__${payment.id}__/attachment/5/add}" enctype="multipart/form-data" id="dz">
-                                                            <div class="form-group m-form__group row">
-                                                                <label class="col-form-label col-lg-4 col-sm-12">
-                                                                    <span th:text="#{label.file.name}"></span>
-                                                                    <span class="m--font-danger"></span>
-                                                                </label>
-                                                                <div class="col-lg-8 col-md-9 col-sm-12">
-                                                                    <input type="text" class="form-control" name="name" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="input-icon right">
-                                                                <input type="file" class="file"
-                                                                       name="file"/>
-
-                                                            </div>
-                                                            <div>
-                                                                <button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_INFORMATION_PAYMENT','PERM_ADD_ATTACHMENT_PAYMENT')" type="submit" class="btn btn-primary">
-                                                                    <span th:text="#{label.form.save}"></span>
-                                                                </button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="reset" class="btn btn-secondary" form="dz" data-dismiss="modal">Закрыть</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!--end modal add attachment to payment -->
                                     </div>
                                 </div>
                                 <!--end: Search Form -->
@@ -287,6 +245,9 @@
                         result = result + '\
 						<a href="/systemFile/' + row.system_file_id +'/download" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-download"></i>\
+						</a>\
+						<a href="/attachment/' + row.attachment_id +'/details" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Документ">\
+							<i class="fa fa-file-o"></i>\
 						</a>\
 					';
 

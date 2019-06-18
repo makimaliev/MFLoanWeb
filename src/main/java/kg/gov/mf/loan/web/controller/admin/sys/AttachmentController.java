@@ -1,5 +1,8 @@
 package kg.gov.mf.loan.web.controller.admin.sys;
 
+import kg.gov.mf.loan.admin.sys.model.Attachment;
+import kg.gov.mf.loan.admin.sys.service.AttachmentService;
+import kg.gov.mf.loan.admin.sys.service.InformationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,10 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-
-import kg.gov.mf.loan.admin.org.model.District;
-import kg.gov.mf.loan.admin.sys.model.*;
-import kg.gov.mf.loan.admin.sys.service.*;
 
 @Controller
 public class AttachmentController {
@@ -60,7 +59,7 @@ public class AttachmentController {
 	public String viewAttachmentDetailsById(@PathVariable("id") long id, Model model) {
 
 		Attachment attachment = this.attachmentService.findById(id);
-
+		model.addAttribute("documents",attachment.getDocumentIds());
 		model.addAttribute("attachment", attachment);
 
 

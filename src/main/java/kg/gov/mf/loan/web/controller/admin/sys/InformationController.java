@@ -26,9 +26,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class InformationController {
@@ -263,7 +261,7 @@ public class InformationController {
 
 	@RequestMapping("/manage/debtor/{debtorId}/loan/{loanId}/object/{objectId}/attachment/{type}/add")
 	public String addAttachment(MultipartHttpServletRequest request, @PathVariable("debtorId") Long debtorId, @PathVariable("type") int type,
-								@PathVariable("loanId") String loanId,@PathVariable("objectId") Long objectId, String name) {
+								@PathVariable("loanId") String loanId, @PathVariable("objectId") Long objectId, String name, Long[] documentIds) {
 
 		String path =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
 
@@ -296,13 +294,14 @@ public class InformationController {
 		if(!exists){
 			folder.mkdir();
 		}
-		path=path+type+"/";
-		folder=new File(path);
-		exists = folder.exists();
-		if(!exists){
-			folder.mkdir();
+		if(type!=4){
+			path=path+type+"/";
+			folder=new File(path);
+			exists = folder.exists();
+			if(!exists){
+				folder.mkdir();
+			}
 		}
-
 
 		Information information;
 		List<Information> informationList=informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(type,objectId);
@@ -320,6 +319,15 @@ public class InformationController {
 		}
 
 		Attachment attachment = new Attachment();
+		Set<Long> docIdSet=new HashSet<>();
+		for (Long docId:documentIds){
+			docIdSet.add(docId);
+		}
+		attachment.setDocumentIds(docIdSet);
+		attachment.setName(name);
+		attachment.setInformation(information);
+		attachmentService.create(attachment);
+		Set<SystemFile> systemFileSet=new HashSet<>();
 		try {
 			Iterator<String> itr = request.getFileNames();
 
@@ -346,16 +354,15 @@ public class InformationController {
 					systemFile.setName(filename);
 					systemFile.setPath(path + filename);
 
-					attachment.setName(name);
-					attachment.setInformation(information);
 
 
-					systemFileService.create(systemFile);
 					systemFile.setAttachment(attachment);
-					attachmentService.create(attachment);
-					systemFileService.edit(systemFile);
+					systemFileService.create(systemFile);
+					systemFileSet.add(systemFile);
 				}
 			}
+			attachment.setSystemFile(systemFileSet);
+			attachmentService.edit(attachment);
 			informationService.edit(information);
 		}
 		catch (Exception e) {

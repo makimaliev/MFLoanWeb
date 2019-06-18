@@ -233,21 +233,21 @@
 						</div>
 
 
-						<div class="form-group m-form__group row">
-							<label class="col-form-label col-lg-4 col-sm-12">
-								<span th:text="#{label.identityDoc.givenBy}"></span>
-								<span class="m--font-danger">*</span>
-							</label>
-							<div class="col-lg-8 col-md-9 col-sm-12">
-								<select class="form-control m-bootstrap-select m_selectpicker" th:value="${person.identityDoc.identityDocGivenBy}" onchange="updateIdentityDocGivenById(this);" th:title="#{label.select}">
-									<option
-											th:each="identityDocGivenByInList : ${identityDocGivenByList}"
-											th:value="${identityDocGivenByInList.id}"
-											th:selected="(${identityDocGivenByInList.id} == *{identityDoc.identityDocGivenBy.id})"
-											th:text="${identityDocGivenByInList.name}"></option>
-								</select>
-							</div>
-						</div>
+						<!--<div class="form-group m-form__group row">-->
+							<!--<label class="col-form-label col-lg-4 col-sm-12">-->
+								<!--<span th:text="#{label.identityDoc.givenBy}"></span>-->
+								<!--<span class="m&#45;&#45;font-danger">*</span>-->
+							<!--</label>-->
+							<!--<div class="col-lg-8 col-md-9 col-sm-12">-->
+								<!--<select class="form-control m-bootstrap-select m_selectpicker" th:value="${person.identityDoc.identityDocGivenBy}" onchange="updateIdentityDocGivenById(this);" th:title="#{label.select}">-->
+									<!--<option-->
+											<!--th:each="identityDocGivenByInList : ${identityDocGivenByList}"-->
+											<!--th:value="${identityDocGivenByInList.id}"-->
+											<!--th:selected="(${identityDocGivenByInList.id} == *{identityDoc.identityDocGivenBy.id})"-->
+											<!--th:text="${identityDocGivenByInList.name}"></option>-->
+								<!--</select>-->
+							<!--</div>-->
+						<!--</div>-->
 
 
 						<div class="form-group m-form__group row">
