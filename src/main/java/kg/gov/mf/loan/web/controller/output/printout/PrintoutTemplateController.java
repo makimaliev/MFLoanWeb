@@ -1128,7 +1128,15 @@ public class PrintoutTemplateController {
 						case 3:
 						    String[] splitted=staff.getName().split(" ");
 						    String words="";
-						    words=splitted[0]+"a "+splitted[1]+" "+splitted[2]+"a";
+						    if(splitted.length==3){
+								words=splitted[0]+"a "+splitted[1]+" "+splitted[2]+"a";
+							}
+							else if (splitted.length==2){
+								words=splitted[0]+"a "+splitted[1];
+							}
+							else{
+								words=staff.getName();
+							}
 							newText=words;
 							break;
 						case 4:
