@@ -1,0 +1,56 @@
+<div xmlns:th="http://www.w3.org/1999/xhtml">
+    <form th:action="@{/loanParent/__${loanId}__/save}" class="form-horizontal" method="POST">
+        <div class="modal-header">
+            <h5 class="modal-title" th:text="#{label.change.loanParent}"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+
+            <div class="alert alert-danger alert-dismissible alert-hidden" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+                <span th:text="#{label.modal.error.name}"></span>
+            </div>
+            <div class="form-group m-form__group row">
+                <label class="col-form-label col-lg-4 col-sm-12">
+                    <span th:text="#{label.loan.parent}"></span>
+                    <span class="m--font-danger">*</span>
+                </label>
+                <div class="col-lg-4 col-md-9 col-sm-12">
+                    <div class="m-typeahead">
+                        <input hidden="hidden" name="parent" id="parentId">
+                        <input class="form-control m-input" id="loan_typeahead" type="text" th:placeholder="#{label.loan.parent}" th:value="${pLoanText}">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.orgForm.button.cancel}"></button>
+                <button type="submit" class="btn btn-primary" th:text="#{label.button.save}" onclick="updateTLoan()"></button>
+            </div>
+    </form>
+
+
+    <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/typeahead.js}" type="text/javascript"></script>
+    <script type="text/javascript" th:inline="javascript">
+        $('.m_selectpicker').selectpicker('refresh');
+
+        var d=[[${debtorId}]];
+
+        $.ajax({
+            type:'post',
+            data:{'q':d},
+            url:"/api/getDebtorId"
+        });
+
+        function updateTLoan(sel)
+        {
+            var loan_text = document.getElementById("loan_typeahead").value;
+            var loan_id = loan_text.match(/[^[\]]+(?=])/g);
+            if(loan_id == null){
+                loan_id = 0;
+            }
+            $("#parentId").val(loan_id);
+        }
+    </script>
+</div>

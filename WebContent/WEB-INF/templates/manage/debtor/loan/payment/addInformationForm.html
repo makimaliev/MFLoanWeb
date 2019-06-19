@@ -25,33 +25,13 @@
             <div class="m-subheader ">
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
-                        <h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.loan.payment}">
+                        <h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.information}">
                             Погашение
                         </h3>
                         <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
                             <li class="m-nav__item m-nav__item--home">
                                 <a th:href="@{/}" class="m-nav__link m-nav__link--icon">
                                     <i class="m-nav__link-icon la la-home"></i>
-                                </a>
-                            </li>
-                            <li class="m-nav__separator">
-                                -
-                            </li>
-                            <li class="m-nav__item">
-                                <a th:href="@{/manage/debtor/list}" class="m-nav__link">
-											<span class="m-nav__link-text" th:text="#{label.debtors}">
-												Список заемщиков
-											</span>
-                                </a>
-                            </li>
-                            <li class="m-nav__separator">
-                                -
-                            </li>
-                            <li class="m-nav__item">
-                                <a th:href="@{/manage/debtor/__${debtorId}__/view}" class="m-nav__link">
-											<span class="m-nav__link-text">
-												Заемщик
-											</span>
                                 </a>
                             </li>
                             <li class="m-nav__separator">
@@ -74,10 +54,14 @@
                         </div>
                     </div>
                     <!--begin::Form-->
-                    <form method="POST" th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/object/__${payment.id}__/attachment/5/add}"
+                    <form method="POST" th:action="@{/object/__${object.id}__/attachment/__${systemObjectTypeId}__/add}"
                           class="m-form m-form--fit m-form--label-align-right" th:object="${attachment}" enctype="multipart/form-data">
 
                         <input hidden="true" type="text" id="id" name="id" th:field="*{id}"/>
+                        <input hidden="true" type="text" id="debtorId" name="debtorId" th:value="${debtorId}"/>
+                        <input hidden="true" type="text" id="loanId" name="loanId" th:value="${loanId}"/>
+                        <input hidden="true" type="text" id="documentIds" name="documentIds" th:value="${documentIds}"/>
+                        <input hidden="true" type="text" id="information" name="information" th:field="*{information.id}"/>
                         <div class="m-portlet__body">
                             <div class="m-form__section">
 
@@ -87,7 +71,7 @@
                                             <span class="m--font-danger"></span>
                                         </label>
                                         <div class="col-lg-8 col-md-9 col-sm-12">
-                                            <input type="text" class="form-control" name="name" />
+                                            <input type="text" class="form-control" name="name"  th:value="*{name}"/>
                                         </div>
                                     </div>
                                     <div class="form-group m-form__group row" >
@@ -106,7 +90,7 @@
                                     <div class="form-group m-form__group row">
                                         <label class="col-3 col-form-label"> Приложения : </label>
                                         <div class="col-9" id="attachmentList">
-                                            <input multiple type="file" class="file"
+                                            <input multiple="multiple" type="file" class="file"
                                                    name="files"/>
                                         </div>
                                     </div>

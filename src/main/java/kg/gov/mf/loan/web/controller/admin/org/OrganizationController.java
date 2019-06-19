@@ -5,7 +5,12 @@ import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.admin.org.model.*;
 import kg.gov.mf.loan.admin.org.repository.OrganizationRepository;
 import kg.gov.mf.loan.admin.org.service.*;
+import kg.gov.mf.loan.admin.sys.model.Attachment;
+import kg.gov.mf.loan.admin.sys.model.Information;
+import kg.gov.mf.loan.admin.sys.model.SystemFile;
+import kg.gov.mf.loan.admin.sys.service.AttachmentService;
 import kg.gov.mf.loan.admin.sys.service.InformationService;
+import kg.gov.mf.loan.admin.sys.service.SystemFileService;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.model.debtor.OwnerType;
@@ -13,6 +18,7 @@ import kg.gov.mf.loan.manage.repository.org.StaffRepository;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.web.fetchModels.PersonOrganizationDocModel;
+import kg.gov.mf.loan.web.fetchModels.SystemFileModel;
 import kg.gov.mf.loan.web.util.Pager;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +59,12 @@ public class OrganizationController {
 
 	@Autowired
 	StaffRepository staffRepository;
+
+	@Autowired
+	AttachmentService attachmentService;
+
+	@Autowired
+	SystemFileService systemFileService;
 	
     public void setOrganizationService(OrganizationService rs)
     {
@@ -267,16 +279,20 @@ public class OrganizationController {
 			organizationPositionList.addAll(this.positionService.findByDepartment(department));
 		}
 
+		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+		String jsonSysFiles= gson.toJson(getSystemFilesByOrganizationId(id));
+		model.addAttribute("files", jsonSysFiles);
+
 		model.addAttribute("docs",getDocs(id));
 		model.addAttribute("organization", organization);
 		model.addAttribute("positionList", organizationPositionList);
-		model.addAttribute("informationList", this.informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2, organization.getId()));		
-		
+		model.addAttribute("informationList", this.informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2, organization.getId()));
+
 
 		return "admin/org/organizationDetails";
 	}
-    
-	
+
+
 	@RequestMapping(value = "/organization/add", method = RequestMethod.GET)
 	public String getOrganizationAddForm(Model model) {
 
@@ -310,27 +326,27 @@ public class OrganizationController {
 
 		IdentityDoc modelIdentityDoc = new IdentityDoc();
 		modelIdentityDoc.setId(0);
-		
+
 		IdentityDocType modelIdentityDocType = new IdentityDocType();
 		modelIdentityDocType.setId(1);
 		modelIdentityDoc.setIdentityDocType(modelIdentityDocType);
-		
+
 		IdentityDocGivenBy modelIdentityDocGivenBy = new IdentityDocGivenBy();
 		modelIdentityDocGivenBy.setId(1);
 		modelIdentityDoc.setIdentityDocGivenBy(modelIdentityDocGivenBy);
 
 		modelOrganization.setIdentityDoc(modelIdentityDoc);
-		
 
-		
+
+
 		model.addAttribute("organization", modelOrganization);
-		
+
 		model.addAttribute("regionList", this.regionService.findAll());
 		model.addAttribute("districtList", this.districtService.findByRegion(modelRegion));
 		model.addAttribute("aokmotuList", this.aokmotuService.findByDistrict(modelDistrict));
 		model.addAttribute("villageList", this.villageService.findByAokmotu(modelAokmotu));
 		model.addAttribute("identityDocTypeList", this.identityDocTypeService.findAll());
-		model.addAttribute("identityDocGivenByList", this.identityDocGivenByService.findAll());		
+		model.addAttribute("identityDocGivenByList", this.identityDocGivenByService.findAll());
 		model.addAttribute("orgFormList", this.orgFormService.findAll());
 
 		String person1Name=" ";
@@ -351,8 +367,8 @@ public class OrganizationController {
 
 		return "admin/org/organizationForm";
 	}
-	
-	
+
+
 
 	@RequestMapping("/organization/{id}/edit")
 	public String getOrganizationEditForm(@PathVariable("id") long id, Model model) {
@@ -381,7 +397,7 @@ public class OrganizationController {
 		}
 
 		model.addAttribute("identityDocTypeList", this.identityDocTypeService.findAll());
-		model.addAttribute("identityDocGivenByList", this.identityDocGivenByService.findAll());		
+		model.addAttribute("identityDocGivenByList", this.identityDocGivenByService.findAll());
 		model.addAttribute("orgFormList", this.orgFormService.findAll());
 
 		Person person1=null;
@@ -498,7 +514,7 @@ public class OrganizationController {
 		model.addAttribute("person2Surname",person2Surname);
 		model.addAttribute("person2Name",person2Name);
 		model.addAttribute("person2Lastname",person2Lastname);
-		
+
 		return "admin/org/organizationForm";
 
 	}
@@ -513,10 +529,10 @@ public class OrganizationController {
 			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
 		}
 		else if (organization.getId() == 0) {
-			
+
 //			organization.setAddress(this.addressService.findById(organization.getAddress().getId()));
 //			organization.setIdentityDoc(this.identityDocService.findById(organization.getIdentityDoc().getId()));
-			
+
 			//organization.setOrgForm(this.orgFormService.findById(organization.getOrgForm().getId()));
 
 			organization.setName(organization.getIdentityDoc().getIdentityDocDetails().getFullname());
@@ -674,6 +690,20 @@ public class OrganizationController {
 		return "redirect:/organization/list";
 	}
 
+//    add information form
+	@RequestMapping("/organization/{id}/addInformation")
+	public String getAddInformationForm(Model model, @PathVariable("id") Long id){
+
+
+		Organization organization=organizationService.findById(id);
+		model.addAttribute("object",organization);
+		model.addAttribute("systemObjectTypeId",2);
+
+		model.addAttribute("attachment",new Attachment());
+
+		return "/manage/debtor/loan/payment/addInformationForm";
+
+	}
 
 	/*
 	@RequestMapping(method = RequestMethod.GET, value = "/organization/search")
@@ -727,4 +757,28 @@ public class OrganizationController {
 		return result;
 	}
 
+	private List<SystemFileModel> getSystemFilesByOrganizationId(Long organizationId){
+
+		List<SystemFileModel> list=new ArrayList<>();
+		List<Information> informations=informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2,organizationId);
+		for (Information information1:informations){
+			Information information=informationService.findById(information1.getId());
+			Set<Attachment> attachments= information.getAttachment();
+			for (Attachment attachment1:attachments){
+				Attachment attachment=attachmentService.findById(attachment1.getId());
+				for (SystemFile systemFile1:attachment.getSystemFile()){
+					SystemFile systemFile=systemFileService.findById(systemFile1.getId());
+					SystemFileModel systemFileModel=new SystemFileModel();
+					systemFileModel.setAttachment_id(attachment.getId());
+					systemFileModel.setSys_name(systemFile.getName());
+					systemFileModel.setSystem_file_id(systemFile.getId());
+					systemFileModel.setAttachment_name(attachment.getName());
+					systemFileModel.setPath(systemFile.getPath());
+					list.add(systemFileModel);
+				}
+			}
+		}
+
+		return list;
+	}
 }

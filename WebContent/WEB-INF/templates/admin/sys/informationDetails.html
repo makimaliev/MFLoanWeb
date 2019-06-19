@@ -57,19 +57,22 @@
 							</ul>
 						</div>
 					</div>
+					<div class="row" >
+						<div class="col-md-12">
+							<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_INFORMATION')" class="btn btn-large btn-primary" th:href="@{/information/__${information.id}__/addAttachment}" th:text="#{label.add.attachment}"> Add
+								Attachment</a>
+						</div>
+					</div>
 					<div class="m-portlet__body">
+
 						<div class="row">
 							<div class="col-md-12">
 								<div class="tabbable-custom ">
-
-
 									<ul class="nav nav-tabs " role="tablist" id="organization_tabs">
 										<li class="nav-item" ><a class="nav-link m--font-primary active" href="#tab_15_1" data-toggle="tab">
 											Приложение </a></li>
 										<li class="nav-item" ><a class="nav-link m--font-primary" href="#tab_15_2" data-toggle="tab">
 											Основная информация</a></li>
-
-
 									</ul>
 									<div class="tab-content">
 

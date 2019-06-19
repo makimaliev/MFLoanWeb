@@ -203,11 +203,13 @@ public class DebtorController {
 			Organization organization = this.organizationService.findById(debtor.getOwner().getEntityId());
 //            String staff="";
 			List<String> staffWithPositions = new ArrayList<>();
+			List<Staff> staffList=new ArrayList<>();
 			for (Department department1 : organization.getDepartment()) {
 				Department department = departmentService.findById(department1.getId());
 				int counter = 0;
 				for (Staff staff1 : staffService.findAllByDepartment(department)) {
 					Staff staff = staffService.findById(staff1.getId());
+					staffList.add(staff);
 					String positionName = staff.getPosition().getName();
 					String staffName = staff.getName();
 					if (staffName.length() > 3) {
@@ -223,7 +225,7 @@ public class DebtorController {
 			}
 
 			model.addAttribute("organization", organization);
-			model.addAttribute("staffs", staffWithPositions);
+			model.addAttribute("staffs", staffList);
 //			model.addAttribute("informationList", this.informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2, organization.getId()));
 		} else {
 			Person person = this.personService.findById(debtor.getOwner().getEntityId());
@@ -252,6 +254,8 @@ public class DebtorController {
 
 		SimpleDateFormat sd=new SimpleDateFormat("dd.MM.yyyy");
 		model.addAttribute("today",sd.format(new Date()));
+		model.addAttribute("type",debtorTypeService.getById(debtor.getDebtorType().getId()));
+		model.addAttribute("types",debtorTypeService.list());
 
 		return "/manage/debtor/view";
 	}
@@ -301,6 +305,7 @@ public class DebtorController {
 			debtor.setOwner(owner);
 			debtor.setAddress_id(owner.getAddress().getId());
 			debtor.setName(owner.getName());
+			debtor.setDebtorType(debtorTypeService.getById(1L));
 			if (owner.getOwnerType().equals(OwnerType.ORGANIZATION))
 				debtor.setOrgForm(formService.getById(1L));
 			else
@@ -1163,6 +1168,19 @@ public class DebtorController {
 		return "redirect: /manage/debtor/{debtorId}/view";
 	}
 
+//	delete summary act of debtor
+	@PostMapping("/manage/debtor/{id}/loanSummaryAct/{actId}/delete")
+	public String delete(@PathVariable("id") Long id,@PathVariable("actId") Long actId){
+
+		LoanSummaryAct loanSummaryAct=loanSummaryActService.getById(actId);
+		loanSummaryActService.remove(loanSummaryAct);
+		for (LoanSummary l:loanSummaryAct.getLoanSummaries()){
+			LoanSummary loanSummary=loanSummaryService.getById(l.getId());
+			loanSummaryService.remove(loanSummary);
+		}
+		return "redirect:/manage/debtor/{id}/view";
+}
+
 	public void runUpdateOfPhases(Loan loan){
 
 
@@ -1244,6 +1262,15 @@ public class DebtorController {
         String result = gson.toJson(getProcsByDebtorId(debtorId));
         return result;
     }
+
+    @PostMapping("/debtor/type/instantUpdate")
+	@ResponseBody
+	public String updateDebtorType(@RequestParam("id") Long id,@RequestParam("data") Long data){
+		Debtor debtor=debtorService.getById(id);
+		debtor.setDebtorType(debtorTypeService.getById(data));
+		debtorService.update(debtor);
+		return "OK";
+	}
 
 	private List<LoanModel> getLoansByDebtorId(long debtorId)
 	{

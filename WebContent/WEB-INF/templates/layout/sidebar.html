@@ -1,5 +1,5 @@
 <div id="m_aside_left" class="m-grid__item	m-aside-left  m-aside-left--skin-dark "
-     xmlns:th="http://www.w3.org/1999/xhtml">
+     xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
     <!-- BEGIN: Aside Menu -->
     <div
             id="m_ver_menu"
@@ -22,7 +22,18 @@
                     </span>
                 </a>
             </li>
-
+            <li  class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
+                <a th:href="@{/organization/1/information/view}" class="m-menu__link" >
+                    <i class="m-menu__link-icon flaticon-tabs"></i>
+                    <span class="m-menu__link-title">
+                        <span class="m-menu__link-wrap">
+                            <span class="m-menu__link-text">
+                                НПА
+                            </span>
+                        </span>
+                    </span>
+                </a>
+            </li>
             <li  class="m-menu__item  m-menu__item--submenu" aria-haspopup="true"  data-menu-submenu-toggle="hover">
                 <a  href="#" class="m-menu__link m-menu__toggle">
                     <i class="m-menu__link-icon la la-wrench"></i>
