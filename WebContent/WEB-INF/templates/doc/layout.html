@@ -147,6 +147,12 @@
             if(docid !== 0)
                 window.onload = drawAttachments(docid);
 
+            function handleTab() {
+
+                window.history.back();
+                window.close();
+            }
+
         </script>
     </th:block>
     <th:block th:fragment="history">

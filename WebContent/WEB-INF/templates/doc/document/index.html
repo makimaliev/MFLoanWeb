@@ -353,7 +353,7 @@
                 var result = '';
                 if (data.owner !== null) {
                     r = data.owner.split(' ');
-                    result = r[0] + ' ' + r[1].charAt(0).toUpperCase() + '.';
+                    result = r.length > 1 ? r[0] + ' ' + r[1].charAt(0).toUpperCase() + '.' : r[0];
                 }
                 return result;
             }

@@ -8,12 +8,28 @@
     <div th:replace="fragments/header :: header-css"/>
     <style>
         .atta td {
-            border-bottom: 1px dashed #ccc;
+            border-bottom: 1px dashed #fff;
         }
 
         .table thead th {
             vertical-align: middle !important;
             text-align: center;
+        }
+
+        .dtp {
+            background: #fff;
+        }
+
+        fieldset {
+            background: #c4c9d0;
+            border: thin solid white;
+            margin: 0 auto;
+            padding: 2em;
+        }
+        legend {
+            font-weight: bold;
+            float: left;
+            margin-bottom: .5em;
         }
 
     </style>
@@ -63,7 +79,7 @@
                                         <div class="tab-content" id="nav-tabContent">
                                             <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="nav-main-tab">
                                                 <div class="col-10 justify-content-center">
-                                                    <fieldset>
+                                                    <fieldset >
                                                         <legend>Main</legend>
                                                         <!-- DOCUMENT -->
                                                         <!-- Owner -->
