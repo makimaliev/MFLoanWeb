@@ -361,7 +361,8 @@ public class PaymentController {
         model.addAttribute("loanId",loanId);
 
         Payment payment=paymentService.getById(paymentId);
-        model.addAttribute("payment",payment);
+        model.addAttribute("object",payment);
+        model.addAttribute("systemObjectTypeId",5);
 
         model.addAttribute("attachment",new Attachment());
 

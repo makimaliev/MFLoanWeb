@@ -2,7 +2,9 @@ package kg.gov.mf.loan.web.controller.admin.sys;
 
 import com.lowagie.text.DocumentException;
 import kg.gov.mf.loan.admin.org.model.Address;
+import kg.gov.mf.loan.admin.org.model.Organization;
 import kg.gov.mf.loan.admin.org.service.AddressService;
+import kg.gov.mf.loan.admin.org.service.OrganizationService;
 import kg.gov.mf.loan.admin.sys.model.Attachment;
 import kg.gov.mf.loan.admin.sys.model.Information;
 import kg.gov.mf.loan.admin.sys.model.SystemFile;
@@ -45,6 +47,9 @@ public class InformationController {
 
 	@Autowired
 	AddressService addressService;
+
+	@Autowired
+    OrganizationService organizationService;
 	
     public void setInformationService(InformationService rs)
     {
@@ -101,7 +106,14 @@ public class InformationController {
 		return "admin/sys/informationDetails";
 	}
 	
-	
+	@GetMapping("/organization/{oId}/information/view")
+	public String viewOrganizationInformations(Model model,@PathVariable("oId") Long oId){
+
+    	List<Information> informations=informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2L,oId);
+    	model.addAttribute("informationList",informations);
+
+		return "admin/sys/informationList";
+	}
 	
 	@RequestMapping(value = "/information/add", method = RequestMethod.GET)
 	public String getInformationAddForm(Model model) {
@@ -156,9 +168,6 @@ public class InformationController {
 
 	@RequestMapping(value = "/information/{informationId}/information/save", method = RequestMethod.POST)
 	public String saveInformationAndRedirectToInformationList(@Validated @ModelAttribute("information") Information information, @PathVariable("informationId") long informationId, BindingResult result) {
-
-		
-		
 		try {
 			System.out.println(information.getClass().getDeclaredField("name"));
 		} catch (NoSuchFieldException e) {
@@ -236,7 +245,10 @@ public class InformationController {
 		} 
 		else 
 		{
-			this.informationService.edit(information);
+			Information information1=informationService.findById(information.getId());
+			information1.setName(information.getName());
+			information1.setDescription(information.getDescription());
+			this.informationService.edit(information1);
 		}
 
 //		switch(String.valueOf(information.getSystemObjectTypeId()))
@@ -258,50 +270,98 @@ public class InformationController {
 		return "redirect:/information/list";
 	}
 
+	@GetMapping("/information/{id}/addAttachment")
+    public String addAttachment(Model model,@PathVariable("id") Long id){
 
-	@RequestMapping("/manage/debtor/{debtorId}/loan/{loanId}/object/{objectId}/attachment/{type}/add")
-	public String addAttachment(MultipartHttpServletRequest request, @PathVariable("debtorId") Long debtorId, @PathVariable("type") int type,
-								@PathVariable("loanId") String loanId, @PathVariable("objectId") Long objectId, String name, Long[] documentIds) {
+        Information information=informationService.findById(id);
+
+        model.addAttribute("object",information);
+        model.addAttribute("systemObjectTypeId",2);
+
+        Attachment attachment=new Attachment();
+        attachment.setInformation(information);
+        model.addAttribute("attachment",attachment);
+
+        return "/manage/debtor/loan/payment/addInformationForm";
+
+    }
+
+
+	@PostMapping("/object/{objectId}/attachment/{type}/add")
+	public String addAttachment(MultipartHttpServletRequest request,@RequestParam(value = "debtorId",required = false) Long debtorId ,@RequestParam(value = "loanId",required = false) Long loanId, @PathVariable("objectId") Long objectId, @PathVariable("type") int type, Attachment attachment,@RequestParam(value = "documentIds",required = false) Long[] documentIds) {
 
 		String path =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
-
-		Debtor debtor=debtorService.getById(debtorId);
-		Address address =addressService.findById(debtor.getAddress_id());
-		Long regionId=address.getRegion().getId();
-		Long districtId=address.getDistrict().getId();
-		File folder = new File(path);
-		path=path+regionId+"/";
-		folder=new File(path);
-		boolean exists = folder.exists();
-		if(!exists){
-			folder.mkdir();
-		}
-		path=path+districtId+"/";
-		folder=new File(path);
-		exists = folder.exists();
-		if(!exists){
-			folder.mkdir();
-		}
-		path=path+debtorId+"/";
-		folder=new File(path);
-		exists = folder.exists();
-		if(!exists){
-			folder.mkdir();
-		}
-		path=path+loanId+"/";
-		folder=new File(path);
-		exists = folder.exists();
-		if(!exists){
-			folder.mkdir();
-		}
-		if(type!=4){
-			path=path+type+"/";
-			folder=new File(path);
-			exists = folder.exists();
-			if(!exists){
-				folder.mkdir();
-			}
-		}
+		String name=attachment.getName();
+        File folder = new File(path);
+        boolean exists=false;
+        if(type!=2) {
+            Debtor debtor = debtorService.getById(Long.valueOf(String.valueOf(debtorId)));
+            Address address = addressService.findById(debtor.getAddress_id());
+            Long regionId = address.getRegion().getId();
+            Long districtId = address.getDistrict().getId();
+            path = path + regionId + "/";
+            folder = new File(path);
+            exists = folder.exists();
+            if (!exists) {
+                folder.mkdir();
+            }
+            path = path + districtId + "/";
+            folder = new File(path);
+            exists = folder.exists();
+            if (!exists) {
+                folder.mkdir();
+            }
+            path = path + debtorId + "/";
+            folder = new File(path);
+            exists = folder.exists();
+            if (!exists) {
+                folder.mkdir();
+            }
+            path = path + loanId + "/";
+            folder = new File(path);
+            exists = folder.exists();
+            if (!exists) {
+                folder.mkdir();
+            }
+            if (type != 4) {
+                path = path + type + "/";
+                folder = new File(path);
+                exists = folder.exists();
+                if (!exists) {
+                    folder.mkdir();
+                }
+            }
+        }
+        else if(type==2){
+            path = path + "organization/";
+            folder = new File(path);
+            exists = folder.exists();
+            if (!exists) {
+                folder.mkdir();
+            }
+            Organization organization=organizationService.findById(objectId);
+            Address address = addressService.findById(organization.getAddress().getId());
+            Long regionId = address.getRegion().getId();
+            Long districtId = address.getDistrict().getId();
+            path = path + regionId + "/";
+            folder = new File(path);
+            exists = folder.exists();
+            if (!exists) {
+                folder.mkdir();
+            }
+            path = path + districtId + "/";
+            folder = new File(path);
+            exists = folder.exists();
+            if (!exists) {
+                folder.mkdir();
+            }
+            path = path + objectId+ "/";
+            folder = new File(path);
+            exists = folder.exists();
+            if (!exists) {
+                folder.mkdir();
+            }
+        }
 
 		Information information;
 		List<Information> informationList=informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(type,objectId);
@@ -318,14 +378,15 @@ public class InformationController {
 			informationService.create(information);
 		}
 
-		Attachment attachment = new Attachment();
+//		Attachment attachment = new Attachment();
 		Set<Long> docIdSet=new HashSet<>();
 		for (Long docId:documentIds){
 			docIdSet.add(docId);
 		}
 		attachment.setDocumentIds(docIdSet);
-		attachment.setName(name);
-		attachment.setInformation(information);
+		if(attachment.getInformation()==null){
+			attachment.setInformation(information);
+		}
 		attachmentService.create(attachment);
 		Set<SystemFile> systemFileSet=new HashSet<>();
 		try {
@@ -370,11 +431,14 @@ public class InformationController {
 		}
 
 		if(type==5){
-			return "redirect:/manage/debtor/{debtorId}/loan/{loanId}/payment/"+objectId+"/view";
+			return "redirect:/manage/debtor/"+debtorId+"/loan/"+loanId+"/payment/"+objectId+"/view";
 		}
 		else if(type==6){
 			return "redirect:/manage/debtor/{debtorId}/collateralagreement/"+objectId+"/view";
 		}
+        else if(type==2){
+            return "redirect:/organization/"+objectId+"/information/view";
+        }
 		else{
 			return "redirect:/manage/debtor/{debtorId}/loan/{loanId}/view";
 		}
@@ -386,7 +450,13 @@ public class InformationController {
 
 		SystemFile systemFile=systemFileService.findById(id);
 		File file = new File(systemFile.getPath());
-		String fileExtension=systemFile.getName().split("\\.")[1];
+        String fileExtension="png";
+		try{
+            fileExtension=systemFile.getName().split("\\.")[1];
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
 		String smth=Files.probeContentType(file.toPath());
 
 		/*

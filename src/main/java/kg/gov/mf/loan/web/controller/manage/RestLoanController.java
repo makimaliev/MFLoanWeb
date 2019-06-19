@@ -4,11 +4,13 @@ import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.repository.org.StaffRepository;
+import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -27,15 +29,20 @@ public class RestLoanController {
     }
 
 
-    private Long debtorId;
+    private static HashMap<String,Long> debtorIds=new HashMap<>();
 
     @PostMapping("/getDebtorId")
     public void setDebtorId(@RequestParam(value = "q") Long q){
-        this.debtorId=q;
+
+        if(debtorIds.size()>=200){
+            debtorIds.clear();
+        }
+        this.debtorIds.put(Utils.getPrincipal(),q);
     }
     @GetMapping("/loans/search")
     public String[] getLoansByRegNumber( @RequestParam(value = "q") String q) {
-        List<Loan> loans = loanRepository.findByDebtorIdAndRegNumberContains(this.debtorId,q);
+
+        List<Loan> loans = loanRepository.findByDebtorIdAndRegNumberContains(debtorIds.get(Utils.getPrincipal()),q);
         String[] sLoans = new String[loans.size()];
         int i = 0;
         for (Loan loan:loans

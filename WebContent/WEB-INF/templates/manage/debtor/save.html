@@ -87,17 +87,17 @@
                                     </div>
                                 </div>
 
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.debtor.type}">
-										Type <span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{debtorType.id}" th:title="#{label.select}">
-											<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
-											</option>
-										</select>
-									</div>
-								</div>
+								<!--<div class="form-group m-form__group row">-->
+									<!--<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.debtor.type}">-->
+										<!--Type <span class="m&#45;&#45;font-danger">*</span>-->
+									<!--</label>-->
+									<!--<div class="col-lg-4 col-md-9 col-sm-12">-->
+										<!--<select class="form-control m-bootstrap-select m_selectpicker" th:field="*{debtorType.id}" th:title="#{label.select}">-->
+											<!--<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>-->
+											<!--</option>-->
+										<!--</select>-->
+									<!--</div>-->
+								<!--</div>-->
 
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.workSector}">

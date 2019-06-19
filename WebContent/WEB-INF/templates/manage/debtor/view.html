@@ -108,6 +108,15 @@
                                                             </div>
                                                         </div>
                                                     </div>
+													<div class="m-widget1__item">
+														<div class="row m-row--no-padding align-items-center">
+															<div class="col">
+																<h3 class="m-widget1__title" th:text="#{label.debtor.type}"></h3>
+																<span class="m-widget1__desc m--font-brand" th:text="${type.name}"></span>
+																<button th:href="@{/debtor/type/save}" type="button" class="btn btn-primary" th:text="#{label.change.debtorType}" data-toggle="modal" data-target="#changeDebtorTypeModal"></button>
+															</div>
+														</div>
+													</div>
                                                 </div>
                                                 <!--end:: Widgets/Stats2-1 -->
                                             </div>
@@ -152,7 +161,9 @@
                                                                 <h3 class="m-widget1__title" th:text="#{label.organization.staff}"></h3>
 																<ul th:each="staff:${staffs}">
 																	<!--<ol class="m-widget1__desc m&#45;&#45;font-brand"  th:text="${staff}"></ol>-->
-																	<span class="m-widget1__desc m--font-brand" th:text="${staff}"></span>
+																	<span class="m-widget1__desc m--font-brand">
+																		<a th:href="@{/person/__${staff.person.id}__/details}" th:text="${staff.position.name}+':'+${staff.name}"></a>
+																	</span>
 																</ul>
 															</div>
                                                         </div>
@@ -212,6 +223,15 @@
                                                             </div>
                                                         </div>
                                                     </div>
+													<div class="m-widget1__item">
+														<div class="row m-row--no-padding align-items-center">
+															<div class="col">
+																<h3 class="m-widget1__title" th:text="#{label.debtor.type}"></h3>
+																<span class="m-widget1__desc m--font-brand" th:text="${type.name}"></span>
+																<button th:href="@{/debtor/type/save}" type="button" class="btn btn-primary" th:text="#{label.change.debtorType}" data-toggle="modal" data-target="#changeDebtorTypeModal"></button>
+															</div>
+														</div>
+													</div>
                                                 </div>
                                                 <!--end:: Widgets/Stats2-1 -->
                                             </div>
@@ -297,25 +317,33 @@
 														</div>
 													</div>
 												</div>
-												<div class="col-lg-4">
-														<button class="btn btn-sm btn-accent" type="button" id="btn_show_loanSummary">
-															Расчет
-														</button>
-														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="btn btn-sm btn-accent" type="button" id="bnt_init_manualCalculator_new">
-															Акт сверки
-														</button>
-														<button sec:authorize="hasAnyAuthority('ADMIN')" class="btn btn-sm btn-accent" type="button" id="bnt_init_dailyCalculator">
+												<div class="col-lg-8">
+													<div class="row">
+														<div class="dropdown m-2">
+															<button class="btn btn-accent dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+																Формировать
+															</button>
+															<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+																<button class="dropdown-item" type="button" id="btn_show_loanSummary">
+																	Расчет
+																</button>
+																<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOANSUMMARY')" class="dropdown-item" type="button" id="bnt_init_manualCalculator_new">
+																	Акт сверки
+																</button>
+																<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLECTIONPHASE','PERM_INIT_COLLECTIONPHASE')" class="dropdown-item" type="button" id="bnt_init_phase">
+																	Претензия
+																</button>
+																<button class="dropdown-item" type="button" id="bnt_init_debtor_info">
+																	Сведения о заемщике
+																</button>
+															</div>
+														</div>
+														<button sec:authorize="hasAnyAuthority('ADMIN')" class="btn btn-sm btn-accent m-2" type="button" id="bnt_init_dailyCalculator">
 															Обновить данные
 														</button>
-														<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLECTIONPHASE','PERM_INIT_COLLECTIONPHASE')" class="btn btn-sm btn-accent" type="button" id="bnt_init_phase">
-															Претензия
-														</button>
-                                                    <button class="btn btn-sm btn-accent" type="button" id="bnt_init_debtor_info">
-                                                        Сведения о заемщике
-                                                    </button>
-													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN_LIST')" data-remote="false" data-toggle="modal"
-													   data-target="#listLoanFormModal" th:href="@{/debtor/__${debtor.id}__/objectList/form}"
-													   role="button" class="btn btn-success" th:text="#{label.add.listOfLoan}"></a>
+														<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN_LIST')" data-remote="false" data-toggle="modal"
+														   data-target="#listLoanFormModal" th:href="@{/debtor/__${debtor.id}__/objectList/form}"
+														   role="button" class="btn btn-success m-2" th:text="#{label.add.listOfLoan}"></a>
 
 														<form id="checkedLoans" th:action="@{/manage/debtor/__${debtor.id}__/loan/summary/view}" method="get">
 															<input hidden="hidden" type="text" name="name" id="selectedLoanses">
@@ -325,19 +353,25 @@
 															<input hidden="hidden" type="text" name="name" id="selectedName">
 															<input hidden="hidden" type="text" name="date" id="dateOfSelected">
 														</form>
-												</div>
-												<div class="col-lg-4">
-													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN')" th:href="@{/manage/debtor/__${debtor.id}__/loan/1/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-														<span><i class="la la-plus"></i><span>Добавить кредит</span></span>
-													</a>
+														<div class="dropdown m-2">
+															<button class="btn btn-accent dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+																Добавить
+															</button>
+															<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+																<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN')" th:href="@{/manage/debtor/__${debtor.id}__/loan/1/0/save}" class="dropdown-item">
+																	<span><i class="la la-plus"></i><span>Добавить кредит</span></span>
+																</a>
 
-													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN')" th:href="@{/manage/debtor/__${debtor.id}__/loan/2/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-														<span><i class="la la-plus"></i><span>Добавить транш</span></span>
-													</a>
+																<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN')" th:href="@{/manage/debtor/__${debtor.id}__/loan/2/0/save}" class="dropdown-item">
+																	<span><i class="la la-plus"></i><span>Добавить транш</span></span>
+																</a>
 
-													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN')" th:href="@{/manage/debtor/__${debtor.id}__/loan/3/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-														<span><i class="la la-plus"></i><span>Добавить реструктуризацию</span></span>
-													</a>
+																<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN')" th:href="@{/manage/debtor/__${debtor.id}__/loan/3/0/save}" class="dropdown-item">
+																	<span><i class="la la-plus"></i><span>Добавить реструктуризацию</span></span>
+																</a>
+															</div>
+														</div>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -462,6 +496,7 @@
 										<th >Дата</th>
 										<th >Сумма</th>
 										<th> </th>
+										<th> </th>
 									</tr>
 									</thead>
 									<tbody>
@@ -470,6 +505,13 @@
 										<td th:text="${#dates.format(actInList.onDate,'dd.MM.yyyy')}" >Id</td>
 										<td th:text="${#numbers.formatDecimal(actInList.amount, 0, 'DEFAULT', 2, 'DEFAULT')}">Id</td>
 										<td hidden="hidden" th:text="${actInList.id}"></td>
+										<td>
+											<form sec:authorize="hasAnyAuthority('ADMIN')" method="post" th:action="@{/manage/debtor/__${debtor.id}__/loanSummaryAct/__${actInList.id}__/delete}">
+												<button type="submit" >
+													<i class="fa fa-trash-o"></i>
+												</button>
+											</form>
+										</td>
 									</tr>
 									</tbody>
 
@@ -492,6 +534,38 @@
 									</div>
 								</div>
 							</div>
+							<!-- Modal -->
+							<div id="changeDebtorTypeModal" class="modal" role="dialog">
+								<div class="modal-dialog">
+
+									<!-- Modal content-->
+									<div class="modal-content">
+										<form>
+											<div class="modal-body">
+												<div class="form-group m-form__group row">
+													<label class="col-form-label col-lg-4 col-sm-12">
+														<span th:text="#{label.debtor.type}"></span>
+														<span class="m--font-danger">*</span>
+													</label>
+													<div class="col-lg-8 col-md-9 col-sm-12">
+														<select id="debtorType" class="form-control m-bootstrap-select m_selectpicker"  th:field="${type.id}">
+															<option th:each="type : ${types}"
+																	th:value="${type.id}"
+																	th:text="${type.name}"></option>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.cancel}">Close</button>
+												<button onclick="saveDebtorType()" type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.save}">Save</button>
+											</div>
+										</form>
+									</div>
+
+								</div>
+							</div>
+							<!--end Modal-->
 						</div>
 					</div>
 				</div>
@@ -523,6 +597,8 @@
 	</script>
 </div>
 <script th:inline="javascript">
+
+    $(".m_selectpicker").selectpicker();
     /*<![CDATA[*/
     // var jsonLoans = /*[[${loans}]]*/ [];
     // var jsonAgreements = /*[[${agreements}]]*/ [];
@@ -1016,6 +1092,19 @@
 
 
     });
+
+    // set/update debtorType
+    function saveDebtorType() {
+        var value=$("#debtorType").val();
+        $.ajax({
+            type:'post',
+            data:{id:debtorId,data:value},
+            url:"/debtor/type/instantUpdate",
+            success:function (data) {
+                location.reload();
+            }
+        });
+    }
 </script>
 </body>
 <!-- end::Body -->

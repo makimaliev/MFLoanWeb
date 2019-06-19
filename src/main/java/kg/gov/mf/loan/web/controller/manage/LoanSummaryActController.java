@@ -2,8 +2,10 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import kg.gov.mf.loan.manage.model.loan.LoanSummaryAct;
 import kg.gov.mf.loan.manage.model.loan.LoanSummaryActState;
+import kg.gov.mf.loan.manage.model.process.LoanSummary;
 import kg.gov.mf.loan.manage.service.loan.LoanSummaryActService;
 import kg.gov.mf.loan.manage.service.loan.LoanSummaryActStateService;
+import kg.gov.mf.loan.manage.service.process.LoanSummaryService;
 import kg.gov.mf.loan.output.report.model.ReferenceView;
 import kg.gov.mf.loan.output.report.service.ReferenceViewService;
 import kg.gov.mf.loan.web.fetchModels.LoanSummaryActMetaModel;
@@ -35,6 +37,9 @@ public class LoanSummaryActController {
     @Autowired
     LoanSummaryActStateService loanSummaryActStateService;
 
+    @Autowired
+    LoanSummaryService loanSummaryService;
+
     @GetMapping("/loanSummaryAct/list")
     public String list(ModelMap model){
 
@@ -56,6 +61,10 @@ public class LoanSummaryActController {
 
         LoanSummaryAct loanSummaryAct=loanSummaryActService.getById(id);
         loanSummaryActService.remove(loanSummaryAct);
+        for (LoanSummary l:loanSummaryAct.getLoanSummaries()){
+            LoanSummary loanSummary=loanSummaryService.getById(l.getId());
+            loanSummaryService.remove(loanSummary);
+        }
         return "redirect:/loanSummaryAct/list";
     }
 

@@ -99,11 +99,11 @@ var DatatableDataLocalLoans = function () {
                     var result = '';
 
                     if(row.regNumber.length <= 60){
-                        return '<span class=" ' + status[row.loanStateId].class + ' ">' + row.regNumber + '</span>';
+                        return '<a href="/manage/debtor/'+ debtorId + '/loan/' + row.id +'/view"><span class=" ' + status[row.loanStateId].class + ' ">' + row.regNumber + '</span></a>';
                     }
 
 				    else {
-                        return '<span class=" ' + status[row.loanStateId].class + ' ">' + row.regNumber+ '</span>';
+                        return '<a href="/manage/debtor/'+ debtorId + '/loan/' + row.id +'/view"><span class=" ' + status[row.loanStateId].class + ' ">' + row.regNumber+ '</span></a>';
                     }
 
                 }

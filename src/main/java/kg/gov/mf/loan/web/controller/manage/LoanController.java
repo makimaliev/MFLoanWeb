@@ -60,6 +60,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -461,6 +462,95 @@ public class LoanController {
         return "redirect:" + "/manage/debtor/"+debtorId+"/loan/{loanId}/view";
     }
 
+    @GetMapping("/loanState/{loanId}/save")
+    public String updateLoanState(Model model,@PathVariable(value = "loanId") Long loanId){
+        Loan loan=loanService.getById(loanId);
+        if (loan.getLoanState()!=null){
+            model.addAttribute("state",loan.getFund());
+        }
+        else{
+            model.addAttribute("state",loanStateService.getById(2L));
+        }
+        model.addAttribute("loanId",loanId);
+        model.addAttribute("stateList",loanStateService.list());
+        return "/manage/debtor/loan/loanStateForm";
+    }
+
+    @PostMapping("/loanState/{loanId}/save")
+    public String updateState(@PathVariable(value = "loanId") Long loanId , LoanState state, BindingResult result){
+
+        Long debtorId=null;
+        if(result.hasErrors()){
+            System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+        }
+        else {
+            LoanState loanState=loanStateService.getById(state.getId());
+            Loan loan=loanService.getById(loanId);
+            debtorId=loan.getDebtor().getId();
+            loan.setLoanState(loanState);
+            loanService.update(loan);
+        }
+        return "redirect:/manage/debtor/"+debtorId+"/loan/{loanId}/view";
+    }
+
+    @GetMapping("/loanParent/{loanId}/save")
+    public String updateLoanParent(Model model,@PathVariable(value = "loanId") Long loanId){
+        Loan loan=loanService.getById(loanId);
+        Loan pLoan = loan.getParent();
+        if(pLoan == null)
+            model.addAttribute("pLoanText", "");
+        else
+        {
+            String pLoanText = "[" + pLoan.getId() + "] " + pLoan.getRegNumber();
+            model.addAttribute("pLoanText", pLoanText);
+        }
+        model.addAttribute("loanId",loanId);
+        model.addAttribute("debtorId",loan.getDebtor().getId());
+        return "/manage/debtor/loan/loanParentForm";
+    }
+
+    @PostMapping("/loanParent/{loanId}/save")
+    public String updateParent(@PathVariable(value = "loanId") Long loanId ,@RequestParam("parent") Long parent){
+
+        Loan loan=loanService.getById(loanId);
+        Long debtorId=loan.getDebtor().getId();
+        Loan pLoan=loanService.getById(parent);
+        loan.setParent(pLoan);
+        loanService.update(loan);
+        return "redirect:/manage/debtor/"+debtorId+"/loan/{loanId}/view";
+    }
+
+    @PostMapping("/loan/closeDate/instantUpdate")
+    @ResponseBody
+    public String updateLoanCloseDate(Long id,String data){
+
+        SimpleDateFormat sf=new SimpleDateFormat("dd.MM.yyyy");
+        Loan loan=loanService.getById(id);
+        try {
+            loan.setCloseDate(sf.parse(data));
+            loanService.update(loan);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+	    return "OK";
+    }
+
+    @PostMapping("/loan/lastDate/instantUpdate")
+    @ResponseBody
+    public String updateLoanLastDate(Long id,String data){
+
+	    SimpleDateFormat sf=new SimpleDateFormat("dd.MM.yyyy");
+	    Loan loan=loanService.getById(id);
+        try {
+            loan.setLastDate(sf.parse(data));
+            loanService.update(loan);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return "OK";
+    }
+
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{classId}/{loanId}/save", method=RequestMethod.GET)
 	public String formLoan(ModelMap model, @PathVariable("debtorId")Long debtorId, @PathVariable("classId")Integer classId, @PathVariable("loanId")Long loanId)
 	{
@@ -635,6 +725,10 @@ public class LoanController {
             }
             else
                 loan.setParent(null);
+
+            loan.setLastDate(loan.getRegDate());
+            loan.setCloseDate(loan.getRegDate());
+            loan.setLoanState(loanStateService.getById(2L));
 
             CreditOrder creditOrder = creditOrderRepository.findOne(loan.getCreditOrder().getId());
             loan.setCreditOrder(creditOrder);

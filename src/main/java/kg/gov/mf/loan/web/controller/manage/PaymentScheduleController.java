@@ -3,7 +3,11 @@ package kg.gov.mf.loan.web.controller.manage;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.repository.loan.PaymentScheduleRepository;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.web.util.Pager;
@@ -135,7 +139,20 @@ public class PaymentScheduleController {
 			paymentScheduleRepository.save(paymentSchedule);
 			//paymentScheduleService.update(paymentSchedule);
 		}
-		
+
+		if(paymentSchedule.getExpectedDate().after(loan.getLastDate())) {
+			/*ScheduledExecutorService someScheduler = Executors.newScheduledThreadPool(1);
+			Runnable runnable = new Runnable() {
+				public void run() {
+					getTheLastScheduleDate(loanId);
+				}
+			};
+			long timeDelay = 10; // You can specify 1 what
+			someScheduler.schedule(runnable, timeDelay, TimeUnit.SECONDS);*/
+
+			getTheLastScheduleDate(loan);
+		}
+
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view#paymentSchedules";
     }
 	
@@ -201,8 +218,9 @@ public class PaymentScheduleController {
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/paymentschedule/uploadFile", method=RequestMethod.POST)
 	public String processUploadedFile(@PathVariable("debtorId")Long debtorId, @PathVariable("loanId")Long loanId, MultipartHttpServletRequest request){
 
-//		Loan loan = this.loanService.getById(loanId);
+		Loan loan = this.loanService.getById(loanId);
 
+		boolean updateLastDate=false;
 		//String seleteQuery="select p.id,p.record_status,p.version,p.uuid,p.collectedInterestPayment,p.collectedPenaltyPayment,p.disbursement,p.expectedDate,p.interestPayment,p.principalPayment,p.installmentStateId,p.loanId  from paymentSchedule p where p.loanId="+String.valueOf(loanId);
 		//Query deleteQuery=  entityManager.createNativeQuery(seleteQuery,PaymentSchedule.class);
 		//List<PaymentSchedule> paymentSchedules=deleteQuery.getResultList();
@@ -262,6 +280,9 @@ public class PaymentScheduleController {
 							paymentSchedule.setCollectedPenaltyPayment(CellCPenalty.getNumericCellValue());
 							paymentSchedule.setInstallmentState(installmentStateService.getById(Long.valueOf(1)));
 							paymentScheduleService.add(paymentSchedule);
+							if(!updateLastDate && paymentSchedule.getExpectedDate().after(loan.getLastDate())){
+								updateLastDate=true;
+							}
 
 						}
 					}
@@ -271,6 +292,28 @@ public class PaymentScheduleController {
 		catch (Exception e) {
 			System.out.println(e);
 		}
+		if(updateLastDate) {
+			/*ScheduledExecutorService someScheduler = Executors.newScheduledThreadPool(1);
+			Runnable runnable = new Runnable() {
+				public void run() {
+					getTheLastScheduleDate(loan.getId());
+				}
+			};
+			long timeDelay = 10; // You can specify 1 what
+			someScheduler.schedule(runnable, timeDelay, TimeUnit.SECONDS);*/
+			getTheLastScheduleDate(loan);
+		}
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
+	}
+
+	public void getTheLastScheduleDate(Loan loan){
+		String getMaxDate="select max(p.expectedDate)\n" +
+				"from paymentSchedule p where loanId="+loan.getId();
+		Query query=entityManager.createNativeQuery(getMaxDate);
+		Date maxDate= (Date) query.getSingleResult();
+		if(maxDate.after(loan.getLastDate())){
+			loan.setLastDate(maxDate);
+			loanService.update(loan);
+		}
 	}
 }
