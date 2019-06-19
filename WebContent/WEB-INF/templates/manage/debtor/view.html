@@ -116,6 +116,19 @@
 																<button th:href="@{/debtor/type/save}" type="button" class="btn btn-primary" th:text="#{label.change.debtorType}" data-toggle="modal" data-target="#changeDebtorTypeModal"></button>
 															</div>
 														</div>
+														<div class="col mt-2">
+															<a th:href="@{/manage/debtor/__${debtor.id}__/save}" class="btn btn-outline-danger" title="Редактировать">
+																	<span>
+																		<i class="la la-edit"></i>
+																		<span th:text="#{label.title.add.edit.debtor}"></span>
+																	</span>
+															</a>
+															<a th:href="@{/manage/debtor/__${debtor.id}__/update/phases}" class="btn btn-outline-danger" title="Обновить">
+																	<span>
+																		<span th:text="#{label.debtor.loan.phases.update}"></span>
+																	</span>
+															</a>
+														</div>
 													</div>
                                                 </div>
                                                 <!--end:: Widgets/Stats2-1 -->
@@ -173,17 +186,10 @@
 													<div class="m-widget1__item">
 														<div class="row m-row--no-padding align-items-center">
 															<div class="col">
-																<a th:href="@{/manage/debtor/__${debtor.id}__/save}" class="btn btn-outline-danger" title="Редактировать">
-																	<span>
-																		<i class="la la-edit"></i>
-																		<span th:text="#{label.title.add.edit.debtor}"></span>
-																	</span>
-																</a>
-																<a th:href="@{/manage/debtor/__${debtor.id}__/update/phases}" class="btn btn-outline-danger" title="Обновить">
-																	<span>
-																		<span th:text="#{label.debtor.loan.phases.update}"></span>
-																	</span>
-																</a>
+																<button th:href="@{/debtor/description/save}" type="button" class="btn btn-primary" th:text="#{label.change.description}" data-toggle="modal" data-target="#changeDebtorDescriptionModal"></button>
+																<br>
+																<span class="m-widget1__desc m--font-brand" th:text="${debtor.description}"></span>
+
 															</div>
 														</div>
 													</div>
@@ -230,6 +236,19 @@
 																<span class="m-widget1__desc m--font-brand" th:text="${type.name}"></span>
 																<button th:href="@{/debtor/type/save}" type="button" class="btn btn-primary" th:text="#{label.change.debtorType}" data-toggle="modal" data-target="#changeDebtorTypeModal"></button>
 															</div>
+															<div class="col">
+																<a th:href="@{/manage/debtor/__${debtor.id}__/save}" class="btn btn-outline-danger" title="Редактировать">
+																	<span>
+																	<i class="la la-edit"></i>
+																	<span th:text="#{label.table.edit}"></span>
+																</span>
+																</a>
+																<a sec:authorize="hasAnyAuthority('ADMIN')" th:href="@{/manage/debtor/__${debtor.id}__/update/phases}" class="btn btn-outline-danger" title="Обновить">
+																	<span>
+																		<span th:text="#{label.debtor.loan.phases.update}"></span>
+																	</span>
+																</a>
+															</div>
 														</div>
 													</div>
                                                 </div>
@@ -270,19 +289,7 @@
 											<div sec:authorize="hasAnyAuthority('ADMIN')" class="m-widget1">
 												<div class="m-widget1__item">
 													<div class="row m-row--no-padding align-items-center">
-														<div class="col">
-															<a th:href="@{/manage/debtor/__${debtor.id}__/save}" class="btn btn-outline-danger" title="Редактировать">
-																	<span>
-																	<i class="la la-edit"></i>
-																	<span th:text="#{label.table.edit}"></span>
-																</span>
-															</a>
-															<a sec:authorize="hasAnyAuthority('ADMIN')" th:href="@{/manage/debtor/__${debtor.id}__/update/phases}" class="btn btn-outline-danger" title="Обновить">
-																	<span>
-																		<span th:text="#{label.debtor.loan.phases.update}"></span>
-																	</span>
-															</a>
-														</div>
+
 													</div>
 												</div>
 											</div>
@@ -559,6 +566,32 @@
 											<div class="modal-footer">
 												<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.cancel}">Close</button>
 												<button onclick="saveDebtorType()" type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.save}">Save</button>
+											</div>
+										</form>
+									</div>
+
+								</div>
+							</div>
+							<div id="changeDebtorDescriptionModal" class="modal" role="dialog">
+								<div class="modal-dialog">
+
+									<!-- Modal content-->
+									<div class="modal-content">
+										<form>
+											<div class="modal-body">
+												<div class="form-group m-form__group row">
+													<label class="col-form-label col-lg-4 col-sm-12">
+														<span th:text="#{label.description}"></span>
+														<span class="m--font-danger">*</span>
+													</label>
+													<div class="col-lg-8 col-md-9 col-sm-12">
+														<input id="debtorDescription" class="form-control m-input" type="text" th:placeholder="#{label.description}" th:value="${debtor.description}">
+													</div>
+												</div>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.cancel}">Close</button>
+												<button onclick="saveDebtorDescription()" type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.save}">Save</button>
 											</div>
 										</form>
 									</div>
@@ -1100,6 +1133,18 @@
             type:'post',
             data:{id:debtorId,data:value},
             url:"/debtor/type/instantUpdate",
+            success:function (data) {
+                location.reload();
+            }
+        });
+    }
+    // set/update description
+    function saveDebtorDescription() {
+        var value=$("#debtorDescription").val();
+        $.ajax({
+            type:'post',
+            data:{id:debtorId,data:value},
+            url:"/debtor/description/update",
             success:function (data) {
                 location.reload();
             }

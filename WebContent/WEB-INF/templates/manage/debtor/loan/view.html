@@ -336,6 +336,16 @@
 														</div>
 													</div>
 												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<button type="button" class="btn btn-primary" th:text="#{label.change.loan.normal.description}" data-toggle="modal" data-target="#changeLoanNormalDescriptionModal"></button>
+															<br>
+															<span class="m-widget1__desc m--font-brand" th:text="${loan.normalDescription}"></span>
+
+														</div>
+													</div>
+												</div>
 											</div>
 											<!--begin:: Widgets/Stats2-2 -->
 											<div class="m-widget1" th:if="${itemDescription}!='false'">
@@ -393,6 +403,26 @@
 														<div class="col">
 															<h3 class="m-widget1__title" th:text="#{label.loan.parent}"></h3>
 															<span class="m-widget1__desc m--font-brand"><a th:href="@{/manage/debtor/__${debtor.id}__/loan/__${loan.parent.id}__/view}" th:text="${loan.parent.regNumber}"></a></span>
+														</div>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<button type="button" class="btn btn-primary" th:text="#{label.change.loan.collection.description}" data-toggle="modal" data-target="#changeLoanCollectionDescriptionModal"></button>
+															<br>
+															<span class="m-widget1__desc m--font-brand" th:text="${loan.collectionDescription}"></span>
+
+														</div>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<button type="button" class="btn btn-primary" th:text="#{label.change.loan.collateral.description}" data-toggle="modal" data-target="#changeLoanCollateralDescriptionModal"></button>
+															<br>
+															<span class="m-widget1__desc m--font-brand" th:text="${loan.collateralDescription}"></span>
+
 														</div>
 													</div>
 												</div>
@@ -1376,6 +1406,7 @@
 								</div>
 							</div>
 						</div>
+						<!--Modals-->
 						<div id="loanFinGroupModal" class="modal fade bs-modal-lg in"  tabindex="-1" role="dialog" aria-hidden="true">
 							<div class="modal-dialog modal-lg" role="document">
 								<div class="modal-content">
@@ -1400,6 +1431,85 @@
 								</div>
 							</div>
 						</div>
+						<div id="changeLoanNormalDescriptionModal" class="modal" role="dialog">
+							<div class="modal-dialog">
+
+								<!-- Modal content-->
+								<div class="modal-content">
+									<form>
+										<div class="modal-body">
+											<div class="form-group m-form__group row">
+												<label class="col-form-label col-lg-4 col-sm-12">
+													<span th:text="#{label.loan.normal.description}"></span>
+													<span class="m--font-danger">*</span>
+												</label>
+												<div class="col-lg-8 col-md-9 col-sm-12">
+													<input id="loanNormalDescription" class="form-control m-input" type="text" th:placeholder="#{label.loan.normal.description}" th:value="${loan.normalDescription}">
+												</div>
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.cancel}">Close</button>
+											<button onclick="saveLoanDescription(1,'loanNormalDescription')" type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.save}">Save</button>
+										</div>
+									</form>
+								</div>
+
+							</div>
+						</div>
+						<div id="changeLoanCollectionDescriptionModal" class="modal" role="dialog">
+							<div class="modal-dialog">
+
+								<!-- Modal content-->
+								<div class="modal-content">
+									<form>
+										<div class="modal-body">
+											<div class="form-group m-form__group row">
+												<label class="col-form-label col-lg-4 col-sm-12">
+													<span th:text="#{label.loan.collection.description}"></span>
+													<span class="m--font-danger">*</span>
+												</label>
+												<div class="col-lg-8 col-md-9 col-sm-12">
+													<input id="loanCollectionDescription" class="form-control m-input" type="text" th:placeholder="#{label.loan.collection.description}" th:value="${loan.collectionDescription}">
+												</div>
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.cancel}">Close</button>
+											<button onclick="saveLoanDescription(2,'loanCollectionDescription')" type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.save}">Save</button>
+										</div>
+									</form>
+								</div>
+
+							</div>
+						</div>
+						<div id="changeLoanCollateralDescriptionModal" class="modal" role="dialog">
+							<div class="modal-dialog">
+
+								<!-- Modal content-->
+								<div class="modal-content">
+									<form>
+										<div class="modal-body">
+											<div class="form-group m-form__group row">
+												<label class="col-form-label col-lg-4 col-sm-12">
+													<span th:text="#{label.loan.collateral.description}"></span>
+													<span class="m--font-danger">*</span>
+												</label>
+												<div class="col-lg-8 col-md-9 col-sm-12">
+													<input id="loanCollateralDescription" class="form-control m-input" type="text" th:placeholder="#{label.loan.collateral.description}" th:value="${loan.collateralDescription}">
+												</div>
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.cancel}">Close</button>
+											<button onclick="saveLoanDescription(3,'loanCollateralDescription')" type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.save}">Save</button>
+										</div>
+									</form>
+								</div>
+
+							</div>
+						</div>
+						<!--end Modal-->
 					</div>
 					<!-- Modal -->
 					<div id="loanCloseDateModal" class="modal" role="dialog">
@@ -1989,6 +2099,19 @@
         var link = $(e.relatedTarget);
         $(this).find(".modal-content").load(link.attr("href"));
     });
+    // set/update loan descriptions
+    function saveLoanDescription(type,inputId) {
+        var value=$("#"+inputId).val();
+        $.ajax({
+            type:'post',
+            data:{id:loanId,data:value},
+            url:"/loan/descriptions/"+type+"/update",
+            success:function (data) {
+                location.reload();
+            }
+        });
+    }
+
 </script>
 <script>
     var phaseDetailsTableInit = function (jsonInput) {

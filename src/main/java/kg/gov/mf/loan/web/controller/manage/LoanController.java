@@ -551,6 +551,27 @@ public class LoanController {
         return "OK";
     }
 
+    @PostMapping("/loan/descriptions/{type}/update")
+    @ResponseBody
+    public String updateLoanDescriptions(Long id,String data,@PathVariable("type") int type){
+
+	    Loan loan=loanService.getById(id);
+        if(type==1){
+            loan.setNormalDescription(data);
+        }
+        else if(type==2){
+            loan.setCollectionDescription(data);
+        }
+        else if(type==3){
+            loan.setCollateralDescription(data);
+        }
+        loanService.update(loan);
+
+        return "OK";
+    }
+
+
+
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{classId}/{loanId}/save", method=RequestMethod.GET)
 	public String formLoan(ModelMap model, @PathVariable("debtorId")Long debtorId, @PathVariable("classId")Integer classId, @PathVariable("loanId")Long loanId)
 	{

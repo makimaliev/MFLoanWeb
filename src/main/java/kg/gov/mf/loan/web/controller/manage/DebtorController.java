@@ -1272,6 +1272,15 @@ public class DebtorController {
 		return "OK";
 	}
 
+    @PostMapping("/debtor/description/update")
+    @ResponseBody
+    public String updateDebtorDescription(@RequestParam("id") Long id,@RequestParam("data") String data){
+        Debtor debtor=debtorService.getById(id);
+        debtor.setDescription(data);
+        debtorService.update(debtor);
+        return "OK";
+    }
+
 	private List<LoanModel> getLoansByDebtorId(long debtorId)
 	{
 		String baseQuery = "SELECT loan.id, loan.loan_class_id, loan.regNumber, loan.regDate, loan.amount, loan.currencyId, currency.name as currencyName,\n" +
