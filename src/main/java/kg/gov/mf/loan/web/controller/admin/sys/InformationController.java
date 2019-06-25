@@ -295,7 +295,12 @@ public class InformationController {
 		String[] splitedByCommaIds=ids.split(",");
 		for(String s:splitedByCommaIds){
 			String[] splitted=s.split(":");
-			idsMap.put(splitted[0],Long.valueOf(splitted[1]));
+			try {
+                idsMap.put(splitted[0],Long.valueOf(splitted[1]));
+            }
+            catch (Exception e){
+                System.out.println(e);
+            }
 		}
 
 		String path=path = getPathForAttachment(idsMap, objectId, type);
