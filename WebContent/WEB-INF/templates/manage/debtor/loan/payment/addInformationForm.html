@@ -58,13 +58,11 @@
                           class="m-form m-form--fit m-form--label-align-right" th:object="${attachment}" enctype="multipart/form-data">
 
                         <input hidden="true" type="text" id="id" name="id" th:field="*{id}"/>
-                        <input hidden="true" type="text" id="debtorId" name="debtorId" th:value="${debtorId}"/>
-                        <input hidden="true" type="text" id="loanId" name="loanId" th:value="${loanId}"/>
+                        <input hidden="hidden" type="text" th:value="${ids}" name="ids" />
                         <input hidden="true" type="text" id="documentIds" name="documentIds" th:value="${documentIds}"/>
                         <input hidden="true" type="text" id="information" name="information" th:field="*{information.id}"/>
                         <div class="m-portlet__body">
                             <div class="m-form__section">
-
                                     <div class="form-group m-form__group row">
                                         <label class="col-form-label col-lg-4 col-sm-12">
                                             <span th:text="#{label.file.name}"></span>

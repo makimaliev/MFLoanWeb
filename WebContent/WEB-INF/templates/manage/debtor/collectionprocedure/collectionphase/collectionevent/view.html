@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title th:text="#{label.collection.event}"></title>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <div th:replace="layout/header"/>
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <div th:replace="layout/sidebar"/>
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <div id="breadcrumb_debtor" class="m-subheader ">
+                <div class="d-flex align-items-center">
+                    <div class="mr-auto">
+                        <h3 class="m-subheader__title m-subheader__title--separator">
+                            Заемщик
+                        </h3>
+                        <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+                            <li class="m-nav__item m-nav__item--home">
+                                <a th:href="@{/}" class="m-nav__link m-nav__link--icon">
+                                    <i class="m-nav__link-icon la la-home"></i>
+                                </a>
+                            </li>
+                            <li class="m-nav__separator">
+                                -
+                            </li>
+                            <li class="m-nav__item">
+                                <a th:href="@{/manage/debtor/list}" class="m-nav__link">
+									<span class="m-nav__link-text">
+										Список заемщиков
+									</span>
+                                </a>
+                            </li>
+                            <li class="m-nav__separator">
+                                -
+                            </li>
+                            <li class="m-nav__item">
+								<span class="m-nav__link-text">
+									Заемщик
+								</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="main_content" class="m-content">
+                <div id="debtor_short_information" class="m-portlet m-portlet--full-height">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text" id="debtorLink" th:text="${event.name}"></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="debtor_information_content" class="m-portlet m-portlet--mobile">
+                    <div id="top-tabs" class="m-portlet__body" >
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link m--font-primary active" data-toggle="tab" href="#main" th:text="#{label.loan.credit}"></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link m--font-primary" data-toggle="tab" href="#information" th:text="#{label.information}"></a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="main" class="tab-pane active"  role="tabpanel">
+                                <div>
+                                    <div class="m-portlet__body m-portlet__body--no-padding">
+                                        <div class="row m-row--no-padding m-row--col-separator-xl">
+
+
+                                            <div class="col-md-12 col-lg-12 col-xl-4">
+                                                <!--begin:: Widgets/Stats2-1 -->
+                                                <div class="m-widget1">
+                                                    <div class="m-widget1__item">
+                                                        <div class="row m-row--no-padding align-items-center">
+                                                            <div class="col">
+                                                                <h3 class="m-widget1__title" th:text="#{label.colleciton.event.startDate}"></h3>
+                                                                <span class="m-widget1__desc m--font-brand" th:text="${#dates.format(event.startDate,'dd.MM.yyyy')}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="m-widget1__item">
+                                                        <div class="row m-row--no-padding align-items-center">
+                                                            <div class="col">
+                                                                <h3 class="m-widget1__title" th:text="#{label.collection.event.closeDate}"></h3>
+                                                                <span class="m-widget1__desc m--font-brand" th:text="${#dates.format(event.closeDate,'dd.MM.yyyy')}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="m-widget1__item">
+                                                        <div class="row m-row--no-padding align-items-center">
+                                                            <div class="col">
+                                                                <h3 class="m-widget1__title" th:text="#{label.status}"></h3>
+                                                                <span class="m-widget1__desc m--font-brand" th:text="${event.eventStatus.name}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="m-widget1__item">
+                                                        <div class="row m-row--no-padding align-items-center">
+                                                            <div class="col">
+                                                                <h3 class="m-widget1__title" th:text="#{label.type}"></h3>
+                                                                <span class="m-widget1__desc m--font-brand" th:text="${event.eventType.name}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--end:: Widgets/Stats2-1 -->
+                                            </div>
+                                            <div class="col-md-12 col-lg-12 col-xl-4">
+                                                <!--begin:: Widgets/Stats2-1 -->
+                                                <div class="m-widget1">
+                                                    <div class="m-widget1__item">
+                                                        <div class="row m-row--no-padding align-items-center">
+                                                            <div class="col">
+                                                                <h3 class="m-widget1__title" th:text="#{label.description}"></h3>
+                                                                <span class="m-widget1__desc m--font-brand" th:text="${event.description}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="m-widget1__item">
+                                                        <div class="row m-row--no-padding align-items-center">
+                                                            <div class="col">
+                                                                <h3 class="m-widget1__title" th:text="#{label.collection.event.docNumber}"></h3>
+                                                                <span class="m-widget1__desc m--font-brand" th:text="${event.docNumber}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--end:: Widgets/Stats2-1 -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="information" class="tab-pane"  role="tabpanel">
+                                <!--begin: Search Form -->
+                                <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                                    <div class="row align-items-center">
+                                        <div class="col-xl-9 order-1 order-xl-1">
+                                            <div class="form-group m-form__group row align-items-center">
+                                                <div class="col-lg-6">
+                                                    <div class="m-input-icon m-input-icon--left">
+                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="searchFile">
+                                                        <span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xl-3 order-3 order-xl-3 m--align-right">
+                                            <div class="row">
+                                                <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_INFORMATION_PAYMENT')" class="btn btn-success" th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phaseId}__/collectionevent/__${event.id}__/addInformation}" th:text="#{label.add.attachment}"> Add
+                                                    Attachment</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end: Search Form -->
+                                <!--begin: Datatable -->
+                                <div class="m_datatable" id="filesTable"></div>
+                                <!--end: Datatable -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<div th:replace="fragments/footer :: footer-js"/>
+
+<!--begin::Page Resources -->
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
+<!--end::Page Resources -->
+<script th:inline="javascript">
+    var jsonFiles=[[${files}]]
+    var DatatableDataLocalFiles = function () {
+        //== Private functions
+
+        // demo initializer
+        var mainTableInit = function () {
+
+            var dataJSONArray = JSON.parse(jsonFiles);
+
+            var datatable = $('#filesTable').mDatatable({
+                // datasource definition
+                data: {
+                    type: 'local',
+                    source: dataJSONArray
+                },
+
+                // layout definition
+                layout: {
+                    theme: 'default', // datatable theme
+                    class: '', // custom wrapper class
+                    scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+                    height: 450, // datatable's body's fixed height
+                    footer: false // display/hide footer
+                },
+
+                // column sorting(refer to Kendo UI)
+                sortable: false,
+
+                // column based filtering(refer to Kendo UI)
+                filterable: false,
+
+                pagination: false,
+
+                // inline and bactch editing(cooming soon)
+                // editable: false,
+
+                // columns definition
+                columns: [{
+                    field: "id",
+                    title: "#",
+                    responsive: {hidden: 'xl'},
+                },{
+                    field: "attachment_name",
+                    title: "Название файла"
+                },  {
+                    field: "sys_name",
+                    title: "Название"
+                },{
+                    field: "action",
+                    width: 110,
+                    title: "",
+                    sortable: false,
+                    template: function (row) {
+
+                        var result = '';
+
+                        result = result + '\
+						<a href="/systemFile/' + row.system_file_id +'/download" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+							<i class="la la-download"></i>\
+						</a>\
+						<a href="/attachment/' + row.attachment_id +'/details" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Документ">\
+							<i class="fa fa-file-o"></i>\
+						</a>\
+					';
+
+
+                        return result;
+                    }
+                }],
+                translate: {
+                    records: {
+                        processing: 'Подождите пожалуйста...',
+                        noRecords: 'Записей не найдено'
+                    },
+                    toolbar: {
+                        pagination: {
+                            items: {
+                                default: {
+                                    first: 'Первая страница',
+                                    prev: 'Предыдущая страница',
+                                    next: 'Следующая страница',
+                                    last: 'Последняя страница',
+                                    more: 'Другие страницы',
+                                    input: 'Номер страницы',
+                                    select: 'Выбрать размер страницы'
+                                },
+                                info: 'Отображение {{start}} - {{end}} из {{total}} записей'
+                            }
+                        }
+                    }
+                },
+
+                toolbar: {
+                    items: {
+                        // pagination
+                        pagination: {
+                            // page size select
+                            pageSizeSelect: [5, 10, 20, 50, 100]
+                        }
+                    }
+                }
+            });
+
+            var query = datatable.getDataSourceQuery();
+
+            $('#searchFile').on('keyup', function (e) {
+                datatable.search($(this).val().toLowerCase());
+            }).val(query.generalSearch);
+
+
+        };
+
+        return {
+            //== Public functions
+            init: function () {
+                // init dmeo
+                mainTableInit();
+            }
+        };
+    }();
+
+    jQuery(document).ready(function () {
+        DatatableDataLocalFiles.init();
+    });
+</script>
+</body>
+<!-- end::Body -->
+</html>

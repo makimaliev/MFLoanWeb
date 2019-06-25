@@ -327,13 +327,12 @@
 
 										<div class="col-xl-3 order-3 order-xl-3 m--align-right">
 											<div class="row">
-												<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_INFORMATION_AGREEMENT')" data-remote="false" data-toggle="modal"
-												   data-target="#paymentAttachment"
+												<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_INFORMATION_AGREEMENT')" th:href="@{/manage/debtor/__${debtorId}__/agreement/__${agreement.id}__/addInformation}"
 												   role="button" class="btn btn-success" th:text="#{label.add.attachment}"> Add
 													Attachment</a>
 											</div>
 										</div>
-										<!--begin modal add attachment to payment -->
+										<!--begin modal add attachment to payment
 										<div class="modal fade" id="paymentAttachment" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 											<div class="modal-dialog" role="document">
 												<div class="modal-content">
@@ -348,7 +347,7 @@
 															<div class="form-group m-form__group row">
 																<label class="col-form-label col-lg-4 col-sm-12">
 																	<span th:text="#{label.file.name}"></span>
-																	<span class="m--font-danger"></span>
+																	<span class="m&#45;&#45;font-danger"></span>
 																</label>
 																<div class="col-lg-8 col-md-9 col-sm-12">
 																	<input type="text" class="form-control" name="name" />
@@ -372,7 +371,7 @@
 												</div>
 											</div>
 										</div>
-										<!--end modal add attachment to payment -->
+										end modal add attachment to payment -->
 									</div>
 								</div>
 								<!--end: Search Form -->
@@ -480,6 +479,9 @@
                         result = result + '\
 						<a href="/systemFile/' + row.system_file_id +'/download" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-download"></i>\
+						</a>\
+						<a href="/attachment/' + row.attachment_id +'/details" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Документ">\
+							<i class="fa fa-file-o"></i>\
 						</a>\
 					';
 

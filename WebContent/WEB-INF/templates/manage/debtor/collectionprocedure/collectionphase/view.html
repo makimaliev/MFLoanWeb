@@ -104,6 +104,9 @@
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#collectionEvent" th:text="#{label.collection.event}"></a>
 							</li>
+							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#information" th:text="#{label.information}"></a>
+							</li>
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane active" id="main">
@@ -351,6 +354,7 @@
 											<thead class="thead-default">
 											<tr>
 												<th th:text="#{label.date}">Name</th>
+												<th>#</th>
 												<th>Статус</th>
 												<th>Вид</th>
 												<th>&nbsp;</th>
@@ -364,6 +368,7 @@
 											</statecheck>
 											<state th:each="t : ${events}">
 												<tr>
+													<td><a th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phaseId}__/collectionevent/__${t.id}__/view}"><i class="la la-arrow-circle-o-right"></i></a></td>
 													<td th:text="${#dates.format(t.startDate,'dd.MM.yyyy')}">Name</td>
 													<td th:text="${t.eventStatus.name}">Name</td>
 													<td th:text="${t.eventType.name}">Name</td>
@@ -385,6 +390,39 @@
 
 										</table>
 								</div>
+							</div>
+							<div id="information" class="tab-pane"  role="tabpanel">
+								<!--begin: Search Form -->
+								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+									<div class="row align-items-center">
+										<div class="col-xl-9 order-1 order-xl-1">
+											<div class="form-group m-form__group row align-items-center">
+												<div class="col-lg-6">
+													<div class="m-input-icon m-input-icon--left">
+														<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="searchFile">
+														<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="col-xl-3 order-3 order-xl-3 m--align-right">
+											<div class="row">
+												<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_INFORMATION_AGREEMENT')" th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionPhase/__${phase.id}__/addInformation}"
+												   role="button" class="btn btn-success" th:text="#{label.add.attachment}"> Add
+													Attachment</a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--end: Search Form -->
+								<!--begin: Datatable -->
+								<div class="m_datatable" id="filesTable"></div>
+								<!--end: Datatable -->
 							</div>
 						</div>
 					</div>
@@ -422,6 +460,131 @@
     var debtorId = /*[[${debtor.id}]]*/ [];
     var procId = /*[[${procId}]]*/ [];
     /*]]>*/
+    // files datatable
+    var jsonFiles=[[${files}]]
+    var DatatableDataLocalFiles = function () {
+        //== Private functions
+
+        // demo initializer
+        var mainTableInit = function () {
+
+            var dataJSONArray = JSON.parse(jsonFiles);
+
+            var datatable = $('#filesTable').mDatatable({
+                // datasource definition
+                data: {
+                    type: 'local',
+                    source: dataJSONArray
+                },
+
+                // layout definition
+                layout: {
+                    theme: 'default', // datatable theme
+                    class: '', // custom wrapper class
+                    scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+                    height: 450, // datatable's body's fixed height
+                    footer: false // display/hide footer
+                },
+
+                // column sorting(refer to Kendo UI)
+                sortable: false,
+
+                // column based filtering(refer to Kendo UI)
+                filterable: false,
+
+                pagination: false,
+
+                // inline and bactch editing(cooming soon)
+                // editable: false,
+
+                // columns definition
+                columns: [{
+                    field: "id",
+                    title: "#",
+                    responsive: {hidden: 'xl'},
+                },{
+                    field: "attachment_name",
+                    title: "Название файла"
+                },  {
+                    field: "sys_name",
+                    title: "Название"
+                },{
+                    field: "action",
+                    width: 110,
+                    title: "",
+                    sortable: false,
+                    template: function (row) {
+
+                        var result = '';
+
+                        result = result + '\
+						<a href="/systemFile/' + row.system_file_id +'/download" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
+							<i class="la la-download"></i>\
+						</a>\
+						<a href="/attachment/' + row.attachment_id +'/details" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Документ">\
+							<i class="fa fa-file-o"></i>\
+						</a>\
+					';
+
+
+                        return result;
+                    }
+                }],
+                translate: {
+                    records: {
+                        processing: 'Подождите пожалуйста...',
+                        noRecords: 'Записей не найдено'
+                    },
+                    toolbar: {
+                        pagination: {
+                            items: {
+                                default: {
+                                    first: 'Первая страница',
+                                    prev: 'Предыдущая страница',
+                                    next: 'Следующая страница',
+                                    last: 'Последняя страница',
+                                    more: 'Другие страницы',
+                                    input: 'Номер страницы',
+                                    select: 'Выбрать размер страницы'
+                                },
+                                info: 'Отображение {{start}} - {{end}} из {{total}} записей'
+                            }
+                        }
+                    }
+                },
+
+                toolbar: {
+                    items: {
+                        // pagination
+                        pagination: {
+                            // page size select
+                            pageSizeSelect: [5, 10, 20, 50, 100]
+                        }
+                    }
+                }
+            });
+
+            var query = datatable.getDataSourceQuery();
+
+            $('#searchFile').on('keyup', function (e) {
+                datatable.search($(this).val().toLowerCase());
+            }).val(query.generalSearch);
+
+
+        };
+
+        return {
+            //== Public functions
+            init: function () {
+                // init dmeo
+                mainTableInit();
+            }
+        };
+    }();
+
+    jQuery(document).ready(function () {
+        DatatableDataLocalFiles.init();
+    });
 </script>
 <script type="text/javascript">
     $(document).ready(function() {

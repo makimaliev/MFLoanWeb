@@ -39,7 +39,11 @@ var DatatableDataLocalBankrupts = function () {
 			columns: [{
                 field: "id",
                 title: "#",
-                responsive: {hidden: 'xl'},
+                template: function (row) {
+                    return '\
+						<a href="/manage/debtor/'+debtorId+'/loan/'+loanId+'/bankrupt/'+row.id+'/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
+					';
+                }
             }, {
 				field: "startedOnDate",
 				title: "Дата инициирования",

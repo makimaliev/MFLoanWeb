@@ -357,8 +357,10 @@ public class PaymentController {
     @RequestMapping("/manage/debtor/{debtorId}/loan/{loanId}/payment/{paymentId}/addInformation")
     public String getAddInformationForm(Model model, @PathVariable("debtorId") Long debtorId, @PathVariable("loanId") Long loanId, @PathVariable("paymentId") Long paymentId){
 
-        model.addAttribute("debtorId",debtorId);
-        model.addAttribute("loanId",loanId);
+        String ids="";
+        ids=ids+"debtorId:"+debtorId+",";
+        ids=ids+"loanId:"+loanId;
+        model.addAttribute("ids",ids);
 
         Payment payment=paymentService.getById(paymentId);
         model.addAttribute("object",payment);

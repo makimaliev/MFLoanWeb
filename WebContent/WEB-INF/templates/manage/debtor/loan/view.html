@@ -1390,8 +1390,7 @@
 
 												<div class="col-xl-3 order-3 order-xl-3 m--align-right">
 													<div class="row">
-														<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_INFORMATION')" data-remote="false" data-toggle="modal"
-														   data-target="#attachment" th:href="@{/4/__${loan.id}__/information/add}"
+														<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_INFORMATION')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/addInformation}"
 														   role="button" class="btn btn-success" th:text="#{label.add.attachment}"> Add
 															Attachment</a>
 													</div>
@@ -2365,7 +2364,11 @@
                             columns: [{
                                 field: "id",
                                 title: "#",
-                                responsive: {hidden: 'xl'},
+                                template: function (row) {
+                                    return '\
+									<a href="/manage/debtor/'+ debtorId + '/loan/' + loanId+ '/guarantoragreement/' + row.id + '/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
+								';
+                                }
                             }, {
                                 field: "notaryOfficeRegNumber",
                                 title: "Номер"
@@ -2461,6 +2464,7 @@
     });
 </script>
 <script>
+    // files datatable
     var DatatableDataLocalFiles = function () {
         //== Private functions
 
@@ -2519,6 +2523,9 @@
                         result = result + '\
 						<a href="/systemFile/' + row.system_file_id +'/download" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Редактировать">\
 							<i class="la la-download"></i>\
+						</a>\
+						<a href="/attachment/' + row.attachment_id +'/details" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Документ">\
+							<i class="fa fa-file-o"></i>\
 						</a>\
 					';
 

@@ -4,7 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.org.service.StaffService;
+import kg.gov.mf.loan.admin.sys.model.Attachment;
+import kg.gov.mf.loan.admin.sys.model.Information;
+import kg.gov.mf.loan.admin.sys.model.SystemFile;
 import kg.gov.mf.loan.admin.sys.model.User;
+import kg.gov.mf.loan.admin.sys.service.AttachmentService;
+import kg.gov.mf.loan.admin.sys.service.InformationService;
+import kg.gov.mf.loan.admin.sys.service.SystemFileService;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collateral.*;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
@@ -15,6 +21,7 @@ import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.web.fetchModels.ItemArrestFreeModel;
 import kg.gov.mf.loan.web.fetchModels.ItemInspectionResultModel;
+import kg.gov.mf.loan.web.fetchModels.SystemFileModel;
 import kg.gov.mf.loan.web.util.Utils;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -29,14 +36,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Controller
 public class CollateralItemController {
-	
+
 	@Autowired
 	CollateralAgreementService agreementService;
 	
@@ -82,6 +86,15 @@ public class CollateralItemController {
 	@Autowired
 	LoanService loanService;
 
+	@Autowired
+	InformationService informationService;
+
+	@Autowired
+	AttachmentService attachmentService;
+
+	@Autowired
+	SystemFileService systemFileService;
+
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -122,6 +135,9 @@ public class CollateralItemController {
 
         String jsonArrestFrees = gson.toJson(getArrestFreesByItemId(itemId));
         model.addAttribute("arrestFrees", jsonArrestFrees);
+
+		String jsonFiles= gson.toJson(getSystemFilesByItemId(itemId));
+		model.addAttribute("files", jsonFiles);
 
         String ownerName= "-";
         String organizationName = "-";
@@ -609,6 +625,26 @@ public class CollateralItemController {
     }
     //END - C TYPE
 
+//	add information form
+	@RequestMapping("/manage/debtor/{debtorId}/agreement/{agreementId}/item/{itemId}/addInformation")
+	public String getAddInformationForm(Model model, @PathVariable("debtorId") Long debtorId,@PathVariable("agreementId") Long agreementId,@PathVariable("itemId") Long itemId){
+
+
+		String ids="";
+		ids=ids+"debtorId:"+debtorId+",";
+		ids=ids+"agreementId:"+agreementId;
+		model.addAttribute("ids",ids);
+
+		CollateralAgreement agreement=agreementService.getById(agreementId);
+		model.addAttribute("object",agreement);
+		model.addAttribute("systemObjectTypeId",7);
+
+		model.addAttribute("attachment",new Attachment());
+
+		return "/manage/debtor/loan/payment/addInformationForm";
+
+	}
+
     private List<ItemInspectionResultModel> getInspectionsByItemId(long itemId)
     {
         List<ItemInspectionResultModel> result = new ArrayList<>();
@@ -825,5 +861,30 @@ public class CollateralItemController {
 			System.out.println(e);
 		}
 		session.getTransaction().commit();
+	}
+
+	private List<SystemFileModel> getSystemFilesByItemId(Long itemId){
+
+		List<SystemFileModel> list=new ArrayList<>();
+		List<Information> informations=informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(7,itemId);
+		for (Information information1:informations){
+			Information information=informationService.findById(information1.getId());
+			Set<Attachment> attachments= information.getAttachment();
+			for (Attachment attachment1:attachments){
+				Attachment attachment=attachmentService.findById(attachment1.getId());
+				for (SystemFile systemFile1:attachment.getSystemFile()){
+					SystemFile systemFile=systemFileService.findById(systemFile1.getId());
+					SystemFileModel systemFileModel=new SystemFileModel();
+					systemFileModel.setAttachment_id(attachment.getId());
+					systemFileModel.setSys_name(systemFile.getName());
+					systemFileModel.setSystem_file_id(systemFile.getId());
+					systemFileModel.setAttachment_name(attachment.getName());
+					systemFileModel.setPath(systemFile.getPath());
+					list.add(systemFileModel);
+				}
+			}
+		}
+
+		return list;
 	}
 }

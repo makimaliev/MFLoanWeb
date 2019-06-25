@@ -36,6 +36,7 @@ import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -275,6 +276,25 @@ public class CollateralAgreementController {
 
 		return "redirect: /manage/debtor/{debtorId}/collateralagreement/{agreementId}/view";
 	}
+
+//    add information form
+	@RequestMapping("/manage/debtor/{debtorId}/agreement/{agreementId}/addInformation")
+	public String getAddInformationForm(Model model, @PathVariable("debtorId") Long debtorId,@PathVariable("agreementId") Long agreementId){
+
+		String ids="";
+		ids=ids+"debtorId:"+debtorId;
+
+		CollateralAgreement agreement=agreementService.getById(agreementId);
+		model.addAttribute("object",agreement);
+		model.addAttribute("systemObjectTypeId",6);
+
+		model.addAttribute("attachment",new Attachment());
+		model.addAttribute("ids",ids);
+
+		return "/manage/debtor/loan/payment/addInformationForm";
+
+	}
+
 
 	private List<CollateralItemModel> getItemsByAgreementId(long agreementId)
 	{

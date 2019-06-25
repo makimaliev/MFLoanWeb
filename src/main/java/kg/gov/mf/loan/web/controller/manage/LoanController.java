@@ -2,7 +2,6 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import kg.gov.mf.loan.admin.org.model.Address;
 import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.org.service.AddressService;
 import kg.gov.mf.loan.admin.sys.model.Attachment;
@@ -42,7 +41,6 @@ import kg.gov.mf.loan.manage.service.orderterm.*;
 import kg.gov.mf.loan.manage.service.process.LoanSummaryService;
 import kg.gov.mf.loan.web.fetchModels.*;
 import kg.gov.mf.loan.web.util.Utils;
-import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,12 +52,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -748,7 +743,6 @@ public class LoanController {
                 loan.setParent(null);
 
             loan.setLastDate(loan.getRegDate());
-            loan.setCloseDate(loan.getRegDate());
             loan.setLoanState(loanStateService.getById(2L));
 
             CreditOrder creditOrder = creditOrderRepository.findOne(loan.getCreditOrder().getId());
@@ -992,110 +986,28 @@ public class LoanController {
         return "/manage/debtor/loanSummary";
     }
 
-    @RequestMapping("/manage/debtor/{debtorId}/loan/{loanId}/attachment/4/add")
-    public String addAttachment(MultipartHttpServletRequest request,@PathVariable("debtorId") Long debtorId,
-                                 @PathVariable("loanId") Long loanId,String name) {
-
-        String path =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
-
-	    Debtor debtor=debtorService.getById(debtorId);
-	    Address address =addressService.findById(debtor.getAddress_id());
-	    Long regionId=address.getRegion().getId();
-	    Long districtId=address.getDistrict().getId();
-        File folder = new File(path);
-        path=path+regionId+"/";
-        folder=new File(path);
-        boolean exists = folder.exists();
-        if(!exists){
-            folder.mkdir();
-        }
-        path=path+districtId+"/";
-        folder=new File(path);
-        exists = folder.exists();
-        if(!exists){
-            folder.mkdir();
-        }
-        path=path+debtorId+"/";
-        folder=new File(path);
-        exists = folder.exists();
-        if(!exists){
-            folder.mkdir();
-        }
-        path=path+loanId+"/";
-        folder=new File(path);
-        exists = folder.exists();
-        if(!exists){
-            folder.mkdir();
-        }
-        path=path+4+"/";
-        folder=new File(path);
-        exists = folder.exists();
-        if(!exists){
-            folder.mkdir();
-        }
+    //	add information form
+    @RequestMapping("/manage/debtor/{debtorId}/loan/{loanId}/addInformation")
+    public String getAddInformationForm(Model model, @PathVariable("debtorId") Long debtorId,@PathVariable("loanId") Long loanId){
 
 
-	    Information information;
-	    List<Information> informationList=informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(4,loanId);
-	    if(informationList.size()>0){
-	        information=informationList.get(0);
-        }
-        else{
-            information=new Information();
-            information.setName(name);
-            information.setDate(new Date());
-            information.setParentInformation(null);
-            information.setSystemObjectId(loanId);
-            information.setSystemObjectTypeId(4);
-            informationService.create(information);
-        }
+        String ids="";
+        ids=ids+"debtorId:"+debtorId+",";
+        ids=ids+"loanId:"+loanId;
+        model.addAttribute("ids",ids);
 
-        Attachment attachment = new Attachment();
-        try {
-            Iterator<String> itr = request.getFileNames();
+        Loan loan=loanService.getById(loanId);
+        model.addAttribute("object",loan);
+        model.addAttribute("systemObjectTypeId",4);
 
-            while (itr.hasNext()) {
+        model.addAttribute("attachment",new Attachment());
 
-                SystemFile systemFile=new SystemFile();
-                String uploadedFile = itr.next();
-                MultipartFile part = request.getFile(uploadedFile);
+        return "/manage/debtor/loan/payment/addInformationForm";
 
-                String filename = part.getOriginalFilename();
-                folder=new File(path+filename);
-                exists = folder.exists();
-                if(exists){
-                }
-                else{
-
-//                String uuid = UUID.randomUUID().toString();
-//                String fsname = uuid + ".atach";
-
-                File file = new File(path + filename);
-
-                part.transferTo(file);
-
-                systemFile.setName(filename);
-                systemFile.setPath(path + filename);
-
-                attachment.setName(name);
-                attachment.setInformation(information);
-
-
-                systemFileService.create(systemFile);
-                systemFile.setAttachment(attachment);
-                attachmentService.create(attachment);
-                systemFileService.edit(systemFile);}
-            }
-            informationService.edit(information);
-        }
-        catch (Exception e) {
-            System.out.println(e);
-        }
-
-        return "redirect:/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 
-//	if less than zero make zero
+
+    //	if less than zero make zero
     public Double conditional(Double num){
         if(num<0){
             return Double.valueOf(0);

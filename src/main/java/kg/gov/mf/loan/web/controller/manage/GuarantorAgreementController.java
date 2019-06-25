@@ -1,5 +1,13 @@
 package kg.gov.mf.loan.web.controller.manage;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.admin.sys.model.Attachment;
+import kg.gov.mf.loan.admin.sys.model.Information;
+import kg.gov.mf.loan.admin.sys.model.SystemFile;
+import kg.gov.mf.loan.admin.sys.service.AttachmentService;
+import kg.gov.mf.loan.admin.sys.service.InformationService;
+import kg.gov.mf.loan.admin.sys.service.SystemFileService;
 import kg.gov.mf.loan.manage.model.collateral.GuarantorAgreement;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
@@ -11,6 +19,7 @@ import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.web.fetchModels.GuarantorAgreementModel;
 import kg.gov.mf.loan.web.fetchModels.GuarantorMetaModel;
+import kg.gov.mf.loan.web.fetchModels.SystemFileModel;
 import kg.gov.mf.loan.web.util.Meta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -43,6 +52,15 @@ public class GuarantorAgreementController {
     @Autowired
     EntityManager entityManager;
 
+    @Autowired
+    InformationService informationService;
+
+    @Autowired
+    AttachmentService attachmentService;
+
+    @Autowired
+    SystemFileService systemFileService;
+
     @InitBinder
     public void initBinder(WebDataBinder binder)
     {
@@ -54,6 +72,31 @@ public class GuarantorAgreementController {
     public String list(ModelMap model){
 
         return "/manage/debtor/loan/guarantoragreement/list";
+
+    }
+
+    @RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/guarantoragreement/{agreementId}/view"})
+    public String viewCollateralItem(ModelMap model,
+                                     @PathVariable("debtorId")Long debtorId,
+                                     @PathVariable("loanId")Long loanId,
+                                     @PathVariable("agreementId")Long agreementId) {
+
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String jsonSysFiles= gson.toJson(getSystemFilesByArrestFreeId(agreementId));
+        model.addAttribute("files", jsonSysFiles);
+
+
+        Attachment attachment=new Attachment();
+        model.addAttribute("attachment",attachment);
+
+        GuarantorAgreement agreement=guarantorAgreementService.getById(agreementId);
+        model.addAttribute("agreement", agreement);
+        model.addAttribute("debtorId", debtorId);
+        model.addAttribute("agreementloanId", loanId);
+
+
+
+        return "/manage/debtor/loan/guarantoragreement/view";
 
     }
 
@@ -191,5 +234,52 @@ public class GuarantorAgreementController {
 
 
         return metaModel;
+    }
+
+    //    add information form
+    @RequestMapping(value = { "/manage/debtor/{debtorId}/loan/{loanId}/guarantoragreement/{agreementId}/addInformation"})
+    public String getAddInformationForm(ModelMap model,
+                                     @PathVariable("debtorId")Long debtorId,
+                                     @PathVariable("loanId")Long loanId,
+                                     @PathVariable("agreementId")Long agreementId) {
+
+        String ids="";
+        ids=ids+"debtorId:"+debtorId+",";
+        ids=ids+"loanId:"+loanId;
+        model.addAttribute("ids",ids);
+
+        GuarantorAgreement agreement=guarantorAgreementService.getById(agreementId);
+        model.addAttribute("object",agreement);
+        model.addAttribute("systemObjectTypeId",10);
+
+        model.addAttribute("attachment",new Attachment());
+
+        return "/manage/debtor/loan/payment/addInformationForm";
+
+    }
+
+    private List<SystemFileModel> getSystemFilesByArrestFreeId(Long id){
+
+        List<SystemFileModel> list=new ArrayList<>();
+        List<Information> informations=informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(10,id);
+        for (Information information1:informations){
+            Information information=informationService.findById(information1.getId());
+            Set<Attachment> attachments= information.getAttachment();
+            for (Attachment attachment1:attachments){
+                Attachment attachment=attachmentService.findById(attachment1.getId());
+                for (SystemFile systemFile1:attachment.getSystemFile()){
+                    SystemFile systemFile=systemFileService.findById(systemFile1.getId());
+                    SystemFileModel systemFileModel=new SystemFileModel();
+                    systemFileModel.setAttachment_id(attachment.getId());
+                    systemFileModel.setSys_name(systemFile.getName());
+                    systemFileModel.setSystem_file_id(systemFile.getId());
+                    systemFileModel.setAttachment_name(attachment.getName());
+                    systemFileModel.setPath(systemFile.getPath());
+                    list.add(systemFileModel);
+                }
+            }
+        }
+
+        return list;
     }
 }

@@ -288,81 +288,17 @@ public class InformationController {
 
 
 	@PostMapping("/object/{objectId}/attachment/{type}/add")
-	public String addAttachment(MultipartHttpServletRequest request,@RequestParam(value = "debtorId",required = false) Long debtorId ,@RequestParam(value = "loanId",required = false) Long loanId, @PathVariable("objectId") Long objectId, @PathVariable("type") int type, Attachment attachment,@RequestParam(value = "documentIds",required = false) Long[] documentIds) {
+	public String addAttachment(MultipartHttpServletRequest request,@RequestParam(value = "ids") String ids, @PathVariable("objectId") Long objectId, @PathVariable("type") int type, Attachment attachment, @RequestParam(value = "documentIds",required = false) Long[] documentIds) {
 
-		String path =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
 		String name=attachment.getName();
-        File folder = new File(path);
-        boolean exists=false;
-        if(type!=2) {
-            Debtor debtor = debtorService.getById(Long.valueOf(String.valueOf(debtorId)));
-            Address address = addressService.findById(debtor.getAddress_id());
-            Long regionId = address.getRegion().getId();
-            Long districtId = address.getDistrict().getId();
-            path = path + regionId + "/";
-            folder = new File(path);
-            exists = folder.exists();
-            if (!exists) {
-                folder.mkdir();
-            }
-            path = path + districtId + "/";
-            folder = new File(path);
-            exists = folder.exists();
-            if (!exists) {
-                folder.mkdir();
-            }
-            path = path + debtorId + "/";
-            folder = new File(path);
-            exists = folder.exists();
-            if (!exists) {
-                folder.mkdir();
-            }
-            path = path + loanId + "/";
-            folder = new File(path);
-            exists = folder.exists();
-            if (!exists) {
-                folder.mkdir();
-            }
-            if (type != 4) {
-                path = path + type + "/";
-                folder = new File(path);
-                exists = folder.exists();
-                if (!exists) {
-                    folder.mkdir();
-                }
-            }
-        }
-        else if(type==2){
-            path = path + "organization/";
-            folder = new File(path);
-            exists = folder.exists();
-            if (!exists) {
-                folder.mkdir();
-            }
-            Organization organization=organizationService.findById(objectId);
-            Address address = addressService.findById(organization.getAddress().getId());
-            Long regionId = address.getRegion().getId();
-            Long districtId = address.getDistrict().getId();
-            path = path + regionId + "/";
-            folder = new File(path);
-            exists = folder.exists();
-            if (!exists) {
-                folder.mkdir();
-            }
-            path = path + districtId + "/";
-            folder = new File(path);
-            exists = folder.exists();
-            if (!exists) {
-                folder.mkdir();
-            }
-            path = path + objectId+ "/";
-            folder = new File(path);
-            exists = folder.exists();
-            if (!exists) {
-                folder.mkdir();
-            }
-        }
+		HashMap<String,Long> idsMap=new HashMap<>();
+		String[] splitedByCommaIds=ids.split(",");
+		for(String s:splitedByCommaIds){
+			String[] splitted=s.split(":");
+			idsMap.put(splitted[0],Long.valueOf(splitted[1]));
+		}
 
+		String path=path = getPathForAttachment(idsMap, objectId, type);
 		Information information;
 		List<Information> informationList=informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(type,objectId);
 		if(informationList.size()>0){
@@ -377,21 +313,19 @@ public class InformationController {
 			information.setSystemObjectTypeId(type);
 			informationService.create(information);
 		}
-
-//		Attachment attachment = new Attachment();
 		Set<Long> docIdSet=new HashSet<>();
 		for (Long docId:documentIds){
 			docIdSet.add(docId);
 		}
 		attachment.setDocumentIds(docIdSet);
-		if(attachment.getInformation()==null){
+		if(attachment.getInformation()==null || attachment.getInformation().getId()==0){
 			attachment.setInformation(information);
 		}
 		attachmentService.create(attachment);
 		Set<SystemFile> systemFileSet=new HashSet<>();
 		try {
 			Iterator<String> itr = request.getFileNames();
-
+			boolean exists=false;
 			while (itr.hasNext()) {
 
 				SystemFile systemFile=new SystemFile();
@@ -399,24 +333,17 @@ public class InformationController {
 				MultipartFile part = request.getFile(uploadedFile);
 
 				String filename = part.getOriginalFilename();
-				folder=new File(path+filename);
+				File folder=new File(path+filename);
 				exists = folder.exists();
 				if(exists){
 				}
 				else{
-
-//                String uuid = UUID.randomUUID().toString();
-//                String fsname = uuid + ".atach";
-
 					File file = new File(path + filename);
 
 					part.transferTo(file);
 
 					systemFile.setName(filename);
 					systemFile.setPath(path + filename);
-
-
-
 					systemFile.setAttachment(attachment);
 					systemFileService.create(systemFile);
 					systemFileSet.add(systemFile);
@@ -430,17 +357,37 @@ public class InformationController {
 			System.out.println(e);
 		}
 
-		if(type==5){
-			return "redirect:/manage/debtor/"+debtorId+"/loan/"+loanId+"/payment/"+objectId+"/view";
-		}
-		else if(type==6){
-			return "redirect:/manage/debtor/{debtorId}/collateralagreement/"+objectId+"/view";
-		}
-        else if(type==2){
-            return "redirect:/organization/"+objectId+"/information/view";
-        }
-		else{
-			return "redirect:/manage/debtor/{debtorId}/loan/{loanId}/view";
+		switch (type){
+
+			case 2:
+				return "redirect:/organization/"+objectId+"/information/view";
+			case 5:
+				return "redirect:/manage/debtor/"+idsMap.get("debtorId")+"/loan/"+idsMap.get("loanId")+"/payment/"+objectId+"/view";
+			case 6:
+				return "redirect:/manage/debtor/"+idsMap.get("debtorId")+"/collateralagreement/"+objectId+"/view";
+			case 7:
+				return "redirect:/manage/debtor/"+idsMap.get("debtorId")+"/collateralagreement/"+idsMap.get("agreementId")+"/collateralitem/"+objectId+"/view";
+            case 8:
+                return "redirect:/manage/debtor/"+idsMap.get("debtorId")+"/collateralagreement/"+idsMap.get("agreementId")+"/collateralitem/"+idsMap.get("itemId")+"/collateralinspection/"+objectId+"/view";
+            case 9:
+                return "redirect:/manage/debtor/"+idsMap.get("debtorId")+"/collateralagreement/"+idsMap.get("agreementId")+"/collateralitem/"+idsMap.get("itemId")+"/collateralarrestfree/"+objectId+"/view";
+            case 10:
+                return "redirect:/manage/debtor/"+idsMap.get("debtorId")+"/loan/"+idsMap.get("loanId")+"/guarantoragreement/"+objectId+"/view";
+			case 11:
+				return "redirect:/manage/debtor/"+idsMap.get("debtorId")+"/collectionprocedure/"+idsMap.get("procedureId")+"/collectionphase/"+objectId+"/view";
+            case 12:
+                return "redirect:/manage/debtor/"+idsMap.get("debtorId")+"/collectionprocedure/"+idsMap.get("procedureId")+"/collectionphase/"+idsMap.get("phaseId")+"/collectionevent/"+objectId+"/view";
+			case 13:
+				return "redirect:/manage/debtor/"+idsMap.get("debtorId")+"/loan/"+idsMap.get("loanId")+"/wo/"+objectId+"/view";
+			case 14:
+				return "redirect:/manage/debtor/"+idsMap.get("debtorId")+"/loan/"+idsMap.get("loanId")+"/loangoods/"+objectId+"/view";
+            case 15:
+                return "redirect:/manage/debtor/"+idsMap.get("debtorId")+"/loan/"+idsMap.get("loanId")+"/debttransfer/"+objectId+"/view";
+            case 16:
+                return "redirect:/manage/debtor/"+idsMap.get("debtorId")+"/loan/"+idsMap.get("loanId")+"/bankrupt/"+objectId+"/view";
+			default:
+				return "redirect:/manage/debtor/"+idsMap.get("debtorId")+"/loan/"+idsMap.get("loanId")+"/view";
+
 		}
 	}
 
@@ -489,6 +436,107 @@ public class InformationController {
 	}
 
 
+//	get path to upload attached files
+	public String getPathForAttachment(HashMap<String, Long> ids, long objectId, int type){
 
+
+		List<String> pathValues=new ArrayList<>();
+		if(type==2){
+			Organization organization=organizationService.findById(objectId);
+			Address address = addressService.findById(organization.getAddress().getId());
+			Long regionId = address.getRegion().getId();
+			Long districtId = address.getDistrict().getId();
+			pathValues.add("organizations");
+			pathValues.add(String.valueOf(regionId));
+			pathValues.add(String.valueOf(districtId));
+			pathValues.add(String.valueOf(objectId));
+		}
+		else if(type==6){
+			Debtor debtor = debtorService.getById(ids.get("debtorId"));
+			Address address = addressService.findById(debtor.getAddress_id());
+			Long regionId = address.getRegion().getId();
+			Long districtId = address.getDistrict().getId();
+			pathValues.add(String.valueOf(regionId));
+			pathValues.add(String.valueOf(districtId));
+			pathValues.add(String.valueOf(ids.get("debtorId")));
+			pathValues.add("agreements");
+			pathValues.add(String.valueOf(objectId));
+		}
+		else if(type==7) {
+			Debtor debtor = debtorService.getById(ids.get("debtorId"));
+			Address address = addressService.findById(debtor.getAddress_id());
+			Long regionId = address.getRegion().getId();
+			Long districtId = address.getDistrict().getId();
+			pathValues.add(String.valueOf(regionId));
+			pathValues.add(String.valueOf(districtId));
+			pathValues.add(String.valueOf(ids.get("debtorId")));
+			pathValues.add("agreements");
+			pathValues.add(String.valueOf(ids.get("agreementId")));
+            pathValues.add(String.valueOf(type));
+			pathValues.add(String.valueOf(objectId));
+		}
+        else if(type==8||type==9) {
+            Debtor debtor = debtorService.getById(ids.get("debtorId"));
+            Address address = addressService.findById(debtor.getAddress_id());
+            Long regionId = address.getRegion().getId();
+            Long districtId = address.getDistrict().getId();
+            pathValues.add(String.valueOf(regionId));
+            pathValues.add(String.valueOf(districtId));
+            pathValues.add(String.valueOf(ids.get("debtorId")));
+            pathValues.add("agreements");
+            pathValues.add(String.valueOf(ids.get("agreementId")));
+            pathValues.add(String.valueOf(ids.get("itemId")));
+            pathValues.add(String.valueOf(type));
+            pathValues.add(String.valueOf(objectId));
+        }
+		else if(type==11||type==12) {
+			Debtor debtor = debtorService.getById(ids.get("debtorId"));
+			Address address = addressService.findById(debtor.getAddress_id());
+			Long regionId = address.getRegion().getId();
+			Long districtId = address.getDistrict().getId();
+			pathValues.add(String.valueOf(regionId));
+			pathValues.add(String.valueOf(districtId));
+			pathValues.add(String.valueOf(ids.get("debtorId")));
+			pathValues.add("procedures");
+			pathValues.add(String.valueOf(ids.get("procedureId")));
+            pathValues.add(String.valueOf(type));
+			pathValues.add(String.valueOf(objectId));
+		}
+		else{
+			Debtor debtor = debtorService.getById(ids.get("debtorId"));
+			Address address = addressService.findById(debtor.getAddress_id());
+			Long regionId = address.getRegion().getId();
+			Long districtId = address.getDistrict().getId();
+			pathValues.add(String.valueOf(regionId));
+			pathValues.add(String.valueOf(districtId));
+			pathValues.add(String.valueOf(ids.get("debtorId")));
+			pathValues.add(String.valueOf(ids.get("loanId")));
+			if(type!=4) {
+				pathValues.add(String.valueOf(type));
+				pathValues.add(String.valueOf(objectId));
+			}
+		}
+
+		return attachmentsPathMaker(pathValues);
+
+	}
+
+//	generates folders if !exists and gives path
+	public String attachmentsPathMaker(List<String> pathValues){
+
+		String path =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
+		File folder=null;
+		for(String pathValue:pathValues){
+			path = path + pathValue + "/";
+			folder = new File(path);
+			if (!folder.exists()) {
+				folder.mkdir();
+			}
+		}
+		return path;
+	}
 
 }
+
+
+

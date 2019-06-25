@@ -7,7 +7,13 @@ import kg.gov.mf.loan.admin.org.service.OrganizationService;
 import kg.gov.mf.loan.admin.org.service.PersonService;
 import kg.gov.mf.loan.admin.org.service.PositionService;
 import kg.gov.mf.loan.admin.org.service.StaffService;
+import kg.gov.mf.loan.admin.sys.model.Attachment;
+import kg.gov.mf.loan.admin.sys.model.Information;
+import kg.gov.mf.loan.admin.sys.model.SystemFile;
 import kg.gov.mf.loan.admin.sys.model.User;
+import kg.gov.mf.loan.admin.sys.service.AttachmentService;
+import kg.gov.mf.loan.admin.sys.service.InformationService;
+import kg.gov.mf.loan.admin.sys.service.SystemFileService;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collection.*;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
@@ -141,6 +147,15 @@ public class CollectionPhaseController {
 	@Autowired
     EventTypeService eventTypeService;
 
+	@Autowired
+	InformationService informationService;
+
+	@Autowired
+	AttachmentService attachmentService;
+
+	@Autowired
+	SystemFileService systemFileService;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
@@ -174,11 +189,17 @@ public class CollectionPhaseController {
         }
         model.addAttribute("events",collectionEvents);
 
+
+
         Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
         String jsonPhaseDetails = gson.toJson(getPhaseDetailsByPhaseId(phaseId));
         model.addAttribute("phaseDetails", jsonPhaseDetails);
+
 		String jsonLoans = gson.toJson(getLoansByPhaseId(phaseId));
         model.addAttribute("jsonLoans", jsonLoans);
+
+		String jsonFiles = gson.toJson(getSystemFilesByItemId(phaseId));
+		model.addAttribute("files", jsonFiles);
 
 		return "/manage/debtor/collectionprocedure/collectionphase/view";
 
@@ -974,6 +995,27 @@ public class CollectionPhaseController {
 		return "redirect:" + "/manage/debtor/collectionprocedure/collectionphase/type/list";
 	}
 
+	//	add information form
+	@RequestMapping("/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionPhase/{phaseId}/addInformation")
+	public String getAddInformationForm(Model model, @PathVariable("debtorId") Long debtorId,@PathVariable("procId") Long procId,@PathVariable("phaseId") Long phaseId){
+
+
+		String ids="";
+		ids=ids+"debtorId:"+debtorId+",";
+		ids=ids+"procedureId:"+procId;
+		model.addAttribute("ids",ids);
+
+		CollectionPhase phase=phaseService.getById(phaseId);
+		model.addAttribute("object",phase);
+		model.addAttribute("systemObjectTypeId",11);
+
+		model.addAttribute("attachment",new Attachment());
+
+		return "/manage/debtor/loan/payment/addInformationForm";
+
+	}
+
+
 	private long getLatestDetailsByDate(long loanId)
 	{
 		String baseQuery = "SELECT det.id\n" +
@@ -1638,4 +1680,29 @@ public class CollectionPhaseController {
             System.out.println(e);
         }
     }
+
+	private List<SystemFileModel> getSystemFilesByItemId(Long phaseId){
+
+		List<SystemFileModel> list=new ArrayList<>();
+		List<Information> informations=informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(11,phaseId);
+		for (Information information1:informations){
+			Information information=informationService.findById(information1.getId());
+			Set<Attachment> attachments= information.getAttachment();
+			for (Attachment attachment1:attachments){
+				Attachment attachment=attachmentService.findById(attachment1.getId());
+				for (SystemFile systemFile1:attachment.getSystemFile()){
+					SystemFile systemFile=systemFileService.findById(systemFile1.getId());
+					SystemFileModel systemFileModel=new SystemFileModel();
+					systemFileModel.setAttachment_id(attachment.getId());
+					systemFileModel.setSys_name(systemFile.getName());
+					systemFileModel.setSystem_file_id(systemFile.getId());
+					systemFileModel.setAttachment_name(attachment.getName());
+					systemFileModel.setPath(systemFile.getPath());
+					list.add(systemFileModel);
+				}
+			}
+		}
+
+		return list;
+	}
 }
