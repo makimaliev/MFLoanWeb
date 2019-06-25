@@ -286,13 +286,20 @@
                                                 </div>
                                                 <!--begin:: Widgets/Stats2-2 -->
                                             </div>
-											<div sec:authorize="hasAnyAuthority('ADMIN')" class="m-widget1">
-												<div class="m-widget1__item">
-													<div class="row m-row--no-padding align-items-center">
-
+											<div class="col-md-12 col-lg-12 col-xl-4">
+												<div sec:authorize="hasAnyAuthority('ADMIN')" class="m-widget1">
+													<div class="m-widget1__item">
+														<div class="row m-row--no-padding align-items-center">
+															<div class="col">
+																<button th:href="@{/debtor/description/save}" type="button" class="btn btn-primary" th:text="#{label.change.description}" data-toggle="modal" data-target="#changeDebtorDescriptionModal"></button>
+																<br>
+																<span class="m-widget1__desc m--font-brand" th:text="${debtor.description}"></span>
+															</div>
+														</div>
 													</div>
 												</div>
 											</div>
+
                                         </div>
                                     </div>
                                 </div>
