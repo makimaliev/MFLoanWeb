@@ -393,6 +393,13 @@ public class PersonController {
 				person.getIdentityDoc().setIdentityDocGivenBy(identityDocGivenByService.findById(1));
 			}
 			Owner owner;
+			Address address=addressService.findById(person.getAddress().getId());
+			if (address.getAokmotu()==null){
+				Aokmotu aokmotu=aokmotuService.findById(1L);
+				address.setAokmotu(aokmotu);
+				addressService.edit(address);
+			}
+			person.setAddress(address);
 			personService.edit(person);
 			try{
 				owner=this.ownerService.getByEntityId(person.getId(),"PERSON");
