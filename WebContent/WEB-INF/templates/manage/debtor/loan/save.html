@@ -82,7 +82,7 @@
 						<input hidden="true" type="text" id="id" name="id" th:field="*{id}"/>
 						<input hidden="true" type="text" id="parentLoanId" th:field="*{parent}" />
 						<input hidden="true" type="text" id="creditOrderId" th:field="*{creditOrder.id}" />
-						<input hidden="true" type="text" id="staffId" th:field="*{supervisorId}" />
+						<input hidden="true" type="text" name="supervisorId" id="staffId" th:field="*{supervisorId}" />
 						<input hidden="true" type="text" id="finGroup" th:field="*{loanFinGroup.id}" />
 						<input hidden="true" type="text" id="fund" th:field="*{fund.id}" />
 						<input  hidden="true" th:value="${debtorId}"  type="text" id="debtordunId">
@@ -256,7 +256,7 @@
 </script>
 
 <script type="text/javascript">
-    var d = document.getElementById('debtordunId').value;
+    var d = $('debtordunId').val();
     $.ajax({
         type:'post',
         data:{'q':d},
@@ -266,12 +266,12 @@
     {
 
 
-        var loan_text = document.getElementById("loan_typeahead").value;
-        var loan_id = loan_text.match(/[^[\]]+(?=])/g);
-        if(loan_id == null){
-            loan_id = 0;
-		}
-        $("#parentLoanId").val(loan_id);
+        // var loan_text = $("#loan_typeahead").val();
+        // var loan_id = loan_text.match(/[^[\]]+(?=])/g);
+        // if(loan_id == null){
+        //     loan_id = 0;
+		// }
+        // $("#parentLoanId").val(loan_id);
 
         var order_text = document.getElementById("order_typeahead").value;
         var order_id = order_text.match(/[^[\]]+(?=])/g);
@@ -279,6 +279,8 @@
 
         var staff_text = document.getElementById("staff_typeahead").value;
         var staff_id = staff_text.match(/[^[\]]+(?=])/g);
+        console.log(staff_id)
+		alert(staff_id)
         $("#staffId").val(staff_id);
     }
 </script>
