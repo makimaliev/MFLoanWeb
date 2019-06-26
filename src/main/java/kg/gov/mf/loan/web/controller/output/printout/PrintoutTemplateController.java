@@ -722,7 +722,7 @@ public class PrintoutTemplateController {
 
                 case 1:
 
-                    String filePath = UPLOADED_FOLDER+ "/"+"1. Договор займа.docx";
+                    String filePath = UPLOADED_FOLDER+ "/"+"1. Договор займа.doc";
 
                     File file = new File(filePath);
 
@@ -781,7 +781,7 @@ public class PrintoutTemplateController {
                     break;
 
                 case 2:
-                    filePath = UPLOADED_FOLDER+ "/"+"2. Договор бп (finish).docx";
+                    filePath = UPLOADED_FOLDER+ "/"+"2. Договор бп (finish).doc";
 
                     file = new File(filePath);
 
