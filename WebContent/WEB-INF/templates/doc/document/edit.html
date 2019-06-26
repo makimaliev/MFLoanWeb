@@ -11,6 +11,7 @@
             border-bottom: 1px dashed #ccc;
         }
     </style>
+    <link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
 </head>
 <!-- end::Head -->
 
@@ -174,10 +175,12 @@
         $('#documentLinks').select2();
 
         var dt_settings = {
+            format : 'dd-mm-yyyy hh:mm',
+            todayHighlight: true,
             autoclose: true,
-            minView : 2,
-            maxView : 2,
-            format : 'dd-mm-yyyy 10:ii'
+            startView: 2,
+            minView: 2,
+            forceParse: 0
         };
         $('.dtp').datetimepicker(dt_settings);
 

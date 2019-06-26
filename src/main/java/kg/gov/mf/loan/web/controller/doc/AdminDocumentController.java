@@ -61,6 +61,10 @@ public class AdminDocumentController extends DocumentFlowController {
 
         if(getUser() == null) return "/login/login";
 
+        Document doc = documentService.getById(document.getId());
+
+        document.setDispatchData(doc.getDispatchData());
+
         documentService.update(document);
 
         return "redirect:/doc?type=" + document.getDocumentType().getInternalName();

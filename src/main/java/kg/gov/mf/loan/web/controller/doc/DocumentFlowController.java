@@ -984,20 +984,28 @@ public class DocumentFlowController extends BaseController {
     }
 
     // Get Dispatch Data for selected Document
-    @RequestMapping("/dispatchData/{id}")
+    @RequestMapping("/dispatchData/{documentId}")
     @ResponseBody
-    public List<DispatchData> getDispatchData(@PathVariable("id") long id) {
+    public List<DispatchData> getDispatchData(@PathVariable("documentId") long documentId) {
 
         List<DispatchData> dispatchDataList = new ArrayList<>();
-        dispatchDataList.addAll(documentService.getById(id).getDispatchData());
+        dispatchDataList.addAll(documentService.getById(documentId).getDispatchData());
 
         return dispatchDataList;
     }
 
-    // Get Tasks for selected Document
-    @RequestMapping("/tasks/{id}")
+    // Get Tasks by Id
+    @RequestMapping("/task/{taskId}")
     @ResponseBody
-    public List getTasks(@PathVariable("id") long id) {
+    public Task getTask(@PathVariable("taskId") long taskId) {
+
+        return taskService.getById(taskId);
+    }
+
+    // Get Tasks for selected Document
+    @RequestMapping("/tasks/{objectId}")
+    @ResponseBody
+    public List getTasks(@PathVariable("objectId") long objectId) {
 
         String query =
                 "select \n" +
@@ -1016,7 +1024,7 @@ public class DocumentFlowController extends BaseController {
                         "where t.objectType = 'Document' and t.objectId = :objectId";
 
         List<Map<String,Object>> result = entityManager.createNativeQuery(query)
-                .setParameter("objectId", id)
+                .setParameter("objectId", objectId)
                 .unwrap(Query.class)
                 .setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE)
                 .list();

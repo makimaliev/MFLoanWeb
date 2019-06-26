@@ -149,8 +149,11 @@
 
             function handleTab() {
 
-                window.history.back();
-                window.close();
+                if(window.history.length > 1) {
+                    window.history.back();
+                } else {
+                    window.close();
+                }
             }
 
         </script>
