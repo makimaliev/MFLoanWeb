@@ -466,6 +466,7 @@
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="dispatchData_tab" role="tabpanel" aria-labelledby="nav-dispatchData_tab-tab">
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editDispatchData" th:onclick="'newDispatchData(\'' + *{id} + '\');'">Add DispatchData</button>
                                                 <table width="100%" class="table table-bordered">
                                                     <thead>
                                                         <tr>
@@ -473,6 +474,7 @@
                                                             <th>dispatchType</th>
                                                             <th>dispatchInitTime</th>
                                                             <th>dispatchBy</th>
+                                                            <th>description</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -481,11 +483,13 @@
                                                             <td width="100px" th:text="${dd.dispatchType.text()}"></td>
                                                             <td width="100px" th:text="${#dates.format(dd.dispatchInitTime, 'dd-MM-yyyy')}"></td>
                                                             <td th:text="${dd.dispatchBy?.staff?.name}"></td>
+                                                            <td th:text="${dd.description}"></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
                                             <div class="tab-pane fade" id="tasks_tab" role="tabpanel" aria-labelledby="nav-tasks_tab-tab">
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editTask" th:onclick="'newTask(\'' + *{id} + '\');'">Add Task</button>
                                                 <table width="100%" class="table table-bordered">
                                                     <thead>
                                                     <tr>
@@ -598,7 +602,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form th:action="@{/task/save}" id="task_form" class="m-form m-form--fit m-form--label-align-right" th:object="${task}" method="POST">
+                <form th:action="@{/admin/task/save}" id="task_form" class="m-form m-form--fit m-form--label-align-right" th:object="${task}" method="POST">
                     <div class="container">
                         <input type="hidden" th:field="*{id}"/>
                         <input type="hidden" th:field="*{version}"/>
@@ -656,17 +660,18 @@
                         </div>
                         <div class="form-group m-form__group row">
                             <label class="col-3 col-form-label"><span> Состояние : </span></label>
-                            <div class="col-sm-9"><input type="text" class="form-control m-input" th:field="*{status}"></div>
+                            <div class="col-sm-9">
+                                <select class="form-control m-input" th:field="*{status}">
+                                    <option value="OPEN">ОТКРЫТ</option>
+                                    <option value="CLOSED">ЗАКРЫТ</option>
+                                </select>
+                            </div>
                         </div>
-
-
-
-
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-success" form="task_form">Сохранить</button>
+                <button type="button" class="btn btn-success" form="task_form" id="saveTask">Сохранить</button>
                 <button type="button" class="btn btn-primary float-none" data-dismiss="modal"> Отмена </button>
             </div>
         </div>
@@ -682,13 +687,12 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form th:action="@{/doc/dispatchData/save}" id="dipatchdata_form" class="m-form m-form--fit m-form--label-align-right" th:object="${dispatch_data}" method="POST">
+                <form th:action="@{/doc/dispatchData/save}" id="dispatchdata_form" class="m-form m-form--fit m-form--label-align-right" th:object="${dispatch_data}" method="POST">
                     <div class="container">
                         <input type="hidden" th:field="*{id}"/>
                         <input type="hidden" th:field="*{version}"/>
                         <input type="hidden" th:field="*{uuid}"/>
                         <input type="hidden" th:field="*{record_status}"/>
-                        <input type="hidden" th:field="*{description}"/>
 
                         <div class="form-group m-form__group row">
                             <label class="col-3 col-form-label">
@@ -719,12 +723,19 @@
                                 </select>
                             </div>
                         </div>
-
+                        <div class="form-group m-form__group row">
+                            <label class="col-3 col-form-label">
+                                <span> Description : </span>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control m-input" th:field="*{description}"/>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-success" form="dipatchdata_form">Сохранить</button>
+                <button type="button" class="btn btn-success" form="dispatchdata_form" id="saveDispatchdata">Сохранить</button>
                 <button type="button" class="btn btn-primary float-none" data-dismiss="modal"> Отмена </button>
             </div>
         </div>
@@ -761,7 +772,7 @@
         $('#documentLinks').select2();
 
         var dt_settings = {
-            format : 'dd.mm.yyyy hh:mm',
+            format : 'dd-mm-yyyy hh:mm',
             todayHighlight: true,
             autoclose: true,
             startView: 2,
@@ -892,6 +903,41 @@
         $('.s2s ').select2(ssoption);
         $('.sds ').select2(sssoption);
 
+        $('body').on('click','#saveDispatchdata',function(e) {
+
+            var myform = document.getElementById("dispatchdata_form");
+            var formData = new FormData(myform );
+            $.ajax({
+                url: "/dispatchData/save/" + $("#document_form #id").val(),
+                data: formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                success: function (response) {
+                    window.location.reload();
+                }
+            });
+        });
+
+        $('body').on('click','#saveTask',function(e) {
+
+            var myform = document.getElementById("task_form");
+            var formData = new FormData(myform );
+
+            $.ajax({
+                url: "/admin/task/save",
+                data: formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                success: function (response) {
+                    window.location.reload();
+                }
+            });
+        });
+
     });
 
     function hide() {
@@ -910,22 +956,22 @@
             url: "/dispatchData/" + dispatchDataId,
             success: function(response){
 
-                console.log(response)
-                $("#dipatchdata_form #id").val(response.id);
-                $("#dipatchdata_form #record_status").val(response.record_status);
-                $("#dipatchdata_form #description").val(response.description);
-                $("#dipatchdata_form #dispatchType").val(response.dispatchType);
+                $("#dispatchdata_form")[0].reset();
+                $('#dispatchdata_form #dispatchBy').empty();
 
-                response.dispatchInitTime !== null ? $("input#dispatchInitTime").val(formatDate(new Date(response.dispatchInitTime))) : "";
-                response.dispatchResponseTime !== null ? $("input#dispatchResponseTime").val(formatDate(new Date(response.dispatchResponseTime))) : "";
+                $("#dispatchdata_form #id").val(response.id);
+                $("#dispatchdata_form #version").val(response.version);
+                $("#dispatchdata_form #uuid").val(response.uuid);
+                $("#dispatchdata_form #record_status").val(response.record_status);
+
+                $("#dispatchdata_form #description").val(response.description);
+                $("#dispatchdata_form #dispatchType").val(response.dispatchType);
+                $("#dispatchdata_form #dispatchInitTime").val(response.dispatchInitTime !== null ? formatDate(new Date(response.dispatchInitTime)): null);
 
                 var dispatchBy = new Option(response.dispatchBy.staff.name, response.dispatchBy.id, true, true);
-                $('#dipatchdata_form #dispatchBy').append(dispatchBy).trigger('change');
+                $('#dispatchdata_form #dispatchBy').append(dispatchBy).trigger('change');
 
-                if(response.dispatchTo !== null) {
-                    var dispatchTo = new Option(response.dispatchTo.staff.name, response.dispatchTo.id, true, true);
-                    $('#dipatchdata_form #dispatchTo').append(dispatchTo).trigger('change');
-                }
+
             }
         });
     }
@@ -935,8 +981,8 @@
             url: "/doc/task/" + taskId,
             success: function(response) {
 
-                console.log(response)
-                $("#task_form")[0].reset();
+                $("#task_form #createdBy").empty();
+                $("#task_form #assignedTo").empty();
 
                 $("#task_form #id").val(response.id);
                 $("#task_form #record_status").val(response.record_status);
@@ -976,6 +1022,36 @@
     }
     function formatDate(date) {
         return date.getDate()  + "-" + (date.getMonth()+1) + "-" + date.getFullYear() + " 10:00";
+    }
+    function newTask(id) {
+        $("#task_form #createdBy").empty();
+        $("#task_form #assignedTo").empty();
+
+        $("#task_form #id").val(0);
+        $("#task_form #uuid").val(null);
+        $("#task_form #summary").val(null);
+        $("#task_form #resolutionSummary").val(null);
+        $("#task_form #description").val(null);
+        $("#task_form #action").val(null);
+        $("#task_form #progress").val(null);
+        $("#task_form #priority").val("MEDIUM");
+
+        $("#task_form #identifiedByUserId").val(0);
+        $("#task_form #modifiedByUserId").val(0);
+        $("#task_form #assignedToUserId").val(0);
+
+        $("#task_form #objectId").val($("#document_form #id").val());
+        $("#task_form #objectType").val("DOCUMENT");
+
+        $("#task_form #createdOn").val(null);
+        $("#task_form #modifiedOn").val(null);
+        $("#task_form #identifiedDate").val(null);
+        $("#task_form #targetResolutionDate").val(null);
+        $("#task_form #actualResolutionDate").val(null);
+    }
+    function newDispatchData(id) {
+        $("#dispatchdata_form")[0].reset();
+        $('#dispatchdata_form #dispatchBy').empty();
     }
 
 </script>
