@@ -21,16 +21,22 @@ import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.model.debtor.OwnerType;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.model.loan.Payment;
+import kg.gov.mf.loan.manage.model.loan.PaymentSchedule;
+import kg.gov.mf.loan.manage.model.process.LoanDetailedSummary;
 import kg.gov.mf.loan.manage.model.process.LoanSummary;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.service.collection.*;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.manage.service.loan.LoanService;
+import kg.gov.mf.loan.manage.service.loan.PaymentService;
+import kg.gov.mf.loan.manage.service.orderterm.CurrencyRateService;
 import kg.gov.mf.loan.manage.service.process.LoanDetailedSummaryService;
 import kg.gov.mf.loan.manage.service.process.LoanSummaryService;
+import kg.gov.mf.loan.output.report.model.LoanView;
 import kg.gov.mf.loan.output.report.model.ReferenceView;
 import kg.gov.mf.loan.output.report.service.ReferenceViewService;
+import kg.gov.mf.loan.output.report.utils.CalculationTool;
 import kg.gov.mf.loan.process.service.JobItemService;
 import kg.gov.mf.loan.web.fetchModels.*;
 import kg.gov.mf.loan.web.util.Utils;
@@ -156,6 +162,12 @@ public class CollectionPhaseController {
 	@Autowired
 	SystemFileService systemFileService;
 
+	@Autowired
+	CurrencyRateService currencyRateService;
+
+	@Autowired
+	PaymentService paymentService;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
@@ -219,6 +231,15 @@ public class CollectionPhaseController {
 		CollectionPhase phase = phaseService.getById(phaseId);
 		model.addAttribute("phase", phase);
 		model.addAttribute("phaseRecordStatus",phase.getRecord_status());
+
+//		remainder of start and paid of phase
+		Double remainder=ifNullMakeZero(phase.getStart_amount())-ifNullMakeZero(phase.getPaid());
+		if(remainder<=0){
+			model.addAttribute("remainder", 0.00);
+		}
+		else{
+			model.addAttribute("remainder", remainder);
+		}
 
 		if(phase.getCollectionPhaseIndex()==null){
 			phase.setSub_index_id(1L);
@@ -1547,8 +1568,303 @@ public class CollectionPhaseController {
 		return "OK";
 	}
 
+	// get payments of phase
+	@GetMapping("/phase/{id}/getPayments")
+	public String getPhasePayments(Model model,@PathVariable("id") Long id){
 
-    public String  getDocs(Long id){
+		CollectionPhase phase=collectionPhaseService.getById(id);
+
+		Loan loan=loanService.getById(phase.getLoans().iterator().next().getId());
+
+		model.addAttribute("id",phase.getId());
+		model.addAttribute("debtorId",loan.getDebtor().getId());
+
+		return "/manage/debtor/collectionprocedure/collectionphase/phasePayments";
+	}
+
+	// get loan summaries of phase
+	@GetMapping("/phase/{id}/getComputation")
+	public String getPhaseComputation(Model model,@PathVariable("id") Long id){
+
+		CollectionPhase phase=collectionPhaseService.getById(id);
+		String phaseLoanIds="";
+		for(Loan l:phase.getLoans()){
+			phaseLoanIds=phaseLoanIds+(l.getId())+"-";
+		}
+
+		model.addAttribute("id",phase.getId());
+		model.addAttribute("phaseLoanIds",phaseLoanIds);
+		model.addAttribute("fromLoan","true");
+		model.addAttribute("today",new Date());
+
+		return "/manage/debtor/collectionprocedure/collectionphase/phaseComputation";
+	}
+
+	@RequestMapping(value = "/manage/collectionphase/{phaseId}/summary/view",method = RequestMethod.GET)
+	public String getSelectedLoanSummariesView(ModelMap model, @PathVariable("phaseId") Long phaseId,String date,String name) throws ParseException
+	{
+
+
+		CollectionPhase phase=phaseService.getById(phaseId);
+		CalculationTool calculationTool=new CalculationTool();
+		LoanSummary sumLoanSummary=new LoanSummary();
+		LinkedHashSet<LoanView> loanViews = new LinkedHashSet<LoanView>(0);
+		HashMap<LoanSummaryModel1,LoanSummaryModel1> summaries=new HashMap<>();
+		Date newDate=new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).parse(date);
+		LinkedHashMap<Long, LoanDetailedSummary> loanDetailedSummaryList = new LinkedHashMap<>();
+
+		for (String id:name.split("-")){
+			if(!id.equals("")) {
+				String baseQuery="select * from loan_view where v_loan_id="+id;
+				Query query=entityManager.createNativeQuery(baseQuery,LoanView.class);
+				LoanView loanView= (LoanView) query.getSingleResult();
+				loanViews.add(loanView);
+			}
+		}
+		loanDetailedSummaryList.putAll(calculationTool.getAllLoanDetailedSummariesByLoanViewList(loanViews, newDate ));
+		for (LoanView loanView:loanViews){
+			Loan loan = loanService.getById(Long.valueOf(loanView.getV_loan_id()));
+
+			Date srokDate = null;
+
+			for (PaymentSchedule schedule: loan.getPaymentSchedules())
+			{
+				if(schedule.getPrincipalPayment()>0)
+				{
+					if(srokDate==null)
+					{
+						srokDate=schedule.getExpectedDate();
+					}
+					else
+					{
+						if(schedule.getExpectedDate()!=null)
+							if(schedule.getExpectedDate().after(srokDate));
+						{
+							srokDate = schedule.getExpectedDate();
+						}
+					}
+
+				}
+
+			}
+
+			if(srokDate==null) srokDate = loan.getRegDate();
+			LoanSummaryModel1 loanSummary1=new LoanSummaryModel1();
+
+			LoanSummary loanSummary=calculationTool.getLoanSummaryCaluculatedByLoanIdAndOnDate(loanView,loanView.getV_loan_id(),newDate,null);
+
+			Double rate=currencyRateService.findByDateAndType(loanSummary.getOnDate(),loan.getCurrency()).getRate();
+
+
+			if(loan.getCloseRate()!=null)
+				if(loan.getCloseRate()>0) rate = loan.getCloseRate();
+
+			loanSummary1.setLoanAmount(conditional(loanSummary.getLoanAmount()));
+			loanSummary1.setTotalDisbursed(conditional(loanSummary.getTotalDisbursed()));
+			loanSummary1.setTotalOutstanding(conditional(loanSummary.getTotalOutstanding()));
+			loanSummary1.setOutstadingPrincipal(conditional(loanSummary.getOutstadingPrincipal()));
+			loanSummary1.setOutstadingInterest(conditional(loanSummary.getOutstadingInterest()));
+			loanSummary1.setOutstadingPenalty(conditional(loanSummary.getOutstadingPenalty()));
+			loanSummary1.setTotalOverdue(conditional(loanSummary.getTotalOverdue()));
+			loanSummary1.setOverduePrincipal(conditional(loanSummary.getOverduePrincipal()));
+			loanSummary1.setOverdueInterest(conditional(loanSummary.getOverdueInterest()));
+			loanSummary1.setOverduePenalty(conditional(loanSummary.getOverduePenalty()));
+			loanSummary1.setOnDate(srokDate);
+			loanSummary1.setTotalPaidKGS(conditional(loanSummary.getTotalPaidKGS()));
+			loanSummary1.setTotalPaid(conditional(loanSummary.getTotalPaid()));
+
+			String name1="";
+			if(loan.getCurrency().getId()!=17){
+				name1=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).format(loan.getRegDate())+"г. в тыс. "+loan.getCurrency().getName();
+			}
+			else{
+				name1=loan.getCreditOrder().getRegNumber()+" №"+loan.getRegNumber()+" от "+new SimpleDateFormat("dd.MM.yyyy",new Locale("ru","RU")).format(loan.getRegDate())+"г. в тоннах "+loan.getCurrency().getName();
+			}
+			loanSummary1.setUuid(name1);
+			loanSummary1.setVersion(loan.getId());
+			loanSummary1.setId(loan.getDebtor().getId());
+
+
+
+			LoanSummaryModel1 newLoanSummary=new LoanSummaryModel1();
+			if(loan.getCurrency().getId()!=1){
+				newLoanSummary.setVersion(Long.valueOf(1));
+				newLoanSummary.setUuid("в тыс. сомах по курсу "+rate);
+				newLoanSummary.setLoanAmount((loanSummary1.getLoanAmount()*rate));
+				newLoanSummary.setTotalDisbursed((loanSummary1.getTotalDisbursed()*rate));
+				newLoanSummary.setTotalOutstanding((loanSummary1.getTotalOutstanding()*rate));
+				newLoanSummary.setOutstadingPrincipal((loanSummary1.getOutstadingPrincipal()*rate));
+				newLoanSummary.setOutstadingInterest((loanSummary1.getOutstadingInterest()*rate));
+				newLoanSummary.setOutstadingPenalty((loanSummary1.getOutstadingPenalty()*rate));
+				newLoanSummary.setTotalOverdue((loanSummary1.getTotalOverdue()*rate));
+				newLoanSummary.setOverduePrincipal((loanSummary1.getOverduePrincipal()*rate));
+				newLoanSummary.setOverdueInterest((loanSummary1.getOverdueInterest()*rate));
+				newLoanSummary.setOverduePenalty((loanSummary1.getOverduePenalty()*rate));
+				newLoanSummary.setOnDate(loanSummary1.getOnDate());
+				newLoanSummary.setTotalPaidKGS((loanSummary1.getTotalPaidKGS()));
+				newLoanSummary.setTotalPaid((loanSummary1.getTotalPaid()));
+
+				model.addAttribute("newSummary",newLoanSummary);
+
+				summaries.put(loanSummary1,newLoanSummary);
+
+				if(sumLoanSummary.getLoanAmount()!=null) {
+					sumLoanSummary.setTotalPaidKGS(sumLoanSummary.getTotalPaidKGS() + newLoanSummary.getTotalPaidKGS());
+					sumLoanSummary.setTotalPaid(sumLoanSummary.getTotalPaid() + newLoanSummary.getTotalPaid());
+					sumLoanSummary.setOutstadingPenalty(sumLoanSummary.getOutstadingPenalty() + newLoanSummary.getOutstadingPenalty());
+					sumLoanSummary.setOutstadingPrincipal(sumLoanSummary.getOutstadingPrincipal() + newLoanSummary.getOutstadingPrincipal());
+					sumLoanSummary.setOutstadingInterest(sumLoanSummary.getOutstadingInterest() + newLoanSummary.getOutstadingInterest());
+					sumLoanSummary.setTotalOverdue(sumLoanSummary.getTotalOverdue() + newLoanSummary.getTotalOverdue());
+					sumLoanSummary.setOverduePrincipal(sumLoanSummary.getOverduePrincipal()+newLoanSummary.getOverduePrincipal());
+					sumLoanSummary.setOverdueInterest(sumLoanSummary.getOverdueInterest()+newLoanSummary.getOverdueInterest());
+					sumLoanSummary.setOverduePenalty(sumLoanSummary.getOverduePenalty()+newLoanSummary.getOverduePenalty());
+					sumLoanSummary.setTotalOutstanding(sumLoanSummary.getTotalOutstanding() + newLoanSummary.getTotalOutstanding());
+					sumLoanSummary.setTotalDisbursed(sumLoanSummary.getTotalDisbursed() + newLoanSummary.getTotalDisbursed());
+					sumLoanSummary.setLoanAmount(sumLoanSummary.getLoanAmount() + newLoanSummary.getLoanAmount());
+				}
+				else{
+					sumLoanSummary.setTotalPaidKGS(newLoanSummary.getTotalPaidKGS());
+					sumLoanSummary.setTotalPaid(newLoanSummary.getTotalPaid());
+					sumLoanSummary.setOutstadingPenalty(newLoanSummary.getOutstadingPenalty());
+					sumLoanSummary.setOutstadingPrincipal(newLoanSummary.getOutstadingPrincipal());
+					sumLoanSummary.setOutstadingInterest(newLoanSummary.getOutstadingInterest());
+					sumLoanSummary.setOutstadingFee(newLoanSummary.getOutstadingFee());
+					sumLoanSummary.setTotalOverdue(newLoanSummary.getTotalOverdue());
+					sumLoanSummary.setOverduePrincipal(newLoanSummary.getOverduePrincipal());
+					sumLoanSummary.setOverdueInterest(newLoanSummary.getOverdueInterest());
+					sumLoanSummary.setOverduePenalty(newLoanSummary.getOverduePenalty());
+					sumLoanSummary.setTotalOutstanding(newLoanSummary.getTotalOutstanding());
+					sumLoanSummary.setTotalDisbursed(newLoanSummary.getTotalDisbursed());
+					sumLoanSummary.setLoanAmount(newLoanSummary.getLoanAmount());
+				}
+			}
+			else{
+//					loanSummary.setVersion(Long.valueOf(0));
+//					loanSummary.setUuid(loanSummary.getUuid()+" в тыс. сомах по курсу "+rate);
+				summaries.put(loanSummary1,loanSummary1);
+				if(sumLoanSummary.getLoanAmount()!=null) {
+					sumLoanSummary.setTotalPaidKGS(sumLoanSummary.getTotalPaidKGS() + loanSummary1.getTotalPaidKGS());
+					sumLoanSummary.setTotalPaid(sumLoanSummary.getTotalPaid()+loanSummary1.getTotalPaid());
+					sumLoanSummary.setOutstadingPenalty(sumLoanSummary.getOutstadingPenalty() + loanSummary1.getOutstadingPenalty());
+					sumLoanSummary.setOutstadingPrincipal(sumLoanSummary.getOutstadingPrincipal() + loanSummary1.getOutstadingPrincipal());
+					sumLoanSummary.setOutstadingInterest(sumLoanSummary.getOutstadingInterest() + loanSummary1.getOutstadingInterest());
+//						sumLoanSummary.setOutstadingFee(sumLoanSummary.getOutstadingFee() + loanSummary.getOutstadingFee());
+					sumLoanSummary.setTotalOverdue(sumLoanSummary.getTotalOverdue() + loanSummary1.getTotalOverdue());
+					sumLoanSummary.setOverduePrincipal(sumLoanSummary.getOverduePrincipal()+ loanSummary1.getOverduePrincipal());
+					sumLoanSummary.setOverdueInterest(sumLoanSummary.getOverdueInterest()+ loanSummary1.getOverdueInterest());
+					sumLoanSummary.setOverduePenalty(sumLoanSummary.getOverduePenalty()+ loanSummary1.getOverduePenalty());
+					sumLoanSummary.setTotalOutstanding(sumLoanSummary.getTotalOutstanding() + loanSummary1.getTotalOutstanding());
+					sumLoanSummary.setTotalDisbursed(sumLoanSummary.getTotalDisbursed() + loanSummary1.getTotalDisbursed());
+					sumLoanSummary.setLoanAmount(sumLoanSummary.getLoanAmount() + loanSummary1.getLoanAmount());
+				}
+				else{
+					sumLoanSummary.setTotalPaidKGS(loanSummary1.getTotalPaidKGS());
+					sumLoanSummary.setTotalPaid(loanSummary1.getTotalPaid());
+					sumLoanSummary.setOutstadingPenalty(loanSummary1.getOutstadingPenalty());
+					sumLoanSummary.setOutstadingPrincipal(loanSummary1.getOutstadingPrincipal());
+					sumLoanSummary.setOutstadingInterest(loanSummary1.getOutstadingInterest());
+					sumLoanSummary.setOutstadingFee(loanSummary1.getOutstadingFee());
+					sumLoanSummary.setTotalOverdue(loanSummary1.getTotalOverdue());
+					sumLoanSummary.setOverduePrincipal(loanSummary1.getOverduePrincipal()*rate);
+					sumLoanSummary.setOverdueInterest(loanSummary1.getOverdueInterest()*rate);
+					sumLoanSummary.setOverduePenalty(loanSummary1.getOverduePenalty()*rate);
+					sumLoanSummary.setTotalOutstanding(loanSummary1.getTotalOutstanding());
+					sumLoanSummary.setTotalDisbursed(loanSummary1.getTotalDisbursed());
+					sumLoanSummary.setLoanAmount(loanSummary1.getLoanAmount());
+				}
+			}
+		}
+//		model.addAttribute("debtorId",);
+//		model.addAttribute("debtor",debtorService.getById(debtorId));
+		model.addAttribute("fromLoanList","true");
+		model.addAttribute("fromLoan","true");
+		model.addAttribute("lists",summaries);
+		model.addAttribute("isCalculationSaved",false);
+		model.addAttribute("totals",sumLoanSummary);
+		return "/manage/debtor/loanSummary2";
+	}
+
+
+//	get the payments of phase
+	@PostMapping("/collectionphase/{phaseId}/payments")
+	@ResponseBody
+	private String getPaymentsByPhaseId(@PathVariable("phaseId") Long phaseId)
+	{
+
+		SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
+		List<PaymentModel> result = new ArrayList<>();
+		CollectionPhase phase=phaseService.getById(phaseId);
+		String phaseLoanIds="";
+		for(Loan l:phase.getLoans()) {
+			phaseLoanIds = phaseLoanIds + (l.getId()) + ",";
+		}
+		phaseLoanIds= phaseLoanIds.substring(0, phaseLoanIds.length() - 1);
+		Date closeDate = new Date();
+		if (phase.getCloseDate() != null) {
+			closeDate = phase.getCloseDate();
+		}
+		else if(phase.getCollectionProcedure()!=null){
+			CollectionProcedure procedure=procService.getById(phase.getCollectionProcedure().getId());
+			if(procedure.getCloseDate()!=null){
+				closeDate=procedure.getCloseDate();
+			}
+		}
+		String getListOfPaymentsQuery= String.format("select *\nfrom payment where loanId in (%s)" +
+				" and paymentDate between '%s' and '%s'", phaseLoanIds, sf.format(phase.getPaymentFromDate()), sf.format(closeDate));
+		Query query=entityManager.createNativeQuery(getListOfPaymentsQuery,Payment.class);
+		List<Payment> payments=query.getResultList();
+		for(Payment pp: payments)
+		{
+			PaymentModel model = new PaymentModel();
+			Payment p=paymentService.getById(pp.getId());
+
+			model.setId(p.getId());
+			model.setPaymentDate(p.getPaymentDate());
+			model.setTotalAmount(p.getTotalAmount());
+			model.setPrincipal(p.getPrincipal());
+			model.setInterest(p.getInterest());
+			model.setPenalty(p.getPenalty());
+			model.setFee(p.getFee());
+			model.setExchange_rate(p.getExchange_rate());
+			model.setNumber(p.getNumber());
+			model.setIn_loan_currency(p.isIn_loan_currency());
+			model.setDetails(p.getDetails());
+			model.setPaymentTypeId(p.getPaymentType().getId());
+			model.setPaymentTypeName(p.getPaymentType().getName());
+			model.setRecord_status(p.getRecord_status());
+			model.setLoanId(p.getLoan().getId());
+
+			result.add(model);
+		}
+
+		Collections.sort(result);
+		int counter=1;
+		for(PaymentModel model:result){
+			model.setCounter(counter++);
+		}
+
+		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+		String returnResult= gson.toJson(result);
+
+		return returnResult;
+	}
+
+	//	if less than zero make zero
+	public Double conditional(Double num){
+		if(num<0){
+			return Double.valueOf(0);
+		}
+		else if(num==Double.valueOf(0)){
+			return num;
+		}
+		else{
+			return num/1000;
+		}
+	}
+
+
+
+	public String  getDocs(Long id){
 
         String baseQuery="select d.title,d.id,dt.name as type\n" +
                 "from df_document d,person p,cat_responsible_organization ro,cat_document_type dt\n" +

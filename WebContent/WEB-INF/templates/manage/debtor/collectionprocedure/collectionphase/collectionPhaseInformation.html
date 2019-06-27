@@ -13,6 +13,12 @@
             <li class="nav-item">
                 <a class="nav-link m--font-primary" data-toggle="tab" href="#phaseEvent" th:text="#{label.collection.event}" id="phaseEventFunction"></a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link m--font-primary" data-toggle="tab" href="#phasePayment" th:text="#{label.loan.payments}" id="phasePaymentFunction"></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link m--font-primary" data-toggle="tab" href="#phaseComputation" th:text="#{label.loan.loanSummary}" id="phaseComputationFunction"></a>
+            </li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="main">
@@ -42,6 +48,14 @@
                                         <div class="col">
                                             <h3 class="m-widget1__title" th:text="#{label.collection.phase.start.amount}"></h3>
                                             <span id="startAmount" class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(phase.start_amount, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-widget1__item">
+                                    <div class="row m-row--no-padding align-items-center">
+                                        <div class="col">
+                                            <h3 class="m-widget1__title" th:text="#{label.collection.phase.remainder}"></h3>
+                                            <span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(remainder, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -221,6 +235,12 @@
             </div>
             <div id="phaseEvent" class="tab-pane" >
                 <div id="event_content"></div>
+            </div>
+            <div id="phasePayment" class="tab-pane" >
+                <div id="payment_content"></div>
+            </div>
+            <div id="phaseComputation" class="tab-pane" >
+                <div id="computation_content"></div>
             </div>
         </div>
     </div>
@@ -426,8 +446,28 @@
         });
     });
 
+    // loan payments tab
+    $("#phasePaymentFunction").on("click",function () {
+        var paymentUrl="/phase/"+pId+"/getPayments";
+        $("#phasePayment").show();
+        $.get(paymentUrl, function(data) {
+
+            $('#payment_content').html(data);
+        });
+    });
+
+    // loan computation tab
+    $("#phaseComputationFunction").on("click",function () {
+        var computationUrl="/phase/"+pId+"/getComputation";
+        $("#phaseComputation").show();
+        $.get(computationUrl, function(data) {
+
+            $('#computation_content').html(data);
+        });
+    });
+
     // save state of tabs
-    var listOfTabs=['#debtorInfo','#main','#phaseEvent'];
+    var listOfTabs=['#debtorInfo','#main','#phaseEvent','#phaseComputation','#phasePayment'];
     var tabName;
     $(document).ready(function() {
         if (sessionStorage.getItem("phaseTab")) {
@@ -492,6 +532,12 @@
     else{
         $("#startAmount").removeClass("alert alert-danger");
     }
+
+    // Payments sums
+    var sumOfPTotal=0.0;
+    var sumOfPPrincipal=0.0;
+    var sumOfPInterest=0.0;
+    var sumOfPPenalty=0.0;
 
 </script>
 <!--end::Portlet-->

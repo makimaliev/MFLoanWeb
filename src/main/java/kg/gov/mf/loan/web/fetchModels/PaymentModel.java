@@ -37,6 +37,7 @@ public class PaymentModel implements Comparable<PaymentModel>{
     private String paymentTypeName;
     private int record_status;
     private int counter;
+    private Long loanId;
 
     @Override
     public int compareTo(PaymentModel model)
@@ -162,5 +163,13 @@ public class PaymentModel implements Comparable<PaymentModel>{
 
     public void setCounter(int counter) {
         this.counter = counter;
+    }
+
+    public Long getLoanId() {
+        return loanId;
+    }
+
+    public void setLoanId(Long loanId) {
+        this.loanId = loanId;
     }
 }
