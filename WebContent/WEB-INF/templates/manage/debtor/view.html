@@ -234,10 +234,10 @@
 															<div class="col">
 																<h3 class="m-widget1__title" th:text="#{label.debtor.type}"></h3>
 																<span class="m-widget1__desc m--font-brand" th:text="${type.name}"></span>
-																<button th:href="@{/debtor/type/save}" type="button" class="btn btn-primary" th:text="#{label.change.debtorType}" data-toggle="modal" data-target="#changeDebtorTypeModal"></button>
+																<button sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR_TYPE')" th:href="@{/debtor/type/save}" type="button" class="btn btn-primary" th:text="#{label.change.debtorType}" data-toggle="modal" data-target="#changeDebtorTypeModal"></button>
 															</div>
 															<div class="col">
-																<a th:href="@{/manage/debtor/__${debtor.id}__/save}" class="btn btn-outline-danger" title="Редактировать">
+																<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR')" th:href="@{/manage/debtor/__${debtor.id}__/save}" class="btn btn-outline-danger" title="Редактировать">
 																	<span>
 																	<i class="la la-edit"></i>
 																	<span th:text="#{label.table.edit}"></span>
