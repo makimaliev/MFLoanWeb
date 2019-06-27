@@ -422,12 +422,16 @@
     // main tab
     $("#mainFunction").on("click",function () {
         $("#phaseEvent").hide();
+        $("#phasePayment").hide();
+        $("#phaseComputation").hide();
     });
 
     //load person tab
     $("#debtorInfoFunction").on("click",function () {
         var contentUrl="/owner/"+ownerId+"/getInformation";
         $("#phaseEvent").hide();
+        $("#phasePayment").hide();
+        $("#phaseComputation").hide();
 
         $.get(contentUrl, function(data) {
 
@@ -439,6 +443,8 @@
     $("#phaseEventFunction").on("click",function () {
         var eventUrl="/phase/"+pId+"/getEvents";
         $("#phaseEvent").show();
+        $("#phasePayment").hide();
+        $("#phaseComputation").hide();
 
         $.get(eventUrl, function(data) {
 
@@ -450,6 +456,8 @@
     $("#phasePaymentFunction").on("click",function () {
         var paymentUrl="/phase/"+pId+"/getPayments";
         $("#phasePayment").show();
+        $("#phaseEvent").hide();
+        $("#phaseComputation").hide();
         $.get(paymentUrl, function(data) {
 
             $('#payment_content').html(data);
@@ -460,6 +468,8 @@
     $("#phaseComputationFunction").on("click",function () {
         var computationUrl="/phase/"+pId+"/getComputation";
         $("#phaseComputation").show();
+        $("#phaseEvent").hide();
+        $("#phasePayment").hide();
         $.get(computationUrl, function(data) {
 
             $('#computation_content').html(data);
