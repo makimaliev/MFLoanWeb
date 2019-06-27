@@ -113,17 +113,17 @@
 															<div class="col">
 																<h3 class="m-widget1__title" th:text="#{label.debtor.type}"></h3>
 																<span class="m-widget1__desc m--font-brand" th:text="${type.name}"></span>
-																<button th:href="@{/debtor/type/save}" type="button" class="btn btn-primary" th:text="#{label.change.debtorType}" data-toggle="modal" data-target="#changeDebtorTypeModal"></button>
+																<button sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR_TYPE')" th:href="@{/debtor/type/save}" type="button" class="btn btn-primary" th:text="#{label.change.debtorType}" data-toggle="modal" data-target="#changeDebtorTypeModal"></button>
 															</div>
 														</div>
 														<div class="col mt-2">
-															<a th:href="@{/manage/debtor/__${debtor.id}__/save}" class="btn btn-outline-danger" title="Редактировать">
+															<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR')" th:href="@{/manage/debtor/__${debtor.id}__/save}" class="btn btn-outline-danger" title="Редактировать">
 																	<span>
 																		<i class="la la-edit"></i>
 																		<span th:text="#{label.title.add.edit.debtor}"></span>
 																	</span>
 															</a>
-															<a th:href="@{/manage/debtor/__${debtor.id}__/update/phases}" class="btn btn-outline-danger" title="Обновить">
+															<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR_PHASE')" th:href="@{/manage/debtor/__${debtor.id}__/update/phases}" class="btn btn-outline-danger" title="Обновить">
 																	<span>
 																		<span th:text="#{label.debtor.loan.phases.update}"></span>
 																	</span>
@@ -182,7 +182,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-												<div sec:authorize="hasAnyAuthority('ADMIN')" class="m-widget1">
+												<div sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR')" class="m-widget1">
 													<div class="m-widget1__item">
 														<div class="row m-row--no-padding align-items-center">
 															<div class="col">
@@ -235,19 +235,19 @@
 																<h3 class="m-widget1__title" th:text="#{label.debtor.type}"></h3>
 																<span class="m-widget1__desc m--font-brand" th:text="${type.name}"></span>
 																<button sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR_TYPE')" th:href="@{/debtor/type/save}" type="button" class="btn btn-primary" th:text="#{label.change.debtorType}" data-toggle="modal" data-target="#changeDebtorTypeModal"></button>
-															</div>
-															<div class="col">
-																<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR')" th:href="@{/manage/debtor/__${debtor.id}__/save}" class="btn btn-outline-danger" title="Редактировать">
+																<div class="row mt-2 ml-1">
+																	<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR')" th:href="@{/manage/debtor/__${debtor.id}__/save}" class="btn btn-outline-danger" title="Редактировать">
 																	<span>
 																	<i class="la la-edit"></i>
 																	<span th:text="#{label.table.edit}"></span>
 																</span>
-																</a>
-																<a sec:authorize="hasAnyAuthority('ADMIN')" th:href="@{/manage/debtor/__${debtor.id}__/update/phases}" class="btn btn-outline-danger" title="Обновить">
+																	</a>
+																	<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR_PHASE')" th:href="@{/manage/debtor/__${debtor.id}__/update/phases}" class="btn btn-outline-danger ml-2" title="Обновить">
 																	<span>
 																		<span th:text="#{label.debtor.loan.phases.update}"></span>
 																	</span>
-																</a>
+																	</a>
+																</div>
 															</div>
 														</div>
 													</div>
@@ -287,7 +287,7 @@
                                                 <!--begin:: Widgets/Stats2-2 -->
                                             </div>
 											<div class="col-md-12 col-lg-12 col-xl-4">
-												<div sec:authorize="hasAnyAuthority('ADMIN')" class="m-widget1">
+												<div sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR')" class="m-widget1">
 													<div class="m-widget1__item">
 														<div class="row m-row--no-padding align-items-center">
 															<div class="col">
