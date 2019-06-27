@@ -722,7 +722,7 @@ public class PrintoutTemplateController {
 
                 case 1:
 
-                    String filePath = UPLOADED_FOLDER+ "/"+"1. Договор займа.doc";
+                    String filePath = UPLOADED_FOLDER+ "/"+"1. Договор займа.docx";
 
                     File file = new File(filePath);
 
@@ -781,7 +781,7 @@ public class PrintoutTemplateController {
                     break;
 
                 case 2:
-                    filePath = UPLOADED_FOLDER+ "/"+"2. Договор бп (finish).doc";
+                    filePath = UPLOADED_FOLDER+ "/"+"2. Договор бп (finish).docx";
 
                     file = new File(filePath);
 
@@ -826,8 +826,8 @@ public class PrintoutTemplateController {
                     break;
             }
 
-            response.setContentType("application/msword");
-            response.setHeader("Content-Disposition", "attachment; filename=filename.doc");
+            response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+            response.setHeader("Content-Disposition", "attachment; filename=filename.docx");
 
             doc.write(response.getOutputStream());
 
