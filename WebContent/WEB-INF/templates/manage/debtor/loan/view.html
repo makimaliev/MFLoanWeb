@@ -341,7 +341,17 @@
 														<div class="col">
 															<button type="button" class="btn btn-primary" th:text="#{label.change.loan.normal.description}" data-toggle="modal" data-target="#changeLoanNormalDescriptionModal"></button>
 															<br>
-															<span class="m-widget1__desc m--font-brand" th:text="${loan.normalDescription}"></span>
+															<span class="m-widget1__desc m--font-brand" th:text="${loan.normalDescription?.text}"></span>
+
+														</div>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<button type="button" class="btn btn-primary" th:text="#{label.change.loan.supervisor.description}" data-toggle="modal" data-target="#changeLoanSupervisorDescriptionModal"></button>
+															<br>
+															<span class="m-widget1__desc m--font-brand" th:text="${loan.supervisorDescription?.text}"></span>
 
 														</div>
 													</div>
@@ -411,7 +421,7 @@
 														<div class="col">
 															<button type="button" class="btn btn-primary" th:text="#{label.change.loan.collection.description}" data-toggle="modal" data-target="#changeLoanCollectionDescriptionModal"></button>
 															<br>
-															<span class="m-widget1__desc m--font-brand" th:text="${loan.collectionDescription}"></span>
+															<span class="m-widget1__desc m--font-brand" th:text="${loan.collectionDescription?.text}"></span>
 
 														</div>
 													</div>
@@ -421,7 +431,27 @@
 														<div class="col">
 															<button type="button" class="btn btn-primary" th:text="#{label.change.loan.collateral.description}" data-toggle="modal" data-target="#changeLoanCollateralDescriptionModal"></button>
 															<br>
-															<span class="m-widget1__desc m--font-brand" th:text="${loan.collateralDescription}"></span>
+															<span class="m-widget1__desc m--font-brand" th:text="${loan.collateralDescription?.text}"></span>
+
+														</div>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<button type="button" class="btn btn-primary" th:text="#{label.change.loan.execution.description}" data-toggle="modal" data-target="#changeLoanExecutionDescriptionModal"></button>
+															<br>
+															<span class="m-widget1__desc m--font-brand" th:text="${loan.executionDescription?.text}"></span>
+
+														</div>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<button type="button" class="btn btn-primary" th:text="#{label.change.loan.profit.description}" data-toggle="modal" data-target="#changeLoanProfitDescriptionModal"></button>
+															<br>
+															<span class="m-widget1__desc m--font-brand" th:text="${loan.profitDescription?.text}"></span>
 
 														</div>
 													</div>
@@ -1443,7 +1473,7 @@
 													<span class="m--font-danger">*</span>
 												</label>
 												<div class="col-lg-8 col-md-9 col-sm-12">
-													<input id="loanNormalDescription" class="form-control m-input" type="text" th:placeholder="#{label.loan.normal.description}" th:value="${loan.normalDescription}">
+													<input id="loanNormalDescription" class="form-control m-input" type="text" th:placeholder="#{label.loan.normal.description}" th:value="${loan.normalDescription?.text}">
 												</div>
 											</div>
 										</div>
@@ -1469,7 +1499,7 @@
 													<span class="m--font-danger">*</span>
 												</label>
 												<div class="col-lg-8 col-md-9 col-sm-12">
-													<input id="loanCollectionDescription" class="form-control m-input" type="text" th:placeholder="#{label.loan.collection.description}" th:value="${loan.collectionDescription}">
+													<input id="loanCollectionDescription" class="form-control m-input" type="text" th:placeholder="#{label.loan.collection.description}" th:value="${loan.collectionDescription?.text}">
 												</div>
 											</div>
 										</div>
@@ -1495,13 +1525,91 @@
 													<span class="m--font-danger">*</span>
 												</label>
 												<div class="col-lg-8 col-md-9 col-sm-12">
-													<input id="loanCollateralDescription" class="form-control m-input" type="text" th:placeholder="#{label.loan.collateral.description}" th:value="${loan.collateralDescription}">
+													<input id="loanCollateralDescription" class="form-control m-input" type="text" th:placeholder="#{label.loan.collateral.description}" th:value="${loan.collateralDescription?.text}">
 												</div>
 											</div>
 										</div>
 										<div class="modal-footer">
 											<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.cancel}">Close</button>
 											<button onclick="saveLoanDescription(3,'loanCollateralDescription')" type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.save}">Save</button>
+										</div>
+									</form>
+								</div>
+
+							</div>
+						</div>
+						<div id="changeLoanSupervisorDescriptionModal" class="modal" role="dialog">
+							<div class="modal-dialog">
+
+								<!-- Modal content-->
+								<div class="modal-content">
+									<form>
+										<div class="modal-body">
+											<div class="form-group m-form__group row">
+												<label class="col-form-label col-lg-4 col-sm-12">
+													<span th:text="#{label.loan.supervisor.description}"></span>
+													<span class="m--font-danger">*</span>
+												</label>
+												<div class="col-lg-8 col-md-9 col-sm-12">
+													<input id="loanSupervisorDescription" class="form-control m-input" type="text" th:placeholder="#{label.loan.supervisor.description}" th:value="${loan.supervisorDescription?.text}">
+												</div>
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.cancel}">Close</button>
+											<button onclick="saveLoanDescription(4,'loanSupervisorDescription')" type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.save}">Save</button>
+										</div>
+									</form>
+								</div>
+
+							</div>
+						</div>
+						<div id="changeLoanExecutionDescriptionModal" class="modal" role="dialog">
+							<div class="modal-dialog">
+
+								<!-- Modal content-->
+								<div class="modal-content">
+									<form>
+										<div class="modal-body">
+											<div class="form-group m-form__group row">
+												<label class="col-form-label col-lg-4 col-sm-12">
+													<span th:text="#{label.loan.execution.description}"></span>
+													<span class="m--font-danger">*</span>
+												</label>
+												<div class="col-lg-8 col-md-9 col-sm-12">
+													<input id="loanExecutionDescription" class="form-control m-input" type="text" th:placeholder="#{label.loan.execution.description}" th:value="${loan.executionDescription?.text}">
+												</div>
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.cancel}">Close</button>
+											<button onclick="saveLoanDescription(5,'loanExecutionDescription')" type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.save}">Save</button>
+										</div>
+									</form>
+								</div>
+
+							</div>
+						</div>
+						<div id="changeLoanProfitDescriptionModal" class="modal" role="dialog">
+							<div class="modal-dialog">
+
+								<!-- Modal content-->
+								<div class="modal-content">
+									<form>
+										<div class="modal-body">
+											<div class="form-group m-form__group row">
+												<label class="col-form-label col-lg-4 col-sm-12">
+													<span th:text="#{label.loan.profit.description}"></span>
+													<span class="m--font-danger">*</span>
+												</label>
+												<div class="col-lg-8 col-md-9 col-sm-12">
+													<input id="loanProfitDescription" class="form-control m-input" type="text" th:placeholder="#{label.loan.profit.description}" th:value="${loan.profitDescription?.text}">
+												</div>
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.cancel}">Close</button>
+											<button onclick="saveLoanDescription(6,'loanProfitDescription')" type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.save}">Save</button>
 										</div>
 									</form>
 								</div>

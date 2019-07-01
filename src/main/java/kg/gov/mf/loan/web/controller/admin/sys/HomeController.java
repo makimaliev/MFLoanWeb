@@ -2,6 +2,7 @@ package kg.gov.mf.loan.web.controller.admin.sys;
 
 import com.lowagie.text.DocumentException;
 import kg.gov.mf.loan.output.report.utils.CollectionPhaseTool;
+import kg.gov.mf.loan.output.report.utils.LoanFieldsMigration;
 import kg.gov.mf.loan.output.report.utils.SecondMigrationTool;
 import kg.gov.mf.loan.web.components.FileSetter;
 import org.slf4j.Logger;
@@ -134,6 +135,13 @@ public class HomeController {
     public String doSecondMigrationtool() throws DocumentException {
         SecondMigrationTool secondMigrationTool=new SecondMigrationTool();
         secondMigrationTool.loanMigrate(43093L);
+        return "index";
+    }
+
+    @RequestMapping("/migrate/loan/fileds")
+    public String loanFieldsMigrate(){
+        LoanFieldsMigration loanFieldsMigration=new LoanFieldsMigration();
+        loanFieldsMigration.migrateLoanField("150.0.0.89","migration2019","postgres","armad27raptor");
         return "index";
     }
 	

@@ -191,6 +191,9 @@ public class LoanController {
     @Autowired
     DestinationAccountService destinationAccountService;
 
+    @Autowired
+    DescriptionService descriptionService;
+
     static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
 
 	@InitBinder
@@ -551,14 +554,78 @@ public class LoanController {
     public String updateLoanDescriptions(Long id,String data,@PathVariable("type") int type){
 
 	    Loan loan=loanService.getById(id);
+        Description description=new Description();
         if(type==1){
-            loan.setNormalDescription(data);
+            if(loan.getNormalDescription()==null){
+                description.setText(data);
+                descriptionService.add(description);
+                loan.setNormalDescription(description);
+            }
+            else{
+                description=loan.getNormalDescription();
+                description.setText(data);
+                descriptionService.update(description);
+            }
         }
         else if(type==2){
-            loan.setCollectionDescription(data);
+            if(loan.getCollectionDescription()==null){
+                description.setText(data);
+                descriptionService.add(description);
+                loan.setCollectionDescription(description);
+            }
+            else{
+                description=loan.getCollectionDescription();
+                description.setText(data);
+                descriptionService.update(description);
+            }
         }
         else if(type==3){
-            loan.setCollateralDescription(data);
+            if(loan.getCollateralDescription()==null){
+                description.setText(data);
+                descriptionService.add(description);
+                loan.setCollateralDescription(description);
+            }
+            else{
+                description=loan.getCollateralDescription();
+                description.setText(data);
+                descriptionService.update(description);
+            }
+        }
+        else if(type==4){
+            if(loan.getSupervisorDescription()==null){
+                description.setText(data);
+                descriptionService.add(description);
+                loan.setSupervisorDescription(description);
+            }
+            else{
+                description=loan.getSupervisorDescription();
+                description.setText(data);
+                descriptionService.update(description);
+            }
+        }
+        else if(type==5){
+            if(loan.getExecutionDescription()==null){
+                description.setText(data);
+                descriptionService.add(description);
+                loan.setExecutionDescription(description);
+            }
+            else{
+                description=loan.getExecutionDescription();
+                description.setText(data);
+                descriptionService.update(description);
+            }
+        }
+        else if(type==6){
+            if(loan.getProfitDescription()==null){
+                description.setText(data);
+                descriptionService.add(description);
+                loan.setProfitDescription(description);
+            }
+            else{
+                description=loan.getProfitDescription();
+                description.setText(data);
+                descriptionService.update(description);
+            }
         }
         loanService.update(loan);
 
