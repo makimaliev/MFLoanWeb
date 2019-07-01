@@ -290,7 +290,7 @@ public class InformationController {
 
 
 	@PostMapping("/object/{objectId}/attachment/{type}/add")
-	public String addAttachment(MultipartHttpServletRequest request,@RequestParam(value = "ids") String ids, @PathVariable("objectId") Long objectId, @PathVariable("type") int type, Attachment attachment, @RequestParam(value = "documentIds",required = false) Long[] documentIds) {
+	public String addAttachment(MultipartFile[] files,MultipartHttpServletRequest request,@RequestParam(value = "ids") String ids, @PathVariable("objectId") Long objectId, @PathVariable("type") int type, Attachment attachment, @RequestParam(value = "documentIds",required = false) Long[] documentIds) {
 
 		String name="";
 		HashMap<String,Long> idsMap=new HashMap<>();
@@ -331,13 +331,13 @@ public class InformationController {
 		attachmentService.create(attachment);
 		Set<SystemFile> systemFileSet=new HashSet<>();
 		try {
-			Iterator<String> itr = request.getFileNames();
+//			Iterator<String> itr = request.getFileNames();
 			boolean exists=false;
-			while (itr.hasNext()) {
+			for (MultipartFile part:files) {
 
 				SystemFile systemFile=new SystemFile();
-				String uploadedFile = itr.next();
-				MultipartFile part = request.getFile(uploadedFile);
+//				String uploadedFile = itr.next();
+//				MultipartFile part = request.getFile(uploadedFile);
 
 				String filename = part.getOriginalFilename();
 				name=filename;

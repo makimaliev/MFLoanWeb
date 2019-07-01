@@ -56,8 +56,12 @@
 							<tbody>
 								<tr th:each="s : ${informationList}">
 									<td th:text="${s.system_file_id}">Id</td>
-									<td th:text="${s.attachment_name}">Name</td>
-									<td th:text="${s.sys_name}">Name</td>
+									<td><a th:href="@{/attachment/__${s.attachment_id}__/details}" th:text="${s.attachment_name}"
+										 title="Просмотр">
+									</a></td>
+									<td><a th:href="@{/systemFile/__${s.system_file_id}__/download}" th:text="${s.sys_name}"
+										   title="Скачать">
+									</a></td>
 									<td class="table-actions text-right">
 										<div class="row">
 											<a th:href="@{/systemFile/__${s.system_file_id}__/download}"
@@ -65,7 +69,7 @@
 												<i class="la la-download"></i>
 											</a>
 											<a th:href="@{/attachment/__${s.attachment_id}__/details}"
-											   class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Скачать">
+											   class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Просмотр">
 												<i class="la la-arrow-circle-left"></i>
 											</a>
 										</div>

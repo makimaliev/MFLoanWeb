@@ -1,5 +1,6 @@
 package kg.gov.mf.loan.web.controller.admin.sys;
 
+import kg.gov.mf.loan.admin.sys.model.Attachment;
 import kg.gov.mf.loan.admin.sys.model.SystemFile;
 import kg.gov.mf.loan.admin.sys.service.AttachmentService;
 import kg.gov.mf.loan.admin.sys.service.SystemFileService;
@@ -18,9 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Controller
 public class SystemFileController {
@@ -128,30 +126,50 @@ public class SystemFileController {
 	}
 
 	@RequestMapping(value = "/systemFile/save", method = RequestMethod.POST)
-	public ModelAndView saveSystemFileAndRedirectToInformationViewPage(@Validated @ModelAttribute("systemFile") SystemFile systemFile, BindingResult result,ModelMap model, @RequestParam("file") MultipartFile file) {
+	public ModelAndView saveSystemFileAndRedirectToInformationViewPage(@Validated @ModelAttribute("systemFile") SystemFile systemFile, BindingResult result,ModelMap model, @RequestParam("files") MultipartFile[] files) {
 
 		
 		if (result.hasErrors()) 
 		{
 			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
-		} 
+		}
+		else if(systemFile.getId()>0){
+			systemFileService.edit(systemFile);
+		}
 		else if (systemFile.getId() == 0) 
 		{
-			
-			
-	        try {
 
-	            
-	            byte[] bytes = file.getBytes();
-	            Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
-	            Files.write(path, bytes);
+			Attachment attachment=attachmentService.findById(systemFile.getAttachment().getId());
 
-	            systemFile.setPath(path.toString());
-	            if(systemFile.getName()==null || systemFile.getName().equals("")){
-	            	systemFile.setName(file.getOriginalFilename().split("\\.")[0]);
+			String path="/";
+			for (SystemFile systemFile1:attachment.getSystemFile()){
+				SystemFile attachmetnSystemFile=systemFileService.findById(systemFile1.getId());
+				String[] splittedPath=attachmetnSystemFile.getPath().split("/");
+				for(int i=0;i<splittedPath.length-1;i++){
+					if (!splittedPath[i].equals(""))
+						path=path+splittedPath[i]+"/";
 				}
-	            
-	            this.systemFileService.create(systemFile);
+				break;
+			}
+	        try {
+	        	int counter=1;
+	        	for (MultipartFile multipartFile:files){
+	        		SystemFile newSystemFile=new SystemFile();
+	        		newSystemFile.setAttachment(systemFile.getAttachment());
+	        		String filename=multipartFile.getOriginalFilename();
+	        		if(systemFile.getName()==null || systemFile.getName().equals("")){
+	        			newSystemFile.setName(filename);
+					}
+					else{
+						newSystemFile.setName(systemFile.getName()+"-"+counter++);
+					}
+
+					File file = new File(path + filename);
+
+					multipartFile.transferTo(file);
+					newSystemFile.setPath(path + filename);
+					this.systemFileService.create(newSystemFile);
+				}
 
 	        } catch (Exception e) {
 	            e.printStackTrace();
