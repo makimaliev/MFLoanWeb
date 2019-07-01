@@ -166,6 +166,7 @@ public class ObjectListController {
 
 		model.addAttribute("selectedObjectList", modelObjectList.getObjectListValues());
 
+
 		model.addAttribute("fromLoan","false");
 
 		return "output/report/objectListForm";
