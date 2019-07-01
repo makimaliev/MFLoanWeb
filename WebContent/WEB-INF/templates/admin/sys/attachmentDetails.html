@@ -70,15 +70,31 @@
 
 											</div>
 
-											<div class="row" >
-												<div class="col-md-12">
-
-													<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
-													   data-target="#attachmentFormModal"
-													   th:href="@{/systemFile/add}" role="button"
-													   class="btn btn-large btn-primary"> Add File </a>
+											<div class="m-portlet__head" >
+												<div class="m-portlet__head-caption">
+													<div class="m-portlet__head-title">
+														<a sec:authorize="hasRole('ADMIN')" data-remote="false" data-toggle="modal"
+														   data-target="#attachmentFormModal"
+														   th:href="@{/systemFile/add}" role="button"
+														   class="btn btn-large btn-primary"> Add File </a>
+													</div>
+												</div>
+												<div class="m-portlet__head-tools">
+													<ul class="m-portlet__nav">
+														<li class="m-portlet__nav-item">
+															<div class="m-input-icon m-input-icon--left">
+																<input type="text" class="form-control m-input" th:placeholder="#{label.search}" id="generalSearch">
+																<span class="m-input-icon__icon m-input-icon__icon--left">
+																		<span>
+																			<i class="la la-search"></i>
+																		</span>
+																	</span>
+															</div>
+														</li>
+													</ul>
 												</div>
 											</div>
+
 										</div>
 									</div>
 									<!-- END BORDERED TABLE PORTLET-->
@@ -216,6 +232,28 @@
         }
     });
     /*]]>*/
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        var table = $('#attachmentTable').DataTable({
+            stateSave: true,
+            language: {
+                paginate: {
+                    previous: '<i class="la la-angle-left"></i>', // or '→'
+                    next: '<i class="la la-angle-right"></i>' // or '←'
+                },
+                lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
+            },
+            "info": false,
+            "sDom": 'rtlip'
+        });
+
+        $('#generalSearch').keyup(function () {
+            table.search($(this).val()).draw();
+        });
+    });
 </script>
 
 </body>
