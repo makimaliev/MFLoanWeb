@@ -14,6 +14,7 @@ import kg.gov.mf.loan.admin.sys.service.SystemFileService;
 import kg.gov.mf.loan.admin.sys.service.cSystemService;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
+import kg.gov.mf.loan.web.fetchModels.SystemFileModel;
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -109,8 +110,9 @@ public class InformationController {
 	@GetMapping("/organization/{oId}/information/view")
 	public String viewOrganizationInformations(Model model,@PathVariable("oId") Long oId){
 
-    	List<Information> informations=informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2L,oId);
-    	model.addAttribute("informationList",informations);
+    	List<SystemFileModel> list=getSystemFilesByTypeAndId(oId);
+
+    	model.addAttribute("informationList",list);
 
 		return "admin/sys/informationList";
 	}
@@ -290,7 +292,7 @@ public class InformationController {
 	@PostMapping("/object/{objectId}/attachment/{type}/add")
 	public String addAttachment(MultipartHttpServletRequest request,@RequestParam(value = "ids") String ids, @PathVariable("objectId") Long objectId, @PathVariable("type") int type, Attachment attachment, @RequestParam(value = "documentIds",required = false) Long[] documentIds) {
 
-		String name=attachment.getName();
+		String name="";
 		HashMap<String,Long> idsMap=new HashMap<>();
 		String[] splitedByCommaIds=ids.split(",");
 		for(String s:splitedByCommaIds){
@@ -311,7 +313,7 @@ public class InformationController {
 		}
 		else{
 			information=new Information();
-			information.setName(name);
+			information.setName(attachment.getName());
 			information.setDate(new Date());
 			information.setParentInformation(null);
 			information.setSystemObjectId(objectId);
@@ -338,6 +340,7 @@ public class InformationController {
 				MultipartFile part = request.getFile(uploadedFile);
 
 				String filename = part.getOriginalFilename();
+				name=filename;
 				File folder=new File(path+filename);
 				exists = folder.exists();
 				if(exists){
@@ -352,6 +355,12 @@ public class InformationController {
 					systemFile.setAttachment(attachment);
 					systemFileService.create(systemFile);
 					systemFileSet.add(systemFile);
+				}
+			}
+			if(attachment.getName()==null || attachment.getName().equals("")){
+				attachment.setName(name);
+				if (information.getName()==null || information.getName().equals("")){
+					information.setName(name);
 				}
 			}
 			attachment.setSystemFile(systemFileSet);
@@ -404,12 +413,14 @@ public class InformationController {
 		File file = new File(systemFile.getPath());
         String fileExtension="png";
 		try{
-            fileExtension=systemFile.getName().split("\\.")[1];
+			String[] splittedFileName=systemFile.getName().split("\\.");
+            fileExtension=splittedFileName[splittedFileName.length-1];
         }
         catch (Exception e){
             System.out.println(e);
+            return;
         }
-		String smth=Files.probeContentType(file.toPath());
+		String mimeType=Files.probeContentType(file.toPath());
 
 		/*
 		if(fileExtension.equals("pdf")){
@@ -434,7 +445,7 @@ public class InformationController {
 		}
 */
 
-		response.setContentType(smth);
+		response.setContentType(mimeType);
 		response.setHeader("Content-Disposition", "attachment; filename=xx."+fileExtension);
 		InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
 		FileCopyUtils.copy(inputStream, response.getOutputStream());
@@ -540,7 +551,31 @@ public class InformationController {
 		}
 		return path;
 	}
+//get system files of
+private List<SystemFileModel> getSystemFilesByTypeAndId(Long id){
 
+	List<SystemFileModel> list=new ArrayList<>();
+	List<Information> informations=informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2,id);
+	for (Information information1:informations){
+		Information information=informationService.findById(information1.getId());
+		Set<Attachment> attachments= information.getAttachment();
+		for (Attachment attachment1:attachments){
+			Attachment attachment=attachmentService.findById(attachment1.getId());
+			for (SystemFile systemFile1:attachment.getSystemFile()){
+				SystemFile systemFile=systemFileService.findById(systemFile1.getId());
+				SystemFileModel systemFileModel=new SystemFileModel();
+				systemFileModel.setAttachment_id(attachment.getId());
+				systemFileModel.setSys_name(systemFile.getName());
+				systemFileModel.setSystem_file_id(systemFile.getId());
+				systemFileModel.setAttachment_name(attachment.getName());
+				systemFileModel.setPath(systemFile.getPath());
+				list.add(systemFileModel);
+			}
+		}
+	}
+
+	return list;
+}
 }
 
 

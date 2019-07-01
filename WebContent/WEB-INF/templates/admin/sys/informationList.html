@@ -48,38 +48,51 @@
 							<thead class="thead-default">
 								<tr>
 									<th th:text="#{label.information.table.id}">Id</th>
-									<th th:text="#{label.information.table.name}">Name</th>
+									<th th:text="#{label.information.attachment.name}">Name</th>
+									<th th:text="#{label.information.systemFile.name}">Name</th>
 									<th>&nbsp;</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr th:each="s : ${informationList}">
-									<td th:text="${s.id}">Id</td>
-									<td th:text="${s.name}">Name</td>
+									<td th:text="${s.system_file_id}">Id</td>
+									<td th:text="${s.attachment_name}">Name</td>
+									<td th:text="${s.sys_name}">Name</td>
 									<td class="table-actions text-right">
-										<span>
+										<div class="row">
+											<a th:href="@{/systemFile/__${s.system_file_id}__/download}"
+											   class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Скачать">
+												<i class="la la-download"></i>
+											</a>
+											<a th:href="@{/attachment/__${s.attachment_id}__/details}"
+											   class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Скачать">
+												<i class="la la-arrow-circle-left"></i>
+											</a>
+										</div>
+										<!--<span>
 											<div class="dropdown">
-												<a href="#" class="btn m-btn m-btn--hover-metal m-btn--icon m-btn--icon-only m-btn--pill btn-dropdown" data-toggle="dropdown">
-													<i class="la la-ellipsis-h"></i>
-												</a>
 												<div class="dropdown-menu dropdown-menu-right">
-													<a  th:href="@{/information/__${s.id}__/details}"
-														role="button" class="dropdown-item"> <span th:text="#{label.table.view}"></span>
+													<a th:href="@{/systemFile/__${s.system_file_id}__/download}"
+													   class="dropdown-item" title="Скачать">
+														<i class="la la-download"></i>
 													</a>
-													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_INFORMATION')" data-remote="false" data-toggle="modal"
-													   data-target="#informationFormModal" th:href="@{/information/__${s.id}__/edit}"
-													   role="button" class="dropdown-item"> <span th:text="#{label.table.edit}"></span>
-													</a>
-													<a hidden="hidden" class="dropdown-item" href="#">
-														<span>
-															<form th:action="@{/information/__${s.id}__/remove}" method="post">
-																<button type="submit" class="btn btn-reset"  th:text="#{label.table.delete}"></button>
-															</form>
-														</span>
-													</a>
+													&lt;!&ndash;<a  th:href="@{/information/__${s.id}__/details}"&ndash;&gt;
+													&lt;!&ndash;role="button" class="dropdown-item"> <span th:text="#{label.table.view}"></span>&ndash;&gt;
+													&lt;!&ndash;</a>&ndash;&gt;
+													&lt;!&ndash;<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_INFORMATION')" data-remote="false" data-toggle="modal"&ndash;&gt;
+													&lt;!&ndash;data-target="#informationFormModal" th:href="@{/information/__${s.id}__/edit}"&ndash;&gt;
+													&lt;!&ndash;role="button" class="dropdown-item"> <span th:text="#{label.table.edit}"></span>&ndash;&gt;
+													&lt;!&ndash;</a>&ndash;&gt;
+													&lt;!&ndash;<a hidden="hidden" class="dropdown-item" href="#">&ndash;&gt;
+													&lt;!&ndash;<span>&ndash;&gt;
+													&lt;!&ndash;<form th:action="@{/information/__${s.id}__/remove}" method="post">&ndash;&gt;
+													&lt;!&ndash;<button type="submit" class="btn btn-reset"  th:text="#{label.table.delete}"></button>&ndash;&gt;
+													&lt;!&ndash;</form>&ndash;&gt;
+													&lt;!&ndash;</span>&ndash;&gt;
+													&lt;!&ndash;</a>&ndash;&gt;
 												</div>
 											</div>
-										</span>
+										</span>-->
 									</td>
 								</tr>
 							</tbody>
@@ -140,9 +153,9 @@
                 lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
 			},
 			"info":     false,
-			keys: {
+			/*keys: {
 				focus: ':eq(0)'
-			},
+			},*/
 			"sDom": 'rtlip'
 		});
 
@@ -153,21 +166,21 @@
 		$('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
 		$('.selectpicker').selectpicker('refresh');
 
-		table.on('key-focus', function(e, datatable, cell) {
+		/*table.on('key-focus', function(e, datatable, cell) {
 
 			var rowData = datatable.row(cell.index().row).data();
 			$("#information_id").val(rowData[0]);
 			var sUrl ="/information/" + rowData[0]+"/view";
+            var row = datatable.row( cell.index().row );
+            table.$('tr.info').removeClass('info');
+            $( row.node() ).addClass( "info" );
+            var rowData = row.data();
+            var colData = datatable.cell( { focused: true } ).data();
 			$.get(sUrl, function(data) {
 				// $('#content').html(data);
 			});
-		});
+		});*/
 
-		var row = datatable.row( cell.index().row );
-		table.$('tr.info').removeClass('info');
-			$( row.node() ).addClass( "info" );
-			var rowData = row.data();
-			var colData = datatable.cell( { focused: true } ).data();
 	});
 </script>
 

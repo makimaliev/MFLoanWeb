@@ -835,19 +835,22 @@
     $("#btn_generate_type_1").on("click",function () {
 
         var initDate = $("#phaseInitDate").val();
-        if(fromLoan==true)
-        $("#selectedName").val(loanId);
+        var searchLoanIds;
+
+        if(fromLoan=='true'){
+            $("#selectedName").val(loanId);
+            searchLoanIds=loanId;
+        }
         else{
             var stringSelecteds="";
             for (var i in selectedLoans){
                 stringSelecteds=stringSelecteds+"-"+i.toString();
             }
+            searchLoanIds=stringSelecteds;
             $("#selectedName").val(stringSelecteds.toString());
         }
         $("#dateOfSelected").val(initDate);
-        // $("#showSummaries").submit();
-
-        var sUrl ="/printoutType/1/objectId/"+debtorId+"/generate?"+"name="+$("#selectedName").val()+"&date="+$("#dateOfSelected").val();
+        var sUrl ="/printoutType/1/objectId/"+debtorId+"/generate?"+"name="+searchLoanIds+"&date="+$("#dateOfSelected").val();
 
         // $.get(sUrl, function(data) {
         //     $('#content').html(data);

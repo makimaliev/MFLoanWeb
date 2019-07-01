@@ -1,6 +1,7 @@
 package kg.gov.mf.loan.web.controller.doc;
 
 import kg.gov.mf.loan.doc.model.DispatchData;
+import kg.gov.mf.loan.doc.model.Document;
 import kg.gov.mf.loan.doc.service.DispatchDataService;
 import kg.gov.mf.loan.doc.service.DocumentService;
 import org.springframework.web.bind.annotation.*;
@@ -35,11 +36,17 @@ public class DispatchDataController extends BaseController {
         return dispatchDataService.getById(id);
     }
 
-    @RequestMapping(value = "/save", method = RequestMethod.GET)
+    @RequestMapping(value = "/save/{id}", method = RequestMethod.POST)
     @ResponseBody
-    public String save(@Valid DispatchData dispatchData) {
+    public String save(@PathVariable("id") Long id, @Valid DispatchData dispatchData) {
 
-        dispatchDataService.update(dispatchData);
+        if(dispatchData.getId() == 0) {
+            Document document = documentService.getById(id);
+            document.getDispatchData().add(dispatchData);
+            documentService.update(document);
+        } else {
+            dispatchDataService.update(dispatchData);
+        }
         return "OK";
     }
 }

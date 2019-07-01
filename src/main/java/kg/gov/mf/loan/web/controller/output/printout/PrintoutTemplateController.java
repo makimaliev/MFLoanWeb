@@ -826,8 +826,8 @@ public class PrintoutTemplateController {
                     break;
             }
 
-            response.setContentType("application/msword");
-            response.setHeader("Content-Disposition", "attachment; filename=filename.doc");
+            response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+            response.setHeader("Content-Disposition", "attachment; filename=filename.docx");
 
             doc.write(response.getOutputStream());
 

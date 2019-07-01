@@ -20,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @SuppressWarnings("unchecked")
 @Controller
@@ -115,7 +116,7 @@ public class AdminDocumentController extends DocumentFlowController {
         return "/doc/document/constants";
     }
 
-    @RequestMapping(value = "/doc/constants/save", method = RequestMethod.POST)
+    @RequestMapping(value = "/doc/task/save", method = RequestMethod.POST)
     public String saveConstants(@ModelAttribute("systemConstant") SystemConstant systemConstant, Model model) {
 
         if(getUser() == null)
@@ -133,5 +134,18 @@ public class AdminDocumentController extends DocumentFlowController {
         model.addAttribute("systemConstant", systemConstant);
 
         return "/doc/document/constants";
+    }
+
+    @RequestMapping(value = "/admin/task/save", method = RequestMethod.POST)
+    @ResponseBody
+    public String save(@Valid Task task) {
+
+        if(task.getId() == 0) {
+            task.setUuid(UUID.randomUUID().toString());
+            taskService.add(task);
+        } else {
+            taskService.update(task);
+        }
+        return "OK";
     }
 }
