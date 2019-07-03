@@ -826,7 +826,7 @@ public class LoanController {
         }
         else
         {
-            if(loan.getParent().getId() != null)
+            if(loan.getParent()!= null)
             {
                 Loan tLoan = loanRepository.findOne(loan.getParent().getId());
                 loan.setParent(tLoan);
