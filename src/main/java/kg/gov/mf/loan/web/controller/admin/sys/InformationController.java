@@ -446,7 +446,7 @@ public class InformationController {
 */
 
 		response.setContentType(mimeType);
-		response.setHeader("Content-Disposition", "attachment; filename=xx."+fileExtension);
+		response.setHeader("Content-Disposition", "attachment; filename="+file.getName()+"."+fileExtension);
 		InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
 		FileCopyUtils.copy(inputStream, response.getOutputStream());
 	}

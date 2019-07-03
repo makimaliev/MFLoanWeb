@@ -144,6 +144,13 @@ public class HomeController {
         loanFieldsMigration.migrateLoanField("150.0.0.89","migration2019","postgres","armad27raptor");
         return "index";
     }
+
+    @RequestMapping("/migrate/loan/supervisorPlan")
+    public String loanSupervisorPlanMigrate(){
+        LoanFieldsMigration loanFieldsMigration=new LoanFieldsMigration();
+        loanFieldsMigration.migrateSupervisorPlans("150.0.0.89","migration2019","postgres","armad27raptor");
+        return "index";
+    }
 	
 	
 	

@@ -339,7 +339,7 @@
 												<div class="m-widget1__item">
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
-															<button type="button" class="btn btn-primary" th:text="#{label.change.loan.normal.description}" data-toggle="modal" data-target="#changeLoanNormalDescriptionModal"></button>
+															<button sec:authorize="hasAnyAuthority('ADMIN','PERM_LOAN_NORMAL_DESC')" type="button" class="btn btn-primary" th:text="#{label.change.loan.normal.description}" data-toggle="modal" data-target="#changeLoanNormalDescriptionModal"></button>
 															<br>
 															<span class="m-widget1__desc m--font-brand" th:text="${loan.normalDescription?.text}"></span>
 
@@ -349,7 +349,7 @@
 												<div class="m-widget1__item">
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
-															<button type="button" class="btn btn-primary" th:text="#{label.change.loan.supervisor.description}" data-toggle="modal" data-target="#changeLoanSupervisorDescriptionModal"></button>
+															<button sec:authorize="hasAnyAuthority('ADMIN','PERM_LOAN_SUPERVISOR_DESC')" type="button" class="btn btn-primary" th:text="#{label.change.loan.supervisor.description}" data-toggle="modal" data-target="#changeLoanSupervisorDescriptionModal"></button>
 															<br>
 															<span class="m-widget1__desc m--font-brand" th:text="${loan.supervisorDescription?.text}"></span>
 
@@ -419,7 +419,7 @@
 												<div class="m-widget1__item">
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
-															<button type="button" class="btn btn-primary" th:text="#{label.change.loan.collection.description}" data-toggle="modal" data-target="#changeLoanCollectionDescriptionModal"></button>
+															<button sec:authorize="hasAnyAuthority('ADMIN','PERM_LOAN_COLLECTION_DESC')" type="button" class="btn btn-primary" th:text="#{label.change.loan.collection.description}" data-toggle="modal" data-target="#changeLoanCollectionDescriptionModal"></button>
 															<br>
 															<span class="m-widget1__desc m--font-brand" th:text="${loan.collectionDescription?.text}"></span>
 
@@ -429,7 +429,7 @@
 												<div class="m-widget1__item">
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
-															<button type="button" class="btn btn-primary" th:text="#{label.change.loan.collateral.description}" data-toggle="modal" data-target="#changeLoanCollateralDescriptionModal"></button>
+															<button sec:authorize="hasAnyAuthority('ADMIN','PERM_LOAN_COLLATERAL_DESC')" type="button" class="btn btn-primary" th:text="#{label.change.loan.collateral.description}" data-toggle="modal" data-target="#changeLoanCollateralDescriptionModal"></button>
 															<br>
 															<span class="m-widget1__desc m--font-brand" th:text="${loan.collateralDescription?.text}"></span>
 
@@ -439,7 +439,7 @@
 												<div class="m-widget1__item">
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
-															<button type="button" class="btn btn-primary" th:text="#{label.change.loan.execution.description}" data-toggle="modal" data-target="#changeLoanExecutionDescriptionModal"></button>
+															<button sec:authorize="hasAnyAuthority('ADMIN','PERM_LOAN_EXECUTION_DESC')" type="button" class="btn btn-primary" th:text="#{label.change.loan.execution.description}" data-toggle="modal" data-target="#changeLoanExecutionDescriptionModal"></button>
 															<br>
 															<span class="m-widget1__desc m--font-brand" th:text="${loan.executionDescription?.text}"></span>
 
@@ -449,7 +449,7 @@
 												<div class="m-widget1__item">
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
-															<button type="button" class="btn btn-primary" th:text="#{label.change.loan.profit.description}" data-toggle="modal" data-target="#changeLoanProfitDescriptionModal"></button>
+															<button sec:authorize="hasAnyAuthority('ADMIN','PERM_LOAN_PROFIT_DESC')" type="button" class="btn btn-primary" th:text="#{label.change.loan.profit.description}" data-toggle="modal" data-target="#changeLoanProfitDescriptionModal"></button>
 															<br>
 															<span class="m-widget1__desc m--font-brand" th:text="${loan.profitDescription?.text}"></span>
 
@@ -1373,7 +1373,7 @@
 												<div class="col-xl-3 order-3 order-xl-3 m--align-right" th:if="${isEmptyChild}==true">
 													<div th:switch="${loggedinuserId}">
 
-														<a th:case="${supervisorId}" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_SUPERVISORPLAN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+														<a th:case="${supervisorId}" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_SUPERVISORPLAN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/add}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
 													<span th:text="#{label.loan.add.supervisorPlan}">
@@ -1381,7 +1381,7 @@
 													</span>
 												</span>
 														</a>
-														<a th:if="${loggedinuserId}==1" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_SUPERVISORPLAN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+														<a th:if="${loggedinuserId}==1" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_SUPERVISORPLAN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/add}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
 													<span th:text="#{label.loan.add.supervisorPlan}">

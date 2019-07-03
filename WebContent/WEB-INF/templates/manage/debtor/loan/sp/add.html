@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<!-- begin::Head -->
+<head>
+    <title th:text="#{label.loan.title.add.edit.supervisorPlans}">Добавить/Редактировать план</title>
+
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<!-- end::Head -->
+
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <!-- BEGIN: Subheader -->
+            <div class="m-subheader ">
+                <div class="d-flex align-items-center">
+                    <div class="mr-auto">
+                        <h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.loan.supervisorPlan}">
+                            План
+                        </h3>
+                        <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+                            <li class="m-nav__item m-nav__item--home">
+                                <a th:href="@{/}" class="m-nav__link m-nav__link--icon">
+                                    <i class="m-nav__link-icon la la-home"></i>
+                                </a>
+                            </li>
+                            <li class="m-nav__separator">
+                                -
+                            </li>
+                            <li class="m-nav__item">
+                                <a th:href="@{/manage/debtor/list}" class="m-nav__link">
+											<span class="m-nav__link-text" th:text="#{label.debtors}">
+												Список заемщиков
+											</span>
+                                </a>
+                            </li>
+                            <li class="m-nav__separator">
+                                -
+                            </li>
+                            <li class="m-nav__item">
+                                <a th:href="@{/manage/debtor/__${debtorId}__/view}" class="m-nav__link">
+											<span class="m-nav__link-text" th:text="${debtor.name}">
+												Заемщик
+											</span>
+                                </a>
+                            </li>
+                            <li class="m-nav__separator">
+                                -
+                            </li>
+                            <li class="m-nav__item">
+                                <a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/view}" class="m-nav__link">
+											<span class="m-nav__link-text" th:text="${loan.regNumber}">
+												Заемщик
+											</span>
+                                </a>
+                            </li>
+                            <li class="m-nav__separator">
+                                -
+                            </li>
+                            <li class="m-nav__item">
+								<span class="m-nav__link-text" th:text="#{label.loan.title.add.edit.supervisorPlans}">
+												Добавить/Редактировать план
+											</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- END: Subheader -->
+            <div class="m-content">
+                <!--begin::Portlet-->
+                <div class="m-portlet m-portlet--full-height">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text">План</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <!--begin::Form-->
+                    <!--<form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/sp/save}" method="post" th:object="${sp}" class="m-form m-form&#45;&#45;fit m-form&#45;&#45;label-align-right">-->
+
+                    <!--<input hidden="true" type="text" id="id" name="id" th:field="*{id}"/>-->
+                    <!--<input hidden="true" type="text" id="record" name="id" th:field="*{record_status}"/>-->
+
+                    <div class="m-portlet__body">
+                        <select class="m-bootstrap-select m-bootstrap-select--solid" name="year" id="year" th:placeholder="#{label.year}">
+                            <option th:each="y:${years}" th:value="${y}" th:text="${y}" th:selected="${year}==${y}"></option>
+                        </select>
+                        <div class="m-form__section ml-1">
+                            <div class="col-md-7">
+                                <tr>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-sm">
+                                                <span th:text="Месяцы"></span>
+                                            </div>
+                                            <div class="col-sm">
+                                                <span th:text="#{label.loan.supervisorPlan.principal}"></span>
+                                            </div>
+                                            <div class="col-sm">
+                                                <span th:text="#{label.loan.supervisorPlan.interest}"></span>
+                                            </div>
+                                            <div class="col-sm">
+                                                <span th:text="#{label.loan.supervisorPlan.penalty}"></span>
+                                            </div>
+                                            <div class="col-sm">
+                                                <span th:text="#{label.loan.supervisorPlan.description}"></span>
+                                            </div>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                                <br>
+                                <tr th:each="month:${monthList}">
+                                    <td>
+                                        <div class="row" th:value="${month.key}" onchange="checkAndSave(this)">
+                                            <span class="col-sm" th:text="${month.value}"></span>
+                                            <div class="col-sm">
+                                                <input th:id="'principal'+${month.key}" type="text" class="form-control m-input" name="principal" th:value="${sp.principal}">
+                                            </div>
+                                            <div class="col-sm">
+                                                <input th:id="'interest'+${month.key}" type="text" class="form-control m-input" name="interest" th:value="${sp.interest}">
+                                            </div>
+                                            <div class="col-sm">
+                                                <input th:id="'penalty'+${month.key}" type="text" class="form-control m-input" name="penalty" th:value="${sp.penalty}">
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <textarea th:id="'description'+${month.key}" class="form-control m-input" rows="2" name="description" th:inline="text">[[${sp.description}]]</textarea>
+                                            </div>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="m-portlet__foot m-portlet__foot--fit">
+                        <div class="m-form__actions m-form__actions">
+                            <div class="row">
+                                <div class="col-lg-4"></div>
+                                <div class="col-lg-6">
+                                    <button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_SUPERVISORPLAN' ,'PERM_UPDATE_SUPERVISORPLAN')" onclick="savePlans()" type="submit" class="btn btn-primary">
+                                        <span th:text="#{label.form.save}"></span>
+                                    </button>
+                                    <button onclick="window.history.back()" type="button" class="btn btn-secondary">
+                                        <span th:text="#{label.form.cancel}"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--</form>-->
+                    <!--end::Form-->
+                </div>
+                <!--end::Portlet-->
+            </div>
+        </div>
+    </div>
+    <!-- end:: Body -->
+    <!-- begin::Footer -->
+    <div th:replace="layout/footer"/>
+    <!-- end::Footer -->
+</div>
+<!-- end:: Page -->
+
+<div th:replace="fragments/footer :: footer-js"/>
+
+<!--begin::Page Resources -->
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
+<!--<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>-->
+<!--end::Page Resources -->
+<script th:inline="javascript">
+    var debtorId=[[${debtorId}]];
+    var loanId=[[${loanId}]];
+    var year=$("#year").val();
+    $("#year").selectpicker();
+    $("#year").on("change",function () {
+        year=$("#year").val();
+    });
+
+    var phaseDetailsModels = [];
+    var phaseDetailsMap=new Map();
+    function checkAndSave(row) {
+        // alert()
+        var month=row.getAttribute("value");
+        var principal=$("#principal"+month).val();
+        var interest=$("#interest"+month).val();
+        var penalty=$("#penalty"+month).val();
+        var description=$("#description"+month).val();
+        var sum=parseFloat(principal)+parseFloat(interest)+parseFloat(penalty)
+        if (sum!=0 && sum!=0.0 && !isNaN(sum)){
+            var PhaseDetailsModel = {};
+            PhaseDetailsModel['loanId'] = month;
+            PhaseDetailsModel['startPrincipal'] = principal;
+            PhaseDetailsModel['startInterest'] = interest;
+            PhaseDetailsModel['startPenalty'] = penalty;
+            PhaseDetailsModel['startTotalAmount'] = sum;
+            PhaseDetailsModel['loanRegNumber'] = description;
+            phaseDetailsMap.set(month,PhaseDetailsModel);
+        }
+        // console.log(phaseDetailsMap);
+    }
+    function savePlans() {
+        for (var [key, value] of phaseDetailsMap) {
+            // console.log(key + ' = ' + value);
+            phaseDetailsModels.push(value);
+        }
+        phaseDetailsModels = JSON.stringify({
+            'phaseDetailsModels' : phaseDetailsModels
+        });
+        // var year=
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type : 'POST',
+            url : "/manage/debtor/"+debtorId+"/loan/"+loanId+"/savePlans?year="+year,
+            data: phaseDetailsModels,
+            dataType: 'json',
+            success:function (data) {
+                window.location.replace("/manage/debtor/" + debtorId + "/loan/" + loanId + "/view");
+            }
+        });
+    }
+</script>
+</body>
+<!-- end::Body -->
+</html>
