@@ -1192,7 +1192,7 @@ public class CollectionPhaseController {
     @PostMapping("/phaseStatus/instantUpdate")
     @ResponseBody
     public String updateTheStatus(Long id,Long stat,String date,String res) throws ParseException {
-        SimpleDateFormat sf=new SimpleDateFormat("dd.mm.yyyy");
+        SimpleDateFormat sf=new SimpleDateFormat("dd.MM.yyyy");
 
         CollectionPhase collectionPhase=collectionPhaseService.getById(id);
         PhaseStatus status=phaseStatusService.getById(stat);
@@ -1227,7 +1227,7 @@ public class CollectionPhaseController {
     @PostMapping("/phaseProcStatus/instantUpdate")
     @ResponseBody
     public String updateTheProcedureStatus(Long id,Long stat,String date) throws ParseException {
-		SimpleDateFormat sf=new SimpleDateFormat("dd.mm.yyyy");
+		SimpleDateFormat sf=new SimpleDateFormat("dd.MM.yyyy");
 
         CollectionPhase collectionPhase=collectionPhaseService.getById(id);
         ProcedureStatus status=procedureStatusService.getById(stat);
@@ -1362,29 +1362,55 @@ public class CollectionPhaseController {
     @PostMapping("/phasePaymentFromDate/instantUpdate")
     @ResponseBody
     public String updateThePaymentFromDate(Long id,String data){
-	    SimpleDateFormat sf=new SimpleDateFormat("dd.mm.yyyy");
+	    SimpleDateFormat sf=new SimpleDateFormat("dd.MM.yyyy");
+	    SimpleDateFormat sf2=new SimpleDateFormat("yyyy-MM-dd");
 
+	    Date closeDate=new Date();
+
+
+
+	    String loanIds="";
         CollectionPhase collectionPhase=collectionPhaseService.getById(id);
+        if(collectionPhase.getCloseDate()!=null){
+            closeDate=collectionPhase.getCloseDate();
+        }
+        else{
+            CollectionProcedure procedure=procService.getById(collectionPhase.getCollectionProcedure().getId());
+            if(procedure.getCloseDate()!=null){
+                   closeDate=procedure.getCloseDate();
+            }
+        }
+        String strCloseDate=sf2.format(closeDate);
         try {
             collectionPhase.setPaymentFromDate(sf.parse(data));
+            for(Loan loan:collectionPhase.getLoans()){
+                loanIds=loanIds+loan.getId()+",";
+            }
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        String getTotalPaidQuery="select sum(p.totalAmount)\n" +
+                "from payment p where loanId in ("+loanIds.substring(0,loanIds.length()-1)+") and p.paymentDate between '"+sf2.format(collectionPhase.getPaymentFromDate())+"' and '"+strCloseDate+"'";
+        Query query=entityManager.createNativeQuery(getTotalPaidQuery);
+        Double paidOfPhase= (Double) query.getSingleResult();
+
+        collectionPhase.setPaid(paidOfPhase);
         collectionPhaseService.update(collectionPhase);
 
-        Session session;
-        try
-        {
-            session = sessionFactory.getCurrentSession();
-        }
-        catch (HibernateException e)
-        {
-            session = sessionFactory.openSession();
-        }
-
-        session.getTransaction().begin();
-        runUpdateOfPhases(id,session);
-        session.getTransaction().commit();
+//        Session session;
+//        try
+//        {
+//            session = sessionFactory.getCurrentSession();
+//        }
+//        catch (HibernateException e)
+//        {
+//            session = sessionFactory.openSession();
+//        }
+//
+//        session.getTransaction().begin();
+//        runUpdateOfPhases(id,session);
+//        session.getTransaction().commit();
 
         return "OK";
     }
