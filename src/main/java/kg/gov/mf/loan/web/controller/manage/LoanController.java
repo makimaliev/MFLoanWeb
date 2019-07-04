@@ -729,21 +729,34 @@ public class LoanController {
 		
 		Debtor debtor = debtorService.getById(debtorId);
 		loan.setDebtor(debtor);
-		Loan loan1=loanService.getById(loan.getId());
-		loan1.setRegNumber(loan.getRegNumber());
-		loan1.setRegDate(loan.getRegDate());
-		loan1.setSupervisorId(loan.getSupervisorId());
-		loan1.setAmount(loan.getAmount());
-		loan1.setLoanType(loan.getLoanType());
-		loan1.setCreditOrder(loan.getCreditOrder());
+
+
+		if(loan.getId()==null || loan.getId() ==0)
+        {
+
+        }
+        else
+        {
+            Loan loan1=loanService.getById(loan.getId());
+
+            loan.setLoanState(loan1.getLoanState());
+            loan.setCloseDate(loan1.getCloseDate());
+            loan.setLastDate(loan1.getLastDate());
+            loan.setParent(loan1.getParent());
+            loan.setLoanFinGroup(loan1.getLoanFinGroup());
+
+
+
+        }
 
 		setBankruptData(loan);
 		if(loan.getLoanType().getId()==10){
-		    loan1.setCloseDate(null);
+		    loan.setCloseDate(null);
         }
-        loan1.setDestinationAccount(destinationAccountService.getById(1L));
 
-		saveLoanData(loan1);
+        loan.setDestinationAccount(destinationAccountService.getById(1L));
+
+		saveLoanData(loan);
 
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/"+loan.getId()+"/view";
 	}
@@ -821,6 +834,9 @@ public class LoanController {
                 loan.setLastDate(loan.getRegDate());
             if(loan.getLoanState()==null)
                 loan.setLoanState(loanStateService.getById(2L));
+
+            if(loan.getLoanFinGroup()==null)
+                loan.setLoanFinGroup(loanFinGroupService.getById(1L));
 
             CreditOrder creditOrder = creditOrderRepository.findOne(loan.getCreditOrder().getId());
             loan.setCreditOrder(creditOrder);
