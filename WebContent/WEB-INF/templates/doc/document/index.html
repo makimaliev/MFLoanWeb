@@ -44,8 +44,7 @@
 
 </head>
 
-<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"
-      onload="reloadTasks();">
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize">
 
 <div class="m-grid m-grid--hor m-grid--root m-page">
     <div th:replace="layout/header"/>
@@ -531,8 +530,10 @@
 
     $(document).ready(function() {
 
+        tsList = reloadTasks();
         var detailRows = [];
         var activeCol = null;
+
         var table = $('#documentTable').DataTable({
             orderCellsTop: true,
             fixedHeader: true,
@@ -603,24 +604,28 @@
                 }
             },
             dom: 'B<<li><t><"text-center"p>>'
-        }).on( 'draw', function () {
-            $.each( detailRows, function ( i, id ) {
-                $('#' + id + ' td.details-control').trigger( 'click' );
-            });
+        })
+            .on( 'draw', function () {
+                $.each( detailRows, function ( i, id ) {
+                    $('#' + id + ' td.details-control').trigger( 'click' );
+                });
 
-            //table.search()
-            /*
-            var cols = table.state.loaded().columns;
-            var html = "";
-            $.each(cols, function( index, value ) {
-                //console.log(this.column(index).title())
-                if(value.search.search != '') {
-                    html += '<li>' + value.search.search + '</li>'
-                }
+                //table.search()
+                /*
+                var cols = table.state.loaded().columns;
+                var html = "";
+                $.each(cols, function( index, value ) {
+                    //console.log(this.column(index).title())
+                    if(value.search.search != '') {
+                        html += '<li>' + value.search.search + '</li>'
+                    }
+                });
+                $('#filter').html(html);
+                */
+            })
+            .on('error.dt', function(e, settings, techNote, message) {
+                console.log(message)
             });
-            $('#filter').html(html);
-            */
-        });
 
         // Detail row init method
         function format (data) {
@@ -875,6 +880,7 @@
             url: '/doc/tasks/all',
             success: function(response) {
                 tsList = response;
+                console.log(response)
             }
         });
     }

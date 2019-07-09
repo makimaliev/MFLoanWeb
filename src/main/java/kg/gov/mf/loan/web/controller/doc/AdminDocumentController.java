@@ -1,5 +1,6 @@
 package kg.gov.mf.loan.web.controller.doc;
 
+import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.org.service.StaffService;
 import kg.gov.mf.loan.doc.dao.DocViewDao;
 import kg.gov.mf.loan.doc.model.DispatchData;
@@ -52,6 +53,7 @@ public class AdminDocumentController extends DocumentFlowController {
         model.addAttribute("subTypes", document.getDocumentType().getDocumentSubTypes());
         model.addAttribute("uid", getUser().getId());
         model.addAttribute("document", document);
+        model.addAttribute("attachments", document.getAttachments());
 
         return "/doc/document/adminedit";
     }
@@ -65,6 +67,37 @@ public class AdminDocumentController extends DocumentFlowController {
         Document doc = documentService.getById(document.getId());
 
         document.setDispatchData(doc.getDispatchData());
+        // Ушул Код у кошуп койчу
+        document.setAttachments(doc.getAttachments());
+
+        //region XTRA
+
+        if(document.getDocumentType().getInternalName().equals("incoming"))
+        {
+            for (Staff staff : document.getReceiverResponsible().getStaff())
+            {
+                if (!doc.getReceiverResponsible().getStaff().contains(staff))
+                {
+                    /** TO-DO */
+                    // Add Task
+                    // Add DispatchData
+                }
+            }
+        }
+
+        if(document.getDocumentType().getInternalName().equals("outgoing"))
+        {
+            for (Staff staff : document.getSenderResponsible().getStaff())
+            {
+                if (!doc.getSenderResponsible().getStaff().contains(staff))
+                {
+                    /** TO-DO */
+                    // Add Task
+                    // Add DispatchData
+                }
+            }
+        }
+        //endregion
 
         documentService.update(document);
 

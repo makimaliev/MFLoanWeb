@@ -965,20 +965,27 @@ public class DocumentFlowController extends BaseController {
     @ResponseBody
     public DataTablesOutput<DocView> getDocuments(@Valid DataTablesInput input, @RequestParam("docType") String docType) {
 
-        long dt = documentTypeService.getByInternalName(docType).getId();
-        int count = documentViewDao.count(dt);
-
-        DataTableResult dataTableResult = documentViewDao.list(dt, getUser().getId(), input);
-
+        User user = getUser();
         DataTablesOutput<DocView> docs = new DataTablesOutput<>();
 
-        if(getUser() == null)
+        if(user == null)
+        {
             docs.setError("Войдите заново");
+        }
+        else {
 
-        docs.setDraw(input.getDraw());
-        docs.setRecordsTotal(count);
-        docs.setRecordsFiltered(dataTableResult.getCount());
-        docs.setData(dataTableResult.getData());
+            long dt = documentTypeService.getByInternalName(docType).getId();
+            int count = documentViewDao.count(dt);
+
+            Long userId = user.getUsername().equals("") ? 0L : user.getId();
+
+            DataTableResult dataTableResult = documentViewDao.list(dt, userId, input);
+
+            docs.setDraw(input.getDraw());
+            docs.setRecordsTotal(count);
+            docs.setRecordsFiltered(dataTableResult.getCount());
+            docs.setData(dataTableResult.getData());
+        }
 
         return docs;
     }

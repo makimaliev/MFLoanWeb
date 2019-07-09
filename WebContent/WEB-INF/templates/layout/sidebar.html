@@ -1350,6 +1350,16 @@
                             </a>
                         </li-->
                         <li sec:authorize="hasRole('ADMIN')" class="m-menu__item " aria-haspopup="true" >
+                            <a th:href="@{/doc/documentType}" class="m-menu__link ">
+                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                    <span></span>
+                                </i>
+                                <span class="m-menu__link-text">
+                                    Виды документов
+                                </span>
+                            </a>
+                        </li>
+                        <li sec:authorize="hasRole('ADMIN')" class="m-menu__item " aria-haspopup="true" >
                             <a th:href="@{/doc/documentSubType}" class="m-menu__link ">
                                 <i class="m-menu__link-bullet m-menu__link-bullet--dot">
                                     <span></span>

@@ -38,6 +38,7 @@
                         <input type="hidden" th:field="*{version}"/>
                         <input type="hidden" th:field="*{uuid}"/>
                         <input type="hidden" th:field="*{internalName}"/>
+                        <input type="hidden" th:field="*{record_status}"/>
 
                         <div class="m-portlet__body">
                             <div class="m-form__section">
@@ -54,13 +55,19 @@
                                         <input class="form-control" th:field="*{code}" autocomplete="off" required/>
                                     </div>
                                 </div>
+                                <!--div class="form-group m-form__group row">
+                                    <label class="col-form-label col-lg-4 col-sm-12"> Счетчик </label>
+                                    <div class="col-lg-4 col-md-9 col-sm-12">
+                                        <input class="form-control" id="counter" name="counter" autocomplete="off" th:value="${counter}"/>
+                                    </div>
+                                </div-->
                                 <div class="form-group m-form__group row">
                                     <label class="col-form-label col-lg-4 col-sm-12"> Формат Регистрационного номера </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
                                         <input class="form-control" th:field="*{regNoFormat}" autocomplete="off" required/>
                                         <br>
                                         <code>Пример&nbsp;&nbsp;&nbsp;&nbsp;: {No}:{ВД}-{ДД}/{ММ}</code><br>
-                                        <code th:utext="'Результат : 123:ВХ-' + ${#dates.format(new java.util.Date(), 'dd')} + '/' + ${#dates.format(new java.util.Date(), 'MM')}"></code>
+                                        <code th:utext="'Результат : ' + ${docno}+ ':' + *{code} + '-' + ${#dates.format(new java.util.Date(), 'dd')} + '/' + ${#dates.format(new java.util.Date(), 'MM')}"></code>
 
 <pre>
 
