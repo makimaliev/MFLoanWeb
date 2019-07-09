@@ -70,7 +70,17 @@ var DatatableDataLocalDebtTransfers = function () {
                 title: "Кредит"
             }, */{
                 field: "transferPersonName",
-                title: "Должник"
+                title: "Должник",
+                width:300,
+                template: function (row) {
+                    var name=row.transferPersonName;
+                    if(name.length>40){
+                        name=name.substr(0,40)+"...";
+                    }
+                    return '\
+						<a href="/manage/debtor/'+debtorId+'/view" class="" title="View">'+name+'</a>\
+					';
+                }
             }, {
                 field: "goodsType",
                 title: "Товар"

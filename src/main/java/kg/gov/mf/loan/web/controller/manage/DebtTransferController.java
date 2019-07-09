@@ -8,11 +8,14 @@ import kg.gov.mf.loan.admin.sys.model.SystemFile;
 import kg.gov.mf.loan.admin.sys.service.AttachmentService;
 import kg.gov.mf.loan.admin.sys.service.InformationService;
 import kg.gov.mf.loan.admin.sys.service.SystemFileService;
+import kg.gov.mf.loan.manage.model.debtor.Debtor;
+import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.model.loan.DebtTransfer;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.repository.loan.DebtTransferRepository;
 import kg.gov.mf.loan.manage.service.collateral.QuantityTypeService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
+import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.manage.service.loan.DebtTransferService;
 import kg.gov.mf.loan.manage.service.loan.GoodTypeService;
 import kg.gov.mf.loan.manage.service.loan.LoanService;
@@ -66,6 +69,9 @@ public class DebtTransferController {
 	@Autowired
 	SystemFileService systemFileService;
 
+	@Autowired
+	OwnerService ownerService;
+
 	static final Logger loggerDT = LoggerFactory.getLogger(DebtTransfer.class);
 
 	@InitBinder
@@ -111,11 +117,22 @@ public class DebtTransferController {
 			model.addAttribute("dt", debtTransfer);
 			model.addAttribute("thisUnit","");
 			model.addAttribute("thisGoodType","");
+			model.addAttribute("ownerText","");
 		}
 			
 		if(dtId > 0)
 		{
-			model.addAttribute("dt", dtService.getById(dtId));
+//			[166] АВП "Биримдик-1" (Организация)
+			DebtTransfer debtTransfer=dtService.getById(dtId);
+			Debtor debtor=debtorService.getByOwnerId(debtTransfer.getTransferPersonId());
+			Owner owner=ownerService.getById(debtTransfer.getTransferPersonId());
+			String ownerType="Организация";
+			if(owner.getOwnerType().equals("PERSON")){
+				ownerType="Физ. лицо";
+			}
+			String fromName="["+owner.getId()+"] "+owner.getName()+" ("+ownerType+")";
+			model.addAttribute("ownerText",fromName);
+			model.addAttribute("dt", debtTransfer);
 //			model.addAttribute("thisUnit",quantityTypeService.getById(dtService.getById(dtId).getUnitTypeId()).getName());
 //			model.addAttribute("thisGoodType",goodTypeService.getById(dtService.getById(dtId).getGoodsTypeId()).getName());
 		}

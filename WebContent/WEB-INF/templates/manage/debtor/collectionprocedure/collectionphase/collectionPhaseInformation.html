@@ -74,6 +74,13 @@
 
                                             <button th:if="${phase.paymentFromDate!=null}" data-toggle="modal" data-target="#paymentFromDateModal" class="m-widget1__desc m--font-brand" th:text="${#dates.format(phase.paymentFromDate,'dd.MM.yyyy')}"></button>
                                             <button th:unless="${phase.paymentFromDate!=null}" data-toggle="modal" data-target="#paymentFromDateModal" class="m-widget1__desc m--font-brand" th:text="#{label.phase.setPaymentFromDate}"></button>
+
+                                            <br>
+                                            <br>
+                                            <h3 class="m-widget1__title" th:text="#{label.phase.paymentToDate}"></h3>
+
+                                            <button th:if="${phase.paymentToDate!=null}" data-toggle="modal" data-target="#paymentToDateModal" class="m-widget1__desc m--font-brand" th:text="${#dates.format(phase.paymentToDate,'dd.MM.yyyy')}"></button>
+                                            <button th:unless="${phase.paymentToDate!=null}" data-toggle="modal" data-target="#paymentToDateModal" class="m-widget1__desc m--font-brand" th:text="#{label.phase.setPaymentToDate}"></button>
                                         </div>
                                     </div>
                                     <!-- Modal -->
@@ -101,6 +108,36 @@
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                         <button onclick="savePhasePaymentFromDate()" type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div id="paymentToDateModal" class="modal" role="dialog">
+                                        <div class="modal-dialog">
+
+                                            <!-- Modal content-->
+                                            <div class="modal-content">
+                                                <form>
+                                                    <div class="modal-body">
+                                                        <div class="form-group m-form__group row">
+                                                            <label class="col-form-label col-lg-4 col-sm-12">
+                                                                <span th:text="#{label.phase.paymentToDate}"></span>
+                                                            </label>
+                                                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                                                <div class="input-group date m_datetimepicker_6">
+                                                                    <input id="paymentToDate" type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:value="${#dates.format(phase.paymentToDate,'dd.MM.yyyy')}"/>
+                                                                    <span class="input-group-addon">
+                                                            <i class="la la-calendar glyphicon-th"></i>
+                                                        </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                        <button onclick="savePhasePaymentToDate()" type="button" class="btn btn-default" data-dismiss="modal">Save</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -385,6 +422,19 @@
             type:'post',
             data:{id:pId,data:dataId},
             url:"/phasePaymentFromDate/instantUpdate",
+            success:function (data) {
+                reloadContent();
+            }
+        });
+    }
+
+    // update paymentToDate, reload content
+    function savePhasePaymentToDate() {
+        var dataId=$("#paymentToDate").val();
+        $.ajax({
+            type:'post',
+            data:{id:pId,data:dataId},
+            url:"/phasePaymentToDate/instantUpdate",
             success:function (data) {
                 reloadContent();
             }

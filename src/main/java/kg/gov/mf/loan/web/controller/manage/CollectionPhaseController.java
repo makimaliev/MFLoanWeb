@@ -1371,15 +1371,9 @@ public class CollectionPhaseController {
 
 	    String loanIds="";
         CollectionPhase collectionPhase=collectionPhaseService.getById(id);
-        if(collectionPhase.getCloseDate()!=null){
-            closeDate=collectionPhase.getCloseDate();
-        }
-        else{
-            CollectionProcedure procedure=procService.getById(collectionPhase.getCollectionProcedure().getId());
-            if(procedure.getCloseDate()!=null){
-                   closeDate=procedure.getCloseDate();
-            }
-        }
+        if(collectionPhase.getPaymentToDate()!=null){
+        	closeDate=collectionPhase.getPaymentToDate();
+		}
         String strCloseDate=sf2.format(closeDate);
         try {
             collectionPhase.setPaymentFromDate(sf.parse(data));
@@ -1414,6 +1408,37 @@ public class CollectionPhaseController {
 
         return "OK";
     }
+
+	@PostMapping("/phasePaymentToDate/instantUpdate")
+	@ResponseBody
+	public String updateThePaymentToDate(Long id,String data){
+		SimpleDateFormat sf=new SimpleDateFormat("dd.MM.yyyy");
+		SimpleDateFormat sf2=new SimpleDateFormat("yyyy-MM-dd");
+
+		String loanIds="";
+		CollectionPhase collectionPhase=collectionPhaseService.getById(id);
+		try {
+			collectionPhase.setPaymentToDate(sf.parse(data));
+			for(Loan loan:collectionPhase.getLoans()){
+				loanIds=loanIds+loan.getId()+",";
+			}
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return "OK";
+		}
+		String strCloseDate=sf2.format(collectionPhase.getPaymentToDate());
+		String getTotalPaidQuery="select sum(p.totalAmount)\n" +
+				"from payment p where loanId in ("+loanIds.substring(0,loanIds.length()-1)+") and p.paymentDate between '"+sf2.format(collectionPhase.getPaymentFromDate())+"' and '"+strCloseDate+"'";
+		Query query=entityManager.createNativeQuery(getTotalPaidQuery);
+		Double paidOfPhase= (Double) query.getSingleResult();
+
+		collectionPhase.setPaid(paidOfPhase);
+		collectionPhaseService.update(collectionPhase);
+
+
+		return "OK";
+	}
 
 
     @GetMapping("/owner/{id}/getInformation")
