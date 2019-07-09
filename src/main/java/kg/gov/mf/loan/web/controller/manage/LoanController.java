@@ -2,8 +2,10 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.admin.org.model.BankData;
 import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.org.service.AddressService;
+import kg.gov.mf.loan.admin.org.service.BankDataService;
 import kg.gov.mf.loan.admin.sys.model.Attachment;
 import kg.gov.mf.loan.admin.sys.model.Information;
 import kg.gov.mf.loan.admin.sys.model.SystemFile;
@@ -17,6 +19,7 @@ import kg.gov.mf.loan.manage.model.collateral.CollateralItem;
 import kg.gov.mf.loan.manage.model.collateral.GuarantorAgreement;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
+import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.model.loan.*;
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
 import kg.gov.mf.loan.manage.model.orderterm.*;
@@ -194,6 +197,9 @@ public class LoanController {
     @Autowired
     DescriptionService descriptionService;
 
+    @Autowired
+    BankDataService bankDataService;
+
     static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
 
 	@InitBinder
@@ -249,6 +255,15 @@ public class LoanController {
 //        String jsonSupervisorPlans = gson.toJson(getSPsByLoanId(loanId));
 //        model.addAttribute("SPs", jsonSupervisorPlans);
 
+
+        try{
+            BankData bankData=bankDataService.findById(loan.getBankDataId());
+            model.addAttribute("bankData",bankData);
+        }
+        catch (Exception e){
+            model.addAttribute("bankData",null);
+        }
+
         List<OrderTermRatePeriod> ratePeriods = ratePeriodService.list();
         model.addAttribute("ratePeriods", ratePeriods);
         
@@ -284,6 +299,8 @@ public class LoanController {
 
         model.addAttribute("debtorId", debtorId);
 		Debtor debtor = debtorService.getById(debtorId);
+		Owner owner=ownerService.getById(debtor.getOwner().getId());
+		model.addAttribute("ownerType",owner.getOwnerType());
 		model.addAttribute("debtor", debtor);
 		model.addAttribute("finGroupId",loan.getLoanFinGroup().getId());
 
@@ -367,6 +384,52 @@ public class LoanController {
         }
 	    return "redirect:" + "/manage/debtor/"+debtorId+"/loan/{loanId}/view";
     }
+
+    @GetMapping("/loanBankData/{loanId}/save")
+    public String updateLoanBankData(Model model,@PathVariable(value = "loanId") Long loanId){
+
+	    Loan loan=loanService.getById(loanId);
+        Debtor debtor=debtorService.getById(loan.getDebtor().getId());
+        Owner owner=ownerService.getById(debtor.getOwner().getId());
+        if(owner.getOwnerType().name().equals("ORGANIZATION")){
+            String bankDataQuery="select *\n" +
+                    "from bank_data where organization_id=1";
+            Query query=entityManager.createNativeQuery(bankDataQuery, BankData.class);
+            List<BankData> bankDataList=query.getResultList();
+            model.addAttribute("bankDatas",bankDataList);
+        }
+        else{
+            model.addAttribute("bankDatas",null);
+        }
+        if(loan.getBankDataId()!=0){
+            model.addAttribute("bankData",loan.getBankDataId());
+        }
+        else{
+            model.addAttribute("bankData",null);
+        }
+        model.addAttribute("loanId",loanId);
+        return "/manage/debtor/loan/loanBankDataForm";
+    }
+
+    @PostMapping("/loanBankData/{loanId}/save")
+    public String updateBankData(@PathVariable(value = "loanId") Long loanId ,@Validated @ModelAttribute(value = "bankDataId") Long bankDataId, BindingResult result){
+
+        Long debtorId=null;
+	    if(result.hasErrors()){
+            System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+        }
+        else {
+            Loan loan=loanService.getById(loanId);
+            debtorId=loan.getDebtor().getId();
+            if(bankDataId!=null || bankDataId!=0) {
+                loan.setBankDataId(bankDataId);
+                loanService.update(loan);
+            }
+        }
+	    return "redirect:" + "/manage/debtor/"+debtorId+"/loan/{loanId}/view";
+    }
+
+
 
     @GetMapping("/destinationAccount/{loanId}/save")
     public String updateDestinationAccount(Model model,@PathVariable(value = "loanId") Long loanId){
