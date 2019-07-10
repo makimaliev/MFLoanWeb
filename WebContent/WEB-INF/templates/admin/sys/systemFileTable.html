@@ -1,0 +1,47 @@
+<div xmlns:th="http://www.w3.org/1999/xhtml">
+    <table class="table" id="sysFileTable">
+        <thead class="thead-default">
+        <tr>
+            <th hidden></th>
+            <th th:text="#{label.systemFile.name}">Id</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="s : ${sysFiles}">
+            <td hidden th:text="${s.id}"></td>
+            <td>
+                <a th:href="@{/systemFile/__${s.id}__/download}" th:text="${s.name}"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+            var sysFileTable = $('#sysFileTable').DataTable({
+                stateSave: false,
+                language: {
+                    paginate: {
+                        previous: '<i class="la la-angle-left"></i>', // or '→'
+                        next: '<i class="la la-angle-right"></i>' // or '←'
+                    },
+                    lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
+                },
+                "info":     false,
+                // keys: {
+                //     focus: ':eq(0)'
+                // },
+                "sDom": ''
+            });
+
+            $('#generalSearch').keyup(function(){
+                sysFileTable.search($(this).val()).draw() ;
+            });
+
+            $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
+            $('.selectpicker').selectpicker('refresh');
+
+
+        });
+    </script>
+</div>

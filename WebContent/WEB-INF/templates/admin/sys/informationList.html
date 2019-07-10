@@ -44,63 +44,29 @@
 						</div>
 					</div>
 					<div class="m-portlet__body">
-						<table class="table" id="informationTable">
-							<thead class="thead-default">
-								<tr>
-									<th th:text="#{label.information.table.id}">Id</th>
-									<th th:text="#{label.information.attachment.name}">Name</th>
-									<th th:text="#{label.information.systemFile.name}">Name</th>
-									<th>&nbsp;</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="s : ${informationList}">
-									<td th:text="${s.system_file_id}">Id</td>
-									<td><a th:href="@{/attachment/__${s.attachment_id}__/details}" th:text="${s.attachment_name}"
-										 title="Просмотр">
-									</a></td>
-									<td><a th:href="@{/systemFile/__${s.system_file_id}__/download}" th:text="${s.sys_name}"
-										   title="Скачать">
-									</a></td>
-									<td class="table-actions text-right">
-										<div class="row">
-											<a th:href="@{/systemFile/__${s.system_file_id}__/download}"
-											   class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Скачать">
-												<i class="la la-download"></i>
-											</a>
-											<a th:href="@{/attachment/__${s.attachment_id}__/details}"
-											   class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Просмотр">
-												<i class="la la-arrow-circle-left"></i>
-											</a>
-										</div>
-										<!--<span>
-											<div class="dropdown">
-												<div class="dropdown-menu dropdown-menu-right">
-													<a th:href="@{/systemFile/__${s.system_file_id}__/download}"
-													   class="dropdown-item" title="Скачать">
-														<i class="la la-download"></i>
-													</a>
-													&lt;!&ndash;<a  th:href="@{/information/__${s.id}__/details}"&ndash;&gt;
-													&lt;!&ndash;role="button" class="dropdown-item"> <span th:text="#{label.table.view}"></span>&ndash;&gt;
-													&lt;!&ndash;</a>&ndash;&gt;
-													&lt;!&ndash;<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_INFORMATION')" data-remote="false" data-toggle="modal"&ndash;&gt;
-													&lt;!&ndash;data-target="#informationFormModal" th:href="@{/information/__${s.id}__/edit}"&ndash;&gt;
-													&lt;!&ndash;role="button" class="dropdown-item"> <span th:text="#{label.table.edit}"></span>&ndash;&gt;
-													&lt;!&ndash;</a>&ndash;&gt;
-													&lt;!&ndash;<a hidden="hidden" class="dropdown-item" href="#">&ndash;&gt;
-													&lt;!&ndash;<span>&ndash;&gt;
-													&lt;!&ndash;<form th:action="@{/information/__${s.id}__/remove}" method="post">&ndash;&gt;
-													&lt;!&ndash;<button type="submit" class="btn btn-reset"  th:text="#{label.table.delete}"></button>&ndash;&gt;
-													&lt;!&ndash;</form>&ndash;&gt;
-													&lt;!&ndash;</span>&ndash;&gt;
-													&lt;!&ndash;</a>&ndash;&gt;
-												</div>
-											</div>
-										</span>-->
-									</td>
-								</tr>
-							</tbody>
-						</table>
+						<div class="row">
+							<div class="col-sm-6">
+								<table class="table" id="informationTable">
+									<thead class="thead-default">
+									<tr>
+										<th hidden></th>
+										<th th:text="#{label.information.name}">Id</th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr th:each="s : ${informationList}">
+										<td hidden th:text="${s.id}"></td>
+										<td th:text="${s.name}"></td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="col-sm-6">
+								<input hidden="true" type="text" id="information_id" name="information_id" />
+								<div id="attachment_content"></div>
+							</div>
+						</div>
+						<div class="col-md-12" id="sysyFile_content"></div>
 					</div>
 
 					<!--begin::Modal-->
@@ -125,13 +91,6 @@
 						</div>
 					</div>
 					<!--end::Modal-->
-				
-					<div class="row">
-						<div class="col-md-12">
-							<input hidden="true" type="text" id="information_id" name="information_id" />
-							<div id="content"></div>
-						</div>
-					</div>
 
 				</div>
 			</div>
@@ -148,7 +107,7 @@
 	$(document).ready(function(){
 
 		var table = $('#informationTable').DataTable({
-			stateSave: true,
+			stateSave: false,
 			language: {
 				paginate: {
 					previous: '<i class="la la-angle-left"></i>', // or '→'
@@ -157,35 +116,38 @@
                 lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
 			},
 			"info":     false,
-			/*keys: {
+			keys: {
 				focus: ':eq(0)'
-			},*/
-			"sDom": 'rtlip'
+			},
+			"sDom": ''
 		});
 
-		$('#generalSearch').keyup(function(){
-			table.search($(this).val()).draw() ;
-		});
+		// $('#generalSearch').keyup(function(){
+		// 	table.search($(this).val()).draw() ;
+		// });
 
 		$('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
 		$('.selectpicker').selectpicker('refresh');
 
-		/*table.on('key-focus', function(e, datatable, cell) {
+		table.on('key-focus', function(e, datatable, cell) {
 
 			var rowData = datatable.row(cell.index().row).data();
+			console.log(rowData);
 			$("#information_id").val(rowData[0]);
-			var sUrl ="/information/" + rowData[0]+"/view";
+			var sUrl ="/information/" + rowData[0]+"/attachment/view";
             var row = datatable.row( cell.index().row );
             table.$('tr.info').removeClass('info');
             $( row.node() ).addClass( "info" );
-            var rowData = row.data();
-            var colData = datatable.cell( { focused: true } ).data();
 			$.get(sUrl, function(data) {
-				// $('#content').html(data);
+				$('#attachment_content').html(data);
 			});
-		});*/
+		});
 
 	});
+    var firstSysFileUrl ="/attachment/0/details/view";
+    $.get(firstSysFileUrl, function(data) {
+        $('#sysyFile_content').html(data);
+    });
 </script>
 
 <script type="text/javascript">

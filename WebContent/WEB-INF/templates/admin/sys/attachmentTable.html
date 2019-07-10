@@ -1,0 +1,60 @@
+<div xmlns:th="http://www.w3.org/1999/xhtml">
+    <table class="table" id="attachmentTable">
+        <thead class="thead-default">
+        <tr>
+            <th hidden></th>
+            <th th:text="#{label.attachment.name}">Id</th>
+            <th th:text="#{label.details}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="s : ${attachments}">
+            <td hidden th:text="${s.id}"></td>
+            <td th:text="${s.name}"></td>
+            <td><a th:href="@{/attachment/__${s.id}__/details}">ПРОСМОТР</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+            var attachmentTable = $('#attachmentTable').DataTable({
+                stateSave: false,
+                language: {
+                    paginate: {
+                        previous: '<i class="la la-angle-left"></i>', // or '→'
+                        next: '<i class="la la-angle-right"></i>' // or '←'
+                    },
+                    lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
+                },
+                "info":     false,
+                keys: {
+                    focus: ':eq(0)'
+                },
+                "sDom": ''
+            });
+
+            // $('#generalSearch').keyup(function(){
+            //     attachmentTable.search($(this).val()).draw() ;
+            // });
+
+            $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
+            $('.selectpicker').selectpicker('refresh');
+
+            attachmentTable.on('key-focus', function(e, datatable, cell) {
+
+                var rowData = datatable.row(cell.index().row).data();
+                console.log(rowData);
+                $("#information_id").val(rowData[0]);
+                var sUrl ="/attachment/" + rowData[0]+"/details/view";
+                var row = datatable.row( cell.index().row );
+                attachmentTable.$('tr.info').removeClass('info');
+                $( row.node() ).addClass( "info" );
+                $.get(sUrl, function(data) {
+                    $('#sysyFile_content').html(data);
+                });
+            });
+
+        });
+    </script>
+</div>

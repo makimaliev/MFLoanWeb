@@ -110,11 +110,43 @@ public class InformationController {
 	@GetMapping("/organization/{oId}/information/view")
 	public String viewOrganizationInformations(Model model,@PathVariable("oId") Long oId){
 
-    	List<SystemFileModel> list=getSystemFilesByTypeAndId(oId);
+    	List<Information> informationList=informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(2,oId);
 
-    	model.addAttribute("informationList",list);
+    	model.addAttribute("informationList",informationList);
+
 
 		return "admin/sys/informationList";
+	}
+	@RequestMapping("/information/{id}/attachment/view")
+	public String viewInformationAttachments(@PathVariable("id") long id, Model model) {
+
+		Information information = this.informationService.findById(id);
+
+		Set<Attachment> attachmentList=information.getAttachment();
+		model.addAttribute("attachments",attachmentList);
+
+		return "admin/sys/attachmentTable";
+	}
+	@RequestMapping("/attachment/{id}/details/view")
+	public String viewAttachments(@PathVariable("id") long id, Model model) {
+    	if(id==0){
+    		List<SystemFileModel> systemFiles=getSystemFilesByTypeAndId(1L);
+    		List<SystemFile> systemFileList=new ArrayList<>();
+    		for (SystemFileModel systemFileModel:systemFiles){
+    			SystemFile file=systemFileService.findById(systemFileModel.getSystem_file_id());
+    			systemFileList.add(file);
+			}
+    		model.addAttribute("sysFiles",systemFileList);
+		}
+
+		else{
+			Attachment attachment=attachmentService.findById(id);
+
+			Set<SystemFile> systemFileSet=attachment.getSystemFile();
+			model.addAttribute("sysFiles",systemFileSet);
+		}
+
+		return "admin/sys/systemFileTable";
 	}
 	
 	@RequestMapping(value = "/information/add", method = RequestMethod.GET)
