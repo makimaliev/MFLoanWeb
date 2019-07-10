@@ -48,9 +48,6 @@ import javax.persistence.Query;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @Controller
 public class PaymentController {
@@ -244,7 +241,15 @@ public class PaymentController {
                 this.jobItemService.runDailyCalculateProcedureForOneLoan(loan.getId(), onDate);
             }
         }
-        int x = 1; // However many threads you want
+//        update the collectionPhases' paid values
+        for (CollectionPhase phase1:loan.getCollectionPhases()){
+            CollectionPhase phase=collectionPhaseService.getById(phase1.getId());
+            updatePaidOfPhase(phase);
+        }
+
+
+
+        /*int x = 1; // However many threads you want
         System.out.println("=========================================================");
         System.out.println(new Date());
         System.out.println("=========================================================");
@@ -255,7 +260,7 @@ public class PaymentController {
             }
         };
         long timeDelay = 30; // You can specify 1 what
-        someScheduler.schedule(runnable, timeDelay, TimeUnit.SECONDS);
+        someScheduler.schedule(runnable, timeDelay, TimeUnit.SECONDS);*/
 //		new Thread(new Runnable() {
 //			public void run() {
 //				phaseUpdater(debtorId);
@@ -468,5 +473,30 @@ public class PaymentController {
         }
 
         return list;
+    }
+
+    private void updatePaidOfPhase(CollectionPhase phase){
+
+        SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
+
+        String loanIds="";
+        Date fromDate=phase.getPaymentFromDate();
+        if(fromDate==null){
+            fromDate=phase.getStartDate();
+        }
+        Date toDate=phase.getPaymentToDate();
+        if(toDate==null)
+            toDate=new Date();
+
+        for(Loan loan:phase.getLoans()){
+            loanIds=loanIds+loan.getId()+",";
+        }
+        String getTotalPaidQuery="select sum(p.totalAmount)\n" +
+                "from payment p where p.record_status=1 and loanId in ("+loanIds.substring(0,loanIds.length()-1)+") and p.paymentDate between '"+dateFormat.format(fromDate)+"' and '"+dateFormat.format(toDate)+"'";
+        Query query=entityManager.createNativeQuery(getTotalPaidQuery);
+        Double paidOfPhase= (Double) query.getSingleResult();
+
+        phase.setPaid(paidOfPhase);
+        collectionPhaseService.update(phase);
     }
 }

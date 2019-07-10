@@ -3,6 +3,7 @@ package kg.gov.mf.loan.web.fetchModels;
 import java.util.Date;
 
 public class PhaseDetailsModel {
+    private Long id;
     private Long loanId;
     private String loanRegNumber;
     private Long loanStateId;
@@ -22,6 +23,14 @@ public class PhaseDetailsModel {
     private Double paidPenalty;
     private Double paidFee;
     private Date initDate;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getLoanId() {
         return loanId;

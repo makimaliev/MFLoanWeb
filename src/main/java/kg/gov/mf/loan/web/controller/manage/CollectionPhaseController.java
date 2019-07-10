@@ -168,6 +168,7 @@ public class CollectionPhaseController {
 	@Autowired
 	PaymentService paymentService;
 
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
@@ -251,6 +252,7 @@ public class CollectionPhaseController {
 			model.addAttribute("indexId", phase.getCollectionPhaseIndex().getId());
 		}
 
+		model.addAttribute("today",new Date());
 		model.addAttribute("phaseTypes",typeService.list() );
 		model.addAttribute("phaseStatuses", phaseStatusService.list());
 
@@ -264,6 +266,7 @@ public class CollectionPhaseController {
 
         List<PhaseDetailsModel> result = new ArrayList<>();
         List<String> listOfLoans= Arrays.asList(selectedLoans.split("[^0-9.]"));
+        CollectionPhase phase=phaseService.getById(id);
         for (String value:listOfLoans) {
         	if (value.length()!=0){
 				LoanModel1 loan=getLoanIdAndRegNumber(Long.parseLong(value));
@@ -273,8 +276,13 @@ public class CollectionPhaseController {
 					dTemp.setLoanRegNumber(loan.getRegNumber());
 					dTemp.setLoanStateId(loan.getStateId());
 					try{
-						CollectionPhase phase=phaseService.getById(id);
-						for (PhaseDetails phaseDetails1:phase.getPhaseDetails()){
+					    PhaseDetails phaseDetails=phaseDetailsService.findByPhaseIdAndLoanId(id,loan.getId());
+                        dTemp.setStartPrincipal(phaseDetails.getStartPrincipal());
+                        dTemp.setStartInterest(phaseDetails.getStartInterest());
+                        dTemp.setStartPenalty(phaseDetails.getStartPenalty());
+                        dTemp.setStartTotalAmount(phaseDetails.getStartTotalAmount());
+                        dTemp.setId(phaseDetails.getId());
+						/*for (PhaseDetails phaseDetails1:phase.getPhaseDetails()){
 							if(phaseDetails1.getLoan_id()==Long.valueOf(value)){
 								PhaseDetails phaseDetails=phaseDetailsService.getById(phaseDetails1.getId());
 								dTemp.setStartPrincipal(phaseDetails.getStartPrincipal());
@@ -282,13 +290,14 @@ public class CollectionPhaseController {
 								dTemp.setStartPenalty(phaseDetails.getStartPenalty());
 								dTemp.setStartTotalAmount(phaseDetails.getStartTotalAmount());
 							}
-						}
+						}*/
 					}
 					catch(Exception e){
 						dTemp.setStartPrincipal(Double.valueOf(0));
 						dTemp.setStartInterest(Double.valueOf(0));
 						dTemp.setStartPenalty(Double.valueOf(0));
 						dTemp.setStartTotalAmount(Double.valueOf(0));
+                        dTemp.setId(0L);
 					}
 					result.add(dTemp);
 				}
@@ -422,6 +431,7 @@ public class CollectionPhaseController {
         for (PhaseDetailsModel model: list
         ) {
             PhaseDetails details = new PhaseDetails();
+            details.setId(model.getId());
             details.setLoan_id(model.getLoanId());
             details.setStartPrincipal(ifNullMakeZero(model.getStartPrincipal()));
             details.setStartInterest(ifNullMakeZero(model.getStartInterest()));
@@ -705,22 +715,43 @@ public class CollectionPhaseController {
 				phase.setLoans(loanSet);
 
 				if (phaseDetailsLists.get(Utils.getPrincipal()) == null) {
-					System.out.println("asdf");
+					System.out.println("no phase details detected!!!");
 				} else {
-					Set<PhaseDetails> listOfDetails = oldPhase.getPhaseDetails();
+				    List<Long> phaseDetailsIds=new ArrayList<>();
 					for (PhaseDetails phaseDetail : phaseDetailsLists.get(Utils.getPrincipal())) {
-						phaseDetail.setCollectionPhase(phase);
-						for (PhaseDetails phaseDetail1 : listOfDetails) {
-							if (phaseDetail.getLoan_id() == phaseDetail1.getLoan_id()) {
-								phaseDetail1.setStartInterest(phaseDetail.getStartInterest());
-								phaseDetail1.setStartPenalty(phaseDetail.getStartPenalty());
-								phaseDetail1.setStartPrincipal(phaseDetail.getStartPrincipal());
-								phaseDetail1.setStartTotalAmount(phaseDetail.getStartTotalAmount());
-								phaseDetail1.setCollectionPhase(phase);
-								phaseDetailsService.update(phaseDetail1);
-							}
-						}
+					    if(phaseDetail.getId()==0){
+                            phaseDetail.setStartInterest(phaseDetail.getStartInterest());
+                            phaseDetail.setStartPenalty(phaseDetail.getStartPenalty());
+                            phaseDetail.setStartPrincipal(phaseDetail.getStartPrincipal());
+                            phaseDetail.setStartTotalAmount(phaseDetail.getStartTotalAmount());
+                            phaseDetail.setCollectionPhase(phase);
+                            phaseDetailsService.add(phaseDetail);
+                            phaseDetailsIds.add(phaseDetail.getId());
+                        }
+                        else if(phaseDetail.getId()>0){
+                            PhaseDetails oldPhaseDetail=phaseDetailsService.getById(phaseDetail.getId());
+                            oldPhaseDetail.setStartInterest(phaseDetail.getStartInterest());
+                            oldPhaseDetail.setStartPenalty(phaseDetail.getStartPenalty());
+                            oldPhaseDetail.setStartPrincipal(phaseDetail.getStartPrincipal());
+                            oldPhaseDetail.setStartTotalAmount(phaseDetail.getStartTotalAmount());
+                            phaseDetailsService.update(oldPhaseDetail);
+                            phaseDetailsIds.add(oldPhaseDetail.getId());
+                        }
 					}
+					for(PhaseDetails details:phase.getPhaseDetails()){
+					    if(!phaseDetailsIds.contains(details.getId())){
+					        phaseDetailsService.remove(details);
+							Session session;
+							try{
+								session=sessionFactory.getCurrentSession();
+							}
+							catch (Exception e){
+								session=sessionFactory.openSession();
+							}
+							String deleteQuery="DELETE FROM loanCollectionPhase WHERE collectionPhaseId="+phase.getId()+" and loanId="+details.getLoan_id();
+							session.createSQLQuery(deleteQuery).executeUpdate();
+                        }
+                    }
 					String updateStart = "(select sum(startTotalAmount) from phaseDetails where collectionPhaseId=" + phase.getId() + ")";
 					Query query = entityManager.createNativeQuery(updateStart);
 					Double sumOfStart = (Double) query.getSingleResult();
@@ -1162,7 +1193,8 @@ public class CollectionPhaseController {
             PhaseType phaseType=typeService.getById(data);
             collectionPhase.setPhaseType(phaseType);
         }
-	    collectionPhaseService.update(collectionPhase);
+//	    collectionPhaseService.update(collectionPhase);
+        updatePaidOfPhase(collectionPhase);
 
     }
 
@@ -1205,7 +1237,8 @@ public class CollectionPhaseController {
         }
         collectionPhase.setResultDocNumber(res);
 
-        collectionPhaseService.update(collectionPhase);
+//        collectionPhaseService.update(collectionPhase);
+        updatePaidOfPhase(collectionPhase);
 
         return "OK";
     }
@@ -1242,6 +1275,7 @@ public class CollectionPhaseController {
 		}
 
         procService.update(procedure);
+        updatePaidOfPhase(collectionPhase);
 
         return "OK";
     }
@@ -1272,7 +1306,8 @@ public class CollectionPhaseController {
         CollectionPhaseGroup group=collectionPhaseGroupService.getById(data);
 
         collectionPhase.setCollectionPhaseGroup(group);
-        collectionPhaseService.update(collectionPhase);
+//        collectionPhaseService.update(collectionPhase);
+        updatePaidOfPhase(collectionPhase);
 
         return "OK";
     }
@@ -1309,7 +1344,9 @@ public class CollectionPhaseController {
         }
 
         collectionPhase.setCollectionPhaseIndex(index);
-        collectionPhaseService.update(collectionPhase);
+//        collectionPhaseService.update(collectionPhase);
+
+        updatePaidOfPhase(collectionPhase);
 
         return "OK";
     }
@@ -1353,8 +1390,8 @@ public class CollectionPhaseController {
         collectionPhaseIndexService.update(index);
 
         collectionPhase.setSub_index_id(index2.getId());
-        collectionPhaseService.update(collectionPhase);
-
+//        collectionPhaseService.update(collectionPhase);
+        updatePaidOfPhase(collectionPhase);
         return "OK";
     }
 
@@ -1427,9 +1464,13 @@ public class CollectionPhaseController {
 			e.printStackTrace();
 			return "OK";
 		}
+		Date fromDate=collectionPhase.getPaymentFromDate();
+		if(collectionPhase.getPaymentFromDate()==null){
+		    fromDate=collectionPhase.getStartDate();
+        }
 		String strCloseDate=sf2.format(collectionPhase.getPaymentToDate());
 		String getTotalPaidQuery="select sum(p.totalAmount)\n" +
-				"from payment p where loanId in ("+loanIds.substring(0,loanIds.length()-1)+") and p.paymentDate between '"+sf2.format(collectionPhase.getPaymentFromDate())+"' and '"+strCloseDate+"'";
+				"from payment p where loanId in ("+loanIds.substring(0,loanIds.length()-1)+") and p.paymentDate between '"+sf2.format(fromDate)+"' and '"+strCloseDate+"'";
 		Query query=entityManager.createNativeQuery(getTotalPaidQuery);
 		Double paidOfPhase= (Double) query.getSingleResult();
 
@@ -1533,6 +1574,8 @@ public class CollectionPhaseController {
         else if(event.getId()>0){
             collectionEventService.update(event);
         }
+        CollectionPhase phase=collectionPhaseService.getById(event.getCollectionPhase().getId());
+        updatePaidOfPhase(phase);
 
 
         return "OK";
@@ -1544,7 +1587,8 @@ public class CollectionPhaseController {
 
 		CollectionPhase phase=collectionPhaseService.getById(id);
 		phase.setDescription(data);
-		collectionPhaseService.update(phase);
+//		collectionPhaseService.update(phase);
+        updatePaidOfPhase(phase);
 		return "OK";
 	}
 
@@ -1561,13 +1605,31 @@ public class CollectionPhaseController {
 	@GetMapping("/phase/{id}/getEdit")
 	public String getEditForm(@PathVariable("id") Long id,Model model){
 		CollectionPhase phase=collectionPhaseService.getById(id);
+
 		model.addAttribute("phase",phase);
 		model.addAttribute("types",typeService.list());
 
-		List<Long> loanIds=new ArrayList<>();
-		for (Loan l:phase.getLoans()) {
-			loanIds.add(l.getId());
-		}
+        List<Long> loanIds=new ArrayList<>();
+        List<Loan> loans=new ArrayList<>();
+        int counter=0;
+        Loan loan=null;
+        for (Loan l:phase.getLoans()) {
+            if(counter==0){
+                loan=loanService.getById(l.getId());
+            }
+            loanIds.add(l.getId());
+        }
+        Debtor debtor=null;
+        if(loan!=null){
+            debtor=debtorService.getById(loan.getDebtor().getId());
+        }
+        if (debtor != null) {
+            for (Loan l:debtor.getLoans()) {
+                loans.add(l);
+            }
+        }
+
+		model.addAttribute("tLoans", loans);
 		model.addAttribute("loanIds", loanIds);
 
 		return "/manage/debtor/collectionprocedure/collectionphase/editForm";
@@ -1583,29 +1645,63 @@ public class CollectionPhaseController {
 			oldPhase.setDocNumber(phase.getDocNumber());
 
 			if (phaseDetailsLists.get(Utils.getPrincipal()) == null) {
+
+				for(PhaseDetails details:phase.getPhaseDetails()){
+					PhaseDetails phaseDetails=phaseDetailsService.getById(details.getId());
+					phaseDetailsService.remove(phaseDetails);
+				}
+				phaseService.update(phase);
 			}
 			else {
-				Set<PhaseDetails> listOfDetails = oldPhase.getPhaseDetails();
+				List<Long> phaseDetIds=new ArrayList<>();
 				for (PhaseDetails phaseDetail : phaseDetailsLists.get(Utils.getPrincipal())) {
 					phaseDetail.setCollectionPhase(oldPhase);
-					for (PhaseDetails phaseDetail1 : listOfDetails) {
-						if (phaseDetail.getLoan_id() == phaseDetail1.getLoan_id()) {
-							phaseDetail1.setStartInterest(phaseDetail.getStartInterest());
-							phaseDetail1.setStartPenalty(phaseDetail.getStartPenalty());
-							phaseDetail1.setStartPrincipal(phaseDetail.getStartPrincipal());
-							phaseDetail1.setStartTotalAmount(phaseDetail.getStartTotalAmount());
-							phaseDetail1.setCollectionPhase(oldPhase);
-							phaseDetailsService.update(phaseDetail1);
+					if(phaseDetail.getId()>0){
+						phaseDetail.setStartInterest(phaseDetail.getStartInterest());
+						phaseDetail.setStartPenalty(phaseDetail.getStartPenalty());
+						phaseDetail.setStartPrincipal(phaseDetail.getStartPrincipal());
+						phaseDetail.setStartTotalAmount(phaseDetail.getStartTotalAmount());
+						phaseDetailsService.update(phaseDetail);
+						phaseDetIds.add(phaseDetail.getId());
+					}
+					else if(phaseDetail.getId()==0){
+						phaseDetail.setCollectionPhase(oldPhase);
+						phaseDetailsService.add(phaseDetail);
+						phaseDetIds.add(phaseDetail.getId());
+						Session session;
+						try{
+							session=sessionFactory.getCurrentSession();
 						}
+						catch (Exception e){
+							session=sessionFactory.openSession();
+						}
+						String insertLoanToCollectionPhaseQuery="insert into loanCollectionPhase VALUES ("+oldPhase.getId()+","+phaseDetail.getLoan_id()+")";
+						session.createSQLQuery(insertLoanToCollectionPhaseQuery).executeUpdate();
 					}
 				}
+				for(PhaseDetails details:oldPhase.getPhaseDetails()){
+					if(!phaseDetIds.contains(details.getId())){
+						phaseDetailsService.remove(details);
+						Session session;
+						try{
+							session=sessionFactory.getCurrentSession();
+						}
+						catch (Exception e){
+							session=sessionFactory.openSession();
+						}
+						String deleteQuery="DELETE FROM loanCollectionPhase WHERE collectionPhaseId="+oldPhase.getId()+" and loanId="+details.getLoan_id();
+						session.createSQLQuery(deleteQuery).executeUpdate();
+					}
+				}
+
 				String updateStart = "(select sum(startTotalAmount) from phaseDetails where collectionPhaseId=" + phase.getId() + ")";
 				Query query = entityManager.createNativeQuery(updateStart);
 				Double sumOfStart = (Double) query.getSingleResult();
 				oldPhase.setStart_amount(sumOfStart);
 			}
-			phaseService.update(oldPhase);
+//			phaseService.update(oldPhase);
 			phaseDetailsLists.remove(Utils.getPrincipal());
+            updatePaidOfPhase(oldPhase);
 			}
 //		return "OK";
 	}
@@ -1615,7 +1711,8 @@ public class CollectionPhaseController {
 	public String postChangeStatus(Long id){
 		CollectionPhase phase=collectionPhaseService.getById(id);
 		phase.setRecord_status(2);
-		collectionPhaseService.update(phase);
+//		collectionPhaseService.update(phase);
+        updatePaidOfPhase(phase);
 		return "OK";
 	}
 
@@ -1639,7 +1736,12 @@ public class CollectionPhaseController {
 
 		CollectionPhase phase=collectionPhaseService.getById(id);
 		String phaseLoanIds="";
-		for(Loan l:phase.getLoans()){
+		Loan loan=null;
+		for (Loan l:phase.getLoans()){
+		    loan=loanService.getById(l.getId());
+        }
+        Debtor debtor=debtorService.getById(loan.getDebtor().getId());
+		for(Loan l:debtor.getLoans()){
 			phaseLoanIds=phaseLoanIds+(l.getId())+"-";
 		}
 
@@ -2072,4 +2174,29 @@ public class CollectionPhaseController {
 
 		return list;
 	}
+
+	private void updatePaidOfPhase(CollectionPhase phase){
+
+        SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
+
+        String loanIds="";
+        Date fromDate=phase.getPaymentFromDate();
+        if(fromDate==null){
+            fromDate=phase.getStartDate();
+        }
+        Date toDate=phase.getPaymentToDate();
+        if(toDate==null)
+            toDate=new Date();
+
+        for(Loan loan:phase.getLoans()){
+            loanIds=loanIds+loan.getId()+",";
+        }
+        String getTotalPaidQuery="select sum(p.totalAmount)\n" +
+                "from payment p where p.record_status=1 and loanId in ("+loanIds.substring(0,loanIds.length()-1)+") and p.paymentDate between '"+dateFormat.format(fromDate)+"' and '"+dateFormat.format(toDate)+"'";
+        Query query=entityManager.createNativeQuery(getTotalPaidQuery);
+        Double paidOfPhase= (Double) query.getSingleResult();
+
+        phase.setPaid(paidOfPhase);
+        collectionPhaseService.update(phase);
+    }
 }

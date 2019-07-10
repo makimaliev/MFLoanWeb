@@ -5,6 +5,8 @@
 	<title th:text="#{label.title.collection.add.edit.phase}">Добавить/Редактировать фазу взыскания</title>
 
 	<div th:replace="fragments/header :: header-css"/>
+	<link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
+	<link th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}" rel="stylesheet" type="text/css" />
 </head>
 <!-- end::Head -->
 
@@ -174,7 +176,7 @@
 											Loans <span class="m--font-danger">*</span>
 										</label>
 										<div class="col-lg-4 col-md-9 col-sm-12">
-											<select name="loanses" class="form-control m-bootstrap-select m_selectpicker" multiple>
+											<select id="loanses" name="loanses" class="form-control m-bootstrap-select m_selectpicker" multiple>
 												<!--<option th:each="loan : ${tLoans}"-->
 														<!--th:value="${loan}"-->
 														<!--th:text="${loan.regNumber}">-->
@@ -195,7 +197,19 @@
 										</div>
 									</div>
 
-									<div id="phaseDetailsTable" class="m_datatable"></div>
+									<div id="smsm">
+										<table id="phaseDetailsTable" >
+											<thead>
+												<th>#</th>
+												<th ></th>
+												<th>Регистрационный номер</th>
+												<th>Итого</th>
+												<th>По осн.с.</th>
+												<th>По проц.</th>
+												<th>По штр.</th>
+											</thead>
+										</table>
+									</div>
 								</div>
 							</div>
 							<div class="m-portlet__foot m-portlet__foot--fit">
@@ -236,6 +250,8 @@
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/select2.js}" type="text/javascript"></script>
 <!--<script th:src="@{/js/data-debtor-loan-phasedetails.js}" th:inline="javascript" type="text/javascript"></script>-->
+<script th:src="@{/assets/global/plugins/datatables/datatables.js}" type="text/javascript"></script>
+<script th:src="@{/assets/global/plugins/datatables/dataTables.keyTable.js}" type="text/javascript"></script>
 <!--end::Page Resources -->
 <script>
     $('.m_selectpicker').selectpicker();
@@ -250,13 +266,14 @@
     });
 </script>
 <script th:inline="javascript">
+    var table;
     var selectedLoans = /*[[${loanIds}]]*/ [];
     var debtorId = /*[[${debtorId}]]*/ [];
     var procId = /*[[${procId}]]*/ [];
     var phaseId = /*[[${phaseId}]]*/ [];
     var tt=JSON.stringify(selectedLoans);
     // console.log(tt)
-    var newPhaseDetailsTableInit = function (jsonInput) {
+    /*function newPhaseDetailsTableInit(jsonInput) {
 
         var dataJSONArray = JSON.parse(jsonInput);
 
@@ -278,6 +295,8 @@
 
             // column sorting(refer to Kendo UI)
             sortable: true,
+
+			serverPaging:true,
 
             // column based filtering(refer to Kendo UI)
             filterable: false,
@@ -357,95 +376,156 @@
                 }
             }
         });
-    }
-    $.ajax({
-        type : 'POST',
-        url : "/collectionPhase/"+phaseId+"/getPhaseDetails",
-        data: {selectedLoans:tt},
-        success:function (data) {
-            // alert(data)
-            newPhaseDetailsTableInit(data);
-            var data = JSON.parse(data);
-            // console.log(data)
-            var saver=function(){
-                var phaseDetailsModels = [];
-                for (var i = 0; i < data.length; i++) {
-					var obj = data[i];
-					$.map(obj, function(val, key) {
-						if(key=='loanId')
-						{
-							var PhaseDetailsModel = {};
-							var startPrincInput ="#startPrinc" + val;
-							var startIntInput ="#startInt" + val;
-							var startPenInput ="#startPen" + val;
-							var totalInput = "#total" + val;
-
-							PhaseDetailsModel['loanId'] = val;
-							PhaseDetailsModel['startPrincipal'] = parseFloat($(startPrincInput).val());
-							PhaseDetailsModel['startInterest'] = parseFloat($(startIntInput).val());
-							PhaseDetailsModel['startPenalty'] = parseFloat($(startPenInput).val());
-							PhaseDetailsModel['startTotalAmount'] = parseFloat($(totalInput).val());
-							// PhaseDetailsModel['initDate'] = d;
-							phaseDetailsModels.push(PhaseDetailsModel);
-						}
-					});
-                    console.log(phaseDetailsModels);
-                }
-                // console.log(phaseDetailsModels);
-                phaseDetailsModels = JSON.stringify({
-                    'phaseDetailsModels' : phaseDetailsModels
-                });
-                $.ajax({
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    type : 'POST',
-                    url : "/collectionPhase/savePhaseDetails",
-                    data: phaseDetailsModels,
-                    dataType: 'json'
-                });
-            }
-            for (var i = 0; i < data.length; i++) {
-                var obj = data[i];
-                $.map(obj, function(val, key) {
-
-                    if(key=="loanId"){
-                        // alert(key+" : "+val);
-                        var startPrincInput ="#startPrinc" + val;
-                        var startIntInput ="#startInt" + val;
-                        var startPenInput ="#startPen" + val;
-                        var totalInput = "#total" + val;
-
-                        $(startPrincInput).on('input', function () {
-                            if($(startPrincInput).val()[$(startPrincInput).val()-1]!='.')
-                            updateTotal();
-                        });
-
-                        $(startIntInput).on('input', function () {
-                            if($(startIntInput).val()[$(startIntInput).val()-1]!='.')
-                            updateTotal();
-                        });
-
-                        $(startPenInput).on('input', function () {
-                            if($(startPenInput).val()[$(startPenInput).val()-1]!='.')
-                            updateTotal();
-                        });
-
-                        function updateTotal() {
-                            var sum = 0.0;
-                            sum = ((parseFloat($(startPrincInput).val()) + parseFloat($(startIntInput).val()) + parseFloat($(startPenInput).val())));
-                            $(totalInput).val(sum.toFixed(2));
-                            saver();
-                        }
+    };*/
+    function dt(info) {
+        // console.log(info);
+        table=$('#phaseDetailsTable').DataTable( {
+                "columnDefs": [
+                    { "orderable": false, "targets": [0,1,2,3,4,5,6] }
+                ],
+                "order": [],
+            data: info,
+            "dom": '',
+            columns: [
+                { data: 'loanId'},
+                { data: 'id',
+                    render: function (data, type, row) {
+                        return '\
+						<input hidden="hidden" type="text" id="id' + row.loanId+ '" value="' + (row.id) + '">\
+					';
                     }
-                });
+				},
+                { data: 'loanRegNumber' },
+                {
+                    data: 'startTotalAmount',
+                    render: function (data, type, row) {
+                        return '\
+						<input type="text" class="form-control m-input p-2" id="total' + row.loanId + '" value="' + (row.startTotalAmount).toFixed(2) + '" disabled>\
+					';
+                    }
+                },
+                { data: 'startPrincipal' ,
+                    render: function ( data, type, row ) {
+                        return '\
+						<input type="text" class="form-control m-input p-2" id="startPrinc' + row.loanId + '" value="' + (row.startPrincipal).toFixed(2)+ '">\
+					';
+                    }
+				},
+                { data: 'startInterest',
+                    render: function ( data, type, row ) {
+                        return '\
+						<input type="text" class="form-control m-input p-2" id="startInt' + row.loanId + '" value="' + (row.startInterest).toFixed(2)+ '">\
+					';
+                    }
+				},
+                { data: 'startPenalty',
+                    render: function ( data, type, row ) {
+                        return '\
+						<input type="text" class="form-control m-input p-2" id="startPen' + row.loanId + '" value="' + (row.startPenalty).toFixed(2)+ '">\
+					';
+                    }
+                }
+            ]
+        } );
+    }
+    function tableLoader(sLoans) {
+        $.ajax({
+            type : 'POST',
+            url : "/collectionPhase/"+phaseId+"/getPhaseDetails",
+            data: {selectedLoans:sLoans},
+            success:function (datas) {
+                var data = JSON.parse(datas);
+                dt(data);
+                var saver=function(){
+                    var phaseDetailsModels = [];
+                    for (var i = 0; i < data.length; i++) {
+                        var obj = data[i];
+                        $.map(obj, function(val, key) {
+                            if(key=='loanId')
+                            {
+                                var PhaseDetailsModel = {};
+                                var startPrincInput ="#startPrinc" + val;
+                                var detId ="#id" + val;
+                                var startIntInput ="#startInt" + val;
+                                var startPenInput ="#startPen" + val;
+                                var totalInput = "#total" + val;
+
+                                PhaseDetailsModel['loanId'] = val;
+                                PhaseDetailsModel['id'] = ($(detId).val());
+                                PhaseDetailsModel['startPrincipal'] = parseFloat($(startPrincInput).val());
+                                PhaseDetailsModel['startInterest'] = parseFloat($(startIntInput).val());
+                                PhaseDetailsModel['startPenalty'] = parseFloat($(startPenInput).val());
+                                PhaseDetailsModel['startTotalAmount'] = parseFloat($(totalInput).val());
+                                // PhaseDetailsModel['initDate'] = d;
+                                phaseDetailsModels.push(PhaseDetailsModel);
+                            }
+                        });
+                        // console.log(phaseDetailsModels);
+                    }
+                    // console.log(phaseDetailsModels);
+                    phaseDetailsModels = JSON.stringify({
+                        'phaseDetailsModels' : phaseDetailsModels
+                    });
+                    $.ajax({
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        type : 'POST',
+                        url : "/collectionPhase/savePhaseDetails",
+                        data: phaseDetailsModels,
+                        dataType: 'json'
+                    });
+                }
+                for (var i = 0; i < data.length; i++) {
+                    var obj = data[i];
+                    $.map(obj, function(val, key) {
+
+                        if(key=="loanId"){
+                            var startPrincInput ="#startPrinc" + val;
+                            var startIntInput ="#startInt" + val;
+                            var startPenInput ="#startPen" + val;
+                            var totalInput = "#total" + val;
+
+                            $(startPrincInput).on('input', function () {
+                                if($(startPrincInput).val()[$(startPrincInput).val()-1]!='.')
+                                    updateTotal();
+                            });
+
+                            $(startIntInput).on('input', function () {
+                                if($(startIntInput).val()[$(startIntInput).val()-1]!='.')
+                                    updateTotal();
+                            });
+
+                            $(startPenInput).on('input', function () {
+                                if($(startPenInput).val()[$(startPenInput).val()-1]!='.')
+                                    updateTotal();
+                            });
+
+                            function updateTotal() {
+                                var sum = 0.0;
+                                sum = ((parseFloat($(startPrincInput).val()) + parseFloat($(startIntInput).val()) + parseFloat($(startPenInput).val())));
+                                $(totalInput).val(sum.toFixed(2));
+                                saver();
+                            }
+                        }
+                    });
+                }
+                // var divT = $('#phaseDetailsDiv');
+                // divT.collapse('show');
+                // mApp.scrollTo(divT, -200);
             }
-            // var divT = $('#phaseDetailsDiv');
-            // divT.collapse('show');
-            // mApp.scrollTo(divT, -200);
-        }
+        });
+    };
+    tableLoader(tt);
+	$("#loanses").on("change",function () {
+		var selectedOptions=$("#loanses").val();
+        table.destroy();
+        tableLoader(JSON.stringify(selectedOptions));
+        // $("#smsm").html($("#smsm"));
+        // $("#smsm").load("#smsm");
     });
+    // $("#smsm").load(" #smsm > *");
 </script>
 </body>
 <!-- end::Body -->

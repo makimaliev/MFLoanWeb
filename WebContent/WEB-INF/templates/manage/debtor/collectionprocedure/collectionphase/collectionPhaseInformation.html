@@ -80,7 +80,7 @@
                                             <h3 class="m-widget1__title" th:text="#{label.phase.paymentToDate}"></h3>
 
                                             <button th:if="${phase.paymentToDate!=null}" data-toggle="modal" data-target="#paymentToDateModal" class="m-widget1__desc m--font-brand" th:text="${#dates.format(phase.paymentToDate,'dd.MM.yyyy')}"></button>
-                                            <button th:unless="${phase.paymentToDate!=null}" data-toggle="modal" data-target="#paymentToDateModal" class="m-widget1__desc m--font-brand" th:text="#{label.phase.setPaymentToDate}"></button>
+                                            <button th:unless="${phase.paymentToDate!=null}" data-toggle="modal" data-target="#paymentToDateModal" class="m-widget1__desc m--font-brand" th:text="${#dates.format(today,'dd.MM.yyyy')}"></button>
                                         </div>
                                     </div>
                                     <!-- Modal -->

@@ -305,7 +305,7 @@
 														</a>
 													</div>
 												</div>
-												<div class="m-widget1__item">
+												<div class="m-widget1__item" sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_LOAN_CLOSEDATE')">
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
 															<h3 class="m-widget1__title" th:text="#{label.loan.closeDate}"></h3>
@@ -314,7 +314,7 @@
 														<button th:unless="${loan.closeDate!=null}" data-toggle="modal" data-target="#loanCloseDateModal" class="m-widget1__desc m--font-brand" th:text="#{label.loan.closeDate}"></button>
 													</div>
 												</div>
-												<div class="m-widget1__item">
+												<div class="m-widget1__item" sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_LOAN_LASTDATE')">
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
 															<h3 class="m-widget1__title" th:text="#{label.loan.lastDate}"></h3>
@@ -375,7 +375,7 @@
 												</div>
 											</div>
 											<!--begin:: Widgets/Stats2-2 -->
-											<div class="m-widget1" th:if="${itemDescription}!='false'">
+											<div class="m-widget1" sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_ITEM_DESCRIPTION')" th:if="${itemDescription}!='false'">
 												<div class="m-widget1__item">
 													<div class="row m-row--no-padding align-items-center">
 														<div class="col">
