@@ -1739,12 +1739,8 @@ public class CollectionPhaseController {
 		String phaseLoanIds="";
 		Loan loan=null;
 		for (Loan l:phase.getLoans()){
-		    loan=loanService.getById(l.getId());
+            phaseLoanIds=phaseLoanIds+(l.getId())+"-";
         }
-        Debtor debtor=debtorService.getById(loan.getDebtor().getId());
-		for(Loan l:debtor.getLoans()){
-			phaseLoanIds=phaseLoanIds+(l.getId())+"-";
-		}
 
 		model.addAttribute("id",phase.getId());
 		model.addAttribute("phaseLoanIds",phaseLoanIds);
