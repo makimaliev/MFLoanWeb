@@ -1657,12 +1657,13 @@ public class CollectionPhaseController {
 				for (PhaseDetails phaseDetail : phaseDetailsLists.get(Utils.getPrincipal())) {
 					phaseDetail.setCollectionPhase(oldPhase);
 					if(phaseDetail.getId()>0){
-						phaseDetail.setStartInterest(phaseDetail.getStartInterest());
-						phaseDetail.setStartPenalty(phaseDetail.getStartPenalty());
-						phaseDetail.setStartPrincipal(phaseDetail.getStartPrincipal());
-						phaseDetail.setStartTotalAmount(phaseDetail.getStartTotalAmount());
-						phaseDetailsService.update(phaseDetail);
-						phaseDetIds.add(phaseDetail.getId());
+						PhaseDetails oldPhaseDetails=phaseDetailsService.getById(phaseDetail.getId());
+						oldPhaseDetails.setStartInterest(phaseDetail.getStartInterest());
+						oldPhaseDetails.setStartPenalty(phaseDetail.getStartPenalty());
+						oldPhaseDetails.setStartPrincipal(phaseDetail.getStartPrincipal());
+						oldPhaseDetails.setStartTotalAmount(phaseDetail.getStartTotalAmount());
+						phaseDetailsService.update(oldPhaseDetails);
+						phaseDetIds.add(oldPhaseDetails.getId());
 					}
 					else if(phaseDetail.getId()==0){
 						phaseDetail.setCollectionPhase(oldPhase);
@@ -1699,7 +1700,7 @@ public class CollectionPhaseController {
 				Double sumOfStart = (Double) query.getSingleResult();
 				oldPhase.setStart_amount(sumOfStart);
 			}
-//			phaseService.update(oldPhase);
+			phaseService.update(oldPhase);
 			phaseDetailsLists.remove(Utils.getPrincipal());
             updatePaidOfPhase(oldPhase);
 			}
