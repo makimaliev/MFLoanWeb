@@ -11,6 +11,7 @@ import kg.gov.mf.loan.admin.sys.service.InformationService;
 import kg.gov.mf.loan.admin.sys.service.SystemFileService;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
+import kg.gov.mf.loan.manage.model.collection.PhaseDetails;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.model.loan.Payment;
@@ -26,6 +27,7 @@ import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.manage.service.loan.PaymentService;
 import kg.gov.mf.loan.manage.service.loan.PaymentTypeService;
 import kg.gov.mf.loan.process.service.JobItemService;
+import kg.gov.mf.loan.web.fetchModels.SimplePhaseDetailsModel;
 import kg.gov.mf.loan.web.fetchModels.SystemFileModel;
 import kg.gov.mf.loan.web.util.Utils;
 import org.hibernate.HibernateException;
@@ -244,8 +246,19 @@ public class PaymentController {
 //        update the collectionPhases' paid values
         for (CollectionPhase phase1:loan.getCollectionPhases()){
             CollectionPhase phase=collectionPhaseService.getById(phase1.getId());
-            updatePaidOfPhase(phase);
+
+            SimpleDateFormat dateFormater=new SimpleDateFormat("yyyy-MM-dd");
+            Date fromDate=phase.getPaymentFromDate();
+            if(fromDate==null){
+                fromDate=phase.getStartDate();
+            }
+            Date toDate=phase.getPaymentToDate();
+            if(toDate==null)
+                toDate=new Date();
+
+            updatePaidOfPhase(phase,dateFormater.format(fromDate),dateFormater.format(toDate),loanId);
         }
+
 
 
 
@@ -475,11 +488,41 @@ public class PaymentController {
         return list;
     }
 
-    private void updatePaidOfPhase(CollectionPhase phase){
+    private void updatePaidOfPhase(CollectionPhase phase,String fromDate,String toDate,Long loanId){
+
+
+        String loanIds="";
+        for(Loan loan:phase.getLoans()){
+            loanIds=loanIds+loan.getId()+",";
+        }
+        String getTotalPaidQuery="select sum(p.totalAmount)\n" +
+                "from payment p where p.record_status=1 and loanId in ("+loanIds.substring(0,loanIds.length()-1)+") and p.paymentDate between '"+fromDate+"' and '"+toDate+"'";
+        Query query=entityManager.createNativeQuery(getTotalPaidQuery);
+        Double paidOfPhase= (Double) query.getSingleResult();
+
+        phase.setPaid(paidOfPhase);
+        collectionPhaseService.update(phase);
+
+        String getSumOfPayments="select phd.id,sum(p.totalAmount) as amount,sum(p.principal) as principal,sum(p.interest) as interest,sum(p.penalty) as penalty,sum(p.fee) as fee\n" +
+                "from phaseDetails phd,payment p where collectionPhaseId="+phase.getId()+" and p.loanId=phd.loan_id and loanId=" +loanId+" "+
+                "and p.paymentDate between '"+fromDate+"' and '"+toDate+"' group by phd.id";
+        Query query1=entityManager.createNativeQuery(getSumOfPayments, SimplePhaseDetailsModel.class);
+        List<SimplePhaseDetailsModel> simplePhaseDetailsModelList=query1.getResultList();
+        for (SimplePhaseDetailsModel model:simplePhaseDetailsModelList){
+            PhaseDetails phaseDetails=phaseDetailsService.getById(model.getId());
+            phaseDetails.setPaidTotalAmount(model.getAmount());
+            phaseDetails.setPaidPrincipal(model.getPrincipal());
+            phaseDetails.setPaidInterest(model.getInterest());
+            phaseDetails.setPaidPenalty(model.getPenalty());
+            phaseDetails.setPaidFee(model.getFee());
+            phaseDetailsService.update(phaseDetails);
+        }
+    }
+
+    private void updatePhaseDetails(CollectionPhase phase,long loanId){
 
         SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
 
-        String loanIds="";
         Date fromDate=phase.getPaymentFromDate();
         if(fromDate==null){
             fromDate=phase.getStartDate();
@@ -488,15 +531,19 @@ public class PaymentController {
         if(toDate==null)
             toDate=new Date();
 
-        for(Loan loan:phase.getLoans()){
-            loanIds=loanIds+loan.getId()+",";
+        String getSumOfPayments="select phd.id,sum(p.totalAmount) as amount,sum(p.principal) as principal,sum(p.interest) as interest,sum(p.penalty) as penalty,sum(p.fee) as fee\n" +
+                "from phaseDetails phd,payment p where collectionPhaseId="+phase.getId()+" and p.loanId=phd.loan_id and loanId=" +loanId+" "+
+                "and p.paymentDate between '"+dateFormat.format(fromDate)+"' and '"+dateFormat.format(toDate)+"' group by phd.id";
+        Query query1=entityManager.createNativeQuery(getSumOfPayments, SimplePhaseDetailsModel.class);
+        List<SimplePhaseDetailsModel> simplePhaseDetailsModelList=query1.getResultList();
+        for (SimplePhaseDetailsModel model:simplePhaseDetailsModelList){
+            PhaseDetails phaseDetails=phaseDetailsService.getById(model.getId());
+            phaseDetails.setPaidTotalAmount(model.getAmount());
+            phaseDetails.setPaidPrincipal(model.getPrincipal());
+            phaseDetails.setPaidInterest(model.getInterest());
+            phaseDetails.setPaidPenalty(model.getPenalty());
+            phaseDetails.setPaidFee(model.getFee());
+            phaseDetailsService.update(phaseDetails);
         }
-        String getTotalPaidQuery="select sum(p.totalAmount)\n" +
-                "from payment p where p.record_status=1 and loanId in ("+loanIds.substring(0,loanIds.length()-1)+") and p.paymentDate between '"+dateFormat.format(fromDate)+"' and '"+dateFormat.format(toDate)+"'";
-        Query query=entityManager.createNativeQuery(getTotalPaidQuery);
-        Double paidOfPhase= (Double) query.getSingleResult();
-
-        phase.setPaid(paidOfPhase);
-        collectionPhaseService.update(phase);
     }
 }

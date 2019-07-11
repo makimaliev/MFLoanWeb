@@ -1429,6 +1429,21 @@ public class CollectionPhaseController {
         collectionPhase.setPaid(paidOfPhase);
         collectionPhaseService.update(collectionPhase);
 
+		String getSumOfPayments="select phd.id,sum(p.totalAmount) as amount,sum(p.principal) as principal,sum(p.interest) as interest,sum(p.penalty) as penalty,sum(p.fee) as fee\n" +
+				"from phaseDetails phd,payment p where collectionPhaseId="+collectionPhase.getId()+" and p.loanId=phd.loan_id " +
+				"and p.paymentDate between '"+sf2.format(collectionPhase.getPaymentFromDate())+"' and '"+strCloseDate+"' group by phd.id";
+		Query query1=entityManager.createNativeQuery(getSumOfPayments,SimplePhaseDetailsModel.class);
+		List<SimplePhaseDetailsModel> simplePhaseDetailsModelList=query1.getResultList();
+		for(SimplePhaseDetailsModel model:simplePhaseDetailsModelList){
+			PhaseDetails phaseDetails=phaseDetailsService.getById(model.getId());
+			phaseDetails.setPaidTotalAmount(model.getAmount());
+			phaseDetails.setPaidPrincipal(model.getPrincipal());
+			phaseDetails.setPaidInterest(model.getInterest());
+			phaseDetails.setPaidPenalty(model.getPenalty());
+			phaseDetails.setPaidFee(model.getFee());
+			phaseDetailsService.update(phaseDetails);
+		}
+
 //        Session session;
 //        try
 //        {
@@ -2195,5 +2210,20 @@ public class CollectionPhaseController {
 
         phase.setPaid(paidOfPhase);
         collectionPhaseService.update(phase);
+
+        String getSumOfPayments="select phd.id,sum(p.totalAmount) as amount,sum(p.principal) as principal,sum(p.interest) as interest,sum(p.penalty) as penalty,sum(p.fee) as fee\n" +
+                "from phaseDetails phd,payment p where collectionPhaseId="+phase.getId()+" and p.loanId=phd.loan_id " +
+                "and p.paymentDate between '"+dateFormat.format(fromDate)+"' and '"+dateFormat.format(toDate)+"' group by phd.id";
+        Query query1=entityManager.createNativeQuery(getSumOfPayments,SimplePhaseDetailsModel.class);
+        List<SimplePhaseDetailsModel> simplePhaseDetailsModelList=query1.getResultList();
+        for(SimplePhaseDetailsModel model:simplePhaseDetailsModelList){
+            PhaseDetails phaseDetails=phaseDetailsService.getById(model.getId());
+            phaseDetails.setPaidTotalAmount(model.getAmount());
+            phaseDetails.setPaidPrincipal(model.getPrincipal());
+            phaseDetails.setPaidInterest(model.getInterest());
+            phaseDetails.setPaidPenalty(model.getPenalty());
+            phaseDetails.setPaidFee(model.getFee());
+            phaseDetailsService.update(phaseDetails);
+        }
     }
 }
