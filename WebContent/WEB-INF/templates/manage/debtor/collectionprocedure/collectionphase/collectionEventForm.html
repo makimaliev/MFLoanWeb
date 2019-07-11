@@ -59,6 +59,14 @@
             </div>
         </div>
         <div class="form-group m-form__group row">
+            <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.sum}">
+                <span class="m--font-danger">*</span>
+            </label>
+            <div class="col-lg-7 col-md-9 col-sm-12">
+                <input type="text" class="form-control m-input" th:field="${event.sum}">
+            </div>
+        </div>
+        <div class="form-group m-form__group row">
             <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.description}">
                 <span class="m--font-danger">*</span>
             </label>
