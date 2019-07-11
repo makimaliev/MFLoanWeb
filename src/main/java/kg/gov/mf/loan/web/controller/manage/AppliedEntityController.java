@@ -35,10 +35,9 @@ import kg.gov.mf.loan.web.fetchModels.EntityDocumentPackageModel;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -275,6 +274,30 @@ public class AppliedEntityController {
 			}
 		}
  		return "redirect:/manage/order/{orderId}/entitylist/{listId}/entity/{entityId}/view";
+	}
+
+	@GetMapping("/entity/{id}/changeEntityList")
+	public String getChangeEntityEntityList(@PathVariable("id") Long id, Model model){
+
+		AppliedEntity entity=entityService.getById(id);
+		List<AppliedEntityList> appliedEntityLists=listService.list();
+
+		model.addAttribute("entity",entity);
+		model.addAttribute("entityLists",appliedEntityLists);
+
+		return "/manage/order/entitylist/entity/entityListChangeForm";
+	}
+
+	@PostMapping("/entity/changeEntityEntityList")
+	public String postChangeEntityEntityList(AppliedEntity entity){
+
+		AppliedEntity oldEntity=entityService.getById(entity.getId());
+		oldEntity.setAppliedEntityList(entity.getAppliedEntityList());
+		entityService.update(oldEntity);
+		AppliedEntityList appliedEntityList=listService.getById(oldEntity.getAppliedEntityList().getId());
+		Long orderId=appliedEntityList.getCreditOrder().getId();
+
+		return "redirect:/manage/order/"+orderId+"/entitylist/"+appliedEntityList.getId()+"/entity/"+oldEntity.getId()+"/view";
 	}
 	
 	private void addPackagesAndDocuments(Long orderId, AppliedEntity entity) {

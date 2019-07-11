@@ -168,6 +168,25 @@
 											</div>
 										</div>
 									</div>
+									<div class="m-widget1__item">
+										<div class="row m-row--no-padding align-items-center">
+											<div class="col-md-7">
+												<h3 class="m-widget1__title" th:text="#{label.change.entitylist}"></h3>
+												<span class="m-widget1__desc m--font-brand" th:text="${entity.appliedEntityList.listNumber}"></span>
+												<a sec:authorize="hasAnyAuthority('ADMIN','PERM_CHANGE_ENTITYLIST')" data-remote="false"
+												   data-toggle="modal"
+												   data-target="#changeEntityListModal"
+												   th:href="@{/entity/__${entity.id}__/changeEntityList}"
+												   role="button"
+												   class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
+												<span>
+													<span th:text="#{label.change.entity.entitylist}">
+													</span>
+												</span>
+												</a>
+											</div>
+										</div>
+									</div>
 								</div>
 								<!--end:: Widgets/Stats2-1 -->
 							</div>
@@ -175,6 +194,12 @@
 					</div>
 				</div>
 				<!--end::Portlet-->
+				<div class="modal fade" id="changeEntityListModal" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog modal-lg" role="document">
+						<div class="modal-content">
+						</div>
+					</div>
+				</div>
 
 				<!--begin::Portlet-->
 				<div class="m-portlet m-portlet--mobile">
@@ -254,6 +279,20 @@
     var listId = /*[[${listId}]]*/ [];
     var entityId = /*[[${entity.id}]]*/ [];
     /*]]>*/
+
+    function getChangeEntityListForm() {
+		var url="/entity/"+entityId+"/changeEntityList";
+        $.get(url, function(data) {
+
+            $('#status_content').html(data);
+        });
+    }
+    $("#changeEntityListModal").on("show.bs.modal", function(e) {
+        var link = $(e.relatedTarget);
+        $(this).find(".modal-title").html(link.attr("href"));
+        $(this).find(".modal-content").load(link.attr("href"));
+        // }
+    });
 </script>
 <script th:inline="javascript">
 	$("#personFormModal").on("show.bs.modal", function(e) {
