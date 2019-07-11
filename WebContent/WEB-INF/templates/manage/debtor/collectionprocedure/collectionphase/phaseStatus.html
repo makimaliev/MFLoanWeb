@@ -1,9 +1,12 @@
 <div xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="m-widget1__item">
         <div class="row m-row--no-padding align-items-center">
-            <div class="col-md-7">
+            <div class="col-md-12">
                 <h3 class="m-widget1__title" th:text="#{label.collection.phase.status}"></h3>
                 <button data-toggle="modal" data-target="#statusModal" class="m-widget1__desc m--font-brand" th:text="${status.name}"></button>
+                <span class="m-widget1__desc m--font-brand" th:if="${phase.closeDate}!=null" th:text="${#dates.format(phase.closeDate,'dd.MM.yyyy')}"></span>
+                <span>||</span>
+                <span class="m-widget1__desc m--font-brand" th:if="${phase.resultDocNumber}!=null" th:text="${phase.resultDocNumber}"></span>
             </div>
         </div>
     </div>

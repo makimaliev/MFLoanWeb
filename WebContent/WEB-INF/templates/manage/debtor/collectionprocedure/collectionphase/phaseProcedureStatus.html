@@ -5,6 +5,7 @@
             <div class="col-md-7">
                 <h3 class="m-widget1__title" th:text="#{label.collection.procedure.status}"></h3>
                 <button data-toggle="modal" data-target="#procStatusModal" class="m-widget1__desc m--font-brand" th:text="${procedureS.name}"></button>
+                <span class="m-widget1__desc m--font-brand" th:if="${closeDate}!=null" th:text="${#dates.format(closeDate,'dd.MM.yyyy')}"></span>
             </div>
         </div>
     </div>
