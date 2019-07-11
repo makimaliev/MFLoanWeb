@@ -83,7 +83,7 @@
 					<div class="m-portlet__head">
 						<div class="m-portlet__head-caption">
 							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text" th:text="${entity.owner.name}"></h3>
+								<h3 class="m-portlet__head-text" th:value="${entity.owner.entityId}+'-'+${entity.owner.ownerType}" th:text="${entity.owner.name}" onclick="goToOwner(this)"></h3>
 								<div class="col-md-12">
 
 									<!-- Default bootstrap modal example -->
@@ -293,6 +293,16 @@
         $(this).find(".modal-content").load(link.attr("href"));
         // }
     });
+
+    function goToOwner(owner) {
+        var splittedOwner=owner.getAttribute("value").split("-");
+        var url="/person/"+splittedOwner[0]+"/details";
+        if (splittedOwner[1]=="ORGANIZATION"){
+            url="/organization/"+splittedOwner[0]+"/details";
+		}
+        window.location.assign(url);
+
+    }
 </script>
 <script th:inline="javascript">
 	$("#personFormModal").on("show.bs.modal", function(e) {
@@ -304,7 +314,8 @@
 
     $(this).find(".modal-body").load(link.attr("href"));
 
-});</script>
+});
+</script>
 </body>
 <!-- end::Body -->
 </html>
