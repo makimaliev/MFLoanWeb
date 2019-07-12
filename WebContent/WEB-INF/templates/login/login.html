@@ -4,22 +4,21 @@
 <!-- begin::Head -->
 <head>
     <meta charset="utf-8" />
-    <title>
-        Логин | MFLoan
-    </title>
+    <title th:text="#{login.page.title}">Логин | MFLoan</title>
+
     <meta name="description" content="Latest updates and statistic charts">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!--begin::Web font -->
-    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
-    <script>
-        WebFont.load({
-            google: {"families":["Montserrat:300,400,500,600,700","Roboto:300,400,500,600,700"]},
-            active: function() {
-                sessionStorage.fonts = true;
-            }
-        });
-    </script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>-->
+    <!--<script>-->
+        <!--WebFont.load({-->
+            <!--google: {"families":["Montserrat:300,400,500,600,700","Roboto:300,400,500,600,700"]},-->
+            <!--active: function() {-->
+                <!--sessionStorage.fonts = true;-->
+            <!--}-->
+        <!--});-->
+    <!--</script>-->
     <!--end::Web font -->
     <!--begin::Base Styles -->
     <link th:href="@{/assets/custom/vendors/base/vendors.bundle.css}" rel="stylesheet" type="text/css" />
@@ -56,13 +55,6 @@
                         <div class="form-group m-form__group">
                             <input class="form-control m-input m-login__form-input--last" type="password" th:placeholder="#{login.form.input.password}" name="password">
                         </div>
-                        <div hidden="hidden" class="row m-login__form-sub">
-                            <div class="col m--align-right m-login__form-right">
-                                <a href="javascript:;" id="m_login_forget_password" class="m-link" th:text="#{login.forgot.password}">
-                                    Сыр сөздү унуттуңузбу?
-                                </a>
-                            </div>
-                        </div>
                         <div class="m-login__form-action">
                             <button id="m_login_signin_submit" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air m-login__btn m-login__btn--primary" th:text="#{login.form.button.login}">
                                 Кирүү
@@ -76,11 +68,11 @@
 </div>
 <!-- end:: Page -->
 <!--begin::Base Scripts -->
-<script th:src="@{/assets/custom/vendors/base/vendors.bundle.js}" type="text/javascript"></script>
-<script th:src="@{/assets/custom/demo/default/base/scripts.bundle.js}" type="text/javascript"></script>
+<!--<script th:src="@{/assets/custom/vendors/base/vendors.bundle.js}" type="text/javascript"></script>-->
+<!--<script th:src="@{/assets/custom/demo/default/base/scripts.bundle.js}" type="text/javascript"></script>-->
 <!--end::Base Scripts -->
 <!--begin::Page Snippets -->
-<script th:src="@{/assets/custom/snippets/pages/user/login.js}" type="text/javascript"></script>
+<!--<script th:src="@{/assets/custom/snippets/pages/user/login.js}" type="text/javascript"></script>-->
 <!--end::Page Snippets -->
 </body>
 <!-- end::Body -->

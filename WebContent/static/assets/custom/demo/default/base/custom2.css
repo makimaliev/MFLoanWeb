@@ -28,16 +28,25 @@
 }
 .btn-focus{
     color: #fff;
-    background-color: #9816f4;
-    border-color: #9816f4;
+    background-color: #4384b3;
+    border-color: #6ba9a8;
 }
 .btn-focus:hover{
     color: #fff;
-    background-color: #840ad9;
+    background-color: #1483d6;
+    border-color: #32e25e;
+}
+
+
+.btn-focus:active, .btn-focus.active, .show > .btn-focus.dropdown-toggle
+{
+    background-color: #20229e;
+    background-image: none;
     border-color: #7c0acd;
 }
 
+/* */
 .m-grid.m-grid--hor:not(.m-grid--desktop):not(.m-grid--desktop-and-tablet):not(.m-grid--tablet):not(.m-grid--tablet-and-mobile):not(.m-grid--mobile) > .m-grid__item.m-grid__item--fluid
 {
-    background: #444;
+    background: #2e6284;
 }
