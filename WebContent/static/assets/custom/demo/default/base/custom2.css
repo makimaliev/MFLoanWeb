@@ -1,0 +1,43 @@
+
+.m-login.m-login--2 .m-login__wrapper .m-login__container .m-login__form .m-form__group .form-control{
+    border-radius: 0;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+.m-login.m-login--2.m-login-2--skin-2 .m-login__container .m-login__form .form-control{
+    background-color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    color: #444;
+}
+.m-login.m-login--2.m-login-2--skin-2 .m-login__container .m-login__form .form-control:focus{
+    color: #444;
+}
+.m-login.m-login--2.m-login-2--skin-2 .m-login__container .m-login__head .m-login__title{
+    color: #fff;
+    font-weight: bold;
+    font-size: 20px;
+}
+.m-login.m-login--2 .m-login__wrapper .m-login__container .m-login__form .m-login__form-action .m-login__btn{
+    font-weight: bold;
+    font-size: 17px;
+    margin-top: 0;
+}
+.m-login.m-login--2.m-login-2--skin-2 .m-login__container .m-login__form{
+    margin-top: 1.5rem;
+}
+.btn-focus{
+    color: #fff;
+    background-color: #9816f4;
+    border-color: #9816f4;
+}
+.btn-focus:hover{
+    color: #fff;
+    background-color: #840ad9;
+    border-color: #7c0acd;
+}
+
+.m-grid.m-grid--hor:not(.m-grid--desktop):not(.m-grid--desktop-and-tablet):not(.m-grid--tablet):not(.m-grid--tablet-and-mobile):not(.m-grid--mobile) > .m-grid__item.m-grid__item--fluid
+{
+    background: #444;
+}
