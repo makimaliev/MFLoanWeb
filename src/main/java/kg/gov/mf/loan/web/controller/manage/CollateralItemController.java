@@ -252,7 +252,7 @@ public class CollateralItemController {
 			CollateralAgreement agreement = agreementService.getById(agreementId);
 			item.setCollateralAgreement(agreement);
 
-			item.setCollateralValue(0.7*item.getEstimatedValue());
+//			item.setCollateralValue(0.7*item.getEstimatedValue());
 			if (item.getOrganization() != null)
 				if (item.getOrganization().getId() == 0)
 					item.setOrganization(null);

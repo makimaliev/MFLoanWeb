@@ -58,8 +58,8 @@ public class FileSetter {
 
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 
-        String smtPath=SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
-        String mainPath=smtPath+"/docs";
+        String filePath=SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
+        String mainPath="/home/eridan/Desktop/docs";
 
 
 
@@ -107,32 +107,27 @@ public class FileSetter {
                             File folder = new File(pathOS);
                             pathOS=pathOS+regionId+"/";
                             folder=new File(pathOS);
-                            boolean exists = folder.exists();
-                            if(!exists){
+                            if(!folder.exists()){
                                 folder.mkdir();
                             }
                             pathOS=pathOS+districtId+"/";
                             folder=new File(pathOS);
-                            exists = folder.exists();
-                            if(!exists){
+                            if(!folder.exists()){
                                 folder.mkdir();
                             }
                             pathOS=pathOS+debtor.getId()+"/";
                             folder=new File(pathOS);
-                            exists = folder.exists();
-                            if(!exists){
-                                folder.mkdir();
-                            }
-                            pathOS=pathOS+loanId+"/";
-                            folder=new File(pathOS);
-                            exists = folder.exists();
-                            if(!exists){
+                            if(!folder.exists()){
                                 folder.mkdir();
                             }
                             pathOS=pathOS+4+"/";
                             folder=new File(pathOS);
-                            exists = folder.exists();
-                            if(!exists){
+                            if(!folder.exists()){
+                                folder.mkdir();
+                            }
+                            pathOS=pathOS+loanId+"/";
+                            folder=new File(pathOS);
+                            if(!folder.exists()){
                                 folder.mkdir();
                             }
                             File file1=new File(pathOS+file.getName());
@@ -143,7 +138,6 @@ public class FileSetter {
                             document.open();
                             PdfReader reader = new PdfReader(fileName);
                             for (int i = 1; i <= reader.getNumberOfPages(); i++){
-                                // optionally write an if statement to include the page
                                 copy.addPage(copy.getImportedPage(reader, i));
                             }
                             copy.freeReader(reader);

@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -123,7 +124,7 @@ public class HomeController {
 
     }
 
-    @RequestMapping("/doSomething")
+    @RequestMapping("/doMigration/files")
     public String doSomething() throws DocumentException {
         FileSetter fileSetter=new FileSetter();
         fileSetter.setFilesToDirectories();
@@ -131,14 +132,14 @@ public class HomeController {
     }
 
 
-    @RequestMapping("/doSecondMigrationTool")
-    public String doSecondMigrationtool() throws DocumentException {
+    @RequestMapping("/doSecondMigrationTool/{loanId}")
+    public String doSecondMigrationtool(@PathVariable("loanId") Long loanId){
         SecondMigrationTool secondMigrationTool=new SecondMigrationTool();
-        secondMigrationTool.loanMigrate(43093L);
+        secondMigrationTool.loanMigrate(loanId,"150.0.0.89","migration2019","postgres","armad27raptor");
         return "index";
     }
 
-    @RequestMapping("/migrate/loan/fileds")
+    @RequestMapping("/migrate/loan/fields")
     public String loanFieldsMigrate(){
         LoanFieldsMigration loanFieldsMigration=new LoanFieldsMigration();
         loanFieldsMigration.migrateLoanField("150.0.0.89","migration2019","postgres","armad27raptor");
