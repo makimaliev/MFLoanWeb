@@ -1,21 +1,19 @@
 package kg.gov.mf.loan.web.config;
 
-import java.util.Properties;
-
-import javax.sql.DataSource;
- 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.sql.DataSource;
+import java.util.Properties;
  
 @Configuration
 @EnableTransactionManagement
@@ -56,6 +54,12 @@ public class HibernateConfiguration {
         properties.put("hibernate.event.merge.entity_copy_observer", "allow");
         //properties.put("hibernate.search.default.directory_provider", environment.getRequiredProperty("hibernate.search.default.directory_provider"));
         //properties.put("hibernate.search.default.indexBase", environment.getRequiredProperty("hibernate.search.default.indexBase"));
+
+//        envers properties
+//        properties.put("org.hibernate.envers.audit_table_prefix", environment.getRequiredProperty("hibernate.envers.audit_table_prefix"));
+//        properties.put("org.hibernate.envers.audit_table_suffix", environment.getRequiredProperty("hibernate.envers.audit_table_suffix"));
+        properties.put("org.hibernate.envers.store_data_at_delete", environment.getRequiredProperty("hibernate.envers.store_data_at_delete"));
+
         return properties;        
     }
      
