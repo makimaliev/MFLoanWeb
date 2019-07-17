@@ -71,6 +71,14 @@
                                                 </span>
                                             </span>
                                         </div>
+                                        <div class="input-group date m_datetimepicker hideable" id="from_datepicker" style="margin-bottom: 5px">
+                                            <input  class="form-control m-input" th:placeholder="#{label.fromDate}" name="date" />
+                                            <span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
                                         <div class="m-input-icon m-input-icon--left" id="item_name">
                                             <input type="text" class="form-control input-sm" th:placeholder="#{label.item.name}" name="item"/>
                                             <span class="m-input-icon__icon m-input-icon__icon--left">
@@ -78,6 +86,12 @@
                                                     <i class="la la-search"></i>
                                                 </span>
                                             </span>
+                                        </div>
+                                        <div class="input-group date m_datetimepicker hideable" id="to_datepicker">
+                                            <input  class="form-control m-input" th:placeholder="#{label.toDate}" name="date" />
+                                            <span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -96,6 +110,23 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="m-form__group m-form__group--inline hideable">
+                                            <div class="m-form__label">
+                                                <label th:text="#{label.item.type}">
+                                                    Item type:
+                                                </label>
+                                            </div>
+                                            <div class="m-form__control">
+                                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_item_type">
+                                                    <option value="">
+                                                        Все
+                                                    </option>
+                                                    <option th:each="itemType: ${itemTypes}" th:value="${itemType.id}" th:text="${itemType.name}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
                                         <div class="m-form__group m-form__group--inline">
                                             <div class="m-form__label">
                                                 <label>
@@ -110,38 +141,9 @@
                                                     <option th:each="district : ${districts}" th:value="${district.id}" th:text="${district.name}"></option>
                                                 </select>
                                             </div>
+                                            <i id="openBtn" class="fa fa-plus-circle col-md-1"></i>
+                                            <i id="closeBtn" class="fa fa-minus-circle col-md-1"></i>
                                         </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="input-group date m_datetimepicker" id="from_datepicker" style="margin-bottom: 5px">
-                                            <input  class="form-control m-input" th:placeholder="#{label.fromDate}" name="date" />
-                                            <span class="input-group-addon">
-													<i class="la la-calendar glyphicon-th"></i>
-												</span>
-                                        </div>
-                                        <div class="input-group date m_datetimepicker" id="to_datepicker">
-                                            <input  class="form-control m-input" th:placeholder="#{label.toDate}" name="date" />
-                                            <span class="input-group-addon">
-													<i class="la la-calendar glyphicon-th"></i>
-												</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                            <div class="m-form__group m-form__group--block">
-                                                <div class="m-form__label">
-                                                    <label th:text="#{label.item.type}">
-                                                        Item type:
-                                                    </label>
-                                                </div>
-                                                <div class="m-form__control">
-                                                    <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_item_type">
-                                                        <option value="">
-                                                            Все
-                                                        </option>
-                                                        <option th:each="itemType: ${itemTypes}" th:value="${itemType.id}" th:text="${itemType.name}"></option>
-                                                    </select>
-                                                </div>
-                                            </div>
                                         <div class="d-md-none m--margin-bottom-10"></div>
                                     </div>
 
@@ -173,6 +175,20 @@
     </script>
 </div>
 <script>
+
+    $(".hideable").hide();
+    $("#closeBtn").hide();
+    $("#openBtn").on("click",function () {
+        $(".hideable").show();
+        $("#openBtn").hide();
+        $("#closeBtn").show();
+    });
+    $("#closeBtn").on("click",function () {
+        $(".hideable").hide();
+        $("#closeBtn").hide();
+        $("#openBtn").show();
+    });
+
     $('#from_datepicker').datetimepicker({
         format: "dd.mm.yyyy",
         todayHighlight: true,
@@ -210,12 +226,12 @@
                             url: '/api/collateralItemViews'
                         }
                     },
-                    pageSize: 100,
+                    pageSize: 10,
                     saveState: {
                         cookie: false,
                         webstorage: false
                     },
-                    serverPaging: true,
+                    // serverPaging: false,
                     serverFiltering: true,
                     serverSorting: true,
                 },
@@ -235,7 +251,7 @@
                 // column based filtering
                 filterable: false,
 
-                pagination: false,
+                pagination: true,
 
                 // columns definition
                 columns: [{

@@ -33,8 +33,10 @@ import kg.gov.mf.loan.manage.service.loan.PaymentService;
 import kg.gov.mf.loan.manage.service.orderterm.CurrencyRateService;
 import kg.gov.mf.loan.manage.service.process.LoanDetailedSummaryService;
 import kg.gov.mf.loan.manage.service.process.LoanSummaryService;
+import kg.gov.mf.loan.output.report.model.CollectionPhaseView;
 import kg.gov.mf.loan.output.report.model.LoanView;
 import kg.gov.mf.loan.output.report.model.ReferenceView;
+import kg.gov.mf.loan.output.report.service.CollectionPhaseViewService;
 import kg.gov.mf.loan.output.report.service.ReferenceViewService;
 import kg.gov.mf.loan.output.report.utils.CalculationTool;
 import kg.gov.mf.loan.process.service.JobItemService;
@@ -167,6 +169,9 @@ public class CollectionPhaseController {
 
 	@Autowired
 	PaymentService paymentService;
+
+	@Autowired
+	CollectionPhaseViewService collectionPhaseViewService;
 
 
 	@InitBinder
@@ -1550,8 +1555,13 @@ public class CollectionPhaseController {
     public String getPhaseEvents(Model model,@PathVariable("id") Long id){
 
         CollectionPhase phase=collectionPhaseService.getById(id);
+        CollectionProcedure procedure=procService.getById(phase.getCollectionProcedure().getId());
         Set<CollectionEvent> events=phase.getCollectionEvents();
+		CollectionPhaseView collectionPhaseView=collectionPhaseViewService.findById(procedure.getId());
 
+
+		model.addAttribute("debtorId",collectionPhaseView.getV_debtor_id());
+		model.addAttribute("procId",procedure.getId());
         model.addAttribute("id",phase.getId());
         model.addAttribute("events",events);
 

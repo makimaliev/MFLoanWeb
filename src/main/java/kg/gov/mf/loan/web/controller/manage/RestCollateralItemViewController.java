@@ -1,17 +1,19 @@
 package kg.gov.mf.loan.web.controller.manage;
 
 
-import kg.gov.mf.loan.output.report.dao.CollateralItemViewDao;
 import kg.gov.mf.loan.output.report.model.CollateralItemView;
 import kg.gov.mf.loan.output.report.service.CollateralItemViewService;
-import kg.gov.mf.loan.web.fetchModels.CollateralItemViewMetaModel;
-import kg.gov.mf.loan.web.util.Meta;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityManager;
-import java.math.BigInteger;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -97,7 +99,7 @@ public class RestCollateralItemViewController {
         Integer offset = (page-1)*perPage;
 
 
-        List<CollateralItemView> all=collateralItemViewService. findByParameter(parameters,offset,perPage,sortStr,sortField);
+        List<CollateralItemView> all=collateralItemViewService. findByParameter(parameters,offset,100,sortStr,sortField);
 
 //        BigInteger count=BigInteger.valueOf(collateralItemViewService.getCount(parameters));
 //        BigInteger count=BigInteger.valueOf(35455);

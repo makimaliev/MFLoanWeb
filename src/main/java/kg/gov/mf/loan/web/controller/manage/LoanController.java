@@ -899,7 +899,7 @@ public class LoanController {
                 loan.setLoanState(loanStateService.getById(2L));
 
             if(loan.getLoanFinGroup()==null)
-                loan.setLoanFinGroup(loanFinGroupService.getById(1L));
+                loan.setLoanFinGroup(loanFinGroupService.getById(2L));
 
             CreditOrder creditOrder = creditOrderRepository.findOne(loan.getCreditOrder().getId());
             loan.setCreditOrder(creditOrder);
