@@ -219,6 +219,31 @@ public class CollectionPhaseController {
 		String jsonFiles = gson.toJson(getSystemFilesByItemId(phaseId));
 		model.addAttribute("files", jsonFiles);
 
+        String createdByStr=null;
+        String modifiedByStr=null;
+        if(phase.getAuCreatedBy()!=null){
+            if(phase.getAuCreatedBy().equals("admin")){
+                createdByStr="Система";
+            }
+            else{
+                User createdByUser=userService.findByUsername(phase.getAuCreatedBy());
+                Staff createdByStaff=createdByUser.getStaff();
+                createdByStr=createdByStaff.getName();
+            }
+        }
+        if(phase.getAuLastModifiedBy()!=null){
+            if(phase.getAuLastModifiedBy().equals("admin")){
+               modifiedByStr="Система";
+            }
+            else{
+                User lastModifiedByUser=userService.findByUsername(phase.getAuLastModifiedBy());
+                Staff lastModifiedByStaff=lastModifiedByUser.getStaff();
+                modifiedByStr=lastModifiedByStaff.getName();
+            }
+        }
+        model.addAttribute("createdBy",createdByStr);
+        model.addAttribute("modifiedBy",modifiedByStr);
+
 		return "/manage/debtor/collectionprocedure/collectionphase/view";
 
 	}

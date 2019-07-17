@@ -2,12 +2,16 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.admin.org.model.Staff;
+import kg.gov.mf.loan.admin.org.service.StaffService;
 import kg.gov.mf.loan.admin.sys.model.Attachment;
 import kg.gov.mf.loan.admin.sys.model.Information;
 import kg.gov.mf.loan.admin.sys.model.SystemFile;
+import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.AttachmentService;
 import kg.gov.mf.loan.admin.sys.service.InformationService;
 import kg.gov.mf.loan.admin.sys.service.SystemFileService;
+import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collateral.CollateralItemArrestFree;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemArrestFreeService;
 import kg.gov.mf.loan.web.fetchModels.SystemFileModel;
@@ -37,6 +41,12 @@ public class CollateralArrestFreeController {
     @Autowired
     SystemFileService systemFileService;
 
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    StaffService staffService;
+
     @RequestMapping(value = { "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/collateralarrestfree/{freeId}/view"})
     public String viewCollateralItem(ModelMap model,
                                      @PathVariable("debtorId")Long debtorId,
@@ -57,6 +67,32 @@ public class CollateralArrestFreeController {
         model.addAttribute("debtorId", debtorId);
         model.addAttribute("agreementId", agreementId);
         model.addAttribute("itemId", itemId);
+
+        String createdByStr=null;
+        String modifiedByStr=null;
+
+        if(arrestFree.getAuCreatedBy()!=null){
+            if(arrestFree.getAuCreatedBy().equals("admin")){
+                createdByStr="Система";
+            }
+            else{
+                User createdByUser=userService.findByUsername(arrestFree.getAuCreatedBy());
+                Staff createdByStaff=createdByUser.getStaff();
+                createdByStr=createdByStaff.getName();
+            }
+        }
+        if(arrestFree.getAuLastModifiedBy()!=null){
+            if(arrestFree.getAuLastModifiedBy().equals("admin")){
+                modifiedByStr="Система";
+            }
+            else{
+                User lastModifiedByUser=userService.findByUsername(arrestFree.getAuLastModifiedBy());
+                Staff lastModifiedByStaff=lastModifiedByUser.getStaff();
+                modifiedByStr=lastModifiedByStaff.getName();
+            }
+        }
+        model.addAttribute("createdBy",createdByStr);
+        model.addAttribute("modifiedBy",modifiedByStr);
 
 
 

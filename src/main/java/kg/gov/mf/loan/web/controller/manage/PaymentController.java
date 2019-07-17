@@ -2,6 +2,7 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.sys.model.Attachment;
 import kg.gov.mf.loan.admin.sys.model.Information;
 import kg.gov.mf.loan.admin.sys.model.SystemFile;
@@ -134,6 +135,32 @@ public class PaymentController {
         model.addAttribute("loanId",loanId);
         model.addAttribute("debtorId",debtorId);
         model.addAttribute("userId",user.getId());
+
+        String createdByStr=null;
+        String modifiedByStr=null;
+
+        if(payment.getAuCreatedBy()!=null){
+            if(payment.getAuCreatedBy().equals("admin")){
+                createdByStr="Система";
+            }
+            else{
+                User createdByUser=userService.findByUsername(payment.getAuCreatedBy());
+                Staff createdByStaff=createdByUser.getStaff();
+                createdByStr=createdByStaff.getName();
+            }
+        }
+        if(payment.getAuLastModifiedBy()!=null){
+            if(payment.getAuLastModifiedBy().equals("admin")){
+                modifiedByStr="Система";
+            }
+            else{
+                User lastModifiedByUser=userService.findByUsername(payment.getAuLastModifiedBy());
+                Staff lastModifiedByStaff=lastModifiedByUser.getStaff();
+                modifiedByStr=lastModifiedByStaff.getName();
+            }
+        }
+        model.addAttribute("createdBy",createdByStr);
+        model.addAttribute("modifiedBy",modifiedByStr);
 
         Attachment attachment=new Attachment();
         model.addAttribute("attachment",attachment);

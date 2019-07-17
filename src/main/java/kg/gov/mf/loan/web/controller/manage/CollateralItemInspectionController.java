@@ -2,12 +2,16 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.admin.org.model.Staff;
+import kg.gov.mf.loan.admin.org.service.StaffService;
 import kg.gov.mf.loan.admin.sys.model.Attachment;
 import kg.gov.mf.loan.admin.sys.model.Information;
 import kg.gov.mf.loan.admin.sys.model.SystemFile;
+import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.AttachmentService;
 import kg.gov.mf.loan.admin.sys.service.InformationService;
 import kg.gov.mf.loan.admin.sys.service.SystemFileService;
+import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collateral.CollateralItemInspectionResult;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemInspectionResultService;
 import kg.gov.mf.loan.web.fetchModels.SystemFileModel;
@@ -37,6 +41,12 @@ public class CollateralItemInspectionController {
     @Autowired
     SystemFileService systemFileService;
 
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    StaffService staffService;
+
     @RequestMapping(value = { "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/collateralinspection/{inspectionId}/view"})
     public String viewCollateralItem(ModelMap model,
                                      @PathVariable("debtorId")Long debtorId,
@@ -58,7 +68,31 @@ public class CollateralItemInspectionController {
         model.addAttribute("agreementId", agreementId);
         model.addAttribute("itemId", itemId);
 
+        String createdByStr=null;
+        String modifiedByStr=null;
 
+        if(inspection.getAuCreatedBy()!=null){
+            if(inspection.getAuCreatedBy().equals("admin")){
+                createdByStr="Система";
+            }
+            else{
+                User createdByUser=userService.findByUsername(inspection.getAuCreatedBy());
+                Staff createdByStaff=createdByUser.getStaff();
+                createdByStr=createdByStaff.getName();
+            }
+        }
+        if(inspection.getAuLastModifiedBy()!=null){
+            if(inspection.getAuLastModifiedBy().equals("admin")){
+                modifiedByStr="Система";
+            }
+            else{
+                User lastModifiedByUser=userService.findByUsername(inspection.getAuLastModifiedBy());
+                Staff lastModifiedByStaff=lastModifiedByUser.getStaff();
+                modifiedByStr=lastModifiedByStaff.getName();
+            }
+        }
+        model.addAttribute("createdBy",createdByStr);
+        model.addAttribute("modifiedBy",modifiedByStr);
 
         return "manage/debtor/collateralagreement/collateralitem/insresult/view";
 

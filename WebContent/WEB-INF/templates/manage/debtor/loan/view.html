@@ -323,6 +323,24 @@
 														<button th:unless="${loan.lastDate!=null}" data-toggle="modal" data-target="#loanLastDateModal" class="m-widget1__desc m--font-brand" th:text="#{label.loan.lastDate}"></button>
 													</div>
 												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.createdBy}"></h3>
+															<span th:if="${createdBy}!=null" class="m-widget1__desc m--font-brand" th:text="${createdBy}+' ('+${#dates.format(loan.auCreatedDate,'dd.MM.yyyy HH:mm:ss')}+')'"></span>
+															<span th:unless="${createdBy}!=null" class="m-widget1__desc m--font-brand">-</span>
+														</div>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.modifiedBy}"></h3>
+															<span class="m-widget1__desc m--font-brand" th:if="${modifiedBy}!=null" th:text="${modifiedBy}+' ('+${#dates.format(loan.auLastModifiedDate,'dd.MM.yyyy  HH:mm:ss')}+')'"></span>
+															<span class="m-widget1__desc m--font-brand" th:unless="${modifiedBy}!=null">-</span>
+														</div>
+													</div>
+												</div>
 											</div>
 											<!--end:: Widgets/Stats2-1 -->
 										</div>
@@ -2080,7 +2098,7 @@
 
 				var norm=JSON.parse(data);
 				// console.log(norm);
-                $.getScript("/js/data-debtor-loan-paymentSchedules.js");
+                $.getScript("/js/data-debtor-loan-paymentSchedules1.js");
 				for(var i in norm){
 					if(norm[i].record_status==1){
 						sumOfPSDisbursement=sumOfPSDisbursement+parseFloat(norm[i].disbursement);
@@ -2152,7 +2170,7 @@
             url: '/supervisorPlanRequest/'+loanId,
             success:function (data) {
                 jsonSPs=data;
-                $.getScript("/js/data-debtor-loan-supervisorPlans.js");
+                $.getScript("/js/data-debtor-loan-supervisorPlans1.js");
             }
         });
     });
@@ -2172,7 +2190,7 @@
             url: '/creditTermRequest/'+loanId,
             success:function (data) {
                 jsonTerms=data;
-                $.getScript("/js/data-debtor-loan-terms.js");
+                $.getScript("/js/data-debtor-loan-terms1.js");
             }
         });
     });

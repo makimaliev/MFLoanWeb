@@ -191,6 +191,28 @@
 										</div>
 										<!--end:: Widgets/Stats2-1 -->
 									</div>
+									<div class="col-md-12 col-lg-12 col-xl-4">
+										<div class="m-widget1">
+											<div class="m-widget1__item">
+												<div class="row m-row--no-padding align-items-center">
+													<div class="col">
+														<h3 class="m-widget1__title" th:text="#{label.createdBy}"></h3>
+														<span th:if="${createdBy}!=null" class="m-widget1__desc m--font-brand" th:text="${createdBy}+' ('+${#dates.format(agreement.auCreatedDate,'dd.MM.yyyy HH:mm:ss')}+')'"></span>
+														<span th:unless="${createdBy}!=null" class="m-widget1__desc m--font-brand">-</span>
+													</div>
+												</div>
+											</div>
+											<div class="m-widget1__item">
+												<div class="row m-row--no-padding align-items-center">
+													<div class="col">
+														<h3 class="m-widget1__title" th:text="#{label.modifiedBy}"></h3>
+														<span class="m-widget1__desc m--font-brand" th:if="${modifiedBy}!=null" th:text="${modifiedBy}+' ('+${#dates.format(agreement.auLastModifiedDate,'dd.MM.yyyy  HH:mm:ss')}+')'"></span>
+														<span class="m-widget1__desc m--font-brand" th:unless="${modifiedBy}!=null">-</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 							<div class="tab-pane" id="collateralItem" role="tabpanel">

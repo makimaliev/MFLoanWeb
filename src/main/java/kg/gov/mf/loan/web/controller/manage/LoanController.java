@@ -350,6 +350,32 @@ public class LoanController {
         }
         model.addAttribute("information",informations);
 
+        String createdByStr=null;
+        String modifiedByStr=null;
+
+        if(loan.getAuCreatedBy()!=null){
+            if(loan.getAuCreatedBy().equals("admin")){
+                createdByStr="Система";
+            }
+            else{
+                User createdByUser=userService.findByUsername(loan.getAuCreatedBy());
+                Staff createdByStaff=createdByUser.getStaff();
+                createdByStr=createdByStaff.getName();
+            }
+        }
+        if(loan.getAuLastModifiedBy()!=null){
+            if(loan.getAuLastModifiedBy().equals("admin")){
+                modifiedByStr="Система";
+            }
+            else{
+                User lastModifiedByUser=userService.findByUsername(loan.getAuLastModifiedBy());
+                Staff lastModifiedByStaff=lastModifiedByUser.getStaff();
+                modifiedByStr=lastModifiedByStaff.getName();
+            }
+        }
+        model.addAttribute("createdBy",createdByStr);
+        model.addAttribute("modifiedBy",modifiedByStr);
+
 
         return "/manage/debtor/loan/view";
     }

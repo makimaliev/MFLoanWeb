@@ -2,12 +2,16 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.admin.org.model.Staff;
+import kg.gov.mf.loan.admin.org.service.StaffService;
 import kg.gov.mf.loan.admin.sys.model.Attachment;
 import kg.gov.mf.loan.admin.sys.model.Information;
 import kg.gov.mf.loan.admin.sys.model.SystemFile;
+import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.AttachmentService;
 import kg.gov.mf.loan.admin.sys.service.InformationService;
 import kg.gov.mf.loan.admin.sys.service.SystemFileService;
+import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.model.loan.WriteOff;
 import kg.gov.mf.loan.manage.repository.loan.WriteOffRepository;
@@ -59,6 +63,12 @@ public class WriteOffController {
 	@Autowired
 	SystemFileService systemFileService;
 
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	StaffService staffService;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
@@ -84,6 +94,32 @@ public class WriteOffController {
 
 		Attachment attachment=new Attachment();
 		model.addAttribute("attachment",attachment);
+
+		String createdByStr=null;
+		String modifiedByStr=null;
+
+		if(writeOff.getAuCreatedBy()!=null){
+			if(writeOff.getAuCreatedBy().equals("admin")){
+				createdByStr="Система";
+			}
+			else{
+				User createdByUser=userService.findByUsername(writeOff.getAuCreatedBy());
+				Staff createdByStaff=createdByUser.getStaff();
+				createdByStr=createdByStaff.getName();
+			}
+		}
+		if(writeOff.getAuLastModifiedBy()!=null){
+			if(writeOff.getAuLastModifiedBy().equals("admin")){
+				modifiedByStr="Система";
+			}
+			else{
+				User lastModifiedByUser=userService.findByUsername(writeOff.getAuLastModifiedBy());
+				Staff lastModifiedByStaff=lastModifiedByUser.getStaff();
+				modifiedByStr=lastModifiedByStaff.getName();
+			}
+		}
+		model.addAttribute("createdBy",createdByStr);
+		model.addAttribute("modifiedBy",modifiedByStr);
 
 		return "/manage/debtor/loan/wo/view";
 	}

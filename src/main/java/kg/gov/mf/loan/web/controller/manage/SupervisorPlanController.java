@@ -1,5 +1,7 @@
 package kg.gov.mf.loan.web.controller.manage;
 
+import kg.gov.mf.loan.admin.org.model.Staff;
+import kg.gov.mf.loan.admin.org.service.StaffService;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.loan.Loan;
@@ -39,6 +41,9 @@ public class SupervisorPlanController {
 	@Autowired
     UserService userService;
 
+	@Autowired
+    StaffService staffService;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
@@ -47,6 +52,44 @@ public class SupervisorPlanController {
 	}
 
 	private Date globalRegDate=new Date();
+
+    @RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/sp/{spId}/view", method=RequestMethod.GET)
+    public String view(ModelMap model,
+                           @PathVariable("debtorId")Long debtorId,
+                           @PathVariable("loanId")Long loanId,
+                           @PathVariable("spId")Long spId){
+        SupervisorPlan plan=spService.getById(spId);
+        model.addAttribute("plan",plan);
+
+        String createdByStr=null;
+        String modifiedByStr=null;
+
+        if(plan.getAuCreatedBy()!=null){
+            if(plan.getAuCreatedBy().equals("admin")){
+                createdByStr="Система";
+            }
+            else{
+                User createdByUser=userService.findByUsername(plan.getAuCreatedBy());
+                Staff createdByStaff=createdByUser.getStaff();
+                createdByStr=createdByStaff.getName();
+            }
+        }
+        if(plan.getAuLastModifiedBy()!=null){
+            if(plan.getAuLastModifiedBy().equals("admin")){
+                modifiedByStr="Система";
+            }
+            else{
+                User lastModifiedByUser=userService.findByUsername(plan.getAuLastModifiedBy());
+                Staff lastModifiedByStaff=lastModifiedByUser.getStaff();
+                modifiedByStr=lastModifiedByStaff.getName();
+            }
+        }
+        model.addAttribute("createdBy",createdByStr);
+        model.addAttribute("modifiedBy",modifiedByStr);
+
+
+        return "/manage/debtor/loan/sp/view";
+    }
 
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/sp/add", method=RequestMethod.GET)
 	public String formSupervisorPlan(ModelMap model,
