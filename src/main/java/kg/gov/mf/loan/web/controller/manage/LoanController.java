@@ -553,7 +553,7 @@ public class LoanController {
     public String updateLoanState(Model model,@PathVariable(value = "loanId") Long loanId){
         Loan loan=loanService.getById(loanId);
         if (loan.getLoanState()!=null){
-            model.addAttribute("state",loan.getFund());
+            model.addAttribute("state",loan.getLoanState());
         }
         else{
             model.addAttribute("state",loanStateService.getById(2L));
@@ -615,7 +615,7 @@ public class LoanController {
         Loan loan=loanService.getById(id);
         try {
             loan.setCloseDate(sf.parse(data));
-            loanService.update(loan);
+            loanRepository.save(loan);
         } catch (ParseException e) {
             e.printStackTrace();
         }
