@@ -415,18 +415,11 @@ public class LoanController {
     public String updateLoanBankData(Model model,@PathVariable(value = "loanId") Long loanId){
 
 	    Loan loan=loanService.getById(loanId);
-        Debtor debtor=debtorService.getById(loan.getDebtor().getId());
-        Owner owner=ownerService.getById(debtor.getOwner().getId());
-        if(owner.getOwnerType().name().equals("ORGANIZATION")){
-            String bankDataQuery="select *\n" +
-                    "from bank_data where organization_id=1";
-            Query query=entityManager.createNativeQuery(bankDataQuery, BankData.class);
-            List<BankData> bankDataList=query.getResultList();
-            model.addAttribute("bankDatas",bankDataList);
-        }
-        else{
-            model.addAttribute("bankDatas",null);
-        }
+        String bankDataQuery="select *\n" +
+                "from bank_data where organization_id=1";
+        Query query=entityManager.createNativeQuery(bankDataQuery, BankData.class);
+        List<BankData> bankDataList=query.getResultList();
+        model.addAttribute("bankDatas",bankDataList);
         if(loan.getBankDataId()!=0){
             model.addAttribute("bankData",loan.getBankDataId());
         }
