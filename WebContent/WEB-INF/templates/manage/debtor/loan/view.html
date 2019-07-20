@@ -228,7 +228,7 @@
                                                         <div class="col">
                                                             <h3 class="m-widget1__title" th:text="#{label.loan.bankData}"></h3>
                                                             <!--<span class="m-widget1__desc m&#45;&#45;font-brand" th:text="${loan.loanFinGroup.name}"></span>-->
-                                                            <span class="m-widget1__desc m--font-brand" th:if="${bankData!= null}" th:text="${bankData.name}">someValue</span>
+                                                            <span class="m-widget1__desc m--font-brand" th:if="${bankData!= null}" th:text="${bankData.name}+'('+${#strings.abbreviate(bankData.account_number,20)}+')'">someValue</span>
                                                             <span class="m-widget1__desc m--font-brand" th:unless="${bankData!= null}" th:text="'?'">someValue</span>
                                                         </div>
                                                         <a sec:authorize="hasAnyAuthority('ADMIN','PERM_CHANGE_LOAN_BANKDATA')" data-remote="false" data-toggle="modal" data-target="#loanBankDataModal" th:href="@{'/loanBankData/'+${loan.id}+'/save'}" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
