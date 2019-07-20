@@ -296,7 +296,6 @@ public class CollectionPhaseController {
 
         List<PhaseDetailsModel> result = new ArrayList<>();
         List<String> listOfLoans= Arrays.asList(selectedLoans.split("[^0-9.]"));
-        CollectionPhase phase=phaseService.getById(id);
         for (String value:listOfLoans) {
         	if (value.length()!=0){
 				LoanModel1 loan=getLoanIdAndRegNumber(Long.parseLong(value));
