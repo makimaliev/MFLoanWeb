@@ -50,3 +50,42 @@
 {
     background: #2e6284;
 }
+.m-header-menu.m-header-menu--skin-light .m-menu__nav > .m-menu__item > .m-menu__link .m-menu__link-text{
+    color: #fff;
+    font-size: 1.13rem;
+}
+.m-menu__link-text{
+    color: #fff;
+}
+.m-header-menu.m-header-menu--submenu-skin-light .m-menu__nav.m-menu__nav--submenu-arrow > .m-menu__item.m-menu__item--submenu.m-menu__item--hover > .m-menu__submenu .m-menu__arrow{
+    color: #444;
+}
+.m-footer{
+    box-shadow: none;
+}
+.m-header-menu.m-header-menu--submenu-skin-light .m-menu__nav > .m-menu__item .m-menu__submenu > .m-menu__subnav > .m-menu__item > .m-menu__link .m-menu__link-text{
+    color: #fff;
+    font-size: 1.13rem;
+}
+.m-stack__item m-stack__item--middle m-brand__tools ,
+.m-stack.m-stack--general.m-stack--ver > .m-stack__item.m-stack__item--middle,
+.m-header-menu.m-header-menu--submenu-skin-light .m-menu__nav > .m-menu__item .m-menu__submenu > .m-menu__subnav,
+.m-aside-left.m-aside-left--skin-dark,
+.m-stack.m-stack--desktop.m-stack--ver > .m-stack__item,
+.m-grid.m-grid--hor:not(.m-grid--desktop):not(.m-grid--desktop-and-tablet):not(.m-grid--tablet):not(.m-grid--tablet-and-mobile):not(.m-grid--mobile) > .m-grid__item,
+#m_header_nav
+{
+    background: #444;
+}
+.m-topbar .m-topbar__nav.m-nav > .m-nav__item > .m-nav__link .m-nav__link-icon > i:before{
+    background: #fff;
+    text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.m-subheader .m-subheader__title, .m-portlet .m-portlet__body, .m-portlet .m-portlet__head .m-portlet__head-text, .m-subheader .m-subheader__breadcrumbs.m-nav > .m-nav__item > .m-nav__link > .m-nav__link-text, .m-subheader .m-subheader__breadcrumbs.m-nav > .m-nav__item > .m-nav__link > .m-nav__link-icon,
+.m-subheader .m-subheader__breadcrumbs.m-nav > .m-nav__item > span
+{
+    color: #fff;
+}
+
