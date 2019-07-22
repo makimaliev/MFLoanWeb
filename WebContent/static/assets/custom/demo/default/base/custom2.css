@@ -50,6 +50,9 @@
 {
     background: #2e6284;
 }
+.m-grid.m-grid--ver-desktop.m-grid--desktop > .m-grid__item.m-grid__item--fluid{
+    background: #224058;
+}
 .m-header-menu.m-header-menu--skin-light .m-menu__nav > .m-menu__item > .m-menu__link .m-menu__link-text{
     color: #fff;
     font-size: 1.13rem;
@@ -58,7 +61,7 @@
     color: #fff;
 }
 .m-header-menu.m-header-menu--submenu-skin-light .m-menu__nav.m-menu__nav--submenu-arrow > .m-menu__item.m-menu__item--submenu.m-menu__item--hover > .m-menu__submenu .m-menu__arrow{
-    color: #444;
+    color: #123654;
 }
 .m-footer{
     box-shadow: none;
@@ -87,5 +90,82 @@
 .m-subheader .m-subheader__breadcrumbs.m-nav > .m-nav__item > span
 {
     color: #fff;
+}
+.m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__head .m-datatable__row, .m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__body .m-datatable__row, .m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__foot .m-datatable__row{
+    border-bottom: 1px solid #d6d6d6;
+}
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__head .m-datatable__row > .m-datatable__cell.m-datatable__cell--left > span, .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__body .m-datatable__row > .m-datatable__cell.m-datatable__cell--left > span, .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__foot .m-datatable__row > .m-datatable__cell.m-datatable__cell--left > span,
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__head .m-datatable__row > .m-datatable__cell.m-datatable__cell--center > span, .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__body .m-datatable__row > .m-datatable__cell.m-datatable__cell--center > span, .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__foot .m-datatable__row > .m-datatable__cell.m-datatable__cell--center > span,
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__head .m-datatable__row > .m-datatable__cell.m-datatable__cell--right > span, .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__body .m-datatable__row > .m-datatable__cell.m-datatable__cell--right > span, .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__foot .m-datatable__row > .m-datatable__cell.m-datatable__cell--right > span,
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__body .m-datatable__row > .m-datatable__cell > span{
+    font-size: 13px;
+    font-weight: 600;
+}
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__head .m-datatable__row > .m-datatable__cell, .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__foot .m-datatable__row > .m-datatable__cell{
+    background: #1f6096;
+}
+a{
+    color: #0661ad;
+}
+.m-input-icon.m-input-icon--left .form-control{
+    font-size: 12px;
+    color: #000;
+    font-weight: 500;
+}
+.m-input-icon.m-input-icon--left .form-control::placeholder{
+    color: #000;
+    font-weight: 500;
+}
+.form-control.m-input--solid{
+    border-color: #cccccc;
+}
+.input-group .form-control{
+    font-size: 12px;
+    color: #000;
+    font-weight: 500;
+}
+.input-group .form-control::placeholder{
+    color: #000;
+    font-weight: 500;
+}
+.m-bootstrap-select.bootstrap-select.btn-group.m-bootstrap-select--solid > .dropdown-toggle{
+    border-color: #cccccc;
+}
+.bootstrap-select.btn-group > .dropdown-toggle.bs-placeholder{
+    color: #000;
+}
+.m-widget1 .m-widget1__item .m-widget1__desc {
+    margin-top: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.25;
+}
+.m-widget1 .m-widget1__item .m-widget1__title {
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 600;
+    color: #717477;
+}
+.m-badge.m-badge--success {
+    background-color: #089a7d;
+    color: #ffffff;
+}
+.btn-success {
+    color: #fff;
+    background-color: #089a7d;
+    border-color: #34bfa3;
+}
+.btn-accent {
+    color: #fff;
+    background-color: #00119a;
+    border-color: #00119a;
+}
+.btn-outline-danger {
+    color: #f4516c;
+    background-color: transparent;
+    background-image: none;
+    border-color: #f4516c;
+    font-size: 13px;
+    font-weight: 900;
 }
 
