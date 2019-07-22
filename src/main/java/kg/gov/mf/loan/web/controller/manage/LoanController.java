@@ -350,6 +350,32 @@ public class LoanController {
         }
         model.addAttribute("information",informations);
 
+        String createdByStr=null;
+        String modifiedByStr=null;
+
+        if(loan.getAuCreatedBy()!=null){
+            if(loan.getAuCreatedBy().equals("admin")){
+                createdByStr="Система";
+            }
+            else{
+                User createdByUser=userService.findByUsername(loan.getAuCreatedBy());
+                Staff createdByStaff=createdByUser.getStaff();
+                createdByStr=createdByStaff.getName();
+            }
+        }
+        if(loan.getAuLastModifiedBy()!=null){
+            if(loan.getAuLastModifiedBy().equals("admin")){
+                modifiedByStr="Система";
+            }
+            else{
+                User lastModifiedByUser=userService.findByUsername(loan.getAuLastModifiedBy());
+                Staff lastModifiedByStaff=lastModifiedByUser.getStaff();
+                modifiedByStr=lastModifiedByStaff.getName();
+            }
+        }
+        model.addAttribute("createdBy",createdByStr);
+        model.addAttribute("modifiedBy",modifiedByStr);
+
 
         return "/manage/debtor/loan/view";
     }
@@ -389,18 +415,11 @@ public class LoanController {
     public String updateLoanBankData(Model model,@PathVariable(value = "loanId") Long loanId){
 
 	    Loan loan=loanService.getById(loanId);
-        Debtor debtor=debtorService.getById(loan.getDebtor().getId());
-        Owner owner=ownerService.getById(debtor.getOwner().getId());
-        if(owner.getOwnerType().name().equals("ORGANIZATION")){
-            String bankDataQuery="select *\n" +
-                    "from bank_data where organization_id=1";
-            Query query=entityManager.createNativeQuery(bankDataQuery, BankData.class);
-            List<BankData> bankDataList=query.getResultList();
-            model.addAttribute("bankDatas",bankDataList);
-        }
-        else{
-            model.addAttribute("bankDatas",null);
-        }
+        String bankDataQuery="select *\n" +
+                "from bank_data where organization_id=1";
+        Query query=entityManager.createNativeQuery(bankDataQuery, BankData.class);
+        List<BankData> bankDataList=query.getResultList();
+        model.addAttribute("bankDatas",bankDataList);
         if(loan.getBankDataId()!=0){
             model.addAttribute("bankData",loan.getBankDataId());
         }
@@ -527,7 +546,7 @@ public class LoanController {
     public String updateLoanState(Model model,@PathVariable(value = "loanId") Long loanId){
         Loan loan=loanService.getById(loanId);
         if (loan.getLoanState()!=null){
-            model.addAttribute("state",loan.getFund());
+            model.addAttribute("state",loan.getLoanState());
         }
         else{
             model.addAttribute("state",loanStateService.getById(2L));
@@ -589,7 +608,7 @@ public class LoanController {
         Loan loan=loanService.getById(id);
         try {
             loan.setCloseDate(sf.parse(data));
-            loanService.update(loan);
+            loanRepository.save(loan);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -899,7 +918,7 @@ public class LoanController {
                 loan.setLoanState(loanStateService.getById(2L));
 
             if(loan.getLoanFinGroup()==null)
-                loan.setLoanFinGroup(loanFinGroupService.getById(1L));
+                loan.setLoanFinGroup(loanFinGroupService.getById(2L));
 
             CreditOrder creditOrder = creditOrderRepository.findOne(loan.getCreditOrder().getId());
             loan.setCreditOrder(creditOrder);

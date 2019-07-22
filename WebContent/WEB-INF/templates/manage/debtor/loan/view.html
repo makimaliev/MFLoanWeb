@@ -223,12 +223,12 @@
 														</a>
 													</div>
 												</div>
-                                                <div class="m-widget1__item" th:if="${ownerType.name()}=='ORGANIZATION'">
+                                                <div class="m-widget1__item">
                                                     <div class="row m-row--no-padding align-items-center">
                                                         <div class="col">
                                                             <h3 class="m-widget1__title" th:text="#{label.loan.bankData}"></h3>
                                                             <!--<span class="m-widget1__desc m&#45;&#45;font-brand" th:text="${loan.loanFinGroup.name}"></span>-->
-                                                            <span class="m-widget1__desc m--font-brand" th:if="${bankData!= null}" th:text="${bankData.name}">someValue</span>
+                                                            <span class="m-widget1__desc m--font-brand" th:if="${bankData!= null}" th:text="${bankData.name}+'('+${#strings.abbreviate(bankData.account_number,20)}+')'">someValue</span>
                                                             <span class="m-widget1__desc m--font-brand" th:unless="${bankData!= null}" th:text="'?'">someValue</span>
                                                         </div>
                                                         <a sec:authorize="hasAnyAuthority('ADMIN','PERM_CHANGE_LOAN_BANKDATA')" data-remote="false" data-toggle="modal" data-target="#loanBankDataModal" th:href="@{'/loanBankData/'+${loan.id}+'/save'}" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
@@ -321,6 +321,24 @@
 														</div>
 														<button th:if="${loan.lastDate!=null}" data-toggle="modal" data-target="#loanLastDateModal" class="m-widget1__desc m--font-brand" th:text="${#dates.format(loan.lastDate,'dd.MM.yyyy')}"></button>
 														<button th:unless="${loan.lastDate!=null}" data-toggle="modal" data-target="#loanLastDateModal" class="m-widget1__desc m--font-brand" th:text="#{label.loan.lastDate}"></button>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.createdBy}"></h3>
+															<span th:if="${createdBy}!=null" class="m-widget1__desc m--font-brand" th:text="${createdBy}+' ('+${#dates.format(loan.auCreatedDate,'dd.MM.yyyy HH:mm:ss')}+')'"></span>
+															<span th:unless="${createdBy}!=null" class="m-widget1__desc m--font-brand">-</span>
+														</div>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.modifiedBy}"></h3>
+															<span class="m-widget1__desc m--font-brand" th:if="${modifiedBy}!=null" th:text="${modifiedBy}+' ('+${#dates.format(loan.auLastModifiedDate,'dd.MM.yyyy  HH:mm:ss')}+')'"></span>
+															<span class="m-widget1__desc m--font-brand" th:unless="${modifiedBy}!=null">-</span>
+														</div>
 													</div>
 												</div>
 											</div>
@@ -1747,7 +1765,7 @@
 <!--<script th:src="@{/js/data-debtor-loan-writeOffs.js}" th:inline="javascript" type="text/javascript"></script>-->
 <!--<script th:src="@{/js/data-debtor-loan-supervisorPlans.js}" th:inline="javascript" type="text/javascript"></script>-->
 <script th:src="@{/js/data-debtor-loan-goods.js}" th:inline="javascript" type="text/javascript"></script>
-<script th:src="@{/js/data-debtor-loan-debtTransfers.js}" th:inline="javascript" type="text/javascript"></script>
+<script th:src="@{/js/data-debtor-loan-debtTransfers1.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-targetedUses.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-reconstructedLists.js}" th:inline="javascript" type="text/javascript"></script>
 <script th:src="@{/js/data-debtor-loan-bankrupts.js}" th:inline="javascript" type="text/javascript"></script>
@@ -2080,7 +2098,7 @@
 
 				var norm=JSON.parse(data);
 				// console.log(norm);
-                $.getScript("/js/data-debtor-loan-paymentSchedules.js");
+                $.getScript("/js/data-debtor-loan-paymentSchedules1.js");
 				for(var i in norm){
 					if(norm[i].record_status==1){
 						sumOfPSDisbursement=sumOfPSDisbursement+parseFloat(norm[i].disbursement);
@@ -2152,7 +2170,7 @@
             url: '/supervisorPlanRequest/'+loanId,
             success:function (data) {
                 jsonSPs=data;
-                $.getScript("/js/data-debtor-loan-supervisorPlans.js");
+                $.getScript("/js/data-debtor-loan-supervisorPlans1.js");
             }
         });
     });
@@ -2172,7 +2190,7 @@
             url: '/creditTermRequest/'+loanId,
             success:function (data) {
                 jsonTerms=data;
-                $.getScript("/js/data-debtor-loan-terms.js");
+                $.getScript("/js/data-debtor-loan-terms1.js");
             }
         });
     });

@@ -276,6 +276,24 @@
 														</div>
 													</div>
 												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.createdBy}"></h3>
+															<span th:if="${createdBy}!=null" class="m-widget1__desc m--font-brand" th:text="${createdBy}+' ('+${#dates.format(phase.auCreatedDate,'dd.MM.yyyy HH:mm:ss')}+')'"></span>
+															<span th:unless="${createdBy}!=null" class="m-widget1__desc m--font-brand">-</span>
+														</div>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.modifiedBy}"></h3>
+															<span class="m-widget1__desc m--font-brand" th:if="${modifiedBy}!=null" th:text="${modifiedBy}+' ('+${#dates.format(phase.auLastModifiedDate,'dd.MM.yyyy  HH:mm:ss')}+')'"></span>
+															<span class="m-widget1__desc m--font-brand" th:unless="${modifiedBy}!=null">-</span>
+														</div>
+													</div>
+												</div>
 											</div>
 											<!--begin:: Widgets/Stats2-2 -->
 

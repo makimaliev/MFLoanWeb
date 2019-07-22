@@ -7,7 +7,9 @@ import kg.gov.mf.loan.admin.org.model.Organization;
 import kg.gov.mf.loan.admin.org.model.Person;
 import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.org.service.*;
+import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.InformationService;
+import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collateral.CollateralAgreement;
 import kg.gov.mf.loan.manage.model.collateral.CollateralItem;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
@@ -172,6 +174,9 @@ public class DebtorController {
 	@Autowired
 	LoanSummaryActStateService loanSummaryActStateService;
 
+	@Autowired
+	UserService userService;
+
 	/**
 	 * The entity manager.
 	 */
@@ -257,6 +262,32 @@ public class DebtorController {
 		model.addAttribute("type",debtorTypeService.getById(debtor.getDebtorType().getId()));
 		model.addAttribute("types",debtorTypeService.list());
 
+		String createdByStr=null;
+		String modifiedByStr=null;
+
+		if(debtor.getAuCreatedBy()!=null){
+			if(debtor.getAuCreatedBy().equals("admin")){
+				createdByStr="Система";
+			}
+			else{
+				User createdByUser=userService.findByUsername(debtor.getAuCreatedBy());
+				Staff createdByStaff=createdByUser.getStaff();
+				createdByStr=createdByStaff.getName();
+			}
+		}
+		if(debtor.getAuLastModifiedBy()!=null){
+			if(debtor.getAuLastModifiedBy().equals("admin")){
+				modifiedByStr="Система";
+			}
+			else{
+				User lastModifiedByUser=userService.findByUsername(debtor.getAuLastModifiedBy());
+				Staff lastModifiedByStaff=lastModifiedByUser.getStaff();
+				modifiedByStr=lastModifiedByStaff.getName();
+			}
+		}
+		model.addAttribute("createdBy",createdByStr);
+		model.addAttribute("modifiedBy",modifiedByStr);
+
 		return "/manage/debtor/view";
 	}
 
@@ -313,13 +344,14 @@ public class DebtorController {
 			debtorService.add(debtor);
 		} else {
 			Owner owner = ownerRepository.findOne(debtor.getOwner().getId());
-			debtor.setOwner(owner);
-			debtor.setName(owner.getName());
+			Debtor oldDebtor=debtorService.getById(debtor.getId());
+			oldDebtor.setOwner(owner);
+			oldDebtor.setName(owner.getName());
 			if (owner.getOwnerType().equals(OwnerType.ORGANIZATION))
-				debtor.setOrgForm(formService.getById(1L));
+				oldDebtor.setOrgForm(formService.getById(1L));
 			else
-				debtor.setOrgForm(formService.getById(2L));
-			debtorService.update(debtor);
+				oldDebtor.setOrgForm(formService.getById(2L));
+			debtorService.update(oldDebtor);
 		}
 
 		return "redirect:" + "/manage/debtor/" + debtor.getId() + "/view";

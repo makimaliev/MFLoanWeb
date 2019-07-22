@@ -7,6 +7,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import kg.gov.mf.loan.admin.org.model.Staff;
+import kg.gov.mf.loan.admin.org.service.StaffService;
+import kg.gov.mf.loan.admin.sys.model.User;
+import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.repository.loan.PaymentScheduleRepository;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
@@ -57,6 +61,13 @@ public class PaymentScheduleController {
 
 	@Autowired
 	PaymentScheduleRepository paymentScheduleRepository;
+
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	StaffService staffService;
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -65,6 +76,44 @@ public class PaymentScheduleController {
 	{
 		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
 	    binder.registerCustomEditor(Date.class, editor);
+	}
+
+	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/paymentschedule/{psId}/view", method=RequestMethod.GET)
+	public String view(ModelMap model,
+								 @PathVariable("debtorId")Long debtorId,
+								 @PathVariable("loanId")Long loanId,
+								 @PathVariable("psId")Long psId){
+		PaymentSchedule paymentSchedule=paymentScheduleService.getById(psId);
+
+		model.addAttribute("schedule",paymentSchedule);
+
+		String createdByStr=null;
+		String modifiedByStr=null;
+
+		if(paymentSchedule.getAuCreatedBy()!=null){
+			if(paymentSchedule.getAuCreatedBy().equals("admin")){
+				createdByStr="Система";
+			}
+			else{
+				User createdByUser=userService.findByUsername(paymentSchedule.getAuCreatedBy());
+				Staff createdByStaff=createdByUser.getStaff();
+				createdByStr=createdByStaff.getName();
+			}
+		}
+		if(paymentSchedule.getAuLastModifiedBy()!=null){
+			if(paymentSchedule.getAuLastModifiedBy().equals("admin")){
+				modifiedByStr="Система";
+			}
+			else{
+				User lastModifiedByUser=userService.findByUsername(paymentSchedule.getAuLastModifiedBy());
+				Staff lastModifiedByStaff=lastModifiedByUser.getStaff();
+				modifiedByStr=lastModifiedByStaff.getName();
+			}
+		}
+		model.addAttribute("createdBy",createdByStr);
+		model.addAttribute("modifiedBy",modifiedByStr);
+
+		return "/manage/debtor/loan/paymentschedule/view";
 	}
 	
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/paymentschedule/{psId}/save", method=RequestMethod.GET)

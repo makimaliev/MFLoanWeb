@@ -168,7 +168,15 @@
                                                         <div class="row m-row--no-padding align-items-center">
                                                             <div class="col">
                                                                 <h3 class="m-widget1__title" th:text="#{label.collateralItem.estimatedValue}"></h3>
-                                                                <span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(item.estimatedValue, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                                                                <span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(item.estimatedValue, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="m-widget1__item" th:if="${item.inspection_needed}==false">
+                                                        <div class="row m-row--no-padding align-items-center">
+                                                            <div class="col">
+                                                                <h3 class="m-widget1__title" th:text="#{label.collateralItem.inspectionNeededDesc}"></h3>
+                                                                <span class="m-widget1__desc m--font-brand" th:text="${item.inspection_needed_description}"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -208,6 +216,24 @@
                                                             <div class="col">
                                                                 <h3 class="m-widget1__title" th:text="#{label.collateralItem.arrestBy}"></h3>
                                                                 <span class="m-widget1__desc m--font-brand" th:text="${organizationName}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="m-widget1__item">
+                                                        <div class="row m-row--no-padding align-items-center">
+                                                            <div class="col">
+                                                                <h3 class="m-widget1__title" th:text="#{label.createdBy}"></h3>
+                                                                <span th:if="${createdBy}!=null" class="m-widget1__desc m--font-brand" th:text="${createdBy}+' ('+${#dates.format(item.auCreatedDate,'dd.MM.yyyy HH:mm:ss')}+')'"></span>
+                                                                <span th:unless="${createdBy}!=null" class="m-widget1__desc m--font-brand">-</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="m-widget1__item">
+                                                        <div class="row m-row--no-padding align-items-center">
+                                                            <div class="col">
+                                                                <h3 class="m-widget1__title" th:text="#{label.modifiedBy}"></h3>
+                                                                <span class="m-widget1__desc m--font-brand" th:if="${modifiedBy}!=null" th:text="${modifiedBy}+' ('+${#dates.format(item.auLastModifiedDate,'dd.MM.yyyy  HH:mm:ss')}+')'"></span>
+                                                                <span class="m-widget1__desc m--font-brand" th:unless="${modifiedBy}!=null">-</span>
                                                             </div>
                                                         </div>
                                                     </div>

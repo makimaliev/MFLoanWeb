@@ -2,12 +2,16 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.admin.org.model.Staff;
+import kg.gov.mf.loan.admin.org.service.StaffService;
 import kg.gov.mf.loan.admin.sys.model.Attachment;
 import kg.gov.mf.loan.admin.sys.model.Information;
 import kg.gov.mf.loan.admin.sys.model.SystemFile;
+import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.AttachmentService;
 import kg.gov.mf.loan.admin.sys.service.InformationService;
 import kg.gov.mf.loan.admin.sys.service.SystemFileService;
+import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.repository.loan.LoanGoodsRepository;
 import kg.gov.mf.loan.manage.service.collateral.QuantityTypeService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
@@ -63,6 +67,12 @@ public class LoanGoodsController {
 	@Autowired
 	SystemFileService systemFileService;
 
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	StaffService staffService;
+
 	@RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/loangoods/{lgId}/view", method=RequestMethod.GET)
 	public String view(ModelMap model,
 								 @PathVariable("debtorId")Long debtorId,
@@ -80,6 +90,32 @@ public class LoanGoodsController {
 
 		Attachment attachment=new Attachment();
 		model.addAttribute("attachment",attachment);
+
+		String createdByStr=null;
+		String modifiedByStr=null;
+
+		if(loanGoods.getAuCreatedBy()!=null){
+			if(loanGoods.getAuCreatedBy().equals("admin")){
+				createdByStr="Система";
+			}
+			else{
+				User createdByUser=userService.findByUsername(loanGoods.getAuCreatedBy());
+				Staff createdByStaff=createdByUser.getStaff();
+				createdByStr=createdByStaff.getName();
+			}
+		}
+		if(loanGoods.getAuLastModifiedBy()!=null){
+			if(loanGoods.getAuLastModifiedBy().equals("admin")){
+				modifiedByStr="Система";
+			}
+			else{
+				User lastModifiedByUser=userService.findByUsername(loanGoods.getAuLastModifiedBy());
+				Staff lastModifiedByStaff=lastModifiedByUser.getStaff();
+				modifiedByStr=lastModifiedByStaff.getName();
+			}
+		}
+		model.addAttribute("createdBy",createdByStr);
+		model.addAttribute("modifiedBy",modifiedByStr);
 
 		return "/manage/debtor/loan/loangoods/view";
 	}

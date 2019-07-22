@@ -2,6 +2,7 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.org.service.OrganizationService;
 import kg.gov.mf.loan.admin.org.service.PersonService;
 import kg.gov.mf.loan.admin.sys.model.Attachment;
@@ -128,6 +129,32 @@ public class CollateralAgreementController {
 		Debtor debtor = debtorService.getById(debtorId);
 		model.addAttribute("debtorId", debtorId);
 		model.addAttribute("debtor", debtor);
+
+		String createdByStr=null;
+		String modifiedByStr=null;
+
+		if(agreement.getAuCreatedBy()!=null){
+			if(agreement.getAuCreatedBy().equals("admin")){
+				createdByStr="Система";
+			}
+			else{
+				User createdByUser=userService.findByUsername(agreement.getAuCreatedBy());
+				Staff createdByStaff=createdByUser.getStaff();
+				createdByStr=createdByStaff.getName();
+			}
+		}
+		if(agreement.getAuLastModifiedBy()!=null){
+			if(agreement.getAuLastModifiedBy().equals("admin")){
+				modifiedByStr="Система";
+			}
+			else{
+				User lastModifiedByUser=userService.findByUsername(agreement.getAuLastModifiedBy());
+				Staff lastModifiedByStaff=lastModifiedByUser.getStaff();
+				modifiedByStr=lastModifiedByStaff.getName();
+			}
+		}
+		model.addAttribute("createdBy",createdByStr);
+		model.addAttribute("modifiedBy",modifiedByStr);
 		
 		return "/manage/debtor/collateralagreement/view";
 		

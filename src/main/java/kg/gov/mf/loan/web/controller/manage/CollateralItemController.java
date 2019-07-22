@@ -172,6 +172,32 @@ public class CollateralItemController {
 
 		}
 
+		String createdByStr=null;
+		String modifiedByStr=null;
+
+		if(tItem.getAuCreatedBy()!=null){
+			if(tItem.getAuCreatedBy().equals("admin")){
+				createdByStr="Система";
+			}
+			else{
+				User createdByUser=userService.findByUsername(tItem.getAuCreatedBy());
+				Staff createdByStaff=createdByUser.getStaff();
+				createdByStr=createdByStaff.getName();
+			}
+		}
+		if(tItem.getAuLastModifiedBy()!=null){
+			if(tItem.getAuLastModifiedBy().equals("admin")){
+				modifiedByStr="Система";
+			}
+			else{
+				User lastModifiedByUser=userService.findByUsername(tItem.getAuLastModifiedBy());
+				Staff lastModifiedByStaff=lastModifiedByUser.getStaff();
+				modifiedByStr=lastModifiedByStaff.getName();
+			}
+		}
+		model.addAttribute("createdBy",createdByStr);
+		model.addAttribute("modifiedBy",modifiedByStr);
+
 		model.addAttribute("ownerName",ownerName);
         model.addAttribute("organizationName",organizationName);
 

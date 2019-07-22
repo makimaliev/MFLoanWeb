@@ -33,8 +33,10 @@ import kg.gov.mf.loan.manage.service.loan.PaymentService;
 import kg.gov.mf.loan.manage.service.orderterm.CurrencyRateService;
 import kg.gov.mf.loan.manage.service.process.LoanDetailedSummaryService;
 import kg.gov.mf.loan.manage.service.process.LoanSummaryService;
+import kg.gov.mf.loan.output.report.model.CollectionPhaseView;
 import kg.gov.mf.loan.output.report.model.LoanView;
 import kg.gov.mf.loan.output.report.model.ReferenceView;
+import kg.gov.mf.loan.output.report.service.CollectionPhaseViewService;
 import kg.gov.mf.loan.output.report.service.ReferenceViewService;
 import kg.gov.mf.loan.output.report.utils.CalculationTool;
 import kg.gov.mf.loan.process.service.JobItemService;
@@ -168,6 +170,9 @@ public class CollectionPhaseController {
 	@Autowired
 	PaymentService paymentService;
 
+	@Autowired
+	CollectionPhaseViewService collectionPhaseViewService;
+
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -213,6 +218,31 @@ public class CollectionPhaseController {
 
 		String jsonFiles = gson.toJson(getSystemFilesByItemId(phaseId));
 		model.addAttribute("files", jsonFiles);
+
+        String createdByStr=null;
+        String modifiedByStr=null;
+        if(phase.getAuCreatedBy()!=null){
+            if(phase.getAuCreatedBy().equals("admin")){
+                createdByStr="Система";
+            }
+            else{
+                User createdByUser=userService.findByUsername(phase.getAuCreatedBy());
+                Staff createdByStaff=createdByUser.getStaff();
+                createdByStr=createdByStaff.getName();
+            }
+        }
+        if(phase.getAuLastModifiedBy()!=null){
+            if(phase.getAuLastModifiedBy().equals("admin")){
+               modifiedByStr="Система";
+            }
+            else{
+                User lastModifiedByUser=userService.findByUsername(phase.getAuLastModifiedBy());
+                Staff lastModifiedByStaff=lastModifiedByUser.getStaff();
+                modifiedByStr=lastModifiedByStaff.getName();
+            }
+        }
+        model.addAttribute("createdBy",createdByStr);
+        model.addAttribute("modifiedBy",modifiedByStr);
 
 		return "/manage/debtor/collectionprocedure/collectionphase/view";
 
@@ -266,7 +296,6 @@ public class CollectionPhaseController {
 
         List<PhaseDetailsModel> result = new ArrayList<>();
         List<String> listOfLoans= Arrays.asList(selectedLoans.split("[^0-9.]"));
-        CollectionPhase phase=phaseService.getById(id);
         for (String value:listOfLoans) {
         	if (value.length()!=0){
 				LoanModel1 loan=getLoanIdAndRegNumber(Long.parseLong(value));
@@ -1550,8 +1579,13 @@ public class CollectionPhaseController {
     public String getPhaseEvents(Model model,@PathVariable("id") Long id){
 
         CollectionPhase phase=collectionPhaseService.getById(id);
+        CollectionProcedure procedure=procService.getById(phase.getCollectionProcedure().getId());
         Set<CollectionEvent> events=phase.getCollectionEvents();
+		CollectionPhaseView collectionPhaseView=collectionPhaseViewService.findById(procedure.getId());
 
+
+		model.addAttribute("debtorId",collectionPhaseView.getV_debtor_id());
+		model.addAttribute("procId",procedure.getId());
         model.addAttribute("id",phase.getId());
         model.addAttribute("events",events);
 
