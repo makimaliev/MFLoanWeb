@@ -224,7 +224,7 @@ public class PaymentController {
                 OrderTermCurrency orderTermCurrency = loan.getCurrency();
                 SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
 
-                String currencyQuery = "select c.id,c.rate,c.date,c.status,c.type_id,c.currency_type_id from currency_rate c where currency_type_id=" + orderTermCurrency.getId() + " and date<='" + dt.format(payment.getPaymentDate()) + "' order by date desc";
+                String currencyQuery = "select c.* from currency_rate c where currency_type_id=" + orderTermCurrency.getId() + " and date<='" + dt.format(payment.getPaymentDate()) + "' order by date desc";
                 Query query = entityManager.createNativeQuery(currencyQuery, CurrencyRate.class);
                 query.setMaxResults(1);
                 CurrencyRate currencyRate = (CurrencyRate) query.getSingleResult();
