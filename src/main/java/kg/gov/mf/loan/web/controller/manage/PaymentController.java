@@ -28,6 +28,7 @@ import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.manage.service.loan.PaymentService;
 import kg.gov.mf.loan.manage.service.loan.PaymentTypeService;
 import kg.gov.mf.loan.process.service.JobItemService;
+import kg.gov.mf.loan.web.fetchModels.PaymentAuditModel;
 import kg.gov.mf.loan.web.fetchModels.SimplePhaseDetailsModel;
 import kg.gov.mf.loan.web.fetchModels.SystemFileModel;
 import kg.gov.mf.loan.web.util.Utils;
@@ -161,6 +162,9 @@ public class PaymentController {
         }
         model.addAttribute("createdBy",createdByStr);
         model.addAttribute("modifiedBy",modifiedByStr);
+
+        String jsonHistory=gson.toJson(historyOfPayment(paymentId));
+        model.addAttribute("jsonHistory",jsonHistory);
 
         Attachment attachment=new Attachment();
         model.addAttribute("attachment",attachment);
@@ -573,4 +577,15 @@ public class PaymentController {
             phaseDetailsService.update(phaseDetails);
         }
     }
+
+    //    get audited history of payment
+    private List<PaymentAuditModel> historyOfPayment(Long paymentId){
+
+        String getPayments="select p.*,pT.name,s.name as staffName,uR.timestamp as date\n" +
+                "from payment_AUD p,paymentType pT,user_revisions uR,users u,staff s where p.paymentTypeId=pT.id and u.username=uR.username and u.staff_id=s.id and uR.id=p.REV and p.id="+paymentId;
+        Query query=entityManager.createNativeQuery(getPayments,PaymentAuditModel.class);
+
+        return (List<PaymentAuditModel>) query.getResultList();
+    }
+
 }

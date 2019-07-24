@@ -7,6 +7,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.org.service.StaffService;
 import kg.gov.mf.loan.admin.sys.model.User;
@@ -14,6 +16,8 @@ import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.repository.loan.PaymentScheduleRepository;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
+import kg.gov.mf.loan.web.fetchModels.PaymentAuditModel;
+import kg.gov.mf.loan.web.fetchModels.PaymentScheduleAuditModel;
 import kg.gov.mf.loan.web.util.Pager;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -110,6 +114,11 @@ public class PaymentScheduleController {
 				modifiedByStr=lastModifiedByStaff.getName();
 			}
 		}
+
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String jsonHistory= gson.toJson(historyOfPayment(psId));
+        model.addAttribute("jsonHistory", jsonHistory);
+
 		model.addAttribute("createdBy",createdByStr);
 		model.addAttribute("modifiedBy",modifiedByStr);
 
@@ -364,5 +373,16 @@ public class PaymentScheduleController {
 			loan.setLastDate(maxDate);
 			loanService.update(loan);
 		}
+	}
+
+	//    get audited history of paymentSchedule
+	private List<PaymentScheduleAuditModel> historyOfPayment(Long sheduleId){
+
+		String getPaymentSchedules="select p.*,p.REVTYPE,iSt.name as installmentStateName,s.name as staffName,uR.timestamp as date\n" +
+                "from paymentSchedule_AUD p,installmentState iSt,user_revisions uR,users u,staff s " +
+                "where p.installmentStateId=iSt.id and u.username=uR.username and u.staff_id=s.id and uR.id=p.REV and p.id="+sheduleId;
+		Query query=entityManager.createNativeQuery(getPaymentSchedules,PaymentScheduleAuditModel.class);
+
+		return query.getResultList();
 	}
 }

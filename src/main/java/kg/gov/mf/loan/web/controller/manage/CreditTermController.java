@@ -1,5 +1,7 @@
 package kg.gov.mf.loan.web.controller.manage;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.admin.org.service.StaffService;
 import kg.gov.mf.loan.admin.sys.model.User;
@@ -18,6 +20,8 @@ import kg.gov.mf.loan.manage.service.orderterm.OrderTermDaysMethodService;
 import kg.gov.mf.loan.manage.service.orderterm.OrderTermFloatingRateTypeService;
 import kg.gov.mf.loan.manage.service.orderterm.OrderTermRatePeriodService;
 import kg.gov.mf.loan.manage.service.orderterm.OrderTermTransactionOrderService;
+import kg.gov.mf.loan.web.fetchModels.CreditTermAuditModel;
+import kg.gov.mf.loan.web.fetchModels.PaymentScheduleAuditModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -28,6 +32,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -39,7 +46,7 @@ public class CreditTermController {
 	LoanService loanService;
 	
 	@Autowired
-	CreditTermService termService;	
+	CreditTermService termService;
 	
 	@Autowired
 	OrderTermRatePeriodService ratePeriodService;
@@ -70,6 +77,9 @@ public class CreditTermController {
 
 	@Autowired
 	StaffService staffService;
+
+	@PersistenceContext
+	EntityManager entityManager;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -109,6 +119,11 @@ public class CreditTermController {
 				modifiedByStr=lastModifiedByStaff.getName();
 			}
 		}
+
+		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+		String jsonHistory= gson.toJson(historyOfTerms(termId));
+		model.addAttribute("jsonHistory", jsonHistory);
+
 		model.addAttribute("createdBy",createdByStr);
 		model.addAttribute("modifiedBy",modifiedByStr);
 
@@ -180,9 +195,9 @@ public class CreditTermController {
 		term.setLoan(loan);
 		
 		if(term.getId() == 0)
-			termService.add(term);
+			termRepository.save(term);
 		else
-			termService.update(term);
+			termRepository.save(term);
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
 	}
@@ -193,5 +208,28 @@ public class CreditTermController {
             termRepository.delete(termRepository.findOne(termId));
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
-	
+
+	//    get audited history of creditTerm
+	private List<CreditTermAuditModel> historyOfTerms(Long termId){
+
+		String getCreditTerms="select c.*,s.name as staffName,uR.timestamp as date,null as daysInMonthMethodName,null as daysInYearMethodName,\n" +
+				"       null as floatingRateTypeName, null as penaltyOnInterestOverdueRateTypeName,\n" +
+				"       null as penaltyOnPrincipleOverdueRateTypeName,null as ratePeriodName,null as transactionOrderName\n" +
+				"from creditTerm_AUD c,user_revisions uR,users u,staff s\n" +
+				"where\n" +
+				"  u.username=uR.username and u.staff_id=s.id and uR.id=c.REV AND c.id="+termId;
+		Query query=entityManager.createNativeQuery(getCreditTerms,CreditTermAuditModel.class);
+		List<CreditTermAuditModel> result=query.getResultList();
+		for (CreditTermAuditModel model:result){
+			model.setDaysInMonthMethodName(daysMethodService.getById(model.getDaysInMonthMethodId()).getName());
+			model.setDaysInYearMethodName(daysMethodService.getById(model.getDaysInYearMethodId()).getName());
+			model.setFloatingRateTypeName(orderTermFloatingRateTypeService.getById(model.getFloatingRateTypeId()).getName());
+			model.setPenaltyOnInterestOverdueRateTypeName(orderTermFloatingRateTypeService.getById(model.getPenaltyOnInterestOverdueRateTypeId()).getName());
+			model.setPenaltyOnPrincipleOverdueRateTypeName(orderTermFloatingRateTypeService.getById(model.getPenaltyOnPrincipleOverdueRateTypeId()).getName());
+			model.setRatePeriodName(ratePeriodService.getById(model.getRatePeriodId()).getName());
+			model.setTransactionOrderName(txOrderService.getById(model.getTransactionOrderId()).getName());
+		}
+
+		return result;
+	}
 }
