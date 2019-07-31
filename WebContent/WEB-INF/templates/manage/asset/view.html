@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<!-- begin::Head -->
+<head>
+    <title th:text="#{label.asset}"></title>
+
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<!-- end::Head -->
+
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <!-- BEGIN: Subheader -->
+            <div class="m-subheader ">
+                <div class="d-flex align-items-center">
+                    <div class="mr-auto">
+                        <h3 class="m-subheader__title m-subheader__title--separator">
+                            Договор залога
+                        </h3>
+                        <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+                            <li class="m-nav__item m-nav__item--home">
+                                <a th:href="@{/}" class="m-nav__link m-nav__link--icon">
+                                    <i class="m-nav__link-icon la la-home"></i>
+                                </a>
+                            </li>
+                            <li class="m-nav__separator">
+                                -
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- END: Subheader -->
+            <div class="m-content">
+                <!--begin::Portlet-->
+
+                <div class="m-content">
+                    <!--begin::Portlet-->
+                    <div class="m-portlet m-portlet--full-height">
+                        <div class="m-portlet__head">
+                            <div class="m-portlet__head-caption">
+                                <div class="m-portlet__head-title">
+                                    <h3 class="m-portlet__head-text" th:text="${asset.number}"></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end::Portlet-->
+                    <!--begin::Portlet-->
+                    <div class="m-portlet m-portlet--mobile">
+                        <div class="m-portlet__body ">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link m--font-primary active" data-toggle="tab" href="#main" th:text="#{label.loan.credit}"></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a id="itemsFunction" class="nav-link m--font-primary" data-toggle="tab" href="#items" th:text="#{label.asset.items}"></a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="main" role="tabpanel">
+                                    <div sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_ASSET')" class="col-xl-12 order-3 order-xl-3 m--align-right">
+                                        <div >
+                                            <div>
+                                                <a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_ASSET')" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+                                                   th:href="@{/asset/__${asset.id}__/save}"
+                                                   data-toggle="modal"
+                                                   data-target="#assetForm"><span th:text="#{label.table.edit}"></span>
+                                                    <i class="la la-plus"></i></span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row m-row--no-padding m-row--col-separator-xl">
+                                        <div class="col-md-12 col-lg-12 col-xl-4">
+                                            <!--begin:: Widgets/Stats2-3 -->
+                                            <div class="m-widget1">
+                                                <div class="m-widget1__item">
+                                                    <div class="row m-row--no-padding align-items-center">
+                                                        <div class="col">
+                                                            <h3 class="m-widget1__title" th:text="#{label.asset.number}"></h3>
+                                                            <span class="m-widget1__desc m--font-brand" th:text="${asset.number}"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="m-widget1__item">
+                                                    <div class="row m-row--no-padding align-items-center">
+                                                        <div class="col">
+                                                            <h3 class="m-widget1__title" th:text="#{label.asset.name}"></h3>
+                                                            <span class="m-widget1__desc m--font-brand" th:text="${asset.name}"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="m-widget1__item">
+                                                    <div class="row m-row--no-padding align-items-center">
+                                                        <div class="col">
+                                                            <h3 class="m-widget1__title" th:text="#{label.asset.amount1}"></h3>
+                                                            <span class="m-widget1__desc m--font-brand" th:text="${asset.amount1}"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="m-widget1__item">
+                                                    <div class="row m-row--no-padding align-items-center">
+                                                        <div class="col">
+                                                            <h3 class="m-widget1__title" th:text="#{label.asset.amount2}"></h3>
+                                                            <span class="m-widget1__desc m--font-brand" th:text="${asset.amount2}"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="m-widget1__item">
+                                                    <div class="row m-row--no-padding align-items-center">
+                                                        <div class="col">
+                                                            <h3 class="m-widget1__title" th:text="#{label.asset.amount3}"></h3>
+                                                            <span class="m-widget1__desc m--font-brand" th:text="${asset.amount3}"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="m-widget1__item">
+                                                    <div class="row m-row--no-padding align-items-center">
+                                                        <div class="col">
+                                                            <h3 class="m-widget1__title" th:text="#{label.date}"></h3>
+                                                            <span class="m-widget1__desc m--font-brand" th:text="${#dates.format(asset.date,'dd.MM.yyyy')}"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--begin:: Widgets/Stats2-3 -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="items" class="tab-pane"  role="tabpanel">
+                                    <!--begin: Search Form -->
+                                    <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                                        <div class="row align-items-center">
+                                            <div class="col-xl-9 order-1 order-xl-1">
+                                                <div class="form-group m-form__group row align-items-center">
+                                                    <div class="col-lg-6">
+                                                        <div class="m-input-icon m-input-icon--left">
+                                                            <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search1">
+                                                            <span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xl-3 order-3 order-xl-3 m--align-right">
+                                                <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_ASSETITEM')" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+                                                   th:href="@{/asset/__${asset.id}__/assetItem/0/save}"
+                                                   data-toggle="modal"
+                                                   data-target="#assetItemForm"><span th:text="#{label.assetItem.add}"></span>
+                                                    <i class="la la-edit"></i></span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--end: Search Form -->
+                                    <!--begin: Datatable -->
+                                    <div class="m_datatable" id="assetItemTable"></div>
+                                    <!--end: Datatable -->
+                                </div>
+                            </div>
+                            <!--begin::Modal-->
+                            <div class="modal fade" id="assetForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="assetItemForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end::Modal-->
+                        </div>
+                    </div>
+                </div>
+                <!--end::Portlet-->
+
+            </div>
+        </div>
+    </div>
+    <!-- end:: Body -->
+    <!-- begin::Footer -->
+    <div th:replace="layout/footer"/>
+    <!-- end::Footer -->
+</div>
+<!-- end:: Page -->
+
+<div th:replace="fragments/footer :: footer-js"/>
+
+<!--begin::Page Resources -->
+<!--end::Page Resources -->
+
+<div th:with="isAdmin = ${#authorization.expression('hasRole(''ADMIN'')')}">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var hasRoleAdmin = /*[[${isAdmin}]]*/ [];
+        var assetId=[[${assetId}]];
+        /*]]>*/
+        $("#itemsFunction").on('click',function () {
+            $.ajax({
+                type:'post',
+                url: '/api/assetItems/'+assetId,
+                success:function (data) {
+                    jsonItems=data;
+                    var DatatableDataLocalItems = function () {
+                        //== Private functions
+
+                        // demo initializer
+                        var mainTableInit = function () {
+
+                            var dataJSONArray = JSON.parse(jsonItems);
+
+                            var datatable = $('#assetItemTable').mDatatable({
+                                // datasource definition
+                                data: {
+                                    type: 'local',
+                                    source: dataJSONArray
+                                },
+
+                                // layout definition
+                                layout: {
+                                    theme: 'default', // datatable theme
+                                    class: '', // custom wrapper class
+                                    scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+                                    height: 450, // datatable's body's fixed height
+                                    footer: false // display/hide footer
+                                },
+
+                                // column sorting(refer to Kendo UI)
+                                sortable: false,
+
+                                // column based filtering(refer to Kendo UI)
+                                filterable: false,
+
+                                pagination: true,
+
+                                // inline and bactch editing(cooming soon)
+                                // editable: false,
+
+                                // columns definition
+                                columns: [{
+                                    field: "id",
+                                    title: "#",
+                                    template: function (row) {
+                                        return '\
+									<a href="/asset/'+ assetId+ '/assetItem/' + row.id + '/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
+								';
+                                    }
+                                }, {
+                                    field: "name",
+                                    title: "Название"
+                                }],
+                                translate: {
+                                    records: {
+                                        processing: 'Подождите пожалуйста...',
+                                        noRecords: 'Записей не найдено'
+                                    },
+                                    toolbar: {
+                                        pagination: {
+                                            items: {
+                                                default: {
+                                                    first: 'Первая страница',
+                                                    prev: 'Предыдущая страница',
+                                                    next: 'Следующая страница',
+                                                    last: 'Последняя страница',
+                                                    more: 'Другие страницы',
+                                                    input: 'Номер страницы',
+                                                    select: 'Выбрать размер страницы'
+                                                },
+                                                info: 'Отображение {{start}} - {{end}} из {{total}} записей'
+                                            }
+                                        }
+                                    }
+                                },
+
+                                toolbar: {
+                                    items: {
+                                        // pagination
+                                        pagination: {
+                                            // page size select
+                                            pageSizeSelect: [5, 10, 20, 50, 100]
+                                        }
+                                    }
+                                }
+                            });
+
+                            var query = datatable.getDataSourceQuery();
+
+                            $('#m_form_searchg').on('keyup', function (e) {
+                                datatable.search($(this).val().toLowerCase());
+                            }).val(query.generalSearch);
+                        };
+
+                        return {
+                            //== Public functions
+                            init: function () {
+                                // init dmeo
+                                mainTableInit();
+                            }
+                        };
+                    }();
+
+                    jQuery(document).ready(function () {
+                        DatatableDataLocalItems.init();
+                    });
+                }
+            });
+
+
+
+        });
+    </script>
+</div>
+
+<script th:inline="javascript">
+    $("#assetForm").on("show.bs.modal", function(e)
+    {
+        var link = $(e.relatedTarget);
+        $(this).find(".modal-content").load(link.attr("href"));
+    });
+    $("#assetItemForm").on("show.bs.modal", function(e)
+    {
+        var link = $(e.relatedTarget);
+        $(this).find(".modal-content").load(link.attr("href"));
+    });
+</script>
+</body>
+<!-- end::Body -->
+</html>
