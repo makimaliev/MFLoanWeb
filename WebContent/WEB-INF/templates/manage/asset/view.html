@@ -67,6 +67,12 @@
                                 <li class="nav-item">
                                     <a id="itemsFunction" class="nav-link m--font-primary" data-toggle="tab" href="#items" th:text="#{label.asset.items}"></a>
                                 </li>
+                                <li class="nav-item">
+                                    <a id="expensesFunction" class="nav-link m--font-primary" data-toggle="tab" href="#expenses" th:text="#{label.asset.expenses}"></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a id="paymentsFunction" class="nav-link m--font-primary" data-toggle="tab" href="#payments" th:text="#{label.asset.payments}"></a>
+                                </li>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane active" id="main" role="tabpanel">
@@ -76,7 +82,7 @@
                                                 <a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_ASSET')" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
                                                    th:href="@{/asset/__${asset.id}__/save}"
                                                    data-toggle="modal"
-                                                   data-target="#assetForm"><span th:text="#{label.table.edit}"></span>
+                                                   data-target="#addForm"><span th:text="#{label.table.edit}"></span>
                                                     <i class="la la-plus"></i></span>
                                                 </a>
                                             </div>
@@ -162,8 +168,8 @@
                                                 <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_ASSETITEM')" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
                                                    th:href="@{/asset/__${asset.id}__/assetItem/0/save}"
                                                    data-toggle="modal"
-                                                   data-target="#assetItemForm"><span th:text="#{label.assetItem.add}"></span>
-                                                    <i class="la la-edit"></i></span>
+                                                   data-target="#addForm"><span th:text="#{label.assetItem.add}"></span>
+                                                    <i class="la la-plus-circle"></i></span>
                                                 </a>
                                             </div>
                                         </div>
@@ -173,15 +179,77 @@
                                     <div class="m_datatable" id="assetItemTable"></div>
                                     <!--end: Datatable -->
                                 </div>
-                            </div>
-                            <!--begin::Modal-->
-                            <div class="modal fade" id="assetForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
+                                <div id="expenses" class="tab-pane"  role="tabpanel">
+                                    <!--begin: Search Form -->
+                                    <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                                        <div class="row align-items-center">
+                                            <div class="col-xl-9 order-1 order-xl-1">
+                                                <div class="form-group m-form__group row align-items-center">
+                                                    <div class="col-lg-6">
+                                                        <div class="m-input-icon m-input-icon--left">
+                                                            <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="search_expense">
+                                                            <span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xl-3 order-3 order-xl-3 m--align-right">
+                                                <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_ASSETEXPENSE')" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+                                                   th:href="@{/asset/__${asset.id}__/assetExpense/0/save}"
+                                                   data-toggle="modal"
+                                                   data-target="#addForm"><span th:text="#{label.assetExpense.add}"></span>
+                                                    <i class="la la-plus-circle"></i></span>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <!--end: Search Form -->
+                                    <!--begin: Datatable -->
+                                    <div class="m_datatable" id="assetExpenseTable"></div>
+                                    <!--end: Datatable -->
+                                </div>
+                                <div id="payments" class="tab-pane"  role="tabpanel">
+                                    <!--begin: Search Form -->
+                                    <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                                        <div class="row align-items-center">
+                                            <div class="col-xl-9 order-1 order-xl-1">
+                                                <div class="form-group m-form__group row align-items-center">
+                                                    <div class="col-lg-6">
+                                                        <div class="m-input-icon m-input-icon--left">
+                                                            <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="search_toLoans">
+                                                            <span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xl-3 order-3 order-xl-3 m--align-right">
+                                                <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_ASSETPAYMENT')" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+                                                   th:href="@{/asset/__${asset.id}__/payment/add}"
+                                                   data-toggle="modal"
+                                                   data-target="#addForm"><span th:text="#{label.assetPayment.add}"></span>
+                                                    <i class="la la-plus-circle"></i></span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--end: Search Form -->
+                                    <!--begin: Datatable -->
+                                    <div class="m_datatable" id="assetPaymentTable"></div>
+                                    <!--end: Datatable -->
                                 </div>
                             </div>
-                            <div class="modal fade" id="assetItemForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <!--begin::Modal-->
+                            <div class="modal fade" id="addForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg" role="document">
                                     <div class="modal-content">
                                     </div>
@@ -323,20 +391,131 @@
                     });
                 }
             });
+        });
+        $("#expensesFunction").on('click',function () {
+            $.ajax({
+                type:'post',
+                url: '/api/assetExpenses/'+assetId,
+                success:function (data) {
+                    jsonExpenses=data;
+                    var DatatableDataLocalExpenses= function () {
+                        //== Private functions
 
+                        // demo initializer
+                        var mainTableInit = function () {
 
+                            var dataJSONArray = JSON.parse(jsonExpenses);
 
+                            var datatable = $('#assetExpenseTable').mDatatable({
+                                // datasource definition
+                                data: {
+                                    type: 'local',
+                                    source: dataJSONArray
+                                },
+
+                                // layout definition
+                                layout: {
+                                    theme: 'default', // datatable theme
+                                    class: '', // custom wrapper class
+                                    scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+                                    height: 450, // datatable's body's fixed height
+                                    footer: false // display/hide footer
+                                },
+
+                                // column sorting(refer to Kendo UI)
+                                sortable: false,
+
+                                // column based filtering(refer to Kendo UI)
+                                filterable: false,
+
+                                pagination: true,
+
+                                // inline and bactch editing(cooming soon)
+                                // editable: false,
+
+                                // columns definition
+                                columns: [
+                                    {
+                                        field: "amount",
+                                        title: "Стоимость"
+                                    }, {
+                                        field: "details",
+                                        title: "Примечание"
+                                    }, {
+                                        field: "onDate",
+                                        title: "Дата"
+                                    }],
+                                translate: {
+                                    records: {
+                                        processing: 'Подождите пожалуйста...',
+                                        noRecords: 'Записей не найдено'
+                                    },
+                                    toolbar: {
+                                        pagination: {
+                                            items: {
+                                                default: {
+                                                    first: 'Первая страница',
+                                                    prev: 'Предыдущая страница',
+                                                    next: 'Следующая страница',
+                                                    last: 'Последняя страница',
+                                                    more: 'Другие страницы',
+                                                    input: 'Номер страницы',
+                                                    select: 'Выбрать размер страницы'
+                                                },
+                                                info: 'Отображение {{start}} - {{end}} из {{total}} записей'
+                                            }
+                                        }
+                                    }
+                                },
+
+                                toolbar: {
+                                    items: {
+                                        // pagination
+                                        pagination: {
+                                            // page size select
+                                            pageSizeSelect: [5, 10, 20, 50, 100]
+                                        }
+                                    }
+                                }
+                            });
+
+                            var query = datatable.getDataSourceQuery();
+
+                            $('#search_expense').on('keyup', function (e) {
+                                datatable.search($(this).val().toLowerCase());
+                            }).val(query.generalSearch);
+                        };
+
+                        return {
+                            //== Public functions
+                            init: function () {
+                                // init dmeo
+                                mainTableInit();
+                            }
+                        };
+                    }();
+
+                    jQuery(document).ready(function () {
+                        DatatableDataLocalExpenses.init();
+                    });
+                }
+            });
+        });
+        $("#paymentsFunction").on('click',function () {
+            $.ajax({
+                type:'post',
+                url: '/asset/assetPayments/'+assetId,
+                success:function (data) {
+                    jsonPayments=data;
+                    $.getScript("/js/data-debtor-loan-payments.js");
+                }
+            });
         });
     </script>
 </div>
 
 <script th:inline="javascript">
-    $("#assetForm").on("show.bs.modal", function(e)
-    {
-        var link = $(e.relatedTarget);
-        $(this).find(".modal-content").load(link.attr("href"));
-    });
-    $("#assetItemForm").on("show.bs.modal", function(e)
+    $("#addForm").on("show.bs.modal", function(e)
     {
         var link = $(e.relatedTarget);
         $(this).find(".modal-content").load(link.attr("href"));

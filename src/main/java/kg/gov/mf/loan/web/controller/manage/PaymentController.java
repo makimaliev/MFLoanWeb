@@ -11,6 +11,7 @@ import kg.gov.mf.loan.admin.sys.service.AttachmentService;
 import kg.gov.mf.loan.admin.sys.service.InformationService;
 import kg.gov.mf.loan.admin.sys.service.SystemFileService;
 import kg.gov.mf.loan.admin.sys.service.UserService;
+import kg.gov.mf.loan.manage.model.asset.Asset;
 import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
 import kg.gov.mf.loan.manage.model.collection.PhaseDetails;
 import kg.gov.mf.loan.manage.model.debtor.Debtor;
@@ -28,6 +29,7 @@ import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.manage.service.loan.PaymentService;
 import kg.gov.mf.loan.manage.service.loan.PaymentTypeService;
 import kg.gov.mf.loan.process.service.JobItemService;
+import kg.gov.mf.loan.web.controller.doc.dto.SearchResult;
 import kg.gov.mf.loan.web.fetchModels.PaymentAuditModel;
 import kg.gov.mf.loan.web.fetchModels.SimplePhaseDetailsModel;
 import kg.gov.mf.loan.web.fetchModels.SystemFileModel;
@@ -41,10 +43,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -586,6 +585,40 @@ public class PaymentController {
         Query query=entityManager.createNativeQuery(getPayments,PaymentAuditModel.class);
 
         return (List<PaymentAuditModel>) query.getResultList();
+    }
+
+    //******************************************************************************************************************
+    //Rest Requests
+    //******************************************************************************************************************
+
+    @GetMapping("/api/payments/search")
+    @ResponseBody
+    public List<SearchResult> apiGetPaymentsByDate(@RequestParam(value="name",required = false) String date, @RequestParam(value="loans")String loans) {
+
+        List<SearchResult> result = new ArrayList<>();
+
+        String[] splittedLoanIds=loans.split(",");
+        String loanIds="";
+        for (String splittedId:splittedLoanIds){
+            if (!splittedId.equals("") ){
+                if(loanIds.equals("")){
+                    loanIds=splittedId;
+                }
+                else{
+                    loanIds=loanIds+","+splittedId;
+                }
+            }
+        }
+
+        String searchQuery="select *\n" +
+                "from payment where paymentDate like '%"+date+"%' and loanId in ("+loanIds+") limit 5";
+        Query query=entityManager.createNativeQuery(searchQuery,Payment.class);
+        List<Payment> payments= query.getResultList();
+        for (Payment payment:payments) {
+            result.add(new SearchResult(payment.getId(),String.valueOf(payment.getPaymentDate())));
+        }
+
+        return result;
     }
 
 }

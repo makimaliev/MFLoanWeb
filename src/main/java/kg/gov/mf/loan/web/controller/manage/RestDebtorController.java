@@ -6,6 +6,7 @@ import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.repository.debtor.DebtorRepository;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
+import kg.gov.mf.loan.web.controller.doc.dto.SearchResult;
 import kg.gov.mf.loan.web.exception.ResourceNotFoundExcption;
 import kg.gov.mf.loan.web.fetchModels.DebtorMetaModel;
 import kg.gov.mf.loan.web.fetchModels.DebtorModel;
@@ -23,6 +24,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.validation.Valid;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -263,5 +265,23 @@ public class RestDebtorController {
 
 		debtorRepository.delete(debtor);
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/debtors/search")
+	public List<SearchResult> getDebtorsByName(@RequestParam(value="name",required = false) String name ) {
+
+        List<SearchResult> result = new ArrayList<>();
+
+		String searchQuery="select *\n" +
+				"from debtor where name like '%"+name+"%' limit 5";
+		Query query=entityManager.createNativeQuery(searchQuery,Debtor.class);
+		List<Debtor> debtors= query.getResultList();
+		String[] strDebtors= new String[debtors.size()];
+		int i = 0;
+		for (Debtor debtor:debtors) {
+			result.add(new SearchResult(debtor.getId(),debtor.getName()));
+		}
+
+		return result;
 	}
 }
