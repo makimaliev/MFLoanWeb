@@ -1,0 +1,35 @@
+<div class="form-group m-form__group row">
+    <label class="col-form-label col-lg-2 col-sm-12">
+        <span th:text="#{label.loan}"></span>
+        <span class="m--font-danger">*</span>
+    </label>
+    <div class="col-lg-10 col-md-9 col-sm-12">
+        <!--<select id="loanPicker" class="form-control" th:field="*{fromLoanIds}" multiple="multiple" style="width: 100%" data-ajax&#45;&#45;url="/api/search/loans">
+            <option th:each="r : *{fromLoanIds}"
+                    th:text="${@loanService.getById(__${r}__).regNumber}"
+                    th:value="${r}"></option>
+        </select>-->
+        <select id="loanPicker" class="form-control m-bootstrap-select m_selectpicker" th:field="${asset.fromLoanIds}" multiple="multiple" th:title="#{label.select}">
+            <option th:each="loan : ${loans}" th:value="${loan.id}" th:text="${loan.regNumber}" ></option>
+        </select>
+    </div>
+    <script>
+        $("#loanPicker").selectpicker();
+        var strSelectedLoans='';
+        var selectedLoans=$("#loanPicker").val();
+        loanSelectFunction();
+
+        function loanSelectFunction(){
+            selectedLoans=$("#loanPicker").val();
+            strSelectedLoans="";
+            for (var i = 0; i < selectedLoans.length; i++) {
+                if(strSelectedLoans==""){
+                    strSelectedLoans=+selectedLoans[i];
+                }
+                else{
+                    strSelectedLoans=strSelectedLoans+','+selectedLoans[i];
+                }
+            }
+        }
+    </script>
+</div>

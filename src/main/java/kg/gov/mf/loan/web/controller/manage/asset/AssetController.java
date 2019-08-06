@@ -6,12 +6,15 @@ import kg.gov.mf.loan.manage.model.asset.Asset;
 import kg.gov.mf.loan.manage.model.asset.AssetItem;
 import kg.gov.mf.loan.manage.model.asset.AssetStatus;
 import kg.gov.mf.loan.manage.model.asset.AssetType;
+import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.model.loan.Payment;
+import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.service.asset.AssetItemService;
 import kg.gov.mf.loan.manage.service.asset.AssetService;
 import kg.gov.mf.loan.manage.service.asset.AssetStatusService;
 import kg.gov.mf.loan.manage.service.asset.AssetTypeService;
 import kg.gov.mf.loan.manage.service.loan.PaymentService;
+import kg.gov.mf.loan.web.fetchModels.LoanModel;
 import kg.gov.mf.loan.web.fetchModels.PaymentModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -49,6 +52,9 @@ public class AssetController {
 
     @Autowired
     PaymentService paymentService;
+
+    @Autowired
+    LoanRepository loanRepository;
 
     @InitBinder
     public void initBinder(WebDataBinder binder)
@@ -153,6 +159,51 @@ public class AssetController {
         return "redirect:/asset/{assetId}/view";
     }
 
+    @GetMapping("/{assetId}/toLoan/add")
+    public String getSaveToLoan(Model model,@PathVariable("assetId") Long assetId){
+
+        Asset asset=assetService.getById(assetId);
+
+        model.addAttribute("asset",asset);
+
+        return "/manage/asset/toLoanAddForm";
+    }
+
+    @PostMapping("/{assetId}/toLoan/save")
+    public String postSaveToLoan(@PathVariable("assetId") Long assetId,Asset asset){
+
+        Asset asset1=assetService.getById(assetId);
+        asset1.setToDebtorIds(asset.getToDebtorIds());
+        asset1.setLoanIds(asset.getLoanIds());
+        assetService.update(asset1);
+
+        return "redirect:/asset/{assetId}/view";
+    }
+
+    @GetMapping("/debtor/{debtorId}/loans/{type}/{assetId}")
+    public String getLoansByDebtor(Model model,@PathVariable("debtorId") String debtorIds,@PathVariable("assetId") Long assetId,@PathVariable("type") int type){
+
+        Asset asset=assetService.getById(assetId);
+        List<Loan> listOfLoans=new ArrayList<>();
+
+        String[] splittedDebtorIds=debtorIds.split(",");
+        for (String id:splittedDebtorIds){
+            List<Loan> loans=loanRepository.findByDebtorId(Long.valueOf(id));
+            listOfLoans.addAll(loans);
+        }
+
+        model.addAttribute("loans",listOfLoans);
+        model.addAttribute("asset",asset);
+
+
+        if(type==1){
+            return "/manage/asset/loanDropDown";
+        }
+        else{
+            return "/manage/asset/toLoanDropDown";
+        }
+    }
+
 
     //******************************************************************************************************************
     //REST REQUESTS
@@ -206,5 +257,43 @@ public class AssetController {
 
         String result = gson.toJson(paymentModelList);
         return result;
+    }
+
+
+    @PostMapping("/toLoans/{assetId}")
+    @ResponseBody
+    public String getToLoansOfAsset(@PathVariable("assetId") Long assetId){
+
+        Asset asset=assetService.getById(assetId);
+        String loanIds="";
+        for (Long id:asset.getLoanIds()){
+            if (loanIds.equals("")){
+                loanIds=String.valueOf(id);
+            }
+            else{
+                loanIds=loanIds+","+id;
+            }
+        }
+
+        String baseQuery = "SELECT loan.id, loan.loan_class_id, loan.regNumber, loan.regDate, loan.amount, loan.currencyId, currency.name as currencyName,\n" +
+                "  loan.loanTypeId, type.name as loanTypeName, loan.loanStateId, state.name as loanStateName,\n" +
+                "  loan.supervisorId, IFNULL(loan.parent_id, 0) as parentLoanId, loan.creditOrderId\n" +
+                "FROM loan loan, orderTermCurrency currency, loanType type, loanState state\n" +
+                "WHERE loan.currencyId = currency.id\n" +
+                "  AND loan.loanTypeId = type.id\n" +
+                "  AND loan.loanStateId = state.id and loan.loanStateId = 2 \n" +
+                "  AND loan.id in (" + loanIds + ")\n" +
+                "  AND  ISNULL(loan.parent_id) \n" +
+                "ORDER BY  loan.regDate DESC";
+
+        Query query = entityManager.createNativeQuery(baseQuery, LoanModel.class);
+
+        List<LoanModel> loans = query.getResultList();
+
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String result = gson.toJson(loans);
+
+        return result;
+
     }
 }

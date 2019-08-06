@@ -615,7 +615,8 @@ public class PaymentController {
         Query query=entityManager.createNativeQuery(searchQuery,Payment.class);
         List<Payment> payments= query.getResultList();
         for (Payment payment:payments) {
-            result.add(new SearchResult(payment.getId(),String.valueOf(payment.getPaymentDate())));
+            String text=String.valueOf(payment.getPaymentDate())+" - "+payment.getTotalAmount()+" - "+payment.getNumber();
+            result.add(new SearchResult(payment.getId(),text));
         }
 
         return result;

@@ -1,4 +1,4 @@
-<form th:action="@{/asset/__${asset.id}__/payment/save}" class="form-horizontal" method="post" th:object="${asset}"
+<form th:action="@{/asset/__${asset.id}__/toLoan/save}" class="form-horizontal" method="post" th:object="${asset}"
       xmlns:th="http://www.w3.org/1999/xhtml">
     <link th:href="@{/assets/global/plugins/select2/css/select2-bootstrap.min.css}" rel="stylesheet" type="text/css" />
     <div class="modal-header">
@@ -21,27 +21,14 @@
                 <span class="m--font-danger">*</span>
             </label>
             <div class="col-lg-10 col-md-9 col-sm-12">
-                <select id="debtorPicker" class="form-control" th:field="*{fromDebtorIds}" multiple="multiple" style="width: 100%" data-ajax--url="/api/debtors/search">
-                    <option th:each="r : *{fromDebtorIds}"
+                <select id="debtorPicker" class="form-control" th:field="*{toDebtorIds}" multiple="multiple" style="width: 100%" data-ajax--url="/api/debtors/search">
+                    <option th:each="r : *{toDebtorIds}"
                             th:text="${@debtorService.getById(__${r}__).name}"
                             th:value="${r}"></option>
                 </select>
             </div>
         </div>
         <div id="loansDropDown"></div>
-        <div class="form-group m-form__group row">
-            <label class="col-form-label col-lg-2 col-sm-12">
-                <span th:text="#{label.payment}"></span>
-                <span class="m--font-danger">*</span>
-            </label>
-            <div class="col-lg-10 col-md-9 col-sm-12">
-                <select id="paymentPicker" class="form-control" th:field="*{paymentIds}" multiple="multiple" style="width: 100%" data-ajax--url="/api/payments/search">
-                    <option th:each="r : *{paymentIds}"
-                            th:text="${@paymentService.getPaymentDateAmountNumberById(__${r}__)}"
-                            th:value="${r}"></option>
-                </select>
-            </div>
-        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.role.button.cancel}"></button>
@@ -104,82 +91,12 @@
         });
 
         function getLoans(){
-            var dropDownUrl ="/asset/debtor/"+strSelectedDebtors+"/loans/1/"+assetId;
+            var dropDownUrl ="/asset/debtor/"+strSelectedDebtors+"/loans/2/"+assetId;
 
             $.get(dropDownUrl, function(data) {
 
                 $('#loansDropDown').html(data);
             });
         };
-
-        $("#loanPicker").on("change",function () {
-            loanSelectFunction();
-        });
-
-        var loanOption = {
-            minimumInputLength: 2,
-            placeholder: "Поиск ...",
-            language: {
-                inputTooShort: function () {
-                    return "";
-                },
-                noResults: function () {
-                    return "Не найден";
-                },
-                searching: function () {
-                    return "";
-                },
-            },
-            ajax: {
-                url: '/api/search/loans',
-                data: function (params) {
-                    var query = {
-                        debtors: strSelectedDebtors,
-                        name: params.term
-                    }
-                    return query;
-                },
-                processResults: function (data) {
-                    console.log(data)
-                    return {
-                        results: data
-                    };
-                }
-            }
-        }
-        $('#loanPicker').select2(loanOption);
-
-        var paymentOption = {
-            minimumInputLength: 2,
-            placeholder: "Поиск ...",
-            language: {
-                inputTooShort: function () {
-                    return "";
-                },
-                noResults: function () {
-                    return "Не найден";
-                },
-                searching: function () {
-                    return "";
-                },
-            },
-            ajax: {
-                url: '/api/payments/search',
-                data: function (params) {
-                    var query = {
-                        loans: strSelectedLoans,
-                        name: params.term
-                    }
-                    return query;
-                },
-                processResults: function (data) {
-                    console.log(data)
-                    return {
-                        results: data
-                    };
-                }
-            }
-        }
-        $('#paymentPicker').select2(paymentOption);
     </script>
 </form>
