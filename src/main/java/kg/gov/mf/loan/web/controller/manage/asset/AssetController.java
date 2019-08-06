@@ -14,7 +14,7 @@ import kg.gov.mf.loan.manage.service.asset.AssetService;
 import kg.gov.mf.loan.manage.service.asset.AssetStatusService;
 import kg.gov.mf.loan.manage.service.asset.AssetTypeService;
 import kg.gov.mf.loan.manage.service.loan.PaymentService;
-import kg.gov.mf.loan.web.fetchModels.LoanModel;
+import kg.gov.mf.loan.web.fetchModels.LoanModel2;
 import kg.gov.mf.loan.web.fetchModels.PaymentModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -24,8 +24,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -188,7 +188,7 @@ public class AssetController {
 
         String[] splittedDebtorIds=debtorIds.split(",");
         for (String id:splittedDebtorIds){
-            List<Loan> loans=loanRepository.findByDebtorId(Long.valueOf(id));
+            List<Loan> loans=loanRepository.findByDebtorIdAndParent(Long.valueOf(id),null);
             listOfLoans.addAll(loans);
         }
 
@@ -277,18 +277,60 @@ public class AssetController {
 
         String baseQuery = "SELECT loan.id, loan.loan_class_id, loan.regNumber, loan.regDate, loan.amount, loan.currencyId, currency.name as currencyName,\n" +
                 "  loan.loanTypeId, type.name as loanTypeName, loan.loanStateId, state.name as loanStateName,\n" +
-                "  loan.supervisorId, IFNULL(loan.parent_id, 0) as parentLoanId, loan.creditOrderId\n" +
-                "FROM loan loan, orderTermCurrency currency, loanType type, loanState state\n" +
+                "  loan.supervisorId, IFNULL(loan.parent_id, 0) as parentLoanId, loan.creditOrderId,\n" +
+                "  d.id as debtorId,d.name as debtorName\n" +
+                "FROM loan loan, orderTermCurrency currency, loanType type, loanState state,debtor d\n" +
                 "WHERE loan.currencyId = currency.id\n" +
                 "  AND loan.loanTypeId = type.id\n" +
                 "  AND loan.loanStateId = state.id and loan.loanStateId = 2 \n" +
                 "  AND loan.id in (" + loanIds + ")\n" +
-                "  AND  ISNULL(loan.parent_id) \n" +
+                "  AND  loan.parent_id is null \n" +
+                "  AND  loan.debtorId=d.id \n" +
                 "ORDER BY  loan.regDate DESC";
 
-        Query query = entityManager.createNativeQuery(baseQuery, LoanModel.class);
+        Query query = entityManager.createNativeQuery(baseQuery, LoanModel2.class);
 
-        List<LoanModel> loans = query.getResultList();
+        List<LoanModel2> loans = query.getResultList();
+
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String result = gson.toJson(loans);
+
+        return result;
+
+    }
+
+
+    @PostMapping("/fromLoans/{assetId}")
+    @ResponseBody
+    public String getFromLoansOfAsset(@PathVariable("assetId") Long assetId){
+
+        Asset asset=assetService.getById(assetId);
+        String loanIds="";
+        for (Long id:asset.getFromLoanIds()){
+            if (loanIds.equals("")){
+                loanIds=String.valueOf(id);
+            }
+            else{
+                loanIds=loanIds+","+id;
+            }
+        }
+
+        String baseQuery = "SELECT loan.id, loan.loan_class_id, loan.regNumber, loan.regDate, loan.amount, loan.currencyId, currency.name as currencyName,\n" +
+                "  loan.loanTypeId, type.name as loanTypeName, loan.loanStateId, state.name as loanStateName,\n" +
+                "  loan.supervisorId, IFNULL(loan.parent_id, 0) as parentLoanId, loan.creditOrderId,\n" +
+                "  d.id as debtorId,d.name as debtorName\n" +
+                "FROM loan loan, orderTermCurrency currency, loanType type, loanState state,debtor d\n" +
+                "WHERE loan.currencyId = currency.id\n" +
+                "  AND loan.loanTypeId = type.id\n" +
+                "  AND loan.loanStateId = state.id and loan.loanStateId = 2 \n" +
+                "  AND loan.id in (" + loanIds + ")\n" +
+                "  AND  loan.parent_id is null \n" +
+                "  AND  loan.debtorId=d.id \n" +
+                "ORDER BY  loan.regDate DESC";
+
+        Query query = entityManager.createNativeQuery(baseQuery, LoanModel2.class);
+
+        List<LoanModel2> loans = query.getResultList();
 
         Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
         String result = gson.toJson(loans);

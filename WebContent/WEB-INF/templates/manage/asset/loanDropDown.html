@@ -19,6 +19,11 @@
         var selectedLoans=$("#loanPicker").val();
         loanSelectFunction();
 
+
+        $("#loanPicker").on("change",function () {
+            loanSelectFunction();
+        });
+
         function loanSelectFunction(){
             selectedLoans=$("#loanPicker").val();
             strSelectedLoans="";
