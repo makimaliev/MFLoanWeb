@@ -126,7 +126,8 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_goodType" th:field="*{lg.goodType.id}">
+										<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_goodType" data-live-search="true"
+												th:field="*{lg.goodType.id}">
 											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="goodType : ${goodTypes}" th:value="${goodType.id}" th:text="${goodType.name}"></option>
 										</select>
