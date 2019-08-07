@@ -1,25 +1,16 @@
 package kg.gov.mf.loan.web.controller.output.report;
 
 
-import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.output.report.model.LoanView;
-import kg.gov.mf.loan.output.report.service.ContentParameterService;
 import kg.gov.mf.loan.output.report.service.LoanViewService;
 import kg.gov.mf.loan.output.report.service.ReferenceViewService;
-import kg.gov.mf.loan.web.fetchModels.LoanViewMetaModel;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigInteger;
 import java.util.*;
-
-import kg.gov.mf.loan.web.util.Meta;
 
 import static java.lang.Character.isDigit;
 
@@ -166,7 +157,7 @@ public class RestLoanViewController {
 
 //        if(this.s.equals("start")){
 
-            List<LoanView> loanViewList=loanViewService.findByParameter(parameters,perPage,offset,sortStr,sortField);
+            List<LoanView> loanViewList=loanViewService.findByParameter(parameters,100,offset,sortStr,sortField);
 //            long loanViews=loanViewService.getCount(parameters);
 //
 //            BigInteger count=BigInteger.valueOf(loanViews);

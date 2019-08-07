@@ -55,8 +55,13 @@
                 <!--Begin Portlet-->
                 <div class="m-portlet">
                     <div class="m-portlet__body">
+
                         <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                             <div class="form-group m-form__group row " style="margin-left: 10px">
+                                <div class="col">
+                                    <span id="hider" type="submit" onclick="hideFields()" class="kt-badge kt-badge--brand kt-badge--md">СКРЫТЬ</span>
+                                    <span id="shower" type="submit" onclick="showFields()" class="kt-badge kt-badge--brand kt-badge--md">ОТКРЫТЬ</span>
+                                </div>
                                 <div class="col-sm">
                                     <div class="m-input-icon m-input-icon--left mb-2">
                                         <input type="text" class="form-control m-input m-input--solid" th:placeholder=#{label.debtor.name} id="debtor_name">
@@ -66,7 +71,7 @@
                                                     </span>
                                                 </span>
                                     </div>
-                                    <div class="m-input-icon m-input-icon--left">
+                                    <div class="m-input-icon m-input-icon--left hideable">
                                         <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.reg.number}" id="reg_number">
                                         <span class="m-input-icon__icon m-input-icon__icon--left">
                                                     <span>
@@ -94,31 +99,31 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="m-form__group m-form__group--inline">
+                                    <div class="m-form__group m-form__group--inline  hideable">
                                         <!--<div class="m-form__label">-->
                                             <!--<label>-->
                                                 <!--Район:-->
                                             <!--</label>-->
                                         <!--</div>-->
-                                        <div class="m-form__control" style="width: 150px">
-                                            <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_district">
-                                                <option value="">
-                                                    Район
-                                                </option>
-                                                <option th:each="district : ${districts}" th:value="${district.id}" th:text="${district.name}"></option>
-                                            </select>
+                                        <div class="input-group date m_datetimepicker mb-2" id="from_datepicker">
+                                            <input  class="form-control m-input" th:placeholder="#{label.fromDate}" name="date" />
+                                            <span class="input-group-addon">
+                                                    <i class="la la-calendar glyphicon-th"></i>
+                                                </span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-sm">
-                                    <div class="input-group date m_datetimepicker mb-2" id="from_datepicker">
-                                        <input  class="form-control m-input" th:placeholder="#{label.fromDate}" name="date" />
-                                        <span class="input-group-addon">
-                                                    <i class="la la-calendar glyphicon-th"></i>
-                                                </span>
+                                    <div class="m-form__control" style="width: 150px">
+                                        <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_district">
+                                            <option value="">
+                                                Район
+                                            </option>
+                                            <option th:each="district : ${districts}" th:value="${district.id}" th:text="${district.name}"></option>
+                                        </select>
                                     </div>
-                                    <div class="input-group date m_datetimepicker" id="to_datepicker">
+                                    <div class="input-group date m_datetimepicker  hideable" id="to_datepicker">
                                         <input  class="form-control m-input" th:placeholder="#{label.toDate}" name="date" />
                                         <span class="input-group-addon">
                                                     <i class="la la-calendar glyphicon-th"></i>
@@ -141,13 +146,13 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="m-form__group m-form__group--inline mb-2" style="width: 150px">
+                                    <div class="m-form__group m-form__group--inline mb-2  hideable" style="width: 150px">
                                         <!--<div class="m-form__label">-->
                                             <!--<label>-->
                                                 <!--Вид кредита:-->
                                             <!--</label>-->
                                         <!--</div>-->
-                                        <div class="m-form__control">
+                                        <div class="m-form__control ">
                                             <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_loan_type">
                                                 <option value="">
                                                     Вид кредита
@@ -166,7 +171,7 @@
                                                     </span>
                                                 </span>
                                     </div>
-                                    <div class="m-form__group m-form__group--inline mb-2 " style="width: 150px">
+                                    <div class="m-form__group m-form__group--inline mb-2  hideable" style="width: 150px">
                                         <!--<div class="m-form__label">-->
                                             <!--<label>-->
                                                 <!--Куратор:-->
@@ -183,16 +188,16 @@
                                     </div>
                                 </div>
                                 <div class="col-sm"></div>
-                                <div class="col-sm"></div>
                             </div>
+                            <div class="m-separator m-separator--dashed d-xl-none"></div>
                         </div>
-                        <div hidden="hidden" class="col-md-5">
+                       <!-- <div hidden="hidden" class="col-md-5">
                             <a id="search_form" sec:authorize="hasRole('ADMIN')" data-remote="false"
                                data-toggle="modal"
                                data-target="#loanViewSearchFormModal"
                                th:href="@{/loanView/search}"
                                role="button"
-                               class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
+                               class="m-portlet__nav-link btn btn-success m-btn m-btn&#45;&#45;air">
                                         <span>
                                             <i class="la la-plus"></i>
                                             <span>
@@ -200,13 +205,15 @@
                                             </span>
                                         </span>
                             </a>
-                            <div class="m-separator m-separator--dashed d-xl-none"></div>
+                            <div class="m-separator m-separator&#45;&#45;dashed d-xl-none"></div>
                             <a id="colum_choose" sec:authorize="hasRole('ADMIN')" data-remote="false"
                                data-toggle="modal"
                                data-target="#loanViewColumnChooseFormModal"
-                               th:href="@{/loanView/columnChoose}"
+                               th:href="@{/loanView/columnChoose}"<span id="hider" type="subm<span id="hider" type="submit" onclick="hideFields()" class="kt-badge kt-badge--brand kt-badge--md">СКРЫТЬ</span>
+                                <span id="shower" type="submit" onclick="showFields()" class="kt-badge kt-badge--brand kt-badge--md">ОТКРЫТЬ</span>it" onclick="hideFields()" class="kt-badge kt-badge--brand kt-badge--md">СКРЫТЬ</span>
+                                <span id="shower" type="submit" onclick="showFields()" class="kt-badge kt-badge--brand kt-badge--md">ОТКРЫТЬ</span>
                                role="button"
-                               class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
+                               class="m-portlet__nav-link btn btn-success m-btn m-btn&#45;&#45;air">
                                                     <span>
                                                         <i class="la la-bars"></i>
                                                         <span>
@@ -214,7 +221,7 @@
                                                         </span>
                                                     </span>
                             </a>
-                        </div>
+                        </div>-->
 
                         <!--begin: Datatable -->
                         <div class="m_datatable" id="ajax_data"></div>
@@ -241,7 +248,6 @@
         </div>
     </div>
     <!-- begin::Footer -->
-<div th:replace="layout/footer"/>
 <!-- end::Footer -->
 </div>
 
@@ -317,12 +323,32 @@
 </script>
 <script th:inline="javascript" >
 
+    function hideFields() {
+        $(".hideable").hide();
+        $("#hider").hide();
+        $("#shower").show();
+    }
+    function showFields() {
+        $(".hideable").show();
+        $("#shower").hide();
+        $("#hider").show();
+    }
+    hideFields();
+    $("#hider").on("click",function () {
+        hideFields();
+    });
+    $("#shower").on("click",function () {
+        showFields();
+    });
+
+
     var loanTypes=/*[[${loanTypes}]]*/ [];
     var supervisors=/*[[${supervisors}]]*/ [];
     var finGroups=/*[[${finGroups}]]*/ [];
     var districts=/*[[${districts}]]*/ [];
     var sds=[[${selectedFieldsTranslated}]];
     var asaa=[[${selectedFieldNamesWithId}]];
+    var currencies=[[${currencies}]];
     var lines="";
     var liness="";
     var ssss=$("#selected_field_names").val();
@@ -454,7 +480,7 @@
                             url: '/api/loanViews/'
                         }
                     },
-                    pageSize: 100,
+                    pageSize: 10,
                     saveState: {
                         cookie: false,
                         webstorage: false
@@ -472,7 +498,7 @@
                     footer: false // display/hide footer
                 },
                 // column sorting
-                sortable: true,
+                sortable: false,
                 // column based filtering
                 filterable: false,
                 pagination: false,
@@ -512,6 +538,7 @@
                 }, {
                     field: "v_loan_reg_number",
                     title: [[#{v_loan_reg_number}]],
+                    responsive: {hidden: 'xl'},
                     // width:230,
                     template: function (row) {
                         var d = row.v_loan_reg_number;
@@ -524,15 +551,25 @@
                     }
                 }, {
                     field: "v_loan_amount",
-                    title: [[#{label.loan.amount}]],
-                    // width:120,
-                    textAlign:'center',
+                    title: [[#{label.loan.fields}]],
+                    width:400,
                     template:function (row) {
-                        return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_loan_amount);
+                        var ppkr=row.v_credit_order_reg_number;
+                        var amount=new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_loan_amount);
+                        var number = row.v_loan_reg_number;
+                        var date = moment("/Date("+row.v_loan_reg_date+")/").format("DD.MM.YYYY");
+                        var currency="";
+                        for (var i in currencies){
+                            if(row.v_loan_currency_id==currencies[i].id){
+                                currency= currencies[i].name;
+                            }
+                        }
+                        return ppkr+" , "+number+" от "+date+" , "+amount+" , "+currency;
                     }
                 }, {
                     field: "v_credit_order_reg_number",
                     title: [[#{label.loan.credit.order.reg.number}]],
+                    responsive: {hidden: 'xl'},
                     // width:210,
                     template: function (row) {
                         var d = row.v_credit_order_reg_number;
@@ -587,6 +624,7 @@
                 },*/{
                     field: "v_loan_type_id",
                     title: [[#{label.loan.type}]],
+                    responsive: {hidden: 'xl'},
                     // width:170,
                     template:function (row) {
                         for (var i in loanTypes){
@@ -604,6 +642,7 @@
                     field: "v_loan_reg_date",
                     title: [[#{label.loan.regDate}]],
                     textAlign:'center',
+                    responsive: {hidden: 'xl'},
                     template: function (row) {
                         var date = moment("/Date("+row.v_loan_reg_date+")/").format("DD.MM.YYYY");
                         return date;
