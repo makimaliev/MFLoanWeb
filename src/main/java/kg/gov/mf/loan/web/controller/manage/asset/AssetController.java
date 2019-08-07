@@ -71,7 +71,10 @@ public class AssetController {
     @GetMapping("/list")
     public String list(Model model){
 
-        List<Asset> assets=assetService.list();
+        List<Asset> assets=new ArrayList<>();
+        for (Asset asset:assetService.list()){
+            assets.add(assetService.getById(asset.getId()));
+        }
         List<AssetType> assetTypelist=assetTypeService.list();
         List<AssetStatus> assetStatuslist=assetStatusService.list();
 

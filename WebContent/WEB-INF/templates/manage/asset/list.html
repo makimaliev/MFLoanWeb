@@ -53,10 +53,13 @@
                                 <thead class="thead-default">
                                 <tr>
                                     <th th:text="#{label.view}"></th>
-                                    <th th:text="#{label.number}"></th>
+                                    <th th:text="#{label.name}"></th>
+                                    <th th:text="#{label.numberAndDate}"></th>
                                     <th th:text="#{label.amount1}"></th>
-                                    <th th:text="#{label.amount2}"></th>
-                                    <th th:text="#{label.amount3}"></th>
+                                    <th th:text="#{label.assetStatus}"></th>
+                                    <th th:text="#{label.assetType}"></th>
+                                    <th th:text="#{label.assetFromDebtors}"></th>
+                                    <th th:text="#{label.assetToDebtors}"></th>
                                     <th>&nbsp;</th>
                                 </tr>
                                 </thead>
@@ -72,10 +75,13 @@
                                                 <i class="la la-arrow-circle-left"></i>
                                             </a>
                                         </td>
-                                        <td th:text="${t.number}"></td>
+                                        <td th:text="${t.name}"></td>
+                                        <td th:text="${t.number}+' , '+${#dates.format(t.date,'dd.MM.yyyy')}"></td>
                                         <td th:text="${t.amount1}"></td>
-                                        <td th:text="${t.amount2}"></td>
-                                        <td th:text="${t.amount3}"></td>
+                                        <td th:text="${t.assetStatus.name}"></td>
+                                        <td th:text="${t.assetType.name}"></td>
+                                        <td  th:text="${@assetService.getFromDebtorNames(__${t.id}__)}"></td>
+                                        <td  th:text="${@assetService.getToDebtorNames(__${t.id}__)}"></td>
                                         <td class="table-actions text-right">
 												<span>
 													<div class="dropdown">
