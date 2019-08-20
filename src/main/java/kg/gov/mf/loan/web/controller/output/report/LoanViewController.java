@@ -3,9 +3,6 @@ package kg.gov.mf.loan.web.controller.output.report;
 
 import kg.gov.mf.loan.admin.org.service.DistrictService;
 import kg.gov.mf.loan.admin.org.service.RegionService;
-import kg.gov.mf.loan.admin.sys.service.MessageResourceService;
-import kg.gov.mf.loan.manage.model.loan.LoanFinGroup;
-import kg.gov.mf.loan.manage.model.loan.LoanType;
 import kg.gov.mf.loan.manage.service.loan.LoanFinGroupService;
 import kg.gov.mf.loan.manage.service.loan.LoanTypeService;
 import kg.gov.mf.loan.output.report.model.GroupType;
@@ -21,9 +18,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.jws.soap.SOAPBinding;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import static java.lang.Character.isDigit;
 
@@ -153,6 +152,9 @@ public class LoanViewController {
 
         List<ReferenceView> districts=referenceViewService.findByParameter("district");
         model.addAttribute("districts",districts);
+
+        List<ReferenceView> currencies=referenceViewService.findByParameter("currency_type");
+        model.addAttribute("currencies",currencies);
 
 
         model.addAttribute("selectedFields",selectedFieldNames);

@@ -1,0 +1,43 @@
+<form th:action="@{/asset/__${assetId}__/assetExpense/save}" class="form-horizontal" method="post" th:object="${expense}">
+    <div class="modal-header">
+        <h5 class="modal-title" th:text="#{label.role.modal.title}"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">
+				&times;
+			</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-danger alert-dismissible alert-hidden" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+            <span th:text="#{label.role.modal.error.name}"></span>
+        </div>
+        <div class="col-md-8">
+            <div class="form-group m-form__group row">
+                <label class="col-form-label col-lg-4 col-sm-12">
+                    <span th:text="#{label.asset.date}"></span>
+                </label>
+                <div class="col-lg-4 col-md-9 col-sm-12">
+                    <div class="input-group date m_datetimepicker_6">
+                        <input required="required" type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:value="${#dates.format(expense.date,'dd.MM.yyyy')}"/>
+                        <span class="input-group-addon">
+                        <i class="la la-calendar glyphicon-th"></i>
+                    </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-control-label" th:text="#{label.expense.amount}">Name<span class="required"> * </span></label>
+                <input required="required" type="text" class="form-control" name="amount" th:value="*{amount}">
+            </div>
+            <div class="form-group">
+                <label class="form-control-label" th:text="#{label.details}">Name<span class="required"> * </span></label>
+                <input required="required" type="text" class="form-control" name="details" th:value="*{details}">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.role.button.cancel}"></button>
+        <button type="submit" class="btn btn-primary" th:text="#{label.role.button.submit}"></button>
+    </div>
+</form>

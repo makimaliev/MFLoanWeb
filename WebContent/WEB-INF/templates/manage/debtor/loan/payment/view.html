@@ -66,6 +66,9 @@
                             <li class="nav-item">
                                 <a class="nav-link m--font-primary" data-toggle="tab" href="#information" th:text="#{label.information}"></a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link m--font-primary" data-toggle="tab" href="#history" th:text="#{label.history}"></a>
+                            </li>
                         </ul>
                         <div class="tab-content">
                             <div id="main" class="tab-pane active"  role="tabpanel">
@@ -190,6 +193,31 @@
                                 <div class="m_datatable" id="filesTable"></div>
                                 <!--end: Datatable -->
                             </div>
+                            <div id="history" class="tab-pane"  role="tabpanel">
+                                <!--begin: Search Form -->
+                                <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                                    <div class="row align-items-center">
+                                        <div class="col-xl-9 order-1 order-xl-1">
+                                            <div class="form-group m-form__group row align-items-center">
+                                                <div class="col-lg-6">
+                                                    <div class="m-input-icon m-input-icon--left">
+                                                        <input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="searchHistory">
+                                                        <span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end: Search Form -->
+                                <!--begin: Datatable -->
+                                <div class="m_datatable" id="historyTable"></div>
+                                <!--end: Datatable -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -206,7 +234,7 @@
 <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
 <!--end::Page Resources -->
 <script th:inline="javascript">
-    var jsonFiles=[[${files}]]
+    var jsonFiles=[[${files}]];
     var DatatableDataLocalFiles = function () {
         //== Private functions
 
@@ -331,6 +359,195 @@
         DatatableDataLocalFiles.init();
     });
 </script>
+<script th:inline="javascript">
+    var jsonHistory=[[${jsonHistory}]];
+    var debtorId=[[${debtorId}]];
+    var loanId=[[${loanId}]];
+    var DatatableDataLocalHistory= function () {
+        //== Private functions
+
+        // demo initializer
+        var mainTableInit = function () {
+
+            var dataJSONArray = JSON.parse(jsonHistory);
+            console.log(jsonHistory)
+
+            var datatable = $('#historyTable').mDatatable({
+                // datasource definition
+                data: {
+                    type: 'local',
+                    source: dataJSONArray
+                },
+
+                // layout definition
+                layout: {
+                    theme: 'default', // datatable theme
+                    class: '', // custom wrapper class
+                    scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+                    height: 450, // datatable's body's fixed height
+                    footer: false // display/hide footer
+                },
+
+                // column sorting(refer to Kendo UI)
+                sortable: true,
+
+                // column based filtering(refer to Kendo UI)
+                filterable: false,
+
+                pagination: true,
+
+                // inline and bactch editing(cooming soon)
+                // editable: false,
+
+                // columns definition
+                columns: [{
+                    field: "paymentDate",
+                    title: "Дата",
+                    width: 70
+                }, {
+                    field: "number",
+                    title: "Номер",
+                    width: 70
+                }, {
+                    field: "totalAmount",
+                    title: "Итого",
+                    width: 80,
+                    template: function (row) {
+                        return (row.totalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                    }
+                }, {
+                    field: "principal",
+                    title: "Осн.сумма",
+                    template: function (row) {
+                        return (row.principal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                    }
+                }, {
+                    field: "interest",
+                    title: "Проценты",
+                    template: function (row) {
+                        return (row.interest).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                    }
+                }, {
+                    field: "penalty",
+                    title: "Штрафы",
+                    template: function (row) {
+                        return (row.penalty).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                    }
+                }, /*{
+                field: "fee",
+                title: "Комиссия",
+                template: function (row) {
+                    return (row.fee).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                }
+            }, */{
+                    field: "staffName",
+                    title: "Куратор",
+                    width: 200
+                },{
+                    field: "name",
+                    title: "Вид платежа",
+                    width: 200
+                }, {
+                    field: "record_status",
+                    title: "Статус",
+                    width: 100,
+                    template: function (row) {
+
+                        if(row.record_status==2){
+                            return '<span class="m-badge m-badge--danger m-badge--wide"> Отменен</span>';
+                        }
+                        else{
+                            return '<span class="m-badge m-badge--success m-badge--wide">Действует</span>';
+                        }
+                    }
+                }, {
+                    field: "REVTYPE",
+                    title: "Тип",
+                    width: 100,
+                    template: function (row) {
+
+                        if(row.REVTYPE==0){
+                            return '<span class="m-badge m-badge--success m-badge--wide"> Создан</span>';
+                        }
+                        else if(row.REVTYPE==1){
+                            return '<span class="m-badge m-badge--warning m-badge--wide"> Обновлен</span>';
+                        }
+                        else{
+                            return '<span class="m-badge m-badge--success m-badge--wide">Удален</span>';
+                        }
+                    }
+                }, {
+                    field: "date",
+                    title: "Время",
+                    width: 250,
+                    template: function (row) {
+                        var timestamp = row.date;
+                        var date = new Date(timestamp*1);
+                        var month=date.getMonth()+1;
+                        if (month<10){
+                            month='0'+month;
+                        }
+                        return date.getFullYear()+'.'+month+'.'+date.getDate()+'  '+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
+
+                    }
+                }],
+                translate: {
+                    records: {
+                        processing: 'Подождите пожалуйста...',
+                        noRecords: 'Записей не найдено'
+                    },
+                    toolbar: {
+                        pagination: {
+                            items: {
+                                default: {
+                                    first: 'Первая страница',
+                                    prev: 'Предыдущая страница',
+                                    next: 'Следующая страница',
+                                    last: 'Последняя страница',
+                                    more: 'Другие страницы',
+                                    input: 'Номер страницы',
+                                    select: 'Выбрать размер страницы'
+                                },
+                                info: 'Отображение {{start}} - {{end}} из {{total}} записей'
+                            }
+                        }
+                    }
+                },
+
+                toolbar: {
+                    items: {
+                        // pagination
+                        pagination: {
+                            // page size select
+                            pageSizeSelect: [5, 10, 20, 50, 100]
+                        }
+                    }
+                }
+            });
+
+            var query = datatable.getDataSourceQuery();
+
+            $('#searchFile').on('keyup', function (e) {
+                datatable.search($(this).val().toLowerCase());
+            }).val(query.generalSearch);
+
+
+        };
+
+        return {
+            //== Public functions
+            init: function () {
+                // init dmeo
+                mainTableInit();
+            }
+        };
+    }();
+
+    jQuery(document).ready(function () {
+        DatatableDataLocalHistory.init();
+    });
+</script>
+
 </body>
 <!-- end::Body -->
 </html>

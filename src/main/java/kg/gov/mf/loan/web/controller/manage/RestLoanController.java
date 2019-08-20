@@ -4,12 +4,17 @@ import kg.gov.mf.loan.admin.org.model.Staff;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.repository.org.StaffRepository;
+import kg.gov.mf.loan.web.controller.doc.dto.SearchResult;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,6 +27,9 @@ public class RestLoanController {
 
     @Autowired
     StaffRepository staffRepository;
+
+    @PersistenceContext
+    EntityManager entityManager;
 
     @GetMapping("/loans")
     public Page<Loan> getAllDebtors(Pageable pageable) {
@@ -70,6 +78,35 @@ public class RestLoanController {
     @GetMapping("/loans/{loanId}")
     public Loan getDebtorById(@PathVariable(value = "loanId") Long loanId) {
         return loanRepository.findOne(loanId);
+    }
+
+    @GetMapping("/search/loans")
+    public List<SearchResult> apiGetLoansByRegNumber(@RequestParam(value="name",required = false) String regNumber,@RequestParam(value="debtors")String debtors ) {
+
+        List<SearchResult> result = new ArrayList<>();
+
+        String[] splittedDebtorIds=debtors.split(",");
+        String debtorIds="";
+        for (String splittedId:splittedDebtorIds){
+            if (!splittedId.equals("") ){
+                if(debtorIds.equals("")){
+                    debtorIds=splittedId;
+                }
+                else{
+                    debtorIds=debtorIds+","+splittedId;
+                }
+            }
+        }
+
+        String searchQuery="select *\n" +
+                "from loan where regNumber like '%"+regNumber+"%' and debtorId in ("+debtorIds+") limit 5";
+        Query query=entityManager.createNativeQuery(searchQuery,Loan.class);
+        List<Loan> loans= query.getResultList();
+        for (Loan loan:loans) {
+            result.add(new SearchResult(loan.getId(),loan.getRegNumber()));
+        }
+
+        return result;
     }
 
 }
