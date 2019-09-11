@@ -127,6 +127,53 @@
 }
 
 
+/* datatable */
+
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__head .m-datatable__row > .m-datatable__cell, .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__foot .m-datatable__row > .m-datatable__cell,
+.thead-default th{
+	background: #4d728a;
+}
+
+.m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__head .m-datatable__row > .m-datatable__cell, .m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__body .m-datatable__row > .m-datatable__cell, .m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__foot .m-datatable__row > .m-datatable__cell{
+	border-bottom: 1px solid #c8cfd4;
+}
+
+
+
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link{
+	background: #456782;
+	border-color: #0a6aa1;
+}
+
+
+
+a{
+	font-weight: 500;
+}
+a:hover{
+	font-weight: 800;
+}
+
+
+
+.m-input-icon.m-input-icon--left .form-control,
+.m-bootstrap-select.bootstrap-select.btn-group.m-bootstrap-select--solid > .dropdown-toggle,
+.input-group .form-control:not(:last-child), .input-group-addon:not(:last-child), .input-group-btn:not(:last-child) > .btn, .input-group-btn:not(:last-child) > .btn-group > .btn, .input-group-btn:not(:last-child) > .dropdown-toggle, .input-group-btn:not(:first-child) > .btn:not(:last-child):not(.dropdown-toggle), .input-group-btn:not(:first-child) > .btn-group:not(:last-child) > .btn,
+.input-group .input-group-addon
+{
+	border: 1px solid #6c92ce;
+}
+
+
+.m-input-icon.m-input-icon--left .form-control::placeholder,
+.bootstrap-select.btn-group .dropdown-toggle .filter-option,
+.input-group .form-control::placeholder
+{
+	color: #000000;
+}
+
+
 
 
 
