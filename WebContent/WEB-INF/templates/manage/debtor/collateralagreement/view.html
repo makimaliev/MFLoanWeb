@@ -99,6 +99,9 @@
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#additionalAgreement" th:text="#{label.collateralagreement.tab.additionalAgreement}"></a>
 							</li>
 							<li class="nav-item">
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#agreementReview" th:text="#{label.collateralagreement.tab.agreementReview}"></a>
+							</li>
+							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#information" th:text="#{label.information}"></a>
 							</li>
 						</ul>
@@ -323,6 +326,38 @@
 										<!--end: Search Form -->
 										<!--begin: Datatable -->
 										<div class="m_datatable" id="additionalAgreementsTable"></div>
+										<!--end: Datatable -->
+									</div>
+								</div>
+								<!--end::Portlet-->
+							</div>
+							<div class="tab-pane" id="agreementReview" role="tabpanel">
+								<!--begin::Portlet-->
+								<div class="m-portlet m-portlet--mobile">
+									<div class="m-portlet__body">
+
+										<!--begin: Search Form -->
+										<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+											<div class="row align-items-center">
+												<div class="col-xl-9 order-1 order-xl-1">
+													<div class="form-group m-form__group row align-items-center">
+														<div class="col-lg-6">
+															<div class="m-input-icon m-input-icon--left">
+																<input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search1">
+																<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!--end: Search Form -->
+										<!--begin: Datatable -->
+										<div class="m_datatable" id="agreementReviewTable"></div>
 										<!--end: Datatable -->
 									</div>
 								</div>

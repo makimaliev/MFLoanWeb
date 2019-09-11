@@ -102,7 +102,7 @@
                                         <span class="m--font-danger">*</span>
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
-                                        <input type="text" class="form-control m-input" name="name" th:value="${item.name}">
+                                        <input required="required" type="text" class="form-control m-input" name="name" th:value="${item.name}">
                                     </div>
                                 </div>
                                 <div class="form-group m-form__group row">
@@ -120,7 +120,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="m-typeahead">
-											<input class="form-control m-input" id="owner_typeahead" type="text" placeholder="Owners" th:value="${ownerText}" >
+											<input required="required" class="form-control m-input" id="owner_typeahead" type="text" placeholder="Owners" th:value="${ownerText}" >
 										</div>
 									</div>
 								</div>
@@ -130,7 +130,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${item.itemType.id}" name="itemType"  id="itemType">
+										<select required="required" class="form-control m-bootstrap-select m_selectpicker" th:field="${item.itemType.id}" name="itemType"  id="itemType">
 											<option th:each="type : ${iTypes}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
 									</div>
@@ -141,7 +141,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="quantity" th:value="${item.quantity}">
+										<input required="required" type="text" class="form-control m-input" name="quantity" th:value="${item.quantity}">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -150,19 +150,10 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m_selectpicker" th:field="${item.quantityType.id}" name="quantityType"  id="quantityType" th:title="#{label.select}">
+										<select required="required" class="form-control m-bootstrap-select m_selectpicker" th:field="${item.quantityType.id}" name="quantityType"  id="quantityType" th:title="#{label.select}">
 											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="type : ${qTypes}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
-									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.collateralItem.collateralValue}"></span>
-										<span class="m--font-danger">*</span>
-									</label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="collateralValue" th:value="${#numbers.formatDecimal(item.collateralValue,1,2,'POINT')}">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -171,8 +162,19 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" name="estimatedValue" th:value="${#numbers.formatDecimal(item.estimatedValue,1,2,'POINT')}">
+										<input required="required" type="text" class="form-control m-input" name="estimatedValue">
 									</div>
+									<!--th:value="${#numbers.formatDecimal(item.estimatedValue,1,2,'POINT')}-->
+								</div>
+								<div class="form-group m-form__group row">
+									<label class="col-form-label col-lg-4 col-sm-12">
+										<span th:text="#{label.collateralItem.collateralValue}"></span>
+										<span class="m--font-danger">*</span>
+									</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<input required="required" type="text" class="form-control m-input" name="collateralValue" >
+									</div>
+									<!--th:value="${#numbers.formatDecimal(item.collateralValue,1,2,'POINT')}"-->
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.item.organization}">
@@ -180,7 +182,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="m-typeahead">
-											<input class="form-control m-input" id="organization_typeahead" type="text" th:placeholder="#{label.item.organization}" th:value="${organizationText}">
+											<input required="required" class="form-control m-input mestoArresta" id="organization_typeahead" type="text" th:placeholder="#{label.item.organization}" th:value="${organizationText}">
 										</div>
 									</div>
 								</div>
@@ -205,7 +207,7 @@
                                                 <span id="detailsLabel6" th:text="#{label.collateralItem.details6}"></span>
                                             </label>
                                             <div class="col-lg-4 col-md-9 col-sm-12">
-                                                <input type="text" class="form-control m-input" name="goods_id" th:value="${itemDetails?.goods_id}">
+                                                <input id="goodIdentificationNum" type="text" class="form-control m-input" name="goods_id" th:value="${itemDetails?.goods_id}">
                                             </div>
                                         </div>
                                         <div class="form-group m-form__group row" id="prod_date">
@@ -518,13 +520,26 @@
 
 
 
+// make fields required/not according to itemType
+<script>
 
-
+</script>
 <script th:inline="javascript">
     /*<![CDATA[*/
     $(document).ready(function(){
 
-
+        if($("#itemType").val()==2 || $("#itemType").val()==4 || $("#itemType").val()==8){
+            $(".mestoArresta").removeAttr("required");
+        }
+        $("#itemType").on("change",function () {
+            if($("#itemType").val()==3){
+                alert("came");
+                $("#goodIdentificationNum").attr("required","required");
+            }
+            else if($("#itemType").val()==2 || $("#itemType").val()==4 || $("#itemType").val()==8){
+                $(".mestoArresta").removeAttr("required");
+            }
+        });
 
         function updateText()
         {
@@ -868,6 +883,9 @@
 		$("#organizationId").val(organization_id);
 
     }
+
+
+
 </script>
 <script th:inline="javascript">
 	var jsonOwners=[[${owners}]];

@@ -1,6 +1,7 @@
 <form th:action="@{/person/save}" class="form-horizontal" method="post" th:object="${person}"
 	  xmlns:th="http://www.w3.org/1999/xhtml">
 	<div class="modal-header">
+		<input type="text" hidden="true" id="fromPerson" name="fromPerson">
 		<h5 class="modal-title" th:text="#{label.add.person}"></h5>
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">&times;</span>
@@ -417,7 +418,12 @@
                 $('#villageSelect').selectpicker('refresh');
             });
         })
-
+	if(fromP!=null){
+        $("#fromPerson").val(fromP);
+	}
+	else{
+        $("#fromPerson").val("true");
+	}
     /*]]>*/
 </script>
 

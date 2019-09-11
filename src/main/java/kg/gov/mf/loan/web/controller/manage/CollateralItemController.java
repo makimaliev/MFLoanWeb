@@ -12,7 +12,10 @@ import kg.gov.mf.loan.admin.sys.service.AttachmentService;
 import kg.gov.mf.loan.admin.sys.service.InformationService;
 import kg.gov.mf.loan.admin.sys.service.SystemFileService;
 import kg.gov.mf.loan.admin.sys.service.UserService;
+import kg.gov.mf.loan.doc.model.Document;
+import kg.gov.mf.loan.doc.service.DocumentService;
 import kg.gov.mf.loan.manage.model.collateral.*;
+import kg.gov.mf.loan.manage.model.debtor.Debtor;
 import kg.gov.mf.loan.manage.model.debtor.Owner;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.service.collateral.*;
@@ -94,6 +97,9 @@ public class CollateralItemController {
 
 	@Autowired
 	SystemFileService systemFileService;
+
+	@Autowired
+	DocumentService documentService;
 
 
 	@InitBinder
@@ -215,8 +221,10 @@ public class CollateralItemController {
 	{
 //		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
 
+		Debtor debtor=debtorService.getById(debtorId);
+
 		model.addAttribute("debtorId", debtorId);
-		model.addAttribute("debtor", debtorService.getById(debtorId));
+		model.addAttribute("debtor", debtor);
 		model.addAttribute("agreementId", agreementId);
 		model.addAttribute("agreement", agreementService.getById(agreementId));
 //		String jsonOwners = gson.toJson(getCollateralItemOwners());
@@ -232,7 +240,13 @@ public class CollateralItemController {
 			CollateralItemDetails collateralItemDetails=new CollateralItemDetails();
 //			collateralItem.setCollateralItemDetails(collateralItemDetails);
 //			collateralItemDetails.setCollateralItem(collateralItem);
-			model.addAttribute("ownerText","");
+			Owner owner=ownerService.getById(debtor.getOwner().getId());
+			if(owner.getOwnerType().name()=="ORGANIZATION"){
+				model.addAttribute("ownerText","["+owner.getId()+"] "+owner.getName()+" (Организация)");
+			}
+			else{
+				model.addAttribute("ownerText","["+owner.getId()+"] "+owner.getName()+" (Физ. лицо)");
+			}
 			model.addAttribute("organizationText","");
 			collateralItem.setItemType(iTypeService.getById(Long.valueOf(1)));
 			model.addAttribute("item", collateralItem);
@@ -380,14 +394,17 @@ public class CollateralItemController {
     		ModelMap model,
     		@PathVariable("debtorId")Long debtorId,
 			@PathVariable("agreementId")Long agreementId,
-			@PathVariable("itemId")Long itemId) {
+			@PathVariable("itemId")Long itemId,Long documentIds) {
 		
 		CollateralItem item = itemService.getById(itemId);
 		item.setStatus(2);
+		Document doc=documentService.getById(documentIds);
+		af.setOnDate(doc.getSenderRegisteredDate());
 		if(af.getId() == 0)
 		{
 			User user = userService.findByUsername(Utils.getPrincipal());
 			af.setArrestFreeBy(user.getId());
+			af.setDocument(String.valueOf(documentIds));
 			item.setCollateralItemArrestFree(af);
 			afService.add(af);
 			itemService.update(item);

@@ -127,14 +127,14 @@
 										</select>
 										-->
 
-										<select name="loanses" class="form-control m-bootstrap-select m_selectpicker" multiple >
+										<select name="loanses" class="form-control m-bootstrap-select m_selectpicker" multiple required="required">
 											<!--<option th:each="loan : ${tLoans}"-->
 													<!--th:value="${{loan}}"-->
 													<!--th:text="${loan.regNumber}">-->
 											<!--</option>-->
 											<option th:each="loan : ${tLoans}"
 													th:value="${loan.id}"
-													th:text="${loan.regNumber}"
+													th:text="${loan.regNumber}+' | '+${loan.regDate}"
 													th:selected="${loanIds.contains(loan.id)}"></option>
 										</select>
 									</div>
@@ -145,7 +145,7 @@
 										Notary office registration number <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" th:field="*{notaryOfficeRegNumber}">
+										<input required="required" type="text" class="form-control m-input" th:field="*{notaryOfficeRegNumber}">
 									</div>
 								</div>
 
@@ -169,7 +169,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="m-typeahead">
-											<input class="form-control m-input" id="owner_typeahead" type="text" th:placeholder="#{label.agreement.notary}" th:value="${ownerText}">
+											<input required="required" class="form-control m-input" id="owner_typeahead" type="text" th:placeholder="#{label.agreement.notary}" th:value="${ownerText}">
 										</div>
 									</div>
 								</div>
@@ -179,7 +179,7 @@
 										Arrest registration number <span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input type="text" class="form-control m-input" th:field="*{arrestRegNumber}">
+										<input required="required" type="text" class="form-control m-input" th:field="*{arrestRegNumber}">
 									</div>
 								</div>
 

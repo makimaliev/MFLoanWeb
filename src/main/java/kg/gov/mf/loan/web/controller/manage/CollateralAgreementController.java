@@ -215,42 +215,99 @@ public class CollateralAgreementController {
 
 		return "/manage/debtor/collateralagreement/save";
 	}
+
+    @RequestMapping(value="/manage/debtor/{debtorId}/loan/{loanId}/collateralagreement/{agreementId}/save", method=RequestMethod.GET)
+    public String formCollateralAgreement(ModelMap model,
+                                          @PathVariable("debtorId")Long debtorId,
+                                          @PathVariable("loanId")Long loanId,
+                                          @PathVariable("agreementId")Long agreementId)
+    {
+        Debtor debtor = debtorService.getById(debtorId);
+        model.addAttribute("debtorId", debtorId);
+        model.addAttribute("debtor", debtor);
+        List<Loan> loans=new ArrayList<>();
+        for(Loan l:debtor.getLoans()){
+            if(l.getParent()==null){
+                loans.add(l);
+            }
+        }
+        model.addAttribute("tLoans", loans);
+
+        if(agreementId == 0)
+        {
+            Loan loan=loanService.getById(loanId);
+            ArrayList<Long> loanIds=new ArrayList<>();
+            CollateralAgreement agreement = new CollateralAgreement();
+            Set<Loan> loanSet=new HashSet<>();
+            loanSet.add(loan);
+            loanIds.add(loanId);
+            agreement.setLoans(loanSet);
+//			agreement.setAgreementDate();
+//			agreement.setArrestRegDate(new Date());
+//			agreement.setCollateralOfficeRegDate(new Date());
+//			agreement.setNotaryOfficeRegDate(new Date());
+            model.addAttribute("agreement", agreement);
+            model.addAttribute("loanIds", loanIds);
+            model.addAttribute("ownerText", "");
+        }
+
+        if(agreementId > 0)
+        {
+            CollateralAgreement agreement = agreementService.getById(agreementId);
+            ArrayList<Long> loanIds=new ArrayList<>();
+            for(Loan loan:agreement.getLoans()){
+                loanIds.add(loan.getId());
+            }
+            model.addAttribute("loanIds",loanIds);
+            model.addAttribute("agreement", agreement);
+            Owner owner = agreement.getNotary();
+
+            String ownerText = "";
+
+            if(owner!=null)
+            {
+                ownerText = "[" + owner.getId() + "] "
+                        + owner.getName()
+                        + " (" + (owner.getOwnerType().equals(OwnerType.ORGANIZATION)? "Организация":"Физ. лицо") +")";
+            }
+
+
+            model.addAttribute("ownerText", ownerText);
+        }
+
+        return "/manage/debtor/collateralagreement/save";
+    }
 	
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collateralagreement/save"}, method=RequestMethod.POST)
     public String saveCollateralAgreement(CollateralAgreement agreement,
-										  @PathVariable("debtorId")Long debtorId, String[] loanses,
-    		ModelMap model)
+										  @PathVariable("debtorId")Long debtorId, String[] loanses)
     {
-    	if(agreement.getNotaryOfficeRegDate()==null||agreement.getNotaryOfficeRegNumber()==null||agreement.getOwner()==null||
-				agreement.getArrestRegDate()==null||agreement.getArrestRegNumber()==null||
+    	if(agreement.getNotaryOfficeRegNumber()==null||agreement.getOwner()==null|| agreement.getArrestRegNumber()==null||
 				loanses.length==0){
 			return "redirect:" + "/manage/debtor/{debtorId}/view";
 		}
     	else {
-			if (agreement.getNotaryOfficeRegDate() != null) {
-				Set<Loan> loanSet = new HashSet<>();
-				for (String l : loanses) {
-					loanSet.add(loanService.getById(Long.valueOf(l)));
-				}
-				if (agreement.getId() == 0) {
-					Owner owner = ownerRepository.findOne(debtorService.getById(debtorId).getOwner().getId());
-					agreement.setOwner(owner);
-					agreement.setAgreementDate(agreement.getNotaryOfficeRegDate());
-					agreement.setAgreementNumber(agreement.getNotaryOfficeRegNumber());
-					agreement.setLoans(loanSet);
-					if(agreement.getCollateralOfficeRegNumber()==null)
-						agreement.setCollateralOfficeRegNumber("");
-					agreementService.add(agreement);
-				} else {
-					Owner owner = ownerRepository.findOne(agreement.getOwner().getId());
-					agreement.setOwner(owner);
-					agreement.setLoans(loanSet);
-					agreementService.update(agreement);
-				}
-				return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/" + agreement.getId() + "/view";
-			} else {
-				return "redirect:" + "/manage/debtor/{debtorId}/view";
+			Set<Loan> loanSet = new HashSet<>();
+			for (String l : loanses) {
+				loanSet.add(loanService.getById(Long.valueOf(l)));
 			}
+			if (agreement.getId() == 0) {
+				Owner owner = ownerRepository.findOne(debtorService.getById(debtorId).getOwner().getId());
+				agreement.setOwner(owner);
+				agreement.setAgreementDate(agreement.getNotaryOfficeRegDate());
+				agreement.setAgreementNumber(agreement.getNotaryOfficeRegNumber());
+				agreement.setLoans(loanSet);
+				if(agreement.getCollateralOfficeRegNumber()==null)
+					agreement.setCollateralOfficeRegNumber("");
+				agreementService.add(agreement);
+				return "redirect:/manage/debtor/{debtorId}/collateralagreement/"+agreement.getId()+"/collateralitem/0/save";
+			} else {
+				Owner owner = ownerRepository.findOne(agreement.getOwner().getId());
+				agreement.setOwner(owner);
+				agreement.setLoans(loanSet);
+				agreementService.update(agreement);
+			}
+			return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/" + agreement.getId() + "/view";
 		}
 
     }

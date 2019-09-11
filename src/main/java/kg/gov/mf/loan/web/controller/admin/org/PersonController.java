@@ -340,7 +340,7 @@ public class PersonController {
 	}
 
 	@RequestMapping(value = "/person/save", method = RequestMethod.POST)
-	public String savePersonAndRedirectToPersonList(@Validated @ModelAttribute("person") Person person, BindingResult result) {
+	public String savePersonAndRedirectToPersonList(@Validated @ModelAttribute("person") Person person, BindingResult result,String fromPerson) {
 
 
 
@@ -434,7 +434,13 @@ public class PersonController {
 
 		}
 
-		return "redirect:/person/"+person.getId()+"/details";
+		if(fromPerson.equals("true") || fromPerson.equals("")){
+			return "redirect:/person/"+person.getId()+"/details";
+		}
+		else{
+			String[] splittedVal=fromPerson.split("-");
+			return "redirect:/manage/debtor/"+splittedVal[0]+"/loan/"+splittedVal[1]+"/guarantoragreement/0/save";
+		}
 
 	}
 
