@@ -2,9 +2,7 @@
 <html lang="en" >
 <!-- begin::Head -->
 <head>
-	<title>
-		Главная страница | MFLoan
-	</title>
+	<title th:text="#{main.page.title}">Главная страница</title>
 
 	<div th:replace="fragments/header :: header-css"/>
 </head>
@@ -27,7 +25,7 @@
 				<div class="d-flex align-items-center">
 					<div class="mr-auto">
 						<h3 class="m-subheader__title ">
-							Dashboard
+							-
 						</h3>
 					</div>
 				</div>
@@ -39,7 +37,7 @@
 	</div>
 	<!-- end:: Body -->
 	<!-- begin::Footer -->
-	<div th:replace="layout/footer"/>
+	<!--<div th:replace="layout/footer"/>-->
 	<!-- end::Footer -->
 </div>
 <!-- end:: Page -->

@@ -1,0 +1,132 @@
+/*************** login page ***********/
+
+.login-bg {
+	background: #2e6284;
+}
+
+.m-login.m-login--2.m-login-2--skin-2 .m-login__container .m-login__head .m-login__title {
+	color: #ffffff;
+	text-align: center;
+	font-size: 1.8rem;
+}
+
+.m-login.m-login--2 .m-login__wrapper .m-login__container .m-login__form .m-form__group .form-control, .m-login.m-login--2 .m-login__wrapper .m-login__container .m-login__form .m-form__group .form-control.m-login__form-input--last {
+	border-radius: 2px;
+	border: 1px solid #c57171;
+	padding: 1.5rem 1.5rem;
+	margin-top: 1.5rem;
+	font-size: 18px;
+	font-weight: 900;
+	color: #5b6f7c;
+}
+
+.m-login.m-login--2 .m-login__wrapper .m-login__container .m-login__form {
+	margin: 1rem auto;
+}
+
+.m-login__form-action .m-login__btn {
+	font-weight: bold;
+	font-size: 17px;
+	margin-top: 0;
+
+	display: inline-block;
+	text-align: center;
+	padding: 1.5rem 4rem;
+
+	color: #fff;
+	background-color: #4384b3;
+	border-color: #6ba9a8;
+}
+
+
+/*************** main page ***********/
+
+
+.m-stack.m-stack--desktop.m-stack--ver > .m-stack__item {
+	background: #2e6284;
+}
+
+.m-header-menu.m-header-menu--skin-light .m-menu__nav > .m-menu__item > .m-menu__link .m-menu__link-text, .m-header-menu.m-header-menu--skin-light .m-menu__nav > .m-menu__item.m-menu__item--hover > .m-menu__link .m-menu__link-text,
+.m-header-menu.m-header-menu--skin-light .m-menu__nav > .m-menu__item > .m-menu__link > .m-menu__hor-arrow, .m-header-menu.m-header-menu--skin-light .m-menu__nav > .m-menu__item.m-menu__item--hover > .m-menu__link > .m-menu__hor-arrow,
+.m-header-menu.m-header-menu--submenu-skin-light .m-menu__nav > .m-menu__item .m-menu__submenu > .m-menu__subnav > .m-menu__item > .m-menu__link .m-menu__link-text, .m-header-menu.m-header-menu--submenu-skin-light .m-menu__nav > .m-menu__item .m-menu__submenu > .m-menu__subnav > .m-menu__item.m-menu__item--hover > .m-menu__link .m-menu__link-text{
+	color: #ffffff;
+	font-weight: 500;
+	font-size: 14px;
+}
+
+
+.m-header-menu.m-header-menu--submenu-skin-light .m-menu__nav > .m-menu__item .m-menu__submenu > .m-menu__subnav {
+	background-color: #003050;
+}
+
+
+.m-header-menu .m-menu__nav > .m-menu__item .m-menu__submenu.m-menu__submenu--classic > .m-menu__subnav {
+	padding: 5px 5px;
+	margin: 0px 10px;
+}
+
+.m-header-menu .m-menu__nav > .m-menu__item .m-menu__submenu > .m-menu__subnav > .m-menu__item > .m-menu__link {
+	padding: 8px 0px;
+}
+
+
+.m-header-menu.m-header-menu--submenu-skin-light .m-menu__nav.m-menu__nav--submenu-arrow > .m-menu__item.m-menu__item--submenu.m-menu__item--hover > .m-menu__submenu .m-menu__arrow {
+	color: #2e6284;
+}
+
+
+
+
+
+.m-header-menu.m-header-menu--skin-light .m-menu__nav > .m-menu__item:hover > .m-menu__link .m-menu__link-text, .m-header-menu.m-header-menu--skin-light .m-menu__nav > .m-menu__item.m-menu__item--hover > .m-menu__link .m-menu__link-text,
+.m-header-menu.m-header-menu--submenu-skin-light .m-menu__nav > .m-menu__item .m-menu__submenu > .m-menu__subnav > .m-menu__item:hover > .m-menu__link .m-menu__link-text, .m-header-menu.m-header-menu--submenu-skin-light .m-menu__nav > .m-menu__item .m-menu__submenu > .m-menu__subnav > .m-menu__item.m-menu__item--hover > .m-menu__link .m-menu__link-text{
+	color: #5eb95e;
+	text-decoration: underline;
+}
+.m-header-menu.m-header-menu--skin-light .m-menu__nav > .m-menu__item:hover > .m-menu__link > .m-menu__hor-arrow, .m-header-menu.m-header-menu--skin-light .m-menu__nav > .m-menu__item.m-menu__item--hover > .m-menu__link > .m-menu__hor-arrow
+{
+	color: #000;
+}
+.m-topbar .m-topbar__nav.m-nav > .m-nav__item > .m-nav__link .m-nav__link-icon > i:before {
+	background: #000;
+	background-clip: text;
+	text-fill-color: transparent;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+
+.m-header {
+	height: 20px;
+}
+.m-brand .m-brand__logo, .m-brand .m-brand__tools {
+	height: 20px !important;
+}
+
+
+/* sidebar */
+
+.m-aside-left.m-aside-left--skin-dark {
+	background-color: #003050;
+}
+
+.m-aside-left--minimize .m-aside-menu .m-menu__nav {
+	padding: 20px 0 20px 0;
+}
+
+.m-aside-left--minimize .m-aside-left {
+	width: 50px;
+}
+
+.m-header--fixed .m-body {
+	padding-top: 35px !important;
+}
+
+.m-brand .m-brand__logo .m-brand__logo-wrapper {
+	color: #fff;
+}
+
+
+
+
+
