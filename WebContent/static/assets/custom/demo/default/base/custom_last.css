@@ -50,7 +50,7 @@
 .m-header-menu.m-header-menu--skin-light .m-menu__nav > .m-menu__item > .m-menu__link > .m-menu__hor-arrow, .m-header-menu.m-header-menu--skin-light .m-menu__nav > .m-menu__item.m-menu__item--hover > .m-menu__link > .m-menu__hor-arrow,
 .m-header-menu.m-header-menu--submenu-skin-light .m-menu__nav > .m-menu__item .m-menu__submenu > .m-menu__subnav > .m-menu__item > .m-menu__link .m-menu__link-text, .m-header-menu.m-header-menu--submenu-skin-light .m-menu__nav > .m-menu__item .m-menu__submenu > .m-menu__subnav > .m-menu__item.m-menu__item--hover > .m-menu__link .m-menu__link-text{
 	color: #ffffff;
-	font-weight: 500;
+	font-weight: 700;
 	font-size: 14px;
 }
 
@@ -87,13 +87,12 @@
 {
 	color: #000;
 }
-.m-topbar .m-topbar__nav.m-nav > .m-nav__item > .m-nav__link .m-nav__link-icon > i:before {
-	background: #000;
-	background-clip: text;
-	text-fill-color: transparent;
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-}
+/*.m-topbar .m-topbar__nav.m-nav > .m-nav__item > .m-nav__link .m-nav__link-icon > i:before {*/
+	/*background: #000;*/
+/*}*/
+
+
+
 
 
 .m-header {
@@ -134,15 +133,21 @@
 	background: #4d728a;
 }
 
+
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__head .m-datatable__row > .m-datatable__cell > span, .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__foot .m-datatable__row > .m-datatable__cell > span {
+	font-weight: 800;
+}
 .m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__head .m-datatable__row > .m-datatable__cell, .m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__body .m-datatable__row > .m-datatable__cell, .m-datatable.m-datatable--default.m-datatable--loaded > .m-datatable__table > .m-datatable__foot .m-datatable__row > .m-datatable__cell{
 	border-bottom: 1px solid #c8cfd4;
 }
 
-
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__body .m-datatable__row.m-datatable__row--even > .m-datatable__cell {
+	background: #eaeaea;
+}
 
 
 .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link{
-	background: #456782;
+	background: #3e8a9e;
 	border-color: #0a6aa1;
 }
 
@@ -163,7 +168,17 @@ a:hover{
 .input-group .input-group-addon
 {
 	border: 1px solid #6c92ce;
+	background-color: #f1fbff;
 }
+
+.form-control {
+	background-color: #f1fbff;
+	color: #000000;
+	border: 1px solid #6c92ce;
+}
+
+
+
 
 
 .m-input-icon.m-input-icon--left .form-control::placeholder,
@@ -171,9 +186,72 @@ a:hover{
 .input-group .form-control::placeholder
 {
 	color: #000000;
+	font-weight: 600;
+}
+
+.m-input-icon.m-input-icon--left .form-control, .m-bootstrap-select.bootstrap-select.btn-group.m-bootstrap-select--solid > .dropdown-toggle, .input-group .form-control:not(:last-child), .input-group-addon:not(:last-child), .input-group-btn:not(:last-child) > .btn, .input-group-btn:not(:last-child) > .btn-group > .btn, .input-group-btn:not(:last-child) > .dropdown-toggle, .input-group-btn:not(:first-child) > .btn:not(:last-child):not(.dropdown-toggle), .input-group-btn:not(:first-child) > .btn-group:not(:last-child) > .btn, .input-group .input-group-addon::placeholder {
+	font-weight: 600;
+	color: #000000;
+}
+
+
+
+.m-grid.m-grid--ver-desktop.m-grid--desktop > .m-grid__item.m-grid__item--fluid {
+	background-color: #cccccc;
 }
 
 
 
 
 
+
+.m--font-primary {
+	color: #127eb5 !important;
+}
+
+/*.m--font-brand {*/
+	/*color: #0456f9 !important;*/
+/*}*/
+
+
+.nav-tabs {
+	border-bottom: 1px solid #c3c3c3;
+}
+
+.nav.nav-pills .nav-link, .nav.nav-tabs .nav-link {
+	font-size: 0.9em;
+}
+
+.m-widget1 .m-widget1__item .m-widget1__title {
+	font-size: 11px;
+	font-weight: 400;
+	color: #777777;
+}
+
+.m-widget1 .m-widget1__item .m-widget1__desc {
+	margin-top: 4px;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.25;
+}
+
+
+.m-widget1 {
+	padding: 8px;
+	background: #ffffff;
+}
+
+.m-portlet .m-portlet__head .m-portlet__head-caption .m-portlet__head-title .m-portlet__head-text {
+	font-size: 16px;
+	text-align: center;
+}
+
+
+
+/*.bootstrap-select.btn-group .dropdown-menu.inner > li > a .text {*/
+	/*color: #ffffff;*/
+/*}*/
+
+/*.dropdown-menu {*/
+	/*background-color: #f1fbff;*/
+/*}*/
