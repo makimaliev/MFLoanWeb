@@ -40,7 +40,7 @@
                                     <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_ASSET')" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
                                        th:href="@{/asset/0/save}"
                                        data-toggle="modal"
-                                       data-target="#assetForm"><span th:text="#{label.add}"></span>
+                                       data-target="#assetForm"><span th:text="#{label.asset.add}"></span>
                                         <i class="la la-plus"></i></span>
                                     </a>
                                 </li>
@@ -53,13 +53,13 @@
                                 <thead class="thead-default">
                                 <tr>
                                     <th th:text="#{label.view}"></th>
-                                    <th th:text="#{label.name}"></th>
-                                    <th th:text="#{label.numberAndDate}"></th>
-                                    <th th:text="#{label.amount1}"></th>
-                                    <th th:text="#{label.assetStatus}"></th>
-                                    <th th:text="#{label.assetType}"></th>
-                                    <th th:text="#{label.assetFromDebtors}"></th>
-                                    <th th:text="#{label.assetToDebtors}"></th>
+                                    <th th:text="#{label.asset.name}"></th>
+                                    <th th:text="#{label.asset.numberAndDate}"></th>
+                                    <th th:text="#{label.asset.amount1}"></th>
+                                    <th th:text="#{label.asset.status}"></th>
+                                    <th th:text="#{label.asset.type}"></th>
+                                    <th th:text="#{label.asset.fromDebtors}"></th>
+                                    <th th:text="#{label.asset.toDebtors}"></th>
                                     <th>&nbsp;</th>
                                 </tr>
                                 </thead>

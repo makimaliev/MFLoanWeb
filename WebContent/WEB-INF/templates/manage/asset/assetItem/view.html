@@ -24,7 +24,7 @@
             <div class="m-subheader ">
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
-                        <h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.asset.item}">
+                        <h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.asset.items}">
                             Предмет залога
                         </h3>
                         <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
@@ -47,7 +47,7 @@
                                 -
                             </li>
                             <li class="m-nav__item">
-								<span class="m-nav__link-text"th:text="#{label.asset.item}"></span>
+								<span class="m-nav__link-text"th:text="#{label.asset.items}"></span>
                             </li>
                         </ul>
                     </div>
@@ -73,7 +73,7 @@
                                     <a class="nav-link m--font-primary active" data-toggle="tab" href="#main" th:text="#{label.loan.credit}"></a>
                                 </li>
                                 <li class="nav-item">
-                                    <a id="itemInspectionsFunction" class="nav-link m--font-primary" data-toggle="tab" href="#inspections" th:text="#{label.assetItem.inspection}"></a>
+                                    <a id="itemInspectionsFunction" class="nav-link m--font-primary" data-toggle="tab" href="#inspections" th:text="#{label.asset.item.inspection}"></a>
                                 </li>
                             </ul>
                             <div class="tab-content">
@@ -316,7 +316,7 @@
                                                 <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_ASSETITEMINSPECTION')" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
                                                    th:href="@{/asset/__${asset.id}__/assetItem/__${item.id}__/assetItemInspection/0/save}"
                                                    data-toggle="modal"
-                                                   data-target="#assetItemInspectionForm"><span th:text="#{label.assetItemInspection.add}"></span>
+                                                   data-target="#assetItemInspectionForm"><span th:text="#{label.asset.item.addInspection}"></span>
                                                     <i class="la la-edit"></i></span>
                                                 </a>
                                             </div>

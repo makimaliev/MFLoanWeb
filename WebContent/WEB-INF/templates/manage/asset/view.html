@@ -174,7 +174,7 @@
                                                 <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_ASSETITEM')" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
                                                    th:href="@{/asset/__${asset.id}__/assetItem/0/save}"
                                                    data-toggle="modal"
-                                                   data-target="#addForm"><span th:text="#{label.assetItem.add}"></span>
+                                                   data-target="#addForm"><span th:text="#{label.asset.addItem}"></span>
                                                     <i class="la la-plus-circle"></i></span>
                                                 </a>
                                             </div>
@@ -208,7 +208,7 @@
                                                 <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_ASSETEXPENSE')" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
                                                    th:href="@{/asset/__${asset.id}__/assetExpense/0/save}"
                                                    data-toggle="modal"
-                                                   data-target="#addForm"><span th:text="#{label.assetExpense.add}"></span>
+                                                   data-target="#addForm"><span th:text="#{label.asset.addExpense}"></span>
                                                     <i class="la la-plus-circle"></i></span>
                                                 </a>
                                             </div>
@@ -242,7 +242,7 @@
                                                 <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_ASSETPAYMENT')" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
                                                    th:href="@{/asset/__${asset.id}__/payment/add}"
                                                    data-toggle="modal"
-                                                   data-target="#addForm"><span th:text="#{label.assetPayment.add}"></span>
+                                                   data-target="#addForm"><span th:text="#{label.asset.addPayment}"></span>
                                                     <i class="la la-plus-circle"></i></span>
                                                 </a>
                                             </div>
@@ -276,7 +276,7 @@
                                                 <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_ASSETTOLOANS')" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
                                                    th:href="@{/asset/__${asset.id}__/toLoan/add}"
                                                    data-toggle="modal"
-                                                   data-target="#addForm"><span th:text="#{label.assetToLoan.add}"></span>
+                                                   data-target="#addForm"><span th:text="#{label.asset.addToLoan}"></span>
                                                     <i class="la la-plus-circle"></i></span>
                                                 </a>
                                             </div>
@@ -310,7 +310,7 @@
                                                 <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_ASSETFROMLOANS')" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
                                                    th:href="@{/asset/__${asset.id}__/payment/add}"
                                                    data-toggle="modal"
-                                                   data-target="#addForm"><span th:text="#{label.assetPayment.add}"></span>
+                                                   data-target="#addForm"><span th:text="#{label.asset.addFromLoans}"></span>
                                                     <i class="la la-plus-circle"></i></span>
                                                 </a>
                                             </div>
@@ -408,7 +408,7 @@
                                     }
                                 }, {
                                     field: "name",
-                                    title: "Название"
+                                    title: "Наименование актива"
                                 }],
                                 translate: {
                                     records: {
