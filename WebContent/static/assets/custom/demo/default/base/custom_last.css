@@ -129,6 +129,10 @@
 
 /* datatable */
 
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__body .m-datatable__row.m-datatable__row--active > .m-datatable__cell {
+	background: #ffffff;
+}
+
 .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__head .m-datatable__row > .m-datatable__cell, .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__foot .m-datatable__row > .m-datatable__cell,
 .thead-default th{
 	background: #4d728a;
@@ -143,7 +147,7 @@
 }
 
 .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__body .m-datatable__row.m-datatable__row--even > .m-datatable__cell {
-	background: #eaeaea;
+	background: #f7f6f6;
 }
 
 
@@ -151,6 +155,8 @@
 	background: #3e8a9e;
 	border-color: #0a6aa1;
 }
+
+
 
 
 
@@ -197,9 +203,9 @@ a:hover{
 
 
 
-.m-grid.m-grid--ver-desktop.m-grid--desktop > .m-grid__item.m-grid__item--fluid {
-	background-color: #e0e0e0;
-}
+/*.m-grid.m-grid--ver-desktop.m-grid--desktop > .m-grid__item.m-grid__item--fluid {*/
+	/*background-color: #e0e0e0;*/
+/*}*/
 
 
 
