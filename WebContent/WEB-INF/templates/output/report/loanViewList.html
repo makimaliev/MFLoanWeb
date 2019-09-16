@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <!-- begin::Head -->
 <head>
-    <title th:text="#{label.loan.view}">Loan view</title>
+    <title th:text="#{label.loan.list}">Loan view</title>
 
     <div th:replace="fragments/header :: header-css"/>
     <link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
@@ -12,6 +12,7 @@
     <link th:href="@{/assets/global/plugins/jquery-multi-select/css/multi-select.css}" media="screen" rel="stylesheet" type="text/css">
 </head>
 <!-- end::Head -->
+
 <!-- end::Body -->
 <body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
 <!-- begin:: Page -->
@@ -27,170 +28,100 @@
         <!-- END: Left Aside -->
         <div class="m-grid__item m-grid__item--fluid m-wrapper">
 
-            <!-- BEGIN: Subheader -->
-            <div class="m-subheader ">
-                <div class="d-flex align-items-center">
-                    <div class="mr-auto">
-                        <h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.loans}">
-                            Loans
-                        </h3>
-                        <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-                            <li class="m-nav__item m-nav__item--home">
-                                <a th:href="@{/}" class="m-nav__link m-nav__link--icon">
-                                    <i class="m-nav__link-icon la la-home"></i>
-                                </a>
-                            </li>
-                            <li class="m-nav__separator">
-                                -
-                            </li>
-                            <li class="m-nav__item">
-                                <span class="m-nav__link-text" th:text="#{label.loans}">List of loans</span>
-                            </li>
-                        </ul>
+            <div class="m-content">
+
+                <!--Filter panel-->
+                <div class="m-portlet filter_panel">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="m-form__control">
+                                <div class="m-input-icon m-input-icon--left">
+                                    <input type="text" class="form-control m-input m-input--solid" th:placeholder=#{label.debtor.name} id="debtor_name">
+                                    <span class="m-input-icon__icon m-input-icon__icon--left"><span><i class="la la-search"></i></span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="m-form__control">
+                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_region">
+                                    <option value="">Область</option>
+                                    <option th:each="region: ${regions}" th:value="${region.id}" th:text="${region.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="m-form__control">
+                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_district">
+                                    <option value="">Район</option>
+                                    <option th:each="district : ${districts}" th:value="${district.id}" th:text="${district.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="m-form__control">
+                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_finGroup">
+                                    <option value="">Фин. группа</option>
+                                    <option th:each="finGroup: ${finGroups}" th:value="${finGroup.id}" th:text="${finGroup.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="m-input-icon m-input-icon--left">
+                                <input type="text" class="form-control m-input m-input--solid" th:placeholder=#{label.loan.creditNumber} id="credit_number">
+                                <span class="m-input-icon__icon m-input-icon__icon--left"><span><i class="la la-search"></i></span></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-1">
+                            <i id="shower" onclick="showFields()" class="la la-angle-down"></i>
+                        </div>
+                    </div>
+                    <div class="row hideable">
+                        <div class="col-lg-3">
+                            <div class="m-input-icon m-input-icon--left">
+                                <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.reg.number}" id="reg_number">
+                                <span class="m-input-icon__icon m-input-icon__icon--left"><span><i class="la la-search"></i></span></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group date m_datetimepicker" id="from_datepicker">
+                                <input  class="form-control m-input" th:placeholder="#{label.fromDate}" name="date" />
+                                <span class="input-group-addon"><i class="la la-calendar glyphicon-th"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group date m_datetimepicker" id="to_datepicker">
+                                <input  class="form-control m-input" th:placeholder="#{label.toDate}" name="date" />
+                                <span class="input-group-addon"><i class="la la-calendar glyphicon-th"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="m-form__control">
+                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_finGroup">
+                                    <option value="">Фин. группа</option>
+                                    <option th:each="finGroup: ${finGroups}" th:value="${finGroup.id}" th:text="${finGroup.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="m-form__control ">
+                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_loan_type">
+                                    <option value="">Вид кредита</option>
+                                    <option th:each="loanType: ${loanTypes}" th:value="${loanType.id}" th:text="${loanType.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-1">
+                            <i id="hider" onclick="hideFields()" class="la la-angle-up"></i>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- END: Subheader -->
-            <div class="m-content">
+
+
+
                 <!--Begin Portlet-->
                 <div class="m-portlet">
                     <div class="m-portlet__body">
 
-                        <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-                            <div class="form-group m-form__group row " style="margin-left: 10px">
-                                <div class="col">
-                                    <span id="hider" type="submit" onclick="hideFields()" class="kt-badge kt-badge--brand kt-badge--md">СКРЫТЬ</span>
-                                    <span id="shower" type="submit" onclick="showFields()" class="kt-badge kt-badge--brand kt-badge--md">ОТКРЫТЬ</span>
-                                </div>
-                                <div class="col-sm">
-                                    <div class="m-input-icon m-input-icon--left mb-2">
-                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder=#{label.debtor.name} id="debtor_name">
-                                        <span class="m-input-icon__icon m-input-icon__icon--left">
-                                                    <span>
-                                                        <i class="la la-search"></i>
-                                                    </span>
-                                                </span>
-                                    </div>
-                                    <div class="m-input-icon m-input-icon--left hideable">
-                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.reg.number}" id="reg_number">
-                                        <span class="m-input-icon__icon m-input-icon__icon--left">
-                                                    <span>
-                                                        <i class="la la-search"></i>
-                                                    </span>
-                                                </span>
-                                    </div>
-                                </div>
-                                <!--<div class="col-md-2">-->
-                                    <!---->
-                                <!--</div>-->
-                                <div class="col-sm">
-                                    <div class="m-form__group m-form__group--inline mb-2">
-                                        <!--<div class="m-form__label">-->
-                                            <!--<label>-->
-                                                <!--Область:-->
-                                            <!--</label>-->
-                                        <!--</div>-->
-                                        <div class="m-form__control" style="width: 150px">
-                                            <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_region">
-                                                <option value="">
-                                                    Область
-                                                </option>
-                                                <option th:each="region: ${regions}" th:value="${region.id}" th:text="${region.name}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="m-form__group m-form__group--inline  hideable">
-                                        <!--<div class="m-form__label">-->
-                                            <!--<label>-->
-                                                <!--Район:-->
-                                            <!--</label>-->
-                                        <!--</div>-->
-                                        <div class="input-group date m_datetimepicker mb-2" id="from_datepicker">
-                                            <input  class="form-control m-input" th:placeholder="#{label.fromDate}" name="date" />
-                                            <span class="input-group-addon">
-                                                    <i class="la la-calendar glyphicon-th"></i>
-                                                </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm">
-                                    <div class="m-form__control" style="width: 150px">
-                                        <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_district">
-                                            <option value="">
-                                                Район
-                                            </option>
-                                            <option th:each="district : ${districts}" th:value="${district.id}" th:text="${district.name}"></option>
-                                        </select>
-                                    </div>
-                                    <div class="input-group date m_datetimepicker  hideable" id="to_datepicker">
-                                        <input  class="form-control m-input" th:placeholder="#{label.toDate}" name="date" />
-                                        <span class="input-group-addon">
-                                                    <i class="la la-calendar glyphicon-th"></i>
-                                                </span>
-                                    </div>
-                                </div>
-                                <div class="col-sm">
-                                    <div class="m-form__group m-form__group--inline mb-2" style="width: 150px">
-                                        <!--<div class="m-form__label">-->
-                                            <!--<label>-->
-                                                <!--Фин. группа:-->
-                                            <!--</label>-->
-                                        <!--</div>-->
-                                        <div class="m-form__control">
-                                            <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_finGroup">
-                                                <option value="">
-                                                    Фин. группа
-                                                </option>
-                                                <option th:each="finGroup: ${finGroups}" th:value="${finGroup.id}" th:text="${finGroup.name}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="m-form__group m-form__group--inline mb-2  hideable" style="width: 150px">
-                                        <!--<div class="m-form__label">-->
-                                            <!--<label>-->
-                                                <!--Вид кредита:-->
-                                            <!--</label>-->
-                                        <!--</div>-->
-                                        <div class="m-form__control ">
-                                            <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_loan_type">
-                                                <option value="">
-                                                    Вид кредита
-                                                </option>
-                                                <option th:each="loanType: ${loanTypes}" th:value="${loanType.id}" th:text="${loanType.name}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm">
-                                    <div class="m-input-icon m-input-icon--left mb-2">
-                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder=#{label.loan.creditNumber} id="credit_number">
-                                        <span class="m-input-icon__icon m-input-icon__icon--left">
-                                                    <span>
-                                                        <i class="la la-search"></i>
-                                                    </span>
-                                                </span>
-                                    </div>
-                                    <div class="m-form__group m-form__group--inline mb-2  hideable" style="width: 150px">
-                                        <!--<div class="m-form__label">-->
-                                            <!--<label>-->
-                                                <!--Куратор:-->
-                                            <!--</label>-->
-                                        <!--</div>-->
-                                        <div class="m-form__control">
-                                            <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_supervisor">
-                                                <option value="">
-                                                    Куратор
-                                                </option>
-                                                <option th:each="supervisor: ${supervisors}" th:value="${supervisor.id}" th:text="${supervisor.name}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm"></div>
-                            </div>
-                            <div class="m-separator m-separator--dashed d-xl-none"></div>
-                        </div>
                        <!-- <div hidden="hidden" class="col-md-5">
                             <a id="search_form" sec:authorize="hasRole('ADMIN')" data-remote="false"
                                data-toggle="modal"

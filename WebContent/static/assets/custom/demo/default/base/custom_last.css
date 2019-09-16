@@ -157,7 +157,10 @@
 }
 
 
-
+.filter_panel{
+	padding: 10px;
+	background: #5ca276;
+}
 
 
 a{
