@@ -886,17 +886,19 @@ public class PrintoutTemplateController {
         if(kvartal==1 ){
             for(int i=5;i<tbl.getRows().size()-3;i++){
                 row=tbl.getRows().get(i);
-                for(int j=1;j<row.getTableCells().size();j++){
+                for(int j=2;j<row.getTableCells().size();j++){
                     cell=row.getTableCells().get(j);
-					cell.getParagraphs().get(0).getRuns().get(0).setText("3 000,00",0);
-//                    cell.setText("3 000,00");
                     if(j==6){
 						cell.getParagraphs().get(0).getRuns().get(0).setText("12 000,00",0);
                     }
 
+                    else{
+						cell.getParagraphs().get(0).getRuns().get(0).setText("3 000,00",0);
+					}
+
                 }
             }
-            row=tbl.getRows().get(tbl.getRows().size()-2);
+            row=tbl.getRows().get(tbl.getRows().size()-3);
             cell=row.getTableCells().get(2);
 			cell.getParagraphs().get(0).getRuns().get(0).setText("2 000,00",0);
 
@@ -989,13 +991,8 @@ public class PrintoutTemplateController {
                     else if(i==5 && j==6){
 						cell.getParagraphs().get(0).getRuns().get(0).setText("3 000,00",0);
                     }
-                    else if(i==tbl.getRows().size()-2 && j==6){
-                        cell.removeParagraph(0);
-                        paragraph = cell.addParagraph();
-                        paragraph.setAlignment(ParagraphAlignment.RIGHT);
-                        run = paragraph.createRun();
-                        run.setText("11 000,00");
-                        cell.setParagraph(paragraph);
+                    else if(i==tbl.getRows().size()-3 && j==6){
+						cell.getParagraphs().get(0).getRuns().get(0).setText("11 000,00",0);
                     }
                     else if(j==6){
 						cell.getParagraphs().get(0).getRuns().get(0).setText("12 000,00",0);
@@ -1003,6 +1000,9 @@ public class PrintoutTemplateController {
                     else if(i==tbl.getRows().size()-2 && (j==5)){
 						cell.getParagraphs().get(0).getRuns().get(0).setText("2 000,00",0);
                     }
+					else if(i==tbl.getRows().size()-3 && (j==5)){
+						cell.getParagraphs().get(0).getRuns().get(0).setText("2 000,00",0);
+					}
                     else if(j!=6){
 						cell.getParagraphs().get(0).getRuns().get(0).setText("3 000,00",0);
                     }

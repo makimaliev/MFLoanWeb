@@ -1,4 +1,5 @@
-<form th:action="@{/asset/__${assetId}__/assetExpense/save}" class="form-horizontal" method="post" th:object="${expense}">
+<form th:action="@{/asset/__${assetId}__/assetExpense/save}" class="form-horizontal" method="post"
+      th:object="${expense}" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="modal-header">
         <h5 class="modal-title" th:text="#{label.role.modal.title}"></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -40,4 +41,5 @@
         <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.role.button.cancel}"></button>
         <button type="submit" class="btn btn-primary" th:text="#{label.role.button.submit}"></button>
     </div>
+    <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-datetimepicker.js}" type="text/javascript"></script>
 </form>

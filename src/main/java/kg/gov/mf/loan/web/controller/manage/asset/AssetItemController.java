@@ -142,16 +142,19 @@ public class AssetItemController {
     @PostMapping("asset/{id}/assetItem/save")
     public String postSave(@PathVariable("id") Long id,AssetItem assetItem,AssetItemDetails assetItemDetails,String date, String expl_date){
 
+        Asset asset=assetService.getById(id);
+
         if (assetItem.getId()==0){
-            assetItemDetails.setAssetItem(assetItem);
             assetItemDetailsService.add(assetItemDetails);
+            assetItemDetails.setAssetItem(assetItem);
             assetItem.setAssetItemDetails(assetItemDetails);
-            Asset asset=assetService.getById(id);
             assetItem.setAsset(asset);
             assetItemService.add(assetItem);
+            assetItemDetailsService.update(assetItemDetails);
         }
         else {
-            assetItemDetailsService.update(assetItemDetails);
+            assetItem.setAssetItemDetails(assetItemDetails);
+            assetItem.setAsset(asset);
             assetItemService.update(assetItem);
         }
 

@@ -418,6 +418,16 @@
                             },{
                                 field: "inspectionResultTypeName",
                                 title: "Вид"
+                            },{
+                                field: "Edit",
+                                title: "Редактировать",
+                                template:function (row) {
+                                    return '\
+                                        <a role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" href="/asset/'+ assetId+ '/assetItem/'+assetItemId+'/assetItemInspection/'+row.id+'/save" data-toggle="modal" data-target="#assetItemInspectionForm">\
+                                            <i class="la la-edit"></i></span>\
+                                        </a>\
+                                    ';
+                                }
                             }],
                             translate: {
                                 records: {

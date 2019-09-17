@@ -2,6 +2,7 @@
 <form id="form" th:action="@{/asset/__${asset.id}__/assetItem/save}" th:object="${item}" method="post" class="m-form m-form--fit m-form--label-align-right">
 
                         <input type="hidden" name="id" th:value="*{id}"/>
+                        <input type="hidden" th:field="${itemDetails.id}"/>
                         <input type="hidden" name="id" th:field="*{owner.id}" id="ownerId"/>
                         <input type="hidden" th:field="*{organization.id}" id="organizationId"/>
 
@@ -98,6 +99,7 @@
                             </div>
                             <div id="myDiv">
                                 <div th:object="${itemDetails}">
+                                    <input hidden="hidden" th:field="${asset.id}">
                                     <div class="m-form__section">
                                         <div class="m-form__heading">
                                             <h3 class="m-form__heading-title" th:text="#{label.assetItem.details}"></h3>

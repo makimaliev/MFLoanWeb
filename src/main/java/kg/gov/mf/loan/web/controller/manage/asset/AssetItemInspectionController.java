@@ -115,7 +115,12 @@ public class AssetItemInspectionController {
             assetItemInspectionService.add(assetItemInspection);
         }
         else {
-            assetItemInspectionService.update(assetItemInspection);
+            AssetItemInspection oldAssetItemInspection=assetItemInspectionService.getById(assetItemInspection.getId());
+            oldAssetItemInspection.setInspectionResultType(assetItemInspection.getInspectionResultType());
+            oldAssetItemInspection.setOnDate(assetItemInspection.getOnDate());
+            oldAssetItemInspection.setDetails(assetItemInspection.getDetails());
+
+            assetItemInspectionService.update(oldAssetItemInspection);
         }
 
         return "redirect:/asset/{assetId}/assetItem/{itemId}/view";
