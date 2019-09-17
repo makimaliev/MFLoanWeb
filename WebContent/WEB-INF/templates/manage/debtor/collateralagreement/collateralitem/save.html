@@ -102,25 +102,25 @@
                                         <span class="m--font-danger">*</span>
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
-                                        <input required="required" type="text" class="form-control m-input" name="name" th:value="${item.name}">
+                                        <input required="required " oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)" type="text" class="form-control m-input" name="name" th:value="${item.name}">
                                     </div>
                                 </div>
                                 <div class="form-group m-form__group row">
                                     <label class="col-form-label col-lg-4 col-sm-12">
                                         <span th:text="#{label.collateralItem.description}"></span>
-                                        <span class="m--font-danger">*</span>
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
                                         <textarea class="form-control m-input" name="description" th:value="${item.description}"></textarea>
                                     </div>
                                 </div>
 								<div class="form-group m-form__group row">
-									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.item.owner2}">
-									Owner <span class="m--font-danger">*</span>
+									<label class="col-form-label col-lg-4 col-sm-12" >
+									<span th:text="#{label.item.owner2}"></span>
+									<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="m-typeahead">
-											<input required="required" class="form-control m-input" id="owner_typeahead" type="text" placeholder="Owners" th:value="${ownerText}" >
+											<input required="required " oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)" class="form-control m-input" id="owner_typeahead" type="text" placeholder="Owners" th:value="${ownerText}" >
 										</div>
 									</div>
 								</div>
@@ -130,7 +130,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select required="required" class="form-control m-bootstrap-select m_selectpicker" th:field="${item.itemType.id}" name="itemType"  id="itemType">
+										<select required="required " oninvalid="showNotEmptyMessage(this)" onchange="deleteMessage(this)" class="form-control m-bootstrap-select m_selectpicker" th:field="${item.itemType.id}" name="itemType"  id="itemType">
 											<option th:each="type : ${iTypes}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
 									</div>
@@ -141,7 +141,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input required="required" type="text" class="form-control m-input" name="quantity" th:value="${item.quantity}">
+										<input required="required " oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)" type="text" class="form-control m-input" name="quantity" th:value="${item.quantity}">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -150,7 +150,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select required="required" class="form-control m-bootstrap-select m_selectpicker" th:field="${item.quantityType.id}" name="quantityType"  id="quantityType" th:title="#{label.select}">
+										<select required="required " oninvalid="showNotEmptyMessage(this)" onchange="deleteMessage(this)" class="form-control m-bootstrap-select m_selectpicker" th:field="${item.quantityType.id}" name="quantityType"  id="quantityType" th:title="#{label.select}">
 											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="type : ${qTypes}" th:value="${type.id}" th:text="${type.name}"></option>
 										</select>
@@ -162,7 +162,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input required="required" type="text" class="form-control m-input" name="estimatedValue">
+										<input required="required " oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)" type="text" class="form-control m-input" name="estimatedValue">
 									</div>
 									<!--th:value="${#numbers.formatDecimal(item.estimatedValue,1,2,'POINT')}-->
 								</div>
@@ -172,7 +172,7 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input required="required" type="text" class="form-control m-input" name="collateralValue" >
+										<input required="required " oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)" type="text" class="form-control m-input" name="collateralValue" >
 									</div>
 									<!--th:value="${#numbers.formatDecimal(item.collateralValue,1,2,'POINT')}"-->
 								</div>
@@ -182,7 +182,7 @@
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="m-typeahead">
-											<input required="required" class="form-control m-input mestoArresta" id="organization_typeahead" type="text" th:placeholder="#{label.item.organization}" th:value="${organizationText}">
+											<input required="required " oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)" class="form-control m-input mestoArresta" id="organization_typeahead" type="text" th:placeholder="#{label.item.organization}" th:value="${organizationText}">
 										</div>
 									</div>
 								</div>
@@ -205,6 +205,7 @@
                                         <div class="form-group m-form__group row" id="goods_id">
                                             <label class="col-form-label col-lg-4 col-sm-12">
                                                 <span id="detailsLabel6" th:text="#{label.collateralItem.details6}"></span>
+												<span class="m--font-danger">*</span>
                                             </label>
                                             <div class="col-lg-4 col-md-9 col-sm-12">
                                                 <input id="goodIdentificationNum" type="text" class="form-control m-input" name="goods_id" th:value="${itemDetails?.goods_id}">
@@ -239,7 +240,6 @@
                                         <div class="form-group m-form__group row" id="document">
                                             <label class="col-form-label col-lg-4 col-sm-12">
                                                 <span th:text="#{label.collateralItem.document}"></span>
-                                                <span class="m--font-danger">*</span>
                                             </label>
                                             <div class="col-lg-4 col-md-9 col-sm-12">
                                                 <input type="text" class="form-control m-input" name="document" th:value="${itemDetails?.document}">
@@ -248,7 +248,6 @@
                                         <div class="form-group m-form__group row" id="goods_address">
                                             <label class="col-form-label col-lg-4 col-sm-12">
                                                 <span  th:text="#{label.collateralItem.goodsAddress}"></span>
-                                                <span class="m--font-danger">*</span>
                                             </label>
                                             <div class="col-lg-4 col-md-9 col-sm-12">
                                                 <input type="text" class="form-control m-input" name="goods_address" th:value="${itemDetails?.goods_address}">
@@ -305,7 +304,6 @@
                                         <div class="form-group m-form__group row" id="incomplete_reason">
                                             <label class="col-form-label col-lg-4 col-sm-12">
                                                 <span  th:text="#{label.collateralItem.incomplete_reason}"></span>
-                                                <span class="m--font-danger">*</span>
                                             </label>
                                             <div class="col-lg-4 col-md-9 col-sm-12">
                                                 <input type="text" class="form-control m-input" name="incomplete_reason" th:value="${itemDetails?.incomplete_reason}">
@@ -533,12 +531,17 @@
         }
         $("#itemType").on("change",function () {
             if($("#itemType").val()==3){
-                alert("came");
-                $("#goodIdentificationNum").attr("required","required");
+
+                $(".mestoArresta").attr("required");
+                $("#goodIdentificationNum").attr("required","");
             }
             else if($("#itemType").val()==2 || $("#itemType").val()==4 || $("#itemType").val()==8){
                 $(".mestoArresta").removeAttr("required");
+                $("#goodIdentificationNum").removeAttr("required");
             }
+            else{
+                $("#goodIdentificationNum").removeAttr("required");
+			}
         });
 
         function updateText()
@@ -920,6 +923,13 @@
 	// $("#itemType").on('change',function () {
 	// 	maker();
 	// });
+    function showNotEmptyMessage(d){
+        d.setCustomValidity([[#{label.pleaseFillThisField}]]);
+    }
+
+    function deleteMessage(d){
+        d.setCustomValidity("");
+    }
 </script>
 
 </body>

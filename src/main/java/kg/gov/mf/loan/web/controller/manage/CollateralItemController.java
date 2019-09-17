@@ -380,11 +380,15 @@ public class CollateralItemController {
 			CollateralItemArrestFree collateralItemArrestFree=new CollateralItemArrestFree();
 			collateralItemArrestFree.setOnDate(new Date());
 			model.addAttribute("af", collateralItemArrestFree);
+			model.addAttribute("document",null);
 		}
 
 		if(afId > 0)
 		{
-			model.addAttribute("af", afService.getById(afId));
+			CollateralItemArrestFree arrestFree=afService.getById(afId);
+			Document document=documentService.getById(Long.parseLong(arrestFree.getDocument()));
+			model.addAttribute("af", arrestFree);
+			model.addAttribute("document",document);
 		}
 		return "/manage/debtor/collateralagreement/collateralitem/arrestfree/save";
 	}
@@ -413,6 +417,7 @@ public class CollateralItemController {
 		else{
 			User user = userService.findByUsername(Utils.getPrincipal());
 			af.setArrestFreeBy(user.getId());
+			af.setDocument(String.valueOf(documentIds));
 			item.setCollateralItemArrestFree(af);
 			afService.update(af);
 			itemService.update(item);

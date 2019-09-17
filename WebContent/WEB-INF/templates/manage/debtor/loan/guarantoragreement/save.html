@@ -88,12 +88,13 @@
                             <div class="m-form__section">
 
                                 <div class="form-group m-form__group row">
-                                    <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.guarantor}">
-                                        Owner <span class="m--font-danger">*</span>
+                                    <label class="col-form-label col-lg-4 col-sm-12">
+                                        <span th:text="#{label.agreement.guarantor}"></span>
+                                        <span class="m--font-danger">*</span>
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
                                         <div class="m-typeahead">
-                                            <input class="form-control m-input" id="guarantor_typeahead" type="text" th:placeholder="#{label.agreement.guarantor}" th:value="${ownerText}">
+                                            <input required="required " oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)" class="form-control m-input" id="guarantor_typeahead" type="text" th:placeholder="#{label.agreement.guarantor}" th:value="${ownerText}">
                                         </div>
                                     </div>
                                     <div>
@@ -120,39 +121,45 @@
                                 </div>
 
                                 <div class="form-group m-form__group row">
-                                    <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.loans}">
-                                        Loans <span class="m--font-danger">*</span>
+                                    <label class="col-form-label col-lg-4 col-sm-12">
+                                        <span th:text="#{label.agreement.loans}"></span>
+                                        <span class="m--font-danger">*</span>
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
-                                        <select name="loanses" class="form-control m-bootstrap-select m_selectpicker" multiple >
+                                        <select name="loanses" class="form-control m-bootstrap-select m_selectpicker" multiple
+                                                required="required " oninvalid="showNotEmptyMessage(this)" onchange="deleteMessage(this)">
                                             <!--<option th:each="loan : ${tLoans}"-->
                                             <!--th:value="${{loan}}"-->
                                             <!--th:text="${loan.regNumber}">-->
                                             <!--</option>-->
                                             <option th:each="loan : ${tLoans}"
                                                     th:value="${loan.id}"
-                                                    th:text="${loan.regNumber}"
+                                                    th:text="${loan.regNumber}+' | '+${loan.regDate}"
                                                     th:selected="${loanIds.contains(loan.id)}"></option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="form-group m-form__group row">
-                                    <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.notaryOfficeRegNumber}">
-                                        Notary office registration number <span class="m--font-danger">*</span>
+                                    <label class="col-form-label col-lg-4 col-sm-12">
+                                        <span th:text="#{label.agreement.notaryOfficeRegNumber}"></span>
+                                        <span class="m--font-danger">*</span>
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
-                                        <input type="text" class="form-control m-input" th:field="*{notaryOfficeRegNumber}">
+                                        <input type="text" class="form-control m-input" th:field="*{notaryOfficeRegNumber}"
+                                               required="required " oninvalid="showNotEmptyMessage(this)" onchange="deleteMessage(this)">
                                     </div>
                                 </div>
 
                                 <div class="form-group m-form__group row">
-                                    <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.notaryOfficeRegDate}">
-                                        Notary office registration date
+                                    <label class="col-form-label col-lg-4 col-sm-12">
+                                        <span th:text="#{label.agreement.notaryOfficeRegDate}"></span>
+                                        <span class="m--font-danger">*</span>
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
                                         <div class="input-group date m_datetimepicker_6">
-                                            <input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{notaryOfficeRegDate}"/>
+                                            <input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" th:field="*{notaryOfficeRegDate}"
+                                                   required="required " oninvalid="showNotEmptyMessage(this)" onchange="deleteMessage(this)"/>
                                             <span class="input-group-addon">
 													<i class="la la-calendar glyphicon-th"></i>
 												</span>
@@ -161,12 +168,14 @@
                                 </div>
 
                                 <div class="form-group m-form__group row">
-                                    <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.agreement.notary}">
-                                        Owner <span class="m--font-danger">*</span>
+                                    <label class="col-form-label col-lg-4 col-sm-12">
+                                        <span th:text="#{label.agreement.notary}">*</span>
+                                        <span class="m--font-danger">*</span>
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
                                         <div class="m-typeahead">
-                                            <input class="form-control m-input" id="owner_typeahead" type="text" th:placeholder="#{label.agreement.notary}" th:value="${notaryText}">
+                                            <input class="form-control m-input" id="owner_typeahead" type="text" th:placeholder="#{label.agreement.notary}" th:value="${notaryText}"
+                                                   required="required " oninvalid="showNotEmptyMessage(this)" onchange="deleteMessage(this)">
                                         </div>
                                     </div>
                                 </div>
@@ -211,6 +220,15 @@
 <!--end::Page Resources -->
 
 <script type="text/javascript" th:inline="javascript">
+
+    function showNotEmptyMessage(d){
+        d.setCustomValidity([[#{label.pleaseFillThisField}]]);
+    }
+
+    function deleteMessage(d){
+        d.setCustomValidity("");
+    }
+
     var debtorId=[[${debtorId}]];
     var loanId=[[${loanId}]];
     var fromP=debtorId+"-"+loanId;
