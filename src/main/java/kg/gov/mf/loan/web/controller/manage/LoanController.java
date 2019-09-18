@@ -28,6 +28,7 @@ import kg.gov.mf.loan.manage.model.process.LoanDetailedSummary;
 import kg.gov.mf.loan.manage.model.process.LoanSummary;
 import kg.gov.mf.loan.manage.model.process.LoanSummaryType;
 import kg.gov.mf.loan.manage.repository.collateral.CollateralItemReposiory;
+import kg.gov.mf.loan.manage.repository.loan.JudgementRepository;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.repository.order.CreditOrderRepository;
 import kg.gov.mf.loan.manage.repository.org.StaffRepository;
@@ -64,6 +65,11 @@ import java.util.*;
 
 @Controller
 public class LoanController {
+
+    //region services
+
+    @Autowired
+    JudgementRepository judgementRepository;
 
     @Autowired
     EntityManager entityManager;
@@ -200,6 +206,8 @@ public class LoanController {
     @Autowired
     BankDataService bankDataService;
 
+    //endregion
+
     static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
 
 	@InitBinder
@@ -294,8 +302,8 @@ public class LoanController {
         String jsonBankrupts = gson.toJson(getBankruptsByLoanId(loanId));
         model.addAttribute("bankrupts", jsonBankrupts);
 
-//        String jsonCollectionPhases = gson.toJson(getPhasesByLoanId(loanId));
-//        model.addAttribute("phases", jsonCollectionPhases);
+        String judgements = gson.toJson(getJudgementsByLoanId(loanId));
+        model.addAttribute("jsonJudgements", judgements);
 
         model.addAttribute("debtorId", debtorId);
 		Debtor debtor = debtorService.getById(debtorId);
@@ -1904,6 +1912,29 @@ public class LoanController {
 
         return list;
     }
+
+    private List<JudgementModel> getJudgementsByLoanId(Long loanId){
+
+	    List<Judgement> judgementList = judgementRepository.findAllByLoanId(loanId);
+
+	    List<JudgementModel> judgementModelList = new ArrayList<>();
+	    for (Judgement judgement : judgementList){
+	        JudgementModel model = new JudgementModel();
+
+	        model.setId(judgement.getId());
+	        model.setDate(judgement.getDate());
+	        model.setDescription(judgement.getDescription());
+	        model.setFee(judgement.getFee());
+	        model.setInterest(judgement.getInterest());
+	        model.setPenalty(judgement.getPenalty());
+	        model.setPrincipal(judgement.getPrincipal());
+	        model.setTotalAmount(judgement.getTotalAmount());
+	        judgementModelList.add(model);
+        }
+
+        return judgementModelList;
+    }
+
 //    private List<CollectionPhaseModel> getPhasesByLoanId(long loanId)
 //    {
 //        List<CollectionPhaseModel> result = new ArrayList<>();

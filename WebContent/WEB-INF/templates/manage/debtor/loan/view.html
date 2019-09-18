@@ -1110,6 +1110,9 @@
 										<a class="nav-link m--font-primary" data-toggle="tab" href="#supervisorPlans" th:text="#{label.loan.supervisorPlans}" id="supervisorPlansFunction"></a>
 									</li>
 									<li class="nav-item">
+										<a class="nav-link m--font-primary" data-toggle="tab" href="#judgement" th:text="#{label.judgement}"></a>
+									</li>
+									<li class="nav-item">
 										<a class="nav-link m--font-primary" data-toggle="tab" href="#information" th:text="#{label.information}"></a>
 									</li>
 								</ul>
@@ -1432,6 +1435,38 @@
 										<!--end: Search Form -->
 										<!--begin: Datatable -->
 										<div class="m_datatable" id="SPsTable"></div>
+										<!--end: Datatable -->
+									</div>
+									<div id="judgement" class="tab-pane"  role="tabpanel">
+										<!--begin: Search Form -->
+										<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+											<div class="row align-items-center">
+												<div class="col-xl-9 order-1 order-xl-1">
+													<div class="form-group m-form__group row align-items-center">
+														<div class="col-lg-6">
+															<div class="m-input-icon m-input-icon--left">
+																<input type="text" class="form-control m-input m-input--solid" placeholder="Искать..." id="searchJudgement">
+																<span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-xl-3 order-3 order-xl-3 m--align-right">
+													<div class="row">
+														<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_JUDGEMENT')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/judgement/0/save}"
+														   role="button" class="btn btn-success" th:text="#{label.add.judgement}"></a>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!--end: Search Form -->
+										<!--begin: Datatable -->
+										<div class="m_datatable" id="judgementsTable"></div>
 										<!--end: Datatable -->
 									</div>
 									<div id="information" class="tab-pane"  role="tabpanel">
@@ -1787,6 +1822,7 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     var jsonFiles= /*[[${files}]]*/ [];
+    var jsonJudgements= /*[[${jsonJudgements}]]*/ [];
     var debtorId = /*[[${debtor.id}]]*/ [];
     var loanId = /*[[${loan.id}]]*/ [];
     var finGroupId = /*[[${finGroupId}]]*/ [];
@@ -2738,9 +2774,113 @@
             }
         };
     }();
+    var DatatableDataLocalJudgement= function () {
+        //== Private functions
+
+        // demo initializer
+        var mainTableInit = function () {
+
+            var dataJSONArray = JSON.parse(jsonJudgements);
+
+            var datatable = $('#judgementsTable').mDatatable({
+                // datasource definition
+                data: {
+                    type: 'local',
+                    source: dataJSONArray
+                },
+
+                // layout definition
+                layout: {
+                    theme: 'default', // datatable theme
+                    class: '', // custom wrapper class
+                    scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+                    height: 450, // datatable's body's fixed height
+                    footer: false // display/hide footer
+                },
+
+                // column sorting(refer to Kendo UI)
+                sortable: false,
+
+                // column based filtering(refer to Kendo UI)
+                filterable: false,
+
+                pagination: true,
+
+                // inline and bactch editing(cooming soon)
+                // editable: false,
+
+                // columns definition
+                columns: [/*{
+                                field: "id",
+                                title: "#",
+                                template: function (row) {
+                                    return '\
+									<a href="/manage/debtor/'+ debtorId + '/loan/' + loanId+ '/guarantoragreement/' + row.id + '/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
+								';
+                                }
+                            }, */{
+                    field: "description",
+                    title: "Description"
+                }, {
+                    field: "date",
+                    title: "Дата"
+                },{
+                    field: "totalAmount",
+                    title: "Нотариус"
+                }],
+                translate: {
+                    records: {
+                        processing: 'Подождите пожалуйста...',
+                        noRecords: 'Записей не найдено'
+                    },
+                    toolbar: {
+                        pagination: {
+                            items: {
+                                default: {
+                                    first: 'Первая страница',
+                                    prev: 'Предыдущая страница',
+                                    next: 'Следующая страница',
+                                    last: 'Последняя страница',
+                                    more: 'Другие страницы',
+                                    input: 'Номер страницы',
+                                    select: 'Выбрать размер страницы'
+                                },
+                                info: 'Отображение {{start}} - {{end}} из {{total}} записей'
+                            }
+                        }
+                    }
+                },
+
+                toolbar: {
+                    items: {
+                        // pagination
+                        pagination: {
+                            // page size select
+                            pageSizeSelect: [5, 10, 20, 50, 100]
+                        }
+                    }
+                }
+            });
+
+            var query = datatable.getDataSourceQuery();
+
+            $('#searchJudgement').on('keyup', function (e) {
+                datatable.search($(this).val().toLowerCase());
+            }).val(query.generalSearch);
+        };
+
+        return {
+            //== Public functions
+            init: function () {
+                // init dmeo
+                mainTableInit();
+            }
+        };
+    }();
 
     jQuery(document).ready(function () {
         DatatableDataLocalFiles.init();
+        DatatableDataLocalJudgement.init();
     });
 
     // inspection not needed description
