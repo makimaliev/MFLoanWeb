@@ -203,54 +203,15 @@
         pickerPosition: 'bottom-left'
     });
 </script>
+
 <script th:inline="javascript">
     var ttt;
     // sessionStorage.SessionName = "detor_name";
     $("#debtor_name").on('input',function () {
         sessionStorage.SessionName = "nameee";
         sessionStorage.setItem("nameee",$("#debtor_name").val());
-        console.log(sessionStorage.getItem("nameee"));
-
     });
 
-    // $("#m_form_region").on('change',function () {
-    //     sessionStorage.SessionName = "regione";
-    //     sessionStorage.setItem("regione",$("#m_form_region").val());
-    //     console.log(sessionStorage.getItem("regione"));
-    //
-    // });
-    //
-    // $("#m_form_district").on('change',function () {
-    //     sessionStorage.SessionName = "districte";
-    //     sessionStorage.setItem("districte",$("#m_form_district").val());
-    //     console.log(sessionStorage.getItem("districte"));
-    // });
-    //
-    // $("#m_form_finGroup").on('change',function () {
-    //     sessionStorage.SessionName = "groupe";
-    //     sessionStorage.setItem("groupe",$("#m_form_finGroup").val());
-    //     console.log(sessionStorage.getItem("groupe"));
-    // });
-
-
-    // $(document).ready(function() {
-    //     if (sessionStorage.getItem("debtorTab")) {
-    //         // alert(location.hash)
-    //         ttt=sessionStorage.getItem("debtorTab");
-    //         // alert(ttt);
-    //         $("a[href='" + ttt + "']").tab("show");
-    //         $(ttt.toString()+"Function").click();
-    //     }
-    //     $(document.body).on("click", "a[data-toggle]", function(event) {
-    //         var tabName = this.getAttribute("href");
-    //         sessionStorage.SessionName = "debtorTab";
-    //         sessionStorage.setItem("debtorTab",tabName);
-    //     });
-    // });
-    // $(window).on("popstate", function() {
-    //     var anchor = ttt || $("a[data-toggle='tab']").first().attr("href");
-    //     $("a[href='" + anchor + "']").tab("show");
-    // });
 </script>
 <script th:inline="javascript" >
 
@@ -436,7 +397,7 @@
                 // columns definition
                 columns:  [{
                     field: "View",
-                    width: 30,
+                    width: 10,
                     textAlign: 'center',
                     title: '#',
                     sortable: false,
@@ -456,7 +417,7 @@
                 },{
                     field: "v_debtor_name",
                     title: [[#{v_debtor_name}]],
-                    // width:230,
+                    width:300,
                     template: function (row) {
                         var d = row.v_debtor_name;
                         if(d.length>30){
@@ -483,7 +444,7 @@
                 }, {
                     field: "v_loan_amount",
                     title: [[#{label.loan.fields}]],
-                    width:400,
+                    width: 400 ,
                     template:function (row) {
                         var ppkr=row.v_credit_order_reg_number;
                         var amount=new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_loan_amount);
@@ -495,8 +456,13 @@
                                 currency= currencies[i].name;
                             }
                         }
-                        return ppkr+" , "+number+" от "+date+" , "+amount+" , "+currency;
+
+                        var output_text = ppkr+", "+number+" от "+date+", "+amount+" "+currency;
+                        return output_text;
                     }
+
+
+
                 }, {
                     field: "v_credit_order_reg_number",
                     title: [[#{label.loan.credit.order.reg.number}]],
@@ -523,12 +489,12 @@
                 },{
                     field: "v_loan_fin_group_id",
                     title: [[#{label.loan.finGroup}]],
-                    // width:250,
+                    width:200,
                     template:function (row) {
                         for (var i in finGroups){
                             if(row.v_loan_fin_group_id==finGroups[i].id){
-                                if(finGroups[i].name.length>35){
-                                    return finGroups[i].name.substring(0,32)+"...";
+                                if(finGroups[i].name.length>20){
+                                    return finGroups[i].name.substring(0,20)+"...";
                                 }
                                 else{
                                     return finGroups[i].name;

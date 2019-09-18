@@ -150,6 +150,10 @@
 	background: #f7f6f6;
 }
 
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__head .m-datatable__row > .m-datatable__cell, .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__body .m-datatable__row > .m-datatable__cell, .m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__foot .m-datatable__row > .m-datatable__cell {
+
+	font-size: 14px;
+}
 
 .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link{
 	background: #3e8a9e;
@@ -164,10 +168,11 @@
 
 
 a{
-	font-weight: 500;
+	font-weight: 400;
+	color: #0027ff;
 }
 a:hover{
-	font-weight: 800;
+	font-weight: 500;
 }
 
 
@@ -265,3 +270,8 @@ a:hover{
 /*.dropdown-menu {*/
 	/*background-color: #f1fbff;*/
 /*}*/
+
+
+body {
+	line-height: 2;
+}
