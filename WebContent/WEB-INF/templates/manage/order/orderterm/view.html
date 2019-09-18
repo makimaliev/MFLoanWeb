@@ -76,6 +76,28 @@
 								<h3 class="m-portlet__head-text" th:text="${term.description}"></h3>
 							</div>
 						</div>
+						<div>
+							<div class="col-xl-3 order-3 order-xl-3 m--align-right">
+								<a data-remote="false"
+								   data-toggle="modal"
+								   data-target="#orderTermCalculateInputsFormModal"
+								   th:href="@{/orderTerm/__${term.id}__/calculateForm}"
+								   role="button"
+								   class="m-portlet__nav-link btn btn-success m-btn m-btn--air">
+										<span>
+											<i class="la la-calculator"></i>
+											<span th:text="#{label.calculate}"></span>
+										</span>
+								</a>
+								<div class="m-separator m-separator--dashed d-xl-none"></div>
+								<div class="modal fade bs-modal-lg in" id="orderTermCalculateInputsFormModal" tabindex="-1" role="dialog" aria-hidden="true">
+									<div class="modal-dialog" role="document">
+										<div class="modal-content">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 					<div class="m-portlet__body m-portlet__body--no-padding">
 						<div class="row m-row--no-padding m-row--col-separator-xl">
@@ -444,6 +466,12 @@
     var orderId = /*[[${orderId}]]*/ [];
     var termId = /*[[${term.id}]]*/ [];
     /*]]>*/
+
+    $("#orderTermCalculateInputsFormModal").on("show.bs.modal", function(e) {
+        var link = $(e.relatedTarget);
+        $(this).find(".modal-content").load(link.attr("href"));
+        // }
+    });
 </script>
 
 </body>

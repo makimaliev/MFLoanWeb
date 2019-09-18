@@ -14,7 +14,7 @@
                                         <span class="m--font-danger">*</span>
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
-                                        <input type="text" class="form-control m-input" name="name" th:value="${item.name}">
+                                        <input required="required " oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)" type="text" class="form-control m-input" name="name" th:value="${item.name}">
                                     </div>
                                 </div>
                                 <div class="form-group m-form__group row">
@@ -32,7 +32,7 @@
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
                                         <div class="m-typeahead">
-                                            <input class="form-control m-input" id="owner_typeahead" type="text" placeholder="Owners" th:value="${ownerText}" >
+                                            <input required="required " oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)" class="form-control m-input" id="owner_typeahead" type="text" placeholder="Owners" th:value="${ownerText}" >
                                         </div>
                                     </div>
                                 </div>
@@ -42,7 +42,7 @@
                                         <span class="m--font-danger">*</span>
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
-                                        <select class="form-control m-bootstrap-select m_selectpicker" th:field="${item.itemType.id}" name="itemType"  id="itemType">
+                                        <select required="required " oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)" class="form-control m-bootstrap-select m_selectpicker" th:field="${item.itemType.id}" name="itemType"  id="itemType">
                                             <option th:each="type : ${itemTypes}" th:value="${type.id}" th:text="${type.name}"></option>
                                         </select>
                                     </div>
@@ -53,7 +53,7 @@
                                         <span class="m--font-danger">*</span>
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
-                                        <input type="text" class="form-control m-input" name="quantity" th:value="${item.quantity}">
+                                        <input required="required " oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)" type="text" class="form-control m-input" name="quantity" th:value="${item.quantity}">
                                     </div>
                                 </div>
                                 <div class="form-group m-form__group row">
@@ -62,19 +62,10 @@
                                         <span class="m--font-danger">*</span>
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
-                                        <select class="form-control m-bootstrap-select m_selectpicker" th:field="${item.quantityType.id}" name="quantityType"  id="quantityType" th:title="#{label.select}">
+                                        <select required="required " oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)" class="form-control m-bootstrap-select m_selectpicker" th:field="${item.quantityType.id}" name="quantityType"  id="quantityType" th:title="#{label.select}">
                                             <option value="0" th:text="#{label.select}"></option>
                                             <option th:each="type : ${quantities}" th:value="${type.id}" th:text="${type.name}"></option>
                                         </select>
-                                    </div>
-                                </div>
-                                <div class="form-group m-form__group row">
-                                    <label class="col-form-label col-lg-4 col-sm-12">
-                                        <span th:text="#{label.assetItem.collateralValue}"></span>
-                                        <span class="m--font-danger">*</span>
-                                    </label>
-                                    <div class="col-lg-4 col-md-9 col-sm-12">
-                                        <input type="text" class="form-control m-input" name="collateralValue" th:value="${#numbers.formatDecimal(item.collateralValue,1,2,'POINT')}">
                                     </div>
                                 </div>
                                 <div class="form-group m-form__group row">
@@ -83,7 +74,16 @@
                                         <span class="m--font-danger">*</span>
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
-                                        <input type="text" class="form-control m-input" name="estimatedValue" th:value="${#numbers.formatDecimal(item.estimatedValue,1,2,'POINT')}">
+                                        <input required="required " oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)" type="text" class="form-control m-input" name="estimatedValue" th:value="${#numbers.formatDecimal(item.estimatedValue,1,2,'POINT')}">
+                                    </div>
+                                </div>
+                                <div class="form-group m-form__group row">
+                                    <label class="col-form-label col-lg-4 col-sm-12">
+                                        <span th:text="#{label.assetItem.collateralValue}"></span>
+                                        <span class="m--font-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-4 col-md-9 col-sm-12">
+                                        <input required="required " oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)" type="text" class="form-control m-input" name="collateralValue" th:value="${#numbers.formatDecimal(item.collateralValue,1,2,'POINT')}">
                                     </div>
                                 </div>
                                 <div class="form-group m-form__group row">
@@ -92,7 +92,7 @@
                                     </label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
                                         <div class="m-typeahead">
-                                            <input class="form-control m-input" id="organization_typeahead" type="text" th:placeholder="#{label.item.organization}" th:value="${organizationText}">
+                                            <input required="required " oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)" class="form-control m-input" id="organization_typeahead" type="text" th:placeholder="#{label.item.organization}" th:value="${organizationText}">
                                         </div>
                                     </div>
                                 </div>
@@ -123,7 +123,7 @@
                                         </div>
                                         <div class="form-group m-form__group row" id="prod_date">
                                             <label class="col-form-label col-lg-4 col-sm-12">
-                                                <span id="detailsLabel7" th:text="#{label.assetItem.details7}"></span>
+                                                <span id="detailsLabel7" th:text="#{label.collateralItem.details7}"></span>
                                             </label>
                                             <div class="col-lg-4 col-md-9 col-sm-12">
                                                 <div class="input-group date m_datetimepicker_6">
@@ -589,5 +589,13 @@
 <script th:inline="javascript">
     var jsonOwners=[[${owners}]];
     var item=[[item]];
+
+    function showNotEmptyMessage(d){
+        d.setCustomValidity([[#{label.pleaseFillThisField}]]);
+    }
+
+    function deleteMessage(d){
+        d.setCustomValidity("");
+    }
 </script>
 </div>

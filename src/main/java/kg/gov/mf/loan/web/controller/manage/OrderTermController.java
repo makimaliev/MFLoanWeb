@@ -1,45 +1,28 @@
 package kg.gov.mf.loan.web.controller.manage;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.manage.model.order.CreditOrder;
+import kg.gov.mf.loan.manage.model.orderterm.*;
 import kg.gov.mf.loan.manage.repository.orderterm.OrderTermRepository;
+import kg.gov.mf.loan.manage.service.order.CreditOrderService;
+import kg.gov.mf.loan.manage.service.orderterm.*;
 import kg.gov.mf.loan.web.fetchModels.AgreementTemplateModel;
+import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import kg.gov.mf.loan.manage.model.order.CreditOrder;
-import kg.gov.mf.loan.manage.model.orderterm.OrderTerm;
-import kg.gov.mf.loan.manage.model.orderterm.OrderTermAccrMethod;
-import kg.gov.mf.loan.manage.model.orderterm.OrderTermCurrency;
-import kg.gov.mf.loan.manage.model.orderterm.OrderTermDaysMethod;
-import kg.gov.mf.loan.manage.model.orderterm.OrderTermFloatingRateType;
-import kg.gov.mf.loan.manage.model.orderterm.OrderTermFrequencyType;
-import kg.gov.mf.loan.manage.model.orderterm.OrderTermFund;
-import kg.gov.mf.loan.manage.model.orderterm.OrderTermRatePeriod;
-import kg.gov.mf.loan.manage.model.orderterm.OrderTermTransactionOrder;
-import kg.gov.mf.loan.manage.service.order.CreditOrderService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermAccrMethodService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermCurrencyService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermDaysMethodService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermFloatingRateTypeService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermFrequencyTypeService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermFundService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermRatePeriodService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermTransactionOrderService;
-import kg.gov.mf.loan.web.util.Utils;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 public class OrderTermController {
@@ -557,6 +540,19 @@ public class OrderTermController {
 		return "redirect:" + "/manage/order/orderterm/accrmethod/list";
     }
 	//END - ORDER TERM FLOATING ACCR METHOD
+
+
+	//region Calculator
+
+	@GetMapping("/orderTerm/{orderTermId}/calculateForm")
+	public String getOrderTermCalculateForm(@PathVariable("orderTermId") Long orderTermId, Model model){
+
+		OrderTerm orderTerm = orderTermService.getById(orderTermId);
+		model.addAttribute("term",orderTerm);
+
+		return "/manage/order/orderterm/orderTermCalculateForm";
+	}
+	//endregion
 
 	private List<AgreementTemplateModel> getTemplatesByTermId(long termId)
 	{
