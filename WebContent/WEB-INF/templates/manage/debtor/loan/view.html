@@ -1458,8 +1458,12 @@
 
 												<div class="col-xl-3 order-3 order-xl-3 m--align-right">
 													<div class="row">
-														<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_JUDGEMENT')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/judgement/0/save}"
-														   role="button" class="btn btn-success" th:text="#{label.add.judgement}"></a>
+														<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_JUDGEMENT')" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+														   th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/judgement/0/save}"
+														   data-toggle="modal"
+														   data-target="#judgementForm"><span th:text="#{label.add.judgement}"></span>
+															<i class="la la-plus"></i></span>
+														</a>
 													</div>
 												</div>
 											</div>
@@ -1532,6 +1536,12 @@
 						</div>
 						<div id="destinationAccountModal" class="modal fade bs-modal-lg in"  tabindex="-1" role="dialog" aria-hidden="true">
 							<div class="modal-dialog modal-lg" role="document">
+								<div class="modal-content">
+								</div>
+							</div>
+						</div>
+						<div class="modal fade" id="judgementForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-dialog" role="document">
 								<div class="modal-content">
 								</div>
 							</div>
@@ -2268,6 +2278,11 @@
 
 </script>
 <script>
+    $("#judgementForm").on("show.bs.modal", function(e)
+    {
+        var link = $(e.relatedTarget);
+        $(this).find(".modal-content").load(link.attr("href"));
+    });
     $("#loanFinGroupModal").on("show.bs.modal", function(e) {
         var link = $(e.relatedTarget);
         $(this).find(".modal-content").load(link.attr("href"));
@@ -2653,7 +2668,7 @@
         $(this).find(".modal-body").load(link.attr("href"));
     });
 </script>
-<script>
+<script th:inline="javascript">
     // files datatable
     var DatatableDataLocalFiles = function () {
         //== Private functions
@@ -2810,15 +2825,15 @@
                 // editable: false,
 
                 // columns definition
-                columns: [/*{
-                                field: "id",
-                                title: "#",
-                                template: function (row) {
-                                    return '\
-									<a href="/manage/debtor/'+ debtorId + '/loan/' + loanId+ '/guarantoragreement/' + row.id + '/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
-								';
-                                }
-                            }, */{
+                columns: [{
+					field: "id",
+					title: "#",
+					template: function (row) {
+						return '\
+						<a href="/manage/debtor/'+ debtorId + '/loan/' + loanId+ '/judgement/' + row.id + '/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
+					';
+					}
+				}, {
                     field: "description",
                     title: "Description"
                 }, {
@@ -2826,8 +2841,16 @@
                     title: "Дата"
                 },{
                     field: "totalAmount",
-                    title: "Нотариус"
-                }],
+                    title: "Сумма"
+                }/*, {
+                    field: "id",
+                    title: "[[#{label.edit}]]",
+                    template: function (row) {
+                        return '\
+						 <a role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air" href="/manage/debtor/'+debtorId+'/loan/'+loanId+'/judgement/'+row.id+'/save}" data-toggle="modal" data-target="#judgementForm"><i class="la la-edit"></i></span></a>\
+					';
+                    }
+                }*/],
                 translate: {
                     records: {
                         processing: 'Подождите пожалуйста...',

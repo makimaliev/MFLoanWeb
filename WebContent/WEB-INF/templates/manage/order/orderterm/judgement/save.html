@@ -1,0 +1,113 @@
+<div xmlns:th="http://www.w3.org/1999/xhtml">
+    <form th:action="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/judgement/save}" class="form-horizontal" method="post" th:object="${judgement}">
+        <div class="modal-header">
+            <h5 class="modal-title" th:text="#{label.add.judgement}"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+
+            <div class="alert alert-danger alert-dismissible alert-hidden" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+                <span th:text="#{label.modal.error.name}"></span>
+            </div>
+
+            <!--hidden-->
+            <input hidden="true" type="text" id="id" name="id" th:field="*{id}" />
+
+
+            <div class="form-group m-form__group row">
+                <label class="col-form-label col-lg-4 col-sm-12">
+                    <span th:text="#{label.judgement.description}"></span>
+                    <span class="m--font-danger">*</span>
+                </label>
+                <div class="col-lg-8 col-md-9 col-sm-12">
+                    <input type="text" class="form-control" th:field="*{description}"
+                           required="required " oninvalid="showNotEmptyMessage(this)" onchange="deleteMessage(this)"/>
+                </div>
+            </div>
+            <div class="form-group m-form__group row">
+                <label class="col-form-label col-lg-4 col-sm-12">
+                    <span th:text="#{label.judgement.amount}"></span>
+                    <span class="m--font-danger">*</span>
+                </label>
+                <div class="col-lg-8 col-md-9 col-sm-12">
+                    <input type="text" class="form-control" th:field="*{totalAmount}"
+                           required="required " oninvalid="showNotEmptyMessage(this)" onchange="deleteMessage(this)"/>
+                </div>
+            </div>
+            <div class="form-group m-form__group row">
+                <label class="col-form-label col-lg-4 col-sm-12">
+                    <span th:text="#{label.judgement.penalty}"></span>
+                    <span class="m--font-danger">*</span>
+                </label>
+                <div class="col-lg-8 col-md-9 col-sm-12">
+                    <input type="text" class="form-control" th:field="*{penalty}"
+                           required="required " oninvalid="showNotEmptyMessage(this)" onchange="deleteMessage(this)"/>
+                </div>
+            </div>
+            <div class="form-group m-form__group row">
+                <label class="col-form-label col-lg-4 col-sm-12">
+                    <span th:text="#{label.judgement.principal}"></span>
+                    <span class="m--font-danger">*</span>
+                </label>
+                <div class="col-lg-8 col-md-9 col-sm-12">
+                    <input type="text" class="form-control"
+                           th:field="*{principal}"/>
+                </div>
+            </div>
+            <div class="form-group m-form__group row">
+                <label class="col-form-label col-lg-4 col-sm-12">
+                    <span th:text="#{label.judgement.interest}"></span>
+                    <span class="m--font-danger">*</span>
+                </label>
+                <div class="col-lg-8 col-md-9 col-sm-12">
+                    <input type="text" class="form-control" th:field="*{interest}"
+                           required="required " oninvalid="showNotEmptyMessage(this)" onchange="deleteMessage(this)"/>
+                </div>
+            </div>
+
+            <div class="form-group m-form__group row">
+                <label class="col-form-label col-lg-4 col-sm-12">
+                    <span th:text="#{label.judgement.date}"></span>
+                    <span class="m--font-danger">*</span>
+                </label>
+                <div class="col-lg-8 col-md-9 col-sm-12">
+                    <div class="input-group date m_datetimepicker_6">
+                        <input type="text" class="form-control m-input" th:placeholder="#{label.select.date}" name="date" th:value="${#dates.format(judgement.date,'dd.MM.yyyy')}"
+                               required="required " oninvalid="showNotEmptyMessage(this)" onchange="deleteMessage(this)"/>
+                        <span class="input-group-addon">
+                        <i class="la la-calendar glyphicon-th"></i>
+                    </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.orgForm.button.cancel}"></button>
+            <button type="submit" class="btn btn-primary" th:text="#{label.button.save}"></button>
+        </div>
+    </form>
+
+    <script th:inline="javascript">
+        $('.m_datetimepicker_6').datetimepicker({
+            format: "dd.mm.yyyy",
+            todayHighlight: true,
+            autoclose: true,
+            startView: 2,
+            minView: 2,
+            forceParse: 0,
+            pickerPosition: 'bottom-left'
+        });
+        function showNotEmptyMessage(d){
+            d.setCustomValidity([[#{label.pleaseFillThisField}]]);
+        }
+
+        function deleteMessage(d){
+            d.setCustomValidity("");
+        }
+    </script>
+
+
+</div>

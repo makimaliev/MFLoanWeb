@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<!-- begin::Head -->
+<head>
+    <title th:text="#{label.judgement}"></title>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<!-- end::Head -->
+
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <!-- BEGIN: Subheader -->
+            <div class="m-subheader ">
+                <div class="d-flex align-items-center">
+                    <div class="mr-auto">
+                        <h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.judgement}"></h3>
+                        <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+                            <li class="m-nav__item m-nav__item--home">
+                                <a th:href="@{/}" class="m-nav__link m-nav__link--icon">
+                                    <i class="m-nav__link-icon la la-home"></i>
+                                </a>
+                            </li>
+                            <li class="m-nav__separator">
+                                -
+                            </li>
+                            <li class="m-nav__item">
+                                <a th:href="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/view}" class="m-nav__link">
+                                    <span class="m-nav__link-text">
+                                        Заемщик
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-nav__separator">
+                                -
+                            </li>
+                            <li class="m-nav__item">
+                                <span class="m-nav__link-text"th:text="#{label.judgement}"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- END: Subheader -->
+            <div class="m-content">
+                <div class="m-content">
+                    <!--begin::Portlet-->
+                    <div class="m-portlet m-portlet--full-height">
+                        <div class="m-portlet__head">
+                            <div class="m-portlet__head-caption">
+                                <div class="m-portlet__head-title">
+                                    <h3 class="m-portlet__head-text" th:text="#{label.judgement}"></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-portlet m-portlet--mobile">
+                        <div class="m-portlet__body">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link m--font-primary active" data-toggle="tab" href="#main" th:text="#{label.loan.credit}"></a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="main" role="tabpanel">
+                                    <div class="col-xl-12 order-3 order-xl-3 m--align-right">
+                                        <div >
+                                            <div>
+                                                <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_JUDGEMENT')" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+                                                   th:href="@{/manage/debtor/__${debtorId}__/loan/__${loanId}__/judgement/__${judgement.id}__/save}"
+                                                   data-toggle="modal"
+                                                   data-target="#judgementForm"><span th:text="#{label.table.edit}"></span>
+                                                    <i class="la la-plus"></i></span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="m-portlet__body m-portlet__body--no-padding">
+                                        <div class="row m-row--no-padding m-row--col-separator-xl">
+                                            <div class="col-md-12 col-lg-12 col-xl-4">
+                                                <!--begin:: Widgets/Stats2-1 -->
+                                                <div class="m-widget1">
+                                                    <div id="item_type" class="m-widget1__item">
+                                                        <div class="row m-row--no-padding align-items-center">
+                                                            <div class="col">
+                                                                <h3 class="m-widget1__title" th:text="#{label.judgement.description}"></h3>
+                                                                <span class="m-widget1__desc m--font-brand" th:text="${judgement.description}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="quantity" class="m-widget1__item">
+                                                        <div class="row m-row--no-padding align-items-center">
+                                                            <div class="col">
+                                                                <h3 class="m-widget1__title" th:text="#{label.judgement.date}"></h3>
+                                                                <span class="m-widget1__desc m--font-brand" th:text="${#dates.format(judgement.date,'dd.MM.yyyy')}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="description" class="m-widget1__item">
+                                                        <div class="row m-row--no-padding align-items-center">
+                                                            <div class="col">
+                                                                <h3 class="m-widget1__title" th:text="#{label.judgement.totalAmount}"></h3>
+                                                                <span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(judgement.totalAmount, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="incomplete_reason" class="m-widget1__item">
+                                                        <div class="row m-row--no-padding align-items-center">
+                                                            <div class="col">
+                                                                <h3 class="m-widget1__title" th:text="#{label.judgement.principal}"></h3>
+                                                                <span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(judgement.principal, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="asset_value" class="m-widget1__item">
+                                                        <div class="row m-row--no-padding align-items-center">
+                                                            <div class="col">
+                                                                <h3 class="m-widget1__title" th:text="#{label.judgement.penalty}"></h3>
+                                                                <span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(judgement.penalty, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id= "estimated_value" class="m-widget1__item">
+                                                        <div class="row m-row--no-padding align-items-center">
+                                                            <div class="col">
+                                                                <h3 class="m-widget1__title" th:text="#{label.judgement.interest}"></h3>
+                                                                <span class="m-widget1__desc m--font-brand" th:text="${#numbers.formatDecimal(judgement.interest, 1, 'DEFAULT', 2, 'DEFAULT')}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--end:: Widgets/Stats2-1 -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--begin::Modal-->
+    <div class="modal fade" id="judgementForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-lg" role="document">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+    <!--end::Modal-->
+    <!-- end:: Body -->
+    <!-- begin::Footer -->
+    <div th:replace="layout/footer"/>
+    <!-- end::Footer -->
+</div>
+<!-- end:: Page -->
+
+<div th:replace="fragments/footer :: footer-js"/>
+
+<!--begin::Page Resources -->
+<!--end::Page Resources -->
+
+<script th:inline="javascript">
+
+    $("#judgementForm").on("show.bs.modal", function(e)
+    {
+        var link = $(e.relatedTarget);
+        $(this).find(".modal-content").load(link.attr("href"));
+    });
+    /*<![CDATA[*/
+    /*]]>*/
+</script>
+
+</body>
+<!-- end::Body -->
+</html>
