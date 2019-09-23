@@ -15,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,6 +32,9 @@ public class AssetExpenseController {
 
     @Autowired
     AssetExpenseService assetExpenseService;
+
+    @PersistenceContext
+    EntityManager entityManager;
 
     @InitBinder
     public void initBinder(WebDataBinder binder)
@@ -82,12 +87,16 @@ public class AssetExpenseController {
     @PostMapping("/asset/{assetId}/assetExpense/save")
     public String postSave(AssetExpense expense,@PathVariable("assetId") Long assetId){
 
+        Asset asset = assetService.getById(assetId);
+        expense.setAsset(asset);
         if(expense.getId()==0){
             assetExpenseService.add(expense);
         }
         else{
             assetExpenseService.update(expense);
         }
+
+        assetAmount3Saver(asset);
 
         return "redirect:/asset/{assetId}/view";
     }
@@ -116,5 +125,19 @@ public class AssetExpenseController {
 
         String result = gson.toJson(assetExpenseModelList);
         return result;
+    }
+
+
+    //SIMPLE FUNCTIONS
+
+    public void assetAmount3Saver(Asset asset){
+
+        String getExpenseTotalAmount = "select sum(e.amount)\n" +
+                "from asset_expense e where e.assetId="+asset.getId();
+        Double expenseTotal= Double.valueOf(String.valueOf(entityManager.createNativeQuery(getExpenseTotalAmount).getSingleResult()));
+
+        asset.setAmount3(expenseTotal);
+        assetService.update(asset);
+
     }
 }

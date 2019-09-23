@@ -345,7 +345,7 @@
 
                                             <div class="col-xl-3 order-3 order-xl-3 m--align-right">
                                                 <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_SECONDARYPAYMENT')" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
-                                                   th:href="@{/asset/__${asset.id}__/payment/add}"
+                                                   th:href="@{/asset/__${asset.id}__/secondaryPayment/add}"
                                                    data-toggle="modal"
                                                    data-target="#addForm"><span th:text="#{label.asset.addSecondaryPayment}"></span>
                                                     <i class="la la-plus-circle"></i></span>

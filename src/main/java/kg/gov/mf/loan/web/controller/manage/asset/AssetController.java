@@ -159,6 +159,34 @@ public class AssetController {
         asset1.setPaymentIds(asset.getPaymentIds());
         assetService.update(asset1);
 
+        assetAmount12Saver(asset1);
+
+
+        return "redirect:/asset/{assetId}/view";
+    }
+
+    @GetMapping("/{assetId}/secondaryPayment/add")
+    public String getSaveSecondaryPayments(Model model,@PathVariable("assetId") Long assetId){
+
+        Asset asset=assetService.getById(assetId);
+
+        model.addAttribute("asset",asset);
+        String assetLoanIds="";
+        for(Long id:asset.getFromLoanIds()){
+            assetLoanIds=assetLoanIds+id+",";
+        }
+        model.addAttribute("assetLoans",assetLoanIds);
+
+        return "/manage/asset/secondaryPaymentAddForm";
+    }
+
+    @PostMapping("/{assetId}/secondaryPayment/save")
+    public String postSaveSecondaryPayment(@PathVariable("assetId") Long assetId,Asset asset){
+
+        Asset asset1=assetService.getById(assetId);
+        asset1.setSecondaryPaymentIds(asset.getSecondaryPaymentIds());
+        assetService.update(asset1);
+        assetAmount4Saver(asset1);
 
 
         return "redirect:/asset/{assetId}/view";
@@ -407,6 +435,40 @@ public class AssetController {
         String result = gson.toJson(loans);
 
         return result;
+
+    }
+
+
+    //******************************************************************************************************************
+    //SIMPLE FUNCTIONS
+    //******************************************************************************************************************
+
+    public void assetAmount12Saver(Asset asset){
+
+        String getSumOfPayments="select sum(p.totalAmount)\n" +
+                "from payment p where p.id in (select aP.paymentIds from Asset_paymentIds aP where Asset_id="+asset.getId()+")";
+        Double paymentsTotal= Double.valueOf(String.valueOf(entityManager.createNativeQuery(getSumOfPayments).getSingleResult()));
+        asset.setAmount1(paymentsTotal);
+
+        String getSumOfFromLoans = "select sum(l.amount)\n" +
+                "from loan l where l.id in (select aL.fromLoanIds from Asset_fromLoanIds aL where Asset_id="+asset.getId()+")";
+        Double fromLoansTotal= Double.valueOf(String.valueOf(entityManager.createNativeQuery(getSumOfFromLoans).getSingleResult()));
+
+        asset.setAmount1(paymentsTotal);
+        asset.setAmount2(fromLoansTotal);
+        assetService.update(asset);
+
+    }
+
+    public void assetAmount4Saver(Asset asset){
+
+        String getSumOfSecondaryPayments="select sum(p.totalAmount)\n" +
+                "from payment p where p.id in (select aSP.secondaryPaymentIds from Asset_secondaryPaymentIds aSP where Asset_id="+asset.getId()+")";
+        Double secondaryPaymentsTotal= Double.valueOf(String.valueOf(entityManager.createNativeQuery(getSumOfSecondaryPayments).getSingleResult()));
+
+
+        asset.setAmount4(secondaryPaymentsTotal);
+        assetService.update(asset);
 
     }
 }
