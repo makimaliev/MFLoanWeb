@@ -159,6 +159,8 @@ public class AssetController {
         asset1.setPaymentIds(asset.getPaymentIds());
         assetService.update(asset1);
 
+
+
         return "redirect:/asset/{assetId}/view";
     }
 
@@ -219,6 +221,60 @@ public class AssetController {
         Asset asset=assetService.getById(assetId);
         String strPaymentIds="";
         for (Long paymentId:asset.getPaymentIds()){
+            if(strPaymentIds.equals("")){
+                strPaymentIds=String.valueOf(paymentId);
+            }
+            else{
+                strPaymentIds=strPaymentIds+","+String.valueOf(paymentId);
+            }
+        }
+
+        List<Payment> paymentList = new ArrayList<>();
+        if(!strPaymentIds.equals("")) {
+            String searchQuery = "select *\n" +
+                    "from payment where id in (" + strPaymentIds + ")";
+
+            Query query = entityManager.createNativeQuery(searchQuery, Payment.class);
+
+            paymentList = query.getResultList();
+        }
+        List<PaymentModel> paymentModelList=new ArrayList<>();
+        for(Payment payment:paymentList){
+            PaymentModel model=new PaymentModel();
+
+            Payment p=paymentService.getById(payment.getId());
+
+            model.setId(p.getId());
+            model.setPaymentDate(p.getPaymentDate());
+            model.setTotalAmount(p.getTotalAmount());
+            model.setPrincipal(p.getPrincipal());
+            model.setInterest(p.getInterest());
+            model.setPenalty(p.getPenalty());
+            model.setFee(p.getFee());
+            model.setExchange_rate(p.getExchange_rate());
+            model.setNumber(p.getNumber());
+            model.setIn_loan_currency(p.isIn_loan_currency());
+            model.setDetails(p.getDetails());
+            model.setPaymentTypeId((p.getPaymentType() == null) ? 0 :p.getPaymentType().getId());
+            model.setPaymentTypeName((p.getPaymentType() == null) ? "" :p.getPaymentType().getName());
+            model.setRecord_status(p.getRecord_status());
+
+            paymentModelList.add(model);
+        }
+
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+
+        String result = gson.toJson(paymentModelList);
+        return result;
+    }
+
+    @PostMapping("/secondaryPayments/{assetId}")
+    @ResponseBody
+    public String apiGetAssetSecondaryPaymentsByAssetId(@PathVariable("assetId") Long assetId){
+
+        Asset asset=assetService.getById(assetId);
+        String strPaymentIds="";
+        for (Long paymentId:asset.getSecondaryPaymentIds()){
             if(strPaymentIds.equals("")){
                 strPaymentIds=String.valueOf(paymentId);
             }

@@ -42,6 +42,19 @@
                 </select>
             </div>
         </div>
+        <!--<div class="form-group m-form__group row">-->
+            <!--<label class="col-form-label col-lg-2 col-sm-12">-->
+                <!--<span th:text="#{label.asset.secondaryPayment}"></span>-->
+                <!--<span class="m&#45;&#45;font-danger">*</span>-->
+            <!--</label>-->
+            <!--<div class="col-lg-10 col-md-9 col-sm-12">-->
+                <!--<select id="secondaryPaymentPicker" class="form-control" th:field="*{secondaryPaymentIds}" multiple="multiple" style="width: 100%" data-ajax&#45;&#45;url="/api/payments/search">-->
+                    <!--<option th:each="r : *{secondaryPaymentIds}"-->
+                            <!--th:text="${@paymentService.getPaymentDateAmountNumberById(__${r}__)}"-->
+                            <!--th:value="${r}"></option>-->
+                <!--</select>-->
+            <!--</div>-->
+        <!--</div>-->
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.role.button.cancel}"></button>
@@ -178,5 +191,6 @@
             }
         }
         $('#paymentPicker').select2(paymentOption);
+        // $('#secondaryPaymentPicker').select2(paymentOption);
     </script>
 </form>

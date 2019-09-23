@@ -134,7 +134,7 @@
 									<div class="col-9" id="documentList">
 										<select required="required " oninvalid="showNotEmptyMessage(this)" onchange="deleteMessage(this)"
 												class="sds form-control" name="documentIds" style="width: 100%" data-ajax--url="/doc/incomingdocuments">
-											<option selected th:value="${document.id}"
+											<option th:if="${document}!=null" selected th:value="${document.id}"
 													th:utext="${@documentServiceImpl.getById(__${document.id}__).documentSubType.name + ' №' + @documentServiceImpl.getById(__${document.id}__).senderRegisteredNumber}">Responsible</option>
 											<option th:each="d : *{documentIds}"
 													th:value="${d}"

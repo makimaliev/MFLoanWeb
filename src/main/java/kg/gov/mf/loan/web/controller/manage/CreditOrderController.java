@@ -1,18 +1,22 @@
 package kg.gov.mf.loan.web.controller.manage;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import kg.gov.mf.loan.manage.model.order.CreditOrder;
+import kg.gov.mf.loan.manage.model.order.CreditOrderState;
+import kg.gov.mf.loan.manage.model.order.CreditOrderType;
 import kg.gov.mf.loan.manage.repository.order.CreditOrderRepository;
+import kg.gov.mf.loan.manage.service.entitylist.AppliedEntityListStateService;
+import kg.gov.mf.loan.manage.service.entitylist.AppliedEntityListTypeService;
+import kg.gov.mf.loan.manage.service.order.CreditOrderService;
+import kg.gov.mf.loan.manage.service.order.CreditOrderStateService;
+import kg.gov.mf.loan.manage.service.order.CreditOrderTypeService;
+import kg.gov.mf.loan.manage.service.orderterm.*;
 import kg.gov.mf.loan.web.fetchModels.AppliedEntityListModel;
 import kg.gov.mf.loan.web.fetchModels.AppliedEntityModel;
 import kg.gov.mf.loan.web.fetchModels.OrderDocumentPackageModel;
 import kg.gov.mf.loan.web.fetchModels.OrderTermModel;
-import kg.gov.mf.loan.web.util.Pager;
+import kg.gov.mf.loan.web.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,28 +26,12 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import kg.gov.mf.loan.manage.model.entitylist.AppliedEntityList;
-import kg.gov.mf.loan.manage.model.order.CreditOrder;
-import kg.gov.mf.loan.manage.model.order.CreditOrderState;
-import kg.gov.mf.loan.manage.model.order.CreditOrderType;
-import kg.gov.mf.loan.manage.service.entitylist.AppliedEntityListStateService;
-import kg.gov.mf.loan.manage.service.entitylist.AppliedEntityListTypeService;
-import kg.gov.mf.loan.manage.service.order.CreditOrderService;
-import kg.gov.mf.loan.manage.service.order.CreditOrderStateService;
-import kg.gov.mf.loan.manage.service.order.CreditOrderTypeService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermAccrMethodService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermCurrencyService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermDaysMethodService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermFloatingRateTypeService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermFrequencyTypeService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermFundService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermRatePeriodService;
-import kg.gov.mf.loan.manage.service.orderterm.OrderTermTransactionOrderService;
-import kg.gov.mf.loan.web.util.Utils;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 @SessionAttributes("roles")
@@ -318,7 +306,7 @@ public class CreditOrderController {
 
     private List<OrderTermModel> getTermsByOrderId(long orderId)
     {
-        String baseQuery = "SELECT term.id,\n" +
+        /*String baseQuery = "SELECT term.id,\n" +
                 "  term.description,\n" +
                 "  term.amount,\n" +
                 "  term.installmentQuantity,\n" +
@@ -379,10 +367,70 @@ public class CreditOrderController {
                 "  AND term.transactionOrderId = txOrder.id\n" +
                 "  AND term.interestAccrMethodId = accMethod.id\n" +
                 "  AND creditOrderId = " + orderId;
-
+*/
+        String baseQuery="SELECT term.id,\n" +
+				"       term.description,\n" +
+				"       term.amount,\n" +
+				"       term.installmentQuantity,\n" +
+				"       term.installmentFirstDay,\n" +
+				"       term.firstInstallmentDate,\n" +
+				"       term.lastInstallmentDate,\n" +
+				"       term.minDaysDisbFirstInst,\n" +
+				"       term.maxDaysDisbFirstInst,\n" +
+				"       term.graceOnPrinciplePaymentInst,\n" +
+				"       term.graceOnPrinciplePaymentDays,\n" +
+				"       term.graceOnInterestPaymentInst,\n" +
+				"       term.graceOnInterestPaymentDays,\n" +
+				"       term.graceOnInterestAccrInst,\n" +
+				"       term.graceOnInterestAccrDays,\n" +
+				"       term.interestRateValue,\n" +
+				"       term.frequencyQuantity,\n" +
+				"       term.penaltyOnPrincipleOverdueRateValue,\n" +
+				"       term.fundId,\n" +
+				"       null as fundName,\n" +
+				"       term.penaltyOnInterestOverdueRateValue,\n" +
+				"       term.earlyRepaymentAllowed,\n" +
+				"       term.penaltyLimitPercent,\n" +
+				"       term.collateralFree,\n" +
+				"       term.currencyId,\n" +
+				"       null as currencyName,\n" +
+				"       term.frequencyTypeId,\n" +
+				"       null as frequencyTypeName,\n" +
+				"       term.interestRateValuePerPeriodId,\n" +
+				"       null as interestRateValuePerPeriodName,\n" +
+				"       term.interestTypeId,\n" +
+				"       null as interestTypeName,\n" +
+				"       term.penaltyOnPrincipleOverdueTypeId,\n" +
+				"       null as penaltyOnPrincipleOverdueTypeName,\n" +
+				"       term.penaltyOnInterestOverdueTypeId,\n" +
+				"       null as penaltyOnInterestOverdueTypeName,\n" +
+				"       term.daysInYearMethodId,\n" +
+				"       null as daysInYearMethodName,\n" +
+				"       term.daysInMonthMethodId,\n" +
+				"       null as daysInMonthMethodName,\n" +
+				"       term.transactionOrderId,\n" +
+				"       null as transactionOrderName,\n" +
+				"       term.interestAccrMethodId,\n" +
+				"       null as interestAccrMethodName\n" +
+				"FROM orderTerm term\n" +
+				"WHERE creditOrderId = 614";
         Query query = entityManager.createNativeQuery(baseQuery, OrderTermModel.class);
 
         List<OrderTermModel> terms = query.getResultList();
+
+        for (OrderTermModel model : terms){
+			model.setFundName(fundService.getById(model.getFundId()).getName());
+			model.setDaysInMonthMethodName(daysMethodService.getById(model.getDaysInMonthMethodId()).getName());
+			model.setDaysInYearMethodName(daysMethodService.getById(model.getDaysInYearMethodId()).getName());
+			model.setCurrencyName(currService.getById(model.getCurrencyId()).getName());
+			model.setTransactionOrderName(txOrderService.getById(model.getTransactionOrderId()).getName());
+			model.setInterestTypeName(rateTypeService.getById(model.getInterestTypeId()).getName());
+			model.setPenaltyOnPrincipleOverdueTypeName(rateTypeService.getById(model.getPenaltyOnPrincipleOverdueTypeId()).getName());
+			model.setPenaltyOnInterestOverdueTypeName(rateTypeService.getById(model.getPenaltyOnInterestOverdueTypeId()).getName());
+			model.setInterestRateValuePerPeriodName(ratePeriodService.getById(model.getInterestRateValuePerPeriodId()).getName());
+			model.setFrequencyTypeName(freqTypeService.getById(model.getFrequencyTypeId()).getName());
+			model.setInterestAccrMethodName(accrMethodService.getById(model.getInterestAccrMethodId()).getName());
+		}
         return terms;
     }
 

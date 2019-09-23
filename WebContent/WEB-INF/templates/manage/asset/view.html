@@ -79,6 +79,9 @@
                                 <li class="nav-item">
                                     <a id="fromLoansFunction" class="nav-link m--font-primary" data-toggle="tab" href="#fromLoans" th:text="#{label.asset.fromLoans}"></a>
                                 </li>
+                                <li class="nav-item">
+                                    <a id="secondaryPaymentsFunction" class="nav-link m--font-primary" data-toggle="tab" href="#secondaryPayments" th:text="#{label.asset.secondaryPayments}"></a>
+                                </li>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane active" id="main" role="tabpanel">
@@ -319,6 +322,40 @@
                                     <!--end: Search Form -->
                                     <!--begin: Datatable -->
                                     <div class="m_datatable" id="assetFromLoansTable"></div>
+                                    <!--end: Datatable -->
+                                </div>
+                                <div id="secondaryPayments" class="tab-pane"  role="tabpanel">
+                                    <!--begin: Search Form -->
+                                    <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                                        <div class="row align-items-center">
+                                            <div class="col-xl-9 order-1 order-xl-1">
+                                                <div class="form-group m-form__group row align-items-center">
+                                                    <div class="col-lg-6">
+                                                        <div class="m-input-icon m-input-icon--left">
+                                                            <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="search_secondary_payments">
+                                                            <span class="m-input-icon__icon m-input-icon__icon--left">
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xl-3 order-3 order-xl-3 m--align-right">
+                                                <a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_SECONDARYPAYMENT')" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+                                                   th:href="@{/asset/__${asset.id}__/payment/add}"
+                                                   data-toggle="modal"
+                                                   data-target="#addForm"><span th:text="#{label.asset.addSecondaryPayment}"></span>
+                                                    <i class="la la-plus-circle"></i></span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--end: Search Form -->
+                                    <!--begin: Datatable -->
+                                    <div class="m_datatable" id="assetSecondaryPaymentsTable"></div>
                                     <!--end: Datatable -->
                                 </div>
                             </div>
@@ -581,7 +618,7 @@
                 url: '/asset/assetPayments/'+assetId,
                 success:function (data) {
                     jsonPayments=data;
-                    DatatableDataLocalPayments.init();
+                    DatatableDataLocalPayments.init("assetPaymentsTable");
                 }
             });
         });
@@ -606,16 +643,27 @@
             });
         });
 
+        $("#secondaryPaymentsFunction").on("click",function () {
+            $.ajax({
+                type:'post',
+                url: '/asset/secondaryPayments/'+assetId,
+                success:function (data) {
+                    jsonPayments=data;
+                    DatatableDataLocalPayments.init("assetSecondaryPaymentsTable");
+                }
+            });
+        });
+
         // paymentsDatatable
         var DatatableDataLocalPayments = function () {
             //== Private functions
 
             // demo initializer
-            var mainTableInit = function () {
+            var mainTableInit = function (divName) {
 
                 var dataJSONArray = JSON.parse(jsonPayments);
 
-                var datatable = $('#assetPaymentsTable').mDatatable({
+                var datatable = $('#'+divName).mDatatable({
                     // datasource definition
                     data: {
                         type: 'local',
@@ -737,9 +785,9 @@
 
             return {
                 //== Public functions
-                init: function () {
+                init: function (divName) {
                     // init dmeo
-                    mainTableInit();
+                    mainTableInit(divName);
                 }
             };
         }();

@@ -3,6 +3,8 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import kg.gov.mf.loan.output.report.model.CollateralItemView;
 import kg.gov.mf.loan.output.report.service.CollateralItemViewService;
+import kg.gov.mf.loan.web.fetchModels.CollateralItemViewMetaModel;
+import kg.gov.mf.loan.web.util.Meta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityManager;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,7 +31,7 @@ public class RestCollateralItemViewController {
     EntityManager entityManager;
 
     @PostMapping("/collateralItemViews")
-    public List<CollateralItemView> getAll(@RequestParam Map<String,String> datatable){
+    public CollateralItemViewMetaModel getAll(@RequestParam Map<String,String> datatable){
 
         LinkedHashMap<String,List<String>> parameters=new LinkedHashMap<>();
 
@@ -95,29 +98,41 @@ public class RestCollateralItemViewController {
             parameters.put("r=ycv_ci_name",itemNames);
         }
         Integer page = Integer.parseInt(pageStr);
-        Integer perPage = Integer.parseInt(perPageStr);
+        Integer perPage =10;
         Integer offset = (page-1)*perPage;
 
 
         List<CollateralItemView> all=collateralItemViewService. findByParameter(parameters,offset,100,sortStr,sortField);
 
 //        BigInteger count=BigInteger.valueOf(collateralItemViewService.getCount(parameters));
-//        BigInteger count=BigInteger.valueOf(35455);
+        BigInteger count= BigInteger.valueOf(0);
+        if (all.size()==100){
+            count=BigInteger.valueOf(100);
+        }
+        else{
+            count=BigInteger.valueOf(all.size());
+
+        }
 //
-//        Meta meta=new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, sortStr, sortField);
+        Meta meta=new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, sortStr, sortField);
 //
-//        CollateralItemViewMetaModel metaModel=new CollateralItemViewMetaModel();
+        CollateralItemViewMetaModel metaModel=new CollateralItemViewMetaModel();
 //
 //        System.out.println("==================================COUNT=====================================================================");
 //        System.out.println(count);
 //        System.out.println("=======================================================================================================");
 //
-//        metaModel.setMeta(meta);
-//        metaModel.setData(all);
+        metaModel.setMeta(meta);
+        if(all.size()>10){
+            metaModel.setData(all.subList(0,10));
+        }
+        else{
+            metaModel.setData(all);
+        }
 
 
 
-        return all;
+        return metaModel;
     }
 
 }
