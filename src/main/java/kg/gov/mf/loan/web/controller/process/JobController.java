@@ -110,6 +110,8 @@ public class JobController {
                     if(!isJobActive(jobDetail)){
                         scheduler.getContext().put("jobItem", jobItem);
                         scheduler.scheduleJob(jobDetail, cronTrigger);
+                        jobItem.setActive(1);
+                        jobItemService.update(jobItem);
                     }
                 }
             }
@@ -136,6 +138,8 @@ public class JobController {
                     if(!isJobActive(jobDetail)){
                         scheduler.getContext().put("jobItem", jobItem);
                         scheduler.scheduleJob(jobDetail, cronTrigger);
+                        jobItem.setActive(1);
+                        jobItemService.update(jobItem);
                     }
                 }
             }
@@ -155,6 +159,8 @@ public class JobController {
                     scheduler.deleteJob(jobKey);
             }
         }
+        jobItem.setActive(0);
+        jobItemService.update(jobItem);
         return "redirect:" + "/job/list";
     }
 
@@ -166,6 +172,12 @@ public class JobController {
                 scheduler.deleteJob(jobKey);
             }
 
+        }
+
+        List<JobItem> jobItems = jobItemService.list();
+        for (JobItem jobItem : jobItems){
+            jobItem.setActive(0);
+            jobItemService.update(jobItem);
         }
         return "redirect:" + "/job/list";
     }
