@@ -59,6 +59,7 @@ public class HibernateConfiguration {
 //        properties.put("org.hibernate.envers.audit_table_prefix", environment.getRequiredProperty("hibernate.envers.audit_table_prefix"));
 //        properties.put("org.hibernate.envers.audit_table_suffix", environment.getRequiredProperty("hibernate.envers.audit_table_suffix"));
         properties.put("org.hibernate.envers.store_data_at_delete", environment.getRequiredProperty("hibernate.envers.store_data_at_delete"));
+        properties.put("hibernate.integration.envers.enabled", environment.getRequiredProperty("hibernate.integration.envers.enabled"));
 
         return properties;        
     }

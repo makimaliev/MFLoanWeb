@@ -291,7 +291,7 @@ public class PaymentScheduleController {
 
 		for (PaymentSchedule paymentSchedule1:paymentSchedules){
 			PaymentSchedule paymentSchedule=this.paymentScheduleService.getById(paymentSchedule1.getId());
-			this.paymentScheduleService.remove(paymentSchedule);
+			this.paymentScheduleRepository.delete(paymentSchedule);
 		}
 		try {
 			Iterator<String> itr = request.getFileNames();
@@ -337,7 +337,7 @@ public class PaymentScheduleController {
 							paymentSchedule.setCollectedInterestPayment(CellCPercent.getNumericCellValue());
 							paymentSchedule.setCollectedPenaltyPayment(CellCPenalty.getNumericCellValue());
 							paymentSchedule.setInstallmentState(installmentStateService.getById(Long.valueOf(1)));
-							paymentScheduleService.add(paymentSchedule);
+							paymentScheduleRepository.save(paymentSchedule);
 							if(!updateLastDate && paymentSchedule.getExpectedDate().after(loan.getLastDate())){
 								updateLastDate=true;
 							}
