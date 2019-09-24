@@ -5,9 +5,11 @@ import com.google.gson.GsonBuilder;
 import kg.gov.mf.loan.manage.model.order.CreditOrder;
 import kg.gov.mf.loan.manage.model.orderterm.*;
 import kg.gov.mf.loan.manage.repository.orderterm.OrderTermRepository;
+import kg.gov.mf.loan.manage.service.loan.InstallmentStateService;
 import kg.gov.mf.loan.manage.service.order.CreditOrderService;
 import kg.gov.mf.loan.manage.service.orderterm.*;
 import kg.gov.mf.loan.web.fetchModels.AgreementTemplateModel;
+import kg.gov.mf.loan.web.fetchModels.PaymentScheduleModel;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -59,6 +61,9 @@ public class OrderTermController {
 
 	@Autowired
 	OrderTermRepository orderTermRepository;
+
+	@Autowired
+	InstallmentStateService installmentStateService;
 
 	/** The entity manager. */
 	@PersistenceContext
@@ -551,6 +556,29 @@ public class OrderTermController {
 		model.addAttribute("term",orderTerm);
 
 		return "/manage/order/orderterm/orderTermCalculateForm";
+	}
+
+	@GetMapping("/manage/orderTerm/{orderTermId}/calculate")
+	public String getListOfPaymentSchedules(@PathVariable("orderTermId") Long orderTermId, Model model){
+
+
+		String getSchedulesQuery = "select id,expectedDate,disbursement,principalPayment,interestPayment,\n" +
+				"       collectedInterestPayment,collectedPenaltyPayment,installmentStateId,\n" +
+				"       record_status, null as installmentStateName, 0 as counter\n" +
+				"from paymentSchedule limit 10";
+		Query query = entityManager.createNativeQuery(getSchedulesQuery,PaymentScheduleModel.class);
+		List<PaymentScheduleModel> paymentScheduleList = query.getResultList();
+
+		for(PaymentScheduleModel paymentScheduleModel: paymentScheduleList)
+		{
+			paymentScheduleModel.setInstallmentStateName(installmentStateService.getById(paymentScheduleModel.getInstallmentStateId()).getName());
+		}
+		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+		String result = gson.toJson(paymentScheduleList);
+
+		model.addAttribute("jsonPaymentSchedules",result);
+
+		return "/manage/order/orderterm/orderTermPaymentScheduleView";
 	}
 	//endregion
 
