@@ -891,6 +891,25 @@
                                             </span>
                                         </a>
                                     </li>
+                                    <li sec:authorize="hasAnyAuthority('ADMIN')" class="m-menu__item " aria-haspopup="true" >
+                                        <a th:href="@{/debtorGroup/list}" class="m-menu__link ">
+                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                <span></span>
+                                            </i>
+                                            <span class="m-menu__link-text" th:text="#{label.debtorGroup}">
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li sec:authorize="hasAnyAuthority('ADMIN')" class="m-menu__item " aria-haspopup="true" >
+                                        <a th:href="@{/debtorSubGroup/list}" class="m-menu__link ">
+                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                <span></span>
+                                            </i>
+                                            <span class="m-menu__link-text" th:text="#{label.debtorSubGroup}">
+                                                Debtor Sub group
+                                            </span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>
@@ -945,6 +964,16 @@
                                             </i>
                                             <span class="m-menu__link-text">
                                                 Вид результата акта обследования
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="m-menu__item " aria-haspopup="true" >
+                                        <a th:href="@{/inspectionStatus/list}" class="m-menu__link ">
+                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                <span></span>
+                                            </i>
+                                            <span class="m-menu__link-text">
+                                                Сатус результата акта обследования
                                             </span>
                                         </a>
                                     </li>

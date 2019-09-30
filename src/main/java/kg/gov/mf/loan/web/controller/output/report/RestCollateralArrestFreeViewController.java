@@ -3,12 +3,15 @@ package kg.gov.mf.loan.web.controller.output.report;
 
 import kg.gov.mf.loan.output.report.model.CollateralArrestFreeView;
 import kg.gov.mf.loan.output.report.service.CollateralArrestFreeViewService;
+import kg.gov.mf.loan.web.fetchModels.CollateralArrestFreeViewMetaModel;
+import kg.gov.mf.loan.web.util.Meta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,7 +26,7 @@ public class RestCollateralArrestFreeViewController {
     CollateralArrestFreeViewService collateralArrestFreeViewService;
 
     @PostMapping("/collateralArrestFreeViews")
-    public List<CollateralArrestFreeView> getAll(@RequestParam Map<String,String> datatable){
+    public CollateralArrestFreeViewMetaModel getAll(@RequestParam Map<String,String> datatable){
 
         LinkedHashMap<String,List<String>> parameters=new LinkedHashMap<>();
 
@@ -80,9 +83,29 @@ public class RestCollateralArrestFreeViewController {
         Integer offset = (page-1)*perPage;
 
 
-        List<CollateralArrestFreeView> all=this.collateralArrestFreeViewService.findByParameter(parameters,offset,perPage);
+        List<CollateralArrestFreeView> all=this.collateralArrestFreeViewService.findByParameter(parameters,offset,100);
 
+        BigInteger count= BigInteger.valueOf(0);
+        if (all.size()==100){
+            count=BigInteger.valueOf(100);
+        }
+        else{
+            count=BigInteger.valueOf(all.size());
 
-        return all;
+        }
+//
+        Meta meta=new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, "desc","v_ci_id");
+//
+        CollateralArrestFreeViewMetaModel metaModel=new CollateralArrestFreeViewMetaModel();
+
+        metaModel.setMeta(meta);
+        if(all.size()>perPage){
+            metaModel.setData(all.subList(0,perPage));
+        }
+        else{
+            metaModel.setData(all);
+        }
+
+        return metaModel;
     }
 }

@@ -1,0 +1,66 @@
+<form th:action="@{/debtor/__${debtor.id}__/debtorGroup/save}" class="form-horizontal" method="post" th:object="${debtor}"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="modal-header">
+        <h5 class="modal-title" th:text="#{label.role.modal.title}"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">
+				&times;
+			</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-danger alert-dismissible alert-hidden" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+            <span th:text="#{label.role.modal.error.name}"></span>
+        </div>
+        <div class="form-group m-form__group row">
+            <label class="col-form-label col-lg-4 col-sm-12">
+                <span th:text="#{label.debtorGroups}"></span>
+                <span class="m--font-danger">*</span>
+            </label>
+            <div class="col-lg-4 col-md-9 col-sm-12">
+                <select id="debtorGroup" required="required " oninvalid="showNotEmptyMessage(this)" onchange="deleteMessage(this)" class="form-control m-bootstrap-select m_selectpicker" th:field="${debtor.debtorGroup.id}" th:title="#{label.select}">
+                    <option value="0" th:text="#{label.select}"></option>
+                    <option th:each="type : ${groupList}" th:value="${type.id}" th:text="${type.name}" ></option>
+                </select>
+            </div>
+        </div>
+        <input type="text" hidden="hidden" id="smth" name="debtorSubGroupId">
+        <div id="subGroup"></div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.role.button.cancel}"></button>
+        <button type="submit" class="btn btn-primary" th:text="#{label.role.button.submit}" onclick="saveSub()"></button>
+    </div>
+    <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
+    <script type="text/javascript" th:inline="javascript">
+        function showNotEmptyMessage(d){
+            d.setCustomValidity([[#{label.pleaseFillThisField}]]);
+        }
+
+        function deleteMessage(d){
+            d.setCustomValidity("");
+        }
+
+        function doUpdate() {
+            var id=$("#debtorGroup").val();
+            var urlStr = "/debtorGroup/"+id+"/getDebtorSubGroups";
+
+            $.get(urlStr, function(data) {
+
+                $('#subGroup').html(data);
+            });
+        }
+
+        doUpdate();
+        $("#debtorGroup").on("change",function () {
+            doUpdate();
+        });
+
+        var subId;
+
+        function saveSub() {
+            $("#smth").val(subId);
+        }
+    </script>
+</form>
