@@ -44,7 +44,7 @@
 
         function doUpdate() {
             var id=$("#debtorGroup").val();
-            var urlStr = "/debtorGroup/"+id+"/getDebtorSubGroups";
+            var urlStr = "/debtor/"+debtorId+"/debtorGroup/"+id+"/getDebtorSubGroups";
 
             $.get(urlStr, function(data) {
 

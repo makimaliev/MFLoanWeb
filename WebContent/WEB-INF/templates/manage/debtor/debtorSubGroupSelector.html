@@ -1,13 +1,12 @@
 <div class="col" xmlns:th="http://www.w3.org/1999/xhtml">
-    <select id="subGroup" class="form-control m-bootstrap-select m_selectpicker"   th:title="#{label.select}">
+    <select id="subGroup" class="form-control m-bootstrap-select m_selectpicker"  th:title="#{label.select}">
         <option value="0" th:text="#{label.select}"></option>
-        <option th:each="type : ${list}" th:value="${type.id}" th:text="${type.name}" ></option>
+        <option th:each="type : ${list}" th:value="${type.id}" th:text="${type.name}" th:selected="${debtorSubGroup.id}"></option>
     </select>
     <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
     <script>
         $("#subGroup").on("change",function () {
-            var idd=$("#subGroup :selected").val();;
-            checker(idd);
+            var idd=$("#subGroup :selected").val();
             if(idd!=0){
                 $.ajax({
                     type:'post',
@@ -17,17 +16,13 @@
             }
         });
 
-        var idd=$("#subGroup :selected").val();;
-        checker(idd);
+        var idd=$("#subGroup :selected").val();
         if(idd!=0){
             $.ajax({
                 type:'post',
                 data:{id:idd,debtorIdd:debtorId},
                 url:"/debtorSaveSubGroup/instantUpdate"
             });
-        }
-        function checker(d){
-            alert(d);
         }
     </script>
 </div>

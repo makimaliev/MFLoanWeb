@@ -97,12 +97,21 @@ public class DebtorGroupController {
         return "redirect:/manage/debtor/{debtorId}/view";
     }
 
-    @GetMapping("/debtorGroup/{debtorGroupId}/getDebtorSubGroups")
-    public String getSubGroupsForm(Model model, @PathVariable("debtorGroupId") Long debtorGroupId){
+    @GetMapping("/debtor/{debtorId}/debtorGroup/{debtorGroupId}/getDebtorSubGroups")
+    public String getSubGroupsForm(Model model, @PathVariable("debtorId") Long debtorId,
+                                   @PathVariable("debtorGroupId") Long debtorGroupId){
 
         List<DebtorSubGroup> list = debtorSubGroupService.getByDebtorGroup(debtorGroupId);
 
-        DebtorSubGroup debtorSubGroup = list.get(0);
+        Debtor debtor = debtorService.getById(debtorId);
+
+        DebtorSubGroup debtorSubGroup = new DebtorSubGroup();
+        try{
+            debtorSubGroup= debtorSubGroupService.getById(debtor.getDebtorSubGroup().getId());
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
 
         model.addAttribute("list",list);
         model.addAttribute("debtorSubGroup",debtorSubGroup);

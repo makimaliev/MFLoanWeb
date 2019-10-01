@@ -293,6 +293,25 @@
                                             </div>
                                             <div class="col-md-12 col-lg-12 col-xl-4">
                                                 <!--begin:: Widgets/Stats2-2 -->
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.debtorGroup}"></h3>
+															<span class="m-widget1__desc m--font-brand" th:text="${debtor?.debtorGroup.name}"></span>
+														</div>
+														<div class="col">
+															<button sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR_GROUP')" th:href="@{/debtor/__${debtor.id}__/debtorGroup/change}" type="button" class="btn btn-primary" th:text="#{label.change.debtorGroups}" data-toggle="modal" data-target="#listLoanFormModal"></button>
+														</div>
+													</div>
+												</div>
+												<div class="m-widget1__item">
+													<div class="row m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.debtorSubGroup}"></h3>
+															<span class="m-widget1__desc m--font-brand" th:text="${debtor?.debtorSubGroup.name}"></span>
+														</div>
+													</div>
+												</div>
                                                 <div class="m-widget1">
                                                     <div class="m-widget1__item">
                                                         <div class="row m-row--no-padding align-items-center">
