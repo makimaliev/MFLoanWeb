@@ -101,6 +101,11 @@ public class CollateralItemController {
 	@Autowired
 	DocumentService documentService;
 
+	@Autowired
+	InspectionStatusService inspectionStatusService;
+
+	@Autowired
+	ArrestFreeStatusService arrestFreeStatusService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -324,8 +329,15 @@ public class CollateralItemController {
 				itemDetails.setCollateralItem(item);
 				item.setCollateralItemDetails(itemDetails);
 
-				if (item.getCollateralItemDetails() != null)
+				if (item.getCollateralItemDetails() != null){
+
+					InspectionStatus inspectionStatus = inspectionStatusService.getById(1L);
+					item.setInspectionStatus(inspectionStatus);
+
+					ArrestFreeStatus arrestFreeStatus = arrestFreeStatusService.getById(1L);
+					item.setArrestFreeStatus(arrestFreeStatus);
 					itemService.add(item);
+				}
 			} else {
 
 				if (item.getRisk_rate() == null) item.setRisk_rate(0.7);
@@ -411,6 +423,9 @@ public class CollateralItemController {
 			af.setDocument(String.valueOf(documentIds));
 			item.setCollateralItemArrestFree(af);
 			afService.add(af);
+
+			ArrestFreeStatus arrestFreeStatus = arrestFreeStatusService.getById(2L);
+			item.setArrestFreeStatus(arrestFreeStatus);
 			itemService.update(item);
 		}
 
@@ -479,10 +494,17 @@ public class CollateralItemController {
 		CollateralItem item = itemService.getById(itemId);
 		ins.setCollateralItem(item);
 		
-		if(ins.getId() == 0)
+		if(ins.getId() == 0){
+
 			insService.add(ins);
+			InspectionStatus inspectionStatus = inspectionStatusService.getById(2L);
+			item.setInspectionStatus(inspectionStatus);
+			itemService.update(item);
+		}
 		else
 			insService.update(ins);
+
+
 		
 		model.addAttribute("loggedinuser", Utils.getPrincipal());
         return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/view";

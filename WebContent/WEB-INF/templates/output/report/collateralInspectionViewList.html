@@ -104,6 +104,29 @@
 
                         </div>
                         <div class="col-lg-2"   >
+                        </div>
+                        <div class="col-lg-1">
+                            <i id="shower" onclick="showFields()" class="la la-angle-down"></i>
+                        </div>
+                    </div>
+                    <div class="row hideable">
+                        <div class="col-lg-2">
+                            <div class="input-group date m_datetimepicker" id="from_datepicker" style="margin-bottom: 5px">
+                                <input  class="form-control m-input" th:placeholder="#{label.fromDate}" name="date" />
+                                <span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group date m_datetimepicker" id="to_datepicker" >
+                                <input  class="form-control m-input" th:placeholder="#{label.toDate}" name="date" />
+                                <span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
                             <div class="m-form__group m-form__group--inline" >
                                 <div class="m-form__control">
                                     <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="ins_type">
@@ -113,27 +136,6 @@
                                         <option th:each="type: ${insTypes}" th:value="${type.id}" th:text="${type.name}"></option>
                                     </select>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-1">
-                            <i id="shower" onclick="showFields()" class="la la-angle-down"></i>
-                        </div>
-                    </div>
-                    <div class="row hideable">
-                        <div class="col-lg-3">
-                            <div class="input-group date m_datetimepicker" id="from_datepicker" style="margin-bottom: 5px">
-                                <input  class="form-control m-input" th:placeholder="#{label.fromDate}" name="date" />
-                                <span class="input-group-addon">
-													<i class="la la-calendar glyphicon-th"></i>
-												</span>
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="input-group date m_datetimepicker" id="to_datepicker" >
-                                <input  class="form-control m-input" th:placeholder="#{label.toDate}" name="date" />
-                                <span class="input-group-addon">
-													<i class="la la-calendar glyphicon-th"></i>
-												</span>
                             </div>
                         </div>
                         <div class="col-lg-5"></div>

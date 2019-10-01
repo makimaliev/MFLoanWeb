@@ -413,7 +413,7 @@ public class CreditOrderController {
 				"       term.interestAccrMethodId,\n" +
 				"       null as interestAccrMethodName\n" +
 				"FROM orderTerm term\n" +
-				"WHERE creditOrderId = 614";
+				"WHERE creditOrderId ="+orderId;
         Query query = entityManager.createNativeQuery(baseQuery, OrderTermModel.class);
 
         List<OrderTermModel> terms = query.getResultList();
