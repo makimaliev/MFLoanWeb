@@ -111,6 +111,25 @@
 													<div class="m-widget1__item">
 														<div class="row m-row--no-padding align-items-center">
 															<div class="col">
+																<h3 class="m-widget1__title" th:text="#{label.debtorGroup}"></h3>
+																<span class="m-widget1__desc m--font-brand" th:text="${debtor?.debtorGroup.name}"></span>
+															</div>
+															<div class="col">
+																<button sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR_GROUP')" th:href="@{/debtor/__${debtor.id}__/debtorGroup/change}" type="button" class="btn btn-primary" th:text="#{label.change.debtorGroups}" data-toggle="modal" data-target="#listLoanFormModal"></button>
+															</div>
+														</div>
+													</div>
+                                                    <div class="m-widget1__item">
+                                                        <div class="row m-row--no-padding align-items-center">
+                                                            <div class="col">
+                                                                <h3 class="m-widget1__title" th:text="#{label.debtorSubGroup}"></h3>
+                                                                <span class="m-widget1__desc m--font-brand" th:text="${debtor?.debtorSubGroup.name}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+													<div class="m-widget1__item">
+														<div class="row m-row--no-padding align-items-center">
+															<div class="col">
 																<h3 class="m-widget1__title" th:text="#{label.debtor.type}"></h3>
 																<span class="m-widget1__desc m--font-brand" th:text="${type.name}"></span>
 																<button sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR_TYPE')" th:href="@{/debtor/type/save}" type="button" class="btn btn-primary" th:text="#{label.change.debtorType}" data-toggle="modal" data-target="#changeDebtorTypeModal"></button>

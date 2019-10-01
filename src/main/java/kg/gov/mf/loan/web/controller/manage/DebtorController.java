@@ -177,6 +177,12 @@ public class DebtorController {
 	@Autowired
 	UserService userService;
 
+	@Autowired
+	DebtorGroupService debtorGroupService;
+
+	@Autowired
+	DebtorSubGroupService debtorSubGroupService;
+
 	/**
 	 * The entity manager.
 	 */
@@ -341,6 +347,11 @@ public class DebtorController {
 				debtor.setOrgForm(formService.getById(1L));
 			else
 				debtor.setOrgForm(formService.getById(2L));
+
+			DebtorGroup debtorGroup= debtorGroupService.getById(1L);
+			DebtorSubGroup debtorSubGroup= debtorSubGroupService.getById(1L);
+			debtor.setDebtorGroup(debtorGroup);
+			debtor.setDebtorSubGroup(debtorSubGroup);
 			debtorService.add(debtor);
 		} else {
 			Owner owner = ownerRepository.findOne(debtor.getOwner().getId());
