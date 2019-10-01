@@ -193,10 +193,12 @@ public class CollectionPhaseController {
     		@PathVariable("procId")Long procId,
     		@PathVariable("phaseId")Long phaseId) {
 
+		CollectionProcedure procedure = procService.getById(procId);
+
 		model.addAttribute("debtorId", debtorId);
 		model.addAttribute("debtor", debtorService.getById(debtorId));
 		model.addAttribute("procId", procId);
-		model.addAttribute("proc", procService.getById(procId));
+		model.addAttribute("proc", procedure);
 
 		CollectionPhase phase = phaseService.getById(phaseId);
 		model.addAttribute("phase", phase);
@@ -243,6 +245,22 @@ public class CollectionPhaseController {
         }
         model.addAttribute("createdBy",createdByStr);
         model.addAttribute("modifiedBy",modifiedByStr);
+
+        User user = userService.findByUsername(Utils.getPrincipal());
+        Staff staff = staffService.findById(user.getStaff().getId());
+
+        Long departmentId = staff.getDepartment().getId();
+
+        if(departmentId==9 && procedure.getStatusDepartmentId() == 4){
+        	model.addAttribute("accept",4);
+		}
+		else if(departmentId==10 && procedure.getStatusDepartmentId() == 3){
+			model.addAttribute("accept",3);
+		}
+		else{
+			model.addAttribute("accept",0);
+		}
+
 
 		return "/manage/debtor/collectionprocedure/collectionphase/view";
 
@@ -965,10 +983,30 @@ public class CollectionPhaseController {
 		phaseService.update(phase);
 		CollectionProcedure procedure=procService.getById(phase.getCollectionProcedure().getId());
 		procedure.setCloseDate(collectionPhase.getCollectionProcedure().getCloseDate());
-		procedure.setProcedureStatus(collectionPhase.getCollectionProcedure().getProcedureStatus());
+		ProcedureStatus newProcStatus=collectionPhase.getCollectionProcedure().getProcedureStatus();
+		if(procedure.getProcedureStatus().getId() != newProcStatus.getId()){
+			if(newProcStatus.getId() ==3 || newProcStatus.getId() == 4){
+				procedure.setStatusDepartmentId(newProcStatus.getId());
+			}
+			else{
+				procedure.setProcedureStatus(newProcStatus);
+			}
+		}
 		procService.update(procedure);
 
 		return "redirect:" + "/manage/debtor/{debtorId}/collectionprocedure/{procId}/view";
+	}
+
+	@GetMapping("/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/accept/{procStatusId}/change")
+	public String acceptChangeOfProcedureStatus(@PathVariable("debtorId") Long debtorId,@PathVariable("procId") Long procId,@PathVariable("phaseId") Long phaseId,@PathVariable("procStatusId") Long procStatusId){
+
+		ProcedureStatus procedureStatus = procedureStatusService.getById(procStatusId);
+		CollectionProcedure procedure = procService.getById(procId);
+		procedure.setProcedureStatus(procedureStatus);
+		procedure.setStatusDepartmentId(0L);
+		procService.update(procedure);
+
+		return "redirect:/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/view";
 	}
 
 	@RequestMapping(value = { "/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/changeRecordStatus"}, method=RequestMethod.POST)
