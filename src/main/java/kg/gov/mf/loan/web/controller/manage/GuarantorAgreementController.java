@@ -17,6 +17,8 @@ import kg.gov.mf.loan.manage.service.collateral.GuarantorAgreementService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
 import kg.gov.mf.loan.manage.service.loan.LoanService;
+import kg.gov.mf.loan.output.report.model.ReferenceView;
+import kg.gov.mf.loan.output.report.service.ReferenceViewService;
 import kg.gov.mf.loan.web.fetchModels.GuarantorAgreementModel;
 import kg.gov.mf.loan.web.fetchModels.GuarantorMetaModel;
 import kg.gov.mf.loan.web.fetchModels.SystemFileModel;
@@ -61,6 +63,9 @@ public class GuarantorAgreementController {
     @Autowired
     SystemFileService systemFileService;
 
+    @Autowired
+    ReferenceViewService referenceViewService;
+
     @InitBinder
     public void initBinder(WebDataBinder binder)
     {
@@ -70,6 +75,13 @@ public class GuarantorAgreementController {
 
     @RequestMapping(value = {"/manage/guarantoragreement/list"},method = RequestMethod.GET)
     public String list(ModelMap model){
+
+        List<ReferenceView> districts=referenceViewService.findByParameter("district");
+        model.addAttribute("districts",districts);
+
+        List<ReferenceView> regions=referenceViewService.findByParameter("region");
+        model.addAttribute("regions",regions);
+
 
         return "/manage/debtor/loan/guarantoragreement/list";
 
@@ -194,6 +206,8 @@ public class GuarantorAgreementController {
 
         String searchDebtor="";
         String searchOwner="";
+        String searchRegion="";
+        String searchDistrict="";
 
         boolean searchByDebtor = datatable.containsKey("datatable[query][debtor]");
         if(searchByDebtor){
@@ -207,23 +221,38 @@ public class GuarantorAgreementController {
             searchDebtor="and o.name like \'%"+ownerStr+"%\' \n";
         }
 
+        boolean searchByDistrict = datatable.containsKey("datatable[query][districtId]");
+        if (searchByDistrict){
+            String districtStr = datatable.get("datatable[query][districtId]");
+            searchDistrict="and r.id="+districtStr+" \n";
+        }
+
+        boolean searchByRegion = datatable.containsKey("datatable[query][regionId]");
+        if (searchByRegion){
+            String regionStr = datatable.get("datatable[query][regionId]");
+            searchRegion="and dis.id="+regionStr+" \n";
+        }
+
         Integer page = Integer.parseInt(pageStr);
         Integer perPage = Integer.parseInt(perPageStr);
         Integer offset = (page-1)*perPage;
 
-        String baseQuery="select ga.id,o.name as owner,n.name as notary," +
-                "ga.notaryOfficeRegDate,ga.notaryOfficeRegNumber,ga.record_status,d.name as debtor,d.id as debtorId,o.id as ownerId,o.ownerType \n" +
-                "from guarantor_agreement ga,loanGuarantorAgreement lga,owner o,owner n,debtor d,loan l where d.id=l.debtorId " +
-                "and l.id=lga.loanId and ga.id=lga.guarantorAgreementId and o.id=ga.ownerId and n.id=ga.notary "+
-                searchDebtor+searchOwner+
+        String baseQuery="select ga.id,o.name as owner,n.name as notary,ga.notaryOfficeRegDate,ga.notaryOfficeRegNumber,ga.record_status,d.name as debtor,\n" +
+                "       d.id as debtorId,o.id as ownerId,o.ownerType,r.id as regionId,dis.id as districtId, r.name as region, dis.name as district\n" +
+                "from guarantor_agreement ga,loanGuarantorAgreement lga,owner o,owner n,debtor d,loan l,address a,region r, district dis\n" +
+                "where d.id=l.debtorId and l.id=lga.loanId and ga.id=lga.guarantorAgreementId  and o.addressId=a.id and a.region_id=r.id and a.district_id=dis.id\n" +
+                "  and o.id=ga.ownerId and n.id=ga.notary "+
+                searchDebtor+searchOwner+searchDistrict+searchRegion+
                 "order by " + sortField + " " + sortStr + " LIMIT " + offset +"," + perPage;
 
         Query query=entityManager.createNativeQuery(baseQuery,GuarantorAgreementModel.class);
         List<GuarantorAgreementModel> guarantorAgreementModels=query.getResultList();
 
         String countQuery="select count(1)\n" +
-                "from guarantor_agreement ga,loanGuarantorAgreement lga,owner o,owner n,debtor d,loan l where d.id=l.debtorId and l.id=lga.loanId and ga.id=lga.guarantorAgreementId and o.id=ga.ownerId and n.id=ga.notary "+
-                searchDebtor+searchOwner;
+                "from guarantor_agreement ga,loanGuarantorAgreement lga,owner o,owner n,debtor d,loan l,address a,region r, district dis where d.id=l.debtorId " +
+                "and l.id=lga.loanId and ga.id=lga.guarantorAgreementId " +
+                "and o.id=ga.ownerId and n.id=ga.notary and o.addressId=a.id and a.region_id=r.id and a.district_id=dis.id\n"+
+                searchDebtor+searchOwner+searchDistrict+searchRegion;
         BigInteger count = (BigInteger)entityManager.createNativeQuery(countQuery).getResultList().get(0);
         Meta meta = new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, sortStr, sortField);
 

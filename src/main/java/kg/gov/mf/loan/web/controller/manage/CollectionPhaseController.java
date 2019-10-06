@@ -251,11 +251,11 @@ public class CollectionPhaseController {
 
         Long departmentId = staff.getDepartment().getId();
 
-        if(departmentId==9 && procedure.getStatusDepartmentId() == 4){
-        	model.addAttribute("accept",4);
+        if(departmentId==9 && procedure.getStatusDepartmentId() == 8){
+        	model.addAttribute("accept",8);
 		}
-		else if(departmentId==10 && procedure.getStatusDepartmentId() == 3){
-			model.addAttribute("accept",3);
+		else if(departmentId==10 && procedure.getStatusDepartmentId() == 7){
+			model.addAttribute("accept",7);
 		}
 		else{
 			model.addAttribute("accept",0);
@@ -985,10 +985,12 @@ public class CollectionPhaseController {
 		procedure.setCloseDate(collectionPhase.getCollectionProcedure().getCloseDate());
 		ProcedureStatus newProcStatus=collectionPhase.getCollectionProcedure().getProcedureStatus();
 		if(procedure.getProcedureStatus().getId() != newProcStatus.getId()){
-			if(newProcStatus.getId() ==3 || newProcStatus.getId() == 4){
-				procedure.setStatusDepartmentId(newProcStatus.getId());
+			if(newProcStatus.getId() ==3 ){
+				procedure.setStatusDepartmentId(7L);
+				procedure.setProcedureStatus(newProcStatus);
 			}
-			else{
+			else if(newProcStatus.getId() == 4){
+				procedure.setStatusDepartmentId(8L);
 				procedure.setProcedureStatus(newProcStatus);
 			}
 		}

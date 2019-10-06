@@ -1,42 +1,42 @@
 //== Class definition
 
 var DatatableDataLocalAgreements = function () {
-	//== Private functions
+    //== Private functions
 
-	// demo initializer
-	var mainTableInit = function () {
+    // demo initializer
+    var mainTableInit = function () {
 
         var dataJSONArray = JSON.parse(jsonAgreements);
 
-		var datatable = $('#agreementsTable').mDatatable({
-			// datasource definition
-			data: {
-				type: 'local',
-				source: dataJSONArray
-			},
+        var datatable = $('#agreementsTable').mDatatable({
+            // datasource definition
+            data: {
+                type: 'local',
+                source: dataJSONArray
+            },
 
-			// layout definition
-			layout: {
-				theme: 'default', // datatable theme
-				class: '', // custom wrapper class
-				scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
-				height: 450, // datatable's body's fixed height
-				footer: false // display/hide footer
-			},
+            // layout definition
+            layout: {
+                theme: 'default', // datatable theme
+                class: '', // custom wrapper class
+                scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+                height: 450, // datatable's body's fixed height
+                footer: false // display/hide footer
+            },
 
-			// column sorting(refer to Kendo UI)
-			sortable: false,
+            // column sorting(refer to Kendo UI)
+            sortable: false,
 
-			// column based filtering(refer to Kendo UI)
-			filterable: false,
+            // column based filtering(refer to Kendo UI)
+            filterable: false,
 
-			pagination: false,
+            pagination: false,
 
-			// inline and bactch editing(cooming soon)
-			// editable: false,
+            // inline and bactch editing(cooming soon)
+            // editable: false,
 
-			// columns definition
-			columns: [{
+            // columns definition
+            columns: [{
                 field: "id",
                 title: "#",
                 responsive: {hidden: 'xl'},
@@ -53,18 +53,18 @@ var DatatableDataLocalAgreements = function () {
 					';
                 }
             }, {
-				field: "agreementNumber",
-				title: "Номер",
+                field: "agreementNumber",
+                title: "Номер",
                 template: function (row) {
-				    var agrNum = row.agreementNumber;
-				    if (agrNum == null || agrNum == '')
-				        agrNum = 'б/н';
+                    var agrNum = row.agreementNumber;
+                    if (agrNum == null || agrNum == '')
+                        agrNum = 'б/н';
 
                     return '\
 						<a href="/manage/debtor/'+ debtorId + '/collateralagreement/' + row.id + '/view">'+agrNum+'</a>\
 					';
                 }
-			},{
+            },{
                 field: "agreementDate",
                 title: "Дата"
             }, {
@@ -167,34 +167,34 @@ var DatatableDataLocalAgreements = function () {
                     }
                 }
             }
-		});
+        });
 
-		var query = datatable.getDataSourceQuery();
+        var query = datatable.getDataSourceQuery();
 
-		$('#m_form_search1').on('keyup', function (e) {
-			datatable.search($(this).val().toLowerCase());
-		}).val(query.generalSearch);
+        $('#m_form_search1').on('keyup', function (e) {
+            datatable.search($(this).val().toLowerCase());
+        }).val(query.generalSearch);
 
-		/*
-		$('#m_form_status').on('change', function () {
-			datatable.search($(this).val(), 'Status');
-		}).val(typeof query.Status !== 'undefined' ? query.Status : '');
+        /*
+        $('#m_form_status').on('change', function () {
+            datatable.search($(this).val(), 'Status');
+        }).val(typeof query.Status !== 'undefined' ? query.Status : '');
 
-		$('#m_form_type').on('change', function () {
-			datatable.search($(this).val(), 'Type');
-		}).val(typeof query.Type !== 'undefined' ? query.Type : '');
+        $('#m_form_type').on('change', function () {
+            datatable.search($(this).val(), 'Type');
+        }).val(typeof query.Type !== 'undefined' ? query.Type : '');
 
-		$('#m_form_status, #m_form_type').selectpicker();
+        $('#m_form_status, #m_form_type').selectpicker();
         */
-	};
+    };
 
-	return {
-		//== Public functions
-		init: function () {
-			// init dmeo
+    return {
+        //== Public functions
+        init: function () {
+            // init dmeo
             mainTableInit();
-		}
-	};
+        }
+    };
 }();
 
 jQuery(document).ready(function () {

@@ -2,15 +2,20 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import kg.gov.mf.loan.output.report.model.CollectionPhaseView;
 import kg.gov.mf.loan.output.report.service.CollectionPhaseViewService;
 import kg.gov.mf.loan.web.fetchModels.CollectionPhaseMetaModel;
 import kg.gov.mf.loan.web.fetchModels.CollectionPhaseModel1;
+import kg.gov.mf.loan.web.fetchModels.CollectionPhaseViewMetaModel;
+import kg.gov.mf.loan.web.util.Meta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.*;
 
 @RestController
@@ -24,7 +29,7 @@ public class RestCollectionPhaseViewController {
     CollectionPhaseViewService collectionPhaseViewService;
 
     @PostMapping("/collectionPhaseViews")
-    public Set<CollectionPhaseView> getAll(@RequestParam Map<String,String> datatable){
+    public CollectionPhaseViewMetaModel getAll(@RequestParam Map<String,String> datatable){
 
         LinkedHashMap<String,List<String>> parameters=new LinkedHashMap<>();
 
@@ -37,6 +42,8 @@ public class RestCollectionPhaseViewController {
         Integer page = Integer.parseInt(pageStr);
         Integer perPage = Integer.parseInt(perPageStr);
         Integer offset = (page-1)*perPage;
+
+        //region searchValues
 
         boolean searchByDebtorName= datatable.containsKey("datatable[query][debtorName]");
         if(searchByDebtorName){
@@ -127,11 +134,25 @@ public class RestCollectionPhaseViewController {
             List<String> searchStrs= Arrays.asList(searchStr);
             parameters.put("r=ycv_cph_result_doc_number",searchStrs);
         }
+    //endregion
 
+        Set<CollectionPhaseView> all= collectionPhaseViewService.findByParameter(parameters,offset,100,sortStr,sortField);
 
-        Set<CollectionPhaseView> all=collectionPhaseViewService.findByParameter(parameters,offset,perPage,sortStr,sortField);
+        BigInteger count= BigInteger.valueOf(100);
 
-        return all;
+        Meta meta=new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, "desc","v_cph_id");
+//
+        CollectionPhaseViewMetaModel metaModel=new CollectionPhaseViewMetaModel();
+
+        metaModel.setMeta(meta);
+        if(all.size()>perPage){
+            metaModel.setData(ImmutableSet.copyOf(Iterables.limit(all, perPage)));
+        }
+        else{
+            metaModel.setData(all);
+        }
+
+        return metaModel;
     }
 
     @GetMapping("/collectionPhaseViews/second")

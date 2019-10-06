@@ -53,32 +53,48 @@
             <!-- END: Subheader -->
             <div class="m-content">
                 <!--Begin Portlet-->
-                <div class="m-portlet">
-                    <div class="m-portlet__body">
-                        <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-                            <div class="form-group m-form__group row " style="margin-left: 10px">
-                                <div class="col-md-2">
-                                    <div class="m-input-icon m-input-icon--left mb-2">
-                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder=#{label.debtor.name} id="debtor_name">
-                                        <span class="m-input-icon__icon m-input-icon__icon--left">
+                <div class="m-portlet filter_panel">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="m-input-icon m-input-icon--left mb-2">
+                                <input type="text" class="form-control m-input m-input--solid" th:placeholder=#{label.debtor.name} id="debtor_name">
+                                <span class="m-input-icon__icon m-input-icon__icon--left">
                                                     <span>
                                                         <i class="la la-search"></i>
                                                     </span>
                                                 </span>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="m-input-icon m-input-icon--left mb-2">
-                                        <input type="text" class="form-control m-input m-input--solid" th:placeholder=#{label.guarantor.name} id="guarantor_name">
-                                        <span class="m-input-icon__icon m-input-icon__icon--left">
-                                                    <span>
-                                                        <i class="la la-search"></i>
-                                                    </span>
-                                                </span>
-                                    </div>
-                                </div>
                             </div>
                         </div>
+                        <div class="col-lg-3">
+                            <div class="m-input-icon m-input-icon--left mb-2">
+                                <input type="text" class="form-control m-input m-input--solid" th:placeholder=#{label.guarantor.name} id="guarantor_name">
+                                <span class="m-input-icon__icon m-input-icon__icon--left">
+                                                    <span>
+                                                        <i class="la la-search"></i>
+                                                    </span>
+                                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="m-form__control">
+                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_region">
+                                    <option value="">Область</option>
+                                    <option th:each="region: ${regions}" th:value="${region.id}" th:text="${region.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="m-form__control">
+                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_district">
+                                    <option value="">Район</option>
+                                    <option th:each="district : ${districts}" th:value="${district.id}" th:text="${district.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-portlet">
+                    <div class="m-portlet__body">
                         <!--begin: Datatable -->
                         <div class="m_datatable" id="ajax_data"></div>
                         <!--end: Datatable -->
@@ -190,6 +206,7 @@
                 }
             });
             var query = datatable.getDataSourceQuery();
+            $('#m_form_region, #m_form_district').selectpicker();
 
             $('#debtor_name').on('keyup', function () {
                 var counterOfDebtor = $('#debtor_name').val().length;
@@ -204,6 +221,13 @@
                     datatable.search($(this).val(), 'owner');
                 }
             }).val(typeof query.owner !== 'undefined' ? query.owner: '');
+            $('#m_form_region').on('change', function () {
+                datatable.search($(this).val(), 'regionId');
+            }).val(typeof query.regionId !== 'undefined' ? query.regionId : '');
+
+            $('#m_form_district').on('change', function () {
+                datatable.search($(this).val(), 'districtId');
+            }).val(typeof query.districtId !== 'undefined' ? query.districtId : '');
 
         };
         return {

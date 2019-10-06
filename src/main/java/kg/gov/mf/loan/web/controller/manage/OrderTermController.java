@@ -559,7 +559,7 @@ public class OrderTermController {
 	}
 
 	@GetMapping("/manage/orderTerm/{orderTermId}/calculate")
-	public String getListOfPaymentSchedules(@PathVariable("orderTermId") Long orderTermId, Model model){
+	public String getListOfPaymentSchedules(@PathVariable("orderTermId") Long orderTermId, Model model,Double amount){
 
 
 		String getSchedulesQuery = "select id,expectedDate,disbursement,principalPayment,interestPayment,\n" +
@@ -577,6 +577,7 @@ public class OrderTermController {
 		String result = gson.toJson(paymentScheduleList);
 
 		model.addAttribute("jsonPaymentSchedules",result);
+		model.addAttribute("amount",amount);
 
 		return "/manage/order/orderterm/orderTermPaymentScheduleView";
 	}

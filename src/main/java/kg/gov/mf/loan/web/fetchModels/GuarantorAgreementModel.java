@@ -27,6 +27,10 @@ public class GuarantorAgreementModel implements Comparable<GuarantorAgreementMod
     private String debtor;
     private Long debtorId;
     private String ownerType;
+    private Long regionId;
+    private Long districtId;
+    private String region;
+    private String district;
 
 
     public long getId() {
@@ -107,6 +111,38 @@ public class GuarantorAgreementModel implements Comparable<GuarantorAgreementMod
 
     public void setOwnerType(String ownerType) {
         this.ownerType = ownerType;
+    }
+
+    public Long getRegionId() {
+        return regionId;
+    }
+
+    public void setRegionId(Long regionId) {
+        this.regionId = regionId;
+    }
+
+    public Long getDistrictId() {
+        return districtId;
+    }
+
+    public void setDistrictId(Long districtId) {
+        this.districtId = districtId;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
     }
 
     @Override

@@ -124,6 +124,14 @@
                                             <div class="col-md-12 col-lg-12 col-xl-4">
                                                 <!--begin:: Widgets/Stats2-1 -->
                                                 <div class="m-widget1">
+                                                    <div class="m-widget1__item">
+                                                        <div class="row m-row--no-padding align-items-center">
+                                                            <div class="col">
+                                                                <h3 class="m-widget1__title" th:text="#{label.collateralItem.inspectionStatus}"></h3>
+                                                                <span class="m-widget1__desc m--font-brand" th:text="${item?.inspectionStatus?.name}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <div id="item_type" class="m-widget1__item">
                                                         <div class="row m-row--no-padding align-items-center">
                                                             <div class="col">

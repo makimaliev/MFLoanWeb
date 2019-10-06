@@ -4,7 +4,6 @@
 <!-- begin::Head -->
 <head>
     <title th:text="#{label.loan.list}">Loan view</title>
-
     <div th:replace="fragments/header :: header-css"/>
     <link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
     <link th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}" rel="stylesheet" type="text/css" />
@@ -12,7 +11,6 @@
     <link th:href="@{/assets/global/plugins/jquery-multi-select/css/multi-select.css}" media="screen" rel="stylesheet" type="text/css">
 </head>
 <!-- end::Head -->
-
 <!-- end::Body -->
 <body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
 <!-- begin:: Page -->
@@ -20,16 +18,13 @@
     <!-- BEGIN: Header -->
     <div th:replace="layout/header"/>
     <!-- END: Header -->
-
     <!-- begin::Body -->
     <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
         <!-- BEGIN: Left Aside -->
         <div th:replace="layout/sidebar"/>
         <!-- END: Left Aside -->
         <div class="m-grid__item m-grid__item--fluid m-wrapper">
-
             <div class="m-content">
-
                 <!--Filter panel-->
                 <div class="m-portlet filter_panel">
                     <div class="row">
@@ -115,9 +110,6 @@
                         </div>
                     </div>
                 </div>
-
-
-
                 <!--Begin Portlet-->
                 <div class="m-portlet">
                     <div class="m-portlet__body">
@@ -184,6 +176,25 @@
 
 <div th:replace="fragments/footer :: footer-js"/>
 <script>
+    function hideFields() {
+        $(".hideable").hide();
+        $("#hider").hide();
+        $("#shower").show();
+    }
+    function showFields() {
+        $(".hideable").show();
+        $("#shower").hide();
+        $("#hider").show();
+    }
+
+    hideFields();
+    $("#hider").on("click",function () {
+        hideFields();
+    });
+    $("#shower").on("click",function () {
+        showFields();
+    });
+
     $('#from_datepicker').datetimepicker({
         format: "dd.mm.yyyy",
         todayHighlight: true,
@@ -214,24 +225,6 @@
 
 </script>
 <script th:inline="javascript" >
-
-    function hideFields() {
-        $(".hideable").hide();
-        $("#hider").hide();
-        $("#shower").show();
-    }
-    function showFields() {
-        $(".hideable").show();
-        $("#shower").hide();
-        $("#hider").show();
-    }
-    hideFields();
-    $("#hider").on("click",function () {
-        hideFields();
-    });
-    $("#shower").on("click",function () {
-        showFields();
-    });
 
 
     var loanTypes=/*[[${loanTypes}]]*/ [];
