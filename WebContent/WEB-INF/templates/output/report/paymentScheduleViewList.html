@@ -68,7 +68,7 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-lg-2" hidden="hidden">
                             <div class="m-form__group m-form__group--inline">
                                 <div class="m-form__control">
                                     <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="credit_order">
@@ -104,7 +104,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-2"></div>
+                        <div class="col-lg-4"></div>
                         <div class="col-lg-1">
                             <i id="shower" onclick="showFields()" class="la la-angle-down"></i>
                         </div>
@@ -217,7 +217,7 @@
                         }
                     },
                     // source:'/api/paymentScheduleViews',
-                    pageSize: 100,
+                    pageSize: 10,
                     saveState: {
                         cookie: false,
                         webstorage: false
@@ -242,7 +242,7 @@
                 // column based filtering
                 filterable: false,
 
-                pagination: false,
+                pagination: true,
 
                 // columns definition
                 columns: [{
@@ -377,9 +377,9 @@
                 }
             }).val(typeof query.debtorName !== 'undefined' ? query.debtorName: '');
 
-            $('#credit_order').on('change', function () {
-                datatable.search($(this).val(), 'creditOrder');
-            }).val(typeof query.creditOrder!== 'undefined' ? query.creditOrder: '');
+            // $('#credit_order').on('change', function () {
+            //     datatable.search($(this).val(), 'creditOrder');
+            // }).val(typeof query.creditOrder!== 'undefined' ? query.creditOrder: '');
 
             $('#m_form_region').on('change', function () {
                 datatable.search($(this).val(), 'regionId');

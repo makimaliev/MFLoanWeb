@@ -44,11 +44,11 @@ public class RestPaymentScheduleViewController {
             parameter.put("r=ycv_debtor_name",searchWord);
         }
 
-        boolean searchByCreditOrderId=datatable.containsKey("datatable[query][creditOrder]");
-        if(searchByCreditOrderId){
-            List<String> searchWord= Arrays.asList(datatable.get("datatable[query][creditOrder]"));
-            parameter.put("r=inv_credit_order_type_id",searchWord);
-        }
+//        boolean searchByCreditOrderId=datatable.containsKey("datatable[query][creditOrder]");
+//        if(searchByCreditOrderId){
+//            List<String> searchWord= Arrays.asList(datatable.get("datatable[query][creditOrder]"));
+//            parameter.put("r=inv_credit_order_type_id",searchWord);
+//        }
 
         boolean getFromDate= datatable.containsKey("datatable[query][fromDater]");
         if (getFromDate){
@@ -81,12 +81,18 @@ public class RestPaymentScheduleViewController {
         PaymentScheduleViewMetaModel metaModel=new PaymentScheduleViewMetaModel();
 
         BigInteger count=BigInteger.valueOf(100);
-        Meta meta=new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, sortStr, sortField);
+        Meta meta=new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, "desc", "v_ps_id");
 
-        List<PaymentScheduleView> all=this.paymentScheduleViewService.findByParameter(parameter,offset,perPage);
+        List<PaymentScheduleView> all=this.paymentScheduleViewService.findByParameter(parameter,offset,10);
+        if(all.size()>perPage){
+            metaModel.setData(all.subList(0,perPage));
+        }
+        else{
+            metaModel.setData(all);
+        }
+
 
         metaModel.setMeta(meta);
-        metaModel.setData(all);
 
         return metaModel;
     }

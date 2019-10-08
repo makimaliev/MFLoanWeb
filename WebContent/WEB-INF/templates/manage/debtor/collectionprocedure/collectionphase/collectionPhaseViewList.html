@@ -67,14 +67,28 @@
                                             </span>
                             </div>
                         </div>
-                        <div class="col-lg-3">
-                            <div class="m-input-icon m-input-icon--left mb-1">
-                                <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.doc.number}" id="doc_number">
-                                <span class="m-input-icon__icon m-input-icon__icon--left">
-                                                <span>
-                                                    <i class="la la-search"></i>
-                                                </span>
-                                            </span>
+                        <div class="col-lg-2">
+                            <div class="m-form__group m-form__group--inline">
+                                <div class="m-form__control">
+                                    <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="phase_type">
+                                        <option value="" th:text="#{label.collection.phase.type}">
+                                            Все
+                                        </option>
+                                        <option th:each="phaseType: ${phaseTypes}" th:value="${phaseType.id}" th:text="${phaseType.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="m-form__group m-form__group--inline">
+                                <div class="m-form__control">
+                                    <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="fin_group">
+                                        <option value="" th:text="#{label.loan.finGroup}">
+                                            Все
+                                        </option>
+                                        <option th:each="finGroup: ${finGroups}" th:value="${finGroup.id}" th:text="${finGroup.name}"></option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="col-lg-2">
@@ -101,20 +115,17 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-1"></div>
                         <div class="col-lg-1"><i id="shower" onclick="showFields()" class="la la-angle-down"></i></div>
                     </div>
                     <div class="row hideable mb-1">
                         <div class="col-lg-2">
-                            <div class="m-form__group m-form__group--inline">
-                                <div class="m-form__control">
-                                    <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="phase_type">
-                                        <option value="" th:text="#{label.collection.phase.type}">
-                                            Все
-                                        </option>
-                                        <option th:each="phaseType: ${phaseTypes}" th:value="${phaseType.id}" th:text="${phaseType.name}"></option>
-                                    </select>
-                                </div>
+                            <div class="m-input-icon m-input-icon--left mb-1">
+                                <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.doc.number}" id="doc_number">
+                                <span class="m-input-icon__icon m-input-icon__icon--left">
+                                                <span>
+                                                    <i class="la la-search"></i>
+                                                </span>
+                                            </span>
                             </div>
                         </div>
                         <div class="col-lg-2">
@@ -147,30 +158,10 @@
 												</span>
                             </div>
                         </div>
-                        <div class="col-lg-2">
-                            <div class="input-group date m_datetimepicker" id="to_datepicker">
-                                <input  class="form-control m-input" th:placeholder="#{label.toDate}" name="date" />
-                                <span class="input-group-addon">
-													<i class="la la-calendar glyphicon-th"></i>
-												</span>
-                            </div>
-                        </div>
-                        <div class="col-lg-1"></div>
+                        <div class="col-lg-3"></div>
                         <div class="col-lg-1"><i id="hider" onclick="hideFields()" class="la la-angle-up"></i></div>
                     </div>
                     <div class="row hideable">
-                        <div class="col-lg-2">
-                            <div class="m-form__group m-form__group--inline">
-                                <div class="m-form__control">
-                                    <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="fin_group">
-                                        <option value="" th:text="#{label.loan.finGroup}">
-                                            Все
-                                        </option>
-                                        <option th:each="finGroup: ${finGroups}" th:value="${finGroup.id}" th:text="${finGroup.name}"></option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-lg-2">
                             <div class="m-form__group m-form__group--inline">
                                 <div class="m-form__control">
@@ -205,6 +196,14 @@
                                         <option th:each="subIndex: ${collectionPhaseSubIndexes}" th:value="${subIndex.id}" th:text="${subIndex.name}"></option>
                                     </select>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group date m_datetimepicker" id="to_datepicker">
+                                <input  class="form-control m-input" th:placeholder="#{label.toDate}" name="date" />
+                                <span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
                             </div>
                         </div>
                     </div>

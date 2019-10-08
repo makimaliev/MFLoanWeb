@@ -95,10 +95,10 @@ public class RestPaymentViewController {
 
 
 
-        List<PaymentView> all=paymentViewService.findByParameter(parameters,offset,perPage,sortStr,sortField);
+        List<PaymentView> all=paymentViewService.findByParameter(parameters,offset,10,sortStr,sortField);
 
-        Long loanViews=paymentViewService.getCount(parameters);
-        BigInteger count=BigInteger.valueOf(loanViews);
+//        Long loanViews=paymentViewService.getCount(parameters);
+        BigInteger count=BigInteger.valueOf(100);
 
         PaymentViewMetaModel metaModel=new PaymentViewMetaModel();
 

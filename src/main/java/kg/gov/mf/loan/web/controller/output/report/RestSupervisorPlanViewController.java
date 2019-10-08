@@ -2,12 +2,15 @@ package kg.gov.mf.loan.web.controller.output.report;
 
 import kg.gov.mf.loan.output.report.model.SupervisorPlanView;
 import kg.gov.mf.loan.output.report.service.SupervisorPlanViewService;
+import kg.gov.mf.loan.web.fetchModels.SupervisorPlanViewMetaModel;
+import kg.gov.mf.loan.web.util.Meta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,7 +25,7 @@ public class RestSupervisorPlanViewController {
     SupervisorPlanViewService supervisorPlanViewService;
 
     @PostMapping("/supervisorPlanViews")
-    public List<SupervisorPlanView> getAll(@RequestParam Map<String,String> datatable){
+    public SupervisorPlanViewMetaModel getAll(@RequestParam Map<String,String> datatable){
         LinkedHashMap<String,List<String>> parameters=new LinkedHashMap<>();
 
 
@@ -69,9 +72,19 @@ public class RestSupervisorPlanViewController {
         Integer offset = (page-1)*perPage;
 
 
-        List<SupervisorPlanView> all=this.supervisorPlanViewService.findByParameter(parameters,offset,perPage);
+        List<SupervisorPlanView> all=this.supervisorPlanViewService.findByParameter(parameters,offset,10);
 
-        return all;
+        BigInteger count=BigInteger.valueOf(100);
+
+
+        SupervisorPlanViewMetaModel metaModel=new SupervisorPlanViewMetaModel();
+//
+        Meta meta= new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, "desc", "v_sp_id");
+
+        metaModel.setMeta(meta);
+        metaModel.setData(all);
+
+        return metaModel;
 
     }
 }

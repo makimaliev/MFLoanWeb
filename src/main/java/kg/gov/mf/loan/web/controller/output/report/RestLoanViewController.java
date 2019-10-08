@@ -4,12 +4,15 @@ package kg.gov.mf.loan.web.controller.output.report;
 import kg.gov.mf.loan.output.report.model.LoanView;
 import kg.gov.mf.loan.output.report.service.LoanViewService;
 import kg.gov.mf.loan.output.report.service.ReferenceViewService;
+import kg.gov.mf.loan.web.fetchModels.LoanViewMetaModel;
+import kg.gov.mf.loan.web.util.Meta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigInteger;
 import java.util.*;
 
 import static java.lang.Character.isDigit;
@@ -66,7 +69,7 @@ public class RestLoanViewController {
         parameter.clear();
     }
     @PostMapping("/loanViews")
-    public List<LoanView> getAllLoanViews(@RequestParam Map<String,String> datatable){
+    public LoanViewMetaModel getAllLoanViews(@RequestParam Map<String,String> datatable){
 
         LinkedHashMap<String,List<String>> parameters=new LinkedHashMap<>();
         String pageStr = datatable.get("datatable[pagination][page]");
@@ -150,26 +153,22 @@ public class RestLoanViewController {
         Integer offset = (page-1)*perPage;
 
 
-        System.out.println("==========================================================================================");
-        System.out.println(parameters.keySet());
-        System.out.println(parameters.values());
-        System.out.println("==========================================================================================");
-
 //        if(this.s.equals("start")){
 
-            List<LoanView> loanViewList=loanViewService.findByParameter(parameters,100,offset,sortStr,sortField);
+            List<LoanView> loanViewList=loanViewService.findByParameter(parameters,10,offset,sortStr,sortField);
 //            long loanViews=loanViewService.getCount(parameters);
 //
-//            BigInteger count=BigInteger.valueOf(loanViews);
+            BigInteger count=BigInteger.valueOf(100);
+
+
+            LoanViewMetaModel loanViewMetaModel=new LoanViewMetaModel();
 //
-//
-//            LoanViewMetaModel loanViewMetaModel=new LoanViewMetaModel();
-//
-//            Meta meta= new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, sortStr, sortField);
-//
-//            loanViewMetaModel.setMeta(meta);
-//            loanViewMetaModel.setData(loanViewList);
-            return loanViewList;
+            Meta meta= new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, "desc", "v_loan_id");
+
+            loanViewMetaModel.setMeta(meta);
+            loanViewMetaModel.setData(loanViewList);
+
+            return loanViewMetaModel;
 //        }
         /*else{
             List<LoanView> loanViewList=loanViewService.findByParameter(parameters,perPage,offset,sortStr,sortField);
