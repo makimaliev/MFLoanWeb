@@ -39,6 +39,7 @@ var DatatableDataLocalPayments = function () {
 			columns: [{
                 field: "id",
                 title: "#",
+                width: 20,
                 template: function (row) {
                     return '\
 						<a href="/manage/debtor/'+debtorId+'/loan/'+loanId+'/payment/'+row.id+'/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
@@ -47,33 +48,36 @@ var DatatableDataLocalPayments = function () {
             }, {
 				field: "paymentDate",
 				title: "Дата",
-                width: 70
+                width: 80
 			}, {
                 field: "number",
                 title: "Номер",
-                width: 70
+                width: 200
             }, {
                 field: "totalAmount",
                 title: "Итого",
-                width: 80,
+                width: 100,
                 template: function (row) {
                     return (row.totalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
             }, {
                 field: "principal",
                 title: "Осн.сумма",
+                width: 100,
                 template: function (row) {
                     return (row.principal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
             }, {
                 field: "interest",
                 title: "Проценты",
+                width: 100,
                 template: function (row) {
                     return (row.interest).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
             }, {
                 field: "penalty",
                 title: "Штрафы",
+                width: 100,
                 template: function (row) {
                     return (row.penalty).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
