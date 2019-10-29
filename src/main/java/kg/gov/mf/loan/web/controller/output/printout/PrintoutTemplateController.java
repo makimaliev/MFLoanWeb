@@ -1304,7 +1304,6 @@ public class PrintoutTemplateController {
 		ReportTool reportTool = new ReportTool();
 
 		try{
-			PrintoutGeneratorPaymentSchedule printoutGeneratorPaymentSchedule = new PrintoutGeneratorPaymentSchedule();
 
 			response.setContentType("application/vnd.ms-excel");
 			response.setHeader("Content-disposition","attachment; filename=report.xls");
