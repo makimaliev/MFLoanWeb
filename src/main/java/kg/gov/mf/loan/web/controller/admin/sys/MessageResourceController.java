@@ -1,5 +1,11 @@
 package kg.gov.mf.loan.web.controller.admin.sys;
 
+import kg.gov.mf.loan.admin.sys.model.MessageResource;
+import kg.gov.mf.loan.admin.sys.service.MessageResourceService;
+import kg.gov.mf.loan.admin.sys.service.ObjectTypeService;
+import kg.gov.mf.loan.web.config.DatabaseDrivenMessageSource;
+import kg.gov.mf.loan.web.fetchModels.MessageResourceMetaModel;
+import kg.gov.mf.loan.web.util.Meta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
@@ -8,16 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
-
-
-import kg.gov.mf.loan.admin.sys.model.*;
-import kg.gov.mf.loan.admin.sys.service.*;
-import kg.gov.mf.loan.web.config.DatabaseDrivenMessageSource;
+import java.math.BigInteger;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class MessageResourceController {
@@ -147,6 +148,62 @@ public class MessageResourceController {
 
      
 
-     
+//	********************************************************************************************
+     //rest
+//	********************************************************************************************
+
+	@PostMapping("/api/messageResources")
+	@ResponseBody
+	public MessageResourceMetaModel getMessageResourceList(@RequestParam Map<String,String> datatable){
+
+		String pageStr = datatable.get("datatable[pagination][page]");
+		String perPageStr = datatable.get("datatable[pagination][perpage]");
+		String sortStr = datatable.get("datatable[sort][sort]");
+		String sortField = datatable.get("datatable[sort][field]");
+
+		boolean isSearch= datatable.containsKey("datatable[query][generalSearch]");
+		if(isSearch){
+
+		}
+
+		Integer page = Integer.parseInt(pageStr);
+		Integer perPage =10;
+		Integer offset = (page-1)*perPage;
+
+
+		List<MessageResource> all = null;
+		if(isSearch){
+			String searchStr = datatable.get("datatable[query][generalSearch]");
+			all = messageResourceService.findAll(100,searchStr);
+		}
+		else{
+			all = messageResourceService.findAll(100);
+		}
+
+		BigInteger count= BigInteger.valueOf(0);
+		if (all.size()==100){
+			count=BigInteger.valueOf(100);
+		}
+		else{
+			count=BigInteger.valueOf(all.size());
+
+		}
+
+		Meta meta=new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, sortStr, sortField);
+
+		MessageResourceMetaModel metaModel=new MessageResourceMetaModel();
+		metaModel.setMeta(meta);
+
+		if(all.size()>10){
+			metaModel.setData(all.subList(0,10));
+		}
+		else{
+			metaModel.setData(all);
+		}
+
+
+
+		return metaModel;
+	}
 
 }

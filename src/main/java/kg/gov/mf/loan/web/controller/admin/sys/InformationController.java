@@ -337,7 +337,7 @@ public class InformationController {
             }
 		}
 
-		String path=path = getPathForAttachment(idsMap, objectId, type);
+		String path = getPathForAttachment(idsMap, objectId, type);
 		Information information;
 		List<Information> informationList=informationService.findInformationBySystemObjectTypeIdAndSystemObjectId(type,objectId);
 		if(informationList.size()>0){

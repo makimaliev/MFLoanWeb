@@ -805,6 +805,7 @@ public class CollectionPhaseController {
 					phase.setStart_amount(sumOfStart);
 				}
 
+				updatePaidOfPhase(phase);
 				phaseService.update(phase);
 				phaseDetailsLists.remove(Utils.getPrincipal());
 			}

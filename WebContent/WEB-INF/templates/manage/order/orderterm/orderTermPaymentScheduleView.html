@@ -77,6 +77,18 @@
 														</span>
                                                         </div>
                                                     </div>
+                                                    <col-lg-2>
+                                                        <form th:action="@{/orderterm/__${orderTermId}__/printout/paymentschedules/pdf}" method="post">
+                                                            <input hidden="hidden" name="paymentSchedules" th:value="${jsonPaymentSchedules}">
+                                                            <button class="btn btn-sm btn-accent m-1" type="submit">GET PDF</button>
+                                                        </form>
+                                                    </col-lg-2>
+                                                    <col-lg-2>
+                                                        <form th:action="@{/orderterm/__${orderTermId}__/printout/paymentschedules/excel}" method="post">
+                                                            <input hidden="hidden" name="paymentSchedules" th:value="${jsonPaymentSchedules}">
+                                                            <button class="btn btn-sm btn-accent m-1" type="submit">GET EXCEL</button>
+                                                        </form>
+                                                    </col-lg-2>
                                                 </div>
                                             </div>
                                         </div>

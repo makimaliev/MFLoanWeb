@@ -1,0 +1,25 @@
+<div xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <form th:action="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${itemId}__/conditiontype/save}" class="form-horizontal" method="post" th:object="${item}">
+        <input type="text" hidden = "hidden" th:value="${itemId}" name="itemId">
+        <input type="text" hidden = "hidden" th:value="${debtorId}" name="debtorId">
+        <input type="text" hidden = "hidden" th:value="${agreementId}" name="agreementId">
+        <div class="portlet-body">
+            <div class="form-body">
+                <div class="form-group  margin-top-20">
+                    <label class="control-label col-md-3" th:text="#{label.collateralItem.conditionType}">Name <span class="required"> * </span>
+                    </label>
+                    <div class="col">
+                        <select class="form-control m-bootstrap-select m_selectpicker my-select" th:field="${item.conditionType.id}" th:title="#{label.select}">
+                            <option th:each="type : ${list}" th:value="${type.id}" th:text="${type.name}"></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button th:text="#{label.form.cancel}" type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
+            <button th:text="#{label.form.save}" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_CONDITIONTYPE','PERM_UPDATE_CONDITIONTYPE')" type="submit" class="btn green">Save</button>
+        </div>
+    </form>
+    <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
+</div>

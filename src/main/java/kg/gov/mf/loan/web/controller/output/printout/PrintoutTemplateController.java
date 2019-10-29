@@ -1,8 +1,11 @@
 package kg.gov.mf.loan.web.controller.output.printout;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.lowagie.text.Document;
-import com.lowagie.text.PageSize;
-import com.lowagie.text.pdf.PdfWriter;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.*;
 import com.lowagie.text.rtf.RtfWriter2;
 import kg.gov.mf.loan.admin.org.model.*;
 import kg.gov.mf.loan.admin.org.service.*;
@@ -15,22 +18,27 @@ import kg.gov.mf.loan.output.printout.model.PrintoutTemplate;
 import kg.gov.mf.loan.output.printout.service.PrintoutService;
 import kg.gov.mf.loan.output.printout.service.PrintoutTemplateService;
 import kg.gov.mf.loan.output.printout.utils.*;
+import kg.gov.mf.loan.output.report.utils.ReportTool;
+import kg.gov.mf.loan.web.fetchModels.PaymentScheduleModel;
 import kg.gov.mf.loan.web.util.Utils;
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
+import javax.activation.MimetypesFileTypeMap;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.*;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -67,6 +75,9 @@ public class PrintoutTemplateController {
 
 	@Autowired
 	EmploymentHistoryService employmentHistoryService;
+
+	@PersistenceContext
+	private EntityManager entityManager;
 
 
 
@@ -1248,6 +1259,403 @@ public class PrintoutTemplateController {
 		}
 
 	}
+
+	//generate pdf of payment schedules
+
+	@PostMapping("/orderterm/{orderTermId}/printout/paymentschedules/pdf")
+	public void generatePdfOfPaymentSchedules(@PathVariable("orderTermId") Long orderTermId,
+											  HttpServletResponse response, String paymentSchedules){
+
+
+		try{
+			Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+
+			Type type = new TypeToken<List<PaymentScheduleModel>>(){}.getType();
+			List<PaymentScheduleModel> result = gson.fromJson(paymentSchedules, type);
+
+			Document document = new Document(PageSize.A4.rotate(), 25, 25, 10, 10);
+
+			PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
+
+			response.setContentType("application/pdf");
+			response.setHeader("Content-disposition","attachment; filename=xx.pdf");
+
+
+
+			generatePdf(null,result,document);
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+
+	}
+
+	//generate excel of payment schedules
+	@PostMapping("/orderterm/{orderTermId}/printout/paymentschedules/excel")
+	public void generateExcelOfPaymentSchedules(@PathVariable("orderTermId") Long orderTermId,
+											  HttpServletResponse response, String paymentSchedules){
+
+
+		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+
+		Type type = new TypeToken<List<PaymentScheduleModel>>(){}.getType();
+		List<PaymentScheduleModel> result = gson.fromJson(paymentSchedules, type);
+
+		ReportTool reportTool = new ReportTool();
+
+		try{
+			PrintoutGeneratorPaymentSchedule printoutGeneratorPaymentSchedule = new PrintoutGeneratorPaymentSchedule();
+
+			response.setContentType("application/vnd.ms-excel");
+			response.setHeader("Content-disposition","attachment; filename=report.xls");
+			String[] columns = {"№", "Дата", "Освоение","Осн.сумма","Проценты","Нак.проценты", "Нак.штр."};
+
+			HSSFWorkbook workbook = new HSSFWorkbook();
+			HSSFSheet sheet = workbook.createSheet("График");
+
+
+
+			int rownum = 0;
+			Cell cell;
+//			Row row;
+			//
+			HSSFCellStyle style = createStyleForTitle(workbook);
+
+			HSSFRow rowhead = sheet.createRow((short) 0);
+
+			for (int i=0; i<7;i++){
+				cell = rowhead.createCell(i, CellType.STRING);
+				cell.setCellValue(columns[i]);
+				cell.setCellStyle(style);
+			}
+
+			// Data
+			for (PaymentScheduleModel paymentSchedule: result) {
+				rownum++;
+				HSSFRow row = sheet.createRow(rownum);
+
+				cell = row.createCell(0, CellType.STRING);
+				cell.setCellValue(rownum);
+
+				cell = row.createCell(1, CellType.STRING);
+				cell.setCellValue(reportTool.DateToString(paymentSchedule.getExpectedDate()));
+
+				cell = row.createCell(2, CellType.STRING);
+				cell.setCellValue(reportTool.FormatNumber(paymentSchedule.getDisbursement()));
+
+				cell = row.createCell(3, CellType.STRING);
+				cell.setCellValue(reportTool.FormatNumber(paymentSchedule.getPrincipalPayment()));
+
+				cell = row.createCell(4, CellType.STRING);
+				cell.setCellValue(reportTool.FormatNumber(paymentSchedule.getInterestPayment()));
+
+				cell = row.createCell(5, CellType.STRING);
+				cell.setCellValue(reportTool.FormatNumber(paymentSchedule.getCollectedInterestPayment()));
+
+				cell = row.createCell(6, CellType.STRING);
+				cell.setCellValue(reportTool.FormatNumber(paymentSchedule.getCollectedPenaltyPayment()));
+
+			}
+			for(int i = 0; i < columns.length; i++) {
+				sheet.autoSizeColumn(i);
+			}
+
+			FileOutputStream fileOut = new FileOutputStream("xx.xls");
+			workbook.write(fileOut);
+			fileOut.close();
+			System.out.println("Your excel file has been generated!");
+
+			//Code to download
+			File fileToDownload = new File("xx.xls");
+			InputStream in = new FileInputStream(fileToDownload);
+
+			// Gets MIME type of the file
+			String mimeType = new MimetypesFileTypeMap().getContentType("xx.xls");
+
+			if (mimeType == null) {
+				// Set to binary type if MIME mapping not found
+				mimeType = "application/octet-stream";
+			}
+			System.out.println("MIME type: " + mimeType);
+
+			// Modifies response
+			response.setContentType(mimeType);
+			response.setContentLength((int) fileToDownload.length());
+
+			// Forces download
+			String headerKey = "Content-Disposition";
+			String headerValue = String.format("attachment; filename=\"%s\"", fileToDownload.getName());
+			response.setHeader(headerKey, headerValue);
+
+			// obtains response's output stream
+			OutputStream outStream = response.getOutputStream();
+
+			byte[] buffer = new byte[4096];
+			int bytesRead = -1;
+
+			while ((bytesRead = in.read(buffer)) != -1) {
+				outStream.write(buffer, 0, bytesRead);
+			}
+
+			in.close();
+			outStream.close();
+
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+
+	}
+
+	private static HSSFCellStyle createStyleForTitle(HSSFWorkbook workbook) {
+		HSSFFont font = workbook.createFont();
+		font.setBold(true);
+		HSSFCellStyle style = workbook.createCellStyle();
+		style.setFont(font);
+		return style;
+	}
+
+	public void generatePdf(PrintoutTemplate template, List<PaymentScheduleModel> paymentSchedules, Document document){
+
+		try{
+			ReportTool reportTool = new ReportTool();
+
+
+			//*********** Document ********************************************************************************
+			//*******************************************************************************************
+
+			PdfPTable table = null;
+			PdfPTable table2 = null;
+			PdfPCell cell  = null;
+
+			float TitleColumnPadding  = 3;
+			int   TitleColumnBorder   = 0;
+			float FooterColumnPadding = 3;
+			int   FooterColumnBorder  = 0;
+
+			BaseFont myfont        = BaseFont.createFont("//timesNewRoman.ttf",BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+
+
+			Font HeaderFont   = new  Font(myfont,7,Font.NORMAL, CMYKColor.BLACK);
+			Font      ColumnFont   = new  Font(myfont,7,Font.NORMAL,CMYKColor.BLACK);
+			Font      TitleFont    = new  Font(myfont,11,Font.BOLD,CMYKColor.BLACK);
+			Font      SubTitleFont = new  Font(myfont,9,Font.BOLD,CMYKColor.BLACK);
+
+			CMYKColor HeaderColor = new CMYKColor(2,0,0,22);
+			CMYKColor ColumnColor = new CMYKColor (0,0,0,0);
+			CMYKColor FooterColor = new CMYKColor (2,0,0,22);
+
+			document.open();
+
+
+//            if (paymentSchedules.size()>0 ){
+
+
+			//***********Title********************************************************************************
+			//*******************************************************************************************
+			table=new PdfPTable(1);
+			table.setWidthPercentage(80);
+
+			cell = new PdfPCell (new Paragraph("График",TitleFont));
+			cell.setFixedHeight(40);
+			cell.setHorizontalAlignment (Element.ALIGN_LEFT);
+			cell.setVerticalAlignment(Element.ALIGN_TOP);
+			cell.setPadding(TitleColumnPadding);
+			cell.setBorder(TitleColumnBorder);
+			table.addCell(cell);
+
+
+			document.add(table);
+
+			//************ Header *******************************************************************
+			//*******************************************************************************
+			table2=new PdfPTable(7);
+			table2.setWidthPercentage(100);
+			table2.setHorizontalAlignment(Element.ALIGN_LEFT);
+
+			int iColWindth[] = new int[7];
+
+			for(int i=0;i<7;i++)
+				iColWindth[i] = 6;
+
+			iColWindth[0] = 3;
+
+			table2.setWidths(iColWindth);
+
+
+			cell = new PdfPCell(new Paragraph("№",HeaderFont));
+			cell.setHorizontalAlignment (Element.ALIGN_CENTER);
+			cell.setVerticalAlignment(Element.ALIGN_CENTER);
+			cell.setBackgroundColor (HeaderColor);
+			table2.addCell (cell);
+
+			cell = new PdfPCell(new Paragraph("Дата",HeaderFont));
+			cell.setHorizontalAlignment (Element.ALIGN_CENTER);
+			cell.setVerticalAlignment(Element.ALIGN_CENTER);
+			cell.setBackgroundColor (HeaderColor);
+			table2.addCell (cell);
+
+			cell = new PdfPCell(new Paragraph("Освоение",HeaderFont));
+			cell.setHorizontalAlignment (Element.ALIGN_CENTER);
+			cell.setVerticalAlignment(Element.ALIGN_CENTER);
+			cell.setBackgroundColor (HeaderColor);
+			table2.addCell (cell);
+
+			cell = new PdfPCell(new Paragraph("Осн.сумма",HeaderFont));
+			cell.setHorizontalAlignment (Element.ALIGN_CENTER);
+			cell.setVerticalAlignment(Element.ALIGN_CENTER);
+			cell.setBackgroundColor (HeaderColor);
+			table2.addCell (cell);
+
+			cell = new PdfPCell(new Paragraph("Проценты",HeaderFont));
+			cell.setHorizontalAlignment (Element.ALIGN_CENTER);
+			cell.setVerticalAlignment(Element.ALIGN_CENTER);
+			cell.setBackgroundColor (HeaderColor);
+			table2.addCell (cell);
+
+			cell = new PdfPCell(new Paragraph("Нак.проценты",HeaderFont));
+			cell.setHorizontalAlignment (Element.ALIGN_CENTER);
+			cell.setVerticalAlignment(Element.ALIGN_CENTER);
+			cell.setBackgroundColor (HeaderColor);
+			table2.addCell (cell);
+
+			cell = new PdfPCell(new Paragraph("Нак.штр.",HeaderFont));
+			cell.setHorizontalAlignment (Element.ALIGN_CENTER);
+			cell.setVerticalAlignment(Element.ALIGN_CENTER);
+			cell.setBackgroundColor (HeaderColor);
+			table2.addCell (cell);
+
+
+			int counter=1;
+			for(PaymentScheduleModel paymentSchedule : paymentSchedules)
+			{
+				cell = new PdfPCell(new Paragraph(String.valueOf(counter++),ColumnFont));
+				cell.setHorizontalAlignment (Element.ALIGN_RIGHT);
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setBackgroundColor (ColumnColor);
+				table2.addCell (cell);
+
+				cell = new PdfPCell(new Paragraph(reportTool.DateToString(paymentSchedule.getExpectedDate()),ColumnFont));
+				cell.setHorizontalAlignment (Element.ALIGN_RIGHT);
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setBackgroundColor (ColumnColor);
+				table2.addCell (cell);
+
+				cell = new PdfPCell(new Paragraph(reportTool.FormatNumber(paymentSchedule.getDisbursement()),ColumnFont));
+				cell.setHorizontalAlignment (Element.ALIGN_RIGHT);
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setBackgroundColor (ColumnColor);
+				cell.setNoWrap(true);
+				table2.addCell (cell);
+
+				cell = new PdfPCell(new Paragraph(reportTool.FormatNumber(paymentSchedule.getPrincipalPayment()),ColumnFont));
+				cell.setHorizontalAlignment (Element.ALIGN_RIGHT);
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setBackgroundColor (ColumnColor);
+				table2.addCell (cell);
+
+				cell = new PdfPCell(new Paragraph(reportTool.FormatNumber(paymentSchedule.getInterestPayment()),ColumnFont));
+				cell.setHorizontalAlignment (Element.ALIGN_RIGHT);
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setBackgroundColor (ColumnColor);
+				table2.addCell (cell);
+
+				cell = new PdfPCell(new Paragraph(reportTool.FormatNumber(paymentSchedule.getCollectedInterestPayment()),ColumnFont));
+				cell.setHorizontalAlignment (Element.ALIGN_RIGHT);
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setBackgroundColor (ColumnColor);
+				table2.addCell (cell);
+
+				cell = new PdfPCell(new Paragraph(reportTool.FormatNumber(paymentSchedule.getCollectedPenaltyPayment()),ColumnFont));
+				cell.setHorizontalAlignment (Element.ALIGN_RIGHT);
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setBackgroundColor (ColumnColor);
+				table2.addCell (cell);
+
+
+
+			}
+
+
+
+
+
+			//************************************************************************
+			//************************************************************************
+//                cell = new PdfPCell(new Paragraph("Итого",ColumnFont));
+//                cell.setHorizontalAlignment (Element.ALIGN_RIGHT);
+//                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+//                cell.setBackgroundColor (FooterColor);
+//                cell.setColspan(2);
+//                table2.addCell (cell);
+
+
+//                cell = new PdfPCell(new Paragraph(reportTool.FormatNumber(paymentSchedules.getTotalDisbursement()),ColumnFont));
+//                cell.setHorizontalAlignment (Element.ALIGN_RIGHT);
+//                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+//                cell.setBackgroundColor(FooterColor);
+//                table2.addCell (cell);
+
+//                cell = new PdfPCell(new Paragraph(" ",ColumnFont));
+//                cell.setHorizontalAlignment (Element.ALIGN_RIGHT);
+//                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+//                cell.setBackgroundColor(FooterColor);
+//                table2.addCell (cell);
+
+//                cell = new PdfPCell(new Paragraph(reportTool.FormatNumber(paymentSchedules.getTotalPrincipalPaid()),ColumnFont));
+//                cell.setHorizontalAlignment (Element.ALIGN_RIGHT);
+//                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+//                cell.setBackgroundColor (FooterColor);
+//                table2.addCell (cell);
+
+//                cell = new PdfPCell(new Paragraph(" ",ColumnFont));
+//                cell.setHorizontalAlignment (Element.ALIGN_RIGHT);
+//                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+//                cell.setBackgroundColor(FooterColor);
+//                cell.setColspan(3);
+//                table2.addCell (cell);
+
+//                cell = new PdfPCell(new Paragraph(reportTool.FormatNumber(sumOfDaysInPeriod),ColumnFont));
+//                cell.setHorizontalAlignment (Element.ALIGN_RIGHT);
+//                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+//                cell.setBackgroundColor (FooterColor);
+//                table2.addCell (cell);
+
+			document.add(table2);
+
+
+
+                /*cell = new PdfPCell(new Paragraph(" ",TitleFont));
+                cell.setHorizontalAlignment (Element.ALIGN_LEFT);
+                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell.setPadding(TitleColumnPadding);
+                cell.setBorder(TitleColumnBorder);
+                table.addCell (cell);
+
+                table=new PdfPTable(1);
+                table.setWidthPercentage(100);
+                cell = new PdfPCell(new Paragraph("Всего на: "+reportTool.DateToString(loanDetailedSummary.getOnDate()),TitleFont));
+                cell.setHorizontalAlignment (Element.ALIGN_LEFT);
+                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell.setPadding(TitleColumnPadding);
+                cell.setBorder(TitleColumnBorder);
+                table.addCell (cell);*/
+//
+//                document.add(table);
+
+//            }
+
+			document.close();
+
+
+
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+	}
+
+
 
 }
 

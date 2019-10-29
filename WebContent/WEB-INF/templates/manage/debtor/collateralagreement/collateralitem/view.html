@@ -215,7 +215,12 @@
                                                         <div class="row m-row--no-padding align-items-center">
                                                             <div class="col">
                                                                 <h3 class="m-widget1__title" th:text="#{label.collateralItem.conditionType}"></h3>
-                                                                <span class="m-widget1__desc m&#45;&#45;font-brand" th:text="${item.conditionType?.name}"></span>
+                                                                <a sec:authorize="hasAnyAuthority('ADMIN')"
+                                                                   th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${item.id}__/conditiontype/change}"
+                                                                   data-toggle="modal"
+                                                                   data-target="#conditionTypeModal">
+                                                                    <span class="m-widget1__desc m--font-brand" th:text="${item.conditionType?.name}"></span>
+                                                                </a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -463,6 +468,13 @@
                         </div>
                     </div>
 			    </div>
+                <!--condition type change modal-->
+                <div class="modal" id="conditionTypeModal" role="dialog" aria-labelledby="ConditionType" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                        </div>
+                    </div>
+                </div>
             </div>
 		</div>
 	</div>
@@ -621,6 +633,12 @@
 
     jQuery(document).ready(function () {
         DatatableDataLocalFiles.init();
+    });
+
+    $("#conditionTypeModal").on("show.bs.modal", function(e)
+    {
+        var link = $(e.relatedTarget);
+        $(this).find(".modal-content").load(link.attr("href"));
     });
 
     var isArrestFreeEmpty = ((JSON.parse(jsonArrestFrees).length == 0) ? true: false);

@@ -578,6 +578,7 @@ public class OrderTermController {
 
 		model.addAttribute("jsonPaymentSchedules",result);
 		model.addAttribute("amount",amount);
+		model.addAttribute("orderTermId",orderTermId);
 
 		return "/manage/order/orderterm/orderTermPaymentScheduleView";
 	}

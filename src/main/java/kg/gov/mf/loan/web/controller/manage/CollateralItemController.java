@@ -693,6 +693,39 @@ public class CollateralItemController {
 			cTypeService.remove(cTypeService.getById(id));
         return "redirect:" + "/manage/debtor/collateralagreement/collateralitem/conditiontype/list";
     }
+
+    //change collateral item's condition type
+	@GetMapping("/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/conditiontype/change")
+	public String getChangeCollateralItemConditionType(@PathVariable("debtorId")Long debtorId,
+													@PathVariable("agreementId")Long agreementId,
+													@PathVariable("itemId")Long itemId, Model model){
+
+		CollateralItem item = itemService.getById(itemId);
+		List<ConditionType> list = cTypeService.list();
+
+		model.addAttribute("item", item);
+		model.addAttribute("list",list);
+		model.addAttribute("itemId",itemId);
+		model.addAttribute("debtorId",debtorId);
+		model.addAttribute("agreementId",agreementId);
+
+
+		return "/manage/debtor/collateralagreement/collateralitem/conditionTypeChange";
+
+	}
+
+	@PostMapping("/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/conditiontype/save")
+	public String postChangeCollateralItemConditionType(@PathVariable("debtorId")Long debtorId, @PathVariable("agreementId")Long agreementId,
+														@PathVariable("itemId") Long itemId,CollateralItem item){
+
+		CollateralItem oldItem = itemService.getById(itemId);
+		ConditionType conditionType = cTypeService.getById(item.getConditionType().getId());
+		oldItem.setConditionType(conditionType);
+		itemService.update(oldItem);
+
+		return "redirect:/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/view";
+	}
+
     //END - C TYPE
 
 //	add information form
