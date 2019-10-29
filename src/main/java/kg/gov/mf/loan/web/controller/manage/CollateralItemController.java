@@ -426,6 +426,10 @@ public class CollateralItemController {
 
 			ArrestFreeStatus arrestFreeStatus = arrestFreeStatusService.getById(2L);
 			item.setArrestFreeStatus(arrestFreeStatus);
+
+			InspectionStatus inspectionStatus = inspectionStatusService.getById(3L);
+			item.setInspectionStatus(inspectionStatus);
+
 			itemService.update(item);
 		}
 
@@ -490,19 +494,42 @@ public class CollateralItemController {
     		@PathVariable("debtorId")Long debtorId,
 			@PathVariable("agreementId")Long agreementId,
 			@PathVariable("itemId")Long itemId) {
-		
+
+
 		CollateralItem item = itemService.getById(itemId);
+
+		try {
+
+			if(ins.getOnDate().getYear()== new Date().getYear())
+			{
+				InspectionStatus inspectionStatus = inspectionStatusService.getById(2L);
+				item.setInspectionStatus(inspectionStatus);
+				itemService.update(item);
+			}
+			else
+			{
+				InspectionStatus inspectionStatus = inspectionStatusService.getById(1L);
+				item.setInspectionStatus(inspectionStatus);
+				itemService.update(item);
+			}
+
+		}
+		catch (Exception ex)
+		{
+
+		}
+
+
 		ins.setCollateralItem(item);
 		
 		if(ins.getId() == 0){
-
 			insService.add(ins);
-			InspectionStatus inspectionStatus = inspectionStatusService.getById(2L);
-			item.setInspectionStatus(inspectionStatus);
-			itemService.update(item);
 		}
 		else
 			insService.update(ins);
+
+
+
 
 
 		

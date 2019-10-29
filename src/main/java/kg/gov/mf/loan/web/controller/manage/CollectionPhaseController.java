@@ -251,6 +251,7 @@ public class CollectionPhaseController {
 
         Long departmentId = staff.getDepartment().getId();
 
+        if(procedure.getStatusDepartmentId()!=null)
         if(departmentId==9 && procedure.getStatusDepartmentId() == 8){
         	model.addAttribute("accept",8);
 		}

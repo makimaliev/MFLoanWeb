@@ -98,7 +98,6 @@ CREATE VIEW collateral_item_details_view AS
 
 
 
-
 DROP VIEW IF EXISTS `collateral_item_view`;
 CREATE VIEW collateral_item_view AS
   SELECT
@@ -151,31 +150,201 @@ CREATE VIEW collateral_item_view AS
     `ci`.`quantity`                        AS `v_ci_quantity`,
     `ci`.`risk_rate`                       AS `v_ci_risk_rate`,
     `ci`.`collateralAgreementId`           AS `v_ci_collateralAgreementId`,
-    `ci`.`conditionTypeId`                 AS `v_ci_conditionTypeId`,
+    `ci`.`conditionTypeId`                 AS `v_ci_condition_type`,
     `ci`.`itemTypeId`                      AS `v_ci_itemTypeId`,
     `ci`.`quantityTypeId`                  AS `v_ci_quantityTypeId`,
-    ci.organization                         as `v_ci_org_id`,
-    org.name                                AS `v_ci_arestPlace`,
-    item_owner.name                         as `v_ci_ownerName`,
-    lcv.v_ci_inspection_date                as `v_ci_inspection_date`,
-    ins.name                                as 'v_ci_last_condition',
-    cidv.str                                as `v_ci_details`,
-    item_desc.text                          as `v_ci_collateral_description`
+    `ci`.`organization`                    AS `v_ci_org_id`,
+    `org`.`name`                           AS `v_ci_arestPlace`,
+    `item_owner`.`name`                    AS `v_ci_ownerName`,
+    `lcv`.`v_ci_inspection_date`           AS `v_ci_inspection_date`,
+    `ins`.`name`                           AS `v_ci_last_condition`,
+    `cidv`.`str`                           AS `v_ci_details`,
+    `item_desc`.`text`                     AS `v_ci_collateral_description`,
+    `ci`.arrestFreeStatusId as `v_ci_arrestFree_status`,
+    `ci`.inspectionStatusId as `v_ci_inspection_status`
 
   FROM (((((((((`mfloan`.`collateral_agreement_view` `cav`
-    JOIN `mfloan`.`collateralItem` `ci`) JOIN `mfloan`.`loan_view` `lv`) JOIN `mfloan`.`loanCollateralAgreement` `lca`)
-    LEFT JOIN owner org on org.id = ci.organization)
-    LEFT JOIN owner item_owner on item_owner.id = ci.ownerId)
-    LEFT JOIN collateral_item_last_condition_view lcv on lcv.v_ci_id = ci.id)
-    LEFT JOIN inspectionResultType ins on ins.id = lcv.v_ci_inspection_result_type_id)
-    LEFT JOIN collateral_item_details_view cidv on cidv.v_ci_id = ci.id)
-    LEFT JOIN description item_desc on item_desc.id = lv.v_collateral_description_id
-  )
+    JOIN `mfloan`.`collateralItem` `ci`) JOIN `mfloan`.`loan_view` `lv`) JOIN
+    `mfloan`.`loanCollateralAgreement` `lca`) LEFT JOIN `mfloan`.`owner` `org`
+      ON ((`org`.`id` = `ci`.`organization`))) LEFT JOIN `mfloan`.`owner` `item_owner`
+      ON ((`item_owner`.`id` = `ci`.`ownerId`))) LEFT JOIN `mfloan`.`collateral_item_last_condition_view` `lcv`
+      ON ((`lcv`.`v_ci_id` = `ci`.`id`))) LEFT JOIN `mfloan`.`inspectionResultType` `ins`
+      ON ((`ins`.`id` = `lcv`.`v_ci_inspection_result_type_id`))) LEFT JOIN
+    `mfloan`.`collateral_item_details_view` `cidv` ON ((`cidv`.`v_ci_id` = `ci`.`id`))) LEFT JOIN
+    `mfloan`.`description` `item_desc` ON ((`item_desc`.`id` = `lv`.`v_collateral_description_id`)))
   WHERE ((`ci`.`collateralAgreementId` = `cav`.`v_ca_id`) AND (`lv`.`v_loan_id` = `lca`.`loanId`) AND
          (`lca`.`collateralAgreementId` = `cav`.`v_ca_id`));
 
 
-
-
+CREATE VIEW reference_view AS
+  SELECT
+    'region'     AS `list_type`,
+    `tbl`.`id`   AS `id`,
+    `tbl`.`name` AS `name`
+  FROM `mfloan`.`region` `tbl`
+  UNION ALL SELECT
+              'district'   AS `list_type`,
+              `tbl`.`id`   AS `id`,
+              `tbl`.`name` AS `name`
+            FROM `mfloan`.`district` `tbl`
+  UNION ALL SELECT
+              'work_sector' AS `list_type`,
+              `tbl`.`id`    AS `id`,
+              `tbl`.`name`  AS `name`
+            FROM `mfloan`.`workSector` `tbl`
+  UNION ALL SELECT
+              'loan_type'  AS `list_type`,
+              `tbl`.`id`   AS `id`,
+              `tbl`.`name` AS `name`
+            FROM `mfloan`.`loanType` `tbl`
+  UNION ALL SELECT
+              'supervisor' AS `list_type`,
+              `u`.`id`     AS `id`,
+              `tbl`.`name` AS `name`
+            FROM (`mfloan`.`staff` `tbl`
+              JOIN `mfloan`.`users` `u`)
+            WHERE (
+              (`tbl`.`organization_id` = 1) AND (`tbl`.`enabled` = TRUE) AND (`tbl`.`department_id` IN (4, 5, 6, 7, 16))
+              AND (`u`.`staff_id` = `tbl`.`id`))
+  UNION ALL SELECT
+              'department' AS `list_type`,
+              `tbl`.`id`   AS `id`,
+              `tbl`.`name` AS `name`
+            FROM `mfloan`.`department` `tbl`
+            WHERE (`tbl`.`organization_id` = 1)
+  UNION ALL SELECT
+              'credit_order'    AS `list_type`,
+              `tbl`.`id`        AS `id`,
+              `tbl`.`regNumber` AS `regNumber`
+            FROM `mfloan`.`creditOrder` `tbl`
+  UNION ALL SELECT
+              'applied_entity_status' AS `list_type`,
+              `tbl`.`id`              AS `id`,
+              `tbl`.`name`            AS `name`
+            FROM `mfloan`.`appliedEntityState` `tbl`
+  UNION ALL SELECT
+              'entity_document_status' AS `list_type`,
+              `tbl`.`id`               AS `id`,
+              `tbl`.`name`             AS `name`
+            FROM `mfloan`.`entityDocumentState` `tbl`
+  UNION ALL SELECT
+              'document_package_status' AS `list_type`,
+              `tbl`.`id`                AS `id`,
+              `tbl`.`name`              AS `name`
+            FROM `mfloan`.`documentPackageState` `tbl`
+  UNION ALL SELECT
+              'collection_phase_type' AS `list_type`,
+              `tbl`.`id`              AS `id`,
+              `tbl`.`name`            AS `name`
+            FROM `mfloan`.`phaseType` `tbl`
+  UNION ALL SELECT
+              'collection_phase_status' AS `list_type`,
+              `tbl`.`id`                AS `id`,
+              `tbl`.`name`              AS `name`
+            FROM `mfloan`.`phaseStatus` `tbl`
+  UNION ALL SELECT
+              'payment_type' AS `list_type`,
+              `tbl`.`id`     AS `id`,
+              `tbl`.`name`   AS `name`
+            FROM `mfloan`.`paymentType` `tbl`
+  UNION ALL SELECT
+              'installment_state' AS `list_type`,
+              `tbl`.`id`          AS `id`,
+              `tbl`.`name`        AS `name`
+            FROM `mfloan`.`installmentState` `tbl`
+  UNION ALL SELECT
+              'currency_type' AS `list_type`,
+              `tbl`.`id`      AS `id`,
+              `tbl`.`name`    AS `name`
+            FROM `mfloan`.`orderTermCurrency` `tbl`
+  UNION ALL SELECT
+              'item_type'  AS `list_type`,
+              `tbl`.`id`   AS `id`,
+              `tbl`.`name` AS `name`
+            FROM `mfloan`.`collateralItemType` `tbl`
+  UNION ALL SELECT
+              'inspection_result_type' AS `list_type`,
+              `tbl`.`id`               AS `id`,
+              `tbl`.`name`             AS `name`
+            FROM `mfloan`.`inspectionResultType` `tbl`
+  UNION ALL SELECT
+              'item_inspection_status' AS `list_type`,
+              `tbl`.`id`               AS `id`,
+              `tbl`.`name`             AS `name`
+            FROM `mfloan`.`inspectionStatus` `tbl`
+  UNION ALL SELECT
+              'item_arrestFree_status' AS `list_type`,
+              `tbl`.`id`               AS `id`,
+              `tbl`.`name`             AS `name`
+            FROM `mfloan`.`arrestFreeStatus` `tbl`
+  UNION ALL SELECT
+              'item_condition_type' AS `list_type`,
+              `tbl`.`id`            AS `id`,
+              `tbl`.`name`          AS `name`
+            FROM `mfloan`.`collateralConditionType` `tbl`
+  UNION ALL SELECT
+              'staff'      AS `list_type`,
+              `tbl`.`id`   AS `id`,
+              `tbl`.`name` AS `name`
+            FROM `mfloan`.`staff` `tbl`
+            WHERE (`tbl`.`organization_id` = 1)
+  UNION ALL SELECT
+              'staff_event_type' AS `list_type`,
+              `tbl`.`id`         AS `id`,
+              `tbl`.`name`       AS `name`
+            FROM `mfloan`.`employment_history_event_type` `tbl`
+  UNION ALL SELECT
+              'staff_position' AS `list_type`,
+              `tbl`.`id`       AS `id`,
+              `tbl`.`name`     AS `name`
+            FROM `mfloan`.`position` `tbl`
+            WHERE `tbl`.`department_id` IN (SELECT `mfloan`.`department`.`id`
+                                            FROM `mfloan`.`department`
+                                            WHERE (`mfloan`.`department`.`organization_id` = 1))
+  UNION ALL SELECT
+              'doc_type'   AS `list_type`,
+              `tbl`.`id`   AS `id`,
+              `tbl`.`name` AS `name`
+            FROM `mfloan`.`cat_document_type` `tbl`
+  UNION ALL SELECT
+              'doc_subType' AS `list_type`,
+              `tbl`.`id`    AS `id`,
+              `tbl`.`name`  AS `name`
+            FROM `mfloan`.`cat_document_subtype` `tbl`
+  UNION ALL SELECT
+              'doc_status' AS `list_type`,
+              `tbl`.`id`   AS `id`,
+              `tbl`.`name` AS `name`
+            FROM `mfloan`.`cat_document_status` `tbl`
+  UNION ALL SELECT
+              'fin_group'  AS `list_type`,
+              `tbl`.`id`   AS `id`,
+              `tbl`.`name` AS `name`
+            FROM `mfloan`.`loanGinGroup` `tbl`
+  UNION ALL SELECT
+              'loan_fund'  AS `list_type`,
+              `tbl`.`id`   AS `id`,
+              `tbl`.`name` AS `name`
+            FROM `mfloan`.`orderTermFund` `tbl`
+  UNION ALL SELECT
+              'collection_phase_group' AS `list_type`,
+              `tbl`.`id`               AS `id`,
+              `tbl`.`name`             AS `name`
+            FROM `mfloan`.`collectionPhaseGroup` `tbl`
+  UNION ALL SELECT
+              'collection_phase_index' AS `list_type`,
+              `tbl`.`id`               AS `id`,
+              `tbl`.`name`             AS `name`
+            FROM `mfloan`.`collectionPhaseIndex` `tbl`
+  UNION ALL SELECT
+              'collection_phase_sub_index' AS `list_type`,
+              `tbl`.`id`                   AS `id`,
+              `tbl`.`name`                 AS `name`
+            FROM `mfloan`.`CollectionPhaseSubIndex` `tbl`
+  UNION ALL SELECT
+              'collection_procedure_status' AS `list_type`,
+              `tbl`.`id`                    AS `id`,
+              `tbl`.`name`                  AS `name`
+            FROM `mfloan`.`procedureStatus` `tbl`;
 
 
