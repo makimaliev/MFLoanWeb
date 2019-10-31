@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<!-- begin::Head -->
+<head>
+    <title th:text="#{label.asset}"></title>
+
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<!-- end::Head -->
+
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <!-- BEGIN: Subheader -->
+            <div class="m-subheader ">
+                <div class="d-flex align-items-center">
+                    <div class="mr-auto">
+                        <h3 class="m-subheader__title m-subheader__title--separator">
+                            Договор залога
+                        </h3>
+                        <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+                            <li class="m-nav__item m-nav__item--home">
+                                <a th:href="@{/}" class="m-nav__link m-nav__link--icon">
+                                    <i class="m-nav__link-icon la la-home"></i>
+                                </a>
+                            </li>
+                            <li class="m-nav__separator">
+                                -
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- END: Subheader -->
+            <div class="m-content">
+                <!--begin::Portlet-->
+
+                <div class="m-content">
+                    <!--begin::Portlet-->
+                    <div class="m-portlet m-portlet--full-height">
+                        <div class="m-portlet__head">
+                            <div class="m-portlet__head-caption">
+                                <div class="m-portlet__head-title">
+                                    <h3 class="m-portlet__head-text"></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end::Portlet-->
+                    <!--begin::Portlet-->
+                    <div class="m-portlet m-portlet--mobile">
+                        <div class="m-portlet__body ">
+                            <div class="form-body" id="chat_window" role="dialog" aria-labelledby="chat_window">
+                                <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="chatModalTitle">&nbsp;</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body bg-light p-0" id="chat-page">
+
+                                            <!--*******************************-->
+                                            <select id="cu" style="width: 100%" >
+                                                <option th:each="user : ${#lists.sort(@chatUserServiceImpl.list())}"
+                                                        th:value="${user.username}"
+                                                        th:text="${user.name}"
+                                                        th:selected="${user.username} == ${chosenUser}"
+                                                >Responsible</option>
+                                            </select>
+
+                                            <!--div id="messageArea" class="m-3"></div-->
+                                            <!-- Start -->
+                                            <div class="chat" style="height: 300px">
+                                                <div class="chat-container">
+                                                    <div class="conversation">
+                                                        <div class="conversation-container p-3" id="messageArea"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- End -->
+                                            <!--*******************************-->
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div style="width: 100%">
+                                                <form id="messageForm" name="messageForm" >
+                                                    <div class="form-group">
+                                                        <div class="input-group">
+                                                            <!--<div class="">-->
+                                                                <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="col-lg-7 form-control"/>
+                                                            <!--</div>-->
+                                                            <!--<div class="col-lg-3">
+                                                                <label for="message-file">
+                                                                    &lt;!&ndash;<i class="fa fa-paperclip"></i>&ndash;&gt;
+                                                                    <span></span>
+                                                                </label>
+                                                                <form id="FileForm" th:action="@{/attachFile}" method="post" enctype="multipart/form-data">
+                                                                    <input style="display: block" id="message-file" name = "file" type="file">
+                                                                </form>
+                                                            </div>-->
+                                                            <div class="col-lg-2">
+                                                                <button type="submit" class="btn btn-primary">Send</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Portlet-->
+            </div>
+        </div>
+    </div>
+    <!-- end:: Body -->
+    <!-- begin::Footer -->
+    <div th:replace="layout/footer"/>
+    <!-- end::Footer -->
+</div>
+<!-- end:: Page -->
+
+<div th:replace="fragments/footer :: footer-js"/>
+
+<!--begin::Page Resources -->
+<!--end::Page Resources -->
+
+<script type="text/javascript" th:inline="javascript">
+
+    // var username = [[${#authentication.name}]];
+    // Chat Begin
+    var messageForm = document.querySelector('#messageForm');
+    var messageInput = document.querySelector('#message');
+    var messageFile = document.querySelector('#message-file');
+    var messageArea = document.querySelector('#messageArea');
+    var chatModalTitle = document.querySelector('#chatModalTitle');
+    var stompClient = null;
+    var username = [[${#authentication.name}]];
+    var receiver = null;
+    var prevdate = null;
+
+    function connect() {
+        var socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, onConnected, onError);
+    }
+    function onConnected() {
+        stompClient.subscribe('/topic/public', onMessageReceived);
+        stompClient.send("/app/chat.addUser", {}, JSON.stringify({sender: username, type: 'JOIN'}))
+        chatModalTitle.innerHTML = "Online"
+        messageInput.disabled = false;
+    }
+    function sendMessage(event) {
+        var messageContent = messageInput.value.trim();
+        /*var file1 = messageFile.files[0];
+
+        if (messageFile.files[0]){
+            $("#FileForm").submit();
+            alert("sdfsdf");
+            console.log(messageFile.files[0]);
+            $.ajax({
+                url: '/attachFile',
+                data: {"file":file1},
+                cache: false,
+                contentType: file1.type,
+                processData: false,
+                type: 'POST',
+                success: function(data)
+                {
+                    alert(data);
+                }
+            });
+
+        }*/
+
+        if(messageContent && stompClient && receiver) {
+            var chatMessage = {
+                sender: username,
+                receiver: receiver,
+                content: messageInput.value,
+                type: 'CHAT'
+            };
+            stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+            messageInput.value = '';
+        }
+        event.preventDefault();
+    }
+    function buildMessage(message) {
+
+        var curdate = new Date(message.date).toLocaleDateString("ru", {day:"2-digit", month:"2-digit", year:"2-digit"});
+
+        if((prevdate == null) || (prevdate < curdate))
+        {
+            prevdate = new Date(message.date).toLocaleDateString("ru", {day:"2-digit", month:"2-digit", year:"2-digit"});
+
+            var dtContainer = document.createElement('div');
+            dtContainer.classList.add('center');
+
+            var dt = document.createElement('span');
+            dt.classList.add('date-title');
+
+            var dttxt = document.createTextNode(prevdate);
+            dt.appendChild(dttxt);
+
+            dtContainer.appendChild(dt);
+
+            messageArea.appendChild(dtContainer);
+        }
+
+        var mc = document.createElement('div');
+        mc.classList.add('message');
+        var mctxt = document.createTextNode(message.content);
+        mc.appendChild(mctxt);
+
+        var s2 = document.createElement('span');
+        var d = new Date(message.date);
+        var s2txt = document.createTextNode(d.toLocaleTimeString([], {hour12: false, hour: '2-digit', minute:'2-digit'}));
+        s2.appendChild(s2txt);
+
+        var s1 = document.createElement('span');
+        s1.classList.add('metadata');
+        s1.appendChild(s2);
+        mc.appendChild(s1);
+
+        if(message.sender === username)
+        {
+            mc.classList.add('sent');
+        }
+        else
+        {
+            mc.classList.add('received');
+        }
+
+        messageArea.appendChild(mc);
+        messageArea.scrollTop = messageArea.scrollHeight;
+
+    }
+    function onMessageReceived(payload) {
+
+        var message = JSON.parse(payload.body);
+
+        if(message.type === 'CHAT' && (message.receiver === username || message.sender === username))
+        {
+            buildMessage(message);
+            $('#cu').val(message.receiver).trigger('change');
+            notipy(message.senderfullname, message.content,message.receiver)
+        }
+        loadMessages(receiver);
+    }
+    function onError() {
+        messageInput.disabled = true;
+        chatModalTitle.innerHTML = "Offline"
+    }
+
+    function loadMessages(usr) {
+        messageArea.innerHTML = "";
+
+        prevdate = null;
+        // alert(username);
+        // alert(receiver);
+        $.ajax({
+            type: "POST",
+            url: "/chat/messages",
+            data: { sender: username, receiver: usr },
+            success: function(result){
+                for(var i = 0; i < result.length; i++)
+                {
+                    buildMessage(result[i]);
+                }
+            }
+        });
+        this.scrollTop = this.scrollHeight;
+    }
+
+    $('#chat_window').on('show.bs.modal', function (e) {
+        loadMessages(receiver);
+    });
+
+    messageForm.addEventListener('submit', sendMessage, true);
+
+    connect();
+
+    var chosenUser = [[${chosenUser}]];
+    if(chosenUser){
+        receiver = chosenUser;
+        loadMessages(chosenUser)
+    }
+
+    $('#cu').select2();
+    $('#cu').on('select2:select', function (e) {
+        receiver = e.params.data.id;
+        loadMessages(receiver)
+    });
+    // Chat End
+
+    function changePageAndSize() {
+        $('#pageSizeSelect').change(function(evt) {
+            var currentLocation = window.location.pathname;
+            window.location.replace(currentLocation + "?pageSize=" + this.value + "&page=1");
+        });
+    }
+
+    /*$(document).ready(function() {
+
+
+        /!*var path = window.location.pathname.split("/");
+
+            if (path[2] != "edit") {
+
+                var tasks = [ [ ${@taskService.getTasksByUserId(@userServiceJpaImpl.findByUsername(#authentication.name).id)} ] ];
+
+                for (var i = 0; i < tasks.length; i++) {
+
+                    if(username === "obsh003" || username === "obsh002") {
+                        if(tasks[i].description !== "Завершить") {
+                            $.notify({
+                                title: 'Задача №: ' + (i + 1),
+                                message: '<a href="/doc/edit/' + tasks[i].objectId + '" role="button" class="btn btn-link text-light" style="text-decoration: none;">' + tasks[i].description + '</a>'
+                            }, {
+                                delay: 2000,
+                                type: "info",
+                                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss"></button>' +
+                                '<span data-notify="icon"></span> ' +
+                                '<span data-notify="title">{1}</span> ' +
+                                '<span data-notify="message">{2}</span>' +
+                                '<div class="progress" data-notify="progressbar">' +
+                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                                '</div>' +
+                                '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                                '</div>'
+                            });
+                        }
+                    }
+                    else
+                    {
+                        $.notify({
+                            title: 'Задача №: ' + (i + 1),
+                            message: '<a href="/doc/edit/' + tasks[i].objectId + '" role="button" class="btn btn-link text-light" style="text-decoration: none;">' + tasks[i].description + '</a>'
+                        }, {
+                            delay: 2000,
+                            type: "info",
+                            template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                            '<button type="button" aria-hidden="true" class="close" data-notify="dismiss"></button>' +
+                            '<span data-notify="icon"></span> ' +
+                            '<span data-notify="title">{1}</span> ' +
+                            '<span data-notify="message">{2}</span>' +
+                            '<div class="progress" data-notify="progressbar">' +
+                            '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                            '</div>' +
+                            '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                            '</div>'
+                        });
+                    }
+                }
+            }*!/
+
+
+
+        changePageAndSize();
+    });*/
+
+
+</script>
+</body>
+<!-- end::Body -->
+</html>
+

@@ -305,6 +305,8 @@ public class CollateralAgreementController {
 				Owner owner = ownerRepository.findOne(agreement.getOwner().getId());
 				agreement.setOwner(owner);
 				agreement.setLoans(loanSet);
+				agreement.setAgreementNumber(agreement.getNotaryOfficeRegNumber());
+				agreement.setAgreementDate(agreement.getNotaryOfficeRegDate());
 				agreementService.update(agreement);
 			}
 			return "redirect:" + "/manage/debtor/{debtorId}/collateralagreement/" + agreement.getId() + "/view";
