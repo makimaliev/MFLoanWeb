@@ -258,7 +258,8 @@
         {
             buildMessage(message);
             $('#cu').val(message.receiver).trigger('change');
-            notipy(message.senderfullname, message.content,message.receiver)
+            if(message.sender != username)
+                notipy(message.senderfullname, message.content,message.sender)
         }
         loadMessages(receiver);
     }

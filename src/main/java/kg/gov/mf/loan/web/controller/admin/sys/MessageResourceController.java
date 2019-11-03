@@ -167,7 +167,7 @@ public class MessageResourceController {
 		}
 
 		Integer page = Integer.parseInt(pageStr);
-		Integer perPage =10;
+		Integer perPage =Integer.parseInt(perPageStr);
 		Integer offset = (page-1)*perPage;
 
 
@@ -194,13 +194,14 @@ public class MessageResourceController {
 		MessageResourceMetaModel metaModel=new MessageResourceMetaModel();
 		metaModel.setMeta(meta);
 
-		if(all.size()>10){
-			metaModel.setData(all.subList(0,10));
+		if(all.size()>perPage){
+			metaModel.setData(all.subList(offset,perPage+offset));
 		}
 		else{
 			metaModel.setData(all);
 		}
 
+//		metaModel.setData(all);
 
 
 		return metaModel;

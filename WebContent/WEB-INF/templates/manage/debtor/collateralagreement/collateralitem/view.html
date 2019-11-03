@@ -215,7 +215,7 @@
                                                         <div class="row m-row--no-padding align-items-center">
                                                             <div class="col">
                                                                 <h3 class="m-widget1__title" th:text="#{label.collateralItem.conditionType}"></h3>
-                                                                <a sec:authorize="hasAnyAuthority('ADMIN')"
+                                                                <a sec:authorize="hasAnyAuthority('ADMIN')" class="btn btn-success"
                                                                    th:href="@{/manage/debtor/__${debtorId}__/collateralagreement/__${agreementId}__/collateralitem/__${item.id}__/conditiontype/change}"
                                                                    data-toggle="modal"
                                                                    data-target="#conditionTypeModal">

@@ -9,7 +9,10 @@ import kg.gov.mf.loan.manage.service.loan.InstallmentStateService;
 import kg.gov.mf.loan.manage.service.order.CreditOrderService;
 import kg.gov.mf.loan.manage.service.orderterm.*;
 import kg.gov.mf.loan.web.fetchModels.AgreementTemplateModel;
+import kg.gov.mf.loan.web.fetchModels.OrderTermMetaModel;
+import kg.gov.mf.loan.web.fetchModels.OrderTermModel;
 import kg.gov.mf.loan.web.fetchModels.PaymentScheduleModel;
+import kg.gov.mf.loan.web.util.Meta;
 import kg.gov.mf.loan.web.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -22,9 +25,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class OrderTermController {
@@ -601,5 +606,70 @@ public class OrderTermController {
 
 		List<AgreementTemplateModel> templates = query.getResultList();
 		return templates;
+	}
+
+	@GetMapping("/orderterm/list")
+	public String getAllTerms(Model model){
+
+
+		return "/output/report/orderTermViewList";
+	}
+
+
+//	**********************************************************************
+//	REST
+//	**********************************************************************
+
+	@PostMapping("/api/orderterms")
+	@ResponseBody
+	public OrderTermMetaModel getListOfOrderTerms(@RequestParam Map<String,String> datatable){
+
+		String pageStr = datatable.get("datatable[pagination][page]");
+		String perPageStr = datatable.get("datatable[pagination][perpage]");
+		String sortStr = datatable.get("datatable[sort][sort]");
+		String sortField = datatable.get("datatable[sort][field]");
+
+		boolean isSearch= datatable.containsKey("datatable[query][generalSearch]");
+		if(isSearch){
+
+		}
+
+		Integer page = Integer.parseInt(pageStr);
+		Integer perPage =Integer.parseInt(perPageStr);
+		Integer offset = (page-1)*perPage;
+
+
+		String baseQuery = "select *, null as fundName, null as currencyName, null as frequencyTypeName, null as interestRateValuePerPeriodName, null as interestTypeName, null as penaltyOnPrincipleOverdueTypeName,\n" +
+				"    null as penaltyOnInterestOverdueTypeName, null as daysInYearMethodName, null as daysInMonthMethodName, null as transactionOrderName, null as interestAccrMethodName\n" +
+				"    from orderTerm order by id desc limit 100 ";
+
+		Query query = entityManager.createNativeQuery(baseQuery,OrderTermModel.class);
+		List<OrderTermModel> all = query.getResultList();
+
+		BigInteger count= BigInteger.valueOf(0);
+		if (all.size()==100){
+			count=BigInteger.valueOf(100);
+		}
+		else{
+			count=BigInteger.valueOf(all.size());
+
+		}
+
+		Meta meta=new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, sortStr, sortField);
+
+		OrderTermMetaModel metaModel=new OrderTermMetaModel();
+		metaModel.setMeta(meta);
+
+		if(all.size()>perPage){
+			metaModel.setData(all.subList(offset,perPage+offset));
+		}
+		else{
+			metaModel.setData(all);
+		}
+
+//		metaModel.setData(all);
+
+
+		return metaModel;
 	}
 }

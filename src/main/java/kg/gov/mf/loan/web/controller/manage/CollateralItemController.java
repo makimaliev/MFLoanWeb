@@ -107,6 +107,9 @@ public class CollateralItemController {
 	@Autowired
 	ArrestFreeStatusService arrestFreeStatusService;
 
+	@Autowired
+    ConditionSubTypeService conditionSubTypeService;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
 	{
@@ -729,9 +732,11 @@ public class CollateralItemController {
 
 		CollateralItem item = itemService.getById(itemId);
 		List<ConditionType> list = cTypeService.list();
+		List<ConditionSubType> subList= conditionSubTypeService.list();
 
 		model.addAttribute("item", item);
 		model.addAttribute("list",list);
+		model.addAttribute("subList",subList);
 		model.addAttribute("itemId",itemId);
 		model.addAttribute("debtorId",debtorId);
 		model.addAttribute("agreementId",agreementId);
@@ -747,13 +752,65 @@ public class CollateralItemController {
 
 		CollateralItem oldItem = itemService.getById(itemId);
 		ConditionType conditionType = cTypeService.getById(item.getConditionType().getId());
+		ConditionSubType conditionSubType = conditionSubTypeService.getById(item.getCondition_sub_type());
+		conditionSubType.setConditionType(conditionType);
+		conditionSubTypeService.update(conditionSubType);
 		oldItem.setConditionType(conditionType);
+		oldItem.setCondition_sub_type(item.getCondition_sub_type());
 		itemService.update(oldItem);
 
 		return "redirect:/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/view";
 	}
 
     //END - C TYPE
+
+    //BEGIN - C SUB TYPE
+    @RequestMapping(value = { "/conditionsubtype/list" }, method = RequestMethod.GET)
+    public String listSubTypes(ModelMap model) {
+
+        List<ConditionSubType> types = conditionSubTypeService.list();
+        model.addAttribute("types", types);
+
+        model.addAttribute("loggedinuser", Utils.getPrincipal());
+        return "/manage/debtor/collateralagreement/collateralitem/conditionsubtype/list";
+    }
+
+    @RequestMapping(value="/conditionsubtype/{typeId}/save", method=RequestMethod.GET)
+    public String formSubType(ModelMap model, @PathVariable("typeId")Long typeId)
+    {
+        if(typeId == 0)
+        {
+            model.addAttribute("type", new ConditionSubType());
+        }
+
+        else if(typeId > 0)
+        {
+            model.addAttribute("type", conditionSubTypeService.getById(typeId));
+        }
+        model.addAttribute("conditiontypes",cTypeService.list());
+
+        return "/manage/debtor/collateralagreement/collateralitem/conditionsubtype/save";
+    }
+
+    @RequestMapping(value="/conditionsubtype/save", method=RequestMethod.POST)
+    public String saveSubType(ConditionSubType type,  ModelMap model) {
+        if(type.getId() == 0)
+            conditionSubTypeService.add(type);
+        else
+            conditionSubTypeService.update(type);
+
+        model.addAttribute("loggedinuser", Utils.getPrincipal());
+        return "redirect:" + "/conditionsubtype/list";
+    }
+
+    @RequestMapping(value="/conditionsubtype/delete", method=RequestMethod.POST)
+    public String deleteSubType(long id) {
+        if(id > 0)
+            cTypeService.remove(cTypeService.getById(id));
+        return "redirect:" + "/conditionsubtype/list";
+    }
+
+    //END - C SUB TYPE
 
 //	add information form
 	@RequestMapping("/manage/debtor/{debtorId}/agreement/{agreementId}/item/{itemId}/addInformation")

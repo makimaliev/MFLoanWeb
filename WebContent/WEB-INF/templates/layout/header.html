@@ -143,6 +143,15 @@
                                                         </span>
                                                     </a>
                                                 </li>
+                                                <li class="m-menu__item " aria-haspopup="true">
+                                                    <a sec:authorize="hasAnyAuthority('ADMIN')"
+                                                       th:href="@{/orderterm/list}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text">
+                                                            Список решений
+                                                        </span>
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </li>
@@ -711,6 +720,7 @@
             // chatModalTitle.innerHTML = "Offline"
         }
         function notipy(t, m, r) {
+            alert(r)
 
             $.notify({
                 title: t,

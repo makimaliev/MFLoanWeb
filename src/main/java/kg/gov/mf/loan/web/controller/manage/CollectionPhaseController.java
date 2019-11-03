@@ -251,15 +251,22 @@ public class CollectionPhaseController {
 
         Long departmentId = staff.getDepartment().getId();
 
-        if(procedure.getStatusDepartmentId()!=null)
-        if(departmentId==9 && procedure.getStatusDepartmentId() == 8){
-        	model.addAttribute("accept",8);
-		}
-		else if(departmentId==10 && procedure.getStatusDepartmentId() == 7){
-			model.addAttribute("accept",7);
-		}
-		else{
-			model.addAttribute("accept",0);
+        if(procedure.getStatusDepartmentId()!=null) {
+			if (departmentId == 9 && procedure.getStatusDepartmentId() == 4) {
+				model.addAttribute("accept", 8);
+			}
+			else if (departmentId == 10 && procedure.getStatusDepartmentId() == 3) {
+				model.addAttribute("accept", 7);
+			}
+			else if ((departmentId == 4 || departmentId == 5 || departmentId == 6 || departmentId == 16) && procedure.getStatusDepartmentId() == 5) {
+				model.addAttribute("accept", 9);
+			}
+			else if (departmentId == 7 && procedure.getStatusDepartmentId() == 6) {
+				model.addAttribute("accept", 10);
+			}
+			else {
+				model.addAttribute("accept", 0);
+			}
 		}
 
 
@@ -755,16 +762,20 @@ public class CollectionPhaseController {
 				Double sumOfStart = (Double) query.getSingleResult();
 				phase.setStart_amount(sumOfStart);
 				phaseService.update(phase);
+				updatePaidOfPhase(phase);
 				phaseDetailsLists.remove(Utils.getPrincipal());
-			} else {
+			}
+			else {
 				CollectionPhase oldPhase = phaseService.getById(phase.getId());
 
 				phase.setPhaseStatus(oldPhase.getPhaseStatus());
 				phase.setLoans(loanSet);
 
 				if (phaseDetailsLists.get(Utils.getPrincipal()) == null) {
+				    phase.setStart_amount(oldPhase.getStart_amount());
 					System.out.println("no phase details detected!!!");
-				} else {
+				}
+				else {
 				    List<Long> phaseDetailsIds=new ArrayList<>();
 					for (PhaseDetails phaseDetail : phaseDetailsLists.get(Utils.getPrincipal())) {
 					    if(phaseDetail.getId()==0){
@@ -988,11 +999,19 @@ public class CollectionPhaseController {
 		ProcedureStatus newProcStatus=collectionPhase.getCollectionProcedure().getProcedureStatus();
 		if(procedure.getProcedureStatus().getId() != newProcStatus.getId()){
 			if(newProcStatus.getId() ==3 ){
-				procedure.setStatusDepartmentId(7L);
+				procedure.setStatusDepartmentId(3L);
 				procedure.setProcedureStatus(newProcStatus);
 			}
 			else if(newProcStatus.getId() == 4){
-				procedure.setStatusDepartmentId(8L);
+				procedure.setStatusDepartmentId(4L);
+				procedure.setProcedureStatus(newProcStatus);
+			}
+			else if(newProcStatus.getId() == 5){
+				procedure.setStatusDepartmentId(5L);
+				procedure.setProcedureStatus(newProcStatus);
+			}
+			else if(newProcStatus.getId() == 6){
+				procedure.setStatusDepartmentId(6L);
 				procedure.setProcedureStatus(newProcStatus);
 			}
 		}
@@ -1009,6 +1028,7 @@ public class CollectionPhaseController {
 		procedure.setProcedureStatus(procedureStatus);
 		procedure.setStatusDepartmentId(0L);
 		procService.update(procedure);
+		changeDebtorGroupAndSubGroup(debtorId,procStatusId);
 
 		return "redirect:/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/view";
 	}
@@ -2302,4 +2322,9 @@ public class CollectionPhaseController {
             phaseDetailsService.update(phaseDetails);
         }
     }
+
+    //debtor group
+    private void changeDebtorGroupAndSubGroup(Long debtorId, Long procedureStatusId){
+
+	}
 }

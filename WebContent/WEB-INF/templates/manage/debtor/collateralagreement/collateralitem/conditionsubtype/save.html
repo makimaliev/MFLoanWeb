@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{label.title.credit.orders}" >MFLoan | Credit Orders</title>
+    <div th:replace="fragments/header :: header-css" />
+</head>
+
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+            <div class="m-content">
+                <div class="m-portlet m-portlet--mobile">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text" th:text="#{label.condition.add.edit.type}">Save Condition Type</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-portlet__body">
+                        <form th:action="@{/conditionsubtype/save}" id="form_sample_2" class="form-horizontal" method="post">
+                            <div class="portlet-body">
+                                <div class="form-body">
+                                    <!--<div class="alert alert-danger display-hide">-->
+                                    <!--<button class="close" data-close="alert"></button>-->
+                                    <!--You have some form errors. Please check below.-->
+                                    <!--</div>-->
+                                    <div class="form-group  margin-top-20">
+                                        <label class="control-label col-md-3" th:text="#{label.condition.type.name}">Name <span class="required"> * </span>
+                                        </label>
+                                        <div class="col-md-4">
+                                            <input hidden="true" type="text" id="id" name="id" th:value="${type.id}"/>
+                                            <div class="input-icon right">
+                                                <i class="fa"></i>
+                                                <input type="text" class="form-control" name="name" th:value="${type.name}"/>
+                                            </div>
+                                        </div>
+                                        <label class="control-label col-md-3" th:text="#{label.conditionType}"><span class="required"> * </span>
+                                        </label>
+                                        <div class="col-md-4">
+                                            <select id="dod" class="form-control m-bootstrap-select m-bootstrap-select--solid" th:field="${type.conditionType.id}">
+                                                <option th:each="t: ${conditiontypes}" th:value="${t.id}" th:text="${t.name}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button th:text="#{label.form.cancel}" type="button" class="btn dark btn-outline" onclick="window.history.back()">Cancel</button>
+                                <button th:text="#{label.form.save}" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_CONDITIONTYPE','PERM_UPDATE_CONDITIONTYPE')" type="submit" class="btn green">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="layout/footer"/>
+</div>
+<div th:replace="fragments/footer :: footer-js"></div>
+<script>
+    $('#dod').selectpicker('refresh');
+</script>
+</body>
+</html>

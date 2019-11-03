@@ -9,8 +9,13 @@
                     <label class="control-label col-md-3" th:text="#{label.collateralItem.conditionType}">Name <span class="required"> * </span>
                     </label>
                     <div class="col">
-                        <select class="form-control m-bootstrap-select m_selectpicker my-select" th:field="${item.conditionType.id}" th:title="#{label.select}">
+                        <select class="form-control m-bootstrap-select m_selectpicker my-select" th:field="${item.conditionType.id}" th:title="#{label.conditionType}">
                             <option th:each="type : ${list}" th:value="${type.id}" th:text="${type.name}"></option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <select class="form-control m-bootstrap-select m_selectpicker my-select" th:field="${item.condition_sub_type}" th:title="#{label.conditionSubType}">
+                            <option th:each="type : ${subList}" th:value="${type.id}" th:text="${type.name}"></option>
                         </select>
                     </div>
                 </div>
