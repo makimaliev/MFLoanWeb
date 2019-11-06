@@ -87,6 +87,9 @@ public class RestPaymentViewController {
             List<String> tos=Arrays.asList(toAmountStr);
             parameters.put("r=lev_payment_total_amount",tos);
         }
+        List<String> orders=Arrays.asList("desc_v_payment_id");
+        parameters.put("orderBy",orders);
+
         Integer page = Integer.parseInt(pageStr);
         Integer perPage = Integer.parseInt(perPageStr);
         Integer offset = (page-1)*perPage;

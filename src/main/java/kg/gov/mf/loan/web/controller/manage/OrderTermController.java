@@ -587,6 +587,66 @@ public class OrderTermController {
 
 		return "/manage/order/orderterm/orderTermPaymentScheduleView";
 	}
+
+	//visualize payment schedules
+	@GetMapping("/manage/orderTerm/{orderTermId}/visualize")
+	public String visualizePaymentSchedulesOfOrderTerm(ModelMap model, @PathVariable("orderTermId")Long orderTermId){
+
+
+		OrderTerm orderTerm = orderTermService.getById(orderTermId);
+
+		model.addAttribute("term", orderTerm);
+
+		List<OrderTermFund> funds = fundService.list();
+		model.addAttribute("funds", funds);
+
+		List<OrderTermCurrency> currs = currService.list();
+		model.addAttribute("currencies", currs);
+
+		List<OrderTermFrequencyType> freqTypes = freqTypeService.list();
+		model.addAttribute("freqTypes", freqTypes);
+
+		List<OrderTermRatePeriod> ratePeriods = ratePeriodService.list();
+		model.addAttribute("ratePeriods", ratePeriods);
+
+		List<OrderTermFloatingRateType> rateTypes = rateTypeService.list();
+		model.addAttribute("rateTypes", rateTypes);
+
+		List<OrderTermTransactionOrder> txOrders = txOrderService.list();
+		model.addAttribute("txOrders", txOrders);
+
+		List<OrderTermDaysMethod> daysMethods = daysMethodService.list();
+		model.addAttribute("daysMethods", daysMethods);
+
+		List<OrderTermAccrMethod> accrMethods = accrMethodService.list();
+		model.addAttribute("accrMethods", accrMethods);
+
+		return "/manage/order/orderterm/visualizePaymentSchedules";
+	}
+
+	@GetMapping("/manage/orderTerm/getListDiv")
+	public String getListToDiv(Model model, OrderTerm orderTerm){
+
+			String getSchedulesQuery = "select id,expectedDate,disbursement,principalPayment,interestPayment,\n" +
+				"       collectedInterestPayment,collectedPenaltyPayment,installmentStateId,\n" +
+				"       record_status, null as installmentStateName, 0 as counter\n" +
+				"from paymentSchedule limit 10";
+		Query query = entityManager.createNativeQuery(getSchedulesQuery,PaymentScheduleModel.class);
+		List<PaymentScheduleModel> paymentScheduleList = query.getResultList();
+
+		for(PaymentScheduleModel paymentScheduleModel: paymentScheduleList)
+		{
+			paymentScheduleModel.setInstallmentStateName(installmentStateService.getById(paymentScheduleModel.getInstallmentStateId()).getName());
+		}
+		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+		String result = gson.toJson(paymentScheduleList);
+
+		model.addAttribute("jsonPaymentSchedules",result);
+		model.addAttribute("orderTermId",orderTerm);
+
+		return "/manage/order/orderterm/showPaymentSchedules";
+	}
+
 	//endregion
 
 	private List<AgreementTemplateModel> getTemplatesByTermId(long termId)

@@ -1,0 +1,5 @@
+<div xmlns:th="http://www.w3.org/1999/xhtml">
+    <select class="form-control m-bootstrap-select m_selectpicker my-select" th:title="#{label.conditionSubType}">
+        <option th:each="type : ${list}" th:value="${type.id}" th:text="${type.name}"></option>
+    </select>
+</div>

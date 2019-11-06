@@ -40,7 +40,6 @@ public class PaymentAuditModel{
     private short REVTYPE;
     @Id
     private Long REV;
-    private Long REVEND;
     private String staffName;
     private String date;
 
@@ -170,14 +169,6 @@ public class PaymentAuditModel{
 
     public void setREV(Long REV) {
         this.REV = REV;
-    }
-
-    public Long getREVEND() {
-        return REVEND;
-    }
-
-    public void setREVEND(Long REVEND) {
-        this.REVEND = REVEND;
     }
 
     public String getStaffName() {

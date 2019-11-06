@@ -10,6 +10,7 @@ import java.util.Date;
 public class OrderTermModel {
     @Id
     private Long id;
+    private Long creditOrderId;
 
     private String description;
     private Double amount;
@@ -78,6 +79,14 @@ public class OrderTermModel {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getCreditOrderId() {
+        return creditOrderId;
+    }
+
+    public void setCreditOrderId(Long creditOrderId) {
+        this.creditOrderId = creditOrderId;
     }
 
     public String getDescription() {

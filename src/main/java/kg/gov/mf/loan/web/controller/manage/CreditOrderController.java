@@ -370,6 +370,7 @@ public class CreditOrderController {
 */
         String baseQuery="SELECT term.id,\n" +
 				"       term.description,\n" +
+				"       term.creditOrderId,\n" +
 				"       term.amount,\n" +
 				"       term.installmentQuantity,\n" +
 				"       term.installmentFirstDay,\n" +
@@ -411,9 +412,9 @@ public class CreditOrderController {
 				"       term.transactionOrderId,\n" +
 				"       null as transactionOrderName,\n" +
 				"       term.interestAccrMethodId,\n" +
-				"       null as interestAccrMethodName\n" +
-				"FROM orderTerm term\n" +
-				"WHERE creditOrderId ="+orderId;
+				"       null as interestAccrMethodName \n" +
+				"FROM orderTerm term \n" +
+				"WHERE term.creditOrderId ="+orderId;
         Query query = entityManager.createNativeQuery(baseQuery, OrderTermModel.class);
 
         List<OrderTermModel> terms = query.getResultList();

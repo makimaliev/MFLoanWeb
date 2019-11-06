@@ -24,7 +24,9 @@ import kg.gov.mf.loan.web.util.Utils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,11 +35,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -1262,8 +1265,8 @@ public class PrintoutTemplateController {
 
 	//generate pdf of payment schedules
 
-	@PostMapping("/orderterm/{orderTermId}/printout/paymentschedules/pdf")
-	public void generatePdfOfPaymentSchedules(@PathVariable("orderTermId") Long orderTermId,
+	@PostMapping("/orderterm/printout/paymentschedules/pdf")
+	public void generatePdfOfPaymentSchedules(
 											  HttpServletResponse response, String paymentSchedules){
 
 
@@ -1291,8 +1294,8 @@ public class PrintoutTemplateController {
 	}
 
 	//generate excel of payment schedules
-	@PostMapping("/orderterm/{orderTermId}/printout/paymentschedules/excel")
-	public void generateExcelOfPaymentSchedules(@PathVariable("orderTermId") Long orderTermId,
+	@PostMapping("/orderterm/printout/paymentschedules/excel")
+	public void generateExcelOfPaymentSchedules(
 											  HttpServletResponse response, String paymentSchedules){
 
 
@@ -1329,75 +1332,55 @@ public class PrintoutTemplateController {
 			}
 
 			// Data
+
+			CellStyle dateCellStyle = workbook.createCellStyle();
+			CreationHelper createHelper = workbook.getCreationHelper();
+			dateCellStyle.setDataFormat(
+					createHelper.createDataFormat().getFormat("mm.DD.yyyy"));
+
+			CellStyle doubleCellStyle = workbook.createCellStyle();
+			doubleCellStyle.setDataFormat(
+					workbook.getCreationHelper().createDataFormat().getFormat("###,##0.##"));
+
 			for (PaymentScheduleModel paymentSchedule: result) {
 				rownum++;
 				HSSFRow row = sheet.createRow(rownum);
 
-				cell = row.createCell(0, CellType.STRING);
+				cell = row.createCell(0, CellType.NUMERIC);
 				cell.setCellValue(rownum);
 
-				cell = row.createCell(1, CellType.STRING);
-				cell.setCellValue(reportTool.DateToString(paymentSchedule.getExpectedDate()));
+				cell = row.createCell(1, CellType.NUMERIC);
+				cell.setCellValue(paymentSchedule.getExpectedDate());
+				cell.setCellStyle(dateCellStyle);
 
-				cell = row.createCell(2, CellType.STRING);
-				cell.setCellValue(reportTool.FormatNumber(paymentSchedule.getDisbursement()));
+				cell = row.createCell(2, CellType.NUMERIC);
+				cell.setCellValue((paymentSchedule.getDisbursement()));
+				cell.setCellStyle(doubleCellStyle);
 
-				cell = row.createCell(3, CellType.STRING);
-				cell.setCellValue(reportTool.FormatNumber(paymentSchedule.getPrincipalPayment()));
+				cell = row.createCell(3, CellType.NUMERIC);
+				cell.setCellValue((paymentSchedule.getPrincipalPayment()));
+				cell.setCellStyle(doubleCellStyle);
 
-				cell = row.createCell(4, CellType.STRING);
-				cell.setCellValue(reportTool.FormatNumber(paymentSchedule.getInterestPayment()));
+				cell = row.createCell(4, CellType.NUMERIC);
+				cell.setCellValue((paymentSchedule.getInterestPayment()));
+				cell.setCellStyle(doubleCellStyle);
 
-				cell = row.createCell(5, CellType.STRING);
-				cell.setCellValue(reportTool.FormatNumber(paymentSchedule.getCollectedInterestPayment()));
+				cell = row.createCell(5, CellType.NUMERIC);
+				cell.setCellValue((paymentSchedule.getCollectedInterestPayment()));
+				cell.setCellStyle(doubleCellStyle);
 
-				cell = row.createCell(6, CellType.STRING);
-				cell.setCellValue(reportTool.FormatNumber(paymentSchedule.getCollectedPenaltyPayment()));
+				cell = row.createCell(6, CellType.NUMERIC);
+				cell.setCellValue((paymentSchedule.getCollectedPenaltyPayment()));
+				cell.setCellStyle(doubleCellStyle);
 
 			}
 			for(int i = 0; i < columns.length; i++) {
 				sheet.autoSizeColumn(i);
 			}
 
-			FileOutputStream fileOut = new FileOutputStream("xx.xls");
-			workbook.write(fileOut);
-			fileOut.close();
-			System.out.println("Your excel file has been generated!");
-
-			//Code to download
-			File fileToDownload = new File("xx.xls");
-			InputStream in = new FileInputStream(fileToDownload);
-
-			// Gets MIME type of the file
-			String mimeType = new MimetypesFileTypeMap().getContentType("xx.xls");
-
-			if (mimeType == null) {
-				// Set to binary type if MIME mapping not found
-				mimeType = "application/octet-stream";
-			}
-			System.out.println("MIME type: " + mimeType);
-
-			// Modifies response
-			response.setContentType(mimeType);
-			response.setContentLength((int) fileToDownload.length());
-
-			// Forces download
-			String headerKey = "Content-Disposition";
-			String headerValue = String.format("attachment; filename=\"%s\"", fileToDownload.getName());
-			response.setHeader(headerKey, headerValue);
-
-			// obtains response's output stream
-			OutputStream outStream = response.getOutputStream();
-
-			byte[] buffer = new byte[4096];
-			int bytesRead = -1;
-
-			while ((bytesRead = in.read(buffer)) != -1) {
-				outStream.write(buffer, 0, bytesRead);
-			}
-
-			in.close();
-			outStream.close();
+			OutputStream out = response.getOutputStream();
+			workbook.write(out);
+			out.close();
 
 		}
 		catch (Exception e){
