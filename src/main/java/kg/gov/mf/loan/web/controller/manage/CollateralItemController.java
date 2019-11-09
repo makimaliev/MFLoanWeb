@@ -762,6 +762,27 @@ public class CollateralItemController {
 		return "redirect:/manage/debtor/{debtorId}/collateralagreement/{agreementId}/collateralitem/{itemId}/view";
 	}
 
+	@GetMapping("/collateralitem/{itemId}/{conditionTypeId}/subtype")
+	public String getSubTypeSelectPicker(Model model, @PathVariable Long itemId, @PathVariable("conditionTypeId") Long conditionTypeId){
+
+		List<ConditionSubType> conditionSubTypes = conditionSubTypeService.getByConditionTypeId(conditionTypeId);
+		CollateralItem item = itemService.getById(itemId);
+
+
+		if(item.getConditionType().getId() == conditionTypeId){
+			model.addAttribute("sameType",true);
+		}
+		else{
+			model.addAttribute("sameType",false);
+		}
+		model.addAttribute("sub_type",item.getCondition_sub_type());
+
+		model.addAttribute("list",conditionSubTypes);
+
+		return "/manage/debtor/collateralagreement/collateralitem/conditionSubTypeSelectPicker";
+
+	}
+
     //END - C TYPE
 
     //BEGIN - C SUB TYPE

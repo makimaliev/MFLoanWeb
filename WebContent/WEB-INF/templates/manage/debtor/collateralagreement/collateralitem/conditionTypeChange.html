@@ -3,6 +3,7 @@
         <input type="text" hidden = "hidden" th:value="${itemId}" name="itemId">
         <input type="text" hidden = "hidden" th:value="${debtorId}" name="debtorId">
         <input type="text" hidden = "hidden" th:value="${agreementId}" name="agreementId">
+        <input id="conditionSubTypeId" type="text" hidden = "hidden" name="condition_sub_type">
         <div class="portlet-body">
             <div class="form-body">
                 <div class="form-group  margin-top-20">
@@ -26,7 +27,11 @@
     </form>
     <script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
     <script>
-        var condTId = $("#conditionTypeSelect").value();
-        $("#subType").load("/collateralitem/"+condTId+"/subtype",);
+        var condTId = $("#conditionTypeSelect :selected").val();
+        $("#subType").load("/collateralitem/"+itemId+"/"+condTId+"/subtype",);
+        $("#conditionTypeSelect").on("change", function () {
+            condTId = $("#conditionTypeSelect :selected").val();
+            $("#subType").load("/collateralitem/"+itemId+"/"+condTId+"/subtype",);
+        });
     </script>
 </div>
