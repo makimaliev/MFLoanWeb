@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -108,7 +109,7 @@ public class ChatController {
 
     @PostMapping("/attachFile")
     @ResponseBody
-    public String saveAttachmentOfChat(MultipartFile file1){
+    public String saveAttachmentOfChat(@RequestParam("file") MultipartFile file){
 
         String path =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
 
@@ -119,24 +120,24 @@ public class ChatController {
         if (!folder.exists()) {
             folder.mkdir();
         }
-//        String filename = file.getOriginalFilename();
-//
-//        folder=new File(path+filename);
-//        if(folder.exists()){
-//        }
-//        else{
-//            File file1 = new File(path + filename);
-//
-//            try {
-//                file.transferTo(file1);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        systemFile.setName(file.getOriginalFilename());
-//        systemFile.setPath(path + filename);
-//        systemFileService.create(systemFile);
+        String filename = file.getOriginalFilename();
 
-        return "OK";
+        folder=new File(path+filename);
+        if(folder.exists()){
+        }
+        else{
+            File file1 = new File(path + filename);
+
+            try {
+                file.transferTo(file1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        systemFile.setName(file.getOriginalFilename());
+        systemFile.setPath(path + filename);
+        systemFileService.create(systemFile);
+
+        return filename+"^"+systemFile.getId();
     }
 }

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <!-- begin::Head -->
 <head>
-    <title th:text="#{label.asset}"></title>
+    <title th:text="#{label.chat}"></title>
 
     <div th:replace="fragments/header :: header-css"/>
 </head>
@@ -26,7 +26,6 @@
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
                         <h3 class="m-subheader__title m-subheader__title--separator">
-                            Договор залога
                         </h3>
                         <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
                             <li class="m-nav__item m-nav__item--home">
@@ -73,7 +72,7 @@
 
                                             <!--*******************************-->
                                             <select id="cu" style="width: 100%" >
-                                                <option th:each="user : ${#lists.sort(@chatUserServiceImpl.list())}"
+                                                <option th:each="user : ${(@chatUserServiceImpl.listAllByDesc())}"
                                                         th:value="${user.username}"
                                                         th:text="${user.name}"
                                                         th:selected="${user.username} == ${chosenUser}"
@@ -95,21 +94,22 @@
                                         </div>
                                         <div class="modal-footer">
                                             <div style="width: 100%">
+                                                <label for="file">
+                                                    <i class="fa fa-paperclip"></i>
+                                                    <span></span>
+                                                </label>
+                                                <form id="fileForm" th:action="@{/attachFile}" method="post" enctype="multipart/form-data">
+                                                    <input style="display: block" id="file" name = "file" type="file">
+                                                </form>
                                                 <form id="messageForm" name="messageForm" >
                                                     <div class="form-group">
                                                         <div class="input-group">
                                                             <!--<div class="">-->
                                                                 <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="col-lg-7 form-control"/>
                                                             <!--</div>-->
-                                                            <!--<div class="col-lg-3">
-                                                                <label for="message-file">
-                                                                    &lt;!&ndash;<i class="fa fa-paperclip"></i>&ndash;&gt;
-                                                                    <span></span>
-                                                                </label>
-                                                                <form id="FileForm" th:action="@{/attachFile}" method="post" enctype="multipart/form-data">
-                                                                    <input style="display: block" id="message-file" name = "file" type="file">
-                                                                </form>
-                                                            </div>-->
+                                                            <div class="col-lg-3">
+
+                                                            </div>
                                                             <div class="col-lg-2">
                                                                 <button type="submit" class="btn btn-primary">Send</button>
                                                             </div>
@@ -146,7 +146,7 @@
     // Chat Begin
     var messageForm = document.querySelector('#messageForm');
     var messageInput = document.querySelector('#message');
-    var messageFile = document.querySelector('#message-file');
+    var messageFileForm = document.querySelector('#fileForm');
     var messageArea = document.querySelector('#messageArea');
     var chatModalTitle = document.querySelector('#chatModalTitle');
     var stompClient = null;
@@ -167,26 +167,42 @@
     }
     function sendMessage(event) {
         var messageContent = messageInput.value.trim();
-        /*var file1 = messageFile.files[0];
+        var messageFile = document.querySelector('#file');
+        var file1 = messageFile.files[0];
 
-        if (messageFile.files[0]){
-            $("#FileForm").submit();
-            alert("sdfsdf");
-            console.log(messageFile.files[0]);
+        console.log(file1);
+        if (file1){
+            // var form = $("#fileForm");
+            var formData = new FormData(messageFileForm);
+            // event.preventDefault();
+            // $("#fileForm").submit();
+            // alert("sdfsdf");
+            // console.log(messageFile.files[0]);
             $.ajax({
                 url: '/attachFile',
-                data: {"file":file1},
+                data: formData,
                 cache: false,
-                contentType: file1.type,
+                contentType: false,
                 processData: false,
                 type: 'POST',
                 success: function(data)
                 {
-                    alert(data);
+                    // alert(data);
+                    var splitted = data.split("^");
+                    var chatMessage = {
+                        sender: username,
+                        receiver: receiver,
+                        content: splitted[0],
+                        docId: splitted[1],
+                        type: 'CHAT'
+                    };
+                    stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+                    messageFile.value = '';
+
                 }
             });
 
-        }*/
+        }
 
         if(messageContent && stompClient && receiver) {
             var chatMessage = {
@@ -224,7 +240,18 @@
 
         var mc = document.createElement('div');
         mc.classList.add('message');
-        var mctxt = document.createTextNode(message.content);
+        var mctxt ;
+        if(message.docId == null){
+            mctxt = document.createTextNode(message.content);
+        }
+        else{
+            mctxt = document.createElement("a");
+            mctxt.setAttribute("href","/systemFile/"+message.docId+"/download");
+            tt=document.createTextNode(message.content);
+            mctxt.appendChild(tt);
+            // console.log(mctxt);
+            // alert(mctxt);
+        }
         mc.appendChild(mctxt);
 
         var s2 = document.createElement('span');
