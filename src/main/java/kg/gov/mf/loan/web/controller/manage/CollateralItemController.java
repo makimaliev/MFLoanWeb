@@ -37,6 +37,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -109,6 +112,9 @@ public class CollateralItemController {
 
 	@Autowired
     ConditionSubTypeService conditionSubTypeService;
+
+	@PersistenceContext
+	EntityManager entityManager;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -384,18 +390,33 @@ public class CollateralItemController {
 			@PathVariable("afId")Long afId)
 	{
 
+		CollateralAgreement agreement = agreementService.getById(agreementId);
+
         model.addAttribute("debtorId", debtorId);
         model.addAttribute("debtor", debtorService.getById(debtorId));
         model.addAttribute("agreementId", agreementId);
-        model.addAttribute("agreement", agreementService.getById(agreementId));
+        model.addAttribute("agreement", agreement);
         model.addAttribute("item", itemService.getById(itemId));
 
 		if(afId == 0)
 		{
 			CollateralItemArrestFree collateralItemArrestFree=new CollateralItemArrestFree();
 			collateralItemArrestFree.setOnDate(new Date());
+
+
 			model.addAttribute("af", collateralItemArrestFree);
 			model.addAttribute("document",null);
+
+
+			List<String> loans = getLoansWithRemainings(agreement);
+
+			if(loans.size() > 0){
+				model.addAttribute("show_alert",true);
+				model.addAttribute("loansStr",loans);
+			}
+			else {
+				model.addAttribute("show_alert",false);
+			}
 		}
 
 		if(afId > 0)
@@ -404,6 +425,8 @@ public class CollateralItemController {
 			Document document=documentService.getById(Long.parseLong(arrestFree.getDocument()));
 			model.addAttribute("af", arrestFree);
 			model.addAttribute("document",document);
+			model.addAttribute("loansStr",null);
+			model.addAttribute("show_alert",false);
 		}
 		return "/manage/debtor/collateralagreement/collateralitem/arrestfree/save";
 	}
@@ -1094,5 +1117,30 @@ public class CollateralItemController {
 		}
 
 		return list;
+	}
+
+	private List<String> getLoansWithRemainings(CollateralAgreement agreement){
+
+		List<String> list = new ArrayList<>();
+		for(Loan loan : agreement.getLoans()){
+			Double remainder = getRemainderOfLoan(loan.getId());
+			if(remainder >0) {
+				list.add(loan.getRegNumber() + " -> " +remainder.toString() + "(остаток.)");
+			}
+		}
+
+		return list;
+	}
+
+	private Double getRemainderOfLoan(long loanId){
+
+
+		String baseQuery = "select ls.loanAmount-ls.totalDisbursed\n" +
+				"from loanSummary ls where ls.loanId="+loanId+" order by ls.onDate desc limit 1";
+		Query query = entityManager.createNativeQuery(baseQuery);
+
+		Double value = (Double) query.getResultList().get(0);
+
+		return value;
 	}
 }

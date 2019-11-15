@@ -816,37 +816,42 @@ public class LoanController {
 	public String saveLoan(NormalLoan loan,
 			@PathVariable("debtorId")Long debtorId)
 	{
-		
-		Debtor debtor = debtorService.getById(debtorId);
-		loan.setDebtor(debtor);
+
+        Loan oldLoan=loan;
+//		Debtor debtor = debtorService.getById(debtorId);
+//		loan.setDebtor(debtor);
 
 
-		if(loan.getId()==null || loan.getId() ==0)
+		if(oldLoan.getId()==null || oldLoan.getId() ==0)
         {
-
+            Debtor debtor = debtorService.getById(debtorId);
+            oldLoan.setDebtor(debtor);
         }
         else
         {
-            Loan loan1=loanService.getById(loan.getId());
 
-            loan.setLoanState(loan1.getLoanState());
-            loan.setCloseDate(loan1.getCloseDate());
-            loan.setLastDate(loan1.getLastDate());
-            loan.setParent(loan1.getParent());
-            loan.setLoanFinGroup(loan1.getLoanFinGroup());
+
+            oldLoan = loanService.getById(loan.getId());
+            oldLoan.setRegNumber(loan.getRegNumber());
+            oldLoan.setRegDate(loan.getRegDate());
+            oldLoan.setAmount(loan.getAmount());
+            oldLoan.setCurrency(loan.getCurrency());
+            oldLoan.setLoanType(loan.getLoanType());
+            oldLoan.setSupervisorId(loan.getSupervisorId());
+            oldLoan.setCreditOrder(loan.getCreditOrder());
 
 
 
         }
 
-		setBankruptData(loan);
-		if(loan.getLoanType().getId()==10){
-		    loan.setCloseDate(null);
+		setBankruptData(oldLoan);
+		if(oldLoan.getLoanType().getId()==10){
+		    oldLoan.setCloseDate(null);
         }
 
-        loan.setDestinationAccount(destinationAccountService.getById(1L));
+        oldLoan.setDestinationAccount(destinationAccountService.getById(1L));
 
-		saveLoanData(loan);
+		saveLoanData(oldLoan);
 
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/"+loan.getId()+"/view";
 	}
@@ -856,18 +861,40 @@ public class LoanController {
                            @PathVariable("debtorId")Long debtorId)
     {
 
-        Debtor debtor = debtorService.getById(debtorId);
-        loan.setDebtor(debtor);
-        setBankruptData(loan);
+        Loan oldLoan=loan;
 
-        if(loan.getLoanType().getId()==10){
-            loan.setCloseDate(null);
+        if(oldLoan.getId()==null || oldLoan.getId() ==0)
+        {
+            Debtor debtor = debtorService.getById(debtorId);
+            oldLoan.setDebtor(debtor);
         }
-        loan.setDestinationAccount(destinationAccountService.getById(1L));
+        else
+        {
 
-        saveLoanData(loan);
+            oldLoan = loanService.getById(loan.getId());
+            oldLoan.setRegNumber(loan.getRegNumber());
+            oldLoan.setRegDate(loan.getRegDate());
+            oldLoan.setAmount(loan.getAmount());
+            oldLoan.setCurrency(loan.getCurrency());
+            oldLoan.setLoanType(loan.getLoanType());
+            oldLoan.setSupervisorId(loan.getSupervisorId());
+            oldLoan.setCreditOrder(loan.getCreditOrder());
 
-        return "redirect:" + "/manage/debtor/{debtorId}/loan/"+loan.getId()+"/view";
+
+
+        }
+
+
+        setBankruptData(oldLoan);
+
+        if(oldLoan.getLoanType().getId()==10){
+            oldLoan.setCloseDate(null);
+        }
+        oldLoan.setDestinationAccount(destinationAccountService.getById(1L));
+
+        saveLoanData(oldLoan);
+
+        return "redirect:" + "/manage/debtor/{debtorId}/loan/"+oldLoan.getId()+"/view";
     }
 
     @RequestMapping(value="/manage/debtor/{debtorId}/loan/3/save", method=RequestMethod.POST)
@@ -875,16 +902,36 @@ public class LoanController {
                                   @PathVariable("debtorId")Long debtorId)
     {
 
-        Debtor debtor = debtorService.getById(debtorId);
-        loan.setDebtor(debtor);
-        setBankruptData(loan);
+        Loan oldLoan=loan;
 
-        if(loan.getLoanType().getId()==10){
-            loan.setCloseDate(null);
+        if(oldLoan.getId()==null || oldLoan.getId() ==0)
+        {
+            Debtor debtor = debtorService.getById(debtorId);
+            oldLoan.setDebtor(debtor);
         }
-        loan.setDestinationAccount(destinationAccountService.getById(1L));
+        else
+        {
 
-        saveLoanData(loan);
+            oldLoan = loanService.getById(loan.getId());
+            oldLoan.setRegNumber(loan.getRegNumber());
+            oldLoan.setRegDate(loan.getRegDate());
+            oldLoan.setAmount(loan.getAmount());
+            oldLoan.setCurrency(loan.getCurrency());
+            oldLoan.setLoanType(loan.getLoanType());
+            oldLoan.setSupervisorId(loan.getSupervisorId());
+            oldLoan.setCreditOrder(loan.getCreditOrder());
+
+
+
+        }
+        setBankruptData(oldLoan);
+
+        if(oldLoan.getLoanType().getId()==10){
+            oldLoan.setCloseDate(null);
+        }
+        oldLoan.setDestinationAccount(destinationAccountService.getById(1L));
+
+        saveLoanData(oldLoan);
 
         return "redirect:" + "/manage/debtor/{debtorId}/loan/"+loan.getId()+"/view";
     }

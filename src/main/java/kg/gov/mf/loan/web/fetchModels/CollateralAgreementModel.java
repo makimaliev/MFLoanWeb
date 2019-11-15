@@ -47,6 +47,7 @@ public class CollateralAgreementModel implements Comparable<CollateralAgreementM
     private String quantityTypeName;
     private Double collateralValue;
     private int status;
+    private int num_of_loans;
 
     @Override
     public int compareTo(CollateralAgreementModel model)
@@ -214,5 +215,13 @@ public class CollateralAgreementModel implements Comparable<CollateralAgreementM
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getNum_of_loans() {
+        return num_of_loans;
+    }
+
+    public void setNum_of_loans(int num_of_loans) {
+        this.num_of_loans = num_of_loans;
     }
 }

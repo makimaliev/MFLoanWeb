@@ -57,6 +57,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -64,9 +65,10 @@ import java.util.*;
 @Controller
 public class CollectionPhaseController {
 	
+	//region services
 	@Autowired
 	CollectionPhaseService phaseService;
-	
+
 	@Autowired
 	CollectionProcedureService procService;
 
@@ -78,10 +80,10 @@ public class CollectionPhaseController {
 
 	@Autowired
 	PhaseStatusService statusService;
-	
+
 	@Autowired
 	PhaseTypeService typeService;
-	
+
 	@Autowired
 	LoanService loanService;
 
@@ -132,28 +134,28 @@ public class CollectionPhaseController {
 	private EntityManager entityManager;
 
 	@Autowired
-    CollectionEventService collectionEventService;
+	CollectionEventService collectionEventService;
 
 	@Autowired
 	StaffService staffService;
 
 	@Autowired
-    OwnerService ownerService;
+	OwnerService ownerService;
 
 	@Autowired
-    PositionService positionService;
+	PositionService positionService;
 
 	@Autowired
-    OrganizationService organizationService;
+	OrganizationService organizationService;
 
 	@Autowired
-    PersonService personService;
+	PersonService personService;
 
 	@Autowired
-    EventStatusService eventStatusService;
+	EventStatusService eventStatusService;
 
 	@Autowired
-    EventTypeService eventTypeService;
+	EventTypeService eventTypeService;
 
 	@Autowired
 	InformationService informationService;
@@ -172,6 +174,7 @@ public class CollectionPhaseController {
 
 	@Autowired
 	CollectionPhaseViewService collectionPhaseViewService;
+	//endregion
 
 
 	@InitBinder
@@ -724,7 +727,7 @@ public class CollectionPhaseController {
 				for (String id : loanses) {
 					loanSet.add(loanService.getById(Long.valueOf(id)));
 				}
-			if (phase.getId() == 0) {
+			if (phase.getId() == 0 && isPhaseWithDateValid(procId,phase.getStartDate())) {
 
 
 				phase.setLoans(loanSet);
@@ -1254,7 +1257,7 @@ public class CollectionPhaseController {
 	{
 		String baseQuery = "SELECT loan.id, loan.loan_class_id, loan.regNumber, loan.regDate, loan.amount, loan.currencyId, currency.name as currencyName,\n" +
 				"  loan.loanTypeId, type.name as loanTypeName, loan.loanStateId, state.name as loanStateName,\n" +
-				"  loan.supervisorId, IFNULL(loan.parent_id, 0) as parentLoanId, loan.creditOrderId\n" +
+				"  loan.supervisorId, IFNULL(loan.parent_id, 0) as parentLoanId, 0.0 as remainder, loan.creditOrderId\n" +
 				"FROM loan loan, orderTermCurrency currency,mfloan.loanCollectionPhase lCPH, loanType type, loanState state\n" +
 				"WHERE loan.currencyId = currency.id\n" +
 				"  AND loan.loanTypeId = type.id\n" +
@@ -2326,5 +2329,21 @@ public class CollectionPhaseController {
     //debtor group
     private void changeDebtorGroupAndSubGroup(Long debtorId, Long procedureStatusId){
 
+	}
+
+	private boolean isPhaseWithDateValid(Long procedureId, Date phaseDate){
+
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String baseQuery = "select count(1)\n" +
+				"from collectionPhase p where collectionProcedureId="+procedureId+ " and p.startDate = "+format.format(phaseDate)+" and p.record_status=1";
+		Query query = entityManager.createNativeQuery(baseQuery);
+
+        BigInteger count = (BigInteger) query.getResultList().get(0);
+
+		if(count == BigInteger.valueOf(0)){
+		    return true;
+        }
+        return false;
 	}
 }

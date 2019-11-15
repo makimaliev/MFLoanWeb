@@ -56,6 +56,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1328,7 +1329,7 @@ public class DebtorController {
 	{
 		String baseQuery = "SELECT loan.id, loan.loan_class_id, loan.regNumber, loan.regDate, loan.amount, loan.currencyId, currency.name as currencyName,\n" +
 				"  loan.loanTypeId, type.name as loanTypeName, loan.loanStateId, state.name as loanStateName,\n" +
-				"  loan.supervisorId, IFNULL(loan.parent_id, 0) as parentLoanId, loan.creditOrderId\n" +
+				"  loan.supervisorId, IFNULL(loan.parent_id, 0) as parentLoanId, 0.0 as remainder, loan.creditOrderId\n" +
 				"FROM loan loan, orderTermCurrency currency, loanType type, loanState state\n" +
 				"WHERE loan.currencyId = currency.id\n" +
 				"  AND loan.loanTypeId = type.id\n" +
@@ -1379,6 +1380,7 @@ public class DebtorController {
                     model.setQuantityTypeName(item.getQuantityType().getName());
                     model.setCollateralValue(item.getCollateralValue());
                     model.setStatus(item.getStatus());
+                    model.setNum_of_loans(agreement.getLoans().size());
 
                     if(!models.containsKey(model.getItemId()))
                         models.put(model.getItemId(), model);
@@ -1488,6 +1490,18 @@ public class DebtorController {
 
         Collections.sort(result);
         return result;
+	}
+
+	private int countLoansOfItem(Long itemId){
+
+		String baseQuery = "select count(1)\n" +
+				"from collectionPhase p where collectionProcedureId=1 and p.record_status=1";
+		Query query = entityManager.createNativeQuery(baseQuery);
+
+		BigInteger count = (BigInteger) query.getResultList().get(0);
+
+		return count.intValue();
+
 	}
 
 }

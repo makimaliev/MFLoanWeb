@@ -87,13 +87,13 @@
 					    <div class="m-portlet__body ">
 						<ul class="nav nav-tabs" role="tablist">
 							<li class="nav-item">
-								<a class="nav-link m--font-primary active" data-toggle="tab" href="#collateralAgreementInfo" th:text="#{label.collateralagreement.tab.info}"></a>
+								<a class="nav-link m--font-primary" data-toggle="tab" href="#collateralAgreementInfo" th:text="#{label.collateralagreement.tab.info}"></a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#collateralItem" th:text="#{label.collateralagreement.tab.collateralItem}"></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link m--font-primary" data-toggle="tab" href="#loans" th:text="#{label.collateralagreement.tab.loans}"></a>
+								<a class="nav-link m--font-primary active" data-toggle="tab" href="#loans" th:text="#{label.collateralagreement.tab.loans}"></a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link m--font-primary" data-toggle="tab" href="#additionalAgreement" th:text="#{label.collateralagreement.tab.additionalAgreement}"></a>
@@ -106,7 +106,7 @@
 							</li>
 						</ul>
 						<div class="tab-content">
-							<div class="tab-pane active" id="collateralAgreementInfo" role="tabpanel">
+							<div class="tab-pane" id="collateralAgreementInfo" role="tabpanel">
 								<div sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLATERALAGREEMENT','PERM_ADD_COLLATERALAGREEMENT')" class="col-xl-12 order-3 order-xl-3 m--align-right">
 									<div >
 										<div>
@@ -262,7 +262,7 @@
 								</div>
 								<!--end::Portlet-->
 							</div>
-							<div class="tab-pane" id="loans" role="tabpanel">
+							<div class="tab-pane active" id="loans" role="tabpanel">
 								<!--begin: Search Form -->
 								<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
 									<div class="row align-items-center">

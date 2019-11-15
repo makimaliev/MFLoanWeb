@@ -47,6 +47,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -447,7 +448,7 @@ public class CollateralAgreementController {
 	{
 		String baseQuery = "SELECT loan.id, loan.loan_class_id, loan.regNumber, loan.regDate, loan.amount, loan.currencyId, currency.name as currencyName,\n" +
 				"  loan.loanTypeId, type.name as loanTypeName, loan.loanStateId, state.name as loanStateName,\n" +
-				"  loan.supervisorId, IFNULL(loan.parent_id, 0) as parentLoanId, loan.creditOrderId\n" +
+				"  loan.supervisorId, IFNULL(loan.parent_id, 0) as parentLoanId, loan.creditOrderId, 0.0 as remainder\n" +
 				"FROM loan loan, orderTermCurrency currency,mfloan.loanCollateralAgreement lCA, loanType type, loanState state\n" +
 				"WHERE loan.currencyId = currency.id\n" +
 				"  AND loan.loanTypeId = type.id\n" +
@@ -460,6 +461,10 @@ public class CollateralAgreementController {
 		Query query = entityManager.createNativeQuery(baseQuery, LoanModel.class);
 
 		List<LoanModel> loans = query.getResultList();
+
+		for (LoanModel loanModel : loans){
+			loanModel.setRemainder(getRemainderOfLoan(loanModel.getId()));
+        }
 		return loans;
 	}
 
@@ -487,6 +492,18 @@ public class CollateralAgreementController {
 
 		return list;
 	}
+
+    private Double getRemainderOfLoan(long loanId){
+
+
+        String baseQuery = "select ls.loanAmount-ls.totalDisbursed\n" +
+				"from loanSummary ls where ls.loanId="+loanId+" order by ls.onDate desc limit 1";
+        Query query = entityManager.createNativeQuery(baseQuery);
+
+        Double value = (Double) query.getResultList().get(0);
+
+        return value;
+    }
 	
 	/*
 	@RequestMapping(value = { "/manage/collateral/{collateralId}/collateralagreement/{agreementId}/inspection/save"})
