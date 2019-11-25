@@ -11,7 +11,13 @@ import kg.gov.mf.loan.admin.org.model.*;
 import kg.gov.mf.loan.admin.org.service.*;
 import kg.gov.mf.loan.admin.sys.model.User;
 import kg.gov.mf.loan.admin.sys.service.UserService;
+import kg.gov.mf.loan.manage.model.debtor.Debtor;
+import kg.gov.mf.loan.manage.model.debtor.Owner;
+import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.model.loan.LoanSummaryAct;
+import kg.gov.mf.loan.manage.service.debtor.DebtorService;
+import kg.gov.mf.loan.manage.service.debtor.OwnerService;
+import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.manage.service.loan.LoanSummaryActService;
 import kg.gov.mf.loan.output.printout.model.Printout;
 import kg.gov.mf.loan.output.printout.model.PrintoutTemplate;
@@ -42,10 +48,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
 
 @Controller
@@ -78,6 +86,24 @@ public class PrintoutTemplateController {
 
 	@Autowired
 	EmploymentHistoryService employmentHistoryService;
+
+	@Autowired
+	LoanService loanService;
+
+	@Autowired
+	DebtorService debtorService;
+
+	@Autowired
+	OwnerService ownerService;
+
+	@Autowired
+	OrganizationService organizationService;
+
+	@Autowired
+	DepartmentService departmentService;
+
+	@Autowired
+	ContactService contactService;
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -721,22 +747,206 @@ public class PrintoutTemplateController {
 	@RequestMapping("/printout/{type_id}/objectId/{object_id}/generate")
 	public void generateDocByTypeAndPersonId(@PathVariable("object_id") long object_id,
 											 @PathVariable("type_id") long type_id,
+											 HttpServletResponse response) {
+		try
+		{
+
+			User user1=userService.findByUsername(Utils.getPrincipal());
+			User user=userService.findById(user1.getId());
+			Staff staff=staffService.findById(user.getStaff().getId());
+			Person person=personService.findById(Long.valueOf(object_id));
+			IdentityDoc identityDoc=identityDocService.findById(person.getIdentityDoc().getId());
+			XWPFDocument doc=new XWPFDocument();
+
+			switch ((int) type_id){
+
+				case 1:
+
+					String filePath = UPLOADED_FOLDER+ "/"+"1. Договор займа.docx";
+
+					File file = new File(filePath);
+
+					FileInputStream fInput = new FileInputStream(file.getAbsolutePath());
+					doc = new XWPFDocument(fInput);
+
+					for (XWPFParagraph p : doc.getParagraphs())
+					{
+						List<XWPFRun> runs = p.getRuns();
+
+						if (runs != null)
+						{
+							for (XWPFRun r : runs)
+							{
+								String text = r.getText(0);
+								if (text != null && text.contains("(="))
+								{
+									replace(r,user,staff,person,identityDoc);
+//							text = text.replace("(=", "$");
+//							r.setText(text, 0);
+								}
+							}
+						}
+					}
+
+					for (XWPFTable tbl : doc.getTables())
+					{
+						for (XWPFTableRow row : tbl.getRows())
+						{
+							for (XWPFTableCell cell : row.getTableCells())
+							{
+								for (XWPFParagraph p : cell.getParagraphs())
+								{
+									for (XWPFRun r : p.getRuns()) {
+										try {
+											String text = r.getText(0);
+											if (text != null && text.contains("(=") && text.contains("21")) {
+												replace(r, user, staff, person, identityDoc);
+												writetable(tbl);
+											} else if (text != null && text.contains("(=")) {
+												replace(r, user, staff, person, identityDoc);
+//									text = text.replace("(=", "$");
+//									r.setText(text,0);
+
+											}
+										}
+										catch (Exception e){
+											System.out.println(e);
+											break;
+										}
+									}
+								}
+							}
+						}
+					}
+					break;
+
+				case 2:
+					filePath = UPLOADED_FOLDER+ "/"+"2. Договор бп (finish).docx";
+
+					file = new File(filePath);
+
+					fInput = new FileInputStream(file.getAbsolutePath());
+					doc = new XWPFDocument(fInput);
+
+					for (XWPFParagraph p : doc.getParagraphs())
+					{
+						List<XWPFRun> runs = p.getRuns();
+
+						if (runs != null)
+						{
+							for (XWPFRun r : runs)
+							{
+								String text = r.getText(0);
+								if (text != null && text.contains("(="))
+								{
+									replace(r,user,staff,person,identityDoc);
+								}
+							}
+						}
+					}
+
+					for (XWPFTable tbl : doc.getTables())
+					{
+						for (XWPFTableRow row : tbl.getRows())
+						{
+							for (XWPFTableCell cell : row.getTableCells())
+							{
+								for (XWPFParagraph p : cell.getParagraphs())
+								{
+									for (XWPFRun r : p.getRuns()) {
+										String text = r.getText(0);
+										if (text != null && text.contains("(=")) {
+											replace(r, user, staff, person, identityDoc);
+										}
+									}
+								}
+							}
+						}
+					}
+					break;
+			}
+
+			response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+			response.setHeader("Content-Disposition", "attachment; filename=filename.docx");
+
+			doc.write(response.getOutputStream());
+
+//                response.getOutputStream().flush();
+//                response.getOutputStream().close();
+
+			doc.close();
+
+		}
+		catch (Exception ex)
+		{
+			System.out.println(ex);
+		}
+
+
+
+
+
+	}
+
+	@RequestMapping("/printout/{type_id}/loanId/{loan_id}/generate")
+	public void generateDocByTypeAndLoanId(@PathVariable("loan_id") long loan_id,
+											 @PathVariable("type_id") long type_id,
 								  HttpServletResponse response) {
 		try
 		{
 
-            User user1=userService.findByUsername(Utils.getPrincipal());
-            User user=userService.findById(user1.getId());
+            User user=userService.findById(userService.findByUsername(Utils.getPrincipal()).getId());
+
             Staff staff=staffService.findById(user.getStaff().getId());
-            Person person=personService.findById(Long.valueOf(object_id));
-            IdentityDoc identityDoc=identityDocService.findById(person.getIdentityDoc().getId());
+
+            Person staffPerson = personService.findById(staff.getPerson().getId());
+
+            Contact staffContact = contactService.findById(staffPerson.getContact().getId());
+
+            Loan loan = loanService.getById(Long.valueOf(loan_id));
+
+			Debtor debtor = debtorService.getById(loan.getDebtor().getId());
+
+			Owner owner = ownerService.getById(debtor.getOwner().getId());
+
+			Address address = addressService.findById(owner.getAddress().getId());
+
+
+            Person person=personService.findById(Long.valueOf(loan_id));
+
+            if(owner.getOwnerType().name().equals(("ORGANIZATION")))
+			{
+				Organization organization = organizationService.findById(owner.getEntityId());
+
+				for (Department department1 : organization.getDepartment())
+				{
+					Department department = departmentService.findById(department1.getId());
+
+					for (Staff staff1 : staffService.findAllByDepartment(department))
+					{
+						Staff staff2 = staffService.findById(staff1.getId());
+
+						person = personService.findById(staff2.getPerson().getId());
+
+						break;
+					}
+					break;
+				}
+
+
+
+			}
+			else person = null;
+
+            IdentityDoc identityDoc= new IdentityDoc();
+
             XWPFDocument doc=new XWPFDocument();
 
 		    switch ((int) type_id){
 
                 case 1:
 
-                    String filePath = UPLOADED_FOLDER+ "/"+"1. Договор займа.docx";
+                    String filePath = UPLOADED_FOLDER+ "/"+"билдируу 2019.docx";
 
                     File file = new File(filePath);
 
@@ -754,99 +964,17 @@ public class PrintoutTemplateController {
                                 String text = r.getText(0);
                                 if (text != null && text.contains("(="))
                                 {
-                                    replace(r,user,staff,person,identityDoc);
-//							text = text.replace("(=", "$");
-//							r.setText(text, 0);
+                                    replace2(r,user,staff,address,debtor, loan, person,identityDoc, staffContact );
                                 }
                             }
                         }
                     }
-
-                    for (XWPFTable tbl : doc.getTables())
-                    {
-                        for (XWPFTableRow row : tbl.getRows())
-                        {
-                            for (XWPFTableCell cell : row.getTableCells())
-                            {
-                                for (XWPFParagraph p : cell.getParagraphs())
-                                {
-                                    for (XWPFRun r : p.getRuns()) {
-                                        try {
-                                            String text = r.getText(0);
-                                            if (text != null && text.contains("(=") && text.contains("21")) {
-                                                replace(r, user, staff, person, identityDoc);
-                                                writetable(tbl);
-                                            } else if (text != null && text.contains("(=")) {
-                                                replace(r, user, staff, person, identityDoc);
-//									text = text.replace("(=", "$");
-//									r.setText(text,0);
-
-                                            }
-                                        }
-                                        catch (Exception e){
-                                            System.out.println(e);
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    break;
-
-                case 2:
-                    filePath = UPLOADED_FOLDER+ "/"+"2. Договор бп (finish).docx";
-
-                    file = new File(filePath);
-
-                    fInput = new FileInputStream(file.getAbsolutePath());
-                    doc = new XWPFDocument(fInput);
-
-                    for (XWPFParagraph p : doc.getParagraphs())
-                    {
-                        List<XWPFRun> runs = p.getRuns();
-
-                        if (runs != null)
-                        {
-                            for (XWPFRun r : runs)
-                            {
-                                String text = r.getText(0);
-                                if (text != null && text.contains("(="))
-                                {
-                                    replace(r,user,staff,person,identityDoc);
-                                }
-                            }
-                        }
-                    }
-
-                    for (XWPFTable tbl : doc.getTables())
-                    {
-                        for (XWPFTableRow row : tbl.getRows())
-                        {
-                            for (XWPFTableCell cell : row.getTableCells())
-                            {
-                                for (XWPFParagraph p : cell.getParagraphs())
-                                {
-                                    for (XWPFRun r : p.getRuns()) {
-                                        String text = r.getText(0);
-                                        if (text != null && text.contains("(=")) {
-                                            replace(r, user, staff, person, identityDoc);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    break;
             }
 
             response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
             response.setHeader("Content-Disposition", "attachment; filename=filename.docx");
 
             doc.write(response.getOutputStream());
-
-//                response.getOutputStream().flush();
-//                response.getOutputStream().close();
 
             doc.close();
 
@@ -856,10 +984,264 @@ public class PrintoutTemplateController {
 			System.out.println(ex);
 		}
 
+	}
+
+
+	private void replace2(XWPFRun run,User user,Staff staff,Address address, Debtor debtor, Loan loan, Person person, IdentityDoc identityDoc, Contact contact)
+	{
+		String text = run.getText(0);
+		try
+		{
+			int startPosition = 0;
+			int closePosition = 0;
+
+			if(text.contains("(="))
+			{
+				startPosition = text.lastIndexOf("(=")+2;
+				closePosition = text.lastIndexOf("=)");
+
+				try
+				{
+					String varIdString = text.substring(startPosition,closePosition);
+					int varId = Integer.parseInt(varIdString);
+
+					String newText = "";
+					String oldText = "";
+
+					switch (varId)
+					{
+							// region name
+						case 30:
+
+							run.getParagraph().setAlignment(ParagraphAlignment.LEFT);
+							if(address!=null){
+
+								if(address.getRegion().getName().contains("г."))
+								{
+									newText=address.getRegion().getName().replace("г.", "");
+									newText=newText.concat(" ш.");
+								}
+								else
+								{
+									newText=address.getRegion().getName().replace("ская","");
+									newText=newText.concat(" облусу");
+								}
+							}
+							break;
+
+
+						// district name
+						case 31:
+							run.getParagraph().setAlignment(ParagraphAlignment.LEFT);
+							if(address!=null){
+
+								if(address.getDistrict().getName().contains("г."))
+								{
+									newText=address.getDistrict().getName().replace("г.", "");
+									newText=newText.concat(" ш.");
+								}
+								else
+								{
+									newText=address.getDistrict().getName().replace("ский","");
+									newText=newText.concat(" району");
+								}
+							}
+							break;
+
+							// address line
+						case 32:
+							run.getParagraph().setAlignment(ParagraphAlignment.LEFT);
+							if(address!=null){
+
+								if(address.getLine()!=null)
+								{
+									newText=address.getLine();
+								}
+								else
+								{
+									newText="";
+								}
+							}
+							break;
+
+							// debtor name
+						case 33:
+							run.getParagraph().setAlignment(ParagraphAlignment.LEFT);
+							if(debtor!=null){
+
+								if(debtor.getName()!=null)
+								{
+									newText=debtor.getName();
+								}
+								else
+								{
+									newText="";
+								}
+							}
+							break;
+
+							// debtor chief
+						case 34:
+							run.getParagraph().setAlignment(ParagraphAlignment.LEFT);
+							if(person!=null){
+
+								if(person.getName()!=null)
+								{
+									newText=person.getName();
+								}
+								else
+								{
+									newText="";
+								}
+							}
+							else
+							{
+								newText = "";
+							}
+							break;
+
+							// date of loan
+						case 35:
+							if(loan!=null){
+
+								newText=DateToString(loan.getRegDate())+"ж.";
+
+								break;
+							}
+
+							// number of loan
+						case 36:
+							if(loan!=null){
+								newText=loan.getRegNumber();
+								break;
+							}
+
+
+							// amount of loan
+						case 37:
+							if(loan!=null){
+								newText=FormatNumber(loan.getAmount());
+								break;
+							}
+
+							// last date of loan
+						case 38:
+							if(loan!=null)
+							{
+								if(loan.getLastDate()!=null)
+								{
+									newText=DateToString(loan.getLastDate())+"ж. на";
+								}
+								else
+								{
+									newText="";
+								}
+
+								break;
+							}
+
+							// name of staff
+						case 39:
+							if(staff!=null)
+							{
+								if(staff.getName()!=null)
+								{
+
+									String[] splitted=staff.getName().split(" ");
+									String words="";
+
+									if(splitted.length==3)
+									{
+										words=splitted[1].substring(0,1)+". "+splitted[0];
+									}
+									else if (splitted.length==2)
+									{
+										words=splitted[1].substring(0,1)+". "+splitted[0];
+									}
+									else
+									{
+										words=staff.getName();
+									}
+
+									newText=words;
+
+								}
+
+								break;
+							}
+
+						case 40:
+							if(contact!=null)
+							{
+								if(contact.getName()!=null)
+								{
+									newText=contact.getName();
+								}
+								else
+								{
+									newText="";
+								}
+
+								break;
+							}
+
+					}
+
+					oldText = "(="+varIdString+"=)";
+
+					if(text.contains(oldText))
+					{
+						text = text.replace(oldText,newText);
+					}
+
+					run.setText(text, 0);
+				}
+				catch (Exception ex)
+				{
+					System.out.println(ex);
+				}
 
 
 
 
+			}
+
+			if(text.contains("(="))
+			{
+				replace(run,user,staff,person,identityDoc);
+			}
+
+
+		}
+		catch (Exception ex)
+		{
+			System.out.println(ex);
+
+		}
+
+	}
+
+	public String DateToString(Date date)
+	{
+
+		SimpleDateFormat DateFormatShort = new SimpleDateFormat("dd.MM.yyyy");
+
+		if(date == null)
+			return "";
+		else
+			return DateFormatShort.format(date);
+	}
+
+	public String FormatNumber(double number)
+	{
+		DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+		symbols.setDecimalSeparator(',');
+		symbols.setGroupingSeparator(' ');
+
+		String pattern = ",##0.00";
+		DecimalFormat decimalFormat = new DecimalFormat(pattern, symbols);
+
+		return decimalFormat.format(number);
 	}
 
 	private void writetable(XWPFTable tbl){
@@ -1055,6 +1437,8 @@ public class PrintoutTemplateController {
 		cell.getParagraphs().get(0).getRuns().get(0).setText("200 000,00",0);
 
     }
+
+
 	private void replace(XWPFRun run,User user,Staff staff,Person person,IdentityDoc identityDoc)
 	{
 		String text = run.getText(0);
@@ -1222,7 +1606,105 @@ public class PrintoutTemplateController {
                         case 22:
                             if(person.getContact()!=null){
                                 newText=person.getContact().getName();
+                                break;
                             }
+
+
+                            // region name
+						case 30:
+
+							run.getParagraph().setAlignment(ParagraphAlignment.LEFT);
+							if(person.getAddress()!=null){
+
+								if(address.getRegion().getName().contains("г."))
+								{
+									newText=address.getRegion().getName().replace("г.", "");
+									newText=newText.concat(" ш.");
+								}
+								else
+								{
+									newText=address.getRegion().getName().replace("ская","");
+									newText=newText.concat(" облусу");
+								}
+							}
+							break;
+
+
+						// district name
+						case 31:
+							if(person.getContact()!=null)
+							{
+								newText=person.getContact().getName();
+								break;
+							}
+
+							// address line
+						case 32:
+							if(person.getContact()!=null){
+								newText=person.getContact().getName();
+								break;
+							}
+
+							// debtor name
+						case 33:
+							if(person.getContact()!=null){
+								newText=person.getContact().getName();
+								break;
+							}
+
+							// debtor chief
+						case 34:
+							if(person.getContact()!=null){
+								newText=person.getContact().getName();
+								break;
+							}
+
+							// date of loan
+						case 35:
+							if(person.getContact()!=null){
+								newText=person.getContact().getName();
+								break;
+							}
+
+							// number of loan
+						case 36:
+							if(person.getContact()!=null){
+								newText=person.getContact().getName();
+								break;
+							}
+
+
+							// amount of loan
+						case 37:
+							if(person.getContact()!=null){
+								newText=person.getContact().getName();
+								break;
+							}
+
+							// last fate of loan
+						case 38:
+							if(person.getContact()!=null){
+								newText=person.getContact().getName();
+								break;
+							}
+
+							// name of staff
+						case 39:
+							if(person.getContact()!=null){
+								newText=person.getContact().getName();
+								break;
+							}
+
+
+
+
+
+
+
+
+
+
+
 
 
 					}

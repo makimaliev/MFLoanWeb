@@ -865,11 +865,20 @@
 															Претензия
 														</button>
 
+															<button sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLECTIONPHASE')" class="btn btn-sm btn-accent m-1" type="button" id="bnt_init_">
+																Претензия
+															</button>
+
 														<form th:action="@{/printoutTemplate/1/objectId/__${loan.id}__/generate}">
 															<input hidden="hidden" name="date" id="generatesDate">
 															<input hidden="hidden" name="name" value="loanId">
 															<button class="btn btn-sm btn-accent m-1" type="submit">Реестр погашений</button>
 														</form>
+
+															<form th:action="@{/printout/1/loanId/__${loan.id}__/generate}">
+																<input hidden="hidden" name="name" value="loanId">
+																<button class="btn btn-sm btn-accent m-1" type="submit">Уведомление</button>
+															</form>
 
 														<form id="checkedLoans" th:action="@{/manage/debtor/__${debtor.id}__/loan/summary/view}" method="get">
 															<input hidden="hidden" type="text" name="name" id="selectedLoanses">
