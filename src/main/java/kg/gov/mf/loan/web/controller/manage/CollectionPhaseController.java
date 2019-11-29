@@ -16,18 +16,20 @@ import kg.gov.mf.loan.admin.sys.service.InformationService;
 import kg.gov.mf.loan.admin.sys.service.SystemFileService;
 import kg.gov.mf.loan.admin.sys.service.UserService;
 import kg.gov.mf.loan.manage.model.collection.*;
-import kg.gov.mf.loan.manage.model.debtor.Debtor;
-import kg.gov.mf.loan.manage.model.debtor.Owner;
-import kg.gov.mf.loan.manage.model.debtor.OwnerType;
+import kg.gov.mf.loan.manage.model.debtor.*;
 import kg.gov.mf.loan.manage.model.loan.Loan;
+import kg.gov.mf.loan.manage.model.loan.LoanFinGroup;
 import kg.gov.mf.loan.manage.model.loan.Payment;
 import kg.gov.mf.loan.manage.model.loan.PaymentSchedule;
 import kg.gov.mf.loan.manage.model.process.LoanDetailedSummary;
 import kg.gov.mf.loan.manage.model.process.LoanSummary;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.service.collection.*;
+import kg.gov.mf.loan.manage.service.debtor.DebtorGroupService;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
+import kg.gov.mf.loan.manage.service.debtor.DebtorSubGroupService;
 import kg.gov.mf.loan.manage.service.debtor.OwnerService;
+import kg.gov.mf.loan.manage.service.loan.LoanFinGroupService;
 import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.manage.service.loan.PaymentService;
 import kg.gov.mf.loan.manage.service.orderterm.CurrencyRateService;
@@ -73,7 +75,7 @@ public class CollectionPhaseController {
 	CollectionProcedureService procService;
 
 	@Autowired
-	ProcedureStatusService procedureStatusService;
+	ProcedureStatusService procedureStatusService;/**/
 
 	@Autowired
 	ProcedureTypeService procedureTypeService;
@@ -174,6 +176,17 @@ public class CollectionPhaseController {
 
 	@Autowired
 	CollectionPhaseViewService collectionPhaseViewService;
+
+	@Autowired
+	DebtorGroupService debtorGroupService;
+
+	@Autowired
+	DebtorSubGroupService debtorSubGroupService;
+
+	@Autowired
+	LoanFinGroupService loanFinGroupService;
+
+
 	//endregion
 
 
@@ -271,6 +284,37 @@ public class CollectionPhaseController {
 				model.addAttribute("accept", 0);
 			}
 		}
+		else
+			{
+				model.addAttribute("accept", 0);
+			}
+
+			if(phase.getDepartment_id()==departmentId || (phase.getPhaseType().getId()==13 && departmentId == 10 ) || (phase.getDepartment_id()==null))
+			{
+				if((departmentId==9 && procedure.getProcedureStatus().getId() == 8)
+						||(departmentId==10 && procedure.getProcedureStatus().getId() == 7)
+						||(departmentId==7 && procedure.getProcedureStatus().getId() == 10))
+				{
+					model.addAttribute("modifyPermission", 1);
+				}
+				else if((departmentId == 4 || departmentId == 5 || departmentId == 6 || departmentId == 16) && procedure.getProcedureStatus().getId() == 9)
+				{
+					model.addAttribute("modifyPermission", 1);
+				}
+				else
+				{
+					model.addAttribute("modifyPermission", 0);
+				}
+
+
+
+			}
+			else
+			{
+				model.addAttribute("modifyPermission", 0);
+			}
+
+
 
 
 		return "/manage/debtor/collectionprocedure/collectionphase/view";
@@ -1017,6 +1061,10 @@ public class CollectionPhaseController {
 				procedure.setStatusDepartmentId(6L);
 				procedure.setProcedureStatus(newProcStatus);
 			}
+			else if(newProcStatus.getId() == 2)
+				{
+					procedure.setProcedureStatus(newProcStatus);
+				}
 		}
 		procService.update(procedure);
 
@@ -1031,7 +1079,7 @@ public class CollectionPhaseController {
 		procedure.setProcedureStatus(procedureStatus);
 		procedure.setStatusDepartmentId(0L);
 		procService.update(procedure);
-		changeDebtorGroupAndSubGroup(debtorId,procStatusId);
+		changeDebtorGroupAndSubGroup(debtorId,procStatusId,procedure);
 
 		return "redirect:/manage/debtor/{debtorId}/collectionprocedure/{procId}/collectionphase/{phaseId}/view";
 	}
@@ -2327,7 +2375,117 @@ public class CollectionPhaseController {
     }
 
     //debtor group
-    private void changeDebtorGroupAndSubGroup(Long debtorId, Long procedureStatusId){
+    private void changeDebtorGroupAndSubGroup(Long debtorId, Long procedureStatusId, CollectionProcedure procedure){
+
+		Debtor debtor = debtorService.getById(debtorId);
+
+		if(procedureStatusId ==7)
+		{
+			DebtorGroup group = debtorGroupService.getById(2L);
+			DebtorSubGroup subGroup = debtorSubGroupService.getById(4L);
+
+			debtor.setDebtorGroup(group);
+			debtor.setDebtorSubGroup(subGroup);
+
+			debtorService.update(debtor);
+
+			CollectionPhase phase = phaseService.getById(procedure.getLastPhase());
+
+			for (PhaseDetails phaseDetails: phase.getPhaseDetails())
+			{
+				Loan loan = loanService.getById(phaseDetails.getLoan_id());
+
+				LoanFinGroup loanGroup = loanFinGroupService.getById(18L);
+
+				loan.setLoanFinGroup(loanGroup);
+
+				loanService.update(loan);
+			}
+
+
+		}
+
+
+		if(procedureStatusId ==8)
+		{
+			DebtorGroup group = debtorGroupService.getById(2L);
+			DebtorSubGroup subGroup = debtorSubGroupService.getById(3L);
+
+			debtor.setDebtorGroup(group);
+			debtor.setDebtorSubGroup(subGroup);
+
+			debtorService.update(debtor);
+
+			CollectionPhase phase = phaseService.getById(procedure.getLastPhase());
+
+			for (PhaseDetails phaseDetails: phase.getPhaseDetails())
+			{
+				Loan loan = loanService.getById(phaseDetails.getLoan_id());
+
+				LoanFinGroup loanGroup = loanFinGroupService.getById(17L);
+
+				loan.setLoanFinGroup(loanGroup);
+
+				loanService.update(loan);
+			}
+
+
+		}
+
+
+		if(procedureStatusId ==9)
+		{
+			DebtorGroup group = debtorGroupService.getById(1L);
+			DebtorSubGroup subGroup = debtorSubGroupService.getById(2L);
+
+			debtor.setDebtorGroup(group);
+			debtor.setDebtorSubGroup(subGroup);
+
+			debtorService.update(debtor);
+
+			CollectionPhase phase = phaseService.getById(procedure.getLastPhase());
+
+			for (PhaseDetails phaseDetails: phase.getPhaseDetails())
+			{
+				Loan loan = loanService.getById(phaseDetails.getLoan_id());
+
+				LoanFinGroup loanGroup = loanFinGroupService.getById(3L);
+
+				loan.setLoanFinGroup(loanGroup);
+
+				loanService.update(loan);
+			}
+		}
+
+
+		if(procedureStatusId ==10)
+		{
+			DebtorGroup group = debtorGroupService.getById(2L);
+			DebtorSubGroup subGroup = debtorSubGroupService.getById(5L);
+
+			debtor.setDebtorGroup(group);
+			debtor.setDebtorSubGroup(subGroup);
+
+			debtorService.update(debtor);
+
+			CollectionPhase phase = phaseService.getById(procedure.getLastPhase());
+
+			for (PhaseDetails phaseDetails: phase.getPhaseDetails())
+			{
+				Loan loan = loanService.getById(phaseDetails.getLoan_id());
+
+				LoanFinGroup loanGroup = loanFinGroupService.getById(20L);
+
+				loan.setLoanFinGroup(loanGroup);
+
+				loanService.update(loan);
+			}
+		}
+
+
+
+
+
 
 	}
 

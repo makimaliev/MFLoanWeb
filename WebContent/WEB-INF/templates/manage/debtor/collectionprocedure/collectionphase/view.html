@@ -119,14 +119,14 @@
 													<span th:text="#{label.accept}"></span>
 												</span>
 											</a>
-											<a th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phase.id}__/save}" class="btn btn-outline-danger" title="Редактировать">
+											<a th:if="${modifyPermission}!=0" th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phase.id}__/save}" class="btn btn-outline-danger" title="Редактировать">
 												<span>
 													<i class="la la-edit"></i>
 													<span th:text="#{label.table.edit}"></span>
 												</span>
 											</a>
 
-											<a th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phase.id}__/changeStatus}" class="btn btn-sm btn-accent" title="Изменить статус">
+											<a th:if="${modifyPermission}!=0" th:href="@{/manage/debtor/__${debtorId}__/collectionprocedure/__${procId}__/collectionphase/__${phase.id}__/changeStatus}" class="btn btn-sm btn-accent" title="Изменить статус">
 												<span>
 													<i class="la la-edit"></i>
 													<span th:text="#{label.collection.phase.change.status}"></span>
@@ -142,10 +142,11 @@
 													<span >Доо талап</span>
 												</span>
                                             </a>
-											<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLECTIONPHASE')" data-remote="false" data-toggle="modal"
+											<a th:if="${modifyPermission}!=0" sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLECTIONPHASE')" data-remote="false" data-toggle="modal"
 											   data-target="#confirmModal" role="button" class="btn btn-outline-danger" th:text="#{label.phase.changeRecord}"></a>
-											<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLECTIONPHASE')" data-remote="false" data-toggle="modal"
-											   data-target="#fromDate" role="button" class="btn btn-outline-success" th:text="#{label.phase.setPaymentFromDate}"></a>
+
+											<!--<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_COLLECTIONPHASE')" data-remote="false" data-toggle="modal"-->
+											   <!--data-target="#fromDate" role="button" class="btn btn-outline-success" th:text="#{label.phase.setPaymentFromDate}"></a>-->
 											<div class="modal fade" id="confirmModal" tabindex="-1"
 												 role="dialog" aria-labelledby="myModalLabel"
 												 aria-hidden="true">
