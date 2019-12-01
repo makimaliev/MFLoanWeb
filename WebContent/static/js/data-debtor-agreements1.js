@@ -65,6 +65,15 @@ var DatatableDataLocalAgreements = function () {
 					';
                 }
             },{
+                field: "num_of_loans",
+                title: "Кредиты",
+                template: function (row) {
+
+                    return '\
+						<a href="/manage/debtor/'+ debtorId + '/collateralagreement/' + row.id + '/view">'+row.num_of_loans+'</a>\
+					';
+                }
+            }, {
                 field: "agreementDate",
                 title: "Дата"
             }, {

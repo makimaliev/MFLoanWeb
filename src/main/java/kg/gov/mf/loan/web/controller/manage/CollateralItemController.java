@@ -159,6 +159,7 @@ public class CollateralItemController {
 		String jsonFiles= gson.toJson(getSystemFilesByItemId(itemId));
 		model.addAttribute("files", jsonFiles);
 
+		model.addAttribute("arrest", tItem.getCollateralItemArrestFree() == null);
         String ownerName= "-";
         String organizationName = "-";
 

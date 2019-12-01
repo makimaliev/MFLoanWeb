@@ -119,6 +119,13 @@ var DatatableDataLocalLoans = function () {
                     return (row.amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
                 }
             },{
+                field: "remainder",
+                title: "Остаток",
+                width: 120,
+                template: function (row) {
+                    return (row.remainder).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+                }
+            },{
                 field: "currencyName",
                 title: "Валюта",
                 width: 70
