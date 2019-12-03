@@ -2350,7 +2350,7 @@ public class CollectionPhaseController {
         for(Loan loan:phase.getLoans()){
             loanIds=loanIds+loan.getId()+",";
         }
-        String getTotalPaidQuery="select sum(p.totalAmount)\n" +
+        String getTotalPaidQuery="select IFNULL(sum(p.totalAmount),0.0)\n" +
                 "from payment p where p.record_status=1 and loanId in ("+loanIds.substring(0,loanIds.length()-1)+") and p.paymentDate between '"+dateFormat.format(fromDate)+"' and '"+dateFormat.format(toDate)+"'";
         Query query=entityManager.createNativeQuery(getTotalPaidQuery);
         Double paidOfPhase= (Double) query.getSingleResult();

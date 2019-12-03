@@ -18,15 +18,15 @@
                 <span th:text="#{label.debtorGroups}"></span>
                 <span class="m--font-danger">*</span>
             </label>
-            <div class="col-lg-4 col-md-9 col-sm-12">
-                <select id="debtorGroup" required="required " oninvalid="showNotEmptyMessage(this)" onchange="deleteMessage(this)" class="form-control m-bootstrap-select m_selectpicker" th:field="${debtor.debtorGroup.id}" th:title="#{label.select}">
+            <div class="col-lg-8 col-md-9 col-sm-12">
+                <select id="debtorGroup" required="required " oninvalid="showNotEmptyMessage(this)" onchange="deleteMessage(this)" class="form-control m-bootstrap-select m_selectpicker" th:field="${debtor.debtorSubGroup.id}" th:title="#{label.select}">
                     <option value="0" th:text="#{label.select}"></option>
-                    <option th:each="type : ${groupList}" th:value="${type.id}" th:text="${type.name}" ></option>
+                    <option th:each="type : ${subGroupList}" th:value="${type.id}" th:text="${type.name}" ></option>
                 </select>
             </div>
         </div>
-        <input type="text" hidden="hidden" id="smth" name="debtorSubGroupId">
-        <div id="subGroup"></div>
+        <!--<input type="text" hidden="hidden" id="smth" name="debtorSubGroupId">
+        <div id="subGroup"></div>-->
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.role.button.cancel}"></button>
@@ -42,7 +42,7 @@
             d.setCustomValidity("");
         }
 
-        function doUpdate() {
+        /*function doUpdate() {
             var id=$("#debtorGroup").val();
             var urlStr = "/debtor/"+debtorId+"/debtorGroup/"+id+"/getDebtorSubGroups";
 
@@ -61,6 +61,6 @@
 
         function saveSub() {
             $("#smth").val(subId);
-        }
+        }*/
     </script>
 </form>

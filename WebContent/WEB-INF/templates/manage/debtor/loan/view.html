@@ -2182,7 +2182,7 @@
 				sumOfPInterest=0;
                 jsonPayments=data;
                 var norm=JSON.parse(jsonPayments);
-                $.getScript("/js/data-debtor-loan-payments.js");
+                $.getScript("/js/data-debtor-loan-payments1.js");
                 for(var i in norm){
 					if(norm[i].record_status==1){
 						sumOfPTotal=sumOfPTotal+parseFloat(norm[i].totalAmount);
@@ -2205,7 +2205,7 @@
             url: '/loanSummaryRequest/'+loanId,
             success:function (data) {
                 jsonSummaries=data;
-                $.getScript("/js/data-debtor-loan-summaries.js");
+                $.getScript("/js/data-debtor-loan-summaries1.js");
             }
         });
     });
@@ -2225,7 +2225,7 @@
             url: '/supervisorPlanRequest/'+loanId,
             success:function (data) {
                 jsonSPs=data;
-                $.getScript("/js/data-debtor-loan-supervisorPlans1.js");
+                $.getScript("/js/data-debtor-loan-supervisorPlans2.js");
             }
         });
     });

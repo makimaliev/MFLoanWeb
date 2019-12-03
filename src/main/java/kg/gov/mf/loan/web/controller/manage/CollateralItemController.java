@@ -363,6 +363,12 @@ public class CollateralItemController {
 						itemDetails.setExplDate(new SimpleDateFormat("dd.MM.yyyy", new Locale("ru", "RU")).parse(expl_date));
 					}
 				}
+				CollateralItem oldItem = itemService.getById(item.getId());
+
+				item.setCondition_sub_type(oldItem.getCondition_sub_type());
+				item.setConditionType(oldItem.getConditionType());
+				item.setArrestFreeStatus(oldItem.getArrestFreeStatus());
+				item.setInspectionStatus(oldItem.getInspectionStatus());
 
 				itemService.update(item);
 			}

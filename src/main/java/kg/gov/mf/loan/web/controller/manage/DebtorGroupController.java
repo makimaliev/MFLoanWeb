@@ -72,13 +72,9 @@ public class DebtorGroupController {
 
         Debtor debtor = debtorService.getById(debtorId);
 
-        List<DebtorGroup> debtorGroupList = debtorGroupService.list();
         List<DebtorSubGroup> debtorSubGroupList= debtorSubGroupService.list();
 
-        model.addAttribute("groupList",debtorGroupList);
         model.addAttribute("subGroupList",debtorSubGroupList);
-
-        DebtorGroup debtorGroup = debtor.getDebtorGroup();
 
         model.addAttribute("debtor",debtor);
 
@@ -90,11 +86,14 @@ public class DebtorGroupController {
 
         Debtor realDebtor = debtorService.getById(debtorId);
 
-        realDebtor.setDebtorGroup(debtor.getDebtorGroup());
+        DebtorSubGroup debtorSubGroup = debtorSubGroupService.getById(debtor.getDebtorSubGroup().getId());
+        DebtorGroup debtorGroup = debtorGroupService.getById(debtorSubGroup.getDebtorGroup().getId());
+        realDebtor.setDebtorGroup(debtorGroup);
+        realDebtor.setDebtorSubGroup(debtorSubGroup);
 
         debtorService.update(realDebtor);
 
-        return "redirect:/manage/debtor/{debtorId}/view";
+            return "redirect:/manage/debtor/{debtorId}/view";
     }
 
     @GetMapping("/debtor/{debtorId}/debtorGroup/{debtorGroupId}/getDebtorSubGroups")

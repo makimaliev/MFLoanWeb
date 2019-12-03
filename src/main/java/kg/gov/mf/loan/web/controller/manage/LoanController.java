@@ -1659,35 +1659,40 @@ public class LoanController {
                 result.add(model);
             }
         }
-        LoanSummary d=loanSummaryService.getLastByLoanSummaryType("DAILY",loanId);
-        LoanSummaryModel model = new LoanSummaryModel();
-        model.setId(d.getId());
-        model.setOnDate(d.getOnDate());
-        model.setLoanAmount(d.getLoanAmount());
-        model.setTotalDisbursed(d.getTotalDisbursed());
-        model.setTotalPaid(d.getTotalPaid());
-        model.setPaidPrincipal(d.getPaidPrincipal());
-        model.setPaidInterest(d.getPaidInterest());
-        model.setPaidPenalty(d.getPaidPenalty());
-        model.setPaidFee(d.getPaidFee());
-        model.setTotalOutstanding(d.getTotalOutstanding());
-        model.setOutstadingPrincipal(d.getOutstadingPrincipal());
-        model.setOutstadingInterest(d.getOutstadingInterest());
-        model.setOutstadingPenalty(d.getOutstadingPenalty());
-        model.setOutstadingFee(d.getOutstadingFee());
-        model.setTotalOverdue(d.getTotalOverdue());
-        model.setOverduePrincipal(d.getOverduePrincipal());
-        model.setOverdueInterest(d.getOverdueInterest());
-        model.setOverduePenalty(d.getOverduePenalty());
-        model.setOverdueFee(d.getOverdueFee());
-        model.setTotalPrincipalPaid(d.getTotalPrincipalPaid());
-        model.setTotalInterestPaid(d.getTotalInterestPaid());
-        model.setTotalPenaltyPaid(d.getTotalPenaltyPaid());
-        model.setTotalFeePaid(d.getTotalFeePaid());
-        model.setLoanSummaryType(d.getLoanSummaryType());
-        model.setRecord_status(d.getRecord_status());
+        try{
+            LoanSummary d=loanSummaryService.getLastByLoanSummaryType("DAILY",loanId);
+            LoanSummaryModel model = new LoanSummaryModel();
+            model.setId(d.getId());
+            model.setOnDate(d.getOnDate());
+            model.setLoanAmount(d.getLoanAmount());
+            model.setTotalDisbursed(d.getTotalDisbursed());
+            model.setTotalPaid(d.getTotalPaid());
+            model.setPaidPrincipal(d.getPaidPrincipal());
+            model.setPaidInterest(d.getPaidInterest());
+            model.setPaidPenalty(d.getPaidPenalty());
+            model.setPaidFee(d.getPaidFee());
+            model.setTotalOutstanding(d.getTotalOutstanding());
+            model.setOutstadingPrincipal(d.getOutstadingPrincipal());
+            model.setOutstadingInterest(d.getOutstadingInterest());
+            model.setOutstadingPenalty(d.getOutstadingPenalty());
+            model.setOutstadingFee(d.getOutstadingFee());
+            model.setTotalOverdue(d.getTotalOverdue());
+            model.setOverduePrincipal(d.getOverduePrincipal());
+            model.setOverdueInterest(d.getOverdueInterest());
+            model.setOverduePenalty(d.getOverduePenalty());
+            model.setOverdueFee(d.getOverdueFee());
+            model.setTotalPrincipalPaid(d.getTotalPrincipalPaid());
+            model.setTotalInterestPaid(d.getTotalInterestPaid());
+            model.setTotalPenaltyPaid(d.getTotalPenaltyPaid());
+            model.setTotalFeePaid(d.getTotalFeePaid());
+            model.setLoanSummaryType(d.getLoanSummaryType());
+            model.setRecord_status(d.getRecord_status());
 
-        result.add(model);
+            result.add(model);
+        }
+        catch (Exception e){
+            System.out.println("NO DAILY LOANSUMMARIES");
+        }
 
 
         Collections.sort(result);
