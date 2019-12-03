@@ -135,14 +135,14 @@ public class HomeController {
     @RequestMapping("/doSecondMigrationTool/{loanId}")
     public String doSecondMigrationtool(@PathVariable("loanId") Long loanId){
         SecondMigrationTool secondMigrationTool=new SecondMigrationTool();
-        secondMigrationTool.loanMigrate(loanId,"150.0.0.89","migration2019","postgres","armad27raptor");
+        secondMigrationTool.loanMigrate(loanId,"150.0.0.89","migration_test","postgres","armad27raptor");
         return "index";
     }
 
     @RequestMapping("/migrate/loan/fields")
     public String loanFieldsMigrate(){
         LoanFieldsMigration loanFieldsMigration=new LoanFieldsMigration();
-        loanFieldsMigration.migrateLoanField("150.0.0.89","migration2019","postgres","armad27raptor");
+        loanFieldsMigration.migrateLoanField("150.0.0.89","migration_test","postgres","armad27raptor");
         return "index";
     }
 
