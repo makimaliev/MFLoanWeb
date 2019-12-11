@@ -812,7 +812,7 @@ public class CollectionPhaseController {
 				updatePaidOfPhase(phase);
 				phaseDetailsLists.remove(Utils.getPrincipal());
 			}
-			else {
+			else if(phase.getId() > 0){
 				CollectionPhase oldPhase = phaseService.getById(phase.getId());
 
 				phase.setPhaseStatus(oldPhase.getPhaseStatus());
@@ -2494,7 +2494,7 @@ public class CollectionPhaseController {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		String baseQuery = "select count(1)\n" +
-				"from collectionPhase p where collectionProcedureId="+procedureId+ " and p.startDate = "+format.format(phaseDate)+" and p.record_status=1";
+				"from collectionPhase p where collectionProcedureId="+procedureId+ " and p.startDate = '"+format.format(phaseDate)+"' and p.record_status=1";
 		Query query = entityManager.createNativeQuery(baseQuery);
 
         BigInteger count = (BigInteger) query.getResultList().get(0);
