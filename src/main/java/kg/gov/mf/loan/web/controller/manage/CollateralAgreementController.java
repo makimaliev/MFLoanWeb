@@ -40,10 +40,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -53,6 +50,8 @@ import java.util.*;
 
 @Controller
 public class CollateralAgreementController {
+
+	//region services
 	
 	@Autowired
 	CollateralAgreementService agreementService;
@@ -98,6 +97,8 @@ public class CollateralAgreementController {
 
 	@Autowired
 	CollateralItemArrestFreeService collateralItemArrestFreeService;
+
+	//endregion
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder)
@@ -504,7 +505,33 @@ public class CollateralAgreementController {
 
         return value;
     }
-	
+
+
+
+//  ******************************************************************************************************************
+//	REST
+//  ******************************************************************************************************************
+
+//	search agreements by agreementNumber
+	@GetMapping("/api/agreements/search")
+	@ResponseBody
+	public String[] searchByAgreementNum(@RequestParam(value = "q") String q){
+		String searchStr = "select *\n" +
+				"from collateralAgreement where agreementNumber like '%"+q+"%'";
+
+		Query query = entityManager.createNativeQuery(searchStr,CollateralAgreement.class);
+		List<CollateralAgreement> agreementList = query.getResultList();
+
+		String[] result = new String[agreementList.size()];
+		int i=0;
+		for(CollateralAgreement agreement : agreementList){
+			result[i++] = "[" + agreement.getId() + "] "
+					+ agreement.getAgreementNumber();
+		}
+		return result;
+	}
+
+
 	/*
 	@RequestMapping(value = { "/manage/collateral/{collateralId}/collateralagreement/{agreementId}/inspection/save"})
     public String saveCollateralInspection(CollateralInspection inspection, @PathVariable("collateralId")Long collateralId, @PathVariable("agreementId")Long agreementId)

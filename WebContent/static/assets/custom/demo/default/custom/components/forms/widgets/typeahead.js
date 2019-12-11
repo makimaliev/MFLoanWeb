@@ -160,6 +160,30 @@ var Typeahead = function() {
             });
     }
 
+    var demo6 = function() {
+        // constructs the suggestion engine
+        var bloodhound = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            // `states` is an array of state names defined in "The Basics"
+            //local: states
+            remote:{
+                url: '/api/agreements/search?q=%QUERY',
+                wildcard: '%QUERY'
+            }
+        });
+
+        $('#agreement_typeahead').typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 1
+            },
+            {
+                name: 'agreements',
+                source: bloodhound
+            });
+    }
+
     return {
         // public functions
         init: function() {
@@ -168,6 +192,7 @@ var Typeahead = function() {
             demo3();
             demo4();
             demo5();
+            demo6();
         }
     };
 }();

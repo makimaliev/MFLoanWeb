@@ -48,6 +48,7 @@ public class CollateralAgreementModel implements Comparable<CollateralAgreementM
     private Double collateralValue;
     private int status;
     private int num_of_loans;
+    private double remaining;
 
     @Override
     public int compareTo(CollateralAgreementModel model)
@@ -223,5 +224,13 @@ public class CollateralAgreementModel implements Comparable<CollateralAgreementM
 
     public void setNum_of_loans(int num_of_loans) {
         this.num_of_loans = num_of_loans;
+    }
+
+    public double getRemaining() {
+        return remaining;
+    }
+
+    public void setRemaining(double remaining) {
+        this.remaining = remaining;
     }
 }

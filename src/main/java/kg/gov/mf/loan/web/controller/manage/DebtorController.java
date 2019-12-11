@@ -1225,6 +1225,48 @@ public class DebtorController {
 		return "redirect:/manage/debtor/{id}/view";
 }
 
+//	choose existing agreement for debtor and select loans
+	@GetMapping("/manage/debtor/{debtorId}/collateralagreement/link")
+	public String linkAgreementToDebtor(@PathVariable Long debtorId,Model model){
+
+		Debtor debtor = debtorService.getById(debtorId);
+		List<Loan> loanList = new ArrayList<>();
+		for (Loan loan : debtor.getLoans()){
+			Loan realLoan = loanService.getById(loan.getId());
+			loanList.add(realLoan);
+		}
+
+		model.addAttribute("tLoans",loanList);
+		model.addAttribute("debtorId",debtorId);
+		model.addAttribute("agreementText","");
+
+
+		return "/manage/debtor/collateralAgreementLinkForm";
+	}
+
+	@PostMapping("/manage/debtor/{debtorId}/collateralagreement/link")
+	public String linkAgreement(@PathVariable Long debtorId,Long agreementId, String[] loanses){
+
+        Set<Loan> loanSet = new HashSet<>();
+        for (String l : loanses) {
+            loanSet.add(loanService.getById(Long.valueOf(l)));
+        }
+
+        CollateralAgreement collateralAgreement = collateralAgreementService.getById(agreementId);
+        for (Loan loan : collateralAgreement.getLoans()){
+            Loan realLoan = loanService.getById(loan.getId());
+            if (realLoan.getDebtor().getId() != debtorId){
+                loanSet.add(realLoan);
+            }
+        }
+
+        collateralAgreement.setLoans(loanSet);
+
+        collateralAgreementService.update(collateralAgreement);
+
+		return "redirect:/manage/debtor/{debtorId}/view";
+	}
+
 	public void runUpdateOfPhases(Loan loan){
 
 
@@ -1352,10 +1394,23 @@ public class DebtorController {
         {
         	Loan loan=loanService.getById(loan1.getId());
             Set<CollateralAgreement> agreements = loan.getCollateralAgreements();
+
             for(CollateralAgreement agreement1: agreements)
             {
 				CollateralAgreement agreement=collateralAgreementService.getById(agreement1.getId());
                 List<CollateralItem> items = collateralItemReposiory.findByCollateralAgreementId(agreement.getId());
+
+				Double remainder = 0.0;
+                for (Loan loan2: agreement.getLoans()){
+					Double value = getRemainingOfLoan(loan2.getId());
+					if(value == -777.0){
+						remainder = -777.0;
+					}
+					else if(remainder != -777.0){
+						remainder = remainder + value;
+					}
+				}
+
                 for(CollateralItem item1: items)
                 {
 					CollateralItem item=collateralItemService.getById(item1.getId());
@@ -1381,6 +1436,7 @@ public class DebtorController {
                     model.setCollateralValue(item.getCollateralValue());
                     model.setStatus(item.getStatus());
                     model.setNum_of_loans(agreement.getLoans().size());
+                    model.setRemaining(remainder);
 
                     if(!models.containsKey(model.getItemId()))
                         models.put(model.getItemId(), model);
@@ -1503,5 +1559,21 @@ public class DebtorController {
 		return count.intValue();
 
 	}
+
+	private Double getRemainingOfLoan(Long loanId){
+
+	    String queryStr = "select totalOutstanding\n" +
+                "from loanSummary where loanSummaryType='DAILY' " +
+                "and onDate =CURRENT_DATE and loanId="+loanId;
+
+	    Query query = entityManager.createNativeQuery(queryStr);
+	    try{
+			Double result = (Double) query.getResultList().get(0);
+			return result;
+		}
+	    catch (Exception e){
+	    	return -777.0;
+		}
+    }
 
 }
