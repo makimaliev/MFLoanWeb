@@ -162,9 +162,9 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input required="required " oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)" type="text" class="form-control m-input" name="estimatedValue">
+										<input th:value="${#numbers.formatDecimal(item.estimatedValue,1,2,'POINT')}" required="required " oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)" type="text" class="form-control m-input" name="estimatedValue">
 									</div>
-									<!--th:value="${#numbers.formatDecimal(item.estimatedValue,1,2,'POINT')}-->
+
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
@@ -172,9 +172,8 @@
 										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<input required="required " oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)" type="text" class="form-control m-input" name="collateralValue" >
+										<input th:value="${#numbers.formatDecimal(item.collateralValue,1,2,'POINT')}" required="required " oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)" type="text" class="form-control m-input" name="collateralValue" >
 									</div>
-									<!--th:value="${#numbers.formatDecimal(item.collateralValue,1,2,'POINT')}"-->
 								</div>
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.item.organization}">
