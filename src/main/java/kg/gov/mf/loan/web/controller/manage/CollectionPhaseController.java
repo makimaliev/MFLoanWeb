@@ -590,7 +590,7 @@ public class CollectionPhaseController {
 
             CollectionProcedure procedure = new CollectionProcedure();
             procedure.setStartDate(startDate);
-            procedure.setProcedureStatus(procedureStatusService.getById(1L));
+            procedure.setProcedureStatus(procedureStatusService.getById(9L));
             procedure.setProcedureType(procedureTypeService.getById(1L));
             procService.add(procedure);
             result=String.valueOf(procedure.getId());
