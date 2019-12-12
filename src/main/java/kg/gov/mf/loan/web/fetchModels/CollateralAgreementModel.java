@@ -46,6 +46,7 @@ public class CollateralAgreementModel implements Comparable<CollateralAgreementM
     private long quantityTypeId;
     private String quantityTypeName;
     private Double collateralValue;
+    private Double estimatedValue=0.0;
     private int status;
     private int num_of_loans;
     private double remaining;
@@ -208,6 +209,14 @@ public class CollateralAgreementModel implements Comparable<CollateralAgreementM
 
     public void setCollateralValue(Double collateralValue) {
         this.collateralValue = collateralValue;
+    }
+
+    public Double getEstimatedValue() {
+        return estimatedValue;
+    }
+
+    public void setEstimatedValue(Double estimatedValue) {
+        this.estimatedValue = estimatedValue;
     }
 
     public int getStatus() {

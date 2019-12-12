@@ -1753,7 +1753,7 @@ public class PrintoutTemplateController {
 
 
 		try{
-			Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+			Gson gson = new GsonBuilder().setDateFormat("yyyy.MM.dd").create();
 
 			Type type = new TypeToken<List<PaymentScheduleModel>>(){}.getType();
 			List<PaymentScheduleModel> result = gson.fromJson(paymentSchedules, type);

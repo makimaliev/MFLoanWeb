@@ -363,6 +363,9 @@ public class DebtorController {
 				oldDebtor.setOrgForm(formService.getById(1L));
 			else
 				oldDebtor.setOrgForm(formService.getById(2L));
+
+			WorkSector workSector = workSectorService.getById(debtor.getWorkSector().getId());
+			oldDebtor.setWorkSector(workSector);
 			debtorService.update(oldDebtor);
 		}
 
@@ -1437,6 +1440,7 @@ public class DebtorController {
                     model.setStatus(item.getStatus());
                     model.setNum_of_loans(agreement.getLoans().size());
                     model.setRemaining(remainder);
+                    model.setEstimatedValue(item.getEstimatedValue());
 
                     if(!models.containsKey(model.getItemId()))
                         models.put(model.getItemId(), model);
@@ -1465,7 +1469,7 @@ public class DebtorController {
 				"from collectionProcedure cp,collectionPhase cph,loan l,loanCollectionPhase lcph,procedureStatus cps,phaseType cpht,\n" +
 				"     phaseStatus cphs\n" +
 				"where lcph.loanId=l.id and cph.id=lcph.collectionPhaseId and cph.collectionProcedureId=cp.id\n" +
-				"and cps.id=cp.procedureStatusId and cpht.id=cph.phaseTypeId and cphs.id=cph.phaseStatusId and l.debtorId="+String.valueOf(debtorId)+" group by id,phaseId order by id desc, startDate desc";
+				"and cps.id=cp.procedureStatusId and cpht.id=cph.phaseTypeId and cph.record_status=1 and cphs.id=cph.phaseStatusId and l.debtorId="+String.valueOf(debtorId)+" group by id,phaseId order by id desc, startDate desc";
 		Query query1=entityManager.createNativeQuery(firstQuery, ProcedureModel.class);
 		List<ProcedureModel> procedureModelList=query1.getResultList();
 		for (ProcedureModel procedureModel:procedureModelList){

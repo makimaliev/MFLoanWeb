@@ -569,14 +569,20 @@
 											<!--</a>-->
 										<!--</div>-->
                                         <div class="col-xl-3 order-3 order-xl-3 m--align-right" th:if="${isEmptyChild}==true">
-											<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_PAYMENTSCHEDULE')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/paymentschedule/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+											<div class="row">
+												<form th:action="@{/orderterm/printout/paymentschedules/pdf}" method="post">
+													<input hidden="hidden" name="paymentSchedules" id="jsonPaymentSchedules">
+													<button class="btn btn-sm btn-accent m-1" type="submit">GET PDF</button>
+												</form>
+												<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_PAYMENTSCHEDULE')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/paymentschedule/0/save}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
 												<span>
 													<i class="la la-plus"></i>
 													<span th:text="#{label.loan.add.paymentSchedule}">
 														Добавить ср. обьязательство
 													</span>
 												</span>
-                                            </a>
+												</a>
+											</div>
                                             <div class="m-separator m-separator--dashed d-xl-none"></div>
                                         </div>
                                     </div>
@@ -1025,6 +1031,96 @@
 								<!--begin: Datatable -->
 								<div class="m_datatable" id="agreementsTable"></div>
 								<!--end: Datatable -->
+								<div class="row m-row--no-padding m-row--col-separator-xl p-3">
+									<div class="col-md-12 col-lg-12 col-xl-6">
+										<h3 class="m-widget1__title">Снятые</h3>
+										<div class="row">
+											<div class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title">Quantity</h3>
+															<span class="m-widget1__desc"></span>
+														</div>
+														<div class="col">
+															<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfQuantityStatus1" text="0.0"></span>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title">Estimated value</h3>
+															<span class="m-widget1__desc"></span>
+														</div>
+														<div class="col">
+															<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfEstimatedValueStatus1" text="0.0"></span>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title">Collateral value</h3>
+															<span class="m-widget1__desc"></span>
+														</div>
+														<div class="col">
+															<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfCollateralValueStatus1" text="0.0"></span>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-12 col-lg-12 col-xl-6">
+										<h3 class="m-widget1__title">Действующие</h3>
+										<div class="row">
+											<div class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title">Quantity</h3>
+															<span class="m-widget1__desc"></span>
+														</div>
+														<div class="col">
+															<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfQuantityStatus2" text="0.0"></span>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title">Estimated value</h3>
+															<span class="m-widget1__desc"></span>
+														</div>
+														<div class="col">
+															<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfEstimatedValueStatus2" text="0.0"></span>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title">Collateral value</h3>
+															<span class="m-widget1__desc"></span>
+														</div>
+														<div class="col">
+															<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfCollateralValueStatus2" text="0.0"></span>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 							<div id="guarantorAgreement" class="tab-pane" role="tabpanel">
 								<!--begin: Search Form -->
@@ -2145,6 +2241,8 @@
             success:function (data) {
                 jsonPaymentSchedules=data;
 
+                $("#jsonPaymentSchedules").val(jsonPaymentSchedules);
+
 				sumOfPSDisbursement=(0);
 				sumOfPSInterest=(0);
 				sumOfPSPrincipal=(0);
@@ -2261,6 +2359,14 @@
         });
     });
 
+	var sumOfCollateralValueStatus1=0;
+	var sumOfEstimatedValueStatus1=0;
+	var sumOfQuantityStatus1=0;
+
+	var sumOfCollateralValueStatus2=0;
+	var sumOfEstimatedValueStatus2=0;
+	var sumOfQuantityStatus2=0;
+
 	$("#agreementsFunction").on('click',function () {
 		$.ajax({
 			type:'post',
@@ -2268,6 +2374,27 @@
 			success:function (data) {
 				jsonAgreements=data;
 				$.getScript("/js/data-debtor-agreements1.js");
+
+				var element=JSON.parse(data);
+				for(var i in element){
+					if(element[i].status ==2) {
+						sumOfQuantityStatus1 = sumOfQuantityStatus1 + parseFloat(element[i].quantity);
+						sumOfCollateralValueStatus1 = sumOfCollateralValueStatus1 + parseFloat(element[i].collateralValue);
+						sumOfEstimatedValueStatus1 = sumOfEstimatedValueStatus1 + parseFloat(element[i].estimatedValue);
+					}
+					else{
+						sumOfQuantityStatus2 = sumOfQuantityStatus2 + parseFloat(element[i].quantity);
+						sumOfCollateralValueStatus2 = sumOfCollateralValueStatus2 + parseFloat(element[i].collateralValue);
+						sumOfEstimatedValueStatus2 = sumOfEstimatedValueStatus2 + parseFloat(element[i].estimatedValue);
+					}
+				}
+				$("#sumOfQuantityStatus1").text((sumOfQuantityStatus1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
+				$("#sumOfCollateralValueStatus1").text((sumOfCollateralValueStatus1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
+				$("#sumOfEstimatedValueStatus1").text((sumOfEstimatedValueStatus1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
+
+				$("#sumOfQuantityStatus2").text((sumOfQuantityStatus2).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
+				$("#sumOfCollateralValueStatus2").text((sumOfCollateralValueStatus2).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
+				$("#sumOfEstimatedValueStatus2").text((sumOfEstimatedValueStatus2).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
 			}
 		});
 	});

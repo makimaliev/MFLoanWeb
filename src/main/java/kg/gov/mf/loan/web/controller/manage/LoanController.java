@@ -1253,7 +1253,7 @@ public class LoanController {
     @PostMapping("/paymentScheduleRequest/{loanId}")
     @ResponseBody
     public String getListOfPaymentSchedules(@PathVariable("loanId") Long loanId){
-        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy.MM.dd").create();
         String result = gson.toJson(getPaymentSchedulesByLoanId(loanId));
         return result;
     }
@@ -1261,7 +1261,7 @@ public class LoanController {
     @PostMapping("/paymentRequest/{loanId}")
     @ResponseBody
     public String getListOfPayments(@PathVariable("loanId") Long loanId){
-        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy.MM.dd").create();
         String result = gson.toJson(getPaymentsByLoanId(loanId));
         return result;
     }

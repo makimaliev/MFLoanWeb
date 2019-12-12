@@ -540,6 +540,96 @@
 								<!--begin: Datatable -->
 								<div class="m_datatable" id="agreementsTable"></div>
 								<!--end: Datatable -->
+								<div class="row m-row--no-padding m-row--col-separator-xl p-3">
+									<div class="col-md-12 col-lg-12 col-xl-6">
+										<h3 class="m-widget1__title">Снятые</h3>
+										<div class="row">
+											<div class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title">Quantity</h3>
+															<span class="m-widget1__desc"></span>
+														</div>
+														<div class="col">
+															<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfQuantityStatus1" text="0.0"></span>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title">Estimated value</h3>
+															<span class="m-widget1__desc"></span>
+														</div>
+														<div class="col">
+															<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfEstimatedValueStatus1" text="0.0"></span>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title">Collateral value</h3>
+															<span class="m-widget1__desc"></span>
+														</div>
+														<div class="col">
+															<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfCollateralValueStatus1" text="0.0"></span>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-12 col-lg-12 col-xl-6">
+										<h3 class="m-widget1__title">Действующие</h3>
+										<div class="row">
+											<div class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title">Quantity</h3>
+															<span class="m-widget1__desc"></span>
+														</div>
+														<div class="col">
+															<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfQuantityStatus2" text="0.0"></span>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title">Estimated value</h3>
+															<span class="m-widget1__desc"></span>
+														</div>
+														<div class="col">
+															<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfEstimatedValueStatus2" text="0.0"></span>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="m-widget1">
+												<div class="m-widget1__item">
+													<div class="m-row--no-padding align-items-center">
+														<div class="col">
+															<h3 class="m-widget1__title">Collateral value</h3>
+															<span class="m-widget1__desc"></span>
+														</div>
+														<div class="col">
+															<span class="m-widget6__text m--align-right m--font-boldest m--font-brand" id="sumOfCollateralValueStatus2" text="0.0"></span>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 							<div id="procedureListOfDebtor" class="tab-pane" role="tabpanel">
 								<!--begin: Search Form -->
@@ -914,7 +1004,13 @@
     });
 </script>
 <script>
+	var sumOfCollateralValueStatus1=0;
+	var sumOfEstimatedValueStatus1=0;
+	var sumOfQuantityStatus1=0;
 
+	var sumOfCollateralValueStatus2=0;
+	var sumOfEstimatedValueStatus2=0;
+	var sumOfQuantityStatus2=0;
 
     $("#loanListOfDebtorFunction").on('click',function () {
 
@@ -949,9 +1045,28 @@
             success:function (data) {
                 jsonAgreements=data;
                 $.getScript("/js/data-debtor-agreements2.js");
+				var element=JSON.parse(data);
+				for(var i in element){
+                	if(element[i].status ==2) {
+                		sumOfQuantityStatus1 = sumOfQuantityStatus1 + parseFloat(element[i].quantity);
+						sumOfCollateralValueStatus1 = sumOfCollateralValueStatus1 + parseFloat(element[i].collateralValue);
+						sumOfEstimatedValueStatus1 = sumOfEstimatedValueStatus1 + parseFloat(element[i].estimatedValue);
+					}
+					else{
+						sumOfQuantityStatus2 = sumOfQuantityStatus2 + parseFloat(element[i].quantity);
+						sumOfCollateralValueStatus2 = sumOfCollateralValueStatus2 + parseFloat(element[i].collateralValue);
+						sumOfEstimatedValueStatus2 = sumOfEstimatedValueStatus2 + parseFloat(element[i].estimatedValue);
+					}
+				}
+				$("#sumOfQuantityStatus1").text((sumOfQuantityStatus1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
+				$("#sumOfCollateralValueStatus1").text((sumOfCollateralValueStatus1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
+				$("#sumOfEstimatedValueStatus1").text((sumOfEstimatedValueStatus1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
+
+				$("#sumOfQuantityStatus2").text((sumOfQuantityStatus2).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
+				$("#sumOfCollateralValueStatus2").text((sumOfCollateralValueStatus2).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
+				$("#sumOfEstimatedValueStatus2").text((sumOfEstimatedValueStatus2).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ","));
             }
         });
-
     });
     $("#procedureListOfDebtorFunction").on('click',function () {
         $.ajax({
