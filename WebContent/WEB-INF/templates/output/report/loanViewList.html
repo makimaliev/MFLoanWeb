@@ -39,7 +39,7 @@
                         <div class="col-lg-2">
                             <div class="m-form__control">
                                 <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_region">
-                                    <option value="">Область</option>
+                                    <option value="">Все области</option>
                                     <option th:each="region: ${regions}" th:value="${region.id}" th:text="${region.name}"></option>
                                 </select>
                             </div>
@@ -47,7 +47,7 @@
                         <div class="col-lg-2">
                             <div class="m-form__control">
                                 <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_district">
-                                    <option value="">Район</option>
+                                    <option value="">Все районы</option>
                                     <option th:each="district : ${districts}" th:value="${district.id}" th:text="${district.name}"></option>
                                 </select>
                             </div>
@@ -55,7 +55,7 @@
                         <div class="col-lg-2">
                             <div class="m-form__control">
                                 <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_finGroup">
-                                    <option value="">Фин. группа</option>
+                                    <option value="">Все группы</option>
                                     <option th:each="finGroup: ${finGroups}" th:value="${finGroup.id}" th:text="${finGroup.name}"></option>
                                 </select>
                             </div>
@@ -90,19 +90,19 @@
                             </div>
                         </div>
                         <div class="col-lg-2">
-                            <div class="m-form__control">
-                                <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_finGroup">
-                                    <option value="">Фин. группа</option>
-                                    <option th:each="finGroup: ${finGroups}" th:value="${finGroup.id}" th:text="${finGroup.name}"></option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-2">
                             <div class="m-form__control ">
                                 <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_loan_type">
                                     <option value="">Вид кредита</option>
                                     <option th:each="loanType: ${loanTypes}" th:value="${loanType.id}" th:text="${loanType.name}"></option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="m-form__control">
+                                <!--<select class="form-control m-bootstrap-select m-bootstrap-select&#45;&#45;solid" id="m_form_finGroup">-->
+                                    <!--<option value="">Фин. группа</option>-->
+                                    <!--<option th:each="finGroup: ${finGroups}" th:value="${finGroup.id}" th:text="${finGroup.name}"></option>-->
+                                <!--</select>-->
                             </div>
                         </div>
                         <div class="col-lg-1">
