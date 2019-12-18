@@ -94,12 +94,11 @@
                                         </div>
                                         <div class="modal-footer">
                                             <div style="width: 100%">
-                                                <label for="file">
-                                                    <i class="fa fa-paperclip"></i>
-                                                    <span></span>
-                                                </label>
                                                 <form id="fileForm" th:action="@{/attachFile}" method="post" enctype="multipart/form-data">
-                                                    <input style="display: block" id="file" name = "file" type="file">
+                                                    <label >
+                                                        <!--<button class="btn-brand" type="button" id="loadFileXml" value="loadXml" onclick="document.getElementById('file').click();"><i class="fa fa-paperclip">Выберите файл</i></button>-->
+                                                        <input type="file" style="display:inline-block;" id="file" name="file"/>
+                                                    </label>
                                                 </form>
                                                 <form id="messageForm" name="messageForm" >
                                                     <div class="form-group">
@@ -315,9 +314,9 @@
         this.scrollTop = this.scrollHeight;
     }
 
-    $('#chat_window').on('show.bs.modal', function (e) {
-        loadMessages(receiver);
-    });
+    // $('#chat_window').on('show.bs.modal', function (e) {
+    //     loadMessages(receiver);
+    // });
 
     messageForm.addEventListener('submit', sendMessage, true);
 

@@ -578,7 +578,7 @@ public class OrderTermController {
 		{
 			paymentScheduleModel.setInstallmentStateName(installmentStateService.getById(paymentScheduleModel.getInstallmentStateId()).getName());
 		}
-		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+		Gson gson = new GsonBuilder().setDateFormat("yyyy.MM.dd").create();
 		String result = gson.toJson(paymentScheduleList);
 
 		model.addAttribute("jsonPaymentSchedules",result);

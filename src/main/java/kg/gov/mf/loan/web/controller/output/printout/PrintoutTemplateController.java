@@ -1767,7 +1767,36 @@ public class PrintoutTemplateController {
 
 
 
-			generatePdf(null,result,document);
+			generatePdf(null,result,document,null);
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+
+	}
+
+	@PostMapping("/manage/debtor/{debtorId}/loan/{loanId}/paymentschedules/pdf")
+	public void generatePdfOfPaymentSchedulesForLoan(
+			@PathVariable Long debtorId, @PathVariable Long loanId,
+			HttpServletResponse response, String paymentSchedules){
+
+
+		try{
+			Gson gson = new GsonBuilder().setDateFormat("yyyy.MM.dd").create();
+
+			Type type = new TypeToken<List<PaymentScheduleModel>>(){}.getType();
+			List<PaymentScheduleModel> result = gson.fromJson(paymentSchedules, type);
+
+			Document document = new Document(PageSize.A4.rotate(), 25, 25, 10, 10);
+
+			PdfWriter pdfWriter = PdfWriter.getInstance(document,response.getOutputStream());
+
+			response.setContentType("application/pdf");
+			response.setHeader("Content-disposition","attachment; filename=xx.pdf");
+
+
+
+			generatePdf(null,result,document, loanId);
 		}
 		catch (Exception e){
 			System.out.println(e);
@@ -1781,7 +1810,7 @@ public class PrintoutTemplateController {
 											  HttpServletResponse response, String paymentSchedules){
 
 
-		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+		Gson gson = new GsonBuilder().setDateFormat("yyyy.MM.dd").create();
 
 		Type type = new TypeToken<List<PaymentScheduleModel>>(){}.getType();
 		List<PaymentScheduleModel> result = gson.fromJson(paymentSchedules, type);
@@ -1818,7 +1847,7 @@ public class PrintoutTemplateController {
 			CellStyle dateCellStyle = workbook.createCellStyle();
 			CreationHelper createHelper = workbook.getCreationHelper();
 			dateCellStyle.setDataFormat(
-					createHelper.createDataFormat().getFormat("mm.DD.yyyy"));
+					createHelper.createDataFormat().getFormat("yyyy.MM.dd"));
 
 			CellStyle doubleCellStyle = workbook.createCellStyle();
 			doubleCellStyle.setDataFormat(
@@ -1879,7 +1908,7 @@ public class PrintoutTemplateController {
 		return style;
 	}
 
-	public void generatePdf(PrintoutTemplate template, List<PaymentScheduleModel> paymentSchedules, Document document){
+	public void generatePdf(PrintoutTemplate template, List<PaymentScheduleModel> paymentSchedules, Document document, Long loanId){
 
 		try{
 			ReportTool reportTool = new ReportTool();
@@ -1902,6 +1931,7 @@ public class PrintoutTemplateController {
 
 			Font HeaderFont   = new  Font(myfont,7,Font.NORMAL, CMYKColor.BLACK);
 			Font      ColumnFont   = new  Font(myfont,7,Font.NORMAL,CMYKColor.BLACK);
+			Font      TitleFont1    = new  Font(myfont,16,Font.BOLD,CMYKColor.RED);
 			Font      TitleFont    = new  Font(myfont,11,Font.BOLD,CMYKColor.BLACK);
 			Font      SubTitleFont = new  Font(myfont,9,Font.BOLD,CMYKColor.BLACK);
 
@@ -1920,13 +1950,43 @@ public class PrintoutTemplateController {
 			table=new PdfPTable(1);
 			table.setWidthPercentage(80);
 
-			cell = new PdfPCell (new Paragraph("График",TitleFont));
+			cell = new PdfPCell (new Paragraph("График",TitleFont1));
 			cell.setFixedHeight(40);
 			cell.setHorizontalAlignment (Element.ALIGN_LEFT);
 			cell.setVerticalAlignment(Element.ALIGN_TOP);
 			cell.setPadding(TitleColumnPadding);
 			cell.setBorder(TitleColumnBorder);
 			table.addCell(cell);
+
+			if(loanId != null){
+				Loan loan = loanService.getById(loanId);
+				Debtor debtor = debtorService.getById(loan.getDebtor().getId());
+
+
+				cell = new PdfPCell (new Paragraph("ЗАЕМЩИК : "+ debtor.getName(),TitleFont));
+				cell.setFixedHeight(20);
+				cell.setHorizontalAlignment (Element.ALIGN_LEFT);
+				cell.setVerticalAlignment(Element.ALIGN_TOP);
+				cell.setPadding(TitleColumnPadding);
+				cell.setBorder(TitleColumnBorder);
+				table.addCell(cell);
+
+				cell = new PdfPCell (new Paragraph("КРЕДИТ : "+ loan.getRegNumber(),TitleFont));
+				cell.setFixedHeight(20);
+				cell.setHorizontalAlignment (Element.ALIGN_LEFT);
+				cell.setVerticalAlignment(Element.ALIGN_TOP);
+				cell.setPadding(TitleColumnPadding);
+				cell.setBorder(TitleColumnBorder);
+				table.addCell(cell);
+
+				cell = new PdfPCell (new Paragraph("ОСНОВАНИЕ ВЫДАЧИ КРЕДИТА : "+ loan.getCreditOrder().getRegNumber(),TitleFont));
+				cell.setFixedHeight(20);
+				cell.setHorizontalAlignment (Element.ALIGN_LEFT);
+				cell.setVerticalAlignment(Element.ALIGN_TOP);
+				cell.setPadding(TitleColumnPadding);
+				cell.setBorder(TitleColumnBorder);
+				table.addCell(cell);
+			}
 
 
 			document.add(table);
