@@ -137,6 +137,14 @@
                         <!--end: Datatable -->
                     </div>
                 </div>
+                <!--begin::Modal-->
+                <div class="modal fade" id="editForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                        </div>
+                    </div>
+                </div>
+                <!--end::Modal-->
             </div>
         </div>
     </div>
@@ -144,7 +152,6 @@
     <div th:replace="layout/footer"/>
     <!-- end::Footer -->
 </div>
-
 <div th:replace="fragments/footer :: footer-js"/>
 <script>
     function hideFields() {
@@ -184,6 +191,13 @@
     });
 </script>
 <script th:inline="javascript" >
+    $("#editForm").on("show.bs.modal", function(e)
+    {
+        var link = $(e.relatedTarget);
+        $(this).find(".modal-content").load(link.attr("href"));
+    });
+
+    var currentUserId = [[${@userServiceJpaImpl.findByUsername(#authentication.name).id}]];
     //== Class definition
     var DatatableJsonRemoteDemo = function () {
         //== Private functions
@@ -255,6 +269,19 @@
                         field: "reg_number",
                         title: [[#{reg_number}]]
                     }, {
+                        field: "registeredDate",
+                        title: [[#{label.regDate}]],
+                        textAlign:'center',
+                        template: function (row) {
+                            if (row.registeredDate) {
+                                var date = moment("/Date(" + row.registeredDate + ")/").format("DD.MM.YYYY");
+                                return date;
+                            }
+                            else {
+                                return "";
+                            }
+                        }
+                    },{
                         field: "amount",
                         title: [[#{label.amount}]],
                         // width:120,
@@ -280,10 +307,46 @@
                         }
                     }, {
                         field: "debtorId",
-                        title: [[#{label.delete}]],
+                        title: [[#{label.edit}]],
                         template: function (row) {
+                            var myDate = new Date('2019-12-31');
+                            var result ="";
+                            if((row.onDate < myDate && row.supervisorId == currentUserId) || currentUserId == 1){
+                                result = '<a href="/loanSummaryAct/'+row.id+'/delete"><i class="fa fa-trash-o"></i></a>';
+                                result = result + '<span class="col"></span>';
+                                result = result +  '<a role="button" href="/loanSummaryAct/'+row.id+'/partialedit" data-toggle="modal" data-target="#editForm"><i class="la la-edit"></i></a>';
+                            }
+                            else{
+                                result = "";
+                            }
+                            return result
 
-                            return '<a href="/loanSummaryAct/'+row.id+'/delete"><i class="fa fa-trash-o"></i></a>';
+                        }
+                    },{
+                        field: "au_created_by",
+                        title: [[#{label.createdBy}]],
+                        textAlign:'center',
+                        template: function (row) {
+                            var date = "";
+                            var user = "";
+                            if(row.au_created_date && row.au_created_by) {
+                                date = "("+moment("/Date(" + row.au_created_date + ")/").format("DD.MM.YYYY")+")";
+                                user = row.au_created_by;
+                            }
+                            return user + date;
+                        }
+                    }, {
+                        field: "au_last_modified_by",
+                        title: [[#{label.modifiedBy}]],
+                        textAlign:'center',
+                        template: function (row) {
+                            var date = "";
+                            var user = "";
+                            if(row.au_last_modified_date && row.au_last_modified_by) {
+                                date ="("+ moment("/Date(" + row.au_last_modified_date + ")/").format("DD.MM.YYYY")+")";
+                                user = row.au_last_modified_by;
+                            }
+                            return user + date;
                         }
                     }],
                 translate: {

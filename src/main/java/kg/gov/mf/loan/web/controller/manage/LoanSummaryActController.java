@@ -12,18 +12,25 @@ import kg.gov.mf.loan.web.fetchModels.LoanSummaryActMetaModel;
 import kg.gov.mf.loan.web.fetchModels.LoanSummaryActModel;
 import kg.gov.mf.loan.web.util.Meta;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @Controller
 public class LoanSummaryActController {
+
+    //region services
 
     @Autowired
     EntityManager entityManager;
@@ -39,6 +46,14 @@ public class LoanSummaryActController {
 
     @Autowired
     LoanSummaryService loanSummaryService;
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder)
+    {
+        CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("dd.MM.yyyy"), true);
+        binder.registerCustomEditor(Date.class, editor);
+    }
+    //endregion
 
     @GetMapping("/loanSummaryAct/list")
     public String list(ModelMap model){
@@ -67,6 +82,38 @@ public class LoanSummaryActController {
         }
         return "redirect:/loanSummaryAct/list";
     }
+
+    @GetMapping("/loanSummaryAct/{id}/partialedit")
+    public String regFieldEditForm(@PathVariable Long id, Model model){
+
+        LoanSummaryAct loanSummaryAct = loanSummaryActService.getById(id);
+        List<LoanSummaryActState> loanSummaryActStateList = loanSummaryActStateService.list();
+
+        model.addAttribute("object",loanSummaryAct);
+        model.addAttribute("list",loanSummaryActStateList);
+
+        return "/manage/debtor/loan/loansummaryact/editRegFields";
+    }
+
+    @PostMapping("/loanSummaryAct/saveregfields")
+    public String saveRegFields(LoanSummaryAct loanSummaryAct,Date date){
+
+        LoanSummaryAct realLoanSummaryAct = loanSummaryActService.getById(loanSummaryAct.getId());
+
+        if(loanSummaryActService.isUneque(loanSummaryAct.getReg_number())) {
+            realLoanSummaryAct.setReg_number(loanSummaryAct.getReg_number());
+            realLoanSummaryAct.setRegisteredDate(date);
+            realLoanSummaryAct.setLoanSummaryActState(loanSummaryAct.getLoanSummaryActState());
+
+            loanSummaryActService.update(realLoanSummaryAct);
+        }
+
+        return  "redirect:/loanSummaryAct/list";
+    }
+
+//    **********************************************************************************************************
+//    REST
+//    **********************************************************************************************************
 
     @PostMapping("/api/loanSummaryActViews")
     @ResponseBody
@@ -127,21 +174,27 @@ public class LoanSummaryActController {
             searchQueries=searchQueries+" and l.onDate<='"+splitted[2]+"-"+splitted[1]+"-"+splitted[0]+"'\n";
         }
 
-        String baseQuery="select l.id,l.amount,l.onDate,l.registeredDate,l.signedDate,l.reg_number,dist.name as districtName,r.name as regionName,d.id as debtorId,d.name as debtorName,l.loanSummaryActStateId as state\n" +
-                "from loanSummaryAct l,debtor d,address a,district dist,region r where l.debtorId=d.id \n" +
-                "                                                                  and a.district_id=dist.id \n" +
-                "                                                                  and a.region_id=r.id  \n" +
-                "                                                                  and d.address_id=a.id \n"+
+        String baseQuery="select l.id,l.amount,l.onDate,l.registeredDate,l.signedDate,l.reg_number,dist.name as districtName,r.name as regionName,d.id as debtorId,d.name as debtorName,\n" +
+                "       l.au_created_by, l.au_created_date,l.au_last_modified_by, l.au_last_modified_date,\n" +
+                "       l.loanSummaryActStateId as state, loan.supervisorId\n" +
+                "from loanSummaryAct l,debtor d,address a,district dist,region r, loanSummary ls, loan, loanSummaryAct_loanSummary lslsa where l.debtorId=d.id\n" +
+                "                                                                  and a.district_id=dist.id\n" +
+                "                                                                  and a.region_id=r.id\n" +
+                "                                                                  and d.address_id=a.id\n" +
+                "                                                                  and lslsa.LoanSummaryAct_id=l.id and ls.id in (lslsa.loanSummaries_id)\n" +
+                "                                                                  and ls.loanId = loan.id\n"+
                                                                                    searchQueries+
                 "order by " + sortField + " " + sortStr + " LIMIT " + offset +"," + perPage;
         Query query=entityManager.createNativeQuery(baseQuery, LoanSummaryActModel.class);
         List<LoanSummaryActModel> list=query.getResultList();
 
         String countQuery="select count(1)\n" +
-                "from loanSummaryAct l,debtor d,address a,district dist,region r where l.debtorId=d.id \n" +
+                "from loanSummaryAct l,debtor d,address a,district dist,region r, loanSummary ls, loan, loanSummaryAct_loanSummary lslsa where l.debtorId=d.id \n" +
                 "                                                                  and a.district_id=dist.id \n" +
                 "                                                                  and a.region_id=r.id  \n" +
-                "                                                                  and d.address_id=a.id \n"+
+                "                                                                  and d.address_id=a.id " +
+                "                                                                  and lslsa.LoanSummaryAct_id=l.id and ls.id in (lslsa.loanSummaries_id)\n" +
+                "                                                                  and ls.loanId = loan.id \n"+
                                                                                    searchQueries;
         BigInteger count = (BigInteger)entityManager.createNativeQuery(countQuery).getResultList().get(0);
         Meta meta = new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, sortStr, sortField);
