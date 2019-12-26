@@ -6,6 +6,7 @@ import kg.gov.mf.loan.manage.model.asset.Asset;
 import kg.gov.mf.loan.manage.model.asset.AssetItem;
 import kg.gov.mf.loan.manage.model.asset.AssetStatus;
 import kg.gov.mf.loan.manage.model.asset.AssetType;
+import kg.gov.mf.loan.manage.model.collection.CollectionPhase;
 import kg.gov.mf.loan.manage.model.loan.Loan;
 import kg.gov.mf.loan.manage.model.loan.Payment;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
@@ -13,6 +14,7 @@ import kg.gov.mf.loan.manage.service.asset.AssetItemService;
 import kg.gov.mf.loan.manage.service.asset.AssetService;
 import kg.gov.mf.loan.manage.service.asset.AssetStatusService;
 import kg.gov.mf.loan.manage.service.asset.AssetTypeService;
+import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
 import kg.gov.mf.loan.manage.service.loan.PaymentService;
 import kg.gov.mf.loan.web.fetchModels.LoanModel2;
 import kg.gov.mf.loan.web.fetchModels.PaymentModel;
@@ -38,6 +40,9 @@ import java.util.Set;
 public class AssetController {
 
     //region services
+    @Autowired
+    CollectionPhaseService collectionPhaseService;
+
     @Autowired
     AssetService assetService;
 
@@ -235,6 +240,41 @@ public class AssetController {
         else{
             return "/manage/asset/toLoanDropDown";
         }
+    }
+
+    //select phase
+    @GetMapping("/{assetId}/selectphase")
+    public String getPhaseSelectForm(@PathVariable Long assetId,Model model){
+
+        Asset asset = assetService.getById(assetId);
+
+        if(asset.getPhase_id() != null){
+
+            CollectionPhase phase = collectionPhaseService.getById(asset.getPhase_id());
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
+            model.addAttribute("phaseText","["+phase.getId()+"] "+phase.getPhaseType().getName()+" - "+simpleDateFormat.format(phase.getStartDate()));
+        }
+        else{
+            model.addAttribute("phaseText",null);
+        }
+        model.addAttribute("asset",asset);
+
+        return "/manage/asset/selectPhaseForm";
+    }
+
+    //save selected phase to asset
+    @PostMapping("/selectphase/save")
+    public String saveSelectedPhase(Asset asset){
+
+        Asset oldAsset = assetService.getById(asset.getId());
+
+        oldAsset.setPhase_id(asset.getPhase_id());
+
+        assetService.update(oldAsset);
+
+        return "redirect:/asset/"+asset.getId()+"/view";
     }
 
 

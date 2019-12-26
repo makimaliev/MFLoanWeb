@@ -70,6 +70,31 @@ public class CollectionPhaseViewController {
         return "manage/debtor/collectionprocedure/collectionphase/collectionPhaseViewList";
     }
 
+    @RequestMapping("/collectionPhaseViews/claim")
+    public String collectionPhaseViewListClaim(ModelMap model){
+
+        List<ReferenceView> collectionPhaseGroups=referenceViewService.findByParameter("collection_phase_group");
+        model.addAttribute("collectionPhaseGroups",collectionPhaseGroups);
+
+        List<ReferenceView> collectionPhaseIndexes=referenceViewService.findByParameter("collection_phase_index");
+        model.addAttribute("collectionPhaseIndexes",collectionPhaseIndexes);
+
+        List<ReferenceView> collectionPhaseSubIndexes=referenceViewService.findByParameter("collection_phase_sub_index");
+        model.addAttribute("collectionPhaseSubIndexes",collectionPhaseSubIndexes);
+
+        List<ReferenceView> finGroups=referenceViewService.findByParameter("fin_group");
+        model.addAttribute("finGroups",finGroups);
+
+        model.addAttribute("regions",regionService.findAll());
+        model.addAttribute("districts",districtService.findAll());
+        model.addAttribute("phaseTypes",phaseTypeService.list());
+        model.addAttribute("procedures",phaseStatusService.list());
+
+        model.addAttribute("loggedinuser", Utils.getPrincipal());
+
+        return "manage/debtor/collectionprocedure/collectionphase/collectionPhaseViewListClaim";
+    }
+
     @RequestMapping("/collectionPhaseViews/second")
     public String collectionPhaseViewList1(ModelMap model){
 

@@ -89,6 +89,12 @@
                                         <div >
                                             <div>
                                                 <a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_ASSET')" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
+                                                   th:href="@{/asset/__${asset.id}__/selectphase}"
+                                                   data-toggle="modal"
+                                                   data-target="#addForm"><span th:text="#{label.select.phase}"></span>
+                                                    <i class="la la-chain"></i></span>
+                                                </a>
+                                                <a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_ASSET')" role="button" class="m-portlet__nav-link btn btn-success m-btn m-btn--air"
                                                    th:href="@{/asset/__${asset.id}__/save}"
                                                    data-toggle="modal"
                                                    data-target="#addForm"><span th:text="#{label.table.edit}"></span>

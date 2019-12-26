@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en"
+
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+>
+<!-- begin::Head -->
+<head>
+    <title th:text="#{label.collection.phases}">MFLoan|CollectionPhaseView</title>
+
+    <div th:replace="fragments/header :: header-css"/>
+    <link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
+</head>
+<!-- end::Head -->
+<!-- end::Body -->
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-aside-left--minimize m-brand--minimize"  >
+<!-- begin:: Page -->
+<div class="m-grid m-grid--hor m-grid--root m-page">
+    <!-- BEGIN: Header -->
+    <div th:replace="layout/header"/>
+    <!-- END: Header -->
+
+    <!-- begin::Body -->
+    <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+        <!-- BEGIN: Left Aside -->
+        <div th:replace="layout/sidebar"/>
+        <!-- END: Left Aside -->
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+
+            <!-- BEGIN: Subheader -->
+            <div class="m-subheader ">
+                <div class="d-flex align-items-center">
+                    <div class="mr-auto">
+                        <h3 class="m-subheader__title m-subheader__title--separator" th:text="#{label.collection.phases}">
+                            CollectionPhaseViews
+                        </h3>
+                        <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+                            <li class="m-nav__item m-nav__item--home">
+                                <a th:href="@{/}" class="m-nav__link m-nav__link--icon">
+                                    <i class="m-nav__link-icon la la-home"></i>
+                                </a>
+                            </li>
+                            <li class="m-nav__separator">
+                                -
+                            </li>
+                            <li class="m-nav__item">
+                                <span class="m-nav__link-text" th:text="#{label.collection.phases}">List of CollectionPhaseViews</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- END: Subheader -->
+            <div class="m-content">
+                <!--Begin Portlet-->
+                <div class="m-portlet filter_panel">
+                    <div class="row mb-1">
+                        <div class="col-lg-3">
+                            <div class="m-input-icon m-input-icon--left mb-1">
+                                <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{v_debtor_name}" id="debtor_name">
+                                <span class="m-input-icon__icon m-input-icon__icon--left">
+                                                <span>
+                                                    <i class="la la-search"></i>
+                                                </span>
+                                            </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="m-form__group m-form__group--inline">
+                                <div class="m-form__control">
+                                    <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="fin_group">
+                                        <option value="" th:text="#{label.loan.finGroup}">
+                                            Все
+                                        </option>
+                                        <option th:each="finGroup: ${finGroups}" th:value="${finGroup.id}" th:text="${finGroup.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="m-form__group m-form__group--inline">
+                                <div class="m-form__control">
+                                    <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_region">
+                                        <option value="">
+                                            Область
+                                        </option>
+                                        <option th:each="region: ${regions}" th:value="${region.id}" th:text="${region.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="m-form__group m-form__group--inline">
+                                <div class="m-form__control">
+                                    <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_district">
+                                        <option value="">
+                                            Район
+                                        </option>
+                                        <option th:each="district : ${districts}" th:value="${district.id}" th:text="${district.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-1"><i id="shower" onclick="showFields()" class="la la-angle-down"></i></div>
+                    </div>
+                    <div class="row hideable mb-1">
+                        <div class="col-lg-2">
+                            <div class="m-input-icon m-input-icon--left mb-1">
+                                <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.doc.number}" id="doc_number">
+                                <span class="m-input-icon__icon m-input-icon__icon--left">
+                                                <span>
+                                                    <i class="la la-search"></i>
+                                                </span>
+                                            </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="m-input-icon m-input-icon--left mb-1">
+                                <input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.result.doc.number}" id="result_doc_number">
+                                <span class="m-input-icon__icon m-input-icon__icon--left">
+                                                <span>
+                                                    <i class="la la-search"></i>
+                                                </span>
+                                            </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="m-form__group m-form__group--inline">
+                                <div class="m-form__control">
+                                    <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="procedure_status">
+                                        <option value="" th:text="#{label.collection.procedure.status}">
+                                            Все
+                                        </option>
+                                        <option th:each="procedure: ${procedures}" th:value="${procedure.id}" th:text="${procedure.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group date m_datetimepicker" id="from_datepicker" style="margin-bottom: 5px">
+                                <input  class="form-control m-input" th:placeholder="#{label.fromDate}" name="date" />
+                                <span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-3"></div>
+                        <div class="col-lg-1"><i id="hider" onclick="hideFields()" class="la la-angle-up"></i></div>
+                    </div>
+                    <div class="row hideable">
+                        <div class="col-lg-2">
+                            <div class="m-form__group m-form__group--inline">
+                                <div class="m-form__control">
+                                    <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="phase_group">
+                                        <option value="">
+                                            Группа
+                                        </option>
+                                        <option th:each="group: ${collectionPhaseGroups}" th:value="${group.id}" th:text="${group.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="m-form__group m-form__group--inline">
+                                <div class="m-form__control">
+                                    <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="phase_index">
+                                        <option value="">
+                                            Индекс
+                                        </option>
+                                        <option th:each="index : ${collectionPhaseIndexes}" th:value="${index.id}" th:text="${index.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="m-form__group m-form__group--inline">
+                                <div class="m-form__control">
+                                    <select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="sub_index">
+                                        <option value="" th:text="#{label.collection.phase.sub.index}">
+                                            Все
+                                        </option>
+                                        <option th:each="subIndex: ${collectionPhaseSubIndexes}" th:value="${subIndex.id}" th:text="${subIndex.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group date m_datetimepicker" id="to_datepicker">
+                                <input  class="form-control m-input" th:placeholder="#{label.toDate}" name="date" />
+                                <span class="input-group-addon">
+													<i class="la la-calendar glyphicon-th"></i>
+												</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-portlet">
+                    <div class="m-portlet__body">
+                        <!--Begin Search Form-->
+                        <!--begin: Datatable -->
+                        <div class="m_datatable" id="ajax_data"></div>
+                        <!--end: Datatable -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end:: Body -->
+    <!-- begin::Footer -->
+    <div th:replace="layout/footer"/>
+    <!-- end::Footer -->
+</div>
+
+<div th:replace="fragments/footer :: footer-js"/>
+<div th:with="isAdmin = ${#authorization.expression('hasRole(''ADMIN'')')}">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var hasRoleAdmin = /*[[${isAdmin}]]*/ [];
+        console.log(hasRoleAdmin);
+        /*]]>*/
+    </script>
+</div>
+<script>
+    function hideFields() {
+        $(".hideable").hide();
+        $("#hider").hide();
+        $("#shower").show();
+    }
+    function showFields() {
+        $(".hideable").show();
+        $("#shower").hide();
+        $("#hider").show();
+    }
+
+    hideFields();
+    $("#hider").on("click",function () {
+        hideFields();
+    });
+    $("#shower").on("click",function () {
+        showFields();
+    });
+    $('#from_datepicker').datetimepicker({
+        format: "dd.mm.yyyy",
+        todayHighlight: true,
+        autoclose: true,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        pickerPosition: 'bottom-left'
+    });
+    $('#to_datepicker').datetimepicker({
+        format: "dd.mm.yyyy",
+        todayHighlight: true,
+        autoclose: true,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        pickerPosition: 'bottom-left'
+    });
+</script>
+<script type="text/javascript" th:inline="javascript">
+    //== Class definition
+
+    var statuses=[[${procedures}]];
+
+    function reply_click(id)
+    {
+        $.ajax({
+            type:'post',
+            data:{id:id},
+            url:"/api/collectionphase/registerchange",
+            success:function (data) {
+                window.location.reload();
+            }
+        });
+    }
+    function changeClass(d) {
+        if(d.classList.contains("btn-danger")){
+            d.classList.remove("btn-danger");
+            d.classList.add("btn-success");
+            d.removeChild(d.firstChild);
+            d.appendChild(document.createTextNode("Registered"));
+        }
+        else{
+            d.classList.remove("btn-success");
+            d.classList.add("btn-danger");
+            d.removeChild(d.firstChild);
+            d.appendChild(document.createTextNode("Not registered"));
+        }
+    }
+
+    var currentUserId = [[${@userServiceJpaImpl.findByUsername(#authentication.name).id}]];
+
+    var DatatableJsonRemoteDemo = function () {
+        //== Private functions
+
+        // basic demo
+        var demo = function () {
+
+            var datatable = $('.m_datatable').mDatatable({
+                // datasource definition
+                data: {
+                    type: 'remote',
+                    source: {
+                        read: {
+                            url: '/api/collectionPhaseViews/claims'
+                        }
+                    },
+                    pageSize: 10,
+                    saveState: {
+                        cookie: false,
+                        webstorage: false
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true,
+                },
+
+                // layout definition
+                layout: {
+                    theme: 'default', // datatable theme
+                    class: '', // custom wrapper class
+                    scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+                    height: 550, // datatable's body's fixed height
+                    footer: false // display/hide footer
+                },
+
+                // column sorting
+                sortable: false,
+
+                // column based filtering
+                filterable: false,
+
+                pagination: true,
+
+                // columns definition
+                columns: [{
+                    field: "id",
+                    title: "#",
+                    sortable: 'desc',
+                    overflow: 'visible',
+                    width:150,
+                    template:function (row) {
+                        if(row.v_cph_doc_number == null){
+                            return "<a  onclick=reply_click("+row.v_cph_id+")><span class=\"btn btn-danger\" onclick=changeClass(this)>Not registered</span></a>";
+                        }
+                        else{
+                            return "<a ><span class=\"btn btn-success\" >Registered</span></a>";
+                        }
+                    }
+                },/*{
+                    field: "View",
+                    width: 80,
+                    textAlign: 'center',
+                    title: [[#{label.view}]],
+                    sortable: false,
+                    selector: false,
+                    overflow: 'visible',
+
+                    template: function (row) {
+                        return '\
+						<a href="/manage/debtor/'+row.v_debtor_id+'/collectionprocedure/'+row.v_cp_id+'/view" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
+					';
+                    }
+                },*/  {
+                    field: "v_cph_id",
+                    title: "#",
+                    sortable: 'desc',
+                    responsive: {hidden: 'xl'}
+                }, {
+                    field: "v_cph_doc_number",
+                    title: "Ном. документа",
+                }, {
+                    field: "v_cph_regDate",
+                    title: "Дата рег.",
+                    template:function (row) {
+                        if (row.v_cph_regDate!=null){
+                            var date = moment("/Date("+row.v_cph_regDate+")/").format("DD.MM.YYYY");
+                            return date;
+                        }
+                        return null;
+                    }
+                },{
+                    field: "v_debtor_name",
+                    title: [[#{v_debtor_name}]],
+                    width:400,
+                    template: function (row) {
+                        var d = row.v_debtor_name;
+                        if(d.length>40){
+                            d=d.substring(0,37);
+                        }
+                        return '\
+                            <a href="/manage/debtor/'+ row.v_debtor_id + '/view">'+d+'</a>\
+                        ';
+                    }
+                }, /*{
+                    field: "v_cph_startDate",
+                    title: "Начал. дата",
+                    textAlign:'center',
+                    template: function (row) {
+                        var date = moment("/Date("+row.v_cph_startDate+")/").format("DD.MM.YYYY");
+                        return date;
+                    }
+                }, */{
+                    field: "v_cph_start_total_amount",
+                    title: "Начал. сумма",
+                    textAlign:'right',
+                    template:function (row) {
+                        return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_cph_start_total_amount);
+                    }
+                },{
+                    field: "v_cph_close_total_amount",
+                    title: "Конеч. сумма",
+                    textAlign:'right',
+                    template:function (row) {
+                        return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_cph_close_total_amount);
+                    }
+                }, {
+                    field: "v_cph_phaseStatusId",
+                    title: "Статус",
+                    template:function (row) {
+                        for(var i=0;i<statuses.length;i++){
+                            if(row.v_cph_phaseStatusId==statuses[i].id){
+                                return statuses[i].name;
+                            }
+                        }
+                    }
+                },{
+                    field: "",
+                    width: 110,
+                    title: "",
+                    sortable: false,
+                    template: function (row) {
+                        var myDate = new Date('2019-12-31');
+                        var result ="";
+                        if((row.onDate < myDate && row.supervisorId == currentUserId) || currentUserId == 1){
+                            result = '<a href="/collectionphase/claim/'+row.v_cph_id+'/delete"><i class="fa fa-trash-o"></i></a>';
+                        }
+                        else{
+                            result = "";
+                        }
+                        return result
+
+                    }
+                }, {
+                    field: "v_cph_closeDate",
+                    title: "Конеч. дата",
+                    textAlign:'center',
+                    template: function (row) {
+                        if (row.v_cph_closeDate!=null){
+                            var date = moment("/Date("+row.v_cph_closeDate+")/").format("DD.MM.YYYY");
+                            return date;
+                        }
+                        return null;
+                    }
+                }],
+                translate: {
+                    records: {
+                        processing: 'Подождите пожалуйста...',
+                        noRecords: 'Записей не найдено'
+                    },
+                    toolbar: {
+                        pagination: {
+                            items: {
+                                default: {
+                                    first: 'Первая страница',
+                                    prev: 'Предыдущая страница',
+                                    next: 'Следующая страница',
+                                    last: 'Последняя страница',
+                                    input: 'Номер страницы',
+                                    select: 'Выбрать размер страницы'
+                                },
+                                info: 'Отображение {{start}} - {{end}} из {{total}} записей'
+                            }
+                        }
+                    }
+                }
+            });
+
+            $('#m_form_region, #m_form_district,#procedure_status,#phase_group,#phase_index,#fin_group,#sub_index').selectpicker();
+
+            var query = datatable.getDataSourceQuery();
+            $('#debtor_name').on('keyup', function () {
+                var counterOfDebtor=$('#debtor_name').val().length;
+                if(counterOfDebtor>=3 || counterOfDebtor==0){
+                    datatable.search($(this).val(), 'debtorName');
+                }
+            }).val(typeof query.debtorName !== 'undefined' ? query.debtorName: '');
+
+            $('#cph_version').on('keyup', function () {
+                datatable.search($(this).find("input").val(), 'cphVersion');
+            }).val(typeof query.cphVersion!== 'undefined' ? query.cphVersion: '');
+
+            $('#m_form_region').on('change', function () {
+                datatable.search($(this).val(), 'regionId');
+            }).val(typeof query.regionId !== 'undefined' ? query.regionId : '');
+
+            $('#m_form_district').on('change', function () {
+                datatable.search($(this).val(), 'districtId');
+            }).val(typeof query.districtId !== 'undefined' ? query.districtId : '');
+
+            $('#from_datepicker').on('change', function () {
+                datatable.search($(this).find("input").val(), 'fromDater');
+            }).val(typeof query.fromDater!== 'undefined' ? query.fromDater: '');
+
+            $('#to_datepicker').on('change', function () {
+                datatable.search($(this).find("input").val(), 'toDater');
+            }).val(typeof query.toDater!== 'undefined' ? query.toDater: '');
+
+            $('#procedure_status').on('change', function () {
+                datatable.search($(this).val(), 'statusId');
+            }).val(typeof query.statusId!== 'undefined' ? query.statusId: '');
+
+            $('#phase_group').on('change', function () {
+                datatable.search($(this).val(), 'groupId');
+            }).val(typeof query.groupId!== 'undefined' ? query.groupId: '');
+
+            $('#phase_index').on('change', function () {
+                datatable.search($(this).val(), 'indexId');
+            }).val(typeof query.indexId!== 'undefined' ? query.indexId: '');
+
+            $('#fin_group').on('change', function () {
+                datatable.search($(this).val(), 'finGroupId');
+            }).val(typeof query.finGroupId!== 'undefined' ? query.finGroupId: '');
+
+            $('#sub_index').on('change', function () {
+                datatable.search($(this).val(), 'subIndexId');
+            }).val(typeof query.subIndexId!== 'undefined' ? query.subIndexId: '');
+
+            $('#doc_number').on('keyup', function () {
+                datatable.search($(this).val(), 'docNumber');
+            }).val(typeof query.docNumber!== 'undefined' ? query.docNumber: '');
+
+            $('#result_doc_number').on('keyup', function () {
+                datatable.search($(this).val(), 'resultDocNumber');
+            }).val(typeof query.resultDocNumber !== 'undefined' ? query.resultDocNumber: '');
+
+        };
+
+        return {
+            // public functions
+            init: function () {
+                demo();
+            }
+        };
+    }();
+
+    jQuery(document).ready(function () {
+        DatatableJsonRemoteDemo.init();
+    });
+</script>
+
+</body>
+<!-- end::Body -->
+</html>
