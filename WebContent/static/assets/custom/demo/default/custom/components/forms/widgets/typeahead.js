@@ -184,6 +184,30 @@ var Typeahead = function() {
             });
     }
 
+    var demo7 = function() {
+        // constructs the suggestion engine
+        var bloodhound = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            // `states` is an array of state names defined in "The Basics"
+            //local: states
+            remote:{
+                url: '/api/phases/search?q=%QUERY',
+                wildcard: '%QUERY'
+            }
+        });
+
+        $('#phase_typeahead').typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 1
+            },
+            {
+                name: 'phases',
+                source: bloodhound
+            });
+    }
+
     return {
         // public functions
         init: function() {
@@ -193,6 +217,7 @@ var Typeahead = function() {
             demo4();
             demo5();
             demo6();
+            demo7();
         }
     };
 }();

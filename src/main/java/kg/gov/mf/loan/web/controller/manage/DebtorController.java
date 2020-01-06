@@ -1386,6 +1386,14 @@ public class DebtorController {
 		Query query = entityManager.createNativeQuery(baseQuery, LoanModel.class);
 
 		List<LoanModel> loans = query.getResultList();
+
+		for(LoanModel l : loans){
+			Double rem = getRemainingOfLoan(l.getId());
+			if(rem != -777){
+				l.setRemainder(rem);
+			}
+		}
+
 		return loans;
 	}
 
@@ -1566,8 +1574,8 @@ public class DebtorController {
 
 	private Double getRemainingOfLoan(Long loanId){
 
-	    String queryStr = "select totalOutstanding\n" +
-                "from loanSummary where loanSummaryType='DAILY' " +
+	    String queryStr = "select l.totalOutstanding\n" +
+                "from loanSummary l where loanSummaryType='DAILY' " +
                 "and onDate =CURRENT_DATE and loanId="+loanId;
 
 	    Query query = entityManager.createNativeQuery(queryStr);

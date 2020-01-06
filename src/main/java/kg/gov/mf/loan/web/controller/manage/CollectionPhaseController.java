@@ -15,6 +15,7 @@ import kg.gov.mf.loan.admin.sys.service.AttachmentService;
 import kg.gov.mf.loan.admin.sys.service.InformationService;
 import kg.gov.mf.loan.admin.sys.service.SystemFileService;
 import kg.gov.mf.loan.admin.sys.service.UserService;
+import kg.gov.mf.loan.manage.model.Counter;
 import kg.gov.mf.loan.manage.model.collection.*;
 import kg.gov.mf.loan.manage.model.debtor.*;
 import kg.gov.mf.loan.manage.model.loan.Loan;
@@ -23,6 +24,7 @@ import kg.gov.mf.loan.manage.model.loan.Payment;
 import kg.gov.mf.loan.manage.model.loan.PaymentSchedule;
 import kg.gov.mf.loan.manage.model.process.LoanDetailedSummary;
 import kg.gov.mf.loan.manage.model.process.LoanSummary;
+import kg.gov.mf.loan.manage.repository.CounterRepository;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.service.collection.*;
 import kg.gov.mf.loan.manage.service.debtor.DebtorGroupService;
@@ -186,6 +188,8 @@ public class CollectionPhaseController {
 	@Autowired
 	LoanFinGroupService loanFinGroupService;
 
+	@Autowired
+	CounterRepository counterRepository;
 
 	//endregion
 
@@ -503,6 +507,8 @@ public class CollectionPhaseController {
 	@ResponseBody
 	public void initializeManualCalculator(@PathVariable("debtorId")Long debtorId, @RequestParam Map<String, String> selectedLoans, @RequestParam String initDater)
 	{
+
+
 		Date date1=null;
 		try {
 			date1=new SimpleDateFormat("dd.MM.yyyy").parse(initDater);
@@ -2529,4 +2535,70 @@ public class CollectionPhaseController {
         }
         return false;
 	}
+
+
+	//register collectionphase api
+	@PostMapping("/api/collectionphase/registerchange")
+	@ResponseBody
+	private String registerApi(Long id)
+	{
+		registerCollectionPhase(id);
+		return "OK";
+	}
+
+	//register collectionPhase function
+	public void registerCollectionPhase(Long id){
+		CollectionPhase collectionPhase = collectionPhaseService.getById(id);
+
+		Counter counter = counterRepository.getByEntityNameEquals(CollectionPhase.class.getSimpleName());
+
+
+		if (counter == null){
+			Counter counter1 =new Counter();
+			counter1.setEntityName(CollectionPhase.class.getSimpleName());
+			counter1.setNumber(1L);
+			counterRepository.save(counter1);
+
+			collectionPhase.setDocNumber("№ "+counter1.getNumber());
+			collectionPhase.setReg_date(new Date());
+
+			collectionPhaseService.update(collectionPhase);
+
+			counter1.setNumber(counter1.getNumber()+1);
+			counterRepository.save(counter1);
+		}
+		else{
+			collectionPhase.setDocNumber("№ "+counter.getNumber());
+			collectionPhase.setReg_date(new Date());
+
+			collectionPhaseService.update(collectionPhase);
+
+			counter.setNumber(counter.getNumber()+1);
+			counterRepository.save(counter);
+		}
+
+	}
+
+    //search phases by date or phase type
+    @GetMapping("/api/phases/search")
+    @ResponseBody
+    private String[] searchPhasesByDateType(@RequestParam(value = "q") String q)
+    {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
+        String searchStr = "select *\n" +
+                "from collectionPhase where docNumber like '%"+q+"%'";
+
+        Query query = entityManager.createNativeQuery(searchStr,CollectionPhase.class);
+        List<CollectionPhase> phaseList = query.getResultList();
+
+        String[] result = new String[phaseList.size()];
+        int i=0;
+        for(CollectionPhase phase : phaseList){
+            result[i++] = "[" + phase.getId() + "] "
+                    + phase.getDocNumber() +" - " + simpleDateFormat.format(phase.getStartDate());
+        }
+        return result;
+    }
+
 }

@@ -28,7 +28,7 @@ public class RestCollectionPhaseViewController {
     @Autowired
     CollectionPhaseViewService collectionPhaseViewService;
 
-    @PostMapping("/collectionPhaseViews")
+    @PostMapping("/collectionPhaseViews/")
     public CollectionPhaseViewMetaModel getAll(@RequestParam Map<String,String> datatable){
 
         LinkedHashMap<String,List<String>> parameters=new LinkedHashMap<>();
@@ -83,7 +83,7 @@ public class RestCollectionPhaseViewController {
         boolean searchByPhaseType= datatable.containsKey("datatable[query][phaseTypeId]");
         if (searchByPhaseType){
             String phaseTypeStr = datatable.get("datatable[query][phaseTypeId]");
-            List<String> phaseTypes=Arrays.asList(phaseTypeStr  );
+            List<String> phaseTypes=Arrays.asList(phaseTypeStr);
             parameters.put("r=inv_cph_phaseTypeId",phaseTypes);
         }
 
@@ -135,6 +135,129 @@ public class RestCollectionPhaseViewController {
             parameters.put("r=ycv_cph_result_doc_number",searchStrs);
         }
     //endregion
+
+        Set<CollectionPhaseView> all= collectionPhaseViewService.findByParameter(parameters,offset,100,sortStr,sortField);
+
+        BigInteger count= BigInteger.valueOf(100);
+
+        Meta meta=new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, "desc","v_cph_id");
+//
+        CollectionPhaseViewMetaModel metaModel=new CollectionPhaseViewMetaModel();
+
+        metaModel.setMeta(meta);
+        if(all.size()>perPage){
+            metaModel.setData(ImmutableSet.copyOf(Iterables.limit(all, perPage)));
+        }
+        else{
+            metaModel.setData(all);
+        }
+
+        return metaModel;
+    }
+
+//    get only claims
+    @PostMapping("/collectionPhaseViews/claims")
+    public CollectionPhaseViewMetaModel getAllClaims(@RequestParam Map<String,String> datatable){
+
+        LinkedHashMap<String,List<String>> parameters=new LinkedHashMap<>();
+
+
+        String pageStr = datatable.get("datatable[pagination][page]");
+        String perPageStr = datatable.get("datatable[pagination][perpage]");
+        String sortStr = datatable.get("datatable[sort][sort]");
+        String sortField = datatable.get("datatable[sort][field]");
+
+        Integer page = Integer.parseInt(pageStr);
+        Integer perPage = Integer.parseInt(perPageStr);
+        Integer offset = (page-1)*perPage;
+
+        //region searchValues
+
+        boolean searchByDebtorName= datatable.containsKey("datatable[query][debtorName]");
+        if(searchByDebtorName){
+            String debtorName = datatable.get("datatable[query][debtorName]");
+            List<String> searchWord= Arrays.asList(debtorName);
+            parameters.put("r=ycv_debtor_name",searchWord);
+        }
+
+        boolean searchByDistrict = datatable.containsKey("datatable[query][districtId]");
+        if (searchByDistrict){
+            String districtStr = datatable.get("datatable[query][districtId]");
+            List<String> districtIds=Arrays.asList(districtStr);
+            parameters.put("r=inv_debtor_district_id",districtIds);
+        }
+
+        boolean searchByRegion = datatable.containsKey("datatable[query][regionId]");
+        if (searchByRegion){
+            String regionStr = datatable.get("datatable[query][regionId]");
+            List<String> regionIds=Arrays.asList(regionStr );
+            parameters.put("r=inv_debtor_region_id",regionIds);
+        }
+
+        boolean getFromDate= datatable.containsKey("datatable[query][fromDater]");
+        if (getFromDate){
+            String fromDateStr = datatable.get("datatable[query][fromDater]");
+            List<String> froms=Arrays.asList(fromDateStr);
+            parameters.put("r=aov_cph_startDate",froms);
+        }
+
+        boolean getToDate= datatable.containsKey("datatable[query][toDater]");
+        if (getToDate){
+            String toDateStr = datatable.get("datatable[query][toDater]");
+            List<String> tos=Arrays.asList(toDateStr);
+            parameters.put("r=bov_cph_startDate",tos);
+        }
+
+        boolean searchByStatus= datatable.containsKey("datatable[query][statusId]");
+        if (searchByStatus){
+            String statusStr = datatable.get("datatable[query][statusId]");
+            List<String> statuses=Arrays.asList(statusStr  );
+            parameters.put("r=inv_cph_phaseStatusId",statuses);
+        }
+
+        boolean searchByFinGroup= datatable.containsKey("datatable[query][finGroupId]");
+        if (searchByFinGroup){
+            String searchStr = datatable.get("datatable[query][finGroupId]");
+            List<String> searchStrs=Arrays.asList(searchStr);
+            parameters.put("r=inv_loan_fin_group_id",searchStrs);
+        }
+
+        boolean searchByIndex= datatable.containsKey("datatable[query][indexId]");
+        if (searchByIndex){
+            String searchStr = datatable.get("datatable[query][indexId]");
+            List<String> searchStrs=Arrays.asList(searchStr);
+            parameters.put("r=inv_cph_index_id",searchStrs);
+        }
+
+        boolean searchByGroup= datatable.containsKey("datatable[query][groupId]");
+        if (searchByGroup){
+            String searchStr = datatable.get("datatable[query][groupId]");
+            List<String> searchStrs=Arrays.asList(searchStr);
+            parameters.put("r=inv_cph_group_id",searchStrs);
+        }
+        boolean searchBySubIndex= datatable.containsKey("datatable[query][subIndexId]");
+        if (searchBySubIndex){
+            String searchStr = datatable.get("datatable[query][subIndexId]");
+            List<String> searchStrs=Arrays.asList(searchStr);
+            parameters.put("r=inv_cph_sub_index_id",searchStrs);
+        }
+
+        boolean searchByDocNumber= datatable.containsKey("datatable[query][docNumber]");
+        if(searchByDocNumber){
+            String searchStr = datatable.get("datatable[query][docNumber]");
+            List<String> searchStrs= Arrays.asList(searchStr);
+            parameters.put("r=ycv_cph_doc_number",searchStrs);
+        }
+
+        boolean searchByResultDocNumber= datatable.containsKey("datatable[query][resultDocNumber]");
+        if(searchByResultDocNumber){
+            String searchStr = datatable.get("datatable[query][resultDocNumber]");
+            List<String> searchStrs= Arrays.asList(searchStr);
+            parameters.put("r=ycv_cph_result_doc_number",searchStrs);
+        }
+        List<String> phaseTypes=Arrays.asList("1");
+        parameters.put("r=inv_cph_phaseTypeId",phaseTypes);
+        //endregion
 
         Set<CollectionPhaseView> all= collectionPhaseViewService.findByParameter(parameters,offset,100,sortStr,sortField);
 

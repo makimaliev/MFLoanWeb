@@ -1,0 +1,26 @@
+<form th:action="@{/loansummaryactstate/save}" id="stateForm" class="form-horizontal" method="post" th:object="${object}"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="modal-header">
+        <h5 class="modal-title" th:text="#{label.role.modal.title}"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">
+				&times;
+			</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-danger alert-dismissible alert-hidden" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+            <span th:text="#{label.role.modal.error.name}"></span>
+        </div>
+        <div class="form-group">
+            <label for="name" class="form-control-label" th:text="#{label.role.modal.name}">Name<span class="required"> * </span></label>
+            <input hidden="true" type="text" id="id" name="id" th:field="*{id}" />
+            <input type="text" class="form-control" id="name" name="name" th:value="*{name}">
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.role.button.cancel}"></button>
+        <button type="submit" class="btn btn-primary" th:text="#{label.role.button.submit}"></button>
+    </div>
+</form>

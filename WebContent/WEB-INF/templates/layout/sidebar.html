@@ -187,6 +187,16 @@
                                             </span>
                                         </a>
                                     </li>
+                                    <li class="m-menu__item " aria-haspopup="true" >
+                                        <a th:href="@{/loansummaryactstate/list}" class="m-menu__link ">
+                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                <span></span>
+                                            </i>
+                                            <span class="m-menu__link-text" th:text="#{label.loanSummaryActState}">
+                                                Список
+                                            </span>
+                                        </a>
+                                    </li>
 
                                     <!--<li class="m-menu__item " aria-haspopup="true" >-->
                                         <!--<a th:href="@{/loanView/list}" class="m-menu__link ">-->
@@ -305,6 +315,26 @@
                                             </i>
                                             <span class="m-menu__link-text">
                                                 Список снятий залога с ареста
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="m-menu__item " aria-haspopup="true" >
+                                        <a th:href="@{/manage/debtor/collateralagreement/collateralitem/conditiontype/list}" class="m-menu__link ">
+                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                <span></span>
+                                            </i>
+                                            <span class="m-menu__link-text" th:text="#{label.conditionType.list}">
+                                                Список условий
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="m-menu__item " aria-haspopup="true" >
+                                        <a th:href="@{/conditionsubtype/list}" class="m-menu__link ">
+                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                <span></span>
+                                            </i>
+                                            <span class="m-menu__link-text" th:text="#{label.conditionSubType.list}">
+                                                Список суб условий
                                             </span>
                                         </a>
                                     </li>

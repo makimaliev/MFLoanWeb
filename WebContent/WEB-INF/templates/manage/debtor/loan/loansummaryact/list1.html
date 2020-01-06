@@ -200,6 +200,7 @@
 
     var currentUserId = [[${@userServiceJpaImpl.findByUsername(#authentication.name).id}]];
 
+    var showTableAfterTwentyYear="false";
     //== Class definition
     var DatatableJsonRemoteDemo = function () {
         //== Private functions
@@ -212,7 +213,7 @@
                     type: 'remote',
                     source: {
                         read: {
-                            url: '/api/loanSummaryActViews/'
+                            url: '/api/loanSummaryActViews/after2020'
                         }
                     },
                     pageSize: 10,
@@ -246,27 +247,27 @@
                         overflow: 'visible',
                         width:150,
                         template:function (row) {
-                            if(row.reg_number == null){
+                            if(row.state==1){
                                 return "<a  onclick=reply_click("+row.id+")><span class=\"btn btn-danger\" onclick=changeClass(this)>Not registered</span></a>";
                             }
                             else{
-                                return "<a ><span class=\"btn btn-success\">Registered</span></a>";
+                                return "<a onclick=reply_click("+row.id+")><span class=\"btn btn-success\" onclick=changeClass(this)>Registered</span></a>";
                             }
                         }
                     }, {
-                    field: "View",
-                    title: [[#{v_debtor_name}]],
-                    overflow: 'visible',
-                    width:300,
-                    template: function (row) {
-                        // var d = row.debtorName;
-                        // if(d.length>30){
-                        //     d= d.substring(0,30)+"...";
-                        // }
-                        return '\
+                        field: "View",
+                        title: [[#{v_debtor_name}]],
+                        overflow: 'visible',
+                        width:300,
+                        template: function (row) {
+                            // var d = row.debtorName;
+                            // if(d.length>30){
+                            //     d= d.substring(0,30)+"...";
+                            // }
+                            return '\
 						<a href="/manage/debtor/'+ row.debtorId + '/view">'+row.debtorName+'</a>\
 					';
-                    }
+                        }
                     },  {
                         field: "reg_number",
                         title: [[#{reg_number}]]
@@ -449,9 +450,8 @@
         $.ajax({
             type:'post',
             data:{id:id},
-            url:"/api/loanSummaryAct/register",
+            url:"/api/loanSummaryActState/change",
             success:function (data) {
-                window.location.reload();
             }
         });
     }

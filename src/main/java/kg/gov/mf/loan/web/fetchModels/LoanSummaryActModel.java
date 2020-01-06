@@ -20,6 +20,11 @@ public class LoanSummaryActModel {
     private String districtName;
     private String regionName;
     private Long state;
+    private Long supervisorId;
+    private String au_created_by;
+    private Date au_created_date;
+    private String au_last_modified_by;
+    private Date au_last_modified_date;
 
     public Long getId() {
         return id;
@@ -107,5 +112,45 @@ public class LoanSummaryActModel {
 
     public void setState(Long state) {
         this.state = state;
+    }
+
+    public Long getSupervisorId() {
+        return supervisorId;
+    }
+
+    public void setSupervisorId(Long supervisorId) {
+        this.supervisorId = supervisorId;
+    }
+
+    public String getAu_created_by() {
+        return au_created_by;
+    }
+
+    public void setAu_created_by(String au_created_by) {
+        this.au_created_by = au_created_by;
+    }
+
+    public Date getAu_created_date() {
+        return au_created_date;
+    }
+
+    public void setAu_created_date(Date au_created_date) {
+        this.au_created_date = au_created_date;
+    }
+
+    public String getAu_last_modified_by() {
+        return au_last_modified_by;
+    }
+
+    public void setAu_last_modified_by(String au_last_modified_by) {
+        this.au_last_modified_by = au_last_modified_by;
+    }
+
+    public Date getAu_last_modified_date() {
+        return au_last_modified_date;
+    }
+
+    public void setAu_last_modified_date(Date au_last_modified_date) {
+        this.au_last_modified_date = au_last_modified_date;
     }
 }
