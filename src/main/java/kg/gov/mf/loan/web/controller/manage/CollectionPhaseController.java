@@ -297,21 +297,46 @@ public class CollectionPhaseController {
 				{
 					model.addAttribute("modifyPermission", 1);
 				}
-				else if((departmentId == 4 || departmentId == 5 || departmentId == 6 || departmentId == 16) && procedure.getProcedureStatus().getId() == 9)
+				else if((departmentId == 4 || departmentId == 5 || departmentId == 6 || departmentId == 16) && (procedure.getProcedureStatus().getId() == 9 ||procedure.getProcedureStatus().getId() == 1))
 				{
 					model.addAttribute("modifyPermission", 1);
 				}
 				else
 				{
-					model.addAttribute("modifyPermission", 0);
+					if(departmentId==3 || user.getId()==1)
+					{
+						model.addAttribute("modifyPermission", 1);
+					}
+					else
+					{
+						model.addAttribute("modifyPermission", 0);
+					}
+
 				}
+
+
 
 
 
 			}
 			else
 			{
-				model.addAttribute("modifyPermission", 0);
+				if(departmentId==3 || user.getId()==1)
+				{
+					model.addAttribute("modifyPermission", 1);
+				}
+				else
+				{
+					if((departmentId == 4 || departmentId == 5 || departmentId == 6 || departmentId == 16) && (procedure.getProcedureStatus().getId() == 9 ||procedure.getProcedureStatus().getId() == 1) && (phase.getId()==1))
+					{
+						model.addAttribute("modifyPermission", 1);
+					}
+					else
+					{
+						model.addAttribute("modifyPermission", 0);
+					}
+
+				}
 			}
 
 
