@@ -295,10 +295,17 @@ public class DebtorController {
 		model.addAttribute("createdBy",createdByStr);
 		model.addAttribute("modifiedBy",modifiedByStr);
 
-		String isThereUnregistered = "select if(COUNT(*)>0,'true','false')\n" +
+//		checking if there is any unregistered loanSummaryAct
+		String isThereUnregisteredLoanSummaryAct = "select if(COUNT(*)>0,'true','false')\n" +
 				"from loanSummaryAct where debtorId="+debtorId+" and reg_number is null";
-		Query query = entityManager.createNativeQuery(isThereUnregistered);
+		Query query = entityManager.createNativeQuery(isThereUnregisteredLoanSummaryAct);
 		model.addAttribute("isThereUnregisteredLoanSummaryAct", query.getSingleResult().equals("true"));
+
+//        checking if there is any unregistered collectionPhases with type id 1
+        String isThereUnregisteredCollectionPhaseWithTypeId1 = "select if(COUNT(*)>0,'true','false')\n" +
+                "from collection_phase_view where v_debtor_id="+debtorId+" and v_cph_phaseTypeId =1 and v_cph_doc_number is null";
+        Query query1 = entityManager.createNativeQuery(isThereUnregisteredCollectionPhaseWithTypeId1);
+        model.addAttribute("isThereUnregisteredCollectionPhaseWithTypeId1", query1.getSingleResult().equals("true"));
 
 		return "/manage/debtor/view";
 	}
