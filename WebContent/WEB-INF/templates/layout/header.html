@@ -222,6 +222,14 @@
                                                         </span>
                                                     </a>
                                                 </li>
+                                                <li class="m-menu__item " aria-haspopup="true">
+                                                    <a th:href="@{/collectionPhaseViews/claim}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text">
+                                                            Список претензий
+                                                        </span>
+                                                    </a>
+                                                </li>
                                                 <li class="m-menu__item " aria-haspopup="true" sec:authorize="hasAnyAuthority('ADMIN','COLLECTION_SUPERVISOR_SECOND')">
                                                     <a th:href="@{/collectionPhaseViews/second}" class="m-menu__link ">
                                                         <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>

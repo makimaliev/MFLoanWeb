@@ -247,11 +247,11 @@
                         overflow: 'visible',
                         width:150,
                         template:function (row) {
-                            if(row.state==1){
+                            if(row.reg_number == null || row.reg_number == ""){
                                 return "<a  onclick=reply_click("+row.id+")><span class=\"btn btn-danger\" onclick=changeClass(this)>Not registered</span></a>";
                             }
                             else{
-                                return "<a onclick=reply_click("+row.id+")><span class=\"btn btn-success\" onclick=changeClass(this)>Registered</span></a>";
+                                return "<a><span class=\"btn btn-success\" onclick=changeClass(this)>Registered</span></a>";
                             }
                         }
                     }, {
@@ -450,8 +450,9 @@
         $.ajax({
             type:'post',
             data:{id:id},
-            url:"/api/loanSummaryActState/change",
+            url:"/api/loanSummaryAct/register",
             success:function (data) {
+                window.location.reload();
             }
         });
     }

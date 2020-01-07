@@ -707,6 +707,44 @@
 								</div>
 							</div>
 							<!--end Modal-->
+							<div class="modal fade" id="alertModal" tabindex="-1"
+								 role="dialog" aria-labelledby="myModalLabel"
+								 aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="m-alert m-alert--icon m-alert--outline alert alert-primary" role="alert" >
+											<div class="m-alert__icon">
+												<i class="la la-warning"></i>
+											</div>
+											<div class="m-alert__text" >
+												<strong th:text="#{label.registerAllLoanSUmmaryActs}"></strong>
+											</div>
+											<div class="m-alert__actions" style="width: 200px;">
+												<button class="btn btn-danger btn-sm m-btn m-btn--pill m-btn--wide"  type="button" th:text="#{label.ok}" data-dismiss="modal"></button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal fade" id="dateAlertModal" tabindex="-1"
+								 role="dialog" aria-labelledby="myModalLabel"
+								 aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="m-alert m-alert--icon m-alert--outline alert alert-primary" role="alert" >
+											<div class="m-alert__icon">
+												<i class="la la-warning"></i>
+											</div>
+											<div class="m-alert__text" >
+												<strong th:text="#{label.pleaseFillDate}"></strong>
+											</div>
+											<div class="m-alert__actions" style="width: 200px;">
+												<button class="btn btn-danger btn-sm m-btn m-btn--pill m-btn--wide"  type="button" th:text="#{label.ok}" data-dismiss="modal"></button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -859,38 +897,43 @@
         // on checkbox checked event
         if (!$("#phaseInitDate").val())
         {
+            $('#dateAlertModal').modal('show');
         }
         else
         {
-            var initDate = $("#phaseInitDate").val();
-            // console.log(selectedLoans);
+            if ([[${isThereUnregisteredLoanSummaryAct}]]){
+                $('#alertModal').modal('show');
+			}
+			else {
+                var initDate = $("#phaseInitDate").val();
+                // console.log(selectedLoans);
 
-            console.log("second one ");
-            $.ajax({
-                type : 'POST',
-                url : "/manage/debtor/"+debtorId+"/initializeManualCalculator",
-                data: {selectedLoans:selectedLoans, initDater: initDate},
-				success:function () {
-                    var stringSelecteds="";
-                    for (var i in selectedLoans){
-                        stringSelecteds=stringSelecteds+"-"+i.toString();
+                console.log("second one ");
+                $.ajax({
+                    type: 'POST',
+                    url: "/manage/debtor/" + debtorId + "/initializeManualCalculator",
+                    data: {selectedLoans: selectedLoans, initDater: initDate},
+                    success: function () {
+                        var stringSelecteds = "";
+                        for (var i in selectedLoans) {
+                            stringSelecteds = stringSelecteds + "-" + i.toString();
+                        }
+                        $("#selectedLoanses").val(stringSelecteds.toString());
+                        $("#selectedLoansesDate").val(initDate);
+                        // $("#checkedLoans").submit();
+
+                        var sUrl = "/manage/debtor/" + debtorId + "/loan/summary/view?" + "name=" + $("#selectedLoanses").val() + "&date=" + $("#selectedLoansesDate").val();
+
+                        isCalculationSaved = /*[[${isCalculationSaved}]]*/ [];
+                        console.log(" manual calculation" + isCalculationSaved);
+
+
+                        $.get(sUrl, function (data) {
+                            $('#content').html(data);
+                        });
                     }
-					$("#selectedLoanses").val(stringSelecteds.toString());
-                    $("#selectedLoansesDate").val(initDate);
-					// $("#checkedLoans").submit();
-
-                    var sUrl ="/manage/debtor/"+debtorId+"/loan/summary/view?"+"name="+$("#selectedLoanses").val()+"&date="+$("#selectedLoansesDate").val();
-
-                    isCalculationSaved= /*[[${isCalculationSaved}]]*/ [];
-                    console.log(" manual calculation"+isCalculationSaved);
-
-
-
-                    $.get(sUrl, function(data) {
-                        $('#content').html(data);
-                    });
-				}
-            });
+                });
+            }
         }
 
 
