@@ -205,7 +205,7 @@ public class LoanSummaryActController {
                 "                                                                  and lslsa.LoanSummaryAct_id=l.id and ls.id in (lslsa.loanSummaries_id)\n" +
                 "                                                                  and ls.loanId = loan.id\n"+
                                                                                    searchQueries+
-                "order by debtorName asc,l.onDate desc,l.amount desc LIMIT " + offset +"," + perPage;
+                "order by id desc, debtorName asc,l.onDate desc,l.amount desc LIMIT " + offset +"," + perPage;
         Query query=entityManager.createNativeQuery(baseQuery, LoanSummaryActModel.class);
         List<LoanSummaryActModel> list=query.getResultList();
 
@@ -296,7 +296,7 @@ public class LoanSummaryActController {
                 "                                                                  and lslsa.LoanSummaryAct_id=l.id and ls.id in (lslsa.loanSummaries_id)\n" +
                 "                                                                  and ls.loanId = loan.id and DATEDIFF('2020-01-01',l.onDate) <= 0\n"+
                 searchQueries+
-                "order by debtorName asc,l.onDate desc,l.amount desc LIMIT " + offset +"," + perPage;
+                "order by id desc, debtorName asc,l.onDate desc,l.amount desc LIMIT " + offset +"," + perPage;
         Query query=entityManager.createNativeQuery(baseQuery, LoanSummaryActModel.class);
         List<LoanSummaryActModel> list=query.getResultList();
 

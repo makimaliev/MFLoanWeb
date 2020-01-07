@@ -222,14 +222,6 @@
                                                         </span>
                                                     </a>
                                                 </li>
-                                                <li class="m-menu__item " aria-haspopup="true">
-                                                    <a th:href="@{/collectionPhaseViews/claim}" class="m-menu__link ">
-                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
-                                                        <span class="m-menu__link-text">
-                                                            Список претензий
-                                                        </span>
-                                                    </a>
-                                                </li>
                                                 <li class="m-menu__item " aria-haspopup="true" sec:authorize="hasAnyAuthority('ADMIN','COLLECTION_SUPERVISOR_SECOND')">
                                                     <a th:href="@{/collectionPhaseViews/second}" class="m-menu__link ">
                                                         <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
@@ -275,12 +267,6 @@
                                                     <a th:href="@{/manage/order/list}" class="m-menu__link ">
                                                         <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
                                                         <span class="m-menu__link-text">Список решений</span>
-                                                    </a>
-                                                </li>
-                                                <li class="m-menu__item " aria-haspopup="true" sec:authorize="hasAnyAuthority('ADMIN','PERM_LOANSUMMARYACT_LIST')">
-                                                    <a th:href="@{/loanSummaryAct/list}" class="m-menu__link ">
-                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
-                                                        <span class="m-menu__link-text" th:text="#{label.loanSummaryAct.list}"></span>
                                                     </a>
                                                 </li>
                                             </ul>
@@ -341,6 +327,20 @@
                                                     <a th:href="@{/doc/report}" class="m-menu__link ">
                                                         <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
                                                         <span class="m-menu__link-text"><i class="fa fa-pie-chart"></i>&nbsp;&nbsp;Контроль исполнения</span>
+                                                    </a>
+                                                </li>
+                                                <li class="m-menu__item " aria-haspopup="true">
+                                                    <a th:href="@{/collectionPhaseViews/claim}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text">
+                                                            Список претензий
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li class="m-menu__item " aria-haspopup="true" sec:authorize="hasAnyAuthority('ADMIN','PERM_LOANSUMMARYACT_LIST')">
+                                                    <a th:href="@{/loanSummaryAct/list}" class="m-menu__link ">
+                                                        <i class="m-menu__link-bullet m-menu__link-bullet--dot"></i>
+                                                        <span class="m-menu__link-text" th:text="#{label.loanSummaryAct.list}"></span>
                                                     </a>
                                                 </li>
                                             </ul>
