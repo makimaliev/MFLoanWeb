@@ -246,11 +246,21 @@
                         overflow: 'visible',
                         width:150,
                         template:function (row) {
-                            if(row.reg_number == null){
-                                return "<a  onclick=reply_click("+row.id+")><span class=\"btn btn-danger\" onclick=changeClass(this)>Not registered</span></a>";
+                            if(currentUserId == 152 || currentUserId == 153) {
+                                if (row.reg_number == null || row.reg_number == "") {
+                                    return "<a  onclick=reply_click(" + row.id + ")><span class=\"btn btn-danger\" onclick=changeClass(this)>Not registered</span></a>";
+                                }
+                                else {
+                                    return "<a ><span class=\"btn btn-success\">Registered</span></a>";
+                                }
                             }
                             else{
-                                return "<a ><span class=\"btn btn-success\">Registered</span></a>";
+                                if (row.reg_number == null) {
+                                    return "<a><span class=\"btn btn-danger\" >Not registered</span></a>";
+                                }
+                                else {
+                                    return "<a ><span class=\"btn btn-success\">Registered</span></a>";
+                                }
                             }
                         }
                     }, {
