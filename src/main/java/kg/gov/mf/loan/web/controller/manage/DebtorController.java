@@ -295,6 +295,11 @@ public class DebtorController {
 		model.addAttribute("createdBy",createdByStr);
 		model.addAttribute("modifiedBy",modifiedByStr);
 
+		String isThereUnregistered = "select if(COUNT(*)>0,'true','false')\n" +
+				"from loanSummaryAct where debtorId="+debtorId+" and reg_number is null";
+		Query query = entityManager.createNativeQuery(isThereUnregistered);
+		model.addAttribute("isThereUnregisteredLoanSummaryAct", query.getSingleResult().equals("true"));
+
 		return "/manage/debtor/view";
 	}
 
