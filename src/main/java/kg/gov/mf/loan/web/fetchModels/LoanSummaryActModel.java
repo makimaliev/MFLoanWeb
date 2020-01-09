@@ -5,7 +5,7 @@ import javax.persistence.Id;
 import java.util.Date;
 
 @Entity
-public class LoanSummaryActModel {
+public class LoanSummaryActModel implements Comparable<LoanSummaryActModel> {
 
     @Id
     private Long id;
@@ -152,5 +152,12 @@ public class LoanSummaryActModel {
 
     public void setAu_last_modified_date(Date au_last_modified_date) {
         this.au_last_modified_date = au_last_modified_date;
+    }
+
+    @Override
+    public int compareTo(LoanSummaryActModel model) {
+        if(model.onDate==null || this.onDate==null)
+            return 1;
+        return model.onDate.compareTo(this.onDate);
     }
 }

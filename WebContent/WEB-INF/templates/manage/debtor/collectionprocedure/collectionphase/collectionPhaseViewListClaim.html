@@ -203,6 +203,14 @@
                         <div class="m_datatable" id="ajax_data"></div>
                         <!--end: Datatable -->
                     </div>
+                    <!--begin::Modal-->
+                    <div class="modal fade" id="editForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                            </div>
+                        </div>
+                    </div>
+                    <!--end::Modal-->
                 </div>
             </div>
         </div>
@@ -263,6 +271,12 @@
 <script type="text/javascript" th:inline="javascript">
     //== Class definition
 
+    $("#editForm").on("show.bs.modal", function(e)
+    {
+        var link = $(e.relatedTarget);
+        $(this).find(".modal-content").load(link.attr("href"));
+    });
+
     var statuses=[[${procedures}]];
 
     function reply_click(id)
@@ -310,8 +324,8 @@
                     },
                     pageSize: 10,
                     saveState: {
-                        cookie: false,
-                        webstorage: false
+                        cookie: true,
+                        webstorage: true
                     },
                     serverPaging: true,
                     serverFiltering: true,
@@ -343,7 +357,8 @@
                     overflow: 'visible',
                     width:150,
                     template:function (row) {
-                        if(currentUserId == 152 || currentUserId == 153) {
+                        var myDate = new Date('2019-12-31');
+                        if((currentUserId == 152 || currentUserId == 153) && row.v_cph_startDate > myDate) {
                             if (row.v_cph_doc_number == null || row.v_cph_doc_number == "") {
                                 return "<a  onclick=reply_click(" + row.v_cph_id + ")><span class=\"btn btn-danger\" onclick=changeClass(this)>Not registered</span></a>";
                             }
@@ -421,21 +436,22 @@
                         return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_cph_start_total_amount);
                     }
                 },{
+                    field: "v_cph_startDate",
+                    title: "  Нач. дата",
+                    textAlign:'center',
+                    template: function (row) {
+                        if (row.v_cph_startDate!=null){
+                            var date = moment("/Date("+row.v_cph_startDate+")/").format("DD.MM.YYYY");
+                            return date;
+                        }
+                        return null;
+                    }
+                },{
                     field: "v_cph_close_total_amount",
                     title: "Конеч. сумма",
                     textAlign:'right',
                     template:function (row) {
                         return new Intl.NumberFormat('ru-IN', {minimumFractionDigits:2}).format(row.v_cph_close_total_amount);
-                    }
-                }, {
-                    field: "v_cph_phaseStatusId",
-                    title: "Статус",
-                    template:function (row) {
-                        for(var i=0;i<statuses.length;i++){
-                            if(row.v_cph_phaseStatusId==statuses[i].id){
-                                return statuses[i].name;
-                            }
-                        }
                     }
                 },{
                     field: "",
@@ -445,8 +461,13 @@
                     template: function (row) {
                         var myDate = new Date('2019-12-31');
                         var result ="";
-                        if((row.onDate < myDate && row.supervisorId == currentUserId) || currentUserId == 1){
+                        if((row.v_cph_startDate < myDate && row.supervisorId == currentUserId)){
                             result = '<a href="/collectionphase/claim/'+row.v_cph_id+'/delete"><i class="fa fa-trash-o"></i></a>';
+                            result = result +  '<a role="button" href="/collectionPhase/'+row.v_cph_id+'/partialedit" data-toggle="modal" data-target="#editForm"><i class="la la-edit"></i></a>';
+                        }
+                        else if(currentUserId == 1){
+                            result = '<a href="/collectionphase/claim/'+row.v_cph_id+'/delete"><i class="fa fa-trash-o"></i></a>';
+                            result = result +  '<a role="button" href="/collectionPhase/'+row.v_cph_id+'/partialedit" data-toggle="modal" data-target="#editForm"><i class="la la-edit"></i></a>';
                         }
                         else{
                             result = "";

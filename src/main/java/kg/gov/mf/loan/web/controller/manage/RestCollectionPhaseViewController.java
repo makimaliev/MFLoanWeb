@@ -2,8 +2,6 @@ package kg.gov.mf.loan.web.controller.manage;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import kg.gov.mf.loan.output.report.model.CollectionPhaseView;
 import kg.gov.mf.loan.output.report.service.CollectionPhaseViewService;
 import kg.gov.mf.loan.web.fetchModels.CollectionPhaseMetaModel;
@@ -136,7 +134,7 @@ public class RestCollectionPhaseViewController {
         }
     //endregion
 
-        Set<CollectionPhaseView> all= collectionPhaseViewService.findByParameter(parameters,offset,100,sortStr,sortField);
+        List<CollectionPhaseView> all= collectionPhaseViewService.findByParameter(parameters,offset,100,sortStr,sortField);
 
         BigInteger count= BigInteger.valueOf(100);
 
@@ -146,7 +144,7 @@ public class RestCollectionPhaseViewController {
 
         metaModel.setMeta(meta);
         if(all.size()>perPage){
-            metaModel.setData(ImmutableSet.copyOf(Iterables.limit(all, perPage)));
+            metaModel.setData(all.subList(offset,offset+perPage));
         }
         else{
             metaModel.setData(all);
@@ -259,7 +257,7 @@ public class RestCollectionPhaseViewController {
         parameters.put("r=inv_cph_phaseTypeId",phaseTypes);
         //endregion
 
-        Set<CollectionPhaseView> all= collectionPhaseViewService.findByParameter(parameters,offset,100,sortStr,sortField);
+        List<CollectionPhaseView> all= collectionPhaseViewService.findByParameter(parameters,offset,100,sortStr,sortField);
 
         BigInteger count= BigInteger.valueOf(100);
 
@@ -269,7 +267,7 @@ public class RestCollectionPhaseViewController {
 
         metaModel.setMeta(meta);
         if(all.size()>perPage){
-            metaModel.setData(ImmutableSet.copyOf(Iterables.limit(all, perPage)));
+            metaModel.setData(all.subList(offset,offset+perPage));
         }
         else{
             metaModel.setData(all);
@@ -324,7 +322,7 @@ public class RestCollectionPhaseViewController {
 
 
         Set<CollectionPhaseModel1> list=new HashSet<>();
-        Set<CollectionPhaseView> all=collectionPhaseViewService.findByParameter(parameters,offset,perPage,"asc","v_debtor_name");
+        List<CollectionPhaseView> all=collectionPhaseViewService.findByParameter(parameters,offset,perPage,"asc","v_debtor_name");
         int total=1000;
         for (CollectionPhaseView phaseView:all) {
             CollectionPhaseModel1 model=new CollectionPhaseModel1();

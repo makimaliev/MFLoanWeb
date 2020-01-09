@@ -1215,6 +1215,28 @@ public class CollectionPhaseController {
 
 	}
 
+    @GetMapping("/collectionPhase/{id}/partialedit")
+    public String regFieldEditForm(@PathVariable Long id, Model model){
+
+	    CollectionPhase collectionPhase = phaseService.getById(id);
+
+        model.addAttribute("object",collectionPhase);
+
+        return "manage/debtor/collectionprocedure/collectionphase/editDocNumberField";
+    }
+
+	@PostMapping("/collectionPhase/saveregfields")
+	public String regFieldEditForm(CollectionPhase collectionPhase){
+
+		CollectionPhase oldCollectionPhase = phaseService.getById(collectionPhase.getId());
+		oldCollectionPhase.setDocNumber(collectionPhase.getDocNumber());
+		oldCollectionPhase.setReg_date(collectionPhase.getReg_date());
+
+		phaseService.update(oldCollectionPhase);
+
+		return "redirect:/collectionPhaseViews/claim";
+	}
+
 
 	private long getLatestDetailsByDate(long loanId)
 	{
