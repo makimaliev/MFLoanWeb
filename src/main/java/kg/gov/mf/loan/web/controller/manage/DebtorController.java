@@ -248,7 +248,7 @@ public class DebtorController {
 
 		model.addAttribute("isPerson", isPerson);
 
-		model.addAttribute("loanSummaryActList", this.loanSummaryActService.getLoanSummaryActByDebtor(debtor));
+//		model.addAttribute("loanSummaryActList", this.loanSummaryActService.getLoanSummaryActByDebtor(debtor));
 //		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
 //		String jsonLoans = gson.toJson(getLoansByDebtorId(debtorId));
 //		model.addAttribute("loans", jsonLoans);
@@ -297,13 +297,13 @@ public class DebtorController {
 
 //		checking if there is any unregistered loanSummaryAct
 		String isThereUnregisteredLoanSummaryAct = "select if(COUNT(*)>0,'true','false')\n" +
-				"from loanSummaryAct where debtorId="+debtorId+" and reg_number is null";
+				"from loanSummaryAct where debtorId="+debtorId+" and (reg_number is null or reg_number = '-') and YEAR(onDate) > 2019";
 		Query query = entityManager.createNativeQuery(isThereUnregisteredLoanSummaryAct);
 		model.addAttribute("isThereUnregisteredLoanSummaryAct", query.getSingleResult().equals("true"));
 
 //        checking if there is any unregistered collectionPhases with type id 1
         String isThereUnregisteredCollectionPhaseWithTypeId1 = "select if(COUNT(*)>0,'true','false')\n" +
-                "from collection_phase_view where v_debtor_id="+debtorId+" and v_cph_phaseTypeId =1 and v_cph_doc_number is null";
+                "from collection_phase_view where v_debtor_id="+debtorId+" and v_cph_phaseTypeId =1 and (v_cph_doc_number is null or v_cph_doc_number='-')  and YEAR(v_cph_startDate) > 2019";
         Query query1 = entityManager.createNativeQuery(isThereUnregisteredCollectionPhaseWithTypeId1);
         model.addAttribute("isThereUnregisteredCollectionPhaseWithTypeId1", query1.getSingleResult().equals("true"));
 
@@ -1356,13 +1356,37 @@ public class DebtorController {
         return result;
     }
 
-    @PostMapping("/debtorProcedures/{debtorId}")
+    @PostMapping("/loanSummaryActs/{debtorId}")
     @ResponseBody
-    public String getListOfProcedures(@PathVariable("debtorId") Long debtorId){
+    public String getListOfLoanSummaryActs(@PathVariable("debtorId") Long debtorId){
         Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
-        String result = gson.toJson(getProcsByDebtorId(debtorId));
+
+        Debtor debtor = debtorService.getById(debtorId);
+        List<LoanSummaryAct> loanSummaryActList =this.loanSummaryActService.getLoanSummaryActByDebtor(debtor);
+        List<LoanSummaryActModel> resultList = new ArrayList<>();
+
+        for (LoanSummaryAct act : loanSummaryActList){
+			LoanSummaryActModel model = new LoanSummaryActModel();
+
+			model.setId(act.getId());
+			model.setAmount(act.getAmount());
+			model.setOnDate(act.getOnDate());
+
+			resultList.add(model);
+		}
+		Collections.sort(resultList);
+
+        String result = gson.toJson(resultList);
         return result;
     }
+
+	@PostMapping("/debtorProcedures/{debtorId}")
+	@ResponseBody
+	public String getListOfProcedures(@PathVariable("debtorId") Long debtorId){
+		Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+		String result = gson.toJson(getProcsByDebtorId(debtorId));
+		return result;
+	}
 
     @PostMapping("/debtor/type/instantUpdate")
 	@ResponseBody

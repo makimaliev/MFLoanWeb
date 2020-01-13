@@ -827,50 +827,6 @@
         debtorURL = '/person/'+entityId + '/details';
 
 </script>
-<script type="text/javascript">
-    $(document).ready(function() {
-
-        var table = $('#loanSummaryActTable').DataTable({
-            stateSave: true,
-            language: {
-                paginate: {
-                    previous: '<i class="la la-angle-left"></i>', // or '→'
-                    next: '<i class="la la-angle-right"></i>' // or '←'
-                },
-                lengthMenu: '[[ #{label.pageSize} ]] _MENU_',
-            },
-            "info":     false,
-            keys: {
-                focus: ':eq(0)'
-            },
-            "sDom": 'rtlip'
-        });
-
-        $('#generalSearch').keyup(function(){
-            table.search($(this).val()).draw() ;
-        });
-
-        $('.dataTables_length select').addClass('selectpicker').attr('data-width','70px');
-        $('.selectpicker').selectpicker('refresh');
-
-        table.on('key-focus', function(e, datatable, cell) {
-
-            var rowData = datatable.row(cell.index().row).data();
-            // console.log(rowData[2]);
-            summaryAct=rowData[2];
-
-            var sUrl ="/manage/debtor/"+debtorId+"/loan/summary/act/" + rowData[2]+"/view";
-
-            $.get(sUrl, function(data) {
-                $('#content_inspection').html(data);
-            });
-
-            var row = datatable.row( cell.index().row );
-            table.$('tr.info').removeClass('info');
-            $( row.node() ).addClass( "info" );
-        });
-    });
-</script>
 <!--<script>-->
 	<!--var btn='#'+$("#seeSummaryAct").val()+'seeSummaryAct';-->
 	<!--alert(btn)-->
@@ -1084,6 +1040,101 @@
             }
         });
     });
+    $("#loanSummaryActListOfDebtorFunction").on('click',function () {
+        $.ajax({
+            type:'post',
+            url: '/loanSummaryActs/'+debtorId,
+            success:function (data) {
+                var jsonLoanSummaryList=data;
+                var dataJSONArray = JSON.parse(jsonLoanSummaryList);
+
+                var datatable = $('#loanSummaryActsTable').mDatatable({
+                    // datasource definition
+                    data: {
+                        type: 'local',
+                        source: dataJSONArray,
+                        pageSize: 10
+                    },
+
+                    // layout definition
+                    layout: {
+                        theme: 'default', // datatable theme
+                        class: '', // custom wrapper class
+                        scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+                        footer: false // display/hide footer
+                    },
+
+                    // column sorting(refer to Kendo UI)
+                    sortable: true,
+
+                    // column based filtering(refer to Kendo UI)
+                    filterable: false,
+
+                    pagination: false,
+
+                    // inline and bactch editing(cooming soon)
+                    // editable: false,
+
+                    // columns definition
+                    columns: [{
+                        field: "id",
+                        title: "#",
+                        sortable: false, // disable sort for this column
+                        width: 50,
+                        textAlign: 'center',
+						template: function (row) {
+                            return '\
+								<a onclick="showLoanSummaryActTable('+row.id+')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View "><i class="la la-arrow-circle-o-right"></i></a>\
+								';
+                        }
+                    },{
+                        field: "onDate",
+                        title: "Дата",
+                        width: 100
+                    },{
+                        field: "amount",
+                        title: "Сумма",
+                        width: 160,
+                        template: function (row) {
+                            return '\
+						<input type="text" class="form-control m-input" value="'+ (row.amount).toFixed(2) +'" disabled>\
+					';
+                        }
+                    }],
+                    translate: {
+                        records: {
+                            processing: 'Подождите пожалуйста...',
+                            noRecords: 'Записей не найдено'
+                        },
+                        toolbar: {
+                            pagination: {
+                                items: {
+                                    default: {
+                                        first: 'Первая страница',
+                                        prev: 'Предыдущая страница',
+                                        next: 'Следующая страница',
+                                        last: 'Последняя страница',
+                                        more: 'Другие страницы',
+                                        input: 'Номер страницы',
+                                        select: 'Выбрать размер страницы'
+                                    },
+                                    info: 'Отображение {{start}} - {{end}} из {{total}} записей'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    function showLoanSummaryActTable(id) {
+        var sUrl ="/manage/debtor/"+debtorId+"/loan/summary/act/" + id+"/view";
+
+        $.get(sUrl, function(data) {
+            $('#content_inspection').html(data);
+        });
+    }
 </script>
 <script th:inline="javascript">
     var ttt;

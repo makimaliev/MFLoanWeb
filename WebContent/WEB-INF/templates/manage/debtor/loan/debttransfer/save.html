@@ -218,19 +218,20 @@
 								</div>
 								-->
 
-
 								<div class="form-group m-form__group row">
 									<label class="col-form-label col-lg-4 col-sm-12">
-										<span th:text="#{label.loan.debtTransfer.goodsType}">Goods type id</span><span class="m--font-danger">*</span>
+										<span th:text="#{label.loan.good.goodType}">Good Typ eId</span>
+										<span class="m--font-danger">*</span>
 									</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
-										<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_goodType" th:field="*{goodType.id}">
-											<option value="0" th:text="#{label.select}">Все</option>
+										<select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_goodType" data-live-search="true"
+												th:field="*{goodType.id}">
+											<option value="0" th:text="#{label.select}"></option>
 											<option th:each="goodType : ${goodTypes}" th:value="${goodType.id}" th:text="${goodType.name}"></option>
 										</select>
-										<!--<input hidden="hidden" type="text" class="form-control m-input" id="goodTypeId" >									-->
+										<!--<input hidden="hidden" type="text" class="form-control m-input" id="goodTypeId" th:field="*{lg.goodType}">									</div>-->
 									</div>
-									</div>
+								</div>
 									<!--<div class="col-lg-4 col-md-9 col-sm-12">-->
 										<!--<input type="text" class="form-control m-input" name="goodsTypeId" th:value="${dt.goodsTypeId}">-->
 									<!--</div>-->
@@ -304,7 +305,7 @@
         <!--});-->
     <!--});-->
 <!--</script>-->
-
+<script th:src="@{/assets/custom/demo/default/custom/components/forms/widgets/bootstrap-select.js}" type="text/javascript"></script>
 <script type="text/javascript">
     function updateTOwner(sel)
     {
