@@ -1014,6 +1014,7 @@ public class DebtorController {
 
 		model.addAttribute("totals",sumLoanSummary);
 		model.addAttribute("isSaved", "");
+		model.addAttribute("summaryAct",id);
 
 
 

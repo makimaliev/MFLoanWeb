@@ -411,6 +411,14 @@ public class ReportController {
 		reportTemplateModel.setGroupType5(reportTemplate.getGroupType5());
 		reportTemplateModel.setGroupType6(reportTemplate.getGroupType6());
 
+		Date onDate = new Date();
+//		model.addAttribute("onDate",reportTemplate.getOnDate());
+		model.addAttribute("onDate",onDate);
+
+		reportTemplateModel.setOnDate(onDate);
+
+
+
 		model.addAttribute("onDate",reportTemplate.getOnDate());
 		if(reportTemplate.getAdditionalDate()!=null)
 		{
