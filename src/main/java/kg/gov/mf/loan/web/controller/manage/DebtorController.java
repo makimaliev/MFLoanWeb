@@ -65,6 +65,8 @@ import java.util.*;
 @Controller
 public class DebtorController {
 
+	//region services
+
 	@Autowired
 	DebtorTypeService debtorTypeService;
 
@@ -193,6 +195,8 @@ public class DebtorController {
 	 */
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	//endregion
 
 	@Autowired
 	private SessionFactory sessionFactory;

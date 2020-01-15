@@ -1895,6 +1895,64 @@
 						<div id="content"></div>
 					</div>
 				</div>
+				<div class="modal fade" id="alertModal" tabindex="-1"
+					 role="dialog" aria-labelledby="myModalLabel"
+					 aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="m-alert m-alert--icon m-alert--outline alert alert-primary" role="alert" >
+								<div class="m-alert__icon">
+									<i class="la la-warning"></i>
+								</div>
+								<div class="m-alert__text" >
+									<strong th:text="#{label.registerAllLoanSUmmaryActs}"></strong>
+								</div>
+								<div class="m-alert__actions" style="width: 200px;">
+									<button class="btn btn-danger btn-sm m-btn m-btn--pill m-btn--wide"  type="button" th:text="#{label.ok}" data-dismiss="modal"></button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal fade" id="phaseAlertModal" tabindex="-1"
+					 role="dialog" aria-labelledby="myModalLabel"
+					 aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="m-alert m-alert--icon m-alert--outline alert alert-primary" role="alert" >
+								<div class="m-alert__icon">
+									<i class="la la-warning"></i>
+								</div>
+								<div class="m-alert__text" >
+									<strong th:text="#{label.registerAllPhasesWithTypeId1}"></strong>
+								</div>
+								<div class="m-alert__actions" style="width: 200px;">
+									<button class="btn btn-danger btn-sm m-btn m-btn--pill m-btn--wide"  type="button" th:text="#{label.ok}" data-dismiss="modal"></button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal fade" id="dateAlertModal" tabindex="-1"
+					 role="dialog" aria-labelledby="myModalLabel"
+					 aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="m-alert m-alert--icon m-alert--outline alert alert-primary" role="alert" >
+								<div class="m-alert__icon">
+									<i class="la la-warning"></i>
+								</div>
+								<div class="m-alert__text" >
+									<strong th:text="#{label.pleaseFillDate}"></strong>
+								</div>
+								<div class="m-alert__actions" style="width: 200px;">
+									<button class="btn btn-danger btn-sm m-btn m-btn--pill m-btn--wide"  type="button" th:text="#{label.ok}" data-dismiss="modal"></button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 
 		</div>
@@ -1987,60 +2045,66 @@
     });
     $('#bnt_init_phase')
         .on('click', function () {
+
             if (!$("#phaseInitDate").val())
             {
-                var alert = $('#m_form_2_msg');
-                alert.removeClass('m--hide').show();
-                mApp.scrollTo(alert, -200);
+				$('#dateAlertModal').modal('show');
             }
             else
             {
-                var initDate = $("#phaseInitDate").val();
-                console.log(debtorId)
-                $.ajax({
-                    type : 'POST',
-                    url : "/manage/debtor/"+debtorId+"/initializephase",
-                    data: {selectedLoans:loanId, initDater: initDate},
-                    success:function (data) {
-                        phaseDetailsTableInit(data);
-                        var divT = $('#phaseDetailsDiv');
-                        divT.collapse('show');
-                        mApp.scrollTo(divT, -200);
-                    }
-                });
-                //$.post( "/manage/debtor/"+debtorId+"/initializephase", );
+				if ([[${isThereUnregisteredCollectionPhaseWithTypeId1}]]){
+					$('#phaseAlertModal').modal('show');
+				}
+				else{
+					var initDate = $("#phaseInitDate").val();
+					$.ajax({
+						type : 'POST',
+						url : "/manage/debtor/"+debtorId+"/initializephase",
+						data: {selectedLoans:loanId, initDater: initDate},
+						success:function (data) {
+							phaseDetailsTableInit(data);
+							var divT = $('#phaseDetailsDiv');
+							divT.collapse('show');
+							mApp.scrollTo(divT, -200);
+						}
+					});
+				}
             }
         });
     $("#bnt_init_manualCalculator").on('click',function () {
         // on checkbox checked event
         if (!$("#phaseInitDate").val())
         {
+			$('#dateAlertModal').modal('show');
         }
         else
         {
-            var initDate = $("#phaseInitDate").val();
-            // console.log(selectedLoans);
-            $.ajax({
-                type : 'POST',
-                url : "/manage/debtor/"+debtorId+"/initializeManualCalculator",
-                data: {selectedLoans:loanId, initDater: initDate},
-                success:function () {
-                    $("#selectedLoanses").val(loanId);
-                    $("#selectedLoansesDate").val(initDate);
-                    // $("#checkedLoans").submit();
+			if ([[${isThereUnregisteredLoanSummaryAct}]]){
+				$('#alertModal').modal('show');
+			}
+            else {
+				var initDate = $("#phaseInitDate").val();
+				$.ajax({
+					type : 'POST',
+					url : "/manage/debtor/"+debtorId+"/initializeManualCalculator",
+					data: {selectedLoans:loanId, initDater: initDate},
+					success:function () {
+						$("#selectedLoanses").val(loanId);
+						$("#selectedLoansesDate").val(initDate);
 
-                    var sUrl ="/manage/debtor/"+debtorId+"/loan/summary/view?"+"name="+$("#selectedLoanses").val()+"&date="+$("#selectedLoansesDate").val();
+						var sUrl ="/manage/debtor/"+debtorId+"/loan/summary/view?"+"name="+$("#selectedLoanses").val()+"&date="+$("#selectedLoansesDate").val();
 
-                    isCalculationSaved= /*[[${isCalculationSaved}]]*/ [];
-                    console.log(" manual calculation"+isCalculationSaved);
+						isCalculationSaved= /*[[${isCalculationSaved}]]*/ [];
+						console.log(" manual calculation"+isCalculationSaved);
 
 
 
-                    $.get(sUrl, function(data) {
-                        $('#content').html(data);
-                    });
-                }
-            });
+						$.get(sUrl, function(data) {
+							$('#content').html(data);
+						});
+					}
+				});
+			}
         }
 
 
@@ -2051,6 +2115,7 @@
         // on checkbox checked event
         if (!$("#phaseInitDate").val())
         {
+			$('#dateAlertModal').modal('show');
         }
         else
         {
@@ -2563,61 +2628,65 @@
         $('#initPhaseSaveBtn')
             .on('click', function () {
                 // var options = { year: 'numeric',month: 'long', day: 'numeric' };
-                var initDate = $("#phaseInitDate").val();
+				if ([[${isThereUnregisteredCollectionPhaseWithTypeId1}]]){
+					$('#phaseAlertModal').modal('show');
+				}
+                else {
+					var initDate = $("#phaseInitDate").val();
 
-                $.ajax({
-                    type:'post',
-                    data:{initdate:initDate},
-                    url:"/initializephasesave/initdate"
-                });
-                var phaseDetailsModels = [];
-                for (var i = 0; i < dataJSONArray.length; i++) {
-                    var obj = dataJSONArray[i];
-                    $.map(obj, function(val, key) {
-                        if(key=='loanId')
-                        {
-                            var PhaseDetailsModel = {};
-                            var startPrincInput ="#startPrinc" + val;
-                            var startIntInput ="#startInt" + val;
-                            var startPenInput ="#startPen" + val;
-                            var totalInput = "#total" + val;
+					$.ajax({
+						type:'post',
+						data:{initdate:initDate},
+						url:"/initializephasesave/initdate"
+					});
+					var phaseDetailsModels = [];
+					for (var i = 0; i < dataJSONArray.length; i++) {
+						var obj = dataJSONArray[i];
+						$.map(obj, function(val, key) {
+							if(key=='loanId')
+							{
+								var PhaseDetailsModel = {};
+								var startPrincInput ="#startPrinc" + val;
+								var startIntInput ="#startInt" + val;
+								var startPenInput ="#startPen" + val;
+								var totalInput = "#total" + val;
 
-                            PhaseDetailsModel['loanId'] = val;
-                            PhaseDetailsModel['startPrincipal'] = parseFloat($(startPrincInput).val());
-                            PhaseDetailsModel['startInterest'] = parseFloat($(startIntInput).val());
-                            PhaseDetailsModel['startPenalty'] = parseFloat($(startPenInput).val());
-                            PhaseDetailsModel['startTotalAmount'] = parseFloat($(totalInput).val());
-                            // PhaseDetailsModel['initDate'] = d;
-                            phaseDetailsModels.push(PhaseDetailsModel);
-                        }
-                    });
-                }
-                console.log(phaseDetailsModels);
-                phaseDetailsModels = JSON.stringify({
-                    'phaseDetailsModels' : phaseDetailsModels
-                });
-                $.ajax({
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    type : 'POST',
-                    url : "/manage/debtor/"+debtorId+"/initializephasesave",
-                    data: phaseDetailsModels,
-                    dataType: 'json',
-                    success:function (data) {
-                        if(data!=""){
-                            var ids=data.split("-");
-                            window.location.replace("/manage/debtor/" + debtorId + "/collectionprocedure/"+ids[0]+"/collectionphase/"+ids[1]+"/view");
-                        }
-                        else {
-                            if (fromLoan == false)
-                                window.location.replace("/manage/debtor/" + debtorId + "/view");
-                            else
-                                window.location.replace("/manage/debtor/" + debtorId + "/loan/" + loanId + "/view");
-                        }
-                    }
-                });
+								PhaseDetailsModel['loanId'] = val;
+								PhaseDetailsModel['startPrincipal'] = parseFloat($(startPrincInput).val());
+								PhaseDetailsModel['startInterest'] = parseFloat($(startIntInput).val());
+								PhaseDetailsModel['startPenalty'] = parseFloat($(startPenInput).val());
+								PhaseDetailsModel['startTotalAmount'] = parseFloat($(totalInput).val());
+								// PhaseDetailsModel['initDate'] = d;
+								phaseDetailsModels.push(PhaseDetailsModel);
+							}
+						});
+					}
+					phaseDetailsModels = JSON.stringify({
+						'phaseDetailsModels' : phaseDetailsModels
+					});
+					$.ajax({
+						headers: {
+							'Accept': 'application/json',
+							'Content-Type': 'application/json'
+						},
+						type : 'POST',
+						url : "/manage/debtor/"+debtorId+"/initializephasesave",
+						data: phaseDetailsModels,
+						dataType: 'json',
+						success:function (data) {
+							if(data!=""){
+								var ids=data.split("-");
+								window.location.replace("/manage/debtor/" + debtorId + "/collectionprocedure/"+ids[0]+"/collectionphase/"+ids[1]+"/view");
+							}
+							else {
+								if (fromLoan == false)
+									window.location.replace("/manage/debtor/" + debtorId + "/view");
+								else
+									window.location.replace("/manage/debtor/" + debtorId + "/loan/" + loanId + "/view");
+							}
+						}
+					});
+				}
             });
 
         for (var i = 0; i < dataJSONArray.length; i++) {
