@@ -974,6 +974,8 @@
 	var sumOfEstimatedValueStatus2=0;
 	var sumOfQuantityStatus2=0;
 
+	var currentUserId = [[${@userServiceJpaImpl.findByUsername(#authentication.name).id}]];
+
     $("#loanListOfDebtorFunction").on('click',function () {
 
         $.ajax({
@@ -1100,7 +1102,21 @@
 						<input type="text" class="form-control m-input" value="'+ (row.amount).toFixed(2) +'" disabled>\
 					';
                         }
-                    }],
+                    },{
+						field: "",
+						title: "",
+						template: function (row) {
+							var myDate = new Date('2019-12-31');
+							var result ="";
+							if((row.onDate < myDate && row.supervisorId == currentUserId) || currentUserId == 1){
+								result = '<a href="/loanSummaryAct/'+row.id+'/delete"><i class="fa fa-trash-o"></i></a>';
+							}
+							else{
+								result = "";
+							}
+							return result
+						}
+					}],
                     translate: {
                         records: {
                             processing: 'Подождите пожалуйста...',
