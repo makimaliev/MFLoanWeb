@@ -15,7 +15,7 @@ import kg.gov.mf.loan.admin.sys.service.AttachmentService;
 import kg.gov.mf.loan.admin.sys.service.InformationService;
 import kg.gov.mf.loan.admin.sys.service.SystemFileService;
 import kg.gov.mf.loan.admin.sys.service.UserService;
-import kg.gov.mf.loan.manage.model.Counter;
+import kg.gov.mf.loan.manage.model.ManageCounter;
 import kg.gov.mf.loan.manage.model.collection.*;
 import kg.gov.mf.loan.manage.model.debtor.*;
 import kg.gov.mf.loan.manage.model.loan.Loan;
@@ -24,7 +24,7 @@ import kg.gov.mf.loan.manage.model.loan.Payment;
 import kg.gov.mf.loan.manage.model.loan.PaymentSchedule;
 import kg.gov.mf.loan.manage.model.process.LoanDetailedSummary;
 import kg.gov.mf.loan.manage.model.process.LoanSummary;
-import kg.gov.mf.loan.manage.repository.CounterRepository;
+import kg.gov.mf.loan.manage.repository.ManageCounterRepository;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
 import kg.gov.mf.loan.manage.service.collection.*;
 import kg.gov.mf.loan.manage.service.debtor.DebtorGroupService;
@@ -189,7 +189,7 @@ public class CollectionPhaseController {
 	LoanFinGroupService loanFinGroupService;
 
 	@Autowired
-	CounterRepository counterRepository;
+	ManageCounterRepository manageCounterRepository;
 
 	//endregion
 
@@ -2572,14 +2572,14 @@ public class CollectionPhaseController {
 	public void registerCollectionPhase(Long id){
 		CollectionPhase collectionPhase = collectionPhaseService.getById(id);
 
-		Counter counter = counterRepository.getByEntityNameEquals(CollectionPhase.class.getSimpleName());
+		ManageCounter counter = manageCounterRepository.getByEntityNameEquals(CollectionPhase.class.getSimpleName());
 
 
 		if (counter == null){
-			Counter counter1 =new Counter();
+			ManageCounter counter1 =new ManageCounter();
 			counter1.setEntityName(CollectionPhase.class.getSimpleName());
 			counter1.setNumber(1L);
-			counterRepository.save(counter1);
+			manageCounterRepository.save(counter1);
 
 			collectionPhase.setDocNumber("№ "+counter1.getNumber());
 			collectionPhase.setReg_date(new Date());
@@ -2587,7 +2587,7 @@ public class CollectionPhaseController {
 			collectionPhaseService.update(collectionPhase);
 
 			counter1.setNumber(counter1.getNumber()+1);
-			counterRepository.save(counter1);
+			manageCounterRepository.save(counter1);
 		}
 		else{
 			collectionPhase.setDocNumber("№ "+counter.getNumber());
@@ -2596,7 +2596,7 @@ public class CollectionPhaseController {
 			collectionPhaseService.update(collectionPhase);
 
 			counter.setNumber(counter.getNumber()+1);
-			counterRepository.save(counter);
+			manageCounterRepository.save(counter);
 		}
 
 	}

@@ -1,10 +1,10 @@
 package kg.gov.mf.loan.web.controller.manage;
 
-import kg.gov.mf.loan.manage.model.Counter;
+import kg.gov.mf.loan.manage.model.ManageCounter;
 import kg.gov.mf.loan.manage.model.loan.LoanSummaryAct;
 import kg.gov.mf.loan.manage.model.loan.LoanSummaryActState;
 import kg.gov.mf.loan.manage.model.process.LoanSummary;
-import kg.gov.mf.loan.manage.repository.CounterRepository;
+import kg.gov.mf.loan.manage.repository.ManageCounterRepository;
 import kg.gov.mf.loan.manage.service.loan.LoanSummaryActService;
 import kg.gov.mf.loan.manage.service.loan.LoanSummaryActStateService;
 import kg.gov.mf.loan.manage.service.process.LoanSummaryService;
@@ -35,7 +35,7 @@ public class LoanSummaryActController {
     //region services
 
     @Autowired
-    CounterRepository counterRepository;
+    ManageCounterRepository manageCounterRepository;
 
     @Autowired
     EntityManager entityManager;
@@ -330,14 +330,14 @@ public class LoanSummaryActController {
     public void registerLoanSummaryact(Long id){
         LoanSummaryAct loanSummaryAct = loanSummaryActService.getById(id);
 
-        Counter counter = counterRepository.getByEntityNameEquals(LoanSummaryAct.class.getSimpleName());
+        ManageCounter counter = manageCounterRepository.getByEntityNameEquals(LoanSummaryAct.class.getSimpleName());
 
 
         if (counter == null){
-            Counter counter1 =new Counter();
+            ManageCounter counter1 =new ManageCounter();
             counter1.setEntityName(LoanSummaryAct.class.getSimpleName());
             counter1.setNumber(1L);
-            counterRepository.save(counter1);
+            manageCounterRepository.save(counter1);
 
             loanSummaryAct.setReg_number("№ "+counter1.getNumber());
             loanSummaryAct.setRegisteredDate(new Date());
@@ -345,7 +345,7 @@ public class LoanSummaryActController {
             loanSummaryActService.update(loanSummaryAct);
 
             counter1.setNumber(counter1.getNumber()+1);
-            counterRepository.save(counter1);
+            manageCounterRepository.save(counter1);
         }
         else{
             loanSummaryAct.setReg_number("№ "+counter.getNumber());
@@ -354,7 +354,7 @@ public class LoanSummaryActController {
             loanSummaryActService.update(loanSummaryAct);
 
             counter.setNumber(counter.getNumber()+1);
-            counterRepository.save(counter);
+            manageCounterRepository.save(counter);
         }
 
     }

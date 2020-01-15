@@ -27,6 +27,7 @@ import kg.gov.mf.loan.manage.repository.collateral.CollateralItemReposiory;
 import kg.gov.mf.loan.manage.repository.debtor.DebtorRepository;
 import kg.gov.mf.loan.manage.repository.debtor.OwnerRepository;
 import kg.gov.mf.loan.manage.repository.loan.LoanRepository;
+import kg.gov.mf.loan.manage.repository.loan.LoanSummaryActRepository;
 import kg.gov.mf.loan.manage.service.collateral.CollateralAgreementService;
 import kg.gov.mf.loan.manage.service.collateral.CollateralItemService;
 import kg.gov.mf.loan.manage.service.collection.CollectionPhaseService;
@@ -171,6 +172,9 @@ public class DebtorController {
 
 	@Autowired
 	LoanSummaryActService loanSummaryActService;
+
+	@Autowired
+	LoanSummaryActRepository loanSummaryActRepository;
 
 	@Autowired
 	LoanSummaryActStateService loanSummaryActStateService;
@@ -786,7 +790,7 @@ public class DebtorController {
 		loanSummaryAct.setAmount(sumLoanSummary.getTotalOutstanding());
 		loanSummaryAct.setOnDate(newDate);
 
-		loanSummaryActService.add(loanSummaryAct);
+		loanSummaryActRepository.save(loanSummaryAct);
 
 
 		return "/manage/debtor/loanSummary2";
