@@ -1294,6 +1294,56 @@ public class LoanController {
         return result;
     }
 
+    @PostMapping("/loanSummaryRequest/{loanId}/{year}")
+    @ResponseBody
+    public String getListOfLoanSummariesByYear(@PathVariable("loanId") Long loanId,@PathVariable String year){
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+
+        List<LoanSummaryModel> result = new ArrayList<>();
+        Loan loan = loanService.getById(loanId);
+        for(LoanSummary d: loan.getLoanSummaries())
+        {
+            if(d.getLoanSummaryType()!=LoanSummaryType.DAILY && simpleDateFormat.format(d.getOnDate()).equals(year))
+            {
+                LoanSummaryModel model = new LoanSummaryModel();
+                model.setId(d.getId());
+                model.setOnDate(d.getOnDate());
+                model.setLoanAmount(d.getLoanAmount());
+                model.setTotalDisbursed(d.getTotalDisbursed());
+                model.setTotalPaid(d.getTotalPaid());
+                model.setPaidPrincipal(d.getPaidPrincipal());
+                model.setPaidInterest(d.getPaidInterest());
+                model.setPaidPenalty(d.getPaidPenalty());
+                model.setPaidFee(d.getPaidFee());
+                model.setTotalOutstanding(d.getTotalOutstanding());
+                model.setOutstadingPrincipal(d.getOutstadingPrincipal());
+                model.setOutstadingInterest(d.getOutstadingInterest());
+                model.setOutstadingPenalty(d.getOutstadingPenalty());
+                model.setOutstadingFee(d.getOutstadingFee());
+                model.setTotalOverdue(d.getTotalOverdue());
+                model.setOverduePrincipal(d.getOverduePrincipal());
+                model.setOverdueInterest(d.getOverdueInterest());
+                model.setOverduePenalty(d.getOverduePenalty());
+                model.setOverdueFee(d.getOverdueFee());
+                model.setTotalPrincipalPaid(d.getTotalPrincipalPaid());
+                model.setTotalInterestPaid(d.getTotalInterestPaid());
+                model.setTotalPenaltyPaid(d.getTotalPenaltyPaid());
+                model.setTotalFeePaid(d.getTotalFeePaid());
+                model.setLoanSummaryType(d.getLoanSummaryType());
+                model.setRecord_status(d.getRecord_status());
+
+                result.add(model);
+            }
+        }
+
+        Collections.sort(result);
+
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String finalResult = gson.toJson(result);
+        return finalResult;
+    }
+
     @PostMapping("/detailedLoanSummaryRequest/{loanId}")
     @ResponseBody
     public String getListOfDetailedLoanSummaries(@PathVariable("loanId") Long loanId){
@@ -1331,6 +1381,42 @@ public class LoanController {
         Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
         String result = gson.toJson(getSPsByLoanId(loanId));
         return result;
+    }
+
+    @PostMapping("/paymentScheduleRequest/{loanId}/{year}")
+    @ResponseBody
+    public String getListOfSupervisorPlansByYear(@PathVariable("loanId") Long loanId,@PathVariable String year){
+
+	    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+
+        List<PaymentScheduleModel> result = new ArrayList<>();
+        Loan loan = loanService.getById(loanId);
+        for(PaymentSchedule pss: loan.getPaymentSchedules())
+        {
+            if(simpleDateFormat.format(pss.getExpectedDate()).equals(year)) {
+                PaymentSchedule ps = paymentScheduleService.getById(pss.getId());
+                PaymentScheduleModel model = new PaymentScheduleModel();
+
+                model.setId(ps.getId());
+                model.setExpectedDate(ps.getExpectedDate());
+                model.setDisbursement(ps.getDisbursement());
+                model.setPrincipalPayment(ps.getPrincipalPayment());
+                model.setInterestPayment(ps.getInterestPayment());
+                model.setCollectedInterestPayment(ps.getCollectedInterestPayment());
+                model.setCollectedPenaltyPayment(ps.getCollectedPenaltyPayment());
+                model.setInstallmentStateId(ps.getInstallmentState().getId());
+                model.setInstallmentStateName(ps.getInstallmentState().getName());
+                model.setRecord_status(ps.getRecord_status());
+
+                result.add(model);
+            }
+        }
+
+        Collections.sort(result);
+
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+        String finalResult = gson.toJson(result);
+        return finalResult;
     }
 
     @PostMapping("/childrenRequest/{loanId}")

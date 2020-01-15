@@ -185,9 +185,11 @@ public class SupervisorPlanController {
 			sp.setReg_date(sp.getDate());
 			spService.add(sp);
 		}
-		else
-			sp.setReg_date(globalRegDate);
-			spService.update(sp);
+		else {
+            sp.setReg_date(globalRegDate);
+            spService.update(sp);
+        }
+		updateLoanData(loanId);
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
@@ -237,4 +239,20 @@ public class SupervisorPlanController {
 
 		return "redirect:/manage/debtor/{debtorId}/loan/{loanId}/view";
 	}
+
+	@GetMapping("/supervisorPlan/paymentScheduleList")
+    public String getPaymentScheduleListInSPAdd(){
+        return "/manage/debtor/loan/sp/paymentSchedulesTableDiv";
+    }
+
+    @GetMapping("/supervisorPlan/loanSummaryList")
+    public String getLoanSUmmaryListInSPAdd(){
+        return "/manage/debtor/loan/sp/loanSummariesTableDiv";
+    }
+
+
+	//function for updating loan data
+    public void updateLoanData(Long loanId){
+
+    }
 }
