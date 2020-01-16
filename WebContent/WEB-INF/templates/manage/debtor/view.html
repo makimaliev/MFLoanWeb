@@ -815,6 +815,7 @@
     var isCalculationSaved = false;
     var jsonAgreements;
     var jsonProcs;
+    var hasUnregisteredloanSummaryAct;
     var debtorId = /*[[${debtor.id}]]*/ [];
     var entityId = /*[[${debtor.owner.entityId}]]*/ [];
     var ownerType = /*[[${debtor.owner.ownerType}]]*/ [];
@@ -826,6 +827,18 @@
     else
         debtorURL = '/person/'+entityId + '/details';
 
+
+
+	checkLoanSummaryActsRegStatus();
+    function checkLoanSummaryActsRegStatus() {
+        $.ajax({
+            type: 'POST',
+            url: "/debtor/"+debtorId+"/checkHasUnregisteredAct",
+            success: function (data) {
+                hasUnregisteredloanSummaryAct=data;
+            }
+        });
+    }
 </script>
 <!--<script>-->
 	<!--var btn='#'+$("#seeSummaryAct").val()+'seeSummaryAct';-->
@@ -870,6 +883,9 @@
 
     });
     $("#bnt_init_manualCalculator_new").on('click',function () {
+        checkLoanSummaryActsRegStatus();
+
+        sleep(3000);
         // on checkbox checked event
         if (!$("#phaseInitDate").val())
         {
@@ -877,7 +893,8 @@
         }
         else
         {
-            if ([[${isThereUnregisteredLoanSummaryAct}]]){
+
+            if (hasUnregisteredloanSummaryAct){
                 $('#alertModal').modal('show');
 			}
 			else {
@@ -1107,12 +1124,25 @@
 						title: "",
 						template: function (row) {
 							var myDate = new Date('2019-12-31');
+
+							var onDateString = row.onDate;
+
+							var onDateFormatted = onDateString.split('.');
+
+							var onDate = new Date(onDateFormatted[2]+'-'+onDateFormatted[1]+'-'+onDateFormatted[0]);
+
+							var isBeforeSpecialDate = onDate < myDate;
+
+							var isNotRegistered = (row.reg_number == null);
+
 							var result ="";
-							if((row.onDate < myDate && row.supervisorId == currentUserId) || currentUserId == 1){
-								result = '<a href="/loanSummaryAct/'+row.id+'/delete"><i class="fa fa-trash-o"></i></a>';
+							if((isBeforeSpecialDate && row.supervisorId == currentUserId) || currentUserId == 1 || (isNotRegistered && row.supervisorId == currentUserId))
+							{
+								result = '<a href="/debtor/'+debtorId+'/loanSummaryAct/'+row.id+'/delete"><i class="fa fa-trash-o"></i></a>';
 							}
-							else{
-								result = "";
+							else
+							{
+								result = isNotRegistered;
 							}
 							return result
 						}
@@ -1279,12 +1309,13 @@
 
         $('#initPhaseSaveBtn')
             .on('click', function () {
+                checkLoanSummaryActsRegStatus();
                 if (!$("#phaseInitDate").val())
                 {
                     $('#dateAlertModal').modal('show');
                 }
                 else {
-                    if ([[${isThereUnregisteredCollectionPhaseWithTypeId1}]]){
+                    if (hasUnregisteredloanSummaryAct){
                         $('#phaseAlertModal').modal('show');
                     }
                     else {

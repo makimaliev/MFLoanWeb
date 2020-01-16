@@ -2026,6 +2026,19 @@
     // var jsonAccrues = /*[[${accrues}]]*/ [];
     /*]]>*/
 	var fromLoan=true;
+
+	var hasUnregisteredloanSummaryAct;
+
+    checkLoanSummaryActsRegStatus();
+    function checkLoanSummaryActsRegStatus() {
+        $.ajax({
+            type: 'POST',
+            url: "/debtor/"+debtorId+"/checkHasUnregisteredAct",
+            success: function (data) {
+                hasUnregisteredloanSummaryAct=data;
+            }
+        });
+    }
 </script>
 <script>
     var fromLoan="true";
@@ -2072,6 +2085,8 @@
             }
         });
     $("#bnt_init_manualCalculator").on('click',function () {
+
+        checkLoanSummaryActsRegStatus();
         // on checkbox checked event
         if (!$("#phaseInitDate").val())
         {
@@ -2079,7 +2094,7 @@
         }
         else
         {
-			if ([[${isThereUnregisteredLoanSummaryAct}]]){
+			if (hasUnregisteredloanSummaryAct){
 				$('#alertModal').modal('show');
 			}
             else {

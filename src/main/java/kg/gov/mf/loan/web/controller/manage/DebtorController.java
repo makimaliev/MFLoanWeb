@@ -1374,12 +1374,31 @@ public class DebtorController {
         List<LoanSummaryAct> loanSummaryActList =this.loanSummaryActService.getLoanSummaryActByDebtor(debtor);
         List<LoanSummaryActModel> resultList = new ArrayList<>();
 
+        Long currentUserId = userService.findByUsername(Utils.getPrincipal()).getId();
+
+        Boolean isSupervisor = false;
+
+        for (Loan loanInLoop: debtor.getLoans())
+		{
+			if(loanInLoop.getSupervisorId()==currentUserId)
+			{
+				isSupervisor = true;
+			}
+		}
+
         for (LoanSummaryAct act : loanSummaryActList){
 			LoanSummaryActModel model = new LoanSummaryActModel();
 
 			model.setId(act.getId());
 			model.setAmount(act.getAmount());
 			model.setOnDate(act.getOnDate());
+			model.setReg_number(act.getReg_number());
+
+			if(isSupervisor)
+			{
+				model.setSupervisorId(currentUserId);
+			}
+
 
 			resultList.add(model);
 		}
@@ -1414,6 +1433,18 @@ public class DebtorController {
         debtorService.update(debtor);
         return "OK";
     }
+
+    //check if there is unregistered loanSummaryAct
+	@PostMapping("debtor/{debtorId}/checkHasUnregisteredAct")
+	@ResponseBody
+	public Boolean checkHasUnregisteredLoanSummaryAct(@PathVariable Long debtorId){
+
+		//		checking if there is any unregistered loanSummaryAct
+		String isThereUnregisteredLoanSummaryAct = "select if(COUNT(*)>0,'true','false')\n" +
+				"from loanSummaryAct where debtorId="+debtorId+" and (reg_number is null or reg_number = '-') and YEAR(onDate) > 2019";
+		Query query = entityManager.createNativeQuery(isThereUnregisteredLoanSummaryAct);
+		return query.getSingleResult().equals("true");
+	}
 
 	private List<LoanModel> getLoansByDebtorId(long debtorId)
 	{

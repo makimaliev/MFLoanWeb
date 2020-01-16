@@ -104,6 +104,18 @@ public class LoanSummaryActController {
         return "redirect:/loanSummaryAct/list";
     }
 
+    @GetMapping("/debtor/{debtor_id}/loanSummaryAct/{id}/delete")
+    public String deleteFromDebtorActList(@PathVariable("id") Long id, @PathVariable("debtor_id") Long debtor_id){
+
+        LoanSummaryAct loanSummaryAct=loanSummaryActService.getById(id);
+        loanSummaryActService.remove(loanSummaryAct);
+        for (LoanSummary l:loanSummaryAct.getLoanSummaries()){
+            LoanSummary loanSummary=loanSummaryService.getById(l.getId());
+            loanSummaryService.remove(loanSummary);
+        }
+        return "redirect:/manage/debtor/"+debtor_id+"/view";
+    }
+
     @GetMapping("/loanSummaryAct/{id}/partialedit")
     public String regFieldEditForm(@PathVariable Long id, Model model){
 
