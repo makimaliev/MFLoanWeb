@@ -10,6 +10,7 @@ import kg.gov.mf.loan.manage.repository.loan.SupervisorPlanRepository;
 import kg.gov.mf.loan.manage.service.debtor.DebtorService;
 import kg.gov.mf.loan.manage.service.loan.LoanService;
 import kg.gov.mf.loan.manage.service.loan.SupervisorPlanService;
+import kg.gov.mf.loan.process.service.JobItemService;
 import kg.gov.mf.loan.web.fetchModels.PhaseDetailsModel;
 import kg.gov.mf.loan.web.fetchModels.PhaseDetailsModelList;
 import kg.gov.mf.loan.web.util.Utils;
@@ -179,6 +180,7 @@ public class SupervisorPlanController {
     {
 		Loan loan = loanService.getById(loanId);
 		sp.setLoan(loan);
+		sp.setFee(0.0);
 		
 		if(sp.getId() == 0){
 			sp.setReg_by_id(1);
@@ -190,6 +192,20 @@ public class SupervisorPlanController {
             spService.update(sp);
         }
 		updateLoanData(loanId);
+
+		try
+        {
+            if(loan.getParent()!=null)
+            {
+                this.spService.updateLoanDataAfterPlanAdd(loan.getParent().getId());
+            }
+
+        }
+        catch (Exception ex)
+        {
+
+        }
+
 		
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
@@ -234,6 +250,19 @@ public class SupervisorPlanController {
                 plan.setReg_by_id(userId);
                 spService.add(plan);
             }
+        }
+
+        try
+        {
+            if(loan.getParent()!=null)
+            {
+                this.spService.updateLoanDataAfterPlanAdd(loan.getParent().getId());
+            }
+
+        }
+        catch (Exception ex)
+        {
+
         }
 
 
