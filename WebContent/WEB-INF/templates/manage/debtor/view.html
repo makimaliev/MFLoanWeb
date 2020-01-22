@@ -816,6 +816,7 @@
     var jsonAgreements;
     var jsonProcs;
     var hasUnregisteredloanSummaryAct;
+    var hasUnregisteredPhase;
     var debtorId = /*[[${debtor.id}]]*/ [];
     var entityId = /*[[${debtor.owner.entityId}]]*/ [];
     var ownerType = /*[[${debtor.owner.ownerType}]]*/ [];
@@ -839,6 +840,17 @@
             }
         });
     }
+
+	checkCollectionPhaseRegStatus();
+	function checkCollectionPhaseRegStatus() {
+		$.ajax({
+			type: 'POST',
+			url: "/debtor/"+debtorId+"/checkHasUnregisteredPhase",
+			success: function (data) {
+				hasUnregisteredPhase=data;
+			}
+		});
+	}
 </script>
 <!--<script>-->
 	<!--var btn='#'+$("#seeSummaryAct").val()+'seeSummaryAct';-->
@@ -885,7 +897,6 @@
     $("#bnt_init_manualCalculator_new").on('click',function () {
         checkLoanSummaryActsRegStatus();
 
-        sleep(3000);
         // on checkbox checked event
         if (!$("#phaseInitDate").val())
         {
@@ -1000,7 +1011,7 @@
             url: '/debtorLoans/'+debtorId,
             success:function (data) {
                 jsonLoans=data;
-                $.getScript("/js/data-debtor-loan.js");
+                $.getScript("/js/data-debtor-loan1.js");
             }
         });
 		$('#loansTable')
@@ -1309,13 +1320,13 @@
 
         $('#initPhaseSaveBtn')
             .on('click', function () {
-                checkLoanSummaryActsRegStatus();
+				checkCollectionPhaseRegStatus();
                 if (!$("#phaseInitDate").val())
                 {
                     $('#dateAlertModal').modal('show');
                 }
                 else {
-                    if (hasUnregisteredloanSummaryAct){
+                    if (hasUnregisteredPhase){
                         $('#phaseAlertModal').modal('show');
                     }
                     else {

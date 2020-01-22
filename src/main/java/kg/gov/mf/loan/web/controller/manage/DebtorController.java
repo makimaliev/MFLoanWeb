@@ -1435,7 +1435,7 @@ public class DebtorController {
     }
 
     //check if there is unregistered loanSummaryAct
-	@PostMapping("debtor/{debtorId}/checkHasUnregisteredAct")
+	@PostMapping("/debtor/{debtorId}/checkHasUnregisteredAct")
 	@ResponseBody
 	public Boolean checkHasUnregisteredLoanSummaryAct(@PathVariable Long debtorId){
 
@@ -1443,6 +1443,18 @@ public class DebtorController {
 		String isThereUnregisteredLoanSummaryAct = "select if(COUNT(*)>0,'true','false')\n" +
 				"from loanSummaryAct where debtorId="+debtorId+" and (reg_number is null or reg_number = '-') and YEAR(onDate) > 2019";
 		Query query = entityManager.createNativeQuery(isThereUnregisteredLoanSummaryAct);
+		return query.getSingleResult().equals("true");
+	}
+
+	//check if there is unregistered collectionPhase with typeId = 1
+	@PostMapping("/debtor/{debtorId}/checkHasUnregisteredPhase")
+	@ResponseBody
+	public Boolean checkHasUnregisteredCollectionPhase(@PathVariable Long debtorId){
+
+		//		checking if there is any unregistered loanSummaryAct
+		String isThereUnregisteredCollectionPhase = "select if(COUNT(*)>0,'true','false')\n" +
+				"from collection_phase_view where v_debtor_id = "+debtorId+" and (v_cph_doc_number is null or v_cph_doc_number = '-') and YEAR(v_cph_startDate) > 2019";
+		Query query = entityManager.createNativeQuery(isThereUnregisteredCollectionPhase);
 		return query.getSingleResult().equals("true");
 	}
 
@@ -1465,9 +1477,7 @@ public class DebtorController {
 
 		for(LoanModel l : loans){
 			Double rem = getRemainingOfLoan(l.getId());
-			if(rem != -777){
-				l.setRemainder(rem);
-			}
+			l.setRemainder(rem);
 		}
 
 		return loans;
@@ -1660,7 +1670,7 @@ public class DebtorController {
 			return result;
 		}
 	    catch (Exception e){
-	    	return -777.0;
+	    	return null;
 		}
     }
 

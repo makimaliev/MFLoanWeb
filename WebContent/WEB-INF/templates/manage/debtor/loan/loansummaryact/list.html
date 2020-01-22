@@ -199,6 +199,7 @@
     });
 
     var currentUserId = [[${@userServiceJpaImpl.findByUsername(#authentication.name).id}]];
+    var currentUserName = [[${#authentication.name}]];
 
     //== Class definition
     var DatatableJsonRemoteDemo = function () {
@@ -324,13 +325,13 @@
                         template: function (row) {
                             var myDate = new Date('2019-12-31');
                             var result ="";
-                            if((row.onDate < myDate && row.supervisorId == currentUserId) || currentUserId == 1){
+                            if((row.onDate < myDate && row.supervisorId == currentUserId) || currentUserId==1 || currentUserName == row.au_created_by){
                                 result = '<a href="/loanSummaryAct/'+row.id+'/delete"><i class="fa fa-trash-o"></i></a>';
                                 result = result + '<span class="col"></span>';
                                 result = result +  '<a role="button" href="/loanSummaryAct/'+row.id+'/partialedit" data-toggle="modal" data-target="#editForm"><i class="la la-edit"></i></a>';
                             }
-                            else{
-                                result = "";
+                            else if ((row.reg_number == null || row.reg_number == "") && currentUserName == row.au_created_by) {
+                                result = '<a href="/loanSummaryAct/'+row.id+'/delete"><i class="fa fa-trash-o"></i></a>';
                             }
                             return result
 

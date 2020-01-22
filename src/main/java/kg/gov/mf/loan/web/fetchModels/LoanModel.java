@@ -32,7 +32,7 @@ public class LoanModel implements Comparable<LoanModel> {
     private long supervisorId;
     private long parentLoanId;
     private long creditOrderId;
-    private double remainder;
+    private Double remainder;
 
     @Override
     public int compareTo(LoanModel model)
@@ -152,11 +152,11 @@ public class LoanModel implements Comparable<LoanModel> {
         this.creditOrderId = creditOrderId;
     }
 
-    public double getRemainder() {
+    public Double getRemainder() {
         return remainder;
     }
 
-    public void setRemainder(double remainder) {
+    public void setRemainder(Double remainder) {
         this.remainder = remainder;
     }
 }

@@ -1383,6 +1383,51 @@ public class LoanController {
         return result;
     }
 
+    @PostMapping("/supervisorPlanRequestWithYears/{loanId}")
+    @ResponseBody
+    public String getListOfSupervisorPlansByYear(@PathVariable("loanId") Long loanId) throws ParseException {
+
+	    String getYearsQuery = "select YEAR(p.date) " +
+                "from supervisorPlan p where p.loanId = "+loanId+" GROUP BY YEAR(p.date)";
+	    Query yearsQuery = entityManager.createNativeQuery(getYearsQuery);
+	    List<Integer> yearsList = yearsQuery.getResultList();
+	    List<SupervisorPlanYearModel> supervisorPlanYearModels = new ArrayList<SupervisorPlanYearModel>();
+        for (int year : yearsList) {
+            String getSPByYear = "select 0 as 'id', "+year+" as 'year', IFNULL(SUM(sp.amount),0.0) as totalAmount, (select IFNULL(SUM(p.amount),0.0)\n" +
+                    "        from supervisorPlan p where MONTH(p.date) in (1,2,3) and p.loanId="+loanId+") as 'quater1',\n" +
+                    "       (select IFNULL(SUM(p.amount),0.0)\n" +
+                    "        from supervisorPlan p where MONTH(p.date) in (4,5,6) and p.loanId="+loanId+") as 'quater2',\n" +
+                    "       (select IFNULL(SUM(p.amount),0.0)\n" +
+                    "        from supervisorPlan p where MONTH(p.date) in (7,8,9) and p.loanId="+loanId+") as 'quater3',\n" +
+                    "       (select IFNULL(SUM(p.amount),0.0)\n" +
+                    "        from supervisorPlan p where MONTH(p.date) in (10,11,12) and p.loanId="+loanId+") as 'quater4',\n" +
+                    "       (select IFNULL(SUM(p.amount),0.0) from supervisorPlan p where MONTH(p.date)=1 and p.loanId="+loanId+") as 'month1',\n" +
+                    "       (select IFNULL(SUM(p.amount),0.0) from supervisorPlan p where MONTH(p.date)=2 and p.loanId="+loanId+") as 'month2',\n" +
+                    "       (select IFNULL(SUM(p.amount),0.0) from supervisorPlan p where MONTH(p.date)=3 and p.loanId="+loanId+") as 'month3',\n" +
+                    "       (select IFNULL(SUM(p.amount),0.0) from supervisorPlan p where MONTH(p.date)=4 and p.loanId="+loanId+") as 'month4',\n" +
+                    "       (select IFNULL(SUM(p.amount),0.0) from supervisorPlan p where MONTH(p.date)=5 and p.loanId="+loanId+") as 'month5',\n" +
+                    "       (select IFNULL(SUM(p.amount),0.0) from supervisorPlan p where MONTH(p.date)=6 and p.loanId="+loanId+") as 'month6',\n" +
+                    "       (select IFNULL(SUM(p.amount),0.0) from supervisorPlan p where MONTH(p.date)=7 and p.loanId="+loanId+") as 'month7',\n" +
+                    "       (select IFNULL(SUM(p.amount),0.0) from supervisorPlan p where MONTH(p.date)=8 and p.loanId="+loanId+") as 'month8',\n" +
+                    "       (select IFNULL(SUM(p.amount),0.0) from supervisorPlan p where MONTH(p.date)=9 and p.loanId="+loanId+") as 'month9',\n" +
+                    "       (select IFNULL(SUM(p.amount),0.0) from supervisorPlan p where MONTH(p.date)=10 and p.loanId="+loanId+") as 'month10',\n" +
+                    "       (select IFNULL(SUM(p.amount),0.0) from supervisorPlan p where MONTH(p.date)=11 and p.loanId="+loanId+") as 'month11',\n" +
+                    "       (select IFNULL(SUM(p.amount),0.0) from supervisorPlan p where MONTH(p.date)=12 and p.loanId="+loanId+") as 'month12'\n" +
+                    "from supervisorPlan sp where loanId = "+loanId+" and YEAR(sp.date)="+year;
+            Query sPQuery = entityManager.createNativeQuery(getSPByYear,SupervisorPlanYearModel.class);
+            SupervisorPlanYearModel supervisorPlanYearModel = (SupervisorPlanYearModel) sPQuery.getSingleResult();
+            supervisorPlanYearModels.add(supervisorPlanYearModel);
+        }
+
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+
+
+        String endResult = gson.toJson(supervisorPlanYearModels);
+
+        return endResult;
+    }
+
+
     @PostMapping("/paymentScheduleRequest/{loanId}/{year}")
     @ResponseBody
     public String getListOfSupervisorPlansByYear(@PathVariable("loanId") Long loanId,@PathVariable String year){

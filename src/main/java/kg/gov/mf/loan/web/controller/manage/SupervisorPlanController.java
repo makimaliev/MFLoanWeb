@@ -179,14 +179,32 @@ public class SupervisorPlanController {
     {
 		Loan loan = loanService.getById(loanId);
 		sp.setLoan(loan);
+
+		if(sp.getPenalty() == null){
+		    sp.setPenalty(0.0);
+        }
+        if(sp.getPrincipal() == null){
+            sp.setPrincipal(0.0);
+        }
+        if(sp.getInterest() == null){
+            sp.setInterest(0.0);
+        }
 		
 		if(sp.getId() == 0){
 			sp.setReg_by_id(1);
 			sp.setReg_date(sp.getDate());
+			sp.setFee(0.0);
 			spService.add(sp);
 		}
 		else {
             sp.setReg_date(globalRegDate);
+            SupervisorPlan oldSP = spService.getById(sp.getId());
+            if(oldSP.getFee()!=null){
+                sp.setFee(oldSP.getFee());
+            }
+            else{
+                sp.setFee(0.0);
+            }
             spService.update(sp);
         }
 		updateLoanData(loanId);

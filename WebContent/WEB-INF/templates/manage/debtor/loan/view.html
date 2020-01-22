@@ -1499,52 +1499,69 @@
 										<!--end: Datatable -->
 									</div>
 									<div id="supervisorPlans" class="tab-pane"  role="tabpanel">
-										<!--begin: Search Form -->
-										<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-											<div class="row align-items-center">
-												<div class="col-xl-9 order-1 order-xl-1">
-													<div class="form-group m-form__group row align-items-center">
-														<div class="col-lg-6">
-															<div class="m-input-icon m-input-icon--left">
-																<input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search8">
-																<span class="m-input-icon__icon m-input-icon__icon--left">
+										<ul id="sPlanTabList" class="nav nav-tabs" role="tablist">
+											<li class="nav-item">
+												<a class="nav-link m--font-primary active" data-toggle="tab" href="#simpleList" th:text="#{label.loan.supervisorPlans}"></a>
+											</li>
+											<li class="nav-item">
+												<a class="nav-link m--font-primary" data-toggle="tab" href="#complexList" th:text="#{label.loan.supervisorPlans1}"></a>
+											</li>
+										</ul>
+										<div  id="sPlanTabContent" class="tab-content">
+											<div id="simpleList" class="tab-pane active" role="tabpanel">
+												<!--begin: Search Form -->
+												<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+													<div class="row align-items-center">
+														<div class="col-xl-9 order-1 order-xl-1">
+															<div class="form-group m-form__group row align-items-center">
+																<div class="col-lg-6">
+																	<div class="m-input-icon m-input-icon--left">
+																		<input type="text" class="form-control m-input m-input--solid" th:placeholder="#{label.search}" id="m_form_search8">
+																		<span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>
 															</span>
 														</span>
+																	</div>
+																</div>
 															</div>
+														</div>
+
+														<div class="col-xl-3 order-3 order-xl-3 m--align-right" th:if="${isEmptyChild}==true">
+															<div th:switch="${loggedinuserId}">
+
+																<a th:case="${supervisorId}" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_SUPERVISORPLAN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/add}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span>
+													<i class="la la-plus"></i>
+													<span th:text="#{label.loan.add.supervisorPlan}">
+														Добавить план
+													</span>
+												</span>
+																</a>
+																<a th:if="${loggedinuserId}==1" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_SUPERVISORPLAN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/add}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span>
+													<i class="la la-plus"></i>
+													<span th:text="#{label.loan.add.supervisorPlan}">
+														Добавить план
+													</span>
+												</span>
+																</a>
+															</div>
+															<div class="m-separator m-separator--dashed d-xl-none"></div>
 														</div>
 													</div>
 												</div>
-
-												<div class="col-xl-3 order-3 order-xl-3 m--align-right" th:if="${isEmptyChild}==true">
-													<div th:switch="${loggedinuserId}">
-
-														<a th:case="${supervisorId}" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_SUPERVISORPLAN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/add}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-												<span>
-													<i class="la la-plus"></i>
-													<span th:text="#{label.loan.add.supervisorPlan}">
-														Добавить план
-													</span>
-												</span>
-														</a>
-														<a th:if="${loggedinuserId}==1" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_SUPERVISORPLAN')" th:href="@{/manage/debtor/__${debtorId}__/loan/__${loan.id}__/sp/add}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-												<span>
-													<i class="la la-plus"></i>
-													<span th:text="#{label.loan.add.supervisorPlan}">
-														Добавить план
-													</span>
-												</span>
-														</a>
-													</div>
-													<div class="m-separator m-separator--dashed d-xl-none"></div>
-												</div>
+												<!--end: Search Form -->
+												<!--begin: Datatable -->
+												<div class="m_datatable" id="SPsTable"></div>
+												<!--end: Datatable -->
+											</div>
+											<div id="complexList" class="tab-pane" role="tabpanel">
+												<!--begin: Datatable -->
+												<div class="m_datatable" id="complexSPlanList"></div>
+												<!--end: Datatable -->
 											</div>
 										</div>
-										<!--end: Search Form -->
-										<!--begin: Datatable -->
-										<div class="m_datatable" id="SPsTable"></div>
-										<!--end: Datatable -->
 									</div>
 									<div id="judgement" class="tab-pane"  role="tabpanel">
 										<!--begin: Search Form -->
@@ -1962,6 +1979,7 @@
 <div th:replace="fragments/footer :: footer-js"/></div>
 
 <!--begin::Page Resources -->
+
 <script>
     var d = document.getElementById('isEmptyChild').value;
     if(d=="true")
@@ -2007,6 +2025,7 @@
     var isCalculationSaved = false;
     var jsonAgreements;
     var jsonGuarantors;
+    var jsonPlansByYear;
     var loggedInUserId=/*[[${loggedinuserId}]]*/ [];
     var supervisorId=/*[[${supervisorId}]]*/ [];
     // var jsonWOs = /*[[${WOs}]]*/ [];
@@ -3181,6 +3200,203 @@
         });
     }
 
+</script>
+<!--complex supervisorPlan table -->
+<script>
+
+	$.ajax({
+		type:'post',
+		url: '/supervisorPlanRequestWithYears/'+loanId,
+		success:function (data) {
+			jsonPlansByYear = data;
+			var dataJSONArrayPlans = JSON.parse(jsonPlansByYear);
+			var datatable = $('#complexSPlanList').mDatatable({
+				// datasource definition
+				data: {
+					type: 'local',
+					source: dataJSONArrayPlans
+				},
+
+				// layout definition
+				layout: {
+					theme: 'default', // datatable theme
+					class: '', // custom wrapper class
+					scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+					height: 450, // datatable's body's fixed height
+					footer: false // display/hide footer
+				},
+
+				// column sorting(refer to Kendo UI)
+				sortable: true,
+
+				// column based filtering(refer to Kendo UI)
+				filterable: false,
+
+				pagination: true,
+
+				// inline and bactch editing(cooming soon)
+				// editable: false,
+
+				// columns definition
+				columns: [{
+					field: "year",
+					title: "Год",
+					width:100,
+				},{
+					field: "totalAmount",
+					title: "Итого",
+					template: function (row) {
+						return (row.totalAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+						// return (row.totalAmount);
+					}
+				},{
+					field: "quater1",
+					title: "1-квартал",
+					template: function (row) {
+						return (row.quater1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+						// return (row.totalAmount);
+					}
+				},{
+					field: "month1",
+					title: "Январь",
+					template: function (row) {
+						return (row.month1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+						// return (row.totalAmount);
+					}
+				},{
+					field: "month2",
+					title: "Февраль",
+					template: function (row) {
+						return (row.month2).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+						// return (row.totalAmount);
+					}
+				},{
+					field: "month3",
+					title: "Март",
+					template: function (row) {
+						return (row.month3).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+						// return (row.totalAmount);
+					}
+				},{
+					field: "quater2",
+					title: "2-квартал",
+					template: function (row) {
+						return (row.quater2).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+						// return (row.totalAmount);
+					}
+				},{
+					field: "month4",
+					title: "Апрель",
+					template: function (row) {
+						return (row.month4).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+						// return (row.totalAmount);
+					}
+				},{
+					field: "month5",
+					title: "Май",
+					template: function (row) {
+						return (row.month2).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+						// return (row.totalAmount);
+					}
+				},{
+					field: "month6",
+					title: "Июнь",
+					template: function (row) {
+						return (row.month6).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+						// return (row.totalAmount);
+					}
+				},{
+					field: "quater3",
+					title: "3-квартал",
+					template: function (row) {
+						return (row.quater3).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+						// return (row.totalAmount);
+					}
+				},{
+					field: "month7",
+					title: "Июль",
+					template: function (row) {
+						return (row.month7).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+						// return (row.totalAmount);
+					}
+				},{
+					field: "month8",
+					title: "Август",
+					template: function (row) {
+						return (row.month8).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+						// return (row.totalAmount);
+					}
+				},{
+					field: "month9",
+					title: "Сентябрь",
+					template: function (row) {
+						return (row.month9).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+						// return (row.totalAmount);
+					}
+				},{
+					field: "quater4",
+					title: "4-квартал",
+					template: function (row) {
+						return (row.quater4).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+						// return (row.totalAmount);
+					}
+				},{
+					field: "month10",
+					title: "Октябрь",
+					template: function (row) {
+						return (row.month10).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+						// return (row.totalAmount);
+					}
+				},{
+					field: "month11",
+					title: "Ноябрь",
+					template: function (row) {
+						return (row.month11).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+						// return (row.totalAmount);
+					}
+				},{
+					field: "month12",
+					title: "Декабрь",
+					template: function (row) {
+						return (row.month12).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ').replace(".", ",");
+						// return (row.totalAmount);
+					}
+				}],
+				translate: {
+					records: {
+						processing: 'Подождите пожалуйста...',
+						noRecords: 'Записей не найдено'
+					},
+					toolbar: {
+						pagination: {
+							items: {
+								default: {
+									first: 'Первая страница',
+									prev: 'Предыдущая страница',
+									next: 'Следующая страница',
+									last: 'Последняя страница',
+									more: 'Другие страницы',
+									input: 'Номер страницы',
+									select: 'Выбрать размер страницы'
+								},
+								info: 'Отображение {{start}} - {{end}} из {{total}} записей'
+							}
+						}
+					}
+				},
+
+				toolbar: {
+					items: {
+						// pagination
+						pagination: {
+							// page size select
+							pageSizeSelect: [5, 10, 20, 50, 100]
+						}
+					}
+				}
+			});
+		}
+	});
 </script>
 </body>
 <!-- end::Body -->
