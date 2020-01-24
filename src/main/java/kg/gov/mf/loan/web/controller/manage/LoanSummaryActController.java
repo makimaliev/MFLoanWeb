@@ -207,16 +207,18 @@ public class LoanSummaryActController {
             searchQueries=searchQueries+" and l.onDate<='"+splitted[2]+"-"+splitted[1]+"-"+splitted[0]+"'\n";
         }
 
-        String baseQuery="select l.id,l.amount,l.onDate,l.registeredDate,l.signedDate,l.reg_number,dist.name as districtName,r.name as regionName,d.id as debtorId,d.name as debtorName,\n" +
+        String baseQuery="select l.id,l.amount,l.onDate,l.registeredDate,l.signedDate,l.reg_number,dist.name as districtName,r.name as regionName,\n" +
+                "       d.id as debtorId,d.name as debtorName,\n" +
                 "       l.au_created_by, l.au_created_date,l.au_last_modified_by, l.au_last_modified_date,\n" +
-                "       l.loanSummaryActStateId as state, loan.supervisorId\n" +
-                "from loanSummaryAct l,debtor d,address a,district dist,region r, loanSummary ls, loan, loanSummaryAct_loanSummary lslsa where l.debtorId=d.id\n" +
-                "                                                                  and a.district_id=dist.id\n" +
-                "                                                                  and a.region_id=r.id\n" +
-                "                                                                  and d.address_id=a.id\n" +
-                "                                                                  and lslsa.LoanSummaryAct_id=l.id and ls.id in (lslsa.loanSummaries_id)\n" +
-                "                                                                  and ls.loanId = loan.id\n"+
-                                                                                   searchQueries+
+                "       l.loanSummaryActStateId as state, GROUP_CONCAT(loan.supervisorId)  as 'supervisorId'\n" +
+                "from loanSummaryAct l,debtor d,address a,district dist,region r,loan,loanSummary ls, loanSummaryAct_loanSummary lslsa\n" +
+                "where l.debtorId=d.id\n" +
+                "                      and ls.loanId = loan.id\n" +
+                "                      and a.district_id=dist.id\n" +
+                "                      and a.region_id=r.id\n" +
+                "                      and d.address_id=a.id\n" +
+                "                      and lslsa.LoanSummaryAct_id=l.id and ls.id in (lslsa.loanSummaries_id)\n" +
+                "group by l.id\n" +
                 "order by id desc, debtorName asc,l.onDate desc,l.amount desc LIMIT " + offset +"," + perPage;
         Query query=entityManager.createNativeQuery(baseQuery, LoanSummaryActModel.class);
         List<LoanSummaryActModel> list=query.getResultList();

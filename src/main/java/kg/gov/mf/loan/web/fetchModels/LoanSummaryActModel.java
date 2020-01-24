@@ -20,7 +20,7 @@ public class LoanSummaryActModel implements Comparable<LoanSummaryActModel> {
     private String districtName;
     private String regionName;
     private Long state;
-    private Long supervisorId;
+    private String supervisorId;
     private String au_created_by;
     private Date au_created_date;
     private String au_last_modified_by;
@@ -114,11 +114,11 @@ public class LoanSummaryActModel implements Comparable<LoanSummaryActModel> {
         this.state = state;
     }
 
-    public Long getSupervisorId() {
+    public String getSupervisorId() {
         return supervisorId;
     }
 
-    public void setSupervisorId(Long supervisorId) {
+    public void setSupervisorId(String supervisorId) {
         this.supervisorId = supervisorId;
     }
 

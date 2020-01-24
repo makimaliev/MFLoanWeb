@@ -1396,7 +1396,7 @@ public class DebtorController {
 
 			if(isSupervisor)
 			{
-				model.setSupervisorId(currentUserId);
+				model.setSupervisorId(currentUserId.toString());
 			}
 
 

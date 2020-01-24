@@ -325,12 +325,19 @@
                         template: function (row) {
                             var myDate = new Date('2019-12-31');
                             var result ="";
-                            if((row.onDate < myDate && row.supervisorId == currentUserId) || currentUserId==1 || currentUserName == row.au_created_by){
+                            var isSupervisor=false;
+                            var splittedSupervisorIds = row.supervisorId.split(',');
+                            splittedSupervisorIds.forEach(function(item){
+                                if(item == currentUserId.toString()){
+                                    isSupervisor = true;
+                                }
+                            });
+                            if((row.onDate < myDate && isSupervisor) || currentUserId==1 || currentUserName == row.au_created_by){
                                 result = '<a href="/loanSummaryAct/'+row.id+'/delete"><i class="fa fa-trash-o"></i></a>';
                                 result = result + '<span class="col"></span>';
                                 result = result +  '<a role="button" href="/loanSummaryAct/'+row.id+'/partialedit" data-toggle="modal" data-target="#editForm"><i class="la la-edit"></i></a>';
                             }
-                            else if ((row.reg_number == null || row.reg_number == "") && currentUserName == row.au_created_by) {
+                            else if ((row.reg_number == null || row.reg_number == "") && (currentUserName == row.au_created_by || isSupervisor)) {
                                 result = '<a href="/loanSummaryAct/'+row.id+'/delete"><i class="fa fa-trash-o"></i></a>';
                             }
                             return result
@@ -445,6 +452,16 @@
             $('#reg_number').on('keyup', function () {
                 datatable.search($(this).val(), 'regNumber');
             }).val(typeof query.regNumber!== 'undefined' ? query.regNumber: '');
+
+            function hasValueInList(list,value) {
+                for( var i=0;i<list.size;i++){
+                    alert(list[i]);
+                    if(list[i] == value){
+                        return true;
+                    }
+                }
+                return false;
+            }
 
 
         };
