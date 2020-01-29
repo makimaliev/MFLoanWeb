@@ -179,7 +179,8 @@ public class SupervisorPlanController {
     {
 		Loan loan = loanService.getById(loanId);
 		sp.setLoan(loan);
-		
+		sp.setFee(0.0);
+
 		if(sp.getId() == 0){
 			sp.setReg_by_id(1);
 			sp.setReg_date(sp.getDate());
@@ -190,7 +191,21 @@ public class SupervisorPlanController {
             spService.update(sp);
         }
 		updateLoanData(loanId);
-		
+
+		try
+        {
+            if(loan.getParent()!=null)
+            {
+                this.spService.updateLoanDataAfterPlanAdd(loan.getParent().getId());
+            }
+
+        }
+        catch (Exception ex)
+        {
+
+        }
+
+
 		return "redirect:" + "/manage/debtor/{debtorId}/loan/{loanId}/view";
     }
 	
@@ -234,6 +249,19 @@ public class SupervisorPlanController {
                 plan.setReg_by_id(userId);
                 spService.add(plan);
             }
+        }
+
+        try
+        {
+            if(loan.getParent()!=null)
+            {
+                this.spService.updateLoanDataAfterPlanAdd(loan.getParent().getId());
+            }
+
+        }
+        catch (Exception ex)
+        {
+
         }
 
 
