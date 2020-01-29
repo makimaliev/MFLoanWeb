@@ -1146,14 +1146,22 @@
 
 							var isNotRegistered = (row.reg_number == null);
 
+							var isSupervisor=false;
+							var splittedSupervisorIds = row.supervisorId.split(',');
+							splittedSupervisorIds.forEach(function(item){
+								if(item == currentUserId.toString()){
+									isSupervisor = true;
+								}
+							});
+
 							var result ="";
-							if((isBeforeSpecialDate && row.supervisorId == currentUserId) || currentUserId == 1 || (isNotRegistered && row.supervisorId == currentUserId))
+							if((isBeforeSpecialDate && isSupervisor) || currentUserId == 1 || (isNotRegistered && isSupervisor))
 							{
 								result = '<a href="/debtor/'+debtorId+'/loanSummaryAct/'+row.id+'/delete"><i class="fa fa-trash-o"></i></a>';
 							}
 							else
 							{
-								result = isNotRegistered;
+								result = "";
 							}
 							return result
 						}

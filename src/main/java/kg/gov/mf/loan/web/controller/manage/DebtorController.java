@@ -1377,13 +1377,11 @@ public class DebtorController {
         Long currentUserId = userService.findByUsername(Utils.getPrincipal()).getId();
 
         Boolean isSupervisor = false;
+        String superVisorIds="";
 
         for (Loan loanInLoop: debtor.getLoans())
 		{
-			if(loanInLoop.getSupervisorId()==currentUserId)
-			{
-				isSupervisor = true;
-			}
+			superVisorIds = superVisorIds +"," + loanInLoop.getSupervisorId();
 		}
 
         for (LoanSummaryAct act : loanSummaryActList){
@@ -1393,11 +1391,13 @@ public class DebtorController {
 			model.setAmount(act.getAmount());
 			model.setOnDate(act.getOnDate());
 			model.setReg_number(act.getReg_number());
-
-			if(isSupervisor)
-			{
-				model.setSupervisorId(currentUserId.toString());
+			if(act.getAuCreatedBy() != null){
+				Long userId = userService.findByUsername(act.getAuCreatedBy()).getId();
+				superVisorIds = superVisorIds +"," + userId;
 			}
+
+			model.setSupervisorId(superVisorIds);
+
 
 
 			resultList.add(model);
