@@ -217,7 +217,7 @@ public class LoanSummaryActController {
                 "                      and a.district_id=dist.id\n" +
                 "                      and a.region_id=r.id\n" +
                 "                      and d.address_id=a.id\n" +
-                "                      and lslsa.LoanSummaryAct_id=l.id and ls.id in (lslsa.loanSummaries_id)\n" +
+                "                      and lslsa.LoanSummaryAct_id=l.id and ls.id in (lslsa.loanSummaries_id)\n" + searchQueries+
                 "group by l.id\n" +
                 "order by id desc, debtorName asc,l.onDate desc,l.amount desc LIMIT " + offset +"," + perPage;
         Query query=entityManager.createNativeQuery(baseQuery, LoanSummaryActModel.class);
