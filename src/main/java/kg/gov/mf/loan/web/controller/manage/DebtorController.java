@@ -1500,10 +1500,7 @@ public class DebtorController {
 				Double remainder = 0.0;
                 for (Loan loan2: agreement.getLoans()){
 					Double value = getRemainingOfLoan(loan2.getId());
-					if(value == -777.0){
-						remainder = -777.0;
-					}
-					else if(remainder != -777.0){
+					if(value != null){
 						remainder = remainder + value;
 					}
 				}
