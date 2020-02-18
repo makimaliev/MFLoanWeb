@@ -501,7 +501,13 @@ public class CollateralAgreementController {
 				"from loanSummary ls where ls.loanId="+loanId+" order by ls.onDate desc limit 1";
         Query query = entityManager.createNativeQuery(baseQuery);
 
-        Double value = (Double) query.getResultList().get(0);
+		Double value = 0.0;
+		try{
+			value = (Double) query.getResultList().get(0);
+		}
+		catch (Exception e){
+			System.out.println("No LoanSummary for this loan!!!");
+		}
 
         return value;
     }
