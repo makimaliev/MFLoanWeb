@@ -20,15 +20,16 @@ import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -52,6 +53,9 @@ public class FileSetter {
     @Autowired
     AttachmentService attachmentService;
 
+    @Autowired
+    EntityManager entityManager;
+
     public List<String> errorss=new ArrayList<>();
 
     public void setFilesToDirectories() throws DocumentException {
@@ -59,7 +63,16 @@ public class FileSetter {
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 
         String filePath=SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
-        String mainPath="/home/eridan/Desktop/docs";
+        String mainPath="/home/user/Desktop/dood";
+
+        String getLOanVersionIdMapQuery = "select version,concat(id,',',debtorId)\n" +
+                "from loan";
+        Query query = entityManager.createNativeQuery(getLOanVersionIdMapQuery);
+        HashMap<Long,String> loanVersionIdMap = new HashMap<Long,String>();
+        List<Object[]> rows=  query.getResultList();
+        for (Object[] row : rows){
+            loanVersionIdMap.put(Long.parseLong(String.valueOf(row[0])),(String) row[1]);
+        }
 
 
 
@@ -71,7 +84,7 @@ public class FileSetter {
             for(String path:result){
                 String[] splitted=path.split("/");
                 int loo=splitted.length;
-                if(loo==8){
+                if(loo>=5){
                     try (Stream<Path> walk1 = Files.walk(Paths.get(path))) {
 
                         List<String> result1 = walk1.filter(Files::isRegularFile)
@@ -82,25 +95,25 @@ public class FileSetter {
                             File file = new File(fileName);
                             System.out.println();
                             long loanId;
-                            Loan loan;
+                            long firstPartValue;
                             try{
                                 String firstPart=file.getName().split("=")[0];
-//                                if(firstPart.contains("-")){
-//                                    firstPart=firstPart.split("-")[0];
-//                                }
-//                                else{
-//                                    firstPart=firstPart.replaceAll("[^\\d]", "" );
-//                                }
+                                if(firstPart.contains("-")){
+                                    firstPart=firstPart.split("-")[0];
+                                }
+                                else{
+                                    firstPart=firstPart.replaceAll("[^\\d]", "" );
+                                }
 
-                                loanId=Long.valueOf(firstPart);
 
-                                loan=loanService.getById(loanService.getByVersion(loanId).getId());
+                                firstPartValue = Long.parseLong(firstPart);
+                                loanId= Long.parseLong(loanVersionIdMap.get(firstPartValue).split(",")[0]);
                             }
                             catch (Exception e){
                                 errorss.add(file.getName());
                                 break;
                             }
-                            Debtor debtor=debtorService.getById(loan.getDebtor().getId());
+                            Debtor debtor=debtorService.getById(Long.valueOf(loanVersionIdMap.get(firstPartValue).split(",")[1]));
                             Address address =addressService.findById(debtor.getAddress_id());
                             Long regionId=address.getRegion().getId();
                             Long districtId=address.getDistrict().getId();
@@ -132,7 +145,7 @@ public class FileSetter {
                             }
                             File file1=new File(pathOS+file.getName());
 
-                            saveAttachments(loan.getId(),file1);
+                            saveAttachments(Long.valueOf(loanVersionIdMap.get(firstPartValue).split(",")[0]),file1);
                             Document document = new Document();
                             PdfCopy copy = new PdfCopy(document, new FileOutputStream(file1));
                             document.open();
