@@ -4,6 +4,7 @@ import com.lowagie.text.DocumentException;
 import kg.gov.mf.loan.output.report.utils.CollectionPhaseTool;
 import kg.gov.mf.loan.output.report.utils.LoanFieldsMigration;
 import kg.gov.mf.loan.output.report.utils.SecondMigrationTool;
+import kg.gov.mf.loan.output.report.utils.SecondMigrationToolVersion2;
 import kg.gov.mf.loan.web.components.FileSetter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,8 +135,16 @@ public class HomeController {
 
     @RequestMapping("/doSecondMigrationTool/{loanId}")
     public String doSecondMigrationtool(@PathVariable("loanId") Long loanId){
-        SecondMigrationTool secondMigrationTool=new SecondMigrationTool();
-        secondMigrationTool.loanMigrate(loanId,"150.0.0.89","migration_test","postgres","armad27raptor");
+
+        try {
+            SecondMigrationToolVersion2 secondMigrationTool=new SecondMigrationToolVersion2();
+//            SecondMigrationTool secondMigrationTool=new SecondMigrationTool();
+            secondMigrationTool.loanMigrate(loanId,"150.0.0.89","gos3","postgres","armad27raptor");
+        }
+        catch (Exception ex)
+        {
+System.out.println(ex);
+        }
         return "index";
     }
 
