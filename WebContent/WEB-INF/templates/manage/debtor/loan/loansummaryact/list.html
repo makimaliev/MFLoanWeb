@@ -6,9 +6,6 @@
     <title th:text="#{label.loanSummaryAct}"></title>
 
     <div th:replace="fragments/header :: header-css"/>
-    <link th:href="@{/assets/global/plugins/datatables/datatables.min.css}" rel="stylesheet" type="text/css" />
-    <link th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css}" rel="stylesheet" type="text/css" />
-    <link th:href="@{/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css}" rel="stylesheet" type="text/css" />
 </head>
 <!-- end::Head -->
 <!-- end::Body -->
@@ -219,7 +216,7 @@
                     pageSize: 10,
                     saveState: {
                         cookie: true,
-                        webstorage: true
+                        webstorage: false
                     },
                     serverPaging: true,
                     serverFiltering: true,
@@ -503,7 +500,6 @@
         }
     }
 </script>
-<script th:src="@{/assets/global/plugins/jquery-multi-select/js/jquery.multi-select.js}" type="text/javascript"></script>
 </body>
 <!-- end::Body -->
 </html>
