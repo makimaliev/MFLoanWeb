@@ -84,7 +84,7 @@ public class FileSetter {
             for(String path:result){
                 String[] splitted=path.split("/");
                 int loo=splitted.length;
-                if(loo>=5){
+                if(loo>=1){
                     try (Stream<Path> walk1 = Files.walk(Paths.get(path))) {
 
                         List<String> result1 = walk1.filter(Files::isRegularFile)
@@ -156,6 +156,7 @@ public class FileSetter {
                             copy.freeReader(reader);
                             reader.close();
                             document.close();
+                            file.delete();
                         }
 
                     } catch (IOException e) {
