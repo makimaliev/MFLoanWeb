@@ -95,6 +95,7 @@
 
 							<input type="hidden" th:field="*{id}"/>
 							<input type="hidden" th:field="*{department_id}"/>
+							<input type="hidden" name="docNumber" th:field="*{docNumber}"/>
 							<div class="m-portlet__body">
 								<div class="m-form__section">
 
@@ -193,7 +194,7 @@
 												<span class="m--font-danger">*</span>
 											</label>
 										<div class="col-lg-4 col-md-9 col-sm-12">
-											<input type="text" class="form-control m-input" th:field="*{docNumber}">
+											<input disabled type="text"  class="form-control m-input" th:value="${phase.docNumber}">
 										</div>
 									</div>
 
