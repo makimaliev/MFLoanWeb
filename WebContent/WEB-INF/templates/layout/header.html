@@ -431,82 +431,83 @@
                             <!-- BEGIN: Topbar -->
                             <div id="m_header_topbar" class="m-topbar  m-stack m-stack--ver m-stack--general">
                                 <div class="m-stack__item m-topbar__nav-wrapper">
-                                    <ul class="m-topbar__nav m-nav m-nav--inline" th:with="lvTasks=${@taskService.getDocumentTasks(@userServiceJpaImpl.findByUsername(#authentication.name).id)}">
+                                    <!--<ul class="m-topbar__nav m-nav m-nav&#45;&#45;inline" th:with="lvTasks=${@taskService.getDocumentTasks(@userServiceJpaImpl.findByUsername(#authentication.name).id)}">-->
+                                    <ul class="m-topbar__nav m-nav m-nav--inline">
 
                                         <!-- BEGIN: CHAT -->
-                                        <li class="m-nav__item m-dropdown m-dropdown--large m-dropdown--arrow m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light  m-list-search m-list-search--skin-light"
-                                            id="mchat" m-search-type="dropdown">
-                                            <a th:href="@{/chat/window/null}" class="m-nav__link" >
-                                                <span class="m-nav__link-icon">
-                                                    <i class="flaticon-speech-bubble"></i>
-                                                </span>
-                                            </a>
-                                        </li>
+                                        <!--<li class="m-nav__item m-dropdown m-dropdown&#45;&#45;large m-dropdown&#45;&#45;arrow m-dropdown&#45;&#45;align-right m-dropdown&#45;&#45;mobile-full-width m-dropdown&#45;&#45;skin-light  m-list-search m-list-search&#45;&#45;skin-light"-->
+                                            <!--id="mchat" m-search-type="dropdown">-->
+                                            <!--<a th:href="@{/chat/window/null}" class="m-nav__link" >-->
+                                                <!--<span class="m-nav__link-icon">-->
+                                                    <!--<i class="flaticon-speech-bubble"></i>-->
+                                                <!--</span>-->
+                                            <!--</a>-->
+                                        <!--</li>-->
                                         <!-- BEGIN: CHAT -->
 
                                         <!-- BEGIN: TASKS -->
-                                        <li class="m-nav__item m-dropdown m-dropdown--medium m-dropdown--arrow m-dropdown--header-bg-fill m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light"
-                                            data-dropdown-toggle="click"
-                                            th:if="${not lvTasks.isEmpty()}">
-                                            <a href="#" class="m-nav__link m-dropdown__toggle">
-                                                <span class="m-nav__link-icon">
-                                                    <i class="flaticon-alert"></i>
-                                                </span>
-                                                <span class="badge badge-light" th:text="${lvTasks.size()}"></span>
-                                            </a>
-                                            <div class="m-dropdown__wrapper">
-                                                <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
-                                                <div class="m-dropdown__inner">
-                                                    <div class="m-dropdown__body">
-                                                        <div class="m-dropdown__content pre-scrollable">
-                                                            <ul class="m-nav m-nav--skin-light">
-                                                                <li class="m-nav__section" th:each="task, index : ${lvTasks}">
-                                                                    <div style="background: #d9d9d9;" class="p-3">
-                                                                        <p class="m--font-bold m-0 p-0" th:text="|№${index.count} - ${#dates.format(task.createdOn, 'dd.MM.yyyy')}|"></p>
-                                                                        <p class="m--font-bold m-0 p-0" th:utext="${task.createdBy?.staff?.name}"></p>
-                                                                        <p class="m-0 p-0"><i class="text-info" th:utext="${task.description}"></i></p>
-                                                                        <a th:href="@{/doc/edit/__${task.objectId}__}"><i class="la la-binoculars"></i></a>
-                                                                    </div>
-                                                                    <div class="m-nav__separator m-nav__separator--fit"></div>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
+                                        <!--<li class="m-nav__item m-dropdown m-dropdown&#45;&#45;medium m-dropdown&#45;&#45;arrow m-dropdown&#45;&#45;header-bg-fill m-dropdown&#45;&#45;align-right m-dropdown&#45;&#45;mobile-full-width m-dropdown&#45;&#45;skin-light"-->
+                                            <!--data-dropdown-toggle="click"-->
+                                            <!--th:if="${not lvTasks.isEmpty()}">-->
+                                            <!--<a href="#" class="m-nav__link m-dropdown__toggle">-->
+                                                <!--<span class="m-nav__link-icon">-->
+                                                    <!--<i class="flaticon-alert"></i>-->
+                                                <!--</span>-->
+                                                <!--<span class="badge badge-light" th:text="${lvTasks.size()}"></span>-->
+                                            <!--</a>-->
+                                            <!--<div class="m-dropdown__wrapper">-->
+                                                <!--<span class="m-dropdown__arrow m-dropdown__arrow&#45;&#45;right m-dropdown__arrow&#45;&#45;adjust"></span>-->
+                                                <!--<div class="m-dropdown__inner">-->
+                                                    <!--<div class="m-dropdown__body">-->
+                                                        <!--<div class="m-dropdown__content pre-scrollable">-->
+                                                            <!--<ul class="m-nav m-nav&#45;&#45;skin-light">-->
+                                                                <!--<li class="m-nav__section" th:each="task, index : ${lvTasks}">-->
+                                                                    <!--<div style="background: #d9d9d9;" class="p-3">-->
+                                                                        <!--<p class="m&#45;&#45;font-bold m-0 p-0" th:text="|№${index.count} - ${#dates.format(task.createdOn, 'dd.MM.yyyy')}|"></p>-->
+                                                                        <!--<p class="m&#45;&#45;font-bold m-0 p-0" th:utext="${task.createdBy?.staff?.name}"></p>-->
+                                                                        <!--<p class="m-0 p-0"><i class="text-info" th:utext="${task.description}"></i></p>-->
+                                                                        <!--<a th:href="@{/doc/edit/__${task.objectId}__}"><i class="la la-binoculars"></i></a>-->
+                                                                    <!--</div>-->
+                                                                    <!--<div class="m-nav__separator m-nav__separator&#45;&#45;fit"></div>-->
+                                                                <!--</li>-->
+                                                            <!--</ul>-->
+                                                        <!--</div>-->
+                                                    <!--</div>-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+                                        <!--</li>-->
                                         <!-- BEGIN: TASKS -->
 
-                                        <li class="m-nav__item m-dropdown m-dropdown--large m-dropdown--arrow m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light	m-list-search m-list-search--skin-light"
-                                            m-dropdown-toggle="click" m-dropdown-persistent="true" id="m_quicksearch" m-search-type="dropdown">
-                                            <a href="#" class="m-nav__link m-dropdown__toggle">
-                                                <span class="m-nav__link-icon">
-                                                    <i class="flaticon-search-1"></i>
-                                                </span>
-                                            </a>
-                                            <div class="m-dropdown__wrapper">
-                                                <span class="m-dropdown__arrow m-dropdown__arrow--right"></span>
-                                                <div class="m-dropdown__inner ">
-                                                    <div class="m-dropdown__header">
-                                                        <form  class="m-list-search__form">
-                                                            <div class="m-list-search__form-wrapper">
-                                                                <span class="m-list-search__form-input-wrapper">
-                                                                    <input id="m_quicksearch_input" autocomplete="off" type="text" name="q" class="m-list-search__form-input" value="" placeholder="Изде...">
-                                                                </span>
-                                                                <span class="m-list-search__form-icon-close" id="m_quicksearch_close">
-                                                                    <i class="la la-remove"></i>
-                                                                </span>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                    <div class="m-dropdown__body">
-                                                        <div class="m-dropdown__scrollable m-scrollable" data-scrollable="true" data-max-height="300" data-mobile-max-height="200">
-                                                            <div class="m-dropdown__content"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
+                                        <!--<li class="m-nav__item m-dropdown m-dropdown&#45;&#45;large m-dropdown&#45;&#45;arrow m-dropdown&#45;&#45;align-right m-dropdown&#45;&#45;mobile-full-width m-dropdown&#45;&#45;skin-light	m-list-search m-list-search&#45;&#45;skin-light"-->
+                                            <!--m-dropdown-toggle="click" m-dropdown-persistent="true" id="m_quicksearch" m-search-type="dropdown">-->
+                                            <!--<a href="#" class="m-nav__link m-dropdown__toggle">-->
+                                                <!--<span class="m-nav__link-icon">-->
+                                                    <!--<i class="flaticon-search-1"></i>-->
+                                                <!--</span>-->
+                                            <!--</a>-->
+                                            <!--<div class="m-dropdown__wrapper">-->
+                                                <!--<span class="m-dropdown__arrow m-dropdown__arrow&#45;&#45;right"></span>-->
+                                                <!--<div class="m-dropdown__inner ">-->
+                                                    <!--<div class="m-dropdown__header">-->
+                                                        <!--<form  class="m-list-search__form">-->
+                                                            <!--<div class="m-list-search__form-wrapper">-->
+                                                                <!--<span class="m-list-search__form-input-wrapper">-->
+                                                                    <!--<input id="m_quicksearch_input" autocomplete="off" type="text" name="q" class="m-list-search__form-input" value="" placeholder="Изде...">-->
+                                                                <!--</span>-->
+                                                                <!--<span class="m-list-search__form-icon-close" id="m_quicksearch_close">-->
+                                                                    <!--<i class="la la-remove"></i>-->
+                                                                <!--</span>-->
+                                                            <!--</div>-->
+                                                        <!--</form>-->
+                                                    <!--</div>-->
+                                                    <!--<div class="m-dropdown__body">-->
+                                                        <!--<div class="m-dropdown__scrollable m-scrollable" data-scrollable="true" data-max-height="300" data-mobile-max-height="200">-->
+                                                            <!--<div class="m-dropdown__content"></div>-->
+                                                        <!--</div>-->
+                                                    <!--</div>-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+                                        <!--</li>-->
                                         <li class="m-nav__item m-topbar__user-profile m-topbar__user-profile--img  m-dropdown m-dropdown--medium m-dropdown--arrow m-dropdown--header-bg-fill m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light" data-dropdown-toggle="click">
                                             <a href="#" class="m-nav__link m-dropdown__toggle">
                                                 <span class="m-nav__link-icon">

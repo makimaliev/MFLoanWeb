@@ -232,6 +232,9 @@ public class LoanSummaryActController {
                 "                                                                  and ls.loanId = loan.id \n"+
                                                                                    searchQueries;
         BigInteger count = (BigInteger)entityManager.createNativeQuery(countQuery).getResultList().get(0);
+
+//        BigInteger count = BigInteger.valueOf(100);
+
         Meta meta = new Meta(page, count.divide(BigInteger.valueOf(perPage)), perPage, count, sortStr, sortField);
 
         LoanSummaryActMetaModel metaModel=new LoanSummaryActMetaModel();
@@ -308,6 +311,7 @@ public class LoanSummaryActController {
                 "                                                                  and a.region_id=r.id\n" +
                 "                                                                  and d.address_id=a.id\n" +
                 "                                                                  and lslsa.LoanSummaryAct_id=l.id and ls.id in (lslsa.loanSummaries_id)\n" +
+                "                                                                  and DATEDIFF('2020-01-01',l.onDate) <= 0 "+
                 "                                                                  and ls.loanId = loan.id and DATEDIFF('2020-01-01',l.onDate) <= 0\n"+
                 searchQueries+
                 "order by id desc, debtorName asc,l.onDate desc,l.amount desc LIMIT " + offset +"," + perPage;
