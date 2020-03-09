@@ -592,6 +592,37 @@ public class PrintoutTemplateController {
 
 	}
 
+
+	@RequestMapping("/printoutType/5/objectId/{object_id}/generate")
+	public void printoutCollateralDamaged(@PathVariable("object_id") long object_id,
+								  HttpServletResponse response) {
+		try {
+
+			PrintoutGeneratorCollateralDocDamaged printoutGeneratorCollateralDocDamaged = new PrintoutGeneratorCollateralDocDamaged();
+
+			Document document = new Document(PageSize.A4, 35, 35, 10, 10);
+
+			RtfWriter2 rtfWriter2 = RtfWriter2.getInstance(document,response.getOutputStream());
+
+			response.setContentType("application/rtf");
+			response.setHeader("Content-disposition","attachment; filename=xx.rtf");
+
+			String username= Utils.getPrincipal();
+
+			printoutGeneratorCollateralDocDamaged.generatePrintout(object_id,document,username);
+
+
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
+
+
+	}
+
 	@RequestMapping("/printoutType/act/{id}/generate")
 	public void printForAct(@PathVariable("id") long id,
 							HttpServletResponse response){

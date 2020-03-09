@@ -475,6 +475,15 @@
 														</div>
 													</div>
 												</div>
+												<div>
+													<a sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_COLLATERALAGREEMENT')" th:href="@{/printoutType/5/objectId/__${debtor.id}__/generate}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill ml-1">
+													<span>
+														<span>
+															Форма извещения (утрата)
+														</span>
+													</span>
+													</a>
+												</div>
 											</div>
 										</div>
 									</div>
