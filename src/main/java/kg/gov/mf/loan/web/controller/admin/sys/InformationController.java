@@ -202,15 +202,7 @@ public class InformationController {
 
 	@RequestMapping(value = "/information/{informationId}/information/save", method = RequestMethod.POST)
 	public String saveInformationAndRedirectToInformationList(@Validated @ModelAttribute("information") Information information, @PathVariable("informationId") long informationId, BindingResult result) {
-		try {
 
-		} catch (NoSuchFieldException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		if (result.hasErrors()) 
 		{
