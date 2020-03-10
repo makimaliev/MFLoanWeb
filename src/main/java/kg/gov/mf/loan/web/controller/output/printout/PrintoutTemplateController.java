@@ -222,7 +222,7 @@ public class PrintoutTemplateController {
 		printoutTemplate.setPrintout(printout);
 		
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (printoutTemplate.getId() == 0) {
 			this.printoutTemplateService.create(printoutTemplate);
 		} else {
@@ -841,7 +841,7 @@ public class PrintoutTemplateController {
 											}
 										}
 										catch (Exception e){
-											System.out.println(e);
+
 											break;
 										}
 									}
@@ -910,7 +910,7 @@ public class PrintoutTemplateController {
 		}
 		catch (Exception ex)
 		{
-			System.out.println(ex);
+
 		}
 
 
@@ -1012,7 +1012,7 @@ public class PrintoutTemplateController {
 		}
 		catch (Exception ex)
 		{
-			System.out.println(ex);
+
 		}
 
 	}
@@ -1229,7 +1229,7 @@ public class PrintoutTemplateController {
 				}
 				catch (Exception ex)
 				{
-					System.out.println(ex);
+
 				}
 
 
@@ -1246,7 +1246,7 @@ public class PrintoutTemplateController {
 		}
 		catch (Exception ex)
 		{
-			System.out.println(ex);
+
 
 		}
 
@@ -1524,7 +1524,7 @@ public class PrintoutTemplateController {
 
 					switch (varId)
 					{
-						case 1: System.out.println("1");
+						case 1:
 
 							int day = localDate.getDayOfMonth();
 							newText = " "+String.valueOf(day)+" ";
@@ -1749,12 +1749,12 @@ public class PrintoutTemplateController {
 
 					run.setText(text, 0);
 
-					System.out.println(run.getText(0));
+
 
 				}
 				catch (Exception ex)
 				{
-					System.out.println(ex);
+
 				}
 
 
@@ -1801,7 +1801,7 @@ public class PrintoutTemplateController {
 			generatePdf(null,result,document,null);
 		}
 		catch (Exception e){
-			System.out.println(e);
+
 		}
 
 	}
@@ -1830,7 +1830,7 @@ public class PrintoutTemplateController {
 			generatePdf(null,result,document, loanId);
 		}
 		catch (Exception e){
-			System.out.println(e);
+
 		}
 
 	}
@@ -1926,7 +1926,7 @@ public class PrintoutTemplateController {
 
 		}
 		catch (Exception e){
-			System.out.println(e);
+
 		}
 
 	}
@@ -2206,7 +2206,7 @@ public class PrintoutTemplateController {
 
 		}
 		catch (Exception e){
-			System.out.println(e);
+
 		}
 	}
 

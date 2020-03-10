@@ -526,7 +526,7 @@ public class OrganizationController {
 		organization.setName(organization.getIdentityDoc().getIdentityDocDetails().getFullname());
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		}
 		else if (organization.getId() == 0) {
 
@@ -561,7 +561,7 @@ public class OrganizationController {
 				debtorService.update(debtor);
 			}
 			catch (Exception e){
-				System.out.println(e);
+
 			}
 
 			Organization organization1=organizationService.findById(organization.getId());

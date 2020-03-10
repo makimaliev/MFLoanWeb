@@ -129,7 +129,7 @@ public class CurrencyRateController {
 	public String saveCurrencyRateAndRedirectToCurrencyRateList(@Validated @ModelAttribute("currencyRate") CurrencyRate currencyRate, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (currencyRate.getId() == 0) {
 			this.currencyRateService.create(currencyRate);
 		} else {

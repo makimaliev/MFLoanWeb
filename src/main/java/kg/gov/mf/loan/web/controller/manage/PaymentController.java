@@ -292,9 +292,7 @@ public class PaymentController {
 
 
         /*int x = 1; // However many threads you want
-        System.out.println("=========================================================");
-        System.out.println(new Date());
-        System.out.println("=========================================================");
+
         ScheduledExecutorService someScheduler = Executors.newScheduledThreadPool(x);
         Runnable runnable = new Runnable() {
             public void run() {
@@ -332,7 +330,7 @@ public class PaymentController {
                     "where phd.id = v.det_id and phd.loan_id=l.id and l.debtorId=" + debtorId;
             session.createSQLQuery(phaseUpdateQuery).executeUpdate();
         } catch (Exception e) {
-            System.out.println(e);
+
         }
         Debtor debtor = debtorService.getById(debtorId);
         for (Loan loan1 : debtor.getLoans()) {
@@ -344,7 +342,7 @@ public class PaymentController {
                             "where cph.id=det.collectionPhaseId and det.collectionPhaseId=" + phase1.getId();
                     session.createSQLQuery(phaseSetPaid).executeUpdate();
                 } catch (Exception e) {
-                    System.out.println(e);
+
                 }
             }
         }
@@ -437,7 +435,7 @@ public class PaymentController {
             runUpdateOfPhases(phase.getId(),session);
             session.getTransaction().commit();
         }
-        System.out.println("finished");
+
     }
 
     public HashMap<String, Double> getPaids(Set<Payment> payments, Date fromDate, Date toDate) {
@@ -488,7 +486,7 @@ public class PaymentController {
             session.createSQLQuery(phaseSetPaid).executeUpdate();
         }
         catch (Exception e){
-            System.out.println(e);
+
         }
     }
 

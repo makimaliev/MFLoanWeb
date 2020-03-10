@@ -71,7 +71,7 @@ public class PrintoutController {
 	public String savePrintoutAndRedirectToPrintoutList(@Validated @ModelAttribute("printout") Printout printout, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (printout.getId() == 0) {
 			this.printoutService.create(printout);
 		} else {

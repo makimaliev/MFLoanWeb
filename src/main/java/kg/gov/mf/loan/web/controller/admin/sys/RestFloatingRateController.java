@@ -90,9 +90,6 @@ public class RestFloatingRateController {
                 }
             }
             this.typeQuery="and ("+query+")\n";
-            System.out.println("==========================================================");
-            System.out.println(typeQuery);
-            System.out.println("==========================================================");
 //            this.typeQuery="and o.name=\""+type+"\" \n";
         }
     }

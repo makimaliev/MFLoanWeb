@@ -995,7 +995,7 @@ public class CollateralItemController {
 			session.createSQLQuery(itemUpdateQuery).executeUpdate();
 		}
 		catch (Exception e){
-			System.out.println(e);
+
 		}
 		session.getTransaction().commit();
 	}
@@ -1057,7 +1057,7 @@ public class CollateralItemController {
 			session.createSQLQuery(itemUpdateQuery).executeUpdate();
 		}
 		catch (Exception e){
-			System.out.println(e);
+
 		}
 		session.getTransaction().commit();
 	}
@@ -1096,7 +1096,7 @@ public class CollateralItemController {
 			session.createSQLQuery(itemUpdateQuery).executeUpdate();
 		}
 		catch (Exception e){
-			System.out.println(e);
+
 		}
 		session.getTransaction().commit();
 	}

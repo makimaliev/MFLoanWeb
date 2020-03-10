@@ -125,7 +125,7 @@ public class MessageResourceController {
 	public String saveMessageResourceAndRedirectToMessageResourceList(@Validated @ModelAttribute("messageResource") MessageResource messageResource, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (messageResource.getId() == 0) {
 			this.messageResourceService.create(messageResource);
 		} else {

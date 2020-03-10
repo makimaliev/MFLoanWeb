@@ -98,7 +98,7 @@ public class DepartmentController {
 	public String saveDepartmentAndRedirectToDepartmentList(@Validated @ModelAttribute("department") Department department, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (department.getId() == 0) {
 			this.departmentService.create(department);
 		} else {

@@ -91,7 +91,7 @@ public class EmploymentHistoryController {
 	public ModelAndView saveEmploymentHistoryAndRedirectToRegionDetails(@Validated @ModelAttribute("employmentHistory") EmploymentHistory employmentHistory, BindingResult result,ModelMap model) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (employmentHistory.getId() == 0) {
 			employmentHistory.setStaff(this.staffService.findById(employmentHistory.getStaff().getId()));
 			this.employmentHistoryService.create(employmentHistory);

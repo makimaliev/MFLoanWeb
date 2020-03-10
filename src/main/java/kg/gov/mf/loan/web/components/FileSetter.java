@@ -93,7 +93,7 @@ public class FileSetter {
                         for(String fileName:result1){
                             String pathOS =  SystemUtils.IS_OS_LINUX ? "/opt/uploads/" : "C:/temp/";
                             File file = new File(fileName);
-                            System.out.println();
+
                             long loanId;
                             long firstPartValue;
                             try{
@@ -168,7 +168,7 @@ public class FileSetter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(errorss);
+
     }
     private void saveAttachments(Long loanId,File file) {
         Information information;
@@ -206,7 +206,7 @@ public class FileSetter {
                 systemFileService.edit(systemFile);
         }
         catch (Exception e) {
-            System.out.println(e);
+
         }
     }
 

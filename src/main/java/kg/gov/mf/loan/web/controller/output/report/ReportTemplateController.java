@@ -180,14 +180,12 @@ public class ReportTemplateController {
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Date startDate = new Date();
-		System.out.println(" START == "+dateFormat.format(startDate)); //2016/11/16 12:08:43
+
 
 
 		ReportTemplate modelReportTemplate = this.reportTemplateService.findById(id);
 
 		Date dataGetDate = new Date();
-		System.out.println(" FINISH == "+dateFormat.format(dataGetDate)); //2016/11/16 12:08:43
-		System.out.println(" DIFF == "+(dataGetDate.getTime()-startDate.getTime())); //2016/11/16 12:08:43
 
 
 
@@ -256,7 +254,7 @@ public class ReportTemplateController {
 		reportTemplate.setReport(report);
 		
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (reportTemplate.getId() == 0) {
 			this.reportTemplateService.create(reportTemplate);
 		} else {

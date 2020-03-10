@@ -116,7 +116,7 @@ public class EmploymentHistoryEventController {
 	public ModelAndView saveEmploymentHistoryEventAndRedirectToEmploymentHistoryDetails(@Validated @ModelAttribute("employmentHistoryEvent") EmploymentHistoryEvent employmentHistoryEvent, BindingResult result,ModelMap model) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (employmentHistoryEvent.getId() == 0) {
 			//employmentHistoryEvent.setEmploymentHistory(this.employmentHistoryService.findById(employmentHistoryEvent.getEmploymentHistory().getId()));
 			

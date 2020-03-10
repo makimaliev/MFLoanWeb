@@ -105,7 +105,7 @@ public class ObjectFieldController {
 	public String saveObjectFieldAndRedirectToObjectFieldList(@Validated @ModelAttribute("objectField") ObjectField objectField, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (objectField.getId() == 0) {
 			this.objectFieldService.create(objectField);
 		} else {

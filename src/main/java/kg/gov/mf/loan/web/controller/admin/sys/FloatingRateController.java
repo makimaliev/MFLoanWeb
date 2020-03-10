@@ -108,7 +108,7 @@ public class FloatingRateController {
 	public String saveFloatingRateAndRedirectToFloatingRateList(@Validated @ModelAttribute("floatingRate") FloatingRate floatingRate, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (floatingRate.getId() == 0) {
 			this.floatingRateService.create(floatingRate);
 		} else {

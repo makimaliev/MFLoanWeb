@@ -357,7 +357,7 @@ public class PersonController {
 
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		}
 		else if (person.getId() == 0) {
 			
@@ -421,7 +421,7 @@ public class PersonController {
 				staffService.edit(staff);
 			}
 			catch(Exception e){
-				System.out.println(e);
+
 			}
 			try{
 				Debtor debtor=debtorService.getByOwnerId(owner.getId());
@@ -429,7 +429,7 @@ public class PersonController {
 				debtorService.update(debtor);
 			}
 			catch (Exception e){
-				System.out.println(e);
+
 			}
 
 		}

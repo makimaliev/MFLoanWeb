@@ -109,7 +109,7 @@ public class DebtorGroupController {
             debtorSubGroup= debtorSubGroupService.getById(debtor.getDebtorSubGroup().getId());
         }
         catch (Exception e){
-            System.out.println(e);
+
         }
 
         model.addAttribute("list",list);

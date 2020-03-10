@@ -238,7 +238,7 @@ public class StaffController {
 		staff.setEnabled(true);
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (staff.getId() == 0) {
 			
 

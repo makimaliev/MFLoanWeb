@@ -83,7 +83,7 @@ public class EmploymentHistoryEventTypeController {
 	public String saveEmploymentHistoryEventTypeAndRedirectToEmploymentHistoryEventTypeList(@Validated @ModelAttribute("employmentHistoryEventType") EmploymentHistoryEventType employmentHistoryEventType, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (employmentHistoryEventType.getId() == 0) {
 			this.employmentHistoryEventTypeService.create(employmentHistoryEventType);
 		} else {

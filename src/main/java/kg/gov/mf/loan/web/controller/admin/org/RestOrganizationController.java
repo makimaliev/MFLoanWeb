@@ -92,9 +92,7 @@ public class RestOrganizationController {
 
     public List<OrganizationModel> sortFunction(List<OrganizationModel> organizations,String sortStr,String sortField){
         int key=0;
-        System.out.println("=======sortsssssstr=========================================================================================================================");
-        System.out.println(sortStr);
-        System.out.println("================================================================================================================================");
+
         String alphabet="0123456789абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
         if(sortField.equals("organizationName")){
             key=1;
@@ -206,7 +204,6 @@ public class RestOrganizationController {
                 "where s.organization_id = o.id";
         Query query=entityManager.createNativeQuery(baseQuery,ContactListModel.class);
         List<ContactListModel> staffs=query.getResultList();
-//        System.out.println("====================================================================================================");
         for(OrganizationModel i :organizations){
             for(ContactListModel j:staffs){
                 if(i.getId()==j.getId() && j.getSmallData()!=null&& !i.getBigData().contains(j.getSmallData())){
@@ -214,7 +211,6 @@ public class RestOrganizationController {
                 }
             }
         }
-//        System.out.println("====================================================================================================");
     }
     private void setContactList(List<OrganizationModel> organizations){
         String baseQuery="select o.id as id, c.name as smallData \n" +

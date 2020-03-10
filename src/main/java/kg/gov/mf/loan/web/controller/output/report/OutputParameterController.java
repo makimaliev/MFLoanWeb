@@ -77,7 +77,7 @@ public class OutputParameterController {
 	public String saveOutputParameterAndRedirectToOutputParameterList(@Validated @ModelAttribute("outputParameter") OutputParameter outputParameter, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (outputParameter.getId() == 0) {
 			this.outputParameterService.create(outputParameter);
 		} else {

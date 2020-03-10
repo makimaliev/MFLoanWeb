@@ -161,7 +161,7 @@ public class SupervisorPlanController {
         if(spId > 0)
         {
             SupervisorPlan sp=spService.getById(spId);
-            System.out.println(sp.getReg_date());
+
             globalRegDate=sp.getReg_date();
             model.addAttribute("sp", sp);
         }

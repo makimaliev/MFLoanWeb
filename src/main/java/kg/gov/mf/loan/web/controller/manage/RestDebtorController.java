@@ -205,7 +205,7 @@ public class RestDebtorController {
 	public Datatable getAllDebtors(HttpServletRequest request)
 	{
 		long count = debtorRepository.count();
-		System.out.println(request.getParameter("datatable[pagination][field]"));
+
 		Pageable pageable = new PageRequest(0, 10);
 
 		Datatable<DebtorV> result = new Datatable<>();

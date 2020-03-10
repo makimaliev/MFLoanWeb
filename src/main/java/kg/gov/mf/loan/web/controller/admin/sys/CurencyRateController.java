@@ -79,8 +79,7 @@ public class CurencyRateController {
         	doc.getDocumentElement().normalize();
         	
         	
-//        	System.out.println(doc.getDocumentElement().getNodeName()+" "+doc.getDocumentElement().getAttribute("Name") +"Date:"+doc.getDocumentElement().getAttribute("Date"));
-  
+
         	String rateDate = doc.getDocumentElement().getAttribute("Date");
         	
         	
@@ -89,7 +88,7 @@ public class CurencyRateController {
         	
         	NodeList nodeList = doc.getElementsByTagName(doc.getDocumentElement().getChildNodes().item(1).getNodeName());
         	
-        	System.out.println("--------------------");
+
         	
         	for(int tmp = 0; tmp < nodeList.getLength(); tmp++)
             {
@@ -99,9 +98,6 @@ public class CurencyRateController {
                     Element element = (Element)node;
                     
 /*                    
-                    System.out.println(element.getNodeName()+" ISO Code " + element.getAttribute("ISOCode").toString() + ":");
-                    System.out.println("Nominal: " + element.getElementsByTagName("Nominal").item(0).getChildNodes().item(0).getNodeValue());
-                    System.out.println("Value: " + element.getElementsByTagName("Value").item(0).getChildNodes().item(0).getNodeValue());
   */
                     
                     currencyRates.add(" ���� ������ "+element.getAttribute("ISOCode").toString()+" �� ��������� �� "+rateDate+ " = "+element.getElementsByTagName("Value").item(0).getChildNodes().item(0).getNodeValue());	
@@ -109,8 +105,7 @@ public class CurencyRateController {
             }
         	
         	model.addAttribute("currencyRateList",currencyRates);
-        	
-        	System.out.println(doc);
+
 
         } catch (Exception e) {
             e.printStackTrace();

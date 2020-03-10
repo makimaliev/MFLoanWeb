@@ -101,7 +101,7 @@ public class BankDataController {
 	public ModelAndView saveBankDataAndRedirectToBankDataList(@Validated @ModelAttribute("bankData") BankData bankData, BindingResult result, ModelMap model) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (bankData.getId() == 0) {
 			this.bankDataService.create(bankData);
 		} else {

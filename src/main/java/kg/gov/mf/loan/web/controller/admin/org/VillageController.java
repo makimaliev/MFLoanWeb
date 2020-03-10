@@ -112,7 +112,7 @@ public class VillageController {
 	public ModelAndView saveVillage(@Validated @ModelAttribute("village") Village village, BindingResult result,ModelMap model) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (village.getId() == 0) {
 			village.setAokmotu(this.aokmotuService.findById(village.getAokmotu().getId()));			
 			this.villageService.create(village);

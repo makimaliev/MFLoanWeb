@@ -96,7 +96,7 @@ public class ObjectTypeController {
 
 		
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (objectType.getId() == 0) {
 			this.objectTypeService.create(objectType);
 		} else {

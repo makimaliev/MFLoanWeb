@@ -77,7 +77,7 @@ public class PermissionController
 	public String savePermission(@Validated @ModelAttribute("permission") Permission p, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (p.getId() == 0) {
 			this.permissionService.create(p);
 		} else {

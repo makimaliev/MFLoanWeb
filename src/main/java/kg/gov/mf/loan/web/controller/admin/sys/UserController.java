@@ -177,7 +177,7 @@ public class UserController {
 
 		
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (user.getId() == 0) {
 			this.userService.create(user);
 		} else {

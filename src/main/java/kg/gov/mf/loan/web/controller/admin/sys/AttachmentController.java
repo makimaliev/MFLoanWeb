@@ -119,7 +119,7 @@ public class AttachmentController {
 
 		
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (attachment.getId() == 0) {
 			this.attachmentService.create(attachment);
 		} else {

@@ -81,7 +81,7 @@ public class JpaConfig {
     @Bean
     public DataSourceInitializer dataSourceInitializer(DataSource dataSource)
     {
-        System.out.println("**************************"+initDatabase);
+
         DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
         dataSourceInitializer.setDataSource(dataSource);
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();

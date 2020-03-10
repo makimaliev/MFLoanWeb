@@ -89,7 +89,7 @@ public class RoleController
 	public String saveRole(@Validated @ModelAttribute("role") Role p, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (p.getId() == 0) {
 			this.roleService.create(p);
 		} else {

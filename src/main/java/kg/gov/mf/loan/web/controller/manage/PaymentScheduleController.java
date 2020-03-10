@@ -299,7 +299,7 @@ public class PaymentScheduleController {
 			while (itr.hasNext()) {
 				String uploadedFile = itr.next();
 				MultipartFile part = request.getFile(uploadedFile);
-				System.out.println(part.getOriginalFilename());
+
 				HSSFWorkbook     WorkBookMain     = new HSSFWorkbook(part.getInputStream());
 				HSSFSheet SheetMain        = null;
 				HSSFRow RowMain          = null;
@@ -348,7 +348,7 @@ public class PaymentScheduleController {
 			}
 		}
 		catch (Exception e) {
-			System.out.println(e);
+
 		}
 		if(updateLastDate) {
 			/*ScheduledExecutorService someScheduler = Executors.newScheduledThreadPool(1);

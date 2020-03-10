@@ -100,7 +100,7 @@ public class DistrictController {
 	public ModelAndView saveDistrictAndRedirectToRegionDetails(@Validated @ModelAttribute("district") District district, BindingResult result,ModelMap model) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (district.getId() == 0) {
 			district.setRegion(this.regionService.findById(district.getRegion().getId()));
 			this.districtService.create(district);

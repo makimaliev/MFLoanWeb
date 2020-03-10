@@ -105,7 +105,7 @@ public class FixTermController {
 	public String saveFixTermAndRedirectToFixTermList(@Validated @ModelAttribute("fixTerm") FixTerm fixTerm, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (fixTerm.getId() == 0) {
 			this.fixTermService.create(fixTerm);
 		} else {

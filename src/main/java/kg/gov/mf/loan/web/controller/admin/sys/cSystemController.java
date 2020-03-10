@@ -138,8 +138,7 @@ public class cSystemController {
 		this.validationService.validateObject(cSystem, result);
 		
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
-			
+
 //			model.addAttribute("error", result);	
 			
 			model.addAttribute("openModal", "1");

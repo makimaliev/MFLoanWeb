@@ -105,7 +105,7 @@ public class ValidationTermController {
 	public String saveValidationTermAndRedirectToValidationTermList(@Validated @ModelAttribute("validationTerm") ValidationTerm validationTerm, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (validationTerm.getId() == 0) {
 			this.validationTermService.create(validationTerm);
 		} else {

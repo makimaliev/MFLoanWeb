@@ -235,7 +235,7 @@ public class ObjectListController {
 		else {
 			String groupTypeId = "";
 			if (result.hasErrors()) {
-				System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 			} else if (objectList.getId() == 0) {
 				if (ObjectListValuesIds != null)
 					for (String id : ObjectListValuesIds) {

@@ -81,7 +81,7 @@ public class ContentParameterController {
 	public String saveContentParameterAndRedirectToContentParameterList(@Validated @ModelAttribute("contentParameter") ContentParameter contentParameter, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (contentParameter.getId() == 0) {
 			this.contentParameterService.create(contentParameter);
 		} else {

@@ -103,7 +103,7 @@ public class OrgFormController {
 	public String saveOrgFormAndRedirectToOrgFormList(@Validated @ModelAttribute("orgForm") OrgForm orgForm, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (orgForm.getId() == 0) {
 			this.orgFormService.create(orgForm);
 		} else {

@@ -270,7 +270,7 @@ public class ReportController {
 			}
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (report.getId() == 0) {
 			this.reportService.create(report);
 		} else {

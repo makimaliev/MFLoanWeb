@@ -341,8 +341,6 @@ public class LoanController {
 //        model.addAttribute("accrues", jsonAccrues);
 
         User user = userService.findByUsername(Utils.getPrincipal());
-//        System.out.println(user.getId());
-//        System.out.println(loan.getSupervisorId());
         model.addAttribute("loggedinuser", Utils.getPrincipal());
         model.addAttribute("loggedinuserId",user.getId());
 
@@ -420,7 +418,7 @@ public class LoanController {
 
         Long debtorId=null;
 	    if(result.hasErrors()){
-            System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
         }
         else {
             LoanFinGroup loanFinGroup=loanFinGroupService.getById(finGroup.getId());
@@ -456,7 +454,7 @@ public class LoanController {
 
         Long debtorId=null;
 	    if(result.hasErrors()){
-            System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
         }
         else {
             Loan loan=loanService.getById(loanId);
@@ -490,7 +488,7 @@ public class LoanController {
 
         Long debtorId=null;
         if(result.hasErrors()){
-            System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
         }
         else {
             DestinationAccount destinationAccount1=destinationAccountService.getById(destinationAccount.getId());
@@ -551,7 +549,7 @@ public class LoanController {
 
         Long debtorId=null;
         if(result.hasErrors()){
-            System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
         }
         else {
             OrderTermFund loanFund=fundService.getById(fund.getId());
@@ -582,7 +580,7 @@ public class LoanController {
 
         Long debtorId=null;
         if(result.hasErrors()){
-            System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
         }
         else {
             LoanState loanState=loanStateService.getById(state.getId());
@@ -1835,7 +1833,7 @@ public class LoanController {
             result.add(model);
         }
         catch (Exception e){
-            System.out.println("NO DAILY LOANSUMMARIES");
+
         }
 
 
@@ -1932,7 +1930,7 @@ public class LoanController {
                 model.setTransferPersonName(debtorService.getByOwnerId(d.getTransferPersonId()).getName());
             }
             catch (Exception e){
-                System.out.println(e);
+
             }
 //            model.setGoodsTypeId(d.getGoodsTypeId());
             try{

@@ -203,7 +203,7 @@ public class InformationController {
 	@RequestMapping(value = "/information/{informationId}/information/save", method = RequestMethod.POST)
 	public String saveInformationAndRedirectToInformationList(@Validated @ModelAttribute("information") Information information, @PathVariable("informationId") long informationId, BindingResult result) {
 		try {
-			System.out.println(information.getClass().getDeclaredField("name"));
+
 		} catch (NoSuchFieldException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -214,7 +214,7 @@ public class InformationController {
 		
 		if (result.hasErrors()) 
 		{
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} 
 		else if (information.getId() == 0) 
 		{
@@ -253,7 +253,7 @@ public class InformationController {
 			
 				Class<?> act = Class.forName("kg.gov.mf.loan.admin.sys.model.Information");
 
-			System.out.println(output);
+
 		} catch (SecurityException | NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -262,7 +262,7 @@ public class InformationController {
 		
 		if (result.hasErrors()) 
 		{
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} 
 		else if (information.getId() == 0) 
 		{
@@ -333,7 +333,7 @@ public class InformationController {
                 idsMap.put(splitted[0],Long.valueOf(splitted[1]));
             }
             catch (Exception e){
-                System.out.println(e);
+
             }
 		}
 
@@ -400,7 +400,7 @@ public class InformationController {
 			informationService.edit(information);
 		}
 		catch (Exception e) {
-			System.out.println(e);
+
 		}
 
 		switch (type){
@@ -449,7 +449,7 @@ public class InformationController {
             fileExtension=splittedFileName[splittedFileName.length-1];
         }
         catch (Exception e){
-            System.out.println(e);
+
             return;
         }
 		String mimeType=Files.probeContentType(file.toPath());

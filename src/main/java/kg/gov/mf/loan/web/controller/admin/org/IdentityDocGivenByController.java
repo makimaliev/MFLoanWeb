@@ -74,7 +74,7 @@ public class IdentityDocGivenByController {
 	public String saveIdentityDocGivenByAndRedirectToIdentityDocGivenByList(@Validated @ModelAttribute("identityDocGivenBy") IdentityDocGivenBy identityDocGivenBy, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (identityDocGivenBy.getId() == 0) {
 			this.identityDocGivenByService.create(identityDocGivenBy);
 		} else {

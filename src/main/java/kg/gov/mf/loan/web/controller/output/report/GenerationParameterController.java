@@ -90,7 +90,7 @@ public class GenerationParameterController {
 	public String saveGenerationParameterAndRedirectToGenerationParameterList(@Validated @ModelAttribute("generationParameter") GenerationParameter generationParameter, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (generationParameter.getId() == 0) {
 			this.generationParameterService.create(generationParameter);
 		} else {

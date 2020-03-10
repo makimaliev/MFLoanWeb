@@ -74,7 +74,7 @@ public class RegionController {
 	public String saveRegionAndRedirectToRegionList(@Validated @ModelAttribute("region") Region region, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (region.getId() == 0) {
 			this.regionService.create(region);
 		} else {

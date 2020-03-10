@@ -73,7 +73,7 @@ public class ObjectListValueController {
 	public String saveObjectListValueAndRedirectToObjectListValueList(@Validated @ModelAttribute("objectListValue") ObjectListValue objectListValue, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (objectListValue.getId() == 0) {
 			this.objectListValueService.create(objectListValue);
 		} else {

@@ -202,8 +202,7 @@ public class JobController {
                 List<Trigger> triggers = (List<Trigger>) scheduler.getTriggersOfJob(jobKey);
                 Date nextFireTime = triggers.get(0).getNextFireTime();
 
-                System.out.println("[jobName] : " + jobName + " [groupName] : "
-                        + jobGroup + " - " + nextFireTime);
+
                 */
             }
 

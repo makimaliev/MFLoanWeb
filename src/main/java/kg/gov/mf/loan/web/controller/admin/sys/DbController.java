@@ -83,7 +83,7 @@ public class DbController {
         	
             SimpleDateFormat df2 = new SimpleDateFormat("dd_MM_yy_HH_mm_ss");
             String dateText = df2.format(today);
-            System.out.println(dateText);
+
         	
             Runtime runtime = Runtime.getRuntime();
 
@@ -100,7 +100,7 @@ public class DbController {
 //            String executeCmd = "mysqldump -u " + username + " -p" + password + " --add-drop-database -B " + database + " -r c:\\temp\\mfloan.sql";
             String executeCmd = "mysqldump -u "+username+"  -p"+password+"  "+database+" -r "+savePath;
 
-            System.out.println(executeCmd);
+
 
             
             
@@ -127,10 +127,10 @@ public class DbController {
                 
                 this.systemFileService.create(dbBackupFile);            
 
-                System.out.println("Backup created successfully!");
+
 
             } else {
-            	System.out.println("Backup NOT created !");
+
             }
 
 
@@ -156,14 +156,14 @@ public class DbController {
         	
         	dbRestoreFile =  this.systemFileService.findById(systemFileId);
         	
-        	System.out.println(" == "+dbRestoreFile.getName()+" == "+dbRestoreFile.getPath() );
+
         	
         	Date today = new Date();
         	
         	
             SimpleDateFormat df2 = new SimpleDateFormat("dd_MM_yy_HH_mm_ss");
             String dateText = df2.format(today);
-            System.out.println(dateText);
+
         	
             Runtime runtime = Runtime.getRuntime();
             
@@ -201,10 +201,10 @@ public class DbController {
                 
                 */
 
-                System.out.println("Backup restored successfully!");
+
 
             } else {
-            	System.out.println("Backup NOT restored !");
+
             }
 
 

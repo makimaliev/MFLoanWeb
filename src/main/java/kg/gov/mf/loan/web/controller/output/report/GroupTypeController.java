@@ -79,7 +79,7 @@ public class GroupTypeController {
 	public String saveGroupTypeAndRedirectToGroupTypeList(@Validated @ModelAttribute("groupType") GroupType groupType, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (groupType.getId() == 0) {
 			this.groupTypeService.create(groupType);
 		} else {

@@ -220,7 +220,7 @@ public class SupervisorTermController {
 
 		
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (supervisorTerm.getId() == 0) {
 			this.supervisorTermService.create(supervisorTerm);
 		} else {

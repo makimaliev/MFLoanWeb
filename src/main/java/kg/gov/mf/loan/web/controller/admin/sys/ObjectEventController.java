@@ -105,7 +105,7 @@ public class ObjectEventController {
 	public String saveObjectEventAndRedirectToObjectEventList(@Validated @ModelAttribute("objectEvent") ObjectEvent objectEvent, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (objectEvent.getId() == 0) {
 			this.objectEventService.create(objectEvent);
 		} else {

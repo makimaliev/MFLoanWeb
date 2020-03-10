@@ -118,9 +118,6 @@ public class RestCollateralItemViewController {
 //
         CollateralItemViewMetaModel metaModel=new CollateralItemViewMetaModel();
 //
-//        System.out.println("==================================COUNT=====================================================================");
-//        System.out.println(count);
-//        System.out.println("=======================================================================================================");
 //
         metaModel.setMeta(meta);
         if(all.size()>10){

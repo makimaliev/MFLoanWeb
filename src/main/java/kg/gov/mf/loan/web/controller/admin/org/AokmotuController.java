@@ -114,7 +114,7 @@ public class AokmotuController {
 	public ModelAndView saveAokmotu(@Validated @ModelAttribute("aokmotu") Aokmotu aokmotu, BindingResult result,ModelMap model) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (aokmotu.getId() == 0) {
 			aokmotu.setDistrict(this.districtService.findById(aokmotu.getDistrict().getId()));			
 			this.aokmotuService.create(aokmotu);

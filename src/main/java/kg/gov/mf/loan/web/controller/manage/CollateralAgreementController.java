@@ -506,7 +506,7 @@ public class CollateralAgreementController {
 			value = (Double) query.getResultList().get(0);
 		}
 		catch (Exception e){
-			System.out.println("No LoanSummary for this loan!!!");
+
 		}
 
         return value;

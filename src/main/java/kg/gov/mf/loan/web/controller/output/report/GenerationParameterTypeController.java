@@ -73,7 +73,7 @@ public class GenerationParameterTypeController {
 	public String saveGenerationParameterTypeAndRedirectToGenerationParameterTypeList(@Validated @ModelAttribute("generationParameterType") GenerationParameterType generationParameterType, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (generationParameterType.getId() == 0) {
 			this.generationParameterTypeService.create(generationParameterType);
 		} else {

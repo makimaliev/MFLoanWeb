@@ -143,7 +143,7 @@ public class HomeController {
         }
         catch (Exception ex)
         {
-System.out.println(ex);
+
         }
         return "index";
     }

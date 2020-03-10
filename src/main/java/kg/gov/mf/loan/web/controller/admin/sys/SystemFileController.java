@@ -131,7 +131,7 @@ public class SystemFileController {
 		
 		if (result.hasErrors()) 
 		{
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		}
 		else if(systemFile.getId()>0){
 			systemFileService.edit(systemFile);

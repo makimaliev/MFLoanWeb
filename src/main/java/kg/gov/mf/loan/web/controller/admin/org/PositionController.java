@@ -98,7 +98,7 @@ public class PositionController {
 	public String savePositionAndRedirectToPositionList(@Validated @ModelAttribute("position") Position position, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (position.getId() == 0) {
 			this.positionService.create(position);
 		} else {

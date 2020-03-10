@@ -88,10 +88,6 @@ public class LoanViewController {
                 }
             }
         }
-        System.out.println("=================================================================================");
-        System.out.println(fieldName);
-        System.out.println(myIds);
-        System.out.println("=================================================================================");
         selected.put("?"+fieldName,myIds+"?");
         if (!groupTypeId.equals("")){
             Long longGroupTypeId=Long.valueOf(groupTypeId);

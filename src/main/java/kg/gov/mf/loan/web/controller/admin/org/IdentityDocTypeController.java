@@ -74,7 +74,7 @@ public class IdentityDocTypeController {
 	public String saveIdentityDocTypeAndRedirectToIdentityDocTypeList(@Validated @ModelAttribute("identityDocType") IdentityDocType identityDocType, BindingResult result) {
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (identityDocType.getId() == 0) {
 			this.identityDocTypeService.create(identityDocType);
 		} else {

@@ -851,7 +851,7 @@ public class CollectionPhaseController {
 
 				if (phaseDetailsLists.get(Utils.getPrincipal()) == null) {
 				    phase.setStart_amount(oldPhase.getStart_amount());
-					System.out.println("no phase details detected!!!");
+
 				}
 				else {
 				    List<Long> phaseDetailsIds=new ArrayList<>();
@@ -1066,8 +1066,7 @@ public class CollectionPhaseController {
 									@PathVariable("procId")Long procId,@PathVariable("collectionPhaseId")Long collectionPhaseId, CollectionPhase collectionPhase){
 		CollectionPhase phase=phaseService.getById(collectionPhaseId);
 
-		System.out.println("==========================================================================================");
-		System.out.println();
+
 		phase.setPhaseStatus(collectionPhase.getPhaseStatus());
 		phase.setCloseDate(collectionPhase.getCloseDate());
 		phase.setResultDocNumber(collectionPhase.getResultDocNumber());
@@ -1428,7 +1427,7 @@ public class CollectionPhaseController {
             collectionPhase.setCloseDate(sf.parse(date));
         }
         catch (Exception e){
-            System.out.println(e);
+
         }
         collectionPhase.setResultDocNumber(res);
 
@@ -1466,7 +1465,7 @@ public class CollectionPhaseController {
 			procedure.setCloseDate(sf.parse(date));
 		}
 		catch (Exception e){
-			System.out.println(e);
+
 		}
 
         procService.update(procedure);
@@ -2267,7 +2266,7 @@ public class CollectionPhaseController {
 			session.createSQLQuery(phaseUpdateQuery).executeUpdate();
 		}
 		catch (Exception e){
-			System.out.println(e);
+
 		}
 		Debtor debtor=debtorService.getById(debtorId);
 		for(Loan loan1:debtor.getLoans()){
@@ -2280,7 +2279,7 @@ public class CollectionPhaseController {
 					session.createSQLQuery(phaseSetPaid).executeUpdate();
 				}
 				catch (Exception e){
-					System.out.println(e);
+
 				}
 			}
 		}
@@ -2358,7 +2357,7 @@ public class CollectionPhaseController {
             session.createSQLQuery(phaseSetPaid).executeUpdate();
         }
         catch (Exception e){
-            System.out.println(e);
+
         }
     }
 

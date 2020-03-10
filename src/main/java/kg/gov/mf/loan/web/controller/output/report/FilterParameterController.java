@@ -118,7 +118,7 @@ public class FilterParameterController {
 			}
 
 		if (result.hasErrors()) {
-			System.out.println(" ==== BINDING ERROR ====" + result.getAllErrors().toString());
+
 		} else if (filterParameter.getId() == 0) {
 			this.filterParameterService.create(filterParameter);
 		} else {
@@ -150,9 +150,6 @@ public class FilterParameterController {
 
 	@RequestMapping("/filterParameter/{id}/user/{user_id}/save")
 	public String saveFilterParameterUserAdd(@PathVariable("id") long id, @PathVariable("id") long user_id,Model model) {
-
-
-    	System.out.println(" user added");
 
 		return "redirect:/filterParameter/list";
 
