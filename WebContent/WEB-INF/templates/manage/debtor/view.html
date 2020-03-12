@@ -144,6 +144,13 @@
 																		<span th:text="#{label.title.add.edit.debtor}"></span>
 																	</span>
 																</a>
+																<button sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR_ACT_NEEDED')"
+																		type="button"
+																		class="btn btn-primary"
+																		th:text="#{label.change.debtor_act_status}"
+																		data-toggle="modal"
+																		data-target="#changeDebtorActStatusModal">
+																</button>
 																<!--<a sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR_PHASE')" th:href="@{/manage/debtor/__${debtor.id}__/update/phases}" class="btn btn-outline-danger" title="Обновить">-->
 																<!--<span>-->
 																<!--<span th:text="#{label.debtor.loan.phases.update}"></span>-->
@@ -174,10 +181,18 @@
                                                         </div>
                                                     </div>
 													<div class="m-widget1__item" sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR_TYPE')">
+													<div class="row m-row--no-padding align-items-center" >
+														<div class="col">
+															<h3 class="m-widget1__title" th:text="#{label.debtor.type}"></h3>
+															<span class="m-widget1__desc m--font-brand" th:text="${type.name}"></span>
+														</div>
+													</div>
+												</div>
+													<div class="m-widget1__item">
 														<div class="row m-row--no-padding align-items-center" >
 															<div class="col">
-																<h3 class="m-widget1__title" th:text="#{label.debtor.type}"></h3>
-																<span class="m-widget1__desc m--font-brand" th:text="${type.name}"></span>
+																<h3 class="m-widget1__title" th:text="#{label.debtor.act_status}"></h3>
+																<span class="m-widget1__desc m--font-brand" th:text="${actStatus.name}"></span>
 															</div>
 														</div>
 													</div>
@@ -259,6 +274,14 @@
 																		<!--<span th:text="#{label.debtor.loan.phases.update}"></span>-->
 																	<!--</span>-->
 																<!--</a>-->
+																<button sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR_ACT_STATUS')"
+																		type="button"
+																		class="btn btn-primary"
+																		th:text="#{label.change.debtor_act_status}"
+																		data-toggle="modal"
+																		data-target="#changeDebtorActStatusModal">
+																</button>
+
 															</div>
 														</div>
 													</div>
@@ -285,6 +308,14 @@
 															<div class="col">
 																<h3 class="m-widget1__title" th:text="#{label.debtor.type}"></h3>
 																<span class="m-widget1__desc m--font-brand" th:text="${type.name}"></span>
+															</div>
+														</div>
+													</div>
+													<div class="m-widget1__item">
+														<div class="row m-row--no-padding align-items-center" >
+															<div class="col">
+																<h3 class="m-widget1__title" th:text="#{label.debtor.act_status}"></h3>
+																<span class="m-widget1__desc m--font-brand" th:text="${actStatus.name}"></span>
 															</div>
 														</div>
 													</div>
@@ -653,6 +684,10 @@
 								 role="dialog" aria-labelledby="myModalLabel"
 								 aria-hidden="true">
 								<div class="modal-dialog">
+									<script>
+										console.log("asdfasdf");
+									</script>
+
 									<div class="modal-content">
 										<div class="modal-body">...</div>
 									</div>
@@ -667,10 +702,6 @@
 										<form>
 											<div class="modal-body">
 												<div class="form-group m-form__group row">
-													<label class="col-form-label col-lg-4 col-sm-12">
-														<span th:text="#{label.debtor.type}"></span>
-														<span class="m--font-danger">*</span>
-													</label>
 													<div class="col-lg-8 col-md-9 col-sm-12">
 														<select id="debtorType" class="form-control m-bootstrap-select m_selectpicker"  th:field="${type.id}">
 															<option th:each="type : ${types}"
@@ -683,6 +714,59 @@
 											<div class="modal-footer">
 												<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.cancel}">Close</button>
 												<button onclick="saveDebtorType()" type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.save}">Save</button>
+											</div>
+										</form>
+									</div>
+
+								</div>
+							</div>
+
+							<div id="changeDebtorActStatusModal" class="modal" role="dialog">
+								<div class="modal-dialog">
+									<!-- Modal content-->
+									<div class="modal-content">
+										<form>
+											<div class="modal-body">
+												<div class="form-group m-form__group row">
+													<div class="col-lg-12 col-md-12 col-sm-12">
+														<select id="debtorActStatus" class="form-control m-bootstrap-select m_selectpicker"  th:field="${actStatus.id}">
+															<option th:each="actStatusInList : ${actStatusList}"
+																	th:value="${actStatusInList.id}"
+																	th:text="${actStatusInList.name}"></option>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.cancel}">Close</button>
+												<button onclick="saveDebtorActStatus()" type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.save}">Save</button>
+											</div>
+										</form>
+									</div>
+
+								</div>
+							</div>
+
+							<div id="changeDebtorDescriptionModal" class="modal" role="dialog">
+								<div class="modal-dialog">
+
+									<!-- Modal content-->
+									<div class="modal-content">
+										<form>
+											<div class="modal-body">
+												<div class="form-group m-form__group row">
+													<label class="col-form-label col-lg-4 col-sm-12">
+														<span th:text="#{label.description}"></span>
+														<span class="m--font-danger">*</span>
+													</label>
+													<div class="col-lg-8 col-md-9 col-sm-12">
+														<input id="debtorDescription" class="form-control m-input" type="text" th:placeholder="#{label.description}" th:value="${debtor.description}">
+													</div>
+												</div>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.cancel}">Close</button>
+												<button onclick="saveDebtorDescription()" type="button" class="btn btn-default" data-dismiss="modal" th:text="#{label.save}">Save</button>
 											</div>
 										</form>
 									</div>
@@ -1473,6 +1557,18 @@
             type:'post',
             data:{id:debtorId,data:value},
             url:"/debtor/type/instantUpdate",
+            success:function (data) {
+                location.reload();
+            }
+        });
+    }
+
+    function saveDebtorActStatus() {
+        var value=$("#debtorActStatus").val();
+        $.ajax({
+            type:'post',
+            data:{id:debtorId,data:value},
+            url:"/debtor/actStatus/instantUpdate",
             success:function (data) {
                 location.reload();
             }

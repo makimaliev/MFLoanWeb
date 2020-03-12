@@ -190,6 +190,12 @@ public class DebtorController {
 	@Autowired
 	DebtorSubGroupService debtorSubGroupService;
 
+	@Autowired
+	DebtorActStatusService debtorActStatusService;
+
+	@Autowired
+	DebtorActNeededService debtorActNeededService;
+
 	/**
 	 * The entity manager.
 	 */
@@ -276,6 +282,9 @@ public class DebtorController {
 		model.addAttribute("today",sd.format(new Date()));
 		model.addAttribute("type",debtorTypeService.getById(debtor.getDebtorType().getId()));
 		model.addAttribute("types",debtorTypeService.list());
+
+		model.addAttribute("actStatus",debtorActStatusService.getById(debtor.getDebtorActStatus().getId()));
+		model.addAttribute("actStatusList",debtorActStatusService.list());
 
 		String createdByStr=null;
 		String modifiedByStr=null;
@@ -371,8 +380,13 @@ public class DebtorController {
 
 			DebtorGroup debtorGroup= debtorGroupService.getById(1L);
 			DebtorSubGroup debtorSubGroup= debtorSubGroupService.getById(1L);
+			DebtorActStatus debtorActStatus = debtorActStatusService.getById(2L);
+			DebtorActNeeded debtorActNeeded = debtorActNeededService.getById(1L);
+
 			debtor.setDebtorGroup(debtorGroup);
 			debtor.setDebtorSubGroup(debtorSubGroup);
+			debtor.setDebtorActNeeded(debtorActNeeded);
+			debtor.setDebtorActStatus(debtorActStatus);
 			debtorService.add(debtor);
 		} else {
 			Owner owner = ownerRepository.findOne(debtor.getOwner().getId());
@@ -1425,6 +1439,8 @@ public class DebtorController {
 		return "OK";
 	}
 
+
+
     @PostMapping("/debtor/description/update")
     @ResponseBody
     public String updateDebtorDescription(@RequestParam("id") Long id,@RequestParam("data") String data){
@@ -1670,5 +1686,34 @@ public class DebtorController {
 	    	return null;
 		}
     }
+
+
+	@GetMapping("/debtor/{debtorId}/debtorActNeeded/change")
+	public String changeDebtorActNeeded(Model model,@PathVariable("debtorId") Long debtorId){
+
+		Debtor debtor = debtorService.getById(debtorId);
+		List<DebtorActStatus> debtorActStatusList= debtorActStatusService.list();
+		model.addAttribute("debtorActStatusList",debtorActStatusList);
+		model.addAttribute("debtor",debtor);
+
+		return "manage/debtor/debtorActStatusForm";
+	}
+
+
+	@PostMapping("/debtor/actStatus/instantUpdate")
+	@ResponseBody
+	public String updateDebtorActStatus(@RequestParam("id") Long id,@RequestParam("data") Long data){
+		Debtor debtor=debtorService.getById(id);
+		debtor.setDebtorActStatus(debtorActStatusService.getById(data));
+
+		if(data==3)
+		{
+			debtor.setDebtorActNeeded(debtorActNeededService.getById(2L));
+		}
+
+		debtorService.update(debtor);
+		return "OK";
+	}
+
 
 }
