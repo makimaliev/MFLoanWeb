@@ -255,7 +255,7 @@
                                             <div class="col-md-8 col-lg-8 col-xl-8">
                                                 <!--begin:: Widgets/Stats2-2 -->
                                                 <div class="m-widget1">
-													<div class="m-widget1__item" sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR_GROUP','PERM_UPDATE_DEBTOR_TYPE','PERM_UPDATE_DEBTOR')">
+													<div class="m-widget1__item" sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR_GROUP','PERM_UPDATE_DEBTOR_TYPE','PERM_UPDATE_DEBTOR','PERM_UPDATE_DEBTOR_ACT_STATUS')">
 														<div class="row m-row--no-padding align-items-center">
 															<div class="col">
 																<button sec:authorize="hasAnyAuthority('ADMIN','PERM_UPDATE_DEBTOR_GROUP')" th:href="@{/debtor/__${debtor.id}__/debtorGroup/change}" type="button" class="btn btn-primary" th:text="#{label.change.debtorGroups}" data-toggle="modal" data-target="#listLoanFormModal"></button>
