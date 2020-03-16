@@ -1264,7 +1264,7 @@ public class LoanController {
     @PostMapping("/paymentScheduleRequest/{loanId}")
     @ResponseBody
     public String getListOfPaymentSchedules(@PathVariable("loanId") Long loanId){
-        Gson gson = new GsonBuilder().setDateFormat("yyyy.MM.dd").create();
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
         String result = gson.toJson(getPaymentSchedulesByLoanId(loanId));
         return result;
     }
@@ -1272,7 +1272,7 @@ public class LoanController {
     @PostMapping("/paymentRequest/{loanId}")
     @ResponseBody
     public String getListOfPayments(@PathVariable("loanId") Long loanId){
-        Gson gson = new GsonBuilder().setDateFormat("yyyy.MM.dd").create();
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
         String result = gson.toJson(getPaymentsByLoanId(loanId));
         return result;
     }
@@ -1352,9 +1352,9 @@ public class LoanController {
 //        String perPageStr = datatable.get("datatable[pagination][perpage]");
 
         List<LoanDetailedSummaryModel> result = new ArrayList<>();
-        Loan loan = loanService.getById(loanId);
+//        Loan loan = loanService.getById(loanId);
 //        LIMIT "+pageStr+","+perPageStr
-        String baseQuery="select * from loanDetailedSummary where loanId="+loanId+" ORDER BY onDate asc ";
+        String baseQuery="select * from loanDetailedSummary where loanId="+loanId+" and year(onDate) <= YEAR(current_date) ORDER BY onDate desc ";
 
         Query query=entityManager.createNativeQuery(baseQuery,LoanDetailedSummaryModel.class);
         result=query.getResultList();
