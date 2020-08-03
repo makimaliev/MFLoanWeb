@@ -119,7 +119,7 @@ public class HomeController {
 
 
         CollectionPhaseTool collectionPhaseTool = new CollectionPhaseTool();
-        collectionPhaseTool.doStartPhaseDetailsUpdate();
+//        collectionPhaseTool.doStartPhaseDetailsUpdate();
 
         return "index";
 
@@ -139,7 +139,7 @@ public class HomeController {
         try {
             SecondMigrationToolVersion2 secondMigrationTool=new SecondMigrationToolVersion2();
 //            SecondMigrationTool secondMigrationTool=new SecondMigrationTool();
-            secondMigrationTool.loanMigrate(loanId,"150.0.0.89","gos3","postgres","armad27raptor");
+//            secondMigrationTool.loanMigrate(loanId,"150.0.0.89","gos3","postgres","armad27raptor");
         }
         catch (Exception ex)
         {
@@ -151,14 +151,14 @@ public class HomeController {
     @RequestMapping("/migrate/loan/fields")
     public String loanFieldsMigrate(){
         LoanFieldsMigration loanFieldsMigration=new LoanFieldsMigration();
-        loanFieldsMigration.migrateLoanField("150.0.0.89","migration_test","postgres","armad27raptor");
+//        loanFieldsMigration.migrateLoanField("150.0.0.89","migration_test","postgres","armad27raptor");
         return "index";
     }
 
     @RequestMapping("/migrate/loan/supervisorPlan")
     public String loanSupervisorPlanMigrate(){
         LoanFieldsMigration loanFieldsMigration=new LoanFieldsMigration();
-        loanFieldsMigration.migrateSupervisorPlans("150.0.0.89","migration2019","postgres","armad27raptor");
+//        loanFieldsMigration.migrateSupervisorPlans("150.0.0.89","migration2019","postgres","armad27raptor");
         return "index";
     }
 	
