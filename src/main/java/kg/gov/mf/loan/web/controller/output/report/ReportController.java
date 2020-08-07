@@ -857,4 +857,15 @@ public class ReportController {
 		}
 
 	}
+
+
+	@RequestMapping("/report/{id}/clone")
+	public String cloneByReport(@PathVariable("id") long id, HttpServletResponse response) {
+
+		Report report = this.reportService.findById(id);
+
+		reportService.clone(report);
+
+		return "redirect:/report/list";
+	}
 }

@@ -79,6 +79,14 @@
 														   role="button" sec:authorize="hasRole('ADMIN')">
 															<span th:text="#{label.table.view}"></span>
 														</a>
+														<a sec:authorize="hasAnyAuthority('ADMIN')" class="dropdown-item" href="#">
+															<span>
+																<form th:action="@{/report/__${s.id}__/clone}" method="post">
+																	<input hidden="true" type="text" th:value="${s.id}" />
+																	<button type="submit" class="btn btn-reset" th:text="#{label.table.clone}"></button>
+																</form>
+															</span>
+														</a>
                                                         <a class="dropdown-item"
                                                            th:href="@{/report/__${s.id}__/customView}"
                                                            role="button">
