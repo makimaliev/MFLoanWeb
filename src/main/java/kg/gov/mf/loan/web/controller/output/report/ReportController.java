@@ -439,6 +439,9 @@ public class ReportController {
 
 		model.addAttribute("reportTemplateModel",reportTemplateModel);
 
+
+		model.addAttribute("showInThousands", reportTemplate.getReport().getId()==15 );
+
 //		model.addAttribute("showGroup1", reportTemplate.getShowGroup1());
 
 
@@ -506,6 +509,7 @@ public class ReportController {
                                      @RequestParam(value = "loanses" , required = false) String[] loanses,
                                      @RequestParam(value = "comparedValue" , required = false) String[] comparedValue,
                                      @RequestParam(value = "comparedDate" , required = false) Date[] comparedDate,
+									 @RequestParam(value = "inThousands" , required = false) String inThousands,
                                      HttpServletResponse response) {
 
 		ReportTool reportTool=new ReportTool();
@@ -661,6 +665,10 @@ public class ReportController {
 
 		}
 
+		double inThousandsValue = 1000;
+        if(inThousands!=null) inThousandsValue = Double.parseDouble(inThousands);
+
+
         ReportTemplate reportTemplate1=new ReportTemplate();
         reportTemplate1.setUsers(reportTemplate.getUsers());
         reportTemplate1.setFilterParameters(filterParameters);
@@ -675,6 +683,7 @@ public class ReportController {
         reportTemplate1.setGroupType6(reportTemplate.getGroupType6());
         reportTemplate1.setName(reportTemplate.getName());
         reportTemplate1.setOutputParameters(reportTemplate.getOutputParameters());
+        reportTemplate1.setInThousands(inThousandsValue);
 
 		reportTemplate1.setShowGroup1(Boolean.FALSE);
 		reportTemplate1.setShowGroup2(Boolean.FALSE);

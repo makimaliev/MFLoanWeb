@@ -222,7 +222,18 @@
                                 </select>
                             </div>
                         </div>
-
+                        <div class="form-group m-form__group row" sec:authorize="hasAnyAuthority('ADMIN','PERM_ADD_LOAN_LIST')" th:if="${showInThousands}">
+                            <label class="col-form-label col-lg-4 col-sm-12" th:text="#{label.inThousands}">
+                                Loans <span class="m--font-danger">*</span>
+                            </label>
+                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                <select id="inThousands" name="inThousands" class="form-control m-bootstrap-select m_selectpicker">
+                                    <option th:value="1000" selected="true" > в тыс.</option>
+                                    <option th:value="1" > в сомах</option>
+                                    <option th:value="1000000" > в млн.</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-6">
                             <div class="form-group m-form__group row">
                                 <button type="button" class="btn m-btn--square  btn-primary" id="submitBtn" th:text="#{label.table.generate}">SUBMIT</button>
@@ -328,7 +339,7 @@
 
             params=params+"&loanses="+$("#loanses").val();
 
-
+            params=params+"&inThousands="+$("#inThousands").val();
 
 
             var Count = 0;
