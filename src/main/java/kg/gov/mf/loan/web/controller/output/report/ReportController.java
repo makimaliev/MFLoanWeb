@@ -666,7 +666,14 @@ public class ReportController {
 		}
 
 		double inThousandsValue = 1000;
-        if(inThousands!=null) inThousandsValue = Double.parseDouble(inThousands);
+        try{
+            if(inThousands!=null) inThousandsValue = Double.parseDouble(inThousands);
+        }
+        catch (Exception ex)
+        {
+
+        }
+
 
 
         ReportTemplate reportTemplate1=new ReportTemplate();
