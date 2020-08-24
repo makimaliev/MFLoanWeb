@@ -206,6 +206,13 @@ public class LoanController {
     @Autowired
     BankDataService bankDataService;
 
+    @Autowired
+    GroupByCollateralExistenseService groupByCollateralExistenseService;
+
+    @Autowired
+    GroupByLoanPeriodService groupByLoanPeriodService;
+
+
     //endregion
 
     static final Logger loggerLoan = LoggerFactory.getLogger(Loan.class);
@@ -754,6 +761,10 @@ public class LoanController {
                 normalLoan.setCurrency(orderTermCurrencyService.getById(Long.valueOf(1)));
                 normalLoan.setLoanFinGroup(loanFinGroupService.getById(Long.valueOf(2)));
                 normalLoan.setFund(orderTermFundService.getById(Long.valueOf(30)));
+
+                normalLoan.setGroupByLoanPeriod(groupByLoanPeriodService.getById(1L));
+                normalLoan.setGroupByCollateralExistense(groupByCollateralExistenseService.getById(1L));
+
                 model.addAttribute("loan", normalLoan);
             }
 		    else if(classId == 2){
@@ -765,6 +776,9 @@ public class LoanController {
                 trancheeLoan.setCurrency(orderTermCurrencyService.getById(Long.valueOf(1)));
                 trancheeLoan.setLoanFinGroup(loanFinGroupService.getById(Long.valueOf(2)));
                 trancheeLoan.setFund(orderTermFundService.getById(Long.valueOf(30)));
+                trancheeLoan.setGroupByLoanPeriod(groupByLoanPeriodService.getById(1L));
+                trancheeLoan.setGroupByCollateralExistense(groupByCollateralExistenseService.getById(1L));
+
                 model.addAttribute("loan", trancheeLoan);
             }
 		    else{
@@ -776,6 +790,9 @@ public class LoanController {
                 restructuredLoan.setCurrency(orderTermCurrencyService.getById(Long.valueOf(1)));
                 restructuredLoan.setLoanFinGroup(loanFinGroupService.getById(Long.valueOf(2)));
                 restructuredLoan.setFund(orderTermFundService.getById(Long.valueOf(30)));
+                restructuredLoan.setGroupByLoanPeriod(groupByLoanPeriodService.getById(1L));
+                restructuredLoan.setGroupByCollateralExistense(groupByCollateralExistenseService.getById(1L));
+
                 model.addAttribute("loan", restructuredLoan);
             }
             model.addAttribute("ownerText", "");
