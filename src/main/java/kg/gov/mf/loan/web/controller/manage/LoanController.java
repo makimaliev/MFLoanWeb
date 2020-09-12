@@ -212,6 +212,9 @@ public class LoanController {
     @Autowired
     GroupByLoanPeriodService groupByLoanPeriodService;
 
+    @Autowired
+    GroupByDisbursementService groupByDisbursementService;
+
 
     //endregion
 
@@ -764,6 +767,7 @@ public class LoanController {
 
                 normalLoan.setGroupByLoanPeriod(groupByLoanPeriodService.getById(1L));
                 normalLoan.setGroupByCollateralExistense(groupByCollateralExistenseService.getById(1L));
+                normalLoan.setGroupByDisbursement(groupByDisbursementService.getById(1L));
 
                 model.addAttribute("loan", normalLoan);
             }
@@ -778,6 +782,7 @@ public class LoanController {
                 trancheeLoan.setFund(orderTermFundService.getById(Long.valueOf(30)));
                 trancheeLoan.setGroupByLoanPeriod(groupByLoanPeriodService.getById(1L));
                 trancheeLoan.setGroupByCollateralExistense(groupByCollateralExistenseService.getById(1L));
+                trancheeLoan.setGroupByDisbursement(groupByDisbursementService.getById(1L));
 
                 model.addAttribute("loan", trancheeLoan);
             }
@@ -792,6 +797,7 @@ public class LoanController {
                 restructuredLoan.setFund(orderTermFundService.getById(Long.valueOf(30)));
                 restructuredLoan.setGroupByLoanPeriod(groupByLoanPeriodService.getById(1L));
                 restructuredLoan.setGroupByCollateralExistense(groupByCollateralExistenseService.getById(1L));
+                restructuredLoan.setGroupByDisbursement(groupByDisbursementService.getById(1L));
 
                 model.addAttribute("loan", restructuredLoan);
             }
