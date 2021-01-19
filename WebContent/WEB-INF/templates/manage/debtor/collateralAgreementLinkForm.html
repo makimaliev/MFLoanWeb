@@ -73,12 +73,12 @@
                         <input type="text" id="agreementId" hidden="hidden" name="agreementId">
                         <div class="form-group m-form__group row">
                             <label class="col-form-label col-lg-4 col-sm-12">
-                                <span th:text="#{label.agreement.notary}"></span>
+                                <span th:text="#{label.agreement.table.collRegNumber}"></span>
                                 <span class="m--font-danger">*</span>
                             </label>
                             <div class="col-lg-4 col-md-9 col-sm-12">
                                 <div class="m-typeahead">
-                                    <input class="form-control m-input" id="agreement_typeahead" type="text" th:placeholder="#{label.agreement.notary}" th:value="${agreementText}"
+                                    <input class="form-control m-input" id="agreement_typeahead" type="text" th:placeholder="#{label.agreement.table.collRegNumber}" th:value="${agreementText}"
                                            required="required " multiple oninvalid="showNotEmptyMessage(this)" oninput="deleteMessage(this)">
                                 </div>
                             </div>
