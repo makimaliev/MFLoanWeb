@@ -1385,7 +1385,19 @@ public class DebtorController {
         Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
 
         Debtor debtor = debtorService.getById(debtorId);
-        List<LoanSummaryAct> loanSummaryActList =this.loanSummaryActService.getLoanSummaryActByDebtor(debtor);
+        List<LoanSummaryAct> loanSummaryActListNotFiltered =this.loanSummaryActService.getLoanSummaryActByDebtor(debtor);
+
+		List<LoanSummaryAct> loanSummaryActList = new ArrayList<>();
+
+
+		for (LoanSummaryAct actInList: loanSummaryActListNotFiltered)
+		{
+			if(!(actInList.getOnDate()==null || actInList.getAmount()==null))
+			{
+				loanSummaryActList.add(actInList);
+			}
+		}
+
         List<LoanSummaryActModel> resultList = new ArrayList<>();
 
         Long currentUserId = userService.findByUsername(Utils.getPrincipal()).getId();
