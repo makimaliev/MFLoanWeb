@@ -1392,10 +1392,12 @@ public class DebtorController {
 
 		for (LoanSummaryAct actInList: loanSummaryActListNotFiltered)
 		{
-			if(!(actInList.getOnDate()==null || actInList.getAmount()==null))
+			if(actInList.getAmount()==null)
 			{
-				loanSummaryActList.add(actInList);
+				actInList.setAmount(0.0);
 			}
+
+			loanSummaryActList.add(actInList);
 		}
 
         List<LoanSummaryActModel> resultList = new ArrayList<>();
