@@ -25,9 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class LoanSummaryActController {
@@ -348,12 +346,19 @@ public class LoanSummaryActController {
     public void registerLoanSummaryact(Long id){
         LoanSummaryAct loanSummaryAct = loanSummaryActService.getById(id);
 
-        ManageCounter counter = manageCounterRepository.getByEntityNameEquals(LoanSummaryAct.class.getSimpleName());
+
+
+        Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+        cal.setTime(loanSummaryAct.getOnDate());
+
+        String yearOfAct = String.valueOf(cal.get(Calendar.YEAR));
+
+        ManageCounter counter = manageCounterRepository.getByEntityNameEquals(LoanSummaryAct.class.getSimpleName()+yearOfAct);
 
 
         if (counter == null){
             ManageCounter counter1 =new ManageCounter();
-            counter1.setEntityName(LoanSummaryAct.class.getSimpleName());
+            counter1.setEntityName(LoanSummaryAct.class.getSimpleName()+yearOfAct);
             counter1.setNumber(1L);
             manageCounterRepository.save(counter1);
 
