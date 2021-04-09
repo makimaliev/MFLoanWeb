@@ -595,265 +595,265 @@
             <!--</div>-->
         </div>
     </div>
-    <script th:src="@{/js/sockjs.js}" type="text/javascript"></script>
-    <script th:src="@{/js/stomp.js}" type="text/javascript"></script>
-    <script type="text/javascript" th:inline="javascript">
+    <!--<script th:src="@{/js/sockjs.js}" type="text/javascript"></script>-->
+    <!--<script th:src="@{/js/stomp.js}" type="text/javascript"></script>-->
+    <!--<script type="text/javascript" th:inline="javascript">-->
 
-        // var username = [[${#authentication.name}]];
-        // Chat Begin
-        // var messageForm = document.querySelector('#messageForm');
-        // var messageInput = document.querySelector('#message');
-        // var messageFile = document.querySelector('#message-file');
-        // var messageArea = document.querySelector('#messageArea');
-        // var chatModalTitle = document.querySelector('#chatModalTitle');
-        var stompClient = null;
-        var username = [[${#authentication.name}]];
-        // var receiver = null;
-        // var prevdate = null;
+        <!--// var username = [[${#authentication.name}]];-->
+        <!--// Chat Begin-->
+        <!--// var messageForm = document.querySelector('#messageForm');-->
+        <!--// var messageInput = document.querySelector('#message');-->
+        <!--// var messageFile = document.querySelector('#message-file');-->
+        <!--// var messageArea = document.querySelector('#messageArea');-->
+        <!--// var chatModalTitle = document.querySelector('#chatModalTitle');-->
+        <!--var stompClient = null;-->
+        <!--var username = [[${#authentication.name}]];-->
+        <!--// var receiver = null;-->
+        <!--// var prevdate = null;-->
 
-        function connect() {
-            var socket = new SockJS('/ws');
-            stompClient = Stomp.over(socket);
-            stompClient.connect({}, onConnected, onError);
-        }
-        function onConnected() {
-            stompClient.subscribe('/topic/public', onMessageReceived);
-            stompClient.send("/app/chat.addUser", {}, JSON.stringify({sender: [[${#authentication.name}]], type: 'JOIN'}))
-            // chatModalTitle.innerHTML = "Online"
-            // messageInput.disabled = false;
-        }
-        /*function sendMessage(event) {
-            var messageContent = messageInput.value.trim();
-            var file1 = messageFile.files[0];
+        <!--function connect() {-->
+            <!--var socket = new SockJS('/ws');-->
+            <!--stompClient = Stomp.over(socket);-->
+            <!--stompClient.connect({}, onConnected, onError);-->
+        <!--}-->
+        <!--function onConnected() {-->
+            <!--stompClient.subscribe('/topic/public', onMessageReceived);-->
+            <!--stompClient.send("/app/chat.addUser", {}, JSON.stringify({sender: [[${#authentication.name}]], type: 'JOIN'}))-->
+            <!--// chatModalTitle.innerHTML = "Online"-->
+            <!--// messageInput.disabled = false;-->
+        <!--}-->
+        <!--/*function sendMessage(event) {-->
+            <!--var messageContent = messageInput.value.trim();-->
+            <!--var file1 = messageFile.files[0];-->
 
-            if (messageFile.files[0]){
-                $("#FileForm").submit();
-                alert("sdfsdf");
-                console.log(messageFile.files[0]);
-                /!*$.ajax({
-                    url: '/attachFile',
-                    data: {"file":file1},
-                    cache: false,
-                    contentType: file1.type,
-                    processData: false,
-                    type: 'POST',
-                    success: function(data)
-                    {
-                        alert(data);
-                    }
-                });*!/
+            <!--if (messageFile.files[0]){-->
+                <!--$("#FileForm").submit();-->
+                <!--alert("sdfsdf");-->
+                <!--console.log(messageFile.files[0]);-->
+                <!--/!*$.ajax({-->
+                    <!--url: '/attachFile',-->
+                    <!--data: {"file":file1},-->
+                    <!--cache: false,-->
+                    <!--contentType: file1.type,-->
+                    <!--processData: false,-->
+                    <!--type: 'POST',-->
+                    <!--success: function(data)-->
+                    <!--{-->
+                        <!--alert(data);-->
+                    <!--}-->
+                <!--});*!/-->
 
-            }
+            <!--}-->
 
-            if(messageContent && stompClient && receiver) {
-                var chatMessage = {
-                    sender: username,
-                    receiver: receiver,
-                    content: messageInput.value,
-                    type: 'CHAT'
-                };
+            <!--if(messageContent && stompClient && receiver) {-->
+                <!--var chatMessage = {-->
+                    <!--sender: username,-->
+                    <!--receiver: receiver,-->
+                    <!--content: messageInput.value,-->
+                    <!--type: 'CHAT'-->
+                <!--};-->
 
-                stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
-                messageInput.value = '';
-            }
-            event.preventDefault();
-        }
-        function buildMessage(message) {
+                <!--stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));-->
+                <!--messageInput.value = '';-->
+            <!--}-->
+            <!--event.preventDefault();-->
+        <!--}-->
+        <!--function buildMessage(message) {-->
 
-            var curdate = new Date(message.date).toLocaleDateString("ru", {day:"2-digit", month:"2-digit", year:"2-digit"});
+            <!--var curdate = new Date(message.date).toLocaleDateString("ru", {day:"2-digit", month:"2-digit", year:"2-digit"});-->
 
-            if((prevdate == null) || (prevdate < curdate))
-            {
-                prevdate = new Date(message.date).toLocaleDateString("ru", {day:"2-digit", month:"2-digit", year:"2-digit"});
+            <!--if((prevdate == null) || (prevdate < curdate))-->
+            <!--{-->
+                <!--prevdate = new Date(message.date).toLocaleDateString("ru", {day:"2-digit", month:"2-digit", year:"2-digit"});-->
 
-                var dtContainer = document.createElement('div');
-                dtContainer.classList.add('center');
+                <!--var dtContainer = document.createElement('div');-->
+                <!--dtContainer.classList.add('center');-->
 
-                var dt = document.createElement('span');
-                dt.classList.add('date-title');
+                <!--var dt = document.createElement('span');-->
+                <!--dt.classList.add('date-title');-->
 
-                var dttxt = document.createTextNode(prevdate);
-                dt.appendChild(dttxt);
+                <!--var dttxt = document.createTextNode(prevdate);-->
+                <!--dt.appendChild(dttxt);-->
 
-                dtContainer.appendChild(dt);
+                <!--dtContainer.appendChild(dt);-->
 
-                messageArea.appendChild(dtContainer);
-            }
+                <!--messageArea.appendChild(dtContainer);-->
+            <!--}-->
 
-            var mc = document.createElement('div');
-            mc.classList.add('message');
-            var mctxt = document.createTextNode(message.content);
-            mc.appendChild(mctxt);
+            <!--var mc = document.createElement('div');-->
+            <!--mc.classList.add('message');-->
+            <!--var mctxt = document.createTextNode(message.content);-->
+            <!--mc.appendChild(mctxt);-->
 
-            var s2 = document.createElement('span');
-            var d = new Date(message.date);
-            var s2txt = document.createTextNode(d.toLocaleTimeString([], {hour12: false, hour: '2-digit', minute:'2-digit'}));
-            s2.appendChild(s2txt);
+            <!--var s2 = document.createElement('span');-->
+            <!--var d = new Date(message.date);-->
+            <!--var s2txt = document.createTextNode(d.toLocaleTimeString([], {hour12: false, hour: '2-digit', minute:'2-digit'}));-->
+            <!--s2.appendChild(s2txt);-->
 
-            var s1 = document.createElement('span');
-            s1.classList.add('metadata');
-            s1.appendChild(s2);
-            mc.appendChild(s1);
+            <!--var s1 = document.createElement('span');-->
+            <!--s1.classList.add('metadata');-->
+            <!--s1.appendChild(s2);-->
+            <!--mc.appendChild(s1);-->
 
-            if(message.sender === username)
-            {
-                mc.classList.add('sent');
-            }
-            else
-            {
-                mc.classList.add('received');
-            }
+            <!--if(message.sender === username)-->
+            <!--{-->
+                <!--mc.classList.add('sent');-->
+            <!--}-->
+            <!--else-->
+            <!--{-->
+                <!--mc.classList.add('received');-->
+            <!--}-->
 
-            messageArea.appendChild(mc);
-            messageArea.scrollTop = messageArea.scrollHeight;
+            <!--messageArea.appendChild(mc);-->
+            <!--messageArea.scrollTop = messageArea.scrollHeight;-->
 
-        }*/
-        function onMessageReceived(payload) {
+        <!--}*/-->
+        <!--function onMessageReceived(payload) {-->
 
-            var message = JSON.parse(payload.body);
-            console.log(message);
-            // alert(message);
+            <!--var message = JSON.parse(payload.body);-->
+            <!--console.log(message);-->
+            <!--// alert(message);-->
 
-            if(message.type === 'CHAT' && (message.receiver === [[${#authentication.name}]] || message.sender === [[${#authentication.name}]]))
-            {
-                // buildMessage(message);
-                $('#cu').val(message.receiver).trigger('change');
-                if(!window.location.href.includes("/chat/window/")){
+            <!--if(message.type === 'CHAT' && (message.receiver === [[${#authentication.name}]] || message.sender === [[${#authentication.name}]]))-->
+            <!--{-->
+                <!--// buildMessage(message);-->
+                <!--$('#cu').val(message.receiver).trigger('change');-->
+                <!--if(!window.location.href.includes("/chat/window/")){-->
 
-                    notipy(message.senderfullname, message.content,message.sender)
-                }
-            }
-        }
-        function onError() {
-            // messageInput.disabled = true;
-            // chatModalTitle.innerHTML = "Offline"
-        }
-        function notipy(t, m, r) {
-            // alert(r)
+                    <!--notipy(message.senderfullname, message.content,message.sender)-->
+                <!--}-->
+            <!--}-->
+        <!--}-->
+        <!--function onError() {-->
+            <!--// messageInput.disabled = true;-->
+            <!--// chatModalTitle.innerHTML = "Offline"-->
+        <!--}-->
+        <!--function notipy(t, m, r) {-->
+            <!--// alert(r)-->
 
-            $.notify({
-                title: t,
-                message: '<a href="/chat/window/'+r+'" class="m-nav__link" >' + m + '</a>'
-            }, {
-                delay: 5000,
-                type: "info",
-                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
-                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss"></button>' +
-                    '<span data-notify="icon"></span> ' +
-                    '<span data-notify="title">{1}</span> ' +
-                    '<span data-notify="message">{2}</span>' +
-                    '<div class="progress" data-notify="progressbar">' +
-                    '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
-                    '</div>' +
-                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
-                    '</div>'
-            });
+            <!--$.notify({-->
+                <!--title: t,-->
+                <!--message: '<a href="/chat/window/'+r+'" class="m-nav__link" >' + m + '</a>'-->
+            <!--}, {-->
+                <!--delay: 5000,-->
+                <!--type: "info",-->
+                <!--template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +-->
+                    <!--'<button type="button" aria-hidden="true" class="close" data-notify="dismiss"></button>' +-->
+                    <!--'<span data-notify="icon"></span> ' +-->
+                    <!--'<span data-notify="title">{1}</span> ' +-->
+                    <!--'<span data-notify="message">{2}</span>' +-->
+                    <!--'<div class="progress" data-notify="progressbar">' +-->
+                    <!--'<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +-->
+                    <!--'</div>' +-->
+                    <!--'<a href="{3}" target="{4}" data-notify="url"></a>' +-->
+                    <!--'</div>'-->
+            <!--});-->
 
-        }
-        /*function loadMessages(usr) {
-            messageArea.innerHTML = "";
+        <!--}-->
+        <!--/*function loadMessages(usr) {-->
+            <!--messageArea.innerHTML = "";-->
 
-            prevdate = null;
-            // alert(username);
-            // alert(receiver);
-            $.ajax({
-                type: "POST",
-                url: "/chat/messages",
-                data: { sender: username, receiver: usr },
-                success: function(result){
-                    for(var i = 0; i < result.length; i++)
-                    {
-                        buildMessage(result[i]);
-                    }
-                }
-            });
-            this.scrollTop = this.scrollHeight;
-        }
+            <!--prevdate = null;-->
+            <!--// alert(username);-->
+            <!--// alert(receiver);-->
+            <!--$.ajax({-->
+                <!--type: "POST",-->
+                <!--url: "/chat/messages",-->
+                <!--data: { sender: username, receiver: usr },-->
+                <!--success: function(result){-->
+                    <!--for(var i = 0; i < result.length; i++)-->
+                    <!--{-->
+                        <!--buildMessage(result[i]);-->
+                    <!--}-->
+                <!--}-->
+            <!--});-->
+            <!--this.scrollTop = this.scrollHeight;-->
+        <!--}-->
 
-        $('#chat_window').on('show.bs.modal', function (e) {
-            loadMessages(receiver);
-        });*/
+        <!--$('#chat_window').on('show.bs.modal', function (e) {-->
+            <!--loadMessages(receiver);-->
+        <!--});*/-->
 
-        // messageForm.addEventListener('submit', sendMessage, true);
+        <!--// messageForm.addEventListener('submit', sendMessage, true);-->
 
-        connect();
+        <!--connect();-->
 
-        /*$('#cu').select2();
-        $('#cu').on('select2:select', function (e) {
-            receiver = e.params.data.id;
-            loadMessages(receiver)
-        });*/
-        // Chat End
+        <!--/*$('#cu').select2();-->
+        <!--$('#cu').on('select2:select', function (e) {-->
+            <!--receiver = e.params.data.id;-->
+            <!--loadMessages(receiver)-->
+        <!--});*/-->
+        <!--// Chat End-->
 
-        function changePageAndSize() {
-            $('#pageSizeSelect').change(function(evt) {
-                var currentLocation = window.location.pathname;
-                window.location.replace(currentLocation + "?pageSize=" + this.value + "&page=1");
-            });
-        }
+        <!--function changePageAndSize() {-->
+            <!--$('#pageSizeSelect').change(function(evt) {-->
+                <!--var currentLocation = window.location.pathname;-->
+                <!--window.location.replace(currentLocation + "?pageSize=" + this.value + "&page=1");-->
+            <!--});-->
+        <!--}-->
 
-        /*$(document).ready(function() {
-
-
-            /!*var path = window.location.pathname.split("/");
-
-                if (path[2] != "edit") {
-
-                    var tasks = [ [ ${@taskService.getTasksByUserId(@userServiceJpaImpl.findByUsername(#authentication.name).id)} ] ];
-
-                    for (var i = 0; i < tasks.length; i++) {
-
-                        if(username === "obsh003" || username === "obsh002") {
-                            if(tasks[i].description !== "Завершить") {
-                                $.notify({
-                                    title: 'Задача №: ' + (i + 1),
-                                    message: '<a href="/doc/edit/' + tasks[i].objectId + '" role="button" class="btn btn-link text-light" style="text-decoration: none;">' + tasks[i].description + '</a>'
-                                }, {
-                                    delay: 2000,
-                                    type: "info",
-                                    template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
-                                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss"></button>' +
-                                    '<span data-notify="icon"></span> ' +
-                                    '<span data-notify="title">{1}</span> ' +
-                                    '<span data-notify="message">{2}</span>' +
-                                    '<div class="progress" data-notify="progressbar">' +
-                                    '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
-                                    '</div>' +
-                                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
-                                    '</div>'
-                                });
-                            }
-                        }
-                        else
-                        {
-                            $.notify({
-                                title: 'Задача №: ' + (i + 1),
-                                message: '<a href="/doc/edit/' + tasks[i].objectId + '" role="button" class="btn btn-link text-light" style="text-decoration: none;">' + tasks[i].description + '</a>'
-                            }, {
-                                delay: 2000,
-                                type: "info",
-                                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
-                                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss"></button>' +
-                                '<span data-notify="icon"></span> ' +
-                                '<span data-notify="title">{1}</span> ' +
-                                '<span data-notify="message">{2}</span>' +
-                                '<div class="progress" data-notify="progressbar">' +
-                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
-                                '</div>' +
-                                '<a href="{3}" target="{4}" data-notify="url"></a>' +
-                                '</div>'
-                            });
-                        }
-                    }
-                }*!/
+        <!--/*$(document).ready(function() {-->
 
 
+            <!--/!*var path = window.location.pathname.split("/");-->
 
-            changePageAndSize();
-        });*/
+                <!--if (path[2] != "edit") {-->
+
+                    <!--var tasks = [ [ ${@taskService.getTasksByUserId(@userServiceJpaImpl.findByUsername(#authentication.name).id)} ] ];-->
+
+                    <!--for (var i = 0; i < tasks.length; i++) {-->
+
+                        <!--if(username === "obsh003" || username === "obsh002") {-->
+                            <!--if(tasks[i].description !== "Завершить") {-->
+                                <!--$.notify({-->
+                                    <!--title: 'Задача №: ' + (i + 1),-->
+                                    <!--message: '<a href="/doc/edit/' + tasks[i].objectId + '" role="button" class="btn btn-link text-light" style="text-decoration: none;">' + tasks[i].description + '</a>'-->
+                                <!--}, {-->
+                                    <!--delay: 2000,-->
+                                    <!--type: "info",-->
+                                    <!--template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +-->
+                                    <!--'<button type="button" aria-hidden="true" class="close" data-notify="dismiss"></button>' +-->
+                                    <!--'<span data-notify="icon"></span> ' +-->
+                                    <!--'<span data-notify="title">{1}</span> ' +-->
+                                    <!--'<span data-notify="message">{2}</span>' +-->
+                                    <!--'<div class="progress" data-notify="progressbar">' +-->
+                                    <!--'<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +-->
+                                    <!--'</div>' +-->
+                                    <!--'<a href="{3}" target="{4}" data-notify="url"></a>' +-->
+                                    <!--'</div>'-->
+                                <!--});-->
+                            <!--}-->
+                        <!--}-->
+                        <!--else-->
+                        <!--{-->
+                            <!--$.notify({-->
+                                <!--title: 'Задача №: ' + (i + 1),-->
+                                <!--message: '<a href="/doc/edit/' + tasks[i].objectId + '" role="button" class="btn btn-link text-light" style="text-decoration: none;">' + tasks[i].description + '</a>'-->
+                            <!--}, {-->
+                                <!--delay: 2000,-->
+                                <!--type: "info",-->
+                                <!--template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +-->
+                                <!--'<button type="button" aria-hidden="true" class="close" data-notify="dismiss"></button>' +-->
+                                <!--'<span data-notify="icon"></span> ' +-->
+                                <!--'<span data-notify="title">{1}</span> ' +-->
+                                <!--'<span data-notify="message">{2}</span>' +-->
+                                <!--'<div class="progress" data-notify="progressbar">' +-->
+                                <!--'<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +-->
+                                <!--'</div>' +-->
+                                <!--'<a href="{3}" target="{4}" data-notify="url"></a>' +-->
+                                <!--'</div>'-->
+                            <!--});-->
+                        <!--}-->
+                    <!--}-->
+                <!--}*!/-->
 
 
-    </script>
+
+            <!--changePageAndSize();-->
+        <!--});*/-->
+
+
+    <!--</script>-->
 
 
 </header>
